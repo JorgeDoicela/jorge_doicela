@@ -44,15 +44,63 @@ Para asegurar que cada módulo sea extraíble a su propio servidor de forma inde
 
 ## Cómo Empezar
 
-### Requisitos Previos
-* Node.js (versión 18 o superior)
-* pnpm (versión 10 o superior)
+### Clonar el Proyecto
+Clona el repositorio en tu máquina local e ingresa al directorio del proyecto:
+```bash
+git clone https://github.com/JorgeDoicela/jorge_doicela.git
+cd jorge_doicela
+```
+
+### Requisitos Previos por Plataforma
+
+#### Windows
+1. **Node.js**: Descarga e instala la versión LTS (18 o superior) desde [nodejs.org](https://nodejs.org/).
+2. **pnpm**: Instálalo ejecutando en tu terminal (CMD o PowerShell):
+   ```bash
+   npm install -g pnpm
+   ```
+3. **Git**: Asegúrate de tener Git instalado y disponible en tu terminal.
+
+#### Debian
+1. **Node.js**: Instala la versión 18 o superior. Se recomienda usar un manejador de versiones (como `nvm` o `fnm`).
+2. **Herramientas de Compilación**: Dado que el backend utiliza `better-sqlite3` (que requiere compilar extensiones nativas C++), instala las herramientas de compilación esenciales:
+   ```bash
+   sudo apt update
+   sudo apt install -y build-essential python3 g++ make
+   ```
+3. **pnpm**: Instálalo globalmente:
+   ```bash
+   npm install -g pnpm
+   ```
+
+#### Arch Linux
+1. **Node.js**: Instala Node.js y npm desde los repositorios oficiales:
+   ```bash
+   sudo pacman -Syu nodejs npm
+   ```
+2. **Herramientas de Compilación**: Instala el grupo de herramientas de desarrollo `base-devel` y `python` para la compilación de módulos nativos:
+   ```bash
+   sudo pacman -S base-devel python
+   ```
+3. **pnpm**: Instálalo globalmente:
+   ```bash
+   npm install -g pnpm
+   ```
 
 ### Instalación de Dependencias
 Instala todas las dependencias del monorepo desde la raíz ejecutando:
 ```bash
 pnpm install
 ```
+
+#### El Comando de Oro: Agregar Dependencias Específicas
+Para agregar una nueva librería a un proyecto específico sin ensuciar la raíz global (manteniendo el aislamiento y la portabilidad), utiliza:
+```bash
+pnpm --filter <nombre-del-proyecto> add <libreria>
+```
+
+* **El peligro de instalar en la raíz (Global)**: Si instalas una librería en la raíz del monorepo, todas tus aplicaciones tendrán acceso a ella. Si en el futuro extraes la carpeta de un proyecto (ej. `bible`) a un VPS nuevo, la aplicación fallará porque la librería se quedó registrada en el `package.json` de la raíz vieja, no en el del subproyecto.
+* **La ventaja de `--filter`**: Garantiza aislamiento (se registra únicamente en el subproyecto) y portabilidad perfecta (cada aplicación viaja con su propia lista exacta de librerías para funcionar de forma autónoma).
 
 ### Ejecutar en Desarrollo
 Inicia todas las aplicaciones (backend y los tres frontends) en paralelo con un único comando:

@@ -21,9 +21,30 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Arquitectura del Proyecto: Proyectos Independientes (Consolidación por Hardware)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este backend actúa como un **contenedor de ejecución** para tres proyectos de software completamente diferentes y ajenos entre sí: **Portfolio**, **Bible** y **Software**. 
+
+Comparten el mismo proceso NestJS únicamente por razones de infraestructura y optimización física (para poder desplegar de forma holgada en servidores de 1GB de RAM), eliminando el consumo excesivo que implicaría ejecutar tres procesos Node.js por separado.
+
+### Principales Reglas de Diseño
+
+1. **Aislamiento Absoluto de Proyectos:**
+   * `BibleModule`, `SoftwareModule` y `PortfolioModule` son independientes. **No se importan entre sí**, no comparten código de dominio ni dependencias.
+   * NINGUNA parte de un proyecto debe conocer la existencia del otro.
+   * Cada uno define su propio flujo de 3 capas interna: **Controller** (HTTP) $\rightarrow$ **Service** (Lógica de Negocio) $\rightarrow$ **Entities/Repositories** (Datos).
+
+2. **Bases de Datos Locales Independientes:**
+   * Cada módulo levanta su propio archivo físico SQLite (`bible.sqlite`, `software.sqlite`, etc.) utilizando conexiones TypeORM aisladas en cada módulo.
+   * Esto previene colisiones e interferencia de datos entre los tres proyectos.
+
+3. **Sin Comunicación de Negocio:**
+   * No existe comunicación (ni directa por inyección, ni asíncrona mediante eventos) entre los tres módulos, dado que representan aplicaciones desconectadas.
+
+4. **Extracción y Despliegue Autónomo:**
+   * La estructura de carpetas física garantiza que puedas copiar y pegar la carpeta de cualquier módulo (ej. `src/bible`) en un proyecto NestJS vacío y limpio en otro servidor, y este funcionará autónomamente de inmediato.
+
+---
 
 ## Project setup
 

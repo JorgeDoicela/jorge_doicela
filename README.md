@@ -1,4 +1,4 @@
-# Ecosistema del Monorepo: Portafolio, Biblia y Software
+# Portafolio, Biblia y Software
 
 Este repositorio contiene la arquitectura modular para el desarrollo del Portafolio, Biblia y Software de Jorge Doicela. Está diseñado como un monorepo puro que prioriza el desacoplamiento total de sus componentes, con miras a un despliegue optimizado en un entorno de bajos recursos (VPS de 1 GB de RAM) y preparado para una futura transición a servicios independientes.
 

@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Verse } from './entities/verse.entity';
-import { BibleService } from './bible.service';
-import { BibleController } from './bible.controller';
+import { Verse } from './verses/entities/verse.entity';
+import { Book } from './books/entities/book.entity';
+import { Translation } from './translations/entities/translation.entity';
+import { VersesModule } from './verses/verses.module';
+import { BooksModule } from './books/books.module';
+import { TranslationsModule } from './translations/translations.module';
 
 @Module({
   imports: [
@@ -10,13 +13,12 @@ import { BibleController } from './bible.controller';
       name: 'bibleConnection',
       type: 'better-sqlite3',
       database: 'bible.sqlite',
-      entities: [Verse],
+      entities: [Verse, Book, Translation],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Verse], 'bibleConnection'),
+    VersesModule,
+    BooksModule,
+    TranslationsModule,
   ],
-  controllers: [BibleController],
-  providers: [BibleService],
-  exports: [BibleService],
 })
 export class BibleModule {}

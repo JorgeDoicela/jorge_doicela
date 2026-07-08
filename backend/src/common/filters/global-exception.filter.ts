@@ -7,6 +7,10 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { Logger } from '@nestjs/common';
+import {
+  EntityNotFoundError,
+  EntityConflictError,
+} from '../domain/domain-errors';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -17,20 +21,23 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let errorDetails: string | object = 'Internal server error';
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
-
-    const errorDetails =
-      typeof message === 'object' && message !== null && 'message' in message
-        ? message.message
-        : message;
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      const res = exception.getResponse();
+      errorDetails =
+        typeof res === 'object' && res !== null && 'message' in res
+          ? ((res as Record<string, unknown>).message as string | object)
+          : res;
+    } else if (exception instanceof EntityNotFoundError) {
+      status = HttpStatus.NOT_FOUND;
+      errorDetails = exception.message;
+    } else if (exception instanceof EntityConflictError) {
+      status = HttpStatus.CONFLICT;
+      errorDetails = exception.message;
+    }
 
     this.logger.error(
       `HTTP Status: ${status} - Method: ${request.method} - Path: ${request.url} - Error: ${
@@ -42,6 +49,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     );
 
     response.status(status).json({
+      success: false,
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,

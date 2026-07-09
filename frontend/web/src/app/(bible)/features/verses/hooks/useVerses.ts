@@ -35,7 +35,7 @@ export function useVerses() {
         throw new Error('No se pudieron cargar los versículos');
       }
       const data = await res.json();
-      setVerses(data as Verse[]);
+      setVerses(data.data as Verse[]);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al conectar con el servidor');
     } finally {

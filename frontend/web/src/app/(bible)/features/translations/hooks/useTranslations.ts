@@ -22,7 +22,7 @@ export function useTranslations() {
           throw new Error('No se pudieron cargar las traducciones');
         }
         const data = await res.json();
-        setTranslations(data as Translation[]);
+        setTranslations(data.data as Translation[]);
       } catch (err: any) {
         setError(err.message || 'Error al conectar con el servidor');
       } finally {

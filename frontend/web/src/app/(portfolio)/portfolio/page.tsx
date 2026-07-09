@@ -1,6 +1,6 @@
-import { TerminalConsole } from './features/terminal/components/TerminalConsole';
+import { TerminalConsole } from '../features/terminal/components/TerminalConsole';
 
-export default function Home() {
+export default function PortfolioPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center py-16 px-4">
       <header className="mb-12 text-center">

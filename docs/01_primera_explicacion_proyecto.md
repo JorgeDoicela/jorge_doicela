@@ -31,23 +31,26 @@ Se agrupará el código por su contexto. Por ejemplo, todo lo relacionado a vers
 Para garantizar que ningún proyecto dependa de otro y que la migración futura sea instantánea, se utilizará una estructura de Workspaces limpia. No habrá capa de paquetes compartidos. Las interfaces de TypeScript (ej. User, Verse) se definirán manualmente tanto en el backend como en su respectivo frontend.
 
 ```text
-mi-gran-monorepo/
+jorge_doicela/ (Monorepo)
 ├── package.json (Configuración maestra de Workspaces)
 │
-├── apps/ (Frontends Next.js - SSG Export)
-│   ├── portfolio/ (100% aislado, sus propios estilos y tipos)
-│   ├── bible/ (100% aislado, define sus propias interfaces)
-│   └── software/ (100% aislado, define sus propias interfaces)
+├── frontend/
+│   └── web/ (Un único proyecto Next.js en puerto 3001)
+│       └── src/app/
+│           ├── (landing)/     <-- Landing Page Principal (jorgedoicela.com)
+│           ├── (portfolio)/   <-- Portfolio (portfolio.jorgedoicela.com)
+│           ├── (bible)/       <-- Biblia (bible.jorgedoicela.com)
+│           └── (software)/    <-- Software (software.jorgedoicela.com)
 │
-└── backend/ (Un solo servidor NestJS)
+└── backend/ (Un solo servidor NestJS en puerto 3000)
     └── src/
-        ├── app.module.ts (Módulo raíz)
-        ├── portfolio/ (Módulo NestJS)
-        ├── bible/ (Módulo NestJS)
-        └── software/ (Módulo NestJS)
+        ├── app.module.ts (Monolito modular consolidado)
+        ├── portfolio/
+        ├── bible/
+        └── software/
 ```
 
-**Ventaja de esta estructura**: Si mañana se extrae la Biblia a otro VPS, simplemente se copian la carpeta `apps/bible/` y la carpeta `backend/src/bible/`. Al no existir paquetes intermedios, la migración es directa y sin riesgo de arrastrar código de otros dominios.
+**Ventaja de esta estructura**: Si mañana se extrae la Biblia a otro VPS, simplemente se copian la carpeta `frontend/web/src/app/(bible)/` y la carpeta `backend/src/bible/`. Al no existir acoplamientos ni dependencias cruzadas entre las carpetas de dominios, la migración es directa e independiente.
 
 ---
 

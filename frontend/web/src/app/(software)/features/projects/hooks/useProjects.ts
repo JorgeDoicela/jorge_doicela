@@ -18,7 +18,7 @@ export function useProjects() {
         }
         const data = await res.json();
         if (active) {
-          setProjects(data as Project[]);
+          setProjects(data.data as Project[]);
         }
       } catch (err: unknown) {
         if (active) {

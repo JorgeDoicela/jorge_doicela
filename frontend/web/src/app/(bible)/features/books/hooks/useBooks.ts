@@ -22,7 +22,7 @@ export function useBooks() {
           throw new Error('No se pudieron cargar los libros');
         }
         const data = await res.json();
-        setBooks(data as Book[]);
+        setBooks(data.data as Book[]);
       } catch (err: any) {
         setError(err.message || 'Error al conectar con el servidor');
       } finally {

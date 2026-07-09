@@ -6,12 +6,14 @@ Este repositorio contiene la arquitectura modular para el desarrollo del Portafo
 
 ## Estructura del Monorepo
 
-El monorepo está configurado utilizando los workspaces de pnpm. Cuenta con un backend modular centralizado y tres frontends independientes desarrollados en Next.js:
+El monorepo está configurado utilizando los workspaces de pnpm. Cuenta con un backend modular centralizado y un frontend Next.js unificado en el puerto 3001 que administra los tres subdominios de forma aislada:
 
-* **backend**: Servidor único NestJS programado como un monolito modular.
-* **apps/portfolio**: Frontend Next.js para la terminal de comandos interactiva.
-* **apps/bible**: Frontend Next.js para la consulta y lectura de la Biblia.
-* **apps/software**: Frontend Next.js para la galería de proyectos de software.
+* **backend**: Servidor único NestJS programado como un monolito modular (puerto 3000).
+* **frontend/web**: Único servidor Next.js que ejecuta los tres frontends de forma desacoplada y los resuelve mediante subdominios (puerto 3001):
+  * **Landing Page**: `jorgedoicela.com`
+  * **Portfolio (Terminal)**: `portfolio.jorgedoicela.com`
+  * **Bible (Biblia)**: `bible.jorgedoicela.com`
+  * **Software (Proyectos)**: `software.jorgedoicela.com`
 
 ---
 
@@ -103,16 +105,19 @@ pnpm --filter <nombre-del-proyecto> add <libreria>
 * **La ventaja de `--filter`**: Garantiza aislamiento (se registra únicamente en el subproyecto) y portabilidad perfecta (cada aplicación viaja con su propia lista exacta de librerías para funcionar de forma autónoma).
 
 ### Ejecutar en Desarrollo
-Inicia todas las aplicaciones (backend y los tres frontends) en paralelo con un único comando:
+Inicia el backend y el frontend en paralelo con un único comando:
 ```bash
 pnpm dev
 ```
 
 Este comando levantará los servidores en los siguientes puertos:
 * **Backend (NestJS)**: `http://localhost:3000`
-* **Portfolio App (Next.js)**: `http://localhost:3001`
-* **Bible App (Next.js)**: `http://localhost:3002`
-* **Software App (Next.js)**: `http://localhost:3003`
+* **Frontend Next.js (SSR)**: `http://localhost:3001`
+  * Subdominios de prueba (resueltos localmente):
+    * `http://portfolio.localhost:3001`
+    * `http://bible.localhost:3001`
+    * `http://software.localhost:3001`
+    * `http://localhost:3001` (Landing)
 
 ### Control de Calidad y Estandarización
 El repositorio tiene configurado un hook de pre-commit utilizando Husky y lint-staged. Cada vez que confirmes cambios con Git, se ejecutarán de forma automática las siguientes verificaciones:

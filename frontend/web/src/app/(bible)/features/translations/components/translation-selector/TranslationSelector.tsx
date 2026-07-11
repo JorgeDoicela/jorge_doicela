@@ -15,11 +15,11 @@ export function TranslationSelector({
   const { translations, loading, error } = useTranslations();
 
   if (loading) {
-    return <div className="text-slate-400 text-sm">Cargando versiones...</div>;
+    return <div className="text-accents-5 text-sm animate-pulse">Cargando versiones...</div>;
   }
 
   if (error) {
-    return <div className="text-rose-400 text-sm">Error: {error}</div>;
+    return <div className="text-red-500 text-sm font-medium">Error: {error}</div>;
   }
 
   return (
@@ -30,7 +30,7 @@ export function TranslationSelector({
           const val = e.target.value;
           onSelectTranslation(val ? Number(val) : null);
         }}
-        className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm"
+        className="px-3 py-1.5 bg-background border border-border rounded-md text-foreground focus:outline-none focus:border-accents-5 text-xs transition-colors duration-200 cursor-pointer"
       >
         <option value="">Todas las Versiones</option>
         {translations.map((translation) => (
@@ -42,3 +42,4 @@ export function TranslationSelector({
     </div>
   );
 }
+

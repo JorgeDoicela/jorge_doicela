@@ -12,21 +12,21 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
   const { books, loading, error } = useBooks();
 
   if (loading) {
-    return <div className="text-slate-400 text-sm">Cargando libros...</div>;
+    return <div className="text-accents-5 text-sm animate-pulse">Cargando libros...</div>;
   }
 
   if (error) {
-    return <div className="text-rose-400 text-sm">Error: {error}</div>;
+    return <div className="text-red-500 text-sm font-medium">Error: {error}</div>;
   }
 
   return (
     <div className="flex flex-wrap gap-2">
       <button
         onClick={() => onSelectBook(null)}
-        className={`px-3 py-1.5 rounded-xl text-sm font-semibold border transition-all ${
+        className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all duration-200 ${
           selectedBookId === null
-            ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
-            : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
+            ? 'bg-btn-p-bg text-btn-p-fg border-foreground'
+            : 'bg-transparent text-accents-5 border-border hover:text-foreground hover:border-accents-5'
         }`}
       >
         Todos los Libros
@@ -36,10 +36,10 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
         <button
           key={book.id}
           onClick={() => onSelectBook(book.id)}
-          className={`px-3 py-1.5 rounded-xl text-sm font-semibold border transition-all ${
+          className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all duration-200 ${
             selectedBookId === book.id
-              ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
-              : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
+              ? 'bg-btn-p-bg text-btn-p-fg border-foreground'
+              : 'bg-transparent text-accents-5 border-border hover:text-foreground hover:border-accents-5'
           }`}
         >
           {book.name} ({book.abbreviation})
@@ -48,3 +48,4 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
     </div>
   );
 }
+

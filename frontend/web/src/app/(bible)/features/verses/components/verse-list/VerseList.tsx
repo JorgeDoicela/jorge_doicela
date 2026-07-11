@@ -15,18 +15,18 @@ export const VerseList: React.FC<VerseListProps> = ({ verses, loading, error }) 
     <div className="w-full max-w-4xl mx-auto">
       {loading && (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-foreground"></div>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-center mb-6">
+        <div className="p-4 rounded-md bg-red-500/10 border border-red-500/20 text-red-500 text-sm text-center mb-6">
           {error}
         </div>
       )}
 
       {!loading && verses.length === 0 && (
-        <p className="text-center text-slate-400 py-12">No se encontraron versículos para esta selección.</p>
+        <p className="text-center text-accents-5 text-sm py-12">No se encontraron versículos para esta selección.</p>
       )}
 
       {!loading && verses.length > 0 && (
@@ -39,3 +39,4 @@ export const VerseList: React.FC<VerseListProps> = ({ verses, loading, error }) 
     </div>
   );
 };
+

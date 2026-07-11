@@ -19,15 +19,5 @@
     "eslint": "^9.39.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "sqlite3",
-      "better-sqlite3"
-    ],
-    "overrides": {
-      "@types/react": "^19.0.0",
-      "@types/react-dom": "^19.0.0"
-    }
   }
 }

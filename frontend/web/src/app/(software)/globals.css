@@ -1,26 +1,414 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.theme-software {
+  /* Fondo Neumórfico Claro - Plata */
+  --background: #e0e5ec;
+  --foreground: #09090b;
+
+  /* Modo Claro - Sinergia Glass-Neumorphism (Optimizado para legibilidad y contraste) */
+  --glass-bg-convex: rgba(255, 255, 255, 0.55); /* Más opaco y claro para dar base sólida al texto */
+  --glass-border-convex: rgba(255, 255, 255, 0.85); /* Mayor definición de bordes de vidrio */
+  
+  /* Sombras duales con bisel interno inset superior izquierdo (brillo del borde del vidrio) */
+  --glass-shadow-convex: 
+    7px 7px 18px rgba(163, 177, 198, 0.65), 
+    -7px -7px 18px rgba(255, 255, 255, 0.95),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.9);
+
+  /* CORRECCIÓN FÍSICA HOVER: Sombras más amplias, difusas y tenues (dispersión de luz al elevarse) */
+  --glass-shadow-convex-hover: 
+    12px 12px 28px rgba(163, 177, 198, 0.45), 
+    -12px -12px 28px rgba(255, 255, 255, 0.85),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.95);
+
+  --glass-bg-concave: rgba(224, 229, 236, 0.45);
+  --glass-border-concave: rgba(9, 9, 11, 0.03);
+  --glass-shadow-concave: 
+    inset 4px 4px 8px rgba(163, 177, 198, 0.6), 
+    inset -4px -4px 8px rgba(255, 255, 255, 0.95);
+
+  /* MEJORA ACCESIBILIDAD: Contraste de texto optimizado para legibilidad WCAG AA */
+  --chip-text: #18181b; /* zinc-900 para garantizar legibilidad */
+  --header-title: #09090b;
+  --header-p: #27272a; /* zinc-800 para contraste de lectura */
+  
+  --btn-shadow: 
+    3px 3px 7px rgba(163, 177, 198, 0.55), 
+    -3px -3px 7px rgba(255, 255, 255, 0.95),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.8);
+  --btn-shadow-hover: 
+    5px 5px 12px rgba(163, 177, 198, 0.4), 
+    -5px -5px 12px rgba(255, 255, 255, 0.85),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.9);
+
+  /* Color de cuadrícula técnica en modo claro */
+  --grid-color: rgba(9, 9, 11, 0.04);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.theme-software.dark,
+html.dark .theme-software {
+  /* Fondo Neumórfico Oscuro - Gris Obsidiana / Grafito */
+  --background: #0e0e11;
+  --foreground: #ede8df;
+
+  /* Modo Oscuro - Sinergia Glass-Neumorphism */
+  --glass-bg-convex: rgba(18, 18, 22, 0.5);
+  --glass-border-convex: rgba(255, 255, 255, 0.09);
+
+  /* CORRECCIÓN FÍSICA OSCURO: Offsets simétricos de 10px y mayor contraste en bisel de vidrio */
+  --glass-shadow-convex: 
+    10px 10px 24px rgba(0, 0, 0, 0.95), 
+    -10px -10px 24px rgba(255, 255, 255, 0.04),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.12);
+    
+  /* CORRECCIÓN FÍSICA HOVER OSCURO: Más difuso y atenuado al elevarse, bisel más brillante */
+  --glass-shadow-convex-hover: 
+    14px 14px 32px rgba(0, 0, 0, 0.85), 
+    -14px -14px 32px rgba(255, 255, 255, 0.03),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.18);
+
+  --glass-bg-concave: rgba(6, 6, 8, 0.7);
+  --glass-border-concave: rgba(255, 255, 255, 0.015);
+  --glass-shadow-concave: 
+    inset 5px 5px 12px rgba(0, 0, 0, 0.95), 
+    inset -4px -4px 10px rgba(255, 255, 255, 0.015);
+
+  /* MEJORA ACCESIBILIDAD OSCURO: Colores claros de alto contraste */
+  --chip-text: #f4f4f5; /* zinc-100 */
+  --header-title: #ffffff;
+  --header-p: #fafafa; /* zinc-50 */
+
+  --btn-shadow: 
+    4px 4px 10px rgba(0, 0, 0, 0.8), 
+    -4px -4px 10px rgba(255, 255, 255, 0.015),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.04);
+  --btn-shadow-hover: 
+    6px 6px 16px rgba(0, 0, 0, 0.7), 
+    -6px -6px 16px rgba(255, 255, 255, 0.01),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.08);
+
+  /* Color de cuadrícula técnica en modo oscuro */
+  --grid-color: rgba(255, 255, 255, 0.018);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Cobertura e Inmunidad Absoluta de Pantalla Completa */
+html,
+body,
+.theme-software {
+  background: var(--background) !important;
+  background-color: var(--background) !important;
+  background-image: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
 }
 
 body {
-  background: var(--background);
+  color: var(--foreground) !important;
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* ─── TEXTURAS Y FONDOS DE ALTA TECNOLOGÍA ────────────────────────── */
+
+/* Rejilla Geométrica (Grid Pattern) de Ingeniería */
+.tech-grid-bg {
+  background-image: 
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Contenedor de Orbes de Brillo (Glows) */
+.tech-glow-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Orbes Flotantes de Desenfoque Púrpura (IA) y Cian (Ciberseguridad) */
+.tech-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.12;
+  pointer-events: none;
+  mix-blend-mode: plus-lighter;
+  will-change: transform;
+}
+
+.theme-software:not(.dark) .tech-glow-orb {
+  opacity: 0.12; /* Ajustado para que no ensucie ni oscurezca el fondo claro */
+  mix-blend-mode: normal; /* Fusión limpia y suave sin oscurecer en modo claro */
+  filter: blur(130px);
+}
+
+.orb-violet {
+  background: radial-gradient(circle, #8b5cf6 0%, transparent 75%);
+  width: 600px;
+  height: 600px;
+  top: -120px;
+  left: -80px;
+  animation: float-orb-1 25s infinite alternate ease-in-out;
+}
+
+.orb-cyan {
+  background: radial-gradient(circle, #06b6d4 0%, transparent 75%);
+  width: 700px;
+  height: 700px;
+  bottom: -150px;
+  right: -50px;
+  animation: float-orb-2 30s infinite alternate ease-in-out;
+}
+
+@keyframes float-orb-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(120px, 80px) scale(1.15); }
+}
+
+@keyframes float-orb-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-140px, -90px) scale(1.08); }
+}
+
+/* ─── COMPONENTES SEMÁNTICOS GLASS-NEUMORPHISM PRO ────────────────── */
+
+/* 1. Panel Convexo (Elevado) */
+.glass-convex-panel {
+  background-color: var(--glass-bg-convex);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border-convex);
+  box-shadow: var(--glass-shadow-convex);
+  
+  /* OPTIMIZACIÓN RENDIMIENTO: GPU Acceleration */
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  
+  transition: 
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Panel Convexo Interactivo (Hover + Active) */
+.glass-convex-panel-interactive {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Reflejo de Vidrio en Hover (Barrido Diagonal de Luz) */
+.glass-convex-panel-interactive::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -70%;
+  width: 25%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.16) 30%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0.16) 70%,
+    transparent
+  );
+  transform: rotate(30deg);
+  pointer-events: none;
+  opacity: 0;
+  will-change: left, opacity;
+}
+
+.theme-software.dark .glass-convex-panel-interactive::after {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.04) 30%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 70%,
+    transparent
+  );
+}
+
+.glass-convex-panel-interactive:hover::after {
+  opacity: 1;
+  left: 160%;
+  transition: left 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-in;
+}
+
+.glass-convex-panel-interactive:hover {
+  transform: translateY(-5px) translateZ(0);
+  box-shadow: var(--glass-shadow-convex-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.theme-software:not(.dark) .glass-convex-panel-interactive:hover {
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.glass-convex-panel-interactive:active {
+  transform: translateY(-0.5px) translateZ(0);
+  box-shadow: var(--glass-shadow-convex);
+}
+
+/* 2. Panel Cóncavo (Hundido) */
+.glass-concave-panel {
+  background-color: var(--glass-bg-concave);
+  border: 1px solid var(--glass-border-concave);
+  
+  /* CORRECCIÓN FISICA: Bisel inferior brillante (reflejo de cristal tallado) */
+  box-shadow: 
+    var(--glass-shadow-concave),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.1);
+    
+  transition: 
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-software:not(.dark) .glass-concave-panel {
+  box-shadow: 
+    var(--glass-shadow-concave),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.7);
+}
+
+/* 3. Botón Neumórfico Físico */
+.glass-btn-neumorphic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--glass-bg-convex);
+  border: 1px solid var(--glass-border-convex);
+  box-shadow: var(--btn-shadow);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  
+  /* OPTIMIZACIÓN RENDIMIENTO: GPU Acceleration */
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.glass-btn-neumorphic:hover {
+  transform: translateY(-1.5px) translateZ(0);
+  box-shadow: var(--btn-shadow-hover);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.theme-software.dark .glass-btn-neumorphic:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Presión táctil: se hunde físicamente volviéndose cóncavo */
+.glass-btn-neumorphic:active {
+  transform: translateY(1px) translateZ(0);
+  background-color: var(--glass-bg-concave);
+  border-color: var(--glass-border-concave);
+  
+  /* Bisel brillante inverso para el botón hundido */
+  box-shadow: 
+    var(--glass-shadow-concave),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.1);
+}
+
+.theme-software:not(.dark) .glass-btn-neumorphic:active {
+  box-shadow: 
+    var(--glass-shadow-concave),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.7);
+}
+
+/* 4. Entrada de Texto Neumórfica Cóncava */
+.glass-input-neumorphic {
+  background-color: var(--glass-bg-concave);
+  border: 1px solid var(--glass-border-concave);
+  
+  /* Bisel inferior brillante por defecto */
+  box-shadow: 
+    var(--glass-shadow-concave),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.05);
+    
+  color: var(--foreground);
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-software:not(.dark) .glass-input-neumorphic {
+  box-shadow: 
+    var(--glass-shadow-concave),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.7);
+}
+
+/* CORRECCIÓN INTERACTIVA: El foco incrementa profundidad y resalta bordes en vez de flotar */
+.glass-input-neumorphic:focus {
+  background-color: var(--glass-bg-concave);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    inset 5px 5px 10px rgba(163, 177, 198, 0.65), 
+    inset -5px -5px 10px rgba(255, 255, 255, 0.95);
+}
+
+.theme-software.dark .glass-input-neumorphic:focus {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    inset 6px 6px 14px rgba(0, 0, 0, 0.98), 
+    inset -5px -5px 12px rgba(255, 255, 255, 0.02);
+}
+
+/* ─── INDICADORES LED DE ESTADO ──────────────────────────────────── */
+
+.tech-led {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.tech-led-cyan {
+  background-color: #06b6d4;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+}
+
+.tech-led-green {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+}
+
+.tech-led-violet {
+  background-color: #8b5cf6;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
+}
+
+.tech-led::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: inherit;
+  animation: led-pulse 2s infinite ease-in-out;
+}
+
+@keyframes led-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }

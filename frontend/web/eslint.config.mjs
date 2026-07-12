@@ -2,6 +2,9 @@ import js from "@eslint/js";
 import ts from "typescript-eslint";
 
 const eslintConfig = [
+  {
+    ignores: [".next/**", "node_modules/**", "dist/**"]
+  },
   js.configs.recommended,
   ...ts.configs.recommended,
   {

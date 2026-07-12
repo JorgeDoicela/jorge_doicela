@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
+import { ChevronDown } from 'lucide-react';
 
 interface TranslationSelectorProps {
   selectedTranslationId: number | null;
@@ -15,22 +16,24 @@ export function TranslationSelector({
   const { translations, loading, error } = useTranslations();
 
   if (loading) {
-    return <div className="text-accents-5 text-sm animate-pulse">Cargando versiones...</div>;
+    return (
+      <div className="h-8 w-36 animate-pulse bg-accents-1 border border-accents-2 rounded-md" />
+    );
   }
 
   if (error) {
-    return <div className="text-red-500 text-sm font-medium">Error: {error}</div>;
+    return <div className="text-red-500 text-xs font-mono">Error: {error}</div>;
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="relative inline-block w-full sm:w-auto">
       <select
         value={selectedTranslationId ?? ''}
         onChange={(e) => {
           const val = e.target.value;
           onSelectTranslation(val ? Number(val) : null);
         }}
-        className="px-3 py-1.5 bg-background border border-border rounded-md text-foreground focus:outline-none focus:border-accents-5 text-xs transition-colors duration-200 cursor-pointer"
+        className="w-full sm:w-auto pl-3 pr-8 py-1.5 bg-background border border-accents-2 hover:border-accents-4 text-foreground rounded-md text-xs font-medium focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-all duration-150 cursor-pointer appearance-none select-none"
       >
         <option value="">Todas las Versiones</option>
         {translations.map((translation) => (
@@ -39,6 +42,9 @@ export function TranslationSelector({
           </option>
         ))}
       </select>
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-accents-4">
+        <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.5} />
+      </div>
     </div>
   );
 }

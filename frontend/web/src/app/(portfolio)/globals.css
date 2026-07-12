@@ -1,26 +1,318 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ═══════════════════════════════════════════════════════════════════
+   DARK LUXURY DESIGN SYSTEM — Portfolio Jorge Doicela
+   Modo oscuro: por defecto y universal.
+   Modo claro: activado con class="light" en <html>.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── TOKENS: Dark Luxury (modo oscuro — default) ─────────────────── */
+:root,
+:root[class~="dark"] {
+
+  /* Fondos */
+  --background:      #080705;
+  --surface:         #0e0d0a;
+  --surface-raised:  #141209;
+
+  /* Texto */
+  --foreground:      #ede8df;
+  --muted:           #6b6055;
+
+  /* Paleta Dorada — escala completa */
+  --gold-100:        #f0e4cb;
+  --gold-200:        #d9c49a;
+  --gold-300:        #c5a87a;
+  --gold-400:        #a88a58;
+  --gold-500:        #8a6e3a;
+  --gold-600:        #5c4820;
+
+  /* Bordes */
+  --border:          #1a1812;
+  --border-gold:     #2a2316;
+
+  /* Efectos */
+  --glow-gold:        rgba(197, 168, 122, 0.12);
+  --glow-gold-strong: rgba(197, 168, 122, 0.22);
+  --grain-opacity:    0.032;
 }
 
+/* ─── TOKENS: Light Luxury (modo claro — class="light") ──────────── */
+:root[class~="light"] {
+
+  /* Fondos */
+  --background:      #f7f3ec;
+  --surface:         #ede5d8;
+  --surface-raised:  #e4d9c9;
+
+  /* Texto */
+  --foreground:      #1c1710;
+  --muted:           #7a6a58;
+
+  /* Paleta Dorada — escala completa */
+  --gold-100:        #3d2e14;
+  --gold-200:        #6b4f24;
+  --gold-300:        #9a7038;
+  --gold-400:        #b8924e;
+  --gold-500:        #d4af72;
+  --gold-600:        #e8d4a8;
+
+  /* Bordes */
+  --border:          #d8ccba;
+  --border-gold:     #c8b898;
+
+  /* Efectos */
+  --glow-gold:        rgba(154, 112, 56, 0.10);
+  --glow-gold-strong: rgba(154, 112, 56, 0.20);
+  --grain-opacity:    0.018;
+}
+
+/* ─── MAPEO A TAILWIND v4 ─────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Fondos */
+  --color-background:      var(--background);
+  --color-surface:         var(--surface);
+  --color-surface-raised:  var(--surface-raised);
+
+  /* Texto */
+  --color-foreground:      var(--foreground);
+  --color-muted:           var(--muted);
+
+  /* Dorado — escala completa */
+  --color-gold-100:        var(--gold-100);
+  --color-gold-200:        var(--gold-200);
+  --color-gold-300:        var(--gold-300);
+  --color-gold-400:        var(--gold-400);
+  --color-gold-500:        var(--gold-500);
+  --color-gold-600:        var(--gold-600);
+
+  /* Aliases cortos para uso rápido en JSX */
+  --color-gold-p:          var(--gold-300);
+  --color-gold-s:          var(--gold-400);
+  --color-gold-b:          var(--border-gold);
+
+  /* Bordes */
+  --color-border:          var(--border);
+  --color-border-gold:     var(--border-gold);
+
+  /* Tipografía */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ═══════════════════════════════════════════════════════════════════
+   BASE RESET & BODY
+   ═══════════════════════════════════════════════════════════════════ */
+
+html {
+  height: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
+  min-height: 100%;
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  /* Gradiente radial superior — firma Dark Luxury */
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(197, 168, 122, 0.055) 0%,
+    transparent 70%
+  );
+  background-attachment: fixed;
+}
+
+/* ─── Grain cinematográfico ───────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 240px 240px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLLBAR — Ultra fino, tono dorado
+   ═══════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar        { width: 3px; height: 3px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--border-gold); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-400); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SELECCIÓN DE TEXTO
+   ═══════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background-color: rgba(197, 168, 122, 0.18);
+  color: var(--gold-100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════════════════════════════════════ */
+
+@keyframes gold-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px 1px var(--glow-gold); }
+  50%       { opacity: 0.5; box-shadow: 0 0 10px 2px var(--glow-gold-strong); }
+}
+
+@keyframes gold-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   UTILITIES DARK LUXURY
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Glow permanente */
+.luxury-glow {
+  box-shadow: 0 0 24px 2px var(--glow-gold);
+}
+
+/* Glow en hover */
+.luxury-glow-hover {
+  transition:
+    box-shadow   0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.luxury-glow-hover:hover {
+  box-shadow: 0 0 32px 4px var(--glow-gold);
+  border-color: var(--gold-400) !important;
+}
+
+/* Pulso dorado — indicadores de estado */
+.luxury-pulse {
+  animation: gold-pulse 2.2s ease-in-out infinite;
+}
+
+/* Card base */
+.luxury-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-gold);
+  border-radius: 0.75rem;
+  transition:
+    box-shadow   0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.luxury-card:hover {
+  box-shadow: 0 0 32px 4px var(--glow-gold);
+  border-color: var(--gold-400);
+}
+
+/* Divider dorado */
+.luxury-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border-gold) 30%,
+    var(--gold-400) 50%,
+    var(--border-gold) 70%,
+    transparent
+  );
+  border: none;
+  opacity: 0.6;
+}
+
+/* Texto degradado dorado */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-100) 0%, var(--gold-300) 45%, var(--gold-200) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shimmer skeleton */
+.luxury-shimmer {
+  background: linear-gradient(90deg, var(--surface) 0%, var(--border-gold) 50%, var(--surface) 100%);
+  background-size: 800px 100%;
+  animation: gold-shimmer 1.8s linear infinite;
+}
+
+/* Animaciones de entrada */
+.animate-fade-up { animation: fade-up  0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: fade-in  0.5s ease both; }
+
+/* Input luxury */
+.luxury-input {
+  width: 100%;
+  background-color: var(--background);
+  border: 1px solid var(--border-gold);
+  border-radius: 0.375rem;
+  color: var(--foreground);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  padding: 0.625rem 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.luxury-input::placeholder { color: var(--muted); opacity: 0.5; }
+.luxury-input:focus {
+  border-color: var(--gold-300);
+  box-shadow: 0 0 0 1px var(--gold-300), 0 0 16px 0 var(--glow-gold);
+}
+
+/* Botón luxury */
+.luxury-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background-color: transparent;
+  border: 1px solid var(--gold-300);
+  border-radius: 0.375rem;
+  color: var(--gold-200);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.luxury-btn:hover {
+  background-color: var(--gold-300);
+  color: var(--background);
+  box-shadow: 0 0 20px 2px var(--glow-gold-strong);
+}
+.luxury-btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+/* Badge luxury */
+.luxury-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(197, 168, 122, 0.06);
+  border: 1px solid var(--border-gold);
+  border-radius: 9999px;
+  color: var(--gold-300);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }

@@ -6,24 +6,26 @@ export function ContactForm() {
   const { formData, loading, error, success, handleChange, submitForm } = useContact();
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
-      <h2 className="text-2xl font-bold text-white mb-6 text-center">Envíame un mensaje</h2>
+    <div className="w-full max-w-lg mx-auto bg-surface border border-gold-b rounded-xl p-8 shadow-2xl luxury-glow-hover transition-colors duration-200">
+      <h2 className="text-xl font-light tracking-[0.2em] uppercase text-foreground mb-6 text-center">
+        Envíame un mensaje
+      </h2>
 
       {success && (
-        <div className="mb-6 p-4 rounded-xl bg-emerald-950/50 border border-emerald-800 text-emerald-300 text-sm text-center">
+        <div className="mb-6 p-4 rounded-md bg-gold-p/5 border border-gold-p/20 text-gold-p text-xs font-mono text-center">
           ¡Mensaje enviado con éxito! Te responderé lo antes posible.
         </div>
       )}
 
       {error && (
-        <div className="mb-6 p-4 rounded-xl bg-rose-950/50 border border-rose-800 text-rose-300 text-sm text-center">
+        <div className="mb-6 p-4 rounded-md bg-red-500/5 border border-red-500/20 text-red-400 text-xs font-mono text-center">
           {error}
         </div>
       )}
 
-      <form onSubmit={submitForm} className="space-y-4">
+      <form onSubmit={submitForm} className="space-y-5">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">
+          <label htmlFor="name" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
             Nombre completo
           </label>
           <input
@@ -33,13 +35,13 @@ export function ContactForm() {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm"
             placeholder="John Doe"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">
+          <label htmlFor="email" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
             Correo electrónico
           </label>
           <input
@@ -49,13 +51,13 @@ export function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm"
             placeholder="john@example.com"
           />
         </div>
 
         <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-slate-300 mb-1">
+          <label htmlFor="subject" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
             Asunto
           </label>
           <input
@@ -65,13 +67,13 @@ export function ContactForm() {
             value={formData.subject}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm"
             placeholder="Propuesta de proyecto / Contacto"
           />
         </div>
 
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">
+          <label htmlFor="message" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
             Mensaje
           </label>
           <textarea
@@ -81,7 +83,7 @@ export function ContactForm() {
             value={formData.message}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
+            className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm resize-none"
             placeholder="Escribe tu mensaje aquí..."
           />
         </div>
@@ -89,7 +91,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3.5 bg-gold-p text-foreground hover:bg-background hover:text-gold-p border border-gold-p font-medium tracking-[0.2em] uppercase text-[10px] rounded-md transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Enviando...' : 'Enviar mensaje'}
         </button>

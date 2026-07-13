@@ -16,7 +16,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     ledColorClass = 'tech-led-violet';
     statusText = 'Web SSH Virtual';
   } else if (project.name.toLowerCase().includes('biblia')) {
-    ledColorClass = 'tech-led-green';
+    ledColorClass = 'tech-led-indigo';
     statusText = 'SQLite Sync';
   }
 

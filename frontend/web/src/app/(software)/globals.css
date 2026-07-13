@@ -1,13 +1,32 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════
+   CONFIGURACIÓN Y VARIANTES DE TAILWIND v4
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Forzado de Modo Oscuro Manual por Clase:
+   Sobrescribe el comportamiento por defecto de Tailwind v4 (que escucha al sistema operativo)
+   para sincronizar la variante "dark:" únicamente con la clase ".dark" inyectada en el HTML. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
 .theme-software {
   /* Fondo Neumórfico Claro - Plata */
   --background: #e0e5ec;
   --foreground: #09090b;
 
   /* Modo Claro - Sinergia Glass-Neumorphism (Optimizado para legibilidad y contraste) */
-  --glass-bg-convex: rgba(255, 255, 255, 0.55); /* Más opaco y claro para dar base sólida al texto */
-  --glass-border-convex: rgba(255, 255, 255, 0.85); /* Mayor definición de bordes de vidrio */
+  --glass-bg-convex: rgba(255, 255, 255, 0.55); /* Base de opacidad sólida para dar buen contraste al texto */
+  --glass-border-convex: rgba(255, 255, 255, 0.85); /* Canto exterior brillante del cristal */
+  
+  /* Gradiente lineal diagonal de 135°: Imita la incidencia física de la luz sobre un plano de vidrio */
+  --glass-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.35) 100%);
+  
+  /* backdrop-filter de vidrio claro: Desenfoque estándar sin sobreexposición */
+  --glass-blur: blur(24px) brightness(1.02) saturate(100%);
   
   /* Sombras duales con bisel interno inset superior izquierdo (brillo del borde del vidrio) */
   --glass-shadow-convex: 
@@ -43,35 +62,55 @@
 
   /* Color de cuadrícula técnica en modo claro */
   --grid-color: rgba(9, 9, 11, 0.04);
+
+  /* Colores de acento semánticos para el ecosistema (Modo Claro) */
+  --accent-ia: #8b5cf6;       /* Violeta para IA */
+  --accent-security: #3b82f6; /* Azul Eléctrico para Ciberseguridad (Reemplaza al Cian) */
+  --accent-software: #6366f1; /* Índigo para Software/Biblia (Reemplaza al Verde) */
+  --accent-tutorial: #f59e0b; /* Ámbar para Tutoriales */
+  --accent-blog: #ef4444;     /* Rojo para Blog/Noticias */
 }
 
 .theme-software.dark,
 html.dark .theme-software {
-  /* Fondo Neumórfico Oscuro - Gris Obsidiana / Grafito */
-  --background: #0e0e11;
+  /* Fondo Neumórfico Oscuro - Obsidiana Azulada */
+  --background: #090a0f;
   --foreground: #ede8df;
 
   /* Modo Oscuro - Sinergia Glass-Neumorphism */
-  --glass-bg-convex: rgba(18, 18, 22, 0.5);
-  --glass-border-convex: rgba(255, 255, 255, 0.09);
+  --glass-bg-convex: rgba(17, 20, 32, 0.55);   /* Tono azul/grafito translúcido premium */
+  --glass-border-convex: rgba(255, 255, 255, 0.12); /* Borde de vidrio más definido */
+  
+  /* Gradiente diagonal oscuro: simula refracción interna sobre fondo obsidiana */
+  --glass-bg-gradient: linear-gradient(135deg, rgba(24, 28, 43, 0.65) 0%, rgba(10, 11, 18, 0.45) 100%);
+  
+  /* backdrop-filter retroiluminado: Aclara sutilmente (brightness 1.15) lo que hay detrás
+     para separar el cristal del fondo oscuro y proyectar la cuadrícula con fidelidad */
+  --glass-blur: blur(24px) brightness(1.15) saturate(110%);
 
-  /* CORRECCIÓN FÍSICA OSCURO: Offsets simétricos de 10px y mayor contraste en bisel de vidrio */
+  /* NEUMORFISMO DE ALTO NIVEL EN MODO OSCURO:
+     En lugar de usar sombras claras blancas genéricas (muy chillonas), se emplea un brillo tecnológico
+     bicolor sutil en el lado superior izquierdo que combina Cian (Ciberseguridad) y Violeta (IA). */
   --glass-shadow-convex: 
-    10px 10px 24px rgba(0, 0, 0, 0.95), 
-    -10px -10px 24px rgba(255, 255, 255, 0.04),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.12);
+    8px 8px 24px rgba(0, 0, 0, 0.85),             /* Sombra proyectada profunda */
+    -5px -5px 15px rgba(59, 130, 246, 0.05),     /* Resplandor azul eléctrico equilibrado (5%) */
+    -10px -10px 25px rgba(167, 139, 250, 0.05),   /* Resplandor violeta equilibrado (5%) */
+    inset 1px 1px 0px rgba(255, 255, 255, 0.12), /* Bisel de luz superior izquierdo calibrado */
+    inset -1px -1px 0px rgba(0, 0, 0, 0.6);      /* Sombra de contorno inferior derecho */
     
-  /* CORRECCIÓN FÍSICA HOVER OSCURO: Más difuso y atenuado al elevarse, bisel más brillante */
+  /* CORRECCIÓN FÍSICA HOVER OSCURO: Mayor volumen con halos de color perceptibles pero refinados */
   --glass-shadow-convex-hover: 
-    14px 14px 32px rgba(0, 0, 0, 0.85), 
-    -14px -14px 32px rgba(255, 255, 255, 0.03),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.18);
+    14px 14px 36px rgba(0, 0, 0, 0.9), 
+    -6px -6px 20px rgba(59, 130, 246, 0.09),     /* Resplandor azul eléctrico calibrado en hover (9%) */
+    -12px -12px 30px rgba(167, 139, 250, 0.09),   /* Resplandor violeta calibrado en hover (9%) */
+    inset 1px 1px 0px rgba(255, 255, 255, 0.17),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.7);
 
-  --glass-bg-concave: rgba(6, 6, 8, 0.7);
-  --glass-border-concave: rgba(255, 255, 255, 0.015);
+  --glass-bg-concave: rgba(5, 5, 8, 0.55);
+  --glass-border-concave: rgba(255, 255, 255, 0.012);
   --glass-shadow-concave: 
-    inset 5px 5px 12px rgba(0, 0, 0, 0.95), 
-    inset -4px -4px 10px rgba(255, 255, 255, 0.015);
+    inset 4px 4px 10px rgba(0, 0, 0, 0.9), 
+    inset -4px -4px 10px rgba(255, 255, 255, 0.02);
 
   /* MEJORA ACCESIBILIDAD OSCURO: Colores claros de alto contraste */
   --chip-text: #f4f4f5; /* zinc-100 */
@@ -80,24 +119,31 @@ html.dark .theme-software {
 
   --btn-shadow: 
     4px 4px 10px rgba(0, 0, 0, 0.8), 
-    -4px -4px 10px rgba(255, 255, 255, 0.015),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.04);
+    -3px -3px 8px rgba(167, 139, 250, 0.06),     /* Brillo violeta equilibrado en reposo (6%) */
+    inset 1px 1px 0px rgba(255, 255, 255, 0.07);
   --btn-shadow-hover: 
-    6px 6px 16px rgba(0, 0, 0, 0.7), 
-    -6px -6px 16px rgba(255, 255, 255, 0.01),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08);
+    6px 6px 14px rgba(0, 0, 0, 0.85), 
+    -4px -4px 10px rgba(59, 130, 246, 0.10),     /* Brillo azul eléctrico equilibrado en hover (10%) */
+    inset 1px 1px 0px rgba(255, 255, 255, 0.10);
 
-  /* Color de cuadrícula técnica en modo oscuro */
-  --grid-color: rgba(255, 255, 255, 0.018);
+  /* Color de cuadrícula técnica en modo oscuro (mayor definición) */
+  --grid-color: rgba(255, 255, 255, 0.025);
+
+  /* Colores de acento semánticos para el ecosistema (Modo Oscuro) */
+  --accent-ia: #a78bfa;       /* Violeta brillante */
+  --accent-security: #60a5fa; /* Azul Eléctrico brillante (Reemplaza al cian) */
+  --accent-software: #818cf8; /* Índigo brillante (Reemplaza al Verde) */
+  --accent-tutorial: #fbbf24; /* Ámbar brillante */
+  --accent-blog: #f87171;     /* Rojo brillante */
 }
 
-/* Cobertura e Inmunidad Absoluta de Pantalla Completa */
+/* Cobertura e Inmunidad Absoluta de Pantalla Completa:
+   Mantiene el fondo del sistema cohesivo. OJO: No usar "background-image: none" aquí
+   para evitar la anulación de la rejilla de ingeniería (.tech-grid-bg) en el body. */
 html,
 body,
 .theme-software {
-  background: var(--background) !important;
   background-color: var(--background) !important;
-  background-image: none !important;
   width: 100% !important;
   max-width: 100% !important;
   margin: 0 !important;
@@ -150,41 +196,94 @@ body {
   filter: blur(130px);
 }
 
+.theme-software.dark .tech-glow-orb,
+html.dark .tech-glow-orb {
+  opacity: 0.16; /* Sutil pero visible vibración cromática de fondo */
+  filter: blur(140px);
+}
+
 .orb-violet {
   background: radial-gradient(circle, #8b5cf6 0%, transparent 75%);
-  width: 600px;
-  height: 600px;
-  top: -120px;
-  left: -80px;
-  animation: float-orb-1 25s infinite alternate ease-in-out;
+  width: 800px;
+  height: 800px;
+  top: -160px;
+  left: -120px;
+  animation: float-orb-1 18s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .orb-cyan {
-  background: radial-gradient(circle, #06b6d4 0%, transparent 75%);
-  width: 700px;
-  height: 700px;
-  bottom: -150px;
-  right: -50px;
-  animation: float-orb-2 30s infinite alternate ease-in-out;
+  background: radial-gradient(circle, #2563eb 0%, transparent 75%); /* Azul real puro en lugar de cian */
+  width: 950px;
+  height: 950px;
+  bottom: -200px;
+  right: -100px;
+  animation: float-orb-2 22s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.orb-magenta {
+  background: radial-gradient(circle, #db2777 0%, transparent 75%); /* Rosa magenta digital para matizar la paleta */
+  width: 850px;
+  height: 850px;
+  top: 25%;
+  left: 30%;
+  animation: float-orb-3 26s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animaciones Orbitales de Alta Amplitud (Garantizan presencia y dinamismo cromático en pantalla) */
 @keyframes float-orb-1 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(120px, 80px) scale(1.15); }
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(220px, 110px) scale(1.15) rotate(50deg);
+  }
+  66% {
+    transform: translate(-100px, 180px) scale(0.9) rotate(-30deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
 }
 
 @keyframes float-orb-2 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-140px, -90px) scale(1.08); }
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(-180px, -140px) scale(0.9) rotate(-55deg);
+  }
+  66% {
+    transform: translate(140px, -220px) scale(1.12) rotate(40deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes float-orb-3 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(170px, -130px) scale(1.1) rotate(45deg);
+  }
+  66% {
+    transform: translate(-150px, 110px) scale(0.92) rotate(-50deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
 }
 
 /* ─── COMPONENTES SEMÁNTICOS GLASS-NEUMORPHISM PRO ────────────────── */
 
-/* 1. Panel Convexo (Elevado) */
+/* 1. Panel Convexo (Elevado) - La pieza core del ecosistema.
+   Combina la refracción del backdrop-filter calibrado, el gradiente lumínico
+   del cristal, el borde perimetral brillante y el relieve volumétrico neumórfico. */
 .glass-convex-panel {
-  background-color: var(--glass-bg-convex);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: var(--glass-bg-gradient);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border-convex);
   box-shadow: var(--glass-shadow-convex);
   
@@ -193,7 +292,7 @@ body {
   will-change: transform, box-shadow;
   
   transition: 
-    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -287,7 +386,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--glass-bg-convex);
+  background: var(--glass-bg-gradient);
   border: 1px solid var(--glass-border-convex);
   box-shadow: var(--btn-shadow);
   color: var(--foreground);
@@ -376,18 +475,28 @@ body {
 }
 
 .tech-led-cyan {
-  background-color: #06b6d4;
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+  background-color: var(--accent-security);
+  box-shadow: 0 0 8px var(--accent-security);
 }
 
-.tech-led-green {
-  background-color: #10b981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+.tech-led-indigo {
+  background-color: var(--accent-software);
+  box-shadow: 0 0 8px var(--accent-software);
 }
 
 .tech-led-violet {
-  background-color: #8b5cf6;
-  box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
+  background-color: var(--accent-ia);
+  box-shadow: 0 0 8px var(--accent-ia);
+}
+
+.tech-led-amber {
+  background-color: var(--accent-tutorial);
+  box-shadow: 0 0 8px var(--accent-tutorial);
+}
+
+.tech-led-red {
+  background-color: var(--accent-blog);
+  box-shadow: 0 0 8px var(--accent-blog);
 }
 
 .tech-led::after {

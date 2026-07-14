@@ -136,7 +136,7 @@ Dado que la instancia de AWS Lightsail opera bajo **Debian 13**, se requiere rea
 El backend utiliza la base de datos física SQLite a través del driver `better-sqlite3`, el cual compila extensiones C++ nativas al instalar dependencias. Se debe asegurar la disponibilidad de las siguientes herramientas de desarrollo en el sistema:
 ```bash
 sudo apt update
-sudo apt install -y build-essential python3 g++ make
+sudo apt install -y build-essential python3 g++ make rsync
 ```
 
 ### 2. Instalación de Node.js, npm y pnpm

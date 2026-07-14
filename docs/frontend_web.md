@@ -15,7 +15,7 @@ Para optimizar al máximo los recursos en el VPS de 1 GB de RAM, se ejecuta un �
 
 ### Middleware de Enrutamiento (`src/middleware.ts`)
 
-El archivo [middleware.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/middleware.ts) intercepta las peticiones entrantes y, según el subdominio del host, reescribe de forma transparente la URL interna hacia el grupo de rutas correspondiente:
+El archivo [middleware.ts](../frontend/web/src/middleware.ts) intercepta las peticiones entrantes y, según el subdominio del host, reescribe de forma transparente la URL interna hacia el grupo de rutas correspondiente:
 
 * **Landing Page** (`jorgedoicela.com` o localhost sin subdominio): Sirve el grupo de rutas `(landing)`.
 * **Portfolio** (`portfolio.jorgedoicela.com` o `portfolio.localhost`): Reescribe internamente a `/portfolio` sirviendo el grupo `(portfolio)`.
@@ -28,7 +28,7 @@ Esto permite que, de cara al usuario, cada subdominio funcione de manera indepen
 
 ## 2. Estructura de Directorios (Aislamiento y FSD)
 
-Bajo el directorio [src/app](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app), el código está estructurado en grupos de rutas (carpetas con paréntesis `(nombre)`) que aíslan el alcance de cada subproyecto:
+Bajo el directorio [src/app](../frontend/web/src/app), el código está estructurado en grupos de rutas (carpetas con paréntesis `(nombre)`) que aíslan el alcance de cada subproyecto:
 
 ```text
 frontend/web/src/
@@ -81,16 +81,16 @@ frontend/web/src/
 El frontend se conecta al backend monolítico modular NestJS (`http://localhost:3000` en desarrollo) resolviendo las siguientes interacciones de red a través de hooks y flujos dedicados por subproyecto:
 
 ### Subproyecto Biblia (`bible`)
-* **Versículos**: Consumidos mediante el hook [useVerses.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/features/verses/hooks/useVerses.ts), el cual realiza una petición `GET` a `${NEXT_PUBLIC_API_URL}/bible/verses` enviando parámetros opcionales de filtro `bookId` y `translationId`.
-* **Libros**: Consumidos mediante el hook [useBooks.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/features/books/hooks/useBooks.ts) a través de una petición `GET` a `${NEXT_PUBLIC_API_URL}/bible/books`.
+* **Versículos**: Consumidos mediante el hook [useVerses.ts](../frontend/web/src/app/(bible)/features/verses/hooks/useVerses.ts), el cual realiza una petición `GET` a `${NEXT_PUBLIC_API_URL}/bible/verses` enviando parámetros opcionales de filtro `bookId` y `translationId`.
+* **Libros**: Consumidos mediante el hook [useBooks.ts](../frontend/web/src/app/(bible)/features/books/hooks/useBooks.ts) a través de una petición `GET` a `${NEXT_PUBLIC_API_URL}/bible/books`.
 * **Traducciones**: Consumidas en el selector de traducción del header a través de una petición `GET` a `${NEXT_PUBLIC_API_URL}/bible/translations`.
 
 ### Subproyecto Software (`software`)
-* **Catálogo de Proyectos**: Consumido mediante el hook [useProjects.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(software)/features/projects/hooks/useProjects.ts) que realiza una petición `GET` a `${NEXT_PUBLIC_API_URL}/software/projects`.
+* **Catálogo de Proyectos**: Consumido mediante el hook [useProjects.ts](../frontend/web/src/app/(software)/features/projects/hooks/useProjects.ts) que realiza una petición `GET` a `${NEXT_PUBLIC_API_URL}/software/projects`.
 
 ### Subproyecto Portafolio (`portfolio`)
 * **Formulario de Contacto**: Envía el payload con la información del formulario mediante una petición `POST` a `${NEXT_PUBLIC_API_URL}/portfolio/contact`.
-* **Terminal Virtual SSH**: Mantiene una conexión WebSocket permanente de baja latencia con el backend en `${NEXT_PUBLIC_API_URL}/terminal` (puerto 3000) a través del hook [useTerminalSocket.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(portfolio)/features/terminal/hooks/useTerminalSocket.ts), emitiendo el evento `'execute-command'` y escuchando las respuestas bajo el evento `'terminal-output'`.
+* **Terminal Virtual SSH**: Mantiene una conexión WebSocket permanente de baja latencia con el backend en `${NEXT_PUBLIC_API_URL}/terminal` (puerto 3000) a través del hook [useTerminalSocket.ts](../frontend/web/src/app/(portfolio)/features/terminal/hooks/useTerminalSocket.ts), emitiendo el evento `'execute-command'` y escuchando las respuestas bajo el evento `'terminal-output'`.
 
 ---
 

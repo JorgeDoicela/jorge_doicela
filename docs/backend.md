@@ -10,7 +10,7 @@ Para desplegar de manera eficiente en servidores de recursos limitados (**VPS de
 
 > [!IMPORTANT]
 > **Aislamiento Lógico Estricto:**
-> A pesar de correr bajo el mismo runtime, los módulos [BibleModule](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend/src/bible/bible.module.ts), [SoftwareModule](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend/src/software/software.module.ts) y [PortfolioModule](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend/src/portfolio/portfolio.module.ts) son **completamente independientes**. NINGÚN módulo debe conocer la existencia de otro, importar código de su dominio o cruzar consultas de persistencia. Esto asegura que cualquiera de las carpetas de negocio (ej. `src/bible/`) pueda ser copiada a un servidor NestJS independiente y funcionar autónomamente de forma inmediata.
+> A pesar de correr bajo el mismo runtime, los módulos [BibleModule](../backend/src/bible/bible.module.ts), [SoftwareModule](../backend/src/software/software.module.ts) y [PortfolioModule](../backend/src/portfolio/portfolio.module.ts) son **completamente independientes**. NINGÚN módulo debe conocer la existencia de otro, importar código de su dominio o cruzar consultas de persistencia. Esto asegura que cualquiera de las carpetas de negocio (ej. `src/bible/`) pueda ser copiada a un servidor NestJS independiente y funcionar autónomamente de forma inmediata.
 
 ---
 
@@ -80,7 +80,7 @@ Cada dominio de negocio sigue estrictamente el patrón de **Arquitectura en Capa
 
 ## 5. Componentes y Middlewares Globales (`src/common/` y `main.ts`)
 
-El archivo de arranque [main.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend/src/main.ts) configura políticas y filtros globales para estandarizar el comportamiento del servidor:
+El archivo de arranque [main.ts](../backend/src/main.ts) configura políticas y filtros globales para estandarizar el comportamiento del servidor:
 
 * **Filtro de Excepciones Global (`GlobalExceptionFilter`)**: Captura cualquier error HTTP lanzado en los servicios de forma centralizada y devuelve una respuesta estructurada JSON uniforme, evitando el uso redundante de bloques `try/catch` en los controladores.
 * **Interceptor de Respuestas (`TransformInterceptor`)**: Formatea de forma unificada todas las respuestas exitosas de los endpoints REST en un JSON con estructura `{ success: true, data: ... }`.
@@ -92,7 +92,7 @@ El archivo de arranque [main.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_
 
 ## 6. WebSockets de la Terminal (Portfolio SSH)
 
-El módulo de Portfolio expone una terminal virtual interactiva mediante WebSockets usando el componente [PortfolioGateway](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend/src/portfolio/gateways/portfolio.gateway.ts):
+El módulo de Portfolio expone una terminal virtual interactiva mediante WebSockets usando el componente [PortfolioGateway](../backend/src/portfolio/gateways/portfolio.gateway.ts):
 
 * **Namespace**: `terminal`
 * **Protocolo**: Socket.io (con WebSocket como transporte exclusivo).
@@ -105,7 +105,7 @@ El módulo de Portfolio expone una terminal virtual interactiva mediante WebSock
 
 ## 7. Configuración y Scripts de Desarrollo
 
-Los comandos de ejecución se gestionan a través de los scripts registrados en [package.json](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend/package.json):
+Los comandos de ejecución se gestionan a través de los scripts registrados en [package.json](../backend/package.json):
 
 * **Instalación de Dependencias**:
   ```bash

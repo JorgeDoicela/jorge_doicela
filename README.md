@@ -13,13 +13,14 @@ Este repositorio contiene la arquitectura modular para el desarrollo del Portafo
 
 El monorepo está configurado utilizando los workspaces de pnpm. Cuenta con un backend modular centralizado y un frontend Next.js unificado en el puerto 3001 que administra los subdominios de forma aislada:
 
-* **[backend](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/backend)**: Servidor único NestJS programado como un monolito modular (puerto 3000). Ver [backend.md](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/docs/backend.md).
-* **[frontend/web](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web)**: Único servidor Next.js que ejecuta los cuatro frontends de forma desacoplada y los resuelve mediante subdominios (puerto 3001). Ver [frontend_web.md](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/docs/frontend_web.md):
+* **[backend](backend/)**: Servidor único NestJS programado como un monolito modular (puerto 3000). Ver [backend.md](docs/backend.md).
+* **[frontend/web](frontend/web/)**: Único servidor Next.js que ejecuta los cuatro frontends de forma desacoplada y los resuelve mediante subdominios (puerto 3001). Ver [frontend_web.md](docs/frontend_web.md):
   * **Landing Page**: `jorgedoicela.com`
   * **Portfolio (Terminal)**: `portfolio.jorgedoicela.com`
   * **Bible (Biblia)**: `bible.jorgedoicela.com`
   * **Software (Proyectos)**: `software.jorgedoicela.com`
-* **[frontend/mobile](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/mobile)**: Cliente móvil independiente en React Native / Expo.
+* **[frontend/mobile](frontend/mobile/)**: Cliente móvil independiente en React Native / Expo.
+* **Infraestructura y Despliegue**: Ver [infraestructura.md](docs/infraestructura.md) para el detalle de la configuración de AWS Lightsail, DNS perimetral de Cloudflare y políticas de seguridad SSL/TLS.
 
 ---
 
@@ -54,7 +55,7 @@ Para asegurar que cada módulo sea extraíble a su propio servidor de forma inde
 ## Cómo Empezar
 
 ### Clonar el Proyecto
-Clona el repositorio en tu máquina local e ingresa al directorio del proyecto:
+Clonar el repositorio en la máquina local e ingresar al directorio del proyecto:
 ```bash
 git clone https://github.com/JorgeDoicela/jorge_doicela.git
 cd jorge_doicela
@@ -64,11 +65,11 @@ cd jorge_doicela
 
 #### Windows
 1. **Node.js**: Descarga e instala la versión LTS (18 o superior) desde [nodejs.org](https://nodejs.org/).
-2. **pnpm**: Instálalo ejecutando en tu terminal (CMD o PowerShell):
+2. **pnpm**: Se instala ejecutando en la terminal (CMD o PowerShell):
    ```bash
    npm install -g pnpm
    ```
-3. **Git**: Asegúrate de tener Git instalado y disponible en tu terminal.
+3. **Git**: Asegurar que Git se encuentre instalado y disponible en la terminal.
 
 #### Debian
 1. **Node.js**: Instala la versión 18 o superior. Se recomienda usar un manejador de versiones (como `nvm` o `fnm`).
@@ -108,7 +109,7 @@ Para agregar una nueva librería a un proyecto específico sin ensuciar la raíz
 pnpm --filter <nombre-del-proyecto> add <libreria>
 ```
 
-* **El peligro de instalar en la raíz (Global)**: Si instalas una librería en la raíz del monorepo, todas tus aplicaciones tendrán acceso a ella. Si en el futuro extraes la carpeta de un proyecto (ej. `bible`) a un VPS nuevo, la aplicación fallará porque la librería se quedó registrada en el `package.json` de la raíz vieja, no en el del subproyecto.
+* **El peligro de instalar en la raíz (Global)**: Si se instala una librería en la raíz del monorepo, todas las aplicaciones tendrán acceso a ella. Si en el futuro se extrae la carpeta de un proyecto (ej. `bible`) a un VPS nuevo, la aplicación fallará porque la librería se quedó registrada en el `package.json` de la raíz original, no en el del subproyecto.
 * **La ventaja de `--filter`**: Garantiza aislamiento (se registra únicamente en el subproyecto) y portabilidad perfecta (cada aplicación viaja con su propia lista exacta de librerías para funcionar de forma autónoma).
 
 ### Ejecutar en Desarrollo

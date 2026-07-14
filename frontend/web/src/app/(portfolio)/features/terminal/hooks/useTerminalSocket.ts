@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 
+import { API_URL } from '../../../../config';
+
 export const useTerminalSocket = () => {
   const [history, setHistory] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
@@ -8,7 +10,7 @@ export const useTerminalSocket = () => {
 
   useEffect(() => {
     // Connect to backend namespace 'terminal' on port 3000
-    const socket = io('http://localhost:3000/terminal', {
+    const socket = io(`${API_URL}/terminal`, {
       transports: ['websocket'],
     });
     socketRef.current = socket;

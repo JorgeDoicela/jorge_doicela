@@ -61,7 +61,7 @@ export default function Home() {
         {/* Chip Grabado (Cóncavo) de Titanio */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase mb-6 text-[var(--chip-text)]">
           <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse"></span>
-          Ecosistema Modular
+          Proyecto Modular
         </div>
 
         <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-[var(--header-title)] mb-6 transition-colors duration-400">

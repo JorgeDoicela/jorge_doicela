@@ -63,7 +63,7 @@
   /* Color de cuadrícula técnica en modo claro */
   --grid-color: rgba(9, 9, 11, 0.04);
 
-  /* Colores de acento semánticos para el ecosistema (Modo Claro) */
+  /* Colores de acento semánticos para el proyecto (Modo Claro) */
   --accent-ia: #8b5cf6;       /* Violeta para IA */
   --accent-security: #3b82f6; /* Azul Eléctrico para Ciberseguridad (Reemplaza al Cian) */
   --accent-software: #6366f1; /* Índigo para Software/Biblia (Reemplaza al Verde) */
@@ -129,7 +129,7 @@ html.dark .theme-software {
   /* Color de cuadrícula técnica en modo oscuro (mayor definición) */
   --grid-color: rgba(255, 255, 255, 0.025);
 
-  /* Colores de acento semánticos para el ecosistema (Modo Oscuro) */
+  /* Colores de acento semánticos para el proyecto (Modo Oscuro) */
   --accent-ia: #a78bfa;       /* Violeta brillante */
   --accent-security: #60a5fa; /* Azul Eléctrico brillante (Reemplaza al cian) */
   --accent-software: #818cf8; /* Índigo brillante (Reemplaza al Verde) */
@@ -277,7 +277,7 @@ html.dark .tech-glow-orb {
 
 /* ─── COMPONENTES SEMÁNTICOS GLASS-NEUMORPHISM PRO ────────────────── */
 
-/* 1. Panel Convexo (Elevado) - La pieza core del ecosistema.
+/* 1. Panel Convexo (Elevado) - La pieza core del proyecto.
    Combina la refracción del backdrop-filter calibrado, el gradiente lumínico
    del cristal, el borde perimetral brillante y el relieve volumétrico neumórfico. */
 .glass-convex-panel {

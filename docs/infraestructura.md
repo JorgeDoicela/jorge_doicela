@@ -86,10 +86,10 @@ A nivel de infraestructura en la nube de AWS Lightsail, se implementa una polít
 
 ## 6. Automatización de Procesos (PM2)
 
-Para controlar la ejecución del backend y frontend de forma robusta en el VPS de 1 GB de RAM, se incluye el archivo de configuración [pm2.config.js](../pm2.config.js) en la raíz del monorepo. Este archivo define la administración individual de memoria y comportamiento para evitar saturar el hardware:
+Para controlar la ejecución del backend y frontend de forma robusta en el VPS de 1 GB de RAM, se incluye el archivo de configuración [pm2.config.js](../pm2.config.js) en la raíz del monorepo. Este archivo define la administración individual de memoria y el directorio de trabajo (`cwd`) de cada aplicación para garantizar la correcta resolución de dependencias locales (`node_modules`) en la estructura del monorepo:
 
-* **backend-nest**: Inicia el backend compilado (`backend/dist/main.js`). Limita el consumo a un máximo de 300 MB de RAM antes de forzar un reinicio preventivo (`max_memory_restart`).
-* **frontend-next**: Ejecuta el servidor Next.js en producción (`next start`) apuntando al subproyecto web en el puerto 3001. Limita su consumo a un máximo de 450 MB de RAM.
+* **backend-nest**: Inicia el backend compilado (`./dist/main.js`) situando su directorio de trabajo en `./backend`. Limita el consumo a un máximo de 300 MB de RAM antes de forzar un reinicio preventivo (`max_memory_restart`).
+* **frontend-next**: Ejecuta el servidor Next.js en producción (`next start`) situando su directorio de trabajo en `./frontend/web` sobre el puerto 3001. Limita su consumo a un máximo de 450 MB de RAM.
 
 Ambas aplicaciones se ejecutan en modo `fork` optimizado para entornos de núcleo simple, asegurando la recuperación automática del servicio ante errores o caídas del sistema operativo.
 

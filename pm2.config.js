@@ -2,7 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'backend-nest',
-      script: './backend/dist/main.js',
+      script: './dist/main.js',
+      cwd: './backend',
       instances: 1,
       exec_mode: 'fork',
       watch: false,
@@ -14,7 +15,8 @@ module.exports = {
     {
       name: 'frontend-next',
       script: 'node_modules/next/dist/bin/next',
-      args: 'start ./frontend/web -p 3001',
+      args: 'start -p 3001',
+      cwd: './frontend/web',
       instances: 1,
       exec_mode: 'fork',
       watch: false,

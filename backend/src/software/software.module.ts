@@ -9,7 +9,7 @@ import { SoftwareController } from './controllers/software.controller';
     TypeOrmModule.forRoot({
       name: 'softwareConnection',
       type: 'better-sqlite3',
-      database: 'software.sqlite',
+      database: process.env.DATABASE_SOFTWARE_PATH || 'software.sqlite',
       entities: [Project],
       synchronize: true,
     }),

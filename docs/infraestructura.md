@@ -81,3 +81,89 @@ A nivel de infraestructura en la nube de AWS Lightsail, se implementa una polít
 > [!IMPORTANT]
 > **Acceso SSH Restringido:**
 > Para evitar ataques de fuerza bruta al servicio SSH de Linux, el puerto 22 **nunca** debe dejarse abierto a cualquier origen (`0.0.0.0/0`). Se debe configurar una regla de restricción por dirección IP estática en la consola de Lightsail para que únicamente el administrador pueda gestionar el sistema operativo del VPS.
+
+---
+
+## 6. Automatización de Procesos (PM2)
+
+Para controlar la ejecución del backend y frontend de forma robusta en el VPS de 1 GB de RAM, se incluye el archivo de configuración [pm2.config.js](../pm2.config.js) en la raíz del monorepo. Este archivo define la administración individual de memoria y comportamiento para evitar saturar el hardware:
+
+* **backend-nest**: Inicia el backend compilado (`backend/dist/main.js`). Limita el consumo a un máximo de 300 MB de RAM antes de forzar un reinicio preventivo (`max_memory_restart`).
+* **frontend-next**: Ejecuta el servidor Next.js en producción (`next start`) apuntando al subproyecto web en el puerto 3001. Limita su consumo a un máximo de 450 MB de RAM.
+
+Ambas aplicaciones se ejecutan en modo `fork` optimizado para entornos de núcleo simple, asegurando la recuperación automática del servicio ante errores o caídas del sistema operativo.
+
+---
+
+## 7. Despliegue Continuo (GitHub Actions)
+
+La integración y el despliegue automático del monorepo hacia AWS Lightsail se gestiona mediante el pipeline definido en [.github/workflows/deploy.yml](../.github/workflows/deploy.yml).
+
+### Fases del Pipeline:
+1. **Validación y Compilación**: Cada confirmación de cambios en la rama `main` dispara la instalación de dependencias mediante `pnpm`, realiza la validación de tipados con TypeScript (`typecheck`) y ejecuta la compilación de producción del monorepo.
+2. **Transferencia de Código Segura**: Se transfieren únicamente los archivos fuente limpios hacia el servidor a través de SSH con rsync, previniendo la subida de dependencias temporales de node_modules o bases de datos locales.
+3. **Arranque en Producción**: Se ejecutan las tareas de instalación limpia de dependencias de producción en el VPS y se recargan las aplicaciones en caliente usando PM2.
+
+### Secretos requeridos en el repositorio de GitHub:
+Para la operación del pipeline, se deben configurar las siguientes credenciales en la pestaña de secretos de GitHub (`Repository Secrets`):
+* `SSH_PRIVATE_KEY`: Clave SSH privada asociada para acceder a la instancia del VPS en Lightsail.
+* `REMOTE_HOST`: Dirección IP estática pública de la instancia de AWS Lightsail.
+* `REMOTE_USER`: Nombre del usuario del sistema operativo para la conexión SSH (ej: `ubuntu`, `bitnami`).
+* `TARGET_DIR`: Ruta absoluta en el VPS donde reside la raíz del proyecto.
+
+---
+
+## 8. Configuración de Variables de Entorno (.env)
+
+El proyecto utiliza variables de entorno para modularizar la persistencia y configurar la seguridad en caliente:
+
+* **Backend (`backend/` - plantilla [backend/.env.example](../backend/.env.example))**:
+  - `PORT`: Define el puerto del backend (3000 por defecto).
+  - `NODE_ENV`: Modo de ejecución (`production`).
+  - `DATABASE_PORTFOLIO_PATH` / `DATABASE_BIBLE_PATH` / `DATABASE_SOFTWARE_PATH`: Rutas personalizables en disco para las bases de datos SQLite independientes, facilitando su almacenamiento persistente fuera de la carpeta temporal del código.
+  - `CORS_ORIGINS`: Lista delimitada por comas de los subdominios habilitados para interactuar de forma segura con el API.
+* **Frontend Web (`frontend/web/` - plantilla [frontend/web/.env.example](../frontend/web/.env.example))**:
+  - `PORT`: Define el puerto del frontend (3001 por defecto).
+  - `NEXT_PUBLIC_API_URL`: URL pública central de acceso a las APIs expuestas por el backend.
+
+---
+
+## 9. Preparación del Sistema Operativo (Debian 13 Trixie)
+
+Dado que la instancia de AWS Lightsail opera bajo **Debian 13**, se requiere realizar la preparación del sistema para garantizar la compatibilidad con binarios nativos y la persistencia de procesos:
+
+### 1. Herramientas de Compilación (Requerido para `better-sqlite3`)
+El backend utiliza la base de datos física SQLite a través del driver `better-sqlite3`, el cual compila extensiones C++ nativas al instalar dependencias. Se debe asegurar la disponibilidad de las siguientes herramientas de desarrollo en el sistema:
+```bash
+sudo apt update
+sudo apt install -y build-essential python3 g++ make
+```
+
+### 2. Instalación de Node.js, npm y pnpm
+Dado que Debian 13 (Trixie) incluye Node.js v20 de forma nativa en sus repositorios oficiales, se puede instalar directamente junto al gestor de paquetes `npm`:
+1. **Instalar Node.js y npm**:
+   ```bash
+   sudo apt install -y nodejs npm
+   ```
+2. **Instalar pnpm**:
+   Se debe instalar globalmente para la gestión de dependencias del monorepo:
+   ```bash
+   sudo npm install -g pnpm
+   ```
+
+### 3. Persistencia de Procesos con systemd (PM2)
+Debian utiliza **systemd** para gestionar el arranque y apagado de servicios de fondo. Para asegurar que PM2 y las aplicaciones (backend y frontend) se inicien automáticamente ante cualquier reinicio programado o caída inesperada del VPS:
+1. **Generar el Script de Inicio**:
+   Ejecutar el comando de configuración de inicio automático:
+   ```bash
+   pm2 startup systemd
+   ```
+   *(Este comando imprimirá en pantalla una directiva `sudo env PATH=...`. Se debe copiar y ejecutar dicha línea exacta en la terminal para registrar el servicio en systemd).*
+2. **Guardar el Estado del Servidor**:
+   Una vez levantados los procesos del monorepo (`backend-nest` y `frontend-next`) mediante PM2, se debe guardar la lista de tareas en ejecución:
+   ```bash
+   pm2 save
+   ```
+   Esto congela la lista de procesos activos y garantiza su restauración automática por parte de systemd en el arranque de la máquina.
+
+

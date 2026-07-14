@@ -65,3 +65,7 @@ coverage/
 # Deployment / Hosting
 .vercel
 .serverless/
+
+# Local SQLite databases
+*.sqlite
+*.sqlite-journal

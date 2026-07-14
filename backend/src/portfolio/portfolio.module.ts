@@ -11,7 +11,7 @@ import { ContactController } from './controllers/contact.controller';
     TypeOrmModule.forRoot({
       name: 'portfolioConnection',
       type: 'better-sqlite3',
-      database: 'portfolio.sqlite',
+      database: process.env.DATABASE_PORTFOLIO_PATH || 'portfolio.sqlite',
       entities: [ContactMessage],
       synchronize: true,
     }),

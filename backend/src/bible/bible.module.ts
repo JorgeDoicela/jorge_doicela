@@ -12,7 +12,7 @@ import { TranslationsModule } from './translations/translations.module';
     TypeOrmModule.forRoot({
       name: 'bibleConnection',
       type: 'better-sqlite3',
-      database: 'bible.sqlite',
+      database: process.env.DATABASE_BIBLE_PATH || 'bible.sqlite',
       entities: [Verse, Book, Translation],
       synchronize: true,
     }),

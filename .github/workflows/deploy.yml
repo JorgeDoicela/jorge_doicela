@@ -1,0 +1,65 @@
+name: Integración y Despliegue Continuo (CI/CD)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener el código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Obtener caché de dependencias de pnpm
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Validar tipos de TypeScript
+        run: pnpm run typecheck
+
+      - name: Compilar backend y frontend
+        run: pnpm run build
+
+      - name: Desplegar archivos compilados a AWS Lightsail
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzc --delete"
+          SOURCE: "/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.TARGET_DIR }}
+          EXCLUDE: "/node_modules/, /dist/, /out/, /.next/, /.git/, /.github/, /backend/node_modules/, /frontend/web/node_modules/, *.sqlite, *.sqlite-journal"
+
+      - name: Ejecutar tareas de inicio y reiniciar PM2 por SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            pnpm install --prod --frozen-lockfile
+            pnpm run build
+            pm2 restart pm2.config.js || pm2 start pm2.config.js
+            pm2 save

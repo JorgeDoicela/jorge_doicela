@@ -26,7 +26,11 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   // Enable CORS for Next.js frontends
-  app.enableCors();
+  app.enableCors({
+    origin: process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(',')
+      : true,
+  });
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);

@@ -7,17 +7,17 @@ export interface Book {
   testament: 'OT' | 'NT';
 }
 
+import { API_URL } from '../../../../config';
+
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch(`${apiUrl}/bible/books`);
+        const res = await fetch(`${API_URL}/bible/books`);
         if (!res.ok) {
           throw new Error('No se pudieron cargar los libros');
         }
@@ -31,7 +31,7 @@ export function useBooks() {
     };
 
     void fetchBooks();
-  }, [apiUrl]);
+  }, []);
 
   return { books, loading, error };
 }

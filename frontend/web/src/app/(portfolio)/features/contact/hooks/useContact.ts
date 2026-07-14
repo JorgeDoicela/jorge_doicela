@@ -7,6 +7,8 @@ export interface ContactFormData {
   message: string;
 }
 
+import { API_URL } from '../../../../config';
+
 export function useContact() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
@@ -17,8 +19,6 @@ export function useContact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -34,7 +34,7 @@ export function useContact() {
     setSuccess(false);
 
     try {
-      const response = await fetch(`${apiUrl}/portfolio/contact`, {
+      const response = await fetch(`${API_URL}/portfolio/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

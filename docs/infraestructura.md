@@ -139,31 +139,139 @@ sudo apt update
 sudo apt install -y build-essential python3 g++ make rsync
 ```
 
-### 2. Instalación de Node.js, npm y pnpm
-Dado que Debian 13 (Trixie) incluye Node.js v20 de forma nativa en sus repositorios oficiales, se puede instalar directamente junto al gestor de paquetes `npm`:
-1. **Instalar Node.js y npm**:
+### 2. Instalación de Node.js v22 y npm
+Para garantizar la compatibilidad con las directivas del pipeline de CI/CD, se requiere actualizar Node.js a la versión 22 LTS:
+1. **Configurar el Repositorio de NodeSource**:
+   ```bash
+   curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+   ```
+2. **Instalar Node.js y el gestor de paquetes npm**:
    ```bash
    sudo apt install -y nodejs npm
    ```
-2. **Instalar pnpm**:
-   Se debe instalar globalmente para la gestión de dependencias del monorepo:
+3. **Instalar pnpm y pm2 globalmente**:
    ```bash
-   sudo npm install -g pnpm
+   sudo npm install -g pnpm pm2
    ```
 
-### 3. Persistencia de Procesos con systemd (PM2)
-Debian utiliza **systemd** para gestionar el arranque y apagado de servicios de fondo. Para asegurar que PM2 y las aplicaciones (backend y frontend) se inicien automáticamente ante cualquier reinicio programado o caída inesperada del VPS:
-1. **Generar el Script de Inicio**:
-   Ejecutar el comando de configuración de inicio automático:
+### 3. Configuración de Memoria de Intercambio (Swap)
+Dado que la compilación de recursos y la instalación en monorepos requiere un consumo elevado de memoria que excede la RAM física disponible (1 GB), se debe habilitar un archivo de intercambio (Swap) de 2 GB para servir como RAM virtual en el disco de estado sólido (SSD):
+1. **Crear el archivo de intercambio de 2 GB**:
+   ```bash
+   sudo fallocate -l 2G /swapfile
+   ```
+2. **Restringir los permisos del archivo por seguridad** (únicamente el superusuario root debe tener acceso de lectura y escritura):
+   ```bash
+   sudo chmod 600 /swapfile
+   ```
+3. **Formatear el archivo como espacio de swap**:
+   ```bash
+   sudo mkswap /swapfile
+   ```
+4. **Activar la memoria swap en el sistema**:
+   ```bash
+   sudo swapon /swapfile
+   ```
+5. **Hacer que el montaje sea persistente** ante reinicios del VPS añadiendo la entrada al archivo `/etc/fstab`:
+   ```bash
+   echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+   ```
+   *(Esto previene bloqueos del kernel de Linux y cancelaciones imprevistas por falta de memoria RAM durante la ejecución de `pnpm install` o tareas de compilación).*
+
+### 4. Configuración del Servidor Web (Nginx como Proxy Inverso)
+Nginx actúa como el punto de entrada HTTPS perimetral seguro en el servidor. Este intercepta el puerto 443, realiza la validación criptográfica de los certificados SSL de Cloudflare y distribuye las peticiones internamente:
+1. **Instalar el servidor Nginx**:
+   ```bash
+   sudo apt install -y nginx
+   ```
+2. **Crear el archivo del bloque de servidor (Server Block)**:
+   ```bash
+   sudo nano /etc/nginx/sites-available/jorgedoicela.com
+   ```
+3. **Plantilla de Configuración Limpia (Optimizado para Debian 13)**:
+   ```nginx
+   # Servidor HTTP: Redirección forzada hacia HTTPS
+   server {
+       listen 80;
+       listen [::]:80;
+       server_name jorgedoicela.com *.jorgedoicela.com;
+       return 301 https://$host$request_uri;
+   }
+
+   # Servidor HTTPS: Cifrado SSL y Proxy Inverso
+   server {
+       listen 443 ssl;
+       listen [::]:443 ssl;
+       http2 on;
+       server_name jorgedoicela.com *.jorgedoicela.com;
+
+       # Rutas de los Certificados de Origen de Cloudflare
+       ssl_certificate /etc/ssl/certs/origin.pem;
+       ssl_certificate_key /etc/ssl/private/private.key;
+
+       # Parámetros recomendados de SSL
+       ssl_protocols TLSv1.2 TLSv1.3;
+       ssl_prefer_server_ciphers on;
+
+       # 1. API Backend REST
+       location ~ ^/(bible|software|portfolio)/ {
+           proxy_pass http://127.0.0.1:3000;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       }
+
+       # 2. Conexiones WebSocket de la Terminal (Socket.io)
+       location /socket.io/ {
+           proxy_pass http://127.0.0.1:3000;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection "Upgrade";
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       }
+
+       # 3. Next.js Frontend (Landing Page y Subproyectos)
+       location / {
+           proxy_pass http://127.0.0.1:3001;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       }
+   }
+   ```
+4. **Habilitar el bloque y reiniciar Nginx**:
+   ```bash
+   # Enlazar la configuración para activarla
+   sudo ln -s /etc/nginx/sites-available/jorgedoicela.com /etc/nginx/sites-enabled/
+
+   # Validar la sintaxis técnica del archivo
+   sudo nginx -t
+
+   # Recargar el servicio web para aplicar los cambios
+   sudo systemctl restart nginx
+   ```
+
+### 5. Persistencia de Procesos con systemd (PM2)
+Para garantizar que los servicios de fondo se mantengan activos tras reinicios o mantenimientos:
+1. **Generar y registrar el script en systemd**:
    ```bash
    pm2 startup systemd
    ```
-   *(Este comando imprimirá en pantalla una directiva `sudo env PATH=...`. Se debe copiar y ejecutar dicha línea exacta en la terminal para registrar el servicio en systemd).*
-2. **Guardar el Estado del Servidor**:
-   Una vez levantados los procesos del monorepo (`backend-nest` y `frontend-next`) mediante PM2, se debe guardar la lista de tareas en ejecución:
+   *(Se debe copiar y ejecutar en consola el comando de registro `sudo env PATH=...` impreso en pantalla por PM2).*
+2. **Guardar el listado de procesos estables**:
    ```bash
    pm2 save
    ```
-   Esto congela la lista de procesos activos y garantiza su restauración automática por parte de systemd en el arranque de la máquina.
+   Esto guarda el estado en `/home/admin/.pm2/dump.pm2` para su levantamiento automático por systemd en el booteo.
 
 

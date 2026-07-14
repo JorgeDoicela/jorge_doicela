@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Verse } from '../types';
 
+import { API_URL } from '../../../../config';
+
 export function useVerses() {
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -9,13 +11,11 @@ export function useVerses() {
   const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
   const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
   const fetchVerses = useCallback(async (bookId: number | null, translationId: number | null) => {
     setLoading(true);
     setError(null);
     try {
-      let url = `${apiUrl}/bible/verses`;
+      let url = `${API_URL}/bible/verses`;
       const params = new URLSearchParams();
       
       if (bookId !== null) {
@@ -41,7 +41,7 @@ export function useVerses() {
     } finally {
       setLoading(false);
     }
-  }, [apiUrl]);
+  }, []);
 
   useEffect(() => {
     let active = true;

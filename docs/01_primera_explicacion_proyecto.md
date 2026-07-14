@@ -1,8 +1,10 @@
 # Arquitectura Interna de Software: NestJS y Next.js (Versión Definitiva)
 
-Este documento define la estructura y las reglas arquitectónicas para el ecosistema del Portafolio, Biblia y Software, desplegado en un VPS inicial de 1 GB de RAM, con miras a escalar a una arquitectura de servicios independientes.
+Este documento define la estructura y las reglas arquitectónicas para el proyecto del Portafolio, Biblia y Software, desplegado en un VPS inicial de 1 GB de RAM, con miras a escalar a una arquitectura de servicios independientes.
 
-Se ha optado por un Monorepo Puro sin paquetes compartidos, priorizando el aislamiento absoluto (desacoplamiento total) por encima del principio DRY (Don't Repeat Yourself).
+> [!IMPORTANT]
+> **Aislamiento Lógico vs. Consolidación Física:**
+> El proyecto está compuesto por **proyectos 100% independientes y desacoplados**. La única razón por la que comparten los mismos procesos en ejecución (NestJS en puerto 3000 y Next.js en puerto 3001) es la limitación física de **1 GB de RAM** en el VPS. Ejecutar procesos de Node.js por separado para cada aplicación saturaría la memoria del servidor. Por ello, se agrupan en tiempo de ejecución bajo runtimes consolidados, pero el código, los estilos CSS y los datos deben tratarse estrictamente como cajas negras separadas sin comunicación mutua.
 
 ---
 
@@ -14,43 +16,79 @@ Cada módulo de NestJS se dividirá estrictamente en tres capas:
 
 1. **Capa de Presentación (Controladores / Gateways)**: Recibe peticiones HTTP o WebSockets. Solo valida que la petición esté bien formateada y delega el trabajo. No contiene lógica.
 2. **Capa de Lógica de Negocio (Servicios)**: El cerebro que procesa las reglas de negocio. Aquí ocurren los cálculos, validaciones complejas y las decisiones.
-3. **Capa de Acceso a Datos (Repositorios / ORMs)**: Se conecta a la base de datos de forma agnóstica (ej. usando Prisma o TypeORM).
+3. **Capa de Acceso a Datos (Repositorios / ORMs)**: Se conecta a la base de datos de forma agnóstica (ej. usando Prisma o TypeORM)
 
----
+## 2. El Frontend: Next.js (Arquitectura Basada en Componentes y Subdominios)
 
-## 2. El Frontend: Next.js (Arquitectura Basada en Componentes)
+Next.js and React son frameworks flexibles. En este proyecto, se ha adoptado un esquema **Multi-Tenant/Multi-Domain** en un único servidor y un patrón de diseño basado en funcionalidades (**Feature-Sliced Design / Colocación por Funcionalidades**).
 
-Next.js y React son "Cero Opinionados". Se utilizará una Arquitectura Basada en Componentes y Funcionalidades (Feature-Sliced Design).
+### Enrutamiento e Intercepción de Subdominios
 
-Se agrupará el código por su contexto. Por ejemplo, todo lo relacionado a versículos irá en su propia carpeta con sus componentes, hooks y llamadas a la API correspondientes, en lugar de separar por "tipo de archivo" (una carpeta para todos los hooks, otra para todos los componentes, etc.).
+Para evitar levantar múltiples instancias de servidores web que consumirían excesiva RAM en el VPS, se utiliza un único servidor Next.js que reescribe dinámicamente las rutas entrantes basándose en el subdominio del host mediante el archivo [middleware.ts](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/middleware.ts):
+
+* **Landing Page principal** (`jorgedoicela.com` o localhost sin subdominio): Se sirve directamente de forma convencional (`NextResponse.next()`).
+* **Subdominio Portfolio** (`portfolio.*`): Se reescribe internamente a `/portfolio` y es gestionado por la carpeta `(portfolio)`.
+* **Subdominio Biblia** (`bible.*`): Se reescribe internamente a `/bible` y es gestionado por la carpeta `(bible)`.
+* **Subdominio Software** (`software.*`): Se reescribe internamente a `/software` y es gestionado por la carpeta `(software)`.
+
+### Aislamiento de Estilos y Configuración CSS
+
+Cada subproyecto dentro del frontend web cuenta con su propio archivo `globals.css` local (por ejemplo, [frontend/web/src/app/(bible)/globals.css](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/globals.css)). Los layouts independientes importan únicamente su archivo de estilos específico. Esto previene de forma absoluta la contaminación cruzada o colisiones de clases globales de Tailwind CSS v4.
+
+### Colocación de Código (FSD)
+
+Se agrupa el código estrictamente por su contexto funcional en directorios `features/`. Por ejemplo, todo lo relacionado con versículos bíblicos se encapsula bajo `(bible)/features/verses/`, el cual contiene:
+- `components/`: Componentes gráficos locales de la funcionalidad (ej. `VerseList.tsx`).
+- `hooks/`: Lógica de datos y llamadas de red asociadas (ej. `useVerses.ts`).
+- `types.ts`: Tipados TypeScript locales.
+
+De este modo se evita crear carpetas técnicas genéricas globales (como una única carpeta `components` o `hooks` para todo el proyecto), manteniendo la portabilidad e independencia de cada módulo.
 
 ---
 
 ## 3. La Estructura del Monorepo (Aislamiento Puro)
 
-Para garantizar que ningún proyecto dependa de otro y que la migración futura sea instantánea, se utilizará una estructura de Workspaces limpia. No habrá capa de paquetes compartidos. Las interfaces de TypeScript (ej. User, Verse) se definirán manualmente tanto en el backend como en su respectivo frontend.
+Para garantizar que ningún proyecto dependa de otro y que la migración futura sea instantánea, se utiliza una estructura de Workspaces limpia. No existe una capa de paquetes compartidos. Las interfaces de TypeScript (ej. `Project`, `Verse`) se definen de forma duplicada tanto en el backend como en el frontend para evitar acoplamientos.
 
 ```text
 jorge_doicela/ (Monorepo)
 ├── package.json (Configuración maestra de Workspaces)
 │
+├── docs/ (Toda la documentación técnica del proyecto)
+│   ├── 01_primera_explicacion_proyecto.md
+│   ├── backend.md            # Documentación específica del backend
+│   └── frontend_web.md       # Documentación específica del frontend
+│
 ├── frontend/
-│   └── web/ (Un único proyecto Next.js en puerto 3001)
-│       └── src/app/
-│           ├── (landing)/     <-- Landing Page Principal (jorgedoicela.com)
-│           ├── (portfolio)/   <-- Portfolio (portfolio.jorgedoicela.com)
-│           ├── (bible)/       <-- Biblia (bible.jorgedoicela.com)
-│           └── (software)/    <-- Software (software.jorgedoicela.com)
+│   ├── web/ (Un único proyecto Next.js en puerto 3001)
+│   │   ├── src/
+│   │   │   ├── middleware.ts   # Intercepta y reescribe subdominios
+│   │   │   └── app/
+│   │   │       ├── (landing)/     <-- Landing Page Principal (jorgedoicela.com)
+│   │   │       ├── (portfolio)/   <-- Portfolio (portfolio.jorgedoicela.com)
+│   │   │       │   ├── portfolio/page.tsx
+│   │   │       │   ├── features/terminal/
+│   │   │       │   └── globals.css
+│   │   │       ├── (bible)/       <-- Biblia (bible.jorgedoicela.com)
+│   │   │       │   ├── bible/page.tsx
+│   │   │       │   ├── features/verses/
+│   │   │       │   └── globals.css
+│   │   │       └── (software)/    <-- Software (software.jorgedoicela.com)
+│   │   │           ├── software/page.tsx
+│   │   │           ├── features/projects/
+│   │   │           └── globals.css
+│   │
+│   └── mobile/ (Cliente de React Native / Expo)
 │
 └── backend/ (Un solo servidor NestJS en puerto 3000)
-    └── src/
-        ├── app.module.ts (Monolito modular consolidado)
-        ├── portfolio/
-        ├── bible/
-        └── software/
+    ├── src/
+    │   ├── app.module.ts (Monolito modular consolidado)
+    │   ├── portfolio/ (WebSockets de la terminal)
+    │   ├── bible/     (Endpoints REST de la Biblia)
+    │   └── software/  (Endpoints REST de Proyectos de Software)
 ```
 
-**Ventaja de esta estructura**: Si mañana se extrae la Biblia a otro VPS, simplemente se copian la carpeta `frontend/web/src/app/(bible)/` y la carpeta `backend/src/bible/`. Al no existir acoplamientos ni dependencias cruzadas entre las carpetas de dominios, la migración es directa e independiente.
+**Ventaja de esta estructura**: Si en el futuro se desea migrar la Biblia a un VPS independiente debido a un incremento de carga, simplemente se copia la carpeta de rutas físicas del frontend `frontend/web/src/app/(bible)/` y la carpeta modular del backend `backend/src/bible/`. La migración será transparente y no requerirá desenredar dependencias ni romper el resto de servicios.
 
 ---
 
@@ -58,7 +96,7 @@ jorge_doicela/ (Monorepo)
 
 Aclaración arquitectónica: En este contexto, "Microservicios" no implica arquitecturas masivas con Kubernetes, Kafka o enrutamiento complejo en la nube. Se refiere estrictamente a **Servicios Independientes**: la capacidad de tomar una carpeta, ponerla en un nuevo VPS (ej. cuando se escale a 2 GB), y que funcione de forma autónoma sin depender del servidor original.
 
-Para lograr esto sin romper el sistema, el servidor NestJS actual (que corre como un único proceso de Node.js para ahorrar RAM) debe programarse como un Monolito Modular, aplicando 3 Reglas de Oro:
+Para lograr esto sin acoplamientos, el servidor NestJS actual (que corre consolidado en un único proceso de Node.js exclusivamente para ahorrar memoria en el VPS de 1 GB de RAM) debe programarse como un Monolito Modular, aplicando 3 Reglas de Oro:
 
 ### Regla 1: Cero Acoplamiento de Código (Aislamiento de Dominio)
 
@@ -69,10 +107,10 @@ Prohibido cruzar importaciones. El módulo de la Biblia no puede saber que el m�
 
 ### Regla 2: Aislamiento de Datos (Bases de Datos Separadas)
 
-Bajo ningún concepto se mezclarán tablas de distintos dominios en la misma base de datos física o lógica.
+Bajo ningún concepto se mezclarán tablas de distintos dominios en la misma base de datos física o lógica. Aunque compartan el servidor debido a la limitación de 1 GB de RAM del VPS, el aislamiento de almacenamiento debe ser total:
 
-* **Fase 1 (SQLite)**: Archivos separados (`bible.sqlite` y `software.sqlite`).
-* **Fase 2 (PostgreSQL - VPS 2GB)**: Bases de datos lógicas separadas dentro del mismo motor (`db_bible` y `db_software`).
+* **Fase 1 (SQLite)**: Archivos de base de datos físicos independientes (`bible.sqlite`, `software.sqlite` y `portfolio.sqlite`).
+* **Fase 2 (PostgreSQL - VPS 2GB)**: Bases de datos lógicas separadas dentro del mismo motor (`db_bible`, `db_software` y `db_portfolio`).
 
 ### Regla 3: Configuración Independiente
 
@@ -96,7 +134,7 @@ Para asegurar la estabilidad del proyecto y prepararlo para escalar a un entorno
 
 ### 5.3 Logging Estructurado (Pino)
 
-El ecosistema de Node.js ofrece varias opciones (Winston, Bunyan, Pino), pero se elige Pino (mediante `nestjs-pino`) como la herramienta definitiva a largo plazo, sin importar si el servidor tiene 1 GB o escala a recursos superiores.
+El entorno de Node.js ofrece varias opciones (Winston, Bunyan, Pino), pero se elige Pino (mediante `nestjs-pino`) como la herramienta definitiva a largo plazo, sin importar si el servidor tiene 1 GB o escala a recursos superiores.
 
 **Justificación Arquitectónica (Alineación con Cloud/SaaS)**:
 
@@ -140,7 +178,7 @@ src/
 
 ## Decisión de ORM: ¿TypeORM o Prisma?
 
-Para el ecosistema que estamos construyendo (Portafolio, Biblia y Software aislados en 1GB de RAM), la elección oficial debe ser **TypeORM**.
+Para el proyecto que estamos construyendo (Portafolio, Biblia y Software aislados en 1GB de RAM), la elección oficial debe ser **TypeORM**.
 
 Aquí te explico por qué Prisma, a pesar de ser más moderno, es una mala idea para tu caso, y por qué TypeORM brilla aquí.
 

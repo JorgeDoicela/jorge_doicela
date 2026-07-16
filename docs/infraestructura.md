@@ -54,7 +54,7 @@ Para garantizar la confidencialidad de la información y la integridad de la ses
 ### Capa 2: Servidor de Origen (Cloudflare -> AWS Lightsail)
 * **Certificado de Origen (Origin Certificate)**: Se emite un certificado SSL gratuito firmado por la entidad de certificación de origen de Cloudflare para los hosts `jorgedoicela.com` y `*.jorgedoicela.com` (con validez de hasta 15 años).
 * **Instalación local**: Este certificado de origen (`origin.pem`) y su clave privada asociada (`private.key`) se instalan localmente en el servidor web (Nginx o Apache) del VPS.
-* **Seguridad**: Esto asegura que el servidor AWS Lightsail solo responda ante conexiones que provengan legítimamente de los servidores perimetrales de Cloudflare, rechazando conexiones HTTPS directas externas al proxy.
+* **Seguridad (Authenticated Origin Pulls)**: Se habilita la validación mutua TLS en Nginx usando la CA pública de Cloudflare (`cloudflare.crt`). De esta manera, el puerto 443 del servidor de origen solo responderá a peticiones firmadas criptográficamente por Cloudflare, bloqueando e invalidando cualquier intento de conexión directa por dirección IP desde el handshake TLS.
 
 ---
 
@@ -74,13 +74,13 @@ A nivel de infraestructura en la nube de AWS Lightsail, se implementa una polít
 
 | Aplicación / Protocolo | Puerto | Origen Autorizado | Propósito |
 | :--- | :--- | :--- | :--- |
-| **HTTP** | `80` | Cualquier origen (`0.0.0.0/0`) | Redirección inicial hacia HTTPS |
-| **HTTPS** | `443` | Cualquier origen (`0.0.0.0/0`) | Tráfico web cifrado principal |
-| **SSH** | `22` | **Restringido por IP** (`<TU_IP_ESTATICA_PERSONAL>`) | Acceso administrativo a consola segura |
+| **HTTPS** | `443` | Cualquier origen (`0.0.0.0/0`) | Tráfico web cifrado principal (Filtrado por Cloudflare en Nginx) |
+| **SSH** | `22` | Cualquier origen (`0.0.0.0/0` / `::/0`) | Acceso administrativo y despliegue CI/CD (GitHub Actions) |
 
 > [!IMPORTANT]
-> **Acceso SSH Restringido:**
-> Para evitar ataques de fuerza bruta al servicio SSH de Linux, el puerto 22 **nunca** debe dejarse abierto a cualquier origen (`0.0.0.0/0`). Se debe configurar una regla de restricción por dirección IP estática en la consola de Lightsail para que únicamente el administrador pueda gestionar el sistema operativo del VPS.
+> **Acceso SSH Blindado por Llaves Criptográficas (Cero Contraseñas):**
+> Para conciliar el despliegue automático desde los servidores dinámicos de GitHub Actions y la seguridad, el puerto 22 se mantiene abierto perimetralmente en AWS Lightsail, pero se implementa una política estricta de **cero contraseñas** (`PasswordAuthentication no`) en el VPS. Únicamente las conexiones que presenten llaves criptográficas autorizadas (`authorized_keys`) pueden acceder al sistema, neutralizando por completo los ataques de fuerza bruta.
+> El puerto 80 (HTTP) se ha cerrado por completo en el firewall de Lightsail, ya que Cloudflare gestiona la redirección HTTP a HTTPS en su propio Edge.
 
 ---
 
@@ -208,6 +208,17 @@ Nginx actúa como el punto de entrada HTTPS perimetral seguro en el servidor. Es
        # Rutas de los Certificados de Origen de Cloudflare
        ssl_certificate /etc/ssl/certs/origin.pem;
        ssl_certificate_key /etc/ssl/private/private.key;
+
+       # Verificación de Origen Autenticado (Cloudflare Authenticated Origin Pulls)
+       ssl_client_certificate /etc/ssl/certs/cloudflare.crt;
+       ssl_verify_client on;
+
+       # Si no envía el certificado de Cloudflare, colgar la conexión inmediatamente
+       error_page 496 =444 @cerrar_conexion;
+
+       location @cerrar_conexion {
+           return 444;
+       }
 
        # Parámetros recomendados de SSL
        ssl_protocols TLSv1.2 TLSv1.3;

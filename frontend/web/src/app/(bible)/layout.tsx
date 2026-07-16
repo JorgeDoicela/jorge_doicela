@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Biblia Modular",
   description: "Módulo de Biblia con soporte de modo claro y oscuro al estilo Vercel.com",
+  icons: {
+    icon: "/bible/logo/logo_color.png",
+  },
 };
 
 export default function RootLayout({

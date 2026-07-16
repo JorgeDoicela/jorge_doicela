@@ -94,7 +94,26 @@ El frontend se conecta al backend monolítico modular NestJS (`http://localhost:
 
 ---
 
-## 4. Desarrollo Local y Scripts
+## 4. Gestión de Assets Estáticos Aislados
+
+Para mantener el aislamiento lógico absoluto y facilitar una futura migración independiente, los recursos estáticos (imágenes y videos) se organizan en subdirectorios específicos dentro del directorio unificado `public/` en la raíz del frontend:
+
+* **Landing**: `public/landing/`
+* **Portfolio**: `public/portfolio/`
+* **Biblia**: `public/bible/`
+* **Software**: `public/software/`
+
+Dado que el middleware (`src/middleware.ts`) excluye de la reescritura de subdominios cualquier petición con punto (`.`), todas las solicitudes a extensiones estáticas se dirigen directamente a la carpeta `public/` global de Next.js.
+
+### Regla de Oro para el Consumo:
+Para evitar colisiones entre proyectos en el runtime compartido, toda referencia a imágenes o videos debe prefijarse explícitamente con la subcarpeta del proyecto:
+* `<img src="/portfolio/images/profile.jpg" />`
+* `<video src="/portfolio/videos/demo.mp4" />`
+* `<img src="/bible/cover.png" />`
+
+---
+
+## 5. Desarrollo Local y Scripts
 
 ### Subdominios de Desarrollo
 Para probar el comportamiento de los subdominios localmente sin necesidad de configurar un servidor DNS local, puedes usar el puerto local con la sintaxis de localhost:

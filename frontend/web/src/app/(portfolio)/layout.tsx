@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Jorge Doicela — Portfolio",
   description: "Portafolio interactivo de Jorge Doicela. Desarrollador de Software.",
+  icons: {
+    icon: "/portfolio/logo/logo_color.png",
+  },
 };
 
 export default function RootLayout({

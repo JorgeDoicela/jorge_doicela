@@ -80,7 +80,7 @@ export default function Home() {
 
       {/* Pie de página minimalista - Grabado */}
       <footer className="relative z-10 mt-24 px-6 py-2.5 rounded-full glass-concave-panel text-zinc-500 text-xs tracking-wider uppercase">
-        Jorge Doicela &copy; {new Date().getFullYear()} &middot; <span className="text-zinc-400 dark:text-zinc-500">SQLite Aislado</span>
+        Jorge Doicela &copy; {new Date().getFullYear()}
       </footer>
     </div>
   );

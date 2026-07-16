@@ -6,11 +6,13 @@ import { useTerminalSocket } from '../hooks/useTerminalSocket';
 export const TerminalConsole: React.FC = () => {
     const { history, sendCommand, isConnected } = useTerminalSocket();
     const [input, setInput] = useState('');
-    const terminalEndRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
     }, [history]);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -51,7 +53,10 @@ export const TerminalConsole: React.FC = () => {
             </div>
 
             {/* Output history */}
-            <div className="h-[400px] overflow-y-auto pr-2 space-y-2 select-text whitespace-pre-wrap leading-relaxed text-foreground/80 scrollbar-thin scrollbar-thumb-gold-b">
+            <div
+                ref={containerRef}
+                className="h-[400px] overflow-y-auto pr-2 space-y-2 select-text whitespace-pre-wrap leading-relaxed text-foreground/80 scrollbar-thin scrollbar-thumb-gold-b"
+            >
                 {history.map((line, index) => {
                     // If this was a command sent by the user, render it with prompt prefix
                     if (
@@ -68,7 +73,6 @@ export const TerminalConsole: React.FC = () => {
                     }
                     return <div key={index} className="text-foreground/60">{line}</div>;
                 })}
-                <div ref={terminalEndRef} />
             </div>
 
             {/* Input row */}
@@ -80,7 +84,6 @@ export const TerminalConsole: React.FC = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 bg-transparent text-foreground border-none outline-none focus:ring-0 p-0 font-mono placeholder-gold-s/30"
-                    autoFocus
                     placeholder="Escribe un comando o ayuda..."
                 />
             </form>

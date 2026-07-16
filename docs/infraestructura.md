@@ -100,9 +100,9 @@ Ambas aplicaciones se ejecutan en modo `fork` optimizado para entornos de núcle
 La integración y el despliegue automático del monorepo hacia AWS Lightsail se gestiona mediante el pipeline definido en [.github/workflows/deploy.yml](../.github/workflows/deploy.yml).
 
 ### Fases del Pipeline:
-1. **Validación y Compilación**: Cada confirmación de cambios en la rama `main` dispara la instalación de dependencias mediante `pnpm`, realiza la validación de tipados con TypeScript (`typecheck`) y ejecuta la compilación de producción del monorepo.
-2. **Transferencia de Código Segura**: Se transfieren únicamente los archivos fuente limpios hacia el servidor a través de SSH con rsync, previniendo la subida de dependencias temporales de node_modules o bases de datos locales.
-3. **Arranque en Producción**: Se ejecutan las tareas de instalación limpia de dependencias de producción en el VPS y se recargan las aplicaciones en caliente usando PM2.
+1. **Validación y Compilación**: Cada confirmación de cambios en la rama `main` dispara la instalación de dependencias mediante `pnpm`, realiza la validación de tipados con TypeScript (`typecheck`) y ejecuta la compilación de producción del monorepo en los servidores de GitHub.
+2. **Transferencia de Código Segura**: Se transfieren los archivos del proyecto y las carpetas de compilación de producción (`backend/dist` y `frontend/web/.next`) hacia el servidor mediante SSH con rsync, previniendo la subida de dependencias temporales de `node_modules` o bases de datos locales.
+3. **Arranque en Producción**: Se ejecutan las tareas de instalación limpia de dependencias de producción en el VPS y se recargan las aplicaciones en caliente usando PM2. La compilación no se ejecuta en el VPS, aliviando el consumo de CPU y RAM (crucial para el límite de 1 GB).
 
 ### Secretos requeridos en el repositorio de GitHub:
 Para la operación del pipeline, se deben configurar las siguientes credenciales en la pestaña de secretos de GitHub (`Repository Secrets`):

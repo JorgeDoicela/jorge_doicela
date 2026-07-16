@@ -49,7 +49,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.TARGET_DIR }}
-          EXCLUDE: "/node_modules/, /dist/, /out/, /.next/, /.git/, /.github/, /backend/node_modules/, /frontend/web/node_modules/, *.sqlite, *.sqlite-journal"
+          EXCLUDE: "/node_modules/, /out/, /.git/, /.github/, /backend/node_modules/, /frontend/web/node_modules/, *.sqlite, *.sqlite-journal"
 
       - name: Ejecutar tareas de inicio y reiniciar PM2 por SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -60,6 +60,5 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             pnpm install --prod --frozen-lockfile
-            pnpm run build
             pm2 restart pm2.config.js || pm2 start pm2.config.js
             pm2 save

@@ -284,12 +284,12 @@ export default function LandingPage() {
                         {/* Botones de contacto con fondos e interacciones suavizadas */}
                         <div className="w-full md:w-72 flex flex-col justify-center gap-2">
                             <a
-                                href="mailto:jorge@doicela.com"
+                                href="mailto:jorge.doicela.m@gmail.com"
                                 className="flex items-center justify-between px-4 py-3 rounded-xl border border-card-border bg-btn-sec hover:bg-btn-sec-hover text-xs font-mono text-text-muted hover:text-foreground transition-all duration-200"
                             >
                                 <span className="flex items-center gap-2">
                                     <Mail className="w-4 h-4 text-indigo-500/70" />
-                                    <span>jorge@doicela.com</span>
+                                    <span>jorge.doicela.m@gmail.com</span>
                                 </span>
                                 <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                             </a>

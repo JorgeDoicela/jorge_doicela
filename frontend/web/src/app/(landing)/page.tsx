@@ -21,6 +21,7 @@ export default function LandingPage() {
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
     const [mounted, setMounted] = useState(false);
     const [time, setTime] = useState('');
+    const [greeting, setGreeting] = useState('¡Bienvenido y bienvenida!');
     const [links, setLinks] = useState({
         portfolio: 'https://portfolio.jorgedoicela.com',
         bible: 'https://bible.jorgedoicela.com',
@@ -51,6 +52,27 @@ export default function LandingPage() {
             });
         }
 
+        // Función para actualizar el saludo basado en la hora local de Quito
+        const updateGreeting = () => {
+            const options: Intl.DateTimeFormatOptions = {
+                timeZone: 'America/Guayaquil',
+                hour: 'numeric',
+                hour12: false
+            };
+            const formatter = new Intl.DateTimeFormat([], options);
+            const hour = parseInt(formatter.format(new Date()), 10);
+            
+            let salute = '¡Bienvenido y bienvenida!';
+            if (hour >= 6 && hour < 12) {
+                salute = '¡Bienvenido y bienvenida! Buenos días';
+            } else if (hour >= 12 && hour < 19) {
+                salute = '¡Bienvenido y bienvenida! Buenas tardes';
+            } else {
+                salute = '¡Bienvenido y bienvenida! Buenas noches';
+            }
+            setGreeting(salute);
+        };
+
         // Función para actualizar reloj local (Quito es UTC-5)
         const updateTime = () => {
             const options: Intl.DateTimeFormatOptions = {
@@ -64,8 +86,12 @@ export default function LandingPage() {
             setTime(formatter.format(new Date()));
         };
 
+        updateGreeting();
         updateTime();
-        const interval = setInterval(updateTime, 1000);
+        const interval = setInterval(() => {
+            updateTime();
+            updateGreeting();
+        }, 1000);
         return () => clearInterval(interval);
     }, []);
 
@@ -92,143 +118,173 @@ export default function LandingPage() {
                 <div className="absolute top-[10%] left-[10%] w-[60%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/10 blur-[130px] transition-colors duration-300"></div>
                 <div className="absolute bottom-[10%] right-[10%] w-[60%] h-[40%] rounded-full bg-violet-500/5 dark:bg-violet-500/10 blur-[130px] transition-colors duration-300"></div>
             </div>
-
             {/* Header Superior - Perfectamente Alineado con el Ancho del Grid */}
-            <header className="w-full max-w-5xl flex justify-between items-center mb-16 border-b border-card-border/40 pb-8 px-2 md:px-0">
+            <header className="w-full max-w-5xl flex justify-between items-center mb-8 border-b border-card-border/40 pb-6 px-2 md:px-0">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground bg-gradient-to-r from-foreground via-foreground/90 to-text-subtitle bg-clip-text">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground bg-gradient-to-r from-foreground via-foreground/90 to-text-subtitle bg-clip-text">
                         Jorge Doicela
                     </h1>
-                    <p className="text-xs md:text-sm text-text-subtitle font-mono tracking-widest uppercase mt-0.5">
+                    <p className="text-[10px] md:text-xs text-text-subtitle font-mono tracking-widest uppercase mt-0.5">
                         Desarrollo de Software & Creación de Productos Digitales
                     </p>
                 </div>
 
-                {/* Botón de Alternar Tema con Efectos Hover Refinados */}
-                <button
-                    onClick={toggleTheme}
-                    className="p-3 rounded-full border border-card-border bg-card text-foreground hover:bg-card-border/70 hover:border-card-hover-border active:scale-95 transition-all duration-300 shadow-sm cursor-pointer"
-                    aria-label="Alternar tema"
-                >
-                    {theme === 'dark' ? (
-                        <Sun className="w-4.5 h-4.5 text-zinc-400 hover:text-amber-400 transition-colors duration-300" />
-                    ) : (
-                        <Moon className="w-4.5 h-4.5 text-zinc-500 hover:text-indigo-600 transition-colors duration-300" />
-                    )}
-                </button>
+                <div className="flex items-center gap-6">
+                    {/* Widget de Hora Local Minimalista */}
+                    <div className="hidden sm:flex flex-col items-end text-right font-mono">
+                        <span className="text-xs text-foreground tracking-widest">{time || '--:--:--'}</span>
+                        <span className="text-[8px] text-text-subtitle uppercase tracking-widest mt-0.5">Quito, Ecuador</span>
+                    </div>
+
+                    {/* Botón de Alternar Tema con Efectos Hover Refinados */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-3 rounded-full border border-card-border bg-card text-foreground hover:bg-card-border/70 hover:border-card-hover-border active:scale-95 transition-all duration-300 shadow-sm cursor-pointer"
+                        aria-label="Alternar tema"
+                    >
+                        {theme === 'dark' ? (
+                            <Sun className="w-4.5 h-4.5 text-zinc-400 hover:text-amber-400 transition-colors duration-300" />
+                        ) : (
+                            <Moon className="w-4.5 h-4.5 text-zinc-500 hover:text-indigo-600 transition-colors duration-300" />
+                        )}
+                    </button>
+                </div>
             </header>
 
-            {/* Bento Grid Principal */}
-            <main className="w-full max-w-5xl z-10 flex-grow flex flex-col justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-auto w-full">
+            {/* Contenido Principal */}
+            <main className="w-full max-w-5xl z-10 flex-grow flex flex-col gap-6 justify-center">
 
-                    {/* Card 1: Biblia (Ancha, Cita con estilo Serif clásico y fondo cálido marfil en modo claro) */}
+                {/* Tarjeta de Bienvenida & Perfil (Estática de Cristal al Inicio) */}
+                <div className="static-glass-card p-8 rounded-[2rem] flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-start md:items-center shadow-sm min-h-[160px] w-full">
+                    <div className="flex-1 flex flex-col gap-2">
+                        <span className="text-[10px] font-mono text-indigo-500 dark:text-indigo-400 tracking-widest uppercase font-medium">
+                            {greeting}
+                        </span>
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                            Página Personal
+                        </h2>
+                    </div>
+                    <div className="flex-[2] max-w-2xl">
+                        <p className="text-text-muted text-xs md:text-sm leading-relaxed font-light">
+                            Te doy la bienvenida a mi espacio digital. Soy desarrollador de software y estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad, residiendo en Quito. <strong className="font-semibold text-foreground">Por sobre todas las cosas, soy cristiano y creyente en Dios</strong>, y mi propósito es crear tecnología de excelencia que no solo solucione problemas complejos, sino que edifique a la comunidad y sea de utilidad para las personas, todo para la gloria de Dios.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Grid de Experiencias Digitales (Tarjetas de Cristal Esmerilado) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+
+                    {/* Card 1: Biblia */}
                     <a
                         href={links.bible}
-                        className="bento-card group md:col-span-2 p-8 rounded-[2rem] border flex flex-col md:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
+                        className="interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
                     >
-                        <div className="flex flex-col justify-between flex-1 pr-0 md:pr-4">
+                        <div className="flex flex-col justify-between flex-1 pr-0 sm:pr-4">
                             <div>
                                 <div className="flex items-center gap-2 mb-4 text-text-subtitle">
                                     <BookOpen className="w-4 h-4" />
-                                    <span className="text-[10px] font-mono tracking-widest uppercase">Plataforma de Lectura</span>
+                                    <span className="text-[10px] font-mono tracking-widest uppercase">Estudios & Recursos Bíblicos</span>
                                 </div>
                                 <h2 className="text-2xl font-semibold text-foreground mb-3 group-hover:text-accent-color transition-colors duration-200">
                                     La Biblia
                                 </h2>
                                 <p className="text-text-muted text-xs md:text-sm leading-relaxed font-light">
-                                    Un espacio digital minimalista y libre de distracciones concebido para la lectura y el estudio reflexivo de las Sagradas Escrituras. Permite navegar por los libros y comparar al instante diferentes traducciones clásicas.
+                                    Un ecosistema completo concebido para el estudio teológico, la evangelización y el crecimiento espiritual. Explora estudios bíblicos, libros, noticias y guías de ayuda espiritual creados para la gloria de Dios.
                                 </p>
                             </div>
                             <div className="mt-8 flex items-center text-xs text-foreground font-medium tracking-wider gap-1 group-hover:text-text-subtitle transition-colors duration-200">
-                                <span>Comenzar lectura</span>
+                                <span>Explorar recursos</span>
                                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                             </div>
                         </div>
 
-                        {/* Bloque Visual de Cita - Mismo gris claro / Oscuro integrado en modo oscuro */}
-                        <div className="w-full md:w-56 bg-inner-card border border-inner-card-border rounded-2xl p-6 flex flex-col justify-center items-center font-serif text-text-muted text-center shadow-inner relative transition-colors duration-300">
-                            <span className="absolute top-2 left-4 text-3xl font-serif text-amber-200 dark:text-zinc-800 pointer-events-none">“</span>
-                            <p className="text-xs md:text-sm italic leading-relaxed text-foreground font-light">
+                        {/* Bloque Visual de Cita */}
+                        <div className="w-full sm:w-52 bg-inner-card border border-inner-card-border rounded-2xl p-6 flex flex-col justify-center items-center font-serif text-text-muted text-center shadow-inner relative transition-colors duration-350">
+                            <span className="absolute top-2 left-4 text-3xl font-serif text-indigo-500/10 pointer-events-none">“</span>
+                            <p className="text-xs md:text-sm italic leading-relaxed text-foreground font-light font-serif">
                                 Lámpara es a mis pies tu palabra, y lumbrera a mi camino.
                             </p>
-                            <span className="text-[10px] font-mono tracking-wider text-text-subtitle mt-3 block not-italic uppercase">Salmos 119:105</span>
+                            <span className="text-[9px] font-mono tracking-wider text-text-subtitle mt-3 block not-italic uppercase">Salmos 119:105</span>
                         </div>
                     </a>
 
-                    {/* Card 2: Software (Ancha, Visualización del Catálogo real de Proyectos con fondo pulido) */}
+                    {/* Card 2: Software */}
                     <a
                         href={links.software}
-                        className="bento-card group md:col-span-2 p-8 rounded-[2rem] border flex flex-col md:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
+                        className="interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
                     >
-                        <div className="flex flex-col justify-between flex-1 pr-0 md:pr-4">
+                        <div className="flex flex-col justify-between flex-1 pr-0 sm:pr-4">
                             <div>
                                 <div className="flex items-center gap-2 mb-4 text-text-subtitle">
                                     <Code className="w-4 h-4" />
-                                    <span className="text-[10px] font-mono tracking-widest uppercase">Galería de Aplicaciones</span>
+                                    <span className="text-[10px] font-mono tracking-widest uppercase">Portal de Tecnología</span>
                                 </div>
                                 <h2 className="text-2xl font-semibold text-foreground mb-3 group-hover:text-accent-color transition-colors duration-200">
-                                    Proyectos & Sistemas
+                                    Software & Noticias
                                 </h2>
                                 <p className="text-text-muted text-xs md:text-sm leading-relaxed font-light">
-                                    Un catálogo con las principales soluciones interactivas, herramientas y plataformas web que he desarrollado. Aplicaciones optimizadas enfocadas en resolver necesidades de forma fluida.
+                                    Un espacio dedicado a la publicación de noticias de software, últimas tendencias en inteligencia artificial, cultura DevSecOps, ciberseguridad y análisis técnicos de ingeniería de sistemas.
                                 </p>
                             </div>
                             <div className="mt-8 flex items-center text-xs text-foreground font-medium tracking-wider gap-1 group-hover:text-text-subtitle transition-colors duration-200">
-                                <span>Ver aplicaciones</span>
+                                <span>Entrar al portal</span>
                                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                             </div>
                         </div>
 
-                        {/* Listado de proyectos destacados - Fondo sutil adaptativo */}
-                        <div className="w-full md:w-56 bg-inner-card border border-inner-card-border rounded-2xl p-6 flex flex-col justify-between shadow-inner transition-colors duration-300">
+                        {/* Listado de destacados */}
+                        <div className="w-full sm:w-52 bg-inner-card border border-inner-card-border rounded-2xl p-6 flex flex-col justify-between shadow-inner transition-colors duration-350">
                             <span className="text-[9px] font-mono text-text-subtitle uppercase tracking-widest border-b border-card-border/40 pb-2 w-full text-center">Destacados</span>
                             <div className="flex-grow flex flex-col justify-center gap-2.5 my-2 text-[10.5px] font-mono text-text-muted">
                                 <div className="flex justify-between border-b border-card-border/20 pb-1.5">
-                                    <span className="text-foreground font-medium">01 / Biblia App</span>
-                                    <span className="text-text-subtitle text-[9px]">Lectura</span>
+                                    <span className="text-foreground font-medium">01 / Modelos & IA</span>
+                                    <span className="text-text-subtitle text-[9px]">Noticias</span>
                                 </div>
                                 <div className="flex justify-between border-b border-card-border/20 pb-1.5">
-                                    <span className="text-foreground font-medium">02 / DIITRA Web</span>
-                                    <span className="text-text-subtitle text-[9px]">Ciencia</span>
+                                    <span className="text-foreground font-medium">02 / DevSecOps</span>
+                                    <span className="text-text-subtitle text-[9px]">Cultura</span>
                                 </div>
                                 <div className="flex justify-between pb-0.5">
-                                    <span className="text-foreground font-medium">03 / Portafolio</span>
-                                    <span className="text-text-subtitle text-[9px]">Consola</span>
+                                    <span className="text-foreground font-medium">03 / Ciberseguridad</span>
+                                    <span className="text-text-subtitle text-[9px]">Defensa</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
-                    {/* Card 3: Portafolio (Ancha, Composición de Secciones) */}
+                    {/* Card 3: Portafolio */}
                     <a
                         href={links.portfolio}
-                        className="bento-card group md:col-span-2 p-8 rounded-[2rem] border flex flex-col md:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px] overflow-hidden"
+                        className="interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px] overflow-hidden"
                     >
                         <div className="flex flex-col justify-between flex-1">
                             <div>
-                                <h2 className="text-xl font-medium text-foreground mb-2">
-                                    Portafolio Interactivo
+                                <div className="flex items-center gap-2 mb-4 text-text-subtitle">
+                                    <Cpu className="w-4 h-4" />
+                                    <span className="text-[10px] font-mono tracking-widest uppercase">Portafolio Profesional</span>
+                                </div>
+                                <h2 className="text-2xl font-semibold text-foreground mb-3 group-hover:text-accent-color transition-colors duration-200">
+                                    Trayectoria & Perfil
                                 </h2>
-                                <p className="text-text-muted text-xs md:text-sm font-light max-w-sm">
-                                    Descubre mi trayectoria profesional, historial laboral y formación académica de una forma completamente interactiva ingresando comandos en una consola web en tiempo real.
+                                <p className="text-text-muted text-xs md:text-sm font-light max-w-sm leading-relaxed">
+                                    Un recorrido completo por mi experiencia laboral, formación académica y proyectos desarrollados. Explora mi trayectoria de forma visual o interactúa mediante la consola virtual.
                                 </p>
                             </div>
 
                             <div className="mt-8 flex items-center text-xs text-foreground font-medium tracking-wider gap-1 group-hover:text-text-subtitle transition-colors duration-200">
-                                <span>Explorar mi perfil</span>
+                                <span>Explorar portafolio</span>
                                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                             </div>
                         </div>
 
                         {/* Listado de secciones */}
-                        <div className="w-full md:w-56 flex flex-col justify-center gap-3 border-t md:border-t-0 md:border-l border-card-border/60 pt-4 md:pt-0 md:pl-6 font-mono text-xs text-text-muted">
+                        <div className="w-full sm:w-52 flex flex-col justify-center gap-3 border-t sm:border-t-0 sm:border-l border-card-border/60 pt-4 sm:pt-0 sm:pl-6 font-mono text-xs text-text-muted">
                             <div className="flex items-center justify-between group-hover:text-foreground transition-colors duration-200">
-                                <span>01 / Proyectos</span>
+                                <span>01 / Proyectos & Skills</span>
                                 <span className="text-[10px] text-text-subtitle font-bold">→</span>
                             </div>
                             <div className="flex items-center justify-between group-hover:text-foreground transition-colors duration-200">
-                                <span>02 / Trayectoria</span>
+                                <span>02 / Trayectoria & Exp</span>
                                 <span className="text-[10px] text-text-subtitle font-bold">→</span>
                             </div>
                             <div className="flex items-center justify-between group-hover:text-foreground transition-colors duration-200">
@@ -238,51 +294,24 @@ export default function LandingPage() {
                         </div>
                     </a>
 
-                    {/* Card 4: Reloj Dinámico (Centrado y Pulido) */}
-                    <div className="bento-card p-8 rounded-[2rem] border flex flex-col justify-between shadow-sm min-h-[200px] relative overflow-hidden">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-text-subtitle font-mono tracking-widest uppercase">Hora Local</span>
-                            <Clock className="w-4 h-4 text-zinc-400" />
-                        </div>
-
-                        <div className="my-auto flex flex-col items-center text-center justify-center py-2">
-                            <div className="text-3xl md:text-4xl font-light tracking-widest text-foreground font-mono">
-                                {time || '--:--:--'}
-                            </div>
-                            <span className="text-[9px] text-text-subtitle font-mono mt-1.5 uppercase tracking-wider">Quito, Ecuador / UTC-5</span>
-                        </div>
-
-                        <div className="pt-2 border-t border-card-border/40 text-[9px] text-text-muted font-mono tracking-wider text-center">
-                            ECUADOR
-                        </div>
-                    </div>
-
-                    {/* Card 5: Filosofía / Enfoque */}
-                    <div className="bento-card p-8 rounded-[2rem] border flex flex-col justify-between shadow-sm min-h-[200px]">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-text-subtitle font-mono tracking-widest uppercase">Mi Enfoque</span>
-                            <Compass className="w-4 h-4 text-zinc-400" />
-                        </div>
-
-                        <div className="my-4">
-                            <p className="text-xs leading-relaxed text-text-muted font-light">
-                                Crear soluciones sencillas a problemas complejos. Priorizar la claridad, el rendimiento y la facilidad de uso para que el software sea verdaderamente valioso.
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Card 6: Conectar / Redes (Botones con fondo adaptativo suave en modo claro) */}
-                    <div className="bento-card md:col-span-2 p-8 rounded-[2rem] border flex flex-col md:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[140px]">
+                    {/* Card 4: Contacto */}
+                    <div className="interactive-glass-card p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px]">
                         <div className="flex flex-col justify-between flex-1">
                             <div>
-                                <span className="text-[10px] text-text-subtitle font-mono tracking-widest uppercase block mb-1">Contacto</span>
-                                <h3 className="text-lg font-medium text-foreground">Conectar con Jorge</h3>
+                                <div className="flex items-center gap-2 mb-4 text-text-subtitle">
+                                    <Mail className="w-4 h-4" />
+                                    <span className="text-[10px] font-mono tracking-widest uppercase">Canal de Contacto</span>
+                                </div>
+                                <h3 className="text-2xl font-semibold text-foreground mb-3">Conectar con Jorge</h3>
+                                <p className="text-text-muted text-xs md:text-sm font-light max-w-sm">
+                                    Si tienes una idea, proyecto o simplemente deseas conversar sobre desarrollo de software, no dudes en contactarme.
+                                </p>
                             </div>
                             <span className="text-[9px] text-text-subtitle font-mono tracking-wider uppercase mt-4 md:mt-0">Canales directos</span>
                         </div>
 
-                        {/* Botones de contacto con fondos e interacciones suavizadas */}
-                        <div className="w-full md:w-72 flex flex-col justify-center gap-2">
+                        {/* Botones de contacto */}
+                        <div className="w-full sm:w-64 flex flex-col justify-center gap-2">
                             <a
                                 href="mailto:jorge.doicela.m@gmail.com"
                                 className="flex items-center justify-between px-4 py-3 rounded-xl border border-card-border bg-btn-sec hover:bg-btn-sec-hover text-xs font-mono text-text-muted hover:text-foreground transition-all duration-200"
@@ -308,47 +337,65 @@ export default function LandingPage() {
                                 </span>
                                 <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                             </a>
+                            <a
+                                href="https://www.tiktok.com/@jorge.doicela"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between px-4 py-3 rounded-xl border border-card-border bg-btn-sec hover:bg-btn-sec-hover text-xs font-mono text-text-muted hover:text-foreground transition-all duration-200"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <svg className="w-4 h-4 text-pink-500/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                                    </svg>
+                                    <span>tiktok.com/@jorge.doicela</span>
+                                </span>
+                                <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+                            </a>
                         </div>
                     </div>
 
-                    {/* Card 7: Especialidades (Ancha, con cajitas de alta legibilidad e iconos de alto contraste) */}
-                    <div className="bento-card md:col-span-2 p-8 rounded-[2rem] border flex flex-col md:flex-row gap-6 justify-between items-center shadow-sm min-h-[140px]">
+                    {/* Card 5: Especialidades / Áreas de Práctica (Estática de Cristal) */}
+                    <div className="static-glass-card p-8 rounded-[2rem] flex flex-col md:flex-row gap-6 justify-between items-center shadow-sm min-h-[180px] md:col-span-2">
                         <div className="flex flex-col justify-between h-full flex-1">
                             <div>
                                 <div className="flex items-center gap-2 mb-2 text-text-subtitle">
-                                    <Layers className="w-4 h-4 animate-pulse" />
+                                    <Layers className="w-4 h-4" />
                                     <span className="text-[10px] font-mono tracking-widest uppercase">Áreas de Práctica</span>
                                 </div>
-                                <h3 className="text-lg font-medium text-foreground">Servicios Profesionales</h3>
-                                <p className="text-text-muted text-xs font-light mt-1">
-                                    Desarrollo de software de extremo a extremo, estructurando sistemas robustos y diseñando interfaces fluidas.
+                                <h3 className="text-xl font-semibold text-foreground">Servicios Profesionales</h3>
+                                <p className="text-text-muted text-xs md:text-sm font-light mt-2 leading-relaxed">
+                                    Desarrollo de software de extremo a extremo, estructurando sistemas robustos, escalables y diseñando interfaces con una experiencia de usuario sumamente refinada.
                                 </p>
                             </div>
                         </div>
 
-                        {/* Bloques de especialidad con colores de iconos y fondos altamente refinados */}
-                        <div className="w-full md:w-72 flex gap-3 justify-center items-center">
-                            <div className="flex flex-col items-center gap-1.5">
-                                <div className="w-20 py-2.5 rounded-xl bg-inner-card border border-inner-card-border flex flex-col items-center shadow-sm transition-colors duration-300">
-                                    <Cpu className="w-4.5 h-4.5 text-indigo-600 dark:text-indigo-400" />
-                                    <span className="text-[8.5px] font-mono text-text-muted mt-1.5 text-center font-medium">Lógica</span>
-                                </div>
-                                <span className="text-[8px] font-mono text-text-subtitle uppercase tracking-wider">Sistemas</span>
+                        {/* Chips elegantes */}
+                        <div className="w-full md:w-72 flex flex-col gap-2">
+                            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-chip-bg border border-chip-border text-xs text-text-muted hover:text-indigo-400 hover:bg-chip-hover-bg hover:border-indigo-500/20 transition-all duration-300 shadow-sm cursor-default">
+                                <Cpu className="w-4 h-4 text-indigo-500/80" />
+                                <span className="font-mono text-[10px] font-medium tracking-wide">Lógica / Sistemas</span>
                             </div>
-                            <div className="flex flex-col items-center gap-1.5">
-                                <div className="w-20 py-2.5 rounded-xl bg-inner-card border border-inner-card-border flex flex-col items-center shadow-sm transition-colors duration-300">
-                                    <Monitor className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
-                                    <span className="text-[8.5px] font-mono text-text-muted mt-1.5 text-center font-medium">Interfaces</span>
-                                </div>
-                                <span className="text-[8px] font-mono text-text-subtitle uppercase tracking-wider">Frontend</span>
+                            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-chip-bg border border-chip-border text-xs text-text-muted hover:text-emerald-400 hover:bg-chip-hover-bg hover:border-emerald-500/20 transition-all duration-300 shadow-sm cursor-default">
+                                <Monitor className="w-4 h-4 text-emerald-500/80" />
+                                <span className="font-mono text-[10px] font-medium tracking-wide">Interfaces / Frontend</span>
                             </div>
-                            <div className="flex flex-col items-center gap-1.5">
-                                <div className="w-20 py-2.5 rounded-xl bg-inner-card border border-inner-card-border flex flex-col items-center shadow-sm transition-colors duration-300">
-                                    <Layers className="w-4.5 h-4.5 text-violet-600 dark:text-violet-400" />
-                                    <span className="text-[8.5px] font-mono text-text-muted mt-1.5 text-center font-medium">Estructura</span>
-                                </div>
-                                <span className="text-[8px] font-mono text-text-subtitle uppercase tracking-wider">Arquitectura</span>
+                            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-chip-bg border border-chip-border text-xs text-text-muted hover:text-violet-400 hover:bg-chip-hover-bg hover:border-violet-500/20 transition-all duration-300 shadow-sm cursor-default">
+                                <Layers className="w-4 h-4 text-violet-500/80" />
+                                <span className="font-mono text-[10px] font-medium tracking-wide">Estructura / Arquitectura</span>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Card 6: Mi Enfoque (Estática de Cristal) */}
+                    <div className="static-glass-card p-8 rounded-[2rem] flex flex-col justify-between shadow-sm min-h-[180px] md:col-span-2">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2 text-text-subtitle mb-2">
+                                <Compass className="w-4 h-4" />
+                                <span className="text-[10px] font-mono tracking-widest uppercase">Mi Enfoque</span>
+                            </div>
+                            <p className="text-base md:text-lg font-serif italic text-text-muted leading-relaxed font-light text-center md:text-left">
+                                “Crear soluciones sencillas a problemas complejos. Priorizar la claridad, el rendimiento y la facilidad de uso para que el software sea verdaderamente valioso.”
+                            </p>
                         </div>
                     </div>
 

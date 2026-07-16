@@ -1,63 +1,65 @@
 @import "tailwindcss";
 
 :root {
-    /* Modo Oscuro por defecto */
-    --background: #09090b;
-    /* Zinc 950 */
+    /* Modo Oscuro por defecto (Noche Profunda) */
+    --background: #030303;
+    /* Foreground en Zinc 100 */
     --foreground: #f4f4f5;
-    /* Zinc 100 */
-    --card-bg: rgba(24, 24, 27, 0.5);
-    /* Zinc 900 con opacidad */
-    --card-border: rgba(39, 39, 42, 0.6);
-    /* Zinc 800 */
-    --card-hover-border: rgba(82, 82, 91, 0.8);
-    /* Zinc 600 */
-    --accent: #6366f1;
-    /* Indigo 500 */
-    --accent-light: #818cf8;
-    /* Indigo 400 */
-    --text-muted: #a1a1aa;
-    /* Zinc 400 */
-    --text-subtitle: #71717a;
-    /* Zinc 500 */
-    --glow-color: rgba(99, 102, 241, 0.08);
-    --shining-border: rgba(255, 255, 255, 0.08);
+    /* Card en Zinc 950 translúcido */
+    --card-bg: rgba(9, 9, 11, 0.4);
+    /* Borde ultra sutil */
+    --card-border: rgba(255, 255, 255, 0.05);
+    /* Borde hover más visible */
+    --card-hover-border: rgba(255, 255, 255, 0.12);
+    /* Acentos */
+    --accent: #6366f1; /* Indigo 500 */
+    --accent-light: #818cf8; /* Indigo 400 */
+    --text-muted: #9ca3af; /* Gray 400 */
+    --text-subtitle: #4b5563; /* Gray 650 */
+    --glow-color: rgba(99, 102, 241, 0.12);
+    --shining-border: rgba(255, 255, 255, 0.05);
 
-    /* Tarjetas internas y botones en modo oscuro */
-    --inner-card-bg: rgba(24, 24, 27, 0.3);
-    --inner-card-border: rgba(39, 39, 42, 0.6);
-    --btn-sec-bg: rgba(24, 24, 27, 0.4);
-    --btn-sec-hover-bg: rgba(39, 39, 42, 0.5);
+    /* Tarjetas internas y botones */
+    --inner-card-bg: rgba(255, 255, 255, 0.02);
+    --inner-card-border: rgba(255, 255, 255, 0.04);
+    --btn-sec-bg: rgba(255, 255, 255, 0.03);
+    --btn-sec-hover-bg: rgba(255, 255, 255, 0.06);
+
+    /* Chips de especialidades */
+    --chip-bg: rgba(255, 255, 255, 0.02);
+    --chip-border: rgba(255, 255, 255, 0.04);
+    --chip-hover-bg: rgba(255, 255, 255, 0.06);
 }
 
 :root.light {
-    /* Modo Claro */
+    /* Modo Claro (Luz Pura) */
     --background: #fafafa;
-    /* Zinc 50 */
-    --foreground: #09090b;
     /* Zinc 950 */
+    --foreground: #09090b;
+    /* Blanco con opacidad y blur */
     --card-bg: rgba(255, 255, 255, 0.7);
-    /* Blanco con opacidad */
-    --card-border: rgba(228, 228, 231, 0.9);
-    /* Zinc 200 */
-    --card-hover-border: rgba(161, 161, 170, 0.8);
-    /* Zinc 400 */
-    --accent: #4f46e5;
-    /* Indigo 600 */
-    --accent-light: #6366f1;
-    /* Indigo 500 */
-    --text-muted: #4b5563;
-    /* Gray 600 */
-    --text-subtitle: #6b7280;
-    /* Gray 500 */
+    /* Borde claro ultra sutil */
+    --card-border: rgba(0, 0, 0, 0.05);
+    /* Borde hover claro */
+    --card-hover-border: rgba(0, 0, 0, 0.12);
+    /* Acentos */
+    --accent: #4f46e5; /* Indigo 600 */
+    --accent-light: #6366f1; /* Indigo 500 */
+    --text-muted: #4b5563; /* Gray 600 */
+    --text-subtitle: #9ca3af; /* Gray 400 */
     --glow-color: rgba(79, 70, 229, 0.04);
-    --shining-border: rgba(0, 0, 0, 0.03);
+    --shining-border: rgba(0, 0, 0, 0.02);
 
-    /* Tarjetas internas y botones en modo claro */
-    --inner-card-bg: rgba(244, 244, 245, 0.8); /* Zinc 100 */
-    --inner-card-border: rgba(228, 228, 231, 0.6); /* Zinc 200 */
-    --btn-sec-bg: rgba(244, 244, 245, 0.5); /* Zinc 100 */
-    --btn-sec-hover-bg: rgba(228, 228, 231, 0.8); /* Zinc 200 */
+    /* Tarjetas internas y botones */
+    --inner-card-bg: rgba(244, 244, 245, 0.6);
+    --inner-card-border: rgba(228, 228, 231, 0.5);
+    --btn-sec-bg: rgba(244, 244, 245, 0.5);
+    --btn-sec-hover-bg: rgba(228, 228, 231, 0.7);
+
+    /* Chips de especialidades */
+    --chip-bg: rgba(0, 0, 0, 0.015);
+    --chip-border: rgba(0, 0, 0, 0.03);
+    --chip-hover-bg: rgba(0, 0, 0, 0.04);
 }
 
 @theme inline {
@@ -75,6 +77,9 @@
     --color-inner-card-border: var(--inner-card-border);
     --color-btn-sec: var(--btn-sec-bg);
     --color-btn-sec-hover: var(--btn-sec-hover-bg);
+    --color-chip-bg: var(--chip-bg);
+    --color-chip-border: var(--chip-border);
+    --color-chip-hover-bg: var(--chip-hover-bg);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
 }
@@ -83,18 +88,73 @@ body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Transición suave para tarjetas y textos */
-.bento-card {
+/* Tarjetas de Vidrio Interactivas */
+.interactive-glass-card {
     background-color: var(--card-bg);
-    border-color: var(--card-border);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
 }
 
-.bento-card:hover {
+.interactive-glass-card:hover {
     border-color: var(--card-hover-border);
-    box-shadow: 0 10px 30px -10px var(--glow-color);
-    transform: translateY(-2px);
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: 0 20px 40px -15px var(--glow-color);
 }
+
+/* Tarjetas de Vidrio Estáticas (No clickeables, informativas) */
+.static-glass-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.3s ease;
+    cursor: default;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
+}
+
+.static-glass-card:hover {
+    /* No se eleva ni brilla, solo reactividad de borde ultra sutil */
+    border-color: var(--card-hover-border);
+}
+
+/* Personalización de la Barra de Desplazamiento (Scrollbar) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+    background: var(--text-subtitle);
+    border-radius: 9999px;
+    border: 3px solid var(--background);
+    transition: background 0.3s ease;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Para Firefox y Estándar Moderno */
+html, body, * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-subtitle) var(--background);
+}
+

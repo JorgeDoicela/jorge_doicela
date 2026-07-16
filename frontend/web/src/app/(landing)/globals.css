@@ -20,8 +20,8 @@
     --shining-border: rgba(255, 255, 255, 0.05);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: rgba(255, 255, 255, 0.02);
-    --inner-card-border: rgba(255, 255, 255, 0.04);
+    --inner-card-bg: transparent;
+    --inner-card-border: rgba(255, 255, 255, 0.15);
     --btn-sec-bg: rgba(255, 255, 255, 0.03);
     --btn-sec-hover-bg: rgba(255, 255, 255, 0.06);
 
@@ -51,8 +51,8 @@
     --shining-border: rgba(0, 0, 0, 0.02);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: rgba(244, 244, 245, 0.6);
-    --inner-card-border: rgba(228, 228, 231, 0.5);
+    --inner-card-bg: transparent;
+    --inner-card-border: rgba(0, 0, 0, 0.12);
     --btn-sec-bg: rgba(244, 244, 245, 0.5);
     --btn-sec-hover-bg: rgba(228, 228, 231, 0.7);
 

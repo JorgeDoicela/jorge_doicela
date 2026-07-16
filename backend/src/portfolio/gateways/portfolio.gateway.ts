@@ -34,7 +34,7 @@ export class PortfolioGateway
     client.emit(
       'terminal-output',
       [
-        'Bienvenido a la Terminal Interactiva de Jorge Doicela (SSH v2.0)',
+        'Bienvenido a la Terminal Interactiva de Jorge Doicela',
         'Escribe "help" para comenzar.',
         '',
         'jorge@vps-1gb-ram:~$ ',

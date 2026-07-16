@@ -61,7 +61,7 @@ export default function LandingPage() {
             };
             const formatter = new Intl.DateTimeFormat([], options);
             const hour = parseInt(formatter.format(new Date()), 10);
-            
+
             let salute = '¡Bienvenido y bienvenida!';
             if (hour >= 6 && hour < 12) {
                 salute = '¡Bienvenido y bienvenida! Buenos días';
@@ -125,7 +125,7 @@ export default function LandingPage() {
                         Jorge Doicela
                     </h1>
                     <p className="text-[10px] md:text-xs text-text-subtitle font-mono tracking-widest uppercase mt-0.5">
-                        Desarrollo de Software & Creación de Productos Digitales
+                        DEVSECOPS, INTELIGENCIA ARTIFICIAL & CIBERSEGURIDAD
                     </p>
                 </div>
 

@@ -197,7 +197,6 @@ export default function LandingPage() {
                                     <span className="text-text-subtitle text-[9px]">Consola</span>
                                 </div>
                             </div>
-                            <span className="text-[8px] font-mono text-text-subtitle text-center">Código Abierto & Herramientas</span>
                         </div>
                     </a>
 
@@ -253,8 +252,8 @@ export default function LandingPage() {
                             <span className="text-[9px] text-text-subtitle font-mono mt-1.5 uppercase tracking-wider">Quito, Ecuador / UTC-5</span>
                         </div>
 
-                        <div className="pt-2 border-t border-card-border/40 text-[9px] text-text-muted font-mono tracking-wider">
-                            ZONA HORARIA ACTIVA
+                        <div className="pt-2 border-t border-card-border/40 text-[9px] text-text-muted font-mono tracking-wider text-center">
+                            ECUADOR
                         </div>
                     </div>
 
@@ -270,8 +269,6 @@ export default function LandingPage() {
                                 Crear soluciones sencillas a problemas complejos. Priorizar la claridad, el rendimiento y la facilidad de uso para que el software sea verdaderamente valioso.
                             </p>
                         </div>
-
-                        <span className="text-[9px] text-text-subtitle font-mono tracking-wider uppercase">Metodología</span>
                     </div>
 
                     {/* Card 6: Conectar / Redes (Botones con fondo adaptativo suave en modo claro) */}
@@ -357,6 +354,11 @@ export default function LandingPage() {
 
                 </div>
             </main>
+
+            {/* Footer minimalista */}
+            <footer className="w-full max-w-5xl mt-16 border-t border-card-border/40 pt-8 px-2 md:px-0 flex justify-center text-xs text-text-subtitle font-mono uppercase tracking-wider">
+                <span>© {new Date().getFullYear()} Jorge Doicela. Todos los derechos reservados.</span>
+            </footer>
 
         </div>
     );

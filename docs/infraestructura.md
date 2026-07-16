@@ -224,6 +224,12 @@ Nginx actúa como el punto de entrada HTTPS perimetral seguro en el servidor. Es
        ssl_protocols TLSv1.2 TLSv1.3;
        ssl_prefer_server_ciphers on;
 
+       # Cabeceras de seguridad y ocultación de versión
+       server_tokens off;
+       add_header X-Frame-Options "DENY" always;
+       add_header X-Content-Type-Options "nosniff" always;
+       add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
        # 1. API Backend REST
        location ~ ^/(bible|software|portfolio)/ {
            proxy_pass http://127.0.0.1:3000;

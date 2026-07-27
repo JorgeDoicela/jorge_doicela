@@ -19,41 +19,60 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 
 ### Diseño Visual y Experiencia de Usuario (UX/UI)
 - [ ] 🔀 **Efecto Parallax en el fondo**: Las elipses degradadas del fondo se mueven a distinta velocidad que el contenido al hacer scroll, generando profundidad tridimensional. *(En móvil: reemplazar `mousemove` por `deviceorientation` o giroscopio; deshabilitar si no hay sensor.)*
+
 - [ ] 🔀 **Partículas interactivas de fondo**: Pequeñas partículas flotantes (tipo Three.js o Tsparticles) que reaccionan al movimiento del ratón acercándose o alejándose del cursor. *(En móvil: reaccionar a `touchmove` en lugar de `mousemove`; reducir la densidad de partículas para no saturar la GPU del dispositivo.)*
+
 - [ ] ✅ **Animación de entrada (Page Load)**: Las tarjetas y el texto de la cabecera aparecen con una animación de entrada escalonada (staggered fade-in + slide-up) al cargar la página por primera vez.
+
 - [ ] ✅ **Efecto Typewriter en el título**: El nombre o el rol ("Full Stack Developer") se escribe letra por letra con animación de máquina de escribir en la cabecera.
-- [ ] 🔀 **Tilt 3D en tarjetas al hover**: Las tarjetas de redirección (Portafolio, Biblia, Software) rotan suavemente en el eje X e Y según la posición del cursor. *(En móvil: `hover` no existe; reemplazar con un efecto de `press` / scale-down al touch para dar feedback táctil.)*
+
 - [ ] ✅ **Transición de tema animada**: El cambio entre modo claro y oscuro se realiza con una animación de "barrido circular" que expande el nuevo tema desde el botón de cambio.
+
 - [ ] 🌐 **Gradiente de fondo reactivo al cursor**: El gradiente del fondo de la página se desplaza sutilmente siguiendo la posición del ratón en tiempo real. *(No aplica en móvil — desactivar por completo en viewports táctiles.)*
-- [x] ✅ **Paleta de temas adicionales**: Más allá de claro/oscuro, ofrecer temas de color alternos (ej. tema índigo, tema sepia, tema salmón).
-- [ ] ✅ **Animación de scroll suave y progress bar**: Barra de progreso de lectura que indica cuánto ha scrolleado el visitante.
-- [ ] 🌐 **Easter egg interactivo**: Un comando o combinación de teclas secreto que dispara una animación o mensaje especial (ej. el Konami Code que ejecuta neofetch en pantalla). *(Los teclados virtuales no tienen keycodes confiables; solo activar en desktop.)*
 
 ### Contenido y Secciones
 - [ ] ✅ **Sección "Disponible para trabajo"**: Un chip de estado con indicador de color verde/rojo que cambia según si Jorge está abierto a proyectos freelance o no.
+
 - [ ] ✅ **Contador de proyectos completados**: Estadísticas animadas con contador de cifras (número de proyectos, años de experiencia, tecnologías usadas).
+
 - [ ] ✅ **Ticker de actividad de GitHub**: Widget que muestra en tiempo real (o con caché) los commits más recientes desde la GitHub API pública.
-- [ ] ✅ **Sección de últimas entradas del Blog**: Miniaturas de los últimos artículos publicados directamente en la landing.
+
+- Revisar [ ] ✅ **Sección de últimas entradas del Blog**: Miniaturas de los últimos artículos publicados directamente en la landing.
+
 - [ ] ✅ **Enlace a CV/Currículum descargable**: Botón flotante o en el footer para descargar el CV en PDF, generado dinámicamente o como asset estático.
+
 - [ ] ✅ **Mapa de tecnologías (tech wheel)**: Visualización circular o de nube interactiva de todas las tecnologías que maneja Jorge.
-- [ ] ✅ **Sección de testimonios / recomendaciones**: Carrusel de citas textuales de colegas, clientes o profesores.
-- [ ] ✅ **Widget de música actual / last.fm**: Muestra la canción o álbum que escucha Jorge en tiempo real o la última escuchada.
+
+- Revisar [ ] ✅ **Sección de testimonios / recomendaciones**: Carrusel de citas textuales de colegas, clientes o profesores.
+
 - [ ] ✅ **Contador de días o proyectos**: Un contador animado de días en la industria o de commits en GitHub.
+
 - [ ] ✅ **Línea de tiempo personal**: Timeline scrolleable con los hitos más importantes de la vida y carrera profesional de Jorge.
 
 ### Funcionalidades Técnicas y de Accesibilidad
 - [ ] ✅ **Soporte multiidioma (i18n)**: Botón para cambiar entre español e inglés, gestionando el idioma con localStorage y traduciendo todo el contenido de la página.
+
 - [ ] ✅ **Metadatos SEO completos**: Etiquetas og:image, og:title, twitter:card, descripción estructurada JSON-LD de persona.
+
 - [ ] ✅ **Sitemap dinámico**: Generación automática de sitemap.xml para todos los subproyectos y páginas desde Next.js.
+
 - [ ] ✅ **Soporte de accesibilidad (ARIA)**: Etiquetas aria-label en todos los botones, navegación con teclado completa y compatibilidad con lectores de pantalla.
+
 - [ ] 🔀 **PWA (Progressive Web App)**: Configurar manifest.json y un service worker básico para que la landing se pueda instalar como app en el móvil del visitante. *(Es específicamente valioso para móvil — alta prioridad en esa plataforma.)*
+
 - [ ] ✅ **Analytics propio sin cookies**: Integración de Umami o Plausible (autohosteado en el mismo VPS) para rastrear visitas sin depender de Google Analytics.
+
 - [ ] ✅ **Compartir en redes sociales**: Botones para compartir directamente el perfil de Jorge en X (Twitter), LinkedIn o WhatsApp con un mensaje predefinido.
+
 - [ ] ✅ **Previsualización de Open Graph**: Imagen estática generada con Next.js OG Image para que cuando se comparta el enlace aparezca una miniatura visualmente atractiva.
+
 - [ ] ✅ **Verificación de Google Search Console y Bing**: Meta tags de verificación para posicionar el sitio en buscadores.
+
 - [ ] ✅ **Robots.txt personalizado**: Definir qué páginas o subdominios deben o no ser indexadas por los motores de búsqueda.
-- [ ] ✅ **Cache y rendimiento (Edge Config)**: Configuración de cabeceras de caché agresivas para activos estáticos y CDN de Cloudflare.
-- [ ] ✅ **Modo sin animaciones (prefers-reduced-motion)**: Detectar la preferencia del sistema operativo del usuario para desactivar animaciones.
+
+- [ ] Revisar ✅ **Modo sin animaciones (prefers-reduced-motion)**: Detectar la preferencia del sistema operativo del usuario para desactivar animaciones.
+
+- [ ] Revisar (Aún estoy aprendiendo a manejar correctamente la caché) ✅ **Cache y rendimiento (Edge Config)**: Configuración de cabeceras de caché agresivas para activos estáticos y CDN de Cloudflare.
 
 ---
 
@@ -90,36 +109,56 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 - [ ] 🌐 **Compartir sesión de terminal en modo lectura**: Generar un enlace único que permite a un visitante ver la sesión en tiempo real (modo espejo).
 
 ### Secciones del Portafolio Visual
-- [ ] ✅ **Sección animada de habilidades con barras de progreso**: Visualización gráfica del nivel de dominio de cada tecnología.
 - [ ] 🔀 **Tarjetas 3D del stack tecnológico**: Las tarjetas rotan y muestran más información al hacer hover, con efecto de profundidad. *(En móvil: reemplazar hover por tap con flip animation.)*
+
 - [ ] ✅ **Animación de escritura en el rol profesional**: El subtítulo alterna cíclicamente entre distintos roles ("Full Stack Developer", "AI Engineer", "Security Researcher").
+
 - [ ] ✅ **Timeline de experiencia interactiva**: Línea de tiempo animada y scrolleable donde cada punto despliega un panel de detalle expandible.
-- [ ] ✅ **Sistema de filtro de proyectos por tecnología**: Botones que filtran las tarjetas por tecnología con animación de reordenamiento.
+
+- [ ] Revisar ✅ **Sistema de filtro de proyectos por tecnología**: Botones que filtran las tarjetas por tecnología con animación de reordenamiento.
+
 - [ ] ✅ **Lightbox de proyectos**: Al hacer clic en un proyecto, se abre un modal expandido con capturas de pantalla y descripción completa.
+
 - [ ] ✅ **Sección de publicaciones o artículos**: Miniaturas de artículos técnicos enlazados desde el portafolio.
+
 - [ ] ✅ **Reproductor de demo de proyectos**: Video corto o GIF que se reproduce al hacer hover sobre la tarjeta del proyecto.
+
 - [ ] ✅ **Sección de valores y filosofía de trabajo**: Texto inspiracional con la filosofía de desarrollo guiada por valores (fe cristiana, excelencia técnica).
+
 - [ ] ✅ **Sección de certificaciones**: Tarjetas de certificaciones obtenidas con enlace de verificación.
+
 - [ ] ✅ **Mapa de calor de contribuciones de GitHub**: Embebido del gráfico de contribuciones directamente en la página.
+
 - [ ] 🌐 **Modo presentación**: Modo especial activable por URL param ?present=true que oculta la navegación y amplía el contenido para proyector.
 
 ### Formulario de Contacto y Comunicación
 - [ ] ✅ **Validación en tiempo real**: Cada campo del formulario valida el formato mientras el usuario escribe.
+
 - [ ] ✅ **Anti-spam con reCAPTCHA o Turnstile (Cloudflare)**: Proteger el endpoint de contacto de bots.
+
 - [ ] ✅ **Notificación por correo electrónico al enviar**: El backend envía un correo a Jorge via Nodemailer cuando llega un nuevo mensaje.
+
 - [ ] ✅ **Notificación push al teléfono (Ntfy o Pushover)**: El backend llama a un servicio de push cuando llega un mensaje nuevo.
+
 - [ ] ✅ **Auto-respuesta automática por correo al visitante**: El backend envía un correo de confirmación al visitante.
+
 - [ ] ✅ **Panel de administración de mensajes**: Ruta protegida /admin/contact para ver, marcar como leídos y eliminar mensajes.
+
 - [ ] ✅ **Autenticación básica del panel de admin**: Login con usuario y contraseña para proteger el panel.
+
 - [ ] ✅ **Exportación de mensajes a CSV**: Botón en el panel de admin para exportar todos los mensajes a un archivo .csv.
+
 - [ ] ✅ **Estado de los mensajes**: Campo status en la base de datos (nuevo, leído, archivado) gestionable desde el panel de admin.
 
 ### Visitas y Métricas
-- [ ] ✅ **Contador de visitas únicas**: El backend registra cada IP que visita el portafolio y muestra en el footer el número de visitas únicas.
-- [ ] ✅ **Contador de veces que se ejecutó un comando en la terminal**: El backend lleva estadísticas de cuántas veces se ejecutó cada comando.
 - [ ] 🌐 **Heatmap de clicks en el portafolio**: Integración ligera de un script de mapa de calor para ver en qué zonas hace clic el visitante.
 
 ---
+
+
+
+
+
 
 ## Biblia Modular (`bible.jorgedoicela.com`) — Frontend Web + App Nativa Expo
 

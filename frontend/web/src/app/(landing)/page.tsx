@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import ParallaxBackground from './components/ParallaxBackground';
+import InteractiveParticles from './components/InteractiveParticles';
 import {
     Sun,
     Moon,
@@ -113,11 +115,9 @@ export default function LandingPage() {
     return (
         <div className="relative min-h-screen flex flex-col justify-between items-center py-16 md:py-24 px-6 md:px-12 selection:bg-zinc-200 selection:text-zinc-900 dark:selection:bg-zinc-800 dark:selection:text-zinc-100 transition-colors duration-300">
 
-            {/* Fondo Decorativo Sutil */}
-            <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-                <div className="absolute top-[10%] left-[10%] w-[60%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/10 blur-[130px] transition-colors duration-300"></div>
-                <div className="absolute bottom-[10%] right-[10%] w-[60%] h-[40%] rounded-full bg-violet-500/5 dark:bg-violet-500/10 blur-[130px] transition-colors duration-300"></div>
-            </div>
+            {/* Fondo Parallax Decorativo Tridimensional y Partículas Interactivas */}
+            <ParallaxBackground />
+            <InteractiveParticles />
             {/* Header Superior - Perfectamente Alineado con el Ancho del Grid */}
             <header className="w-full max-w-5xl flex justify-between items-center mb-8 border-b border-card-border/40 pb-6 px-2 md:px-0">
                 <div className="flex flex-col gap-2">

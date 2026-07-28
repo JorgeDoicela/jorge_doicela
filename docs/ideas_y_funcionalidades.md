@@ -18,9 +18,9 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 > Portal de bienvenida. No tiene backend ni base de datos. Toda la lógica es del lado del cliente. La landing es una web responsive; no existe app nativa para esta sección, pero debe verse impecable en móvil.
 
 ### Diseño Visual y Experiencia de Usuario (UX/UI)
-- [ ] 🔀 **Efecto Parallax en el fondo**: Las elipses degradadas del fondo se mueven a distinta velocidad que el contenido al hacer scroll, generando profundidad tridimensional. *(En móvil: reemplazar `mousemove` por `deviceorientation` o giroscopio; deshabilitar si no hay sensor.)*
+- [x] 🔀 **Efecto Parallax en el fondo**: Las elipses degradadas del fondo se mueven a distinta velocidad que el contenido al hacer scroll, generando profundidad tridimensional. *(En móvil: reemplazar `mousemove` por `deviceorientation` o giroscopio; deshabilitar si no hay sensor.)*
 
-- [ ] 🔀 **Partículas interactivas de fondo**: Pequeñas partículas flotantes (tipo Three.js o Tsparticles) que reaccionan al movimiento del ratón acercándose o alejándose del cursor. *(En móvil: reaccionar a `touchmove` en lugar de `mousemove`; reducir la densidad de partículas para no saturar la GPU del dispositivo.)*
+- [x] 🔀 **Partículas interactivas de fondo**: Pequeñas partículas flotantes (tipo Three.js o Tsparticles) que reaccionan al movimiento del ratón acercándose o alejándose del cursor. *(En móvil: reaccionar a `touchmove` en lugar de `mousemove`; reducir la densidad de partículas para no saturar la GPU del dispositivo.)*
 
 - [ ] ✅ **Animación de entrada (Page Load)**: Las tarjetas y el texto de la cabecera aparecen con una animación de entrada escalonada (staggered fade-in + slide-up) al cargar la página por primera vez.
 

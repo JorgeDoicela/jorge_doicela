@@ -1,65 +1,67 @@
 @import "tailwindcss";
 
 :root {
-    /* Modo Oscuro por defecto (Noche Profunda) */
+    /* Modo Oscuro por defecto (Cosmos Etéreo Suave) */
     --background: #030303;
-    /* Foreground en Zinc 100 */
-    --foreground: #f4f4f5;
-    /* Card en Zinc 950 translúcido */
-    --card-bg: rgba(9, 9, 11, 0.4);
-    /* Borde ultra sutil */
-    --card-border: rgba(255, 255, 255, 0.05);
-    /* Borde hover más visible */
-    --card-hover-border: rgba(255, 255, 255, 0.12);
+    /* Foreground principal en Zinc 50 */
+    --foreground: #fafafa;
+    /* Card en Zinc 950 translúcido sutil (opacidad ligera y etérea) */
+    --card-bg: rgba(10, 10, 15, 0.48);
+    /* Borde cristalino sutil */
+    --card-border: rgba(255, 255, 255, 0.055);
+    /* Borde hover elegante */
+    --card-hover-border: rgba(255, 255, 255, 0.16);
     /* Acentos */
     --accent: #6366f1; /* Indigo 500 */
     --accent-light: #818cf8; /* Indigo 400 */
-    --text-muted: #9ca3af; /* Gray 400 */
-    --text-subtitle: #4b5563; /* Gray 650 */
-    --glow-color: rgba(99, 102, 241, 0.12);
-    --shining-border: rgba(255, 255, 255, 0.05);
+    /* Texto secundario y párrafos en Zinc 300 */
+    --text-muted: #d4d4d8; 
+    /* Subtítulos, tags y etiquetas mono en Zinc 400 */
+    --text-subtitle: #a1a1aa; 
+    --glow-color: rgba(99, 102, 241, 0.15);
+    --shining-border: rgba(255, 255, 255, 0.06);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: transparent;
-    --inner-card-border: rgba(255, 255, 255, 0.15);
-    --btn-sec-bg: rgba(255, 255, 255, 0.03);
-    --btn-sec-hover-bg: rgba(255, 255, 255, 0.06);
+    --inner-card-bg: rgba(255, 255, 255, 0.03);
+    --inner-card-border: rgba(255, 255, 255, 0.12);
+    --btn-sec-bg: rgba(255, 255, 255, 0.05);
+    --btn-sec-hover-bg: rgba(255, 255, 255, 0.1);
 
     /* Chips de especialidades */
-    --chip-bg: rgba(255, 255, 255, 0.02);
-    --chip-border: rgba(255, 255, 255, 0.04);
-    --chip-hover-bg: rgba(255, 255, 255, 0.06);
+    --chip-bg: rgba(255, 255, 255, 0.04);
+    --chip-border: rgba(255, 255, 255, 0.08);
+    --chip-hover-bg: rgba(255, 255, 255, 0.09);
 }
 
 :root.light {
-    /* Modo Claro (Luz Pura) */
-    --background: #fafafa;
+    /* Modo Claro (Minimalismo Impoluto Estilo Apple / Stripe) */
+    --background: #f8fafc;
     /* Zinc 950 */
-    --foreground: #09090b;
-    /* Blanco con opacidad y blur */
-    --card-bg: rgba(255, 255, 255, 0.7);
-    /* Borde claro ultra sutil */
-    --card-border: rgba(0, 0, 0, 0.05);
-    /* Borde hover claro */
-    --card-hover-border: rgba(0, 0, 0, 0.12);
+    --foreground: #0f172a;
+    /* Blanco esmerilado con alta definición */
+    --card-bg: rgba(255, 255, 255, 0.82);
+    /* Borde claro ultra preciso */
+    --card-border: rgba(15, 23, 42, 0.08);
+    /* Borde hover índigo cristalino */
+    --card-hover-border: rgba(99, 102, 241, 0.3);
     /* Acentos */
     --accent: #4f46e5; /* Indigo 600 */
     --accent-light: #6366f1; /* Indigo 500 */
-    --text-muted: #4b5563; /* Gray 600 */
-    --text-subtitle: #9ca3af; /* Gray 400 */
-    --glow-color: rgba(79, 70, 229, 0.04);
-    --shining-border: rgba(0, 0, 0, 0.02);
+    --text-muted: #475569; /* Slate 600 */
+    --text-subtitle: #64748b; /* Slate 500 */
+    --glow-color: rgba(99, 102, 241, 0.12);
+    --shining-border: rgba(0, 0, 0, 0.03);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: transparent;
-    --inner-card-border: rgba(0, 0, 0, 0.12);
-    --btn-sec-bg: rgba(244, 244, 245, 0.5);
-    --btn-sec-hover-bg: rgba(228, 228, 231, 0.7);
+    --inner-card-bg: rgba(248, 250, 252, 0.6);
+    --inner-card-border: rgba(15, 23, 42, 0.08);
+    --btn-sec-bg: rgba(241, 245, 249, 0.8);
+    --btn-sec-hover-bg: rgba(226, 232, 240, 0.9);
 
     /* Chips de especialidades */
-    --chip-bg: rgba(0, 0, 0, 0.015);
-    --chip-border: rgba(0, 0, 0, 0.03);
-    --chip-hover-bg: rgba(0, 0, 0, 0.04);
+    --chip-bg: rgba(15, 23, 42, 0.03);
+    --chip-border: rgba(15, 23, 42, 0.06);
+    --chip-hover-bg: rgba(15, 23, 42, 0.07);
 }
 
 @theme inline {
@@ -95,10 +97,10 @@ body {
 .interactive-glass-card {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
 }
 
 .interactive-glass-card:hover {
@@ -111,15 +113,14 @@ body {
 .static-glass-card {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     transition: border-color 0.3s ease;
     cursor: default;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
 .static-glass-card:hover {
-    /* No se eleva ni brilla, solo reactividad de borde ultra sutil */
     border-color: var(--card-hover-border);
 }
 

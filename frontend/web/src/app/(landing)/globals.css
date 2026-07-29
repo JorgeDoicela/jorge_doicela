@@ -188,40 +188,6 @@ html, body, * {
     }
 }
 
-/* Transición de Tema de Barrido Circular (Circular Reveal Theme Transition - View Transitions API) */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-    display: block;
-    will-change: clip-path;
-}
-
-::view-transition-image-pair(root) {
-    isolation: isolate;
-}
-
-::view-transition-old(root) {
-    z-index: 1;
-}
-
-::view-transition-new(root) {
-    z-index: 9999;
-}
-
-.light::view-transition-old(root) {
-    z-index: 9999;
-}
-
-.light::view-transition-new(root) {
-    z-index: 1;
-}
-
-/* Prevenir conflicto de transiciones CSS individuales en body durante la animación View Transitions */
-html:has(::view-transition) body,
-html:has(::view-transition) * {
-    transition: none !important;
-}
 
 
 

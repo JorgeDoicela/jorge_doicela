@@ -127,45 +127,45 @@ export default function ParallaxBackground() {
             {/* Nube 1: Nebulosa Violeta / Magenta Cósmica */}
             <div
                 ref={cloud1Ref}
-                className="absolute top-[-15%] left-[-15%] w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-[40%_60%_70%_30%/50%_30%_70%_50%] opacity-80 dark:opacity-100 blur-[140px] transition-colors duration-500 will-change-transform"
+                className="absolute top-[-15%] left-[-15%] w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full opacity-70 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
                 style={{
-                    background: 'radial-gradient(ellipse at center, rgba(168, 85, 247, 0.28) 0%, rgba(217, 70, 239, 0.16) 45%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.22) 0%, rgba(217, 70, 239, 0.10) 40%, rgba(168, 85, 247, 0.03) 65%, transparent 80%)'
                 }}
             />
 
             {/* Nube 2: Corriente Interestelar Índigo Profunda */}
             <div
                 ref={cloud2Ref}
-                className="absolute bottom-[-15%] right-[-15%] w-[85vw] h-[85vw] max-w-[950px] max-h-[950px] rounded-[60%_40%_30%_70%/40%_60%_40%_60%] opacity-80 dark:opacity-100 blur-[150px] transition-colors duration-500 will-change-transform"
+                className="absolute bottom-[-15%] right-[-15%] w-[85vw] h-[85vw] max-w-[950px] max-h-[950px] rounded-full opacity-70 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
                 style={{
-                    background: 'radial-gradient(ellipse at center, rgba(99, 102, 241, 0.30) 0%, rgba(79, 70, 229, 0.18) 50%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.24) 0%, rgba(79, 70, 229, 0.12) 45%, rgba(99, 102, 241, 0.03) 65%, transparent 80%)'
                 }}
             />
 
             {/* Nube 3: Polvo Celestial Cian & Sky */}
             <div
                 ref={cloud3Ref}
-                className="absolute top-[25%] left-[10%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-[50%_50%_40%_60%/60%_40%_60%_40%] opacity-70 dark:opacity-100 blur-[130px] transition-colors duration-500 will-change-transform"
+                className="absolute top-[25%] left-[10%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full opacity-60 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
                 style={{
-                    background: 'radial-gradient(ellipse at center, rgba(56, 189, 248, 0.24) 0%, rgba(14, 165, 233, 0.12) 50%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.18) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 75%)'
                 }}
             />
 
             {/* Nube 4: Núcleo Galáctico Rosado / Púrpura */}
             <div
                 ref={cloud4Ref}
-                className="absolute top-[10%] right-[5%] w-[55vw] h-[55vw] max-w-[650px] max-h-[650px] rounded-[45%_55%_60%_40%/50%_50%_40%_60%] opacity-70 dark:opacity-100 blur-[140px] transition-colors duration-500 will-change-transform"
+                className="absolute top-[10%] right-[5%] w-[55vw] h-[55vw] max-w-[650px] max-h-[650px] rounded-full opacity-60 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
                 style={{
-                    background: 'radial-gradient(ellipse at center, rgba(236, 72, 153, 0.22) 0%, rgba(147, 51, 234, 0.14) 50%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(236, 72, 153, 0.18) 0%, rgba(147, 51, 234, 0.08) 45%, transparent 80%)'
                 }}
             />
 
             {/* Nube 5: Destellos de Polvo Solar Ámbar */}
             <div
                 ref={cloud5Ref}
-                className="absolute bottom-[10%] left-[20%] w-[45vw] h-[45vw] max-w-[550px] max-h-[550px] rounded-[60%_40%_50%_50%/40%_50%_60%_50%] opacity-60 dark:opacity-100 blur-[120px] transition-colors duration-500 will-change-transform"
+                className="absolute bottom-[10%] left-[20%] w-[45vw] h-[45vw] max-w-[550px] max-h-[550px] rounded-full opacity-50 dark:opacity-90 blur-[25px] transition-colors duration-500 will-change-transform"
                 style={{
-                    background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.14) 0%, rgba(245, 158, 11, 0.05) 55%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(251, 191, 36, 0.10) 0%, rgba(245, 158, 11, 0.03) 50%, transparent 75%)'
                 }}
             />
         </div>

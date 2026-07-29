@@ -26,9 +26,7 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 
 - [x] ✅ **Efecto Typewriter en el título**: El nombre o el rol ("Full Stack Developer") se escribe letra por letra con animación de máquina de escribir en la cabecera.
 
-- [x] ✅ **Transición de tema animada**: El cambio entre modo claro y oscuro se realiza con una animación de "barrido circular" que expande el nuevo tema desde el botón de cambio.
-
-- [ ] 🌐 **Gradiente de fondo reactivo al cursor**: El gradiente del fondo de la página se desplaza sutilmente siguiendo la posición del ratón en tiempo real. *(No aplica en móvil — desactivar por completo en viewports táctiles.)*
+- [x] 🌐 **Gradiente de fondo reactivo al cursor**: El gradiente del fondo de la página se desplaza sutilmente siguiendo la posición del ratón en tiempo real. *(No aplica en móvil — desactivar por completo en viewports táctiles.)*
 
 ### Contenido y Secciones
 - [ ] ✅ **Sección "Disponible para trabajo"**: Un chip de estado con indicador de color verde/rojo que cambia según si Jorge está abierto a proyectos freelance o no.

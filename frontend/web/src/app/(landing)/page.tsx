@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import ParallaxBackground from './components/ParallaxBackground';
 import InteractiveParticles from './components/InteractiveParticles';
 import TypewriterRole from './components/TypewriterRole';
+import ReactiveCursorGradient from './components/ReactiveCursorGradient';
 import {
     Sun,
     Moon,
@@ -98,57 +99,11 @@ export default function LandingPage() {
         return () => clearInterval(interval);
     }, []);
 
-    const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const toggleTheme = () => {
         const nextTheme = theme === 'dark' ? 'light' : 'dark';
-
-        const applyTheme = () => {
-            setTheme(nextTheme);
-            localStorage.setItem('landing-theme', nextTheme);
-            document.documentElement.classList.toggle('light', nextTheme === 'light');
-        };
-
-        const doc = document as Document & {
-            startViewTransition?: (callback: () => void) => { ready: Promise<void> };
-        };
-
-        const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        if (!doc.startViewTransition || isReducedMotion) {
-            applyTheme();
-            return;
-        }
-
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = rect.left + rect.width / 2;
-        const y = rect.top + rect.height / 2;
-
-        const endRadius = Math.hypot(
-            Math.max(x, window.innerWidth - x),
-            Math.max(y, window.innerHeight - y)
-        );
-
-        const transition = doc.startViewTransition(() => {
-            applyTheme();
-        });
-
-        transition.ready.then(() => {
-            const clipPath = [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${endRadius}px at ${x}px ${y}px)`
-            ];
-            document.documentElement.animate(
-                {
-                    clipPath: nextTheme === 'light' ? clipPath : [...clipPath].reverse()
-                },
-                {
-                    duration: 450,
-                    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                    pseudoElement: nextTheme === 'light'
-                        ? '::view-transition-new(root)'
-                        : '::view-transition-old(root)'
-                }
-            );
-        });
+        setTheme(nextTheme);
+        localStorage.setItem('landing-theme', nextTheme);
+        document.documentElement.classList.toggle('light', nextTheme === 'light');
     };
 
     if (!mounted) {
@@ -162,8 +117,9 @@ export default function LandingPage() {
     return (
         <div className="relative min-h-screen flex flex-col justify-between items-center py-16 md:py-24 px-6 md:px-12 selection:bg-zinc-200 selection:text-zinc-900 dark:selection:bg-zinc-800 dark:selection:text-zinc-100 transition-colors duration-300">
 
-            {/* Fondo Parallax Decorativo Tridimensional y Partículas Interactivas */}
+            {/* Fondo Parallax Decorativo Tridimensional, Gradiente Reactivo al Cursor y Partículas Interactivas */}
             <ParallaxBackground />
+            <ReactiveCursorGradient />
             <InteractiveParticles />
             {/* Header Superior - Perfectamente Alineado con el Ancho del Grid */}
             <header 

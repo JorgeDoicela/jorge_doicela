@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Jorge Doicela",
     description: "Accede a los proyectos principales de Jorge Doicela: Portafolio, Biblia y Software.",
     icons: {
-        icon: "/landing/logo/logo_color.png",
+        icon: "/landing/logo/logo_fondo_circular_color_.png",
     },
 };
 

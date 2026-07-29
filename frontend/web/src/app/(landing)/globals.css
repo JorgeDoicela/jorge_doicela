@@ -159,3 +159,70 @@ html, body, * {
     scrollbar-color: var(--text-subtitle) var(--background);
 }
 
+/* Animación de Entrada Escalonada Premium (Staggered Fade-In + Slide-Up) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up {
+        animation: fadeIn 0.4s ease forwards;
+        transform: none !important;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+}
+
+/* Transición de Tema de Barrido Circular (Circular Reveal Theme Transition - View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+    display: block;
+    will-change: clip-path;
+}
+
+::view-transition-image-pair(root) {
+    isolation: isolate;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 9999;
+}
+
+.light::view-transition-old(root) {
+    z-index: 9999;
+}
+
+.light::view-transition-new(root) {
+    z-index: 1;
+}
+
+/* Prevenir conflicto de transiciones CSS individuales en body durante la animación View Transitions */
+html:has(::view-transition) body,
+html:has(::view-transition) * {
+    transition: none !important;
+}
+
+
+
+

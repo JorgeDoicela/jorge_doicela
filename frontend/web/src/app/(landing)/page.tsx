@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import ParallaxBackground from './components/ParallaxBackground';
 import InteractiveParticles from './components/InteractiveParticles';
+import TypewriterRole from './components/TypewriterRole';
 import {
     Sun,
     Moon,
@@ -97,11 +98,57 @@ export default function LandingPage() {
         return () => clearInterval(interval);
     }, []);
 
-    const toggleTheme = () => {
+    const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
         const nextTheme = theme === 'dark' ? 'light' : 'dark';
-        setTheme(nextTheme);
-        localStorage.setItem('landing-theme', nextTheme);
-        document.documentElement.classList.toggle('light', nextTheme === 'light');
+
+        const applyTheme = () => {
+            setTheme(nextTheme);
+            localStorage.setItem('landing-theme', nextTheme);
+            document.documentElement.classList.toggle('light', nextTheme === 'light');
+        };
+
+        const doc = document as Document & {
+            startViewTransition?: (callback: () => void) => { ready: Promise<void> };
+        };
+
+        const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!doc.startViewTransition || isReducedMotion) {
+            applyTheme();
+            return;
+        }
+
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        const endRadius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
+        );
+
+        const transition = doc.startViewTransition(() => {
+            applyTheme();
+        });
+
+        transition.ready.then(() => {
+            const clipPath = [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`
+            ];
+            document.documentElement.animate(
+                {
+                    clipPath: nextTheme === 'light' ? clipPath : [...clipPath].reverse()
+                },
+                {
+                    duration: 450,
+                    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                    pseudoElement: nextTheme === 'light'
+                        ? '::view-transition-new(root)'
+                        : '::view-transition-old(root)'
+                }
+            );
+        });
     };
 
     if (!mounted) {
@@ -119,14 +166,15 @@ export default function LandingPage() {
             <ParallaxBackground />
             <InteractiveParticles />
             {/* Header Superior - Perfectamente Alineado con el Ancho del Grid */}
-            <header className="w-full max-w-5xl flex justify-between items-center mb-8 border-b border-card-border/40 pb-6 px-2 md:px-0">
+            <header 
+                className="animate-fade-in-up w-full max-w-5xl flex justify-between items-center mb-8 border-b border-card-border/40 pb-6 px-2 md:px-0"
+                style={{ animationDelay: '0ms' }}
+            >
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground bg-gradient-to-r from-foreground via-foreground/90 to-text-subtitle bg-clip-text">
                         Jorge Doicela
                     </h1>
-                    <p className="text-[10px] md:text-xs text-text-subtitle font-mono tracking-widest uppercase mt-0.5">
-                        DEVSECOPS, INTELIGENCIA ARTIFICIAL & CIBERSEGURIDAD
-                    </p>
+                    <TypewriterRole />
                 </div>
 
                 <div className="flex items-center gap-6">
@@ -155,7 +203,10 @@ export default function LandingPage() {
             <main className="w-full max-w-5xl z-10 flex-grow flex flex-col gap-6 justify-center">
 
                 {/* Tarjeta de Bienvenida & Perfil (Estática de Cristal al Inicio) */}
-                <div className="static-glass-card p-8 rounded-[2rem] flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-start md:items-center shadow-sm min-h-[160px] w-full">
+                <div 
+                    className="animate-fade-in-up static-glass-card p-8 rounded-[2rem] flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-start md:items-center shadow-sm min-h-[160px] w-full"
+                    style={{ animationDelay: '100ms' }}
+                >
                     <div className="flex-1 flex flex-col gap-2">
                         <span className="text-[10px] font-mono text-indigo-500 dark:text-indigo-400 tracking-widest uppercase font-medium">
                             {greeting}
@@ -177,7 +228,8 @@ export default function LandingPage() {
                     {/* Card 1: Biblia */}
                     <a
                         href={links.bible}
-                        className="interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
+                        className="animate-fade-in-up interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
+                        style={{ animationDelay: '200ms' }}
                     >
                         <div className="flex flex-col justify-between flex-1 pr-0 sm:pr-4">
                             <div>
@@ -211,7 +263,8 @@ export default function LandingPage() {
                     {/* Card 2: Software */}
                     <a
                         href={links.software}
-                        className="interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
+                        className="animate-fade-in-up interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[250px] relative overflow-hidden"
+                        style={{ animationDelay: '300ms' }}
                     >
                         <div className="flex flex-col justify-between flex-1 pr-0 sm:pr-4">
                             <div>
@@ -255,7 +308,8 @@ export default function LandingPage() {
                     {/* Card 3: Portafolio */}
                     <a
                         href={links.portfolio}
-                        className="interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px] overflow-hidden"
+                        className="animate-fade-in-up interactive-glass-card group p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px] overflow-hidden"
+                        style={{ animationDelay: '400ms' }}
                     >
                         <div className="flex flex-col justify-between flex-1">
                             <div>
@@ -295,7 +349,10 @@ export default function LandingPage() {
                     </a>
 
                     {/* Card 4: Contacto */}
-                    <div className="interactive-glass-card p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px]">
+                    <div 
+                        className="animate-fade-in-up interactive-glass-card p-8 rounded-[2rem] flex flex-col sm:flex-row gap-6 justify-between items-stretch shadow-sm min-h-[200px]"
+                        style={{ animationDelay: '500ms' }}
+                    >
                         <div className="flex flex-col justify-between flex-1">
                             <div>
                                 <div className="flex items-center gap-2 mb-4 text-text-subtitle">
@@ -355,7 +412,10 @@ export default function LandingPage() {
                     </div>
 
                     {/* Card 5: Especialidades / Áreas de Práctica (Estática de Cristal) */}
-                    <div className="static-glass-card p-8 rounded-[2rem] flex flex-col md:flex-row gap-6 justify-between items-center shadow-sm min-h-[180px] md:col-span-2">
+                    <div 
+                        className="animate-fade-in-up static-glass-card p-8 rounded-[2rem] flex flex-col md:flex-row gap-6 justify-between items-center shadow-sm min-h-[180px] md:col-span-2"
+                        style={{ animationDelay: '600ms' }}
+                    >
                         <div className="flex flex-col justify-between h-full flex-1">
                             <div>
                                 <div className="flex items-center gap-2 mb-2 text-text-subtitle">
@@ -387,7 +447,10 @@ export default function LandingPage() {
                     </div>
 
                     {/* Card 6: Mi Enfoque (Estática de Cristal) */}
-                    <div className="static-glass-card p-8 rounded-[2rem] flex flex-col justify-between shadow-sm min-h-[180px] md:col-span-2">
+                    <div 
+                        className="animate-fade-in-up static-glass-card p-8 rounded-[2rem] flex flex-col justify-between shadow-sm min-h-[180px] md:col-span-2"
+                        style={{ animationDelay: '700ms' }}
+                    >
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 text-text-subtitle mb-2">
                                 <Compass className="w-4 h-4" />
@@ -403,7 +466,10 @@ export default function LandingPage() {
             </main>
 
             {/* Footer minimalista */}
-            <footer className="w-full max-w-5xl mt-16 border-t border-card-border/40 pt-8 px-2 md:px-0 flex justify-center text-xs text-text-subtitle font-mono uppercase tracking-wider">
+            <footer 
+                className="animate-fade-in-up w-full max-w-5xl mt-16 border-t border-card-border/40 pt-8 px-2 md:px-0 flex justify-center text-xs text-text-subtitle font-mono uppercase tracking-wider"
+                style={{ animationDelay: '800ms' }}
+            >
                 <span>© {new Date().getFullYear()} Jorge Doicela. Todos los derechos reservados.</span>
             </footer>
 

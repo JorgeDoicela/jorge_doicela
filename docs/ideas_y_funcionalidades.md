@@ -22,11 +22,11 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 
 - [x] 🔀 **Partículas interactivas de fondo**: Pequeñas partículas flotantes (tipo Three.js o Tsparticles) que reaccionan al movimiento del ratón acercándose o alejándose del cursor. *(En móvil: reaccionar a `touchmove` en lugar de `mousemove`; reducir la densidad de partículas para no saturar la GPU del dispositivo.)*
 
-- [ ] ✅ **Animación de entrada (Page Load)**: Las tarjetas y el texto de la cabecera aparecen con una animación de entrada escalonada (staggered fade-in + slide-up) al cargar la página por primera vez.
+- [x] ✅ **Animación de entrada (Page Load)**: Las tarjetas y el texto de la cabecera aparecen con una animación de entrada escalonada (staggered fade-in + slide-up) al cargar la página por primera vez.
 
-- [ ] ✅ **Efecto Typewriter en el título**: El nombre o el rol ("Full Stack Developer") se escribe letra por letra con animación de máquina de escribir en la cabecera.
+- [x] ✅ **Efecto Typewriter en el título**: El nombre o el rol ("Full Stack Developer") se escribe letra por letra con animación de máquina de escribir en la cabecera.
 
-- [ ] ✅ **Transición de tema animada**: El cambio entre modo claro y oscuro se realiza con una animación de "barrido circular" que expande el nuevo tema desde el botón de cambio.
+- [x] ✅ **Transición de tema animada**: El cambio entre modo claro y oscuro se realiza con una animación de "barrido circular" que expande el nuevo tema desde el botón de cambio.
 
 - [ ] 🌐 **Gradiente de fondo reactivo al cursor**: El gradiente del fondo de la página se desplaza sutilmente siguiendo la posición del ratón en tiempo real. *(No aplica en móvil — desactivar por completo en viewports táctiles.)*
 

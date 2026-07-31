@@ -60,5 +60,6 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             pnpm install --prod --frozen-lockfile
-            pm2 restart pm2.config.js || pm2 start pm2.config.js
+            pm2 delete all || true
+            pm2 start pm2.config.js
             pm2 save

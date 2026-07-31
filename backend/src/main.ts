@@ -4,14 +4,18 @@ import { Logger } from 'nestjs-pino';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
-  // Use nestjs-pino logger
+  // Habilitar compresión Gzip/Brotli para todas las respuestas REST
+  app.use(compression());
+
+  // Usar el registrador nestjs-pino
   app.useLogger(app.get(Logger));
 
-  // Enable global validation with strict whitelist and transformation
+  // Validación global con transformación
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -19,13 +23,13 @@ async function bootstrap() {
     }),
   );
 
-  // Global Response Interceptor
+  // Interceptor global de respuestas uniformes
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  // Global Exception Filter
+  // Filtro global de excepciones
   app.useGlobalFilters(new GlobalExceptionFilter());
 
-  // Enable CORS for Next.js frontends
+  // Habilitar CORS para los frontends de Next.js
   app.enableCors({
     origin: process.env.CORS_ORIGINS
       ? process.env.CORS_ORIGINS.split(',')

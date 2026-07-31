@@ -39,14 +39,22 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       errorDetails = exception.message;
     }
 
-    this.logger.error(
-      `HTTP Status: ${status} - Method: ${request.method} - Path: ${request.url} - Error: ${
-        exception instanceof Error
-          ? exception.message
-          : JSON.stringify(exception)
-      }`,
-      exception instanceof Error ? exception.stack : undefined,
-    );
+    if (status === HttpStatus.NOT_FOUND) {
+      this.logger.warn(
+        `HTTP Status: 404 - Method: ${request.method} - Path: ${request.url} - ${
+          exception instanceof Error ? exception.message : 'Not Found'
+        }`,
+      );
+    } else {
+      this.logger.error(
+        `HTTP Status: ${status} - Method: ${request.method} - Path: ${request.url} - Error: ${
+          exception instanceof Error
+            ? exception.message
+            : JSON.stringify(exception)
+        }`,
+        exception instanceof Error ? exception.stack : undefined,
+      );
+    }
 
     response.status(status).json({
       success: false,

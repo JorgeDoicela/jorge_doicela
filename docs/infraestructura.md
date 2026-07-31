@@ -226,9 +226,16 @@ Nginx actúa como el punto de entrada HTTPS perimetral seguro en el servidor. Es
 
        # Cabeceras de seguridad y ocultación de versión
        server_tokens off;
-       add_header X-Frame-Options "DENY" always;
+       add_header X-Frame-Options "SAMEORIGIN" always;
        add_header X-Content-Type-Options "nosniff" always;
        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+       # Compresión de Alto Rendimiento (Gzip / Brotli)
+       gzip on;
+       gzip_comp_level 6;
+       gzip_min_length 256;
+       gzip_proxied any;
+       gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
 
        # 1. API Backend REST
        location ~ ^/(bible|software|portfolio)/ {

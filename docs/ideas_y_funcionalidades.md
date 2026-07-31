@@ -48,25 +48,25 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 - [ ] ✅ **Línea de tiempo personal**: Timeline scrolleable con los hitos más importantes de la vida y carrera profesional de Jorge.
 
 ### Funcionalidades Técnicas y de Accesibilidad
-- [ ] ✅ **Soporte multiidioma (i18n)**: Botón para cambiar entre español e inglés, gestionando el idioma con localStorage y traduciendo todo el contenido de la página.
+- [x] ✅ **Soporte multiidioma (i18n)**: Botón para cambiar entre español e inglés, gestionando el idioma con localStorage y traduciendo todo el contenido de la página.
 
-- [ ] ✅ **Metadatos SEO completos**: Etiquetas og:image, og:title, twitter:card, descripción estructurada JSON-LD de persona.
+- [x] ✅ **Metadatos SEO completos**: Etiquetas og:image, og:title, twitter:card, descripción estructurada JSON-LD de persona.
 
-- [ ] ✅ **Sitemap dinámico**: Generación automática de sitemap.xml para todos los subproyectos y páginas desde Next.js.
+- [x] ✅ **Sitemap dinámico**: Generación automática de sitemap.xml para todos los subproyectos y páginas desde Next.js.
 
-- [ ] ✅ **Soporte de accesibilidad (ARIA)**: Etiquetas aria-label en todos los botones, navegación con teclado completa y compatibilidad con lectores de pantalla.
+- [x] ✅ **Soporte de accesibilidad (ARIA)**: Etiquetas aria-label en todos los botones, navegación con teclado completa y compatibilidad con lectores de pantalla.
 
-- [ ] 🔀 **PWA (Progressive Web App)**: Configurar manifest.json y un service worker básico para que la landing se pueda instalar como app en el móvil del visitante. *(Es específicamente valioso para móvil — alta prioridad en esa plataforma.)*
+- [x] 🔀 **PWA (Progressive Web App)**: Configurar manifest.json y un service worker básico para que la landing se pueda instalar como app en el móvil del visitante. *(Es específicamente valioso para móvil — alta prioridad en esa plataforma.)*
 
 - [ ] ✅ **Analytics propio sin cookies**: Integración de Umami o Plausible (autohosteado en el mismo VPS) para rastrear visitas sin depender de Google Analytics.
 
 - [ ] ✅ **Compartir en redes sociales**: Botones para compartir directamente el perfil de Jorge en X (Twitter), LinkedIn o WhatsApp con un mensaje predefinido.
 
-- [ ] ✅ **Previsualización de Open Graph**: Imagen estática generada con Next.js OG Image para que cuando se comparta el enlace aparezca una miniatura visualmente atractiva.
+- [x] ✅ **Previsualización de Open Graph**: Imagen estática generada con Next.js OG Image para que cuando se comparta el enlace aparezca una miniatura visualmente atractiva.
 
-- [ ] ✅ **Verificación de Google Search Console y Bing**: Meta tags de verificación para posicionar el sitio en buscadores.
+- [x] ✅ **Verificación de Google Search Console y Bing**: Meta tags de verificación para posicionar el sitio en buscadores.
 
-- [ ] ✅ **Robots.txt personalizado**: Definir qué páginas o subdominios deben o no ser indexadas por los motores de búsqueda.
+- [x] ✅ **Robots.txt personalizado**: Definir qué páginas o subdominios deben o no ser indexadas por los motores de búsqueda.
 
 - [ ] Revisar ✅ **Modo sin animaciones (prefers-reduced-motion)**: Detectar la preferencia del sistema operativo del usuario para desactivar animaciones.
 

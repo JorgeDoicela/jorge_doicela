@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import ResourceErrorFallback from "../components/ResourceErrorFallback";
+import CancelFallback from "../components/CancelFallback";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -22,7 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${plusJakartaSans.variable} h-full scroll-smooth theme-software`}>
+      <head>
+        <ResourceErrorFallback />
+      </head>
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
+        <CancelFallback />
         {/* Capa de Orbes de Brillo de Fondo */}
         <div className="tech-glow-container">
           <div className="tech-glow-orb orb-violet" />

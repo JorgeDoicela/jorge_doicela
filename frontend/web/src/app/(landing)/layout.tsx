@@ -4,6 +4,8 @@ import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
 import PwaRegister from "./components/PwaRegister";
 import PersonJsonLd from "./components/PersonJsonLd";
+import ResourceErrorFallback from "../components/ResourceErrorFallback";
+import CancelFallback from "../components/CancelFallback";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -101,7 +103,11 @@ export default function LandingLayout({
             lang="es"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
+            <head>
+                <ResourceErrorFallback />
+            </head>
             <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
+                <CancelFallback />
                 <LanguageProvider>
                     <PwaRegister />
                     <PersonJsonLd />

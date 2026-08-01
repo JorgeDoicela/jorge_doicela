@@ -60,6 +60,12 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             pnpm install --prod --frozen-lockfile
+            
+            # Copiar recursos estáticos obligatorios requeridos por Next.js en modo Standalone
+            mkdir -p frontend/web/.next/standalone/frontend/web/.next
+            cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/
+            cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/
+            
             pm2 delete all || true
             pm2 start pm2.config.js
             pm2 save

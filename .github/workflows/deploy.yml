@@ -60,8 +60,8 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             
-            # Instalar dependencias del backend de forma dedicada en producción para evitar MODULE_NOT_FOUND
-            cd backend && pnpm install --prod --frozen-lockfile && cd ..
+            # Instalar dependencias del backend de forma dedicada en producción sin ejecutar scripts de desarrollo (Husky)
+            cd backend && pnpm install --prod --frozen-lockfile --ignore-scripts && cd ..
             
             # Copiar recursos estáticos obligatorios requeridos por Next.js en modo Standalone
             mkdir -p frontend/web/.next/standalone/frontend/web/.next

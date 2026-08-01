@@ -59,7 +59,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.TARGET_DIR }}
-            pnpm install --prod --frozen-lockfile
+            
+            # Instalar dependencias del backend de forma dedicada en producción para evitar MODULE_NOT_FOUND
+            cd backend && pnpm install --prod --frozen-lockfile && cd ..
             
             # Copiar recursos estáticos obligatorios requeridos por Next.js en modo Standalone
             mkdir -p frontend/web/.next/standalone/frontend/web/.next

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ForumTopic } from '../types';
+import { API_URL } from '../../../../config';
 
 export function useForum() {
   const [topics, setTopics] = useState<ForumTopic[]>([]);
@@ -13,8 +14,7 @@ export function useForum() {
       setLoading(true);
       setError(null);
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/software/forum`);
+        const res = await fetch(`${API_URL}/software/forum`);
 
         if (!res.ok) {
           throw new Error('Error al cargar temas del foro');

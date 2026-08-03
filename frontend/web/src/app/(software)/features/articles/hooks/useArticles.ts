@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Article, SoftwareCategory } from '../types';
+import { API_URL } from '../../../../config';
 
 export function useArticles(category: SoftwareCategory, search: string) {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -21,7 +22,6 @@ export function useArticles(category: SoftwareCategory, search: string) {
       setError(null);
 
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
         const params = new URLSearchParams();
 
         if (category !== 'all') {
@@ -31,7 +31,7 @@ export function useArticles(category: SoftwareCategory, search: string) {
           params.append('search', search.trim());
         }
 
-        const url = `${baseUrl}/software/articles${params.toString() ? `?${params.toString()}` : ''}`;
+        const url = `${API_URL}/software/articles${params.toString() ? `?${params.toString()}` : ''}`;
         const res = await fetch(url);
 
         if (!res.ok) {

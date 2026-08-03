@@ -209,45 +209,29 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 
 ---
 
-## Galería de Software (`software.jorgedoicela.com`) — Frontend + Backend
+## Software Hub y Plataforma Tecológica (`software.jorgedoicela.com`) — Frontend + Backend
 
-> Catálogo visual y técnico de proyectos y herramientas desarrolladas por Jorge. Principalmente web, pero debe ser completamente usable en móvil con diseño responsivo y targets táctiles adecuados (mínimo 44×44px).
+> Hub integral de contenidos, noticias, blog, foros, inteligencia artificial, ciberseguridad, tutoriales y proyectos de software desarrollados por Jorge. Principalmente web, pero completamente adaptable a dispositivos móviles.
 
-### Catálogo de Proyectos
-- [ ] ✅ **Filtros por tecnología o categoría**: Chips o tags clicables que filtran la malla por lenguaje, framework o tipo (web, mobile, CLI, IA, etc.).
-- [ ] ✅ **Buscador en tiempo real**: Campo de búsqueda que filtra proyectos por nombre, descripción o tecnología mientras el usuario escribe.
-- [ ] ✅ **Orden dinámico de proyectos**: Ordenar la malla por fecha de creación, nombre o número de estrellas en GitHub.
-- [ ] ✅ **Página de detalle de proyecto**: Ruta /software/projects/:id con toda la información: descripción completa, capturas de pantalla, stack, fecha y enlaces.
-- [ ] ✅ **Sistema de tags múltiples por proyecto**: Campo tags[] en la entidad Project para clasificar con múltiples etiquetas (open-source, en-producción, en-desarrollo, etc.).
-- [ ] ✅ **Estado del proyecto en tiempo real**: Badge en cada tarjeta que indica el estado (En desarrollo, Producción, Archivado, Mantenimiento).
-- [ ] ✅ **Contador de estrellas de GitHub**: Llamada a la API pública de GitHub para mostrar el número de estrellas del repositorio en la tarjeta.
-- [ ] ✅ **Fecha de última actualización de GitHub**: Mostrar cuándo fue el último commit del repositorio.
-- [ ] 🔀 **Enlace a demo en vivo con iframe preview**: Al pasar el cursor sobre una tarjeta, mostrar una miniatura de la URL en producción. *(En móvil: `hover` no existe — reemplazar con thumbnail estático o screenshot pregenerado.)*
-- [ ] ✅ **Carousel de imágenes por proyecto**: Galería deslizante de capturas de pantalla dentro de la página de detalle. *(En móvil: activar swipe gesture nativo.)*
-- [ ] ✅ **Video demo embebido**: Video de demostración del proyecto embebido desde YouTube o servido como asset local.
+### Módulos y Categorías del Hub
+- [ ] ✅ **Noticias y Actualidad Tech**: Módulo de noticias del sector tecnológico y desarrollo de software.
+- [ ] ✅ **Blog y Artículos Técnicos**: Artículos profundos sobre arquitectura de software, patrones de diseño y desarrollo web/móvil.
+- [ ] ✅ **Inteligencia Artificial**: Sección dedicada a modelos de lenguaje, herramientas de IA, visión por computador y automatizaciones.
+- [ ] ✅ **Ciberseguridad**: Guías de bastionado, seguridad defensiva/ofensiva, avisos de vulnerabilidades y buenas prácticas de codificación segura.
+- [ ] ✅ **Tutoriales y Guías Paso a Paso**: Manuales estructurados con código ejecutable para aprender conceptos de programación.
+- [ ] ✅ **Foros y Discusiones de Comunidad**: Espacio comunitario para debates, preguntas y respuestas sobre desarrollo de software.
+- [ ] ✅ **Galería de Proyectos**: Malla interactiva de proyectos y herramientas del autor con stack técnico y enlaces.
 
-### Administración de Proyectos
-- [ ] 🌐 **Panel de administración protegido**: Ruta /admin/projects con autenticación básica para gestionar los proyectos sin tocar la API directamente.
-- [ ] 🌐 **CRUD visual completo**: Formularios para crear, editar y eliminar proyectos desde la interfaz de administración.
-- [ ] 🌐 **Subida de imágenes de capturas de pantalla**: Endpoint de subida de archivos (multipart/form-data) en NestJS para guardar imágenes de los proyectos.
-- [ ] 🌐 **Reordenación drag-and-drop de proyectos**: En el panel de admin, reordenar la posición de los proyectos arrastrando y soltando tarjetas.
-- [ ] 🌐 **Programación de publicación**: Campo publishedAt en la entidad Project para agendar cuándo aparece un proyecto en la galería pública.
-- [ ] 🌐 **Modo borrador de proyecto**: Campo isDraft para trabajar en el contenido de un proyecto sin publicarlo en la galería pública.
+### Navegación y Filtros en Tiempo Real
+- [ ] ✅ **Filtros por categoría (CategoryNav)**: Menú de selección entre Noticias, Blog, Foros, IA, Ciberseguridad, Tutoriales y Proyectos.
+- [ ] ✅ **Buscador en tiempo real**: Filtro instantáneo por texto, etiquetas y conceptos clave.
+- [ ] ✅ **Etiquetas por contenido (Tags)**: Sistema de clasificación cruzada por lenguajes, frameworks o temas.
+- [ ] ✅ **Contador de lecturas e interacciones**: Registro de visualizaciones y me gusta por artículo y tutorial.
 
-### Funcionalidades de Comunidad e Interacción
-- [ ] ✅ **Sistema de reacciones por proyecto**: Botones de reacción (Me impresiona, Favorito, Increíble) que los visitantes pueden usar sin registrarse.
-- [ ] ✅ **Contador de visualizaciones**: El backend registra cuántas veces se ha visitado la página de detalle de cada proyecto.
-- [ ] ✅ **Sección de comentarios**: Sistema de comentarios por proyecto (sin registro, usando nombre + mensaje) almacenados en la base de datos.
-- [ ] ✅ **Compartir proyecto en redes**: Botones para compartir la URL del proyecto directamente a Twitter, LinkedIn o WhatsApp.
-- [ ] ✅ **Formulario de colaboración**: Formulario en la página de detalle para que otro desarrollador pueda proponer colaboración en un proyecto.
-- [ ] ✅ **Newsletter / Lista de correos**: Los visitantes pueden suscribirse para recibir novedades cuando Jorge publique un nuevo proyecto.
-
-### Integraciones Avanzadas
-- [ ] ✅ **Sincronización automática con GitHub**: Tarea cron en el backend que consulta la API de GitHub y actualiza automáticamente los datos de cada repositorio.
-- [ ] ✅ **Importador de repositorios de GitHub**: Endpoint que, dado el username de GitHub, importa automáticamente todos los repositorios públicos como borradores.
-- [ ] ✅ **Generación automática de tarjetas de proyecto (OG Image)**: Para cada proyecto, generar una imagen Open Graph dinámica con Next.js OG.
-- [ ] ✅ **Integración con npm**: Si algún proyecto es una librería npm, mostrar el número de descargas semanales en la tarjeta.
-- [ ] ✅ **Notificación cuando se crea un nuevo proyecto**: El backend emite un evento por WebSocket a todos los visitantes activos anunciando en tiempo real que hay un nuevo proyecto.
+### Administración del Hub
+- [ ] 🌐 **Panel de administración protegido**: Rutas protegidas para publicar y editar artículos, tutoriales y noticias.
+- [ ] 🌐 **CRUD de contenidos y foros**: Gestión visual completa de categorías, borrador y estado de publicación.
+- [ ] 🌐 **Editor Markdown / Rich Text**: Soporte de edición enriquecida con sintaxis de código y bloques destacados.
 
 ---
 

@@ -52,7 +52,17 @@ Gestiona el texto sagrado y la segmentación teológica:
   - `DELETE /bible/translations/:id`: Elimina una traducción.
 
 ### Módulo de Software (`software`)
-Gestiona el catálogo de proyectos y herramientas de desarrollo:
+Gestiona el Software Hub (Noticias, Blog, Foros, IA, Ciberseguridad, Tutoriales y Proyectos):
+* **Artículos y Contenidos (`/software/articles`)**:
+  - `GET /software/articles`: Lista los artículos y contenidos. Admite query params `category` (noticias, blog, ai, ciberseguridad, tutoriales) y `search`.
+  - `GET /software/articles/:id`: Obtiene el detalle de un artículo por ID o slug.
+  - `POST /software/articles`: Registra un nuevo artículo (requiere `CreateArticleDto`).
+  - `PATCH /software/articles/:id`: Actualiza campos específicos de un artículo.
+  - `DELETE /software/articles/:id`: Elimina un artículo.
+* **Foros y Discusiones (`/software/forum`)**:
+  - `GET /software/forum`: Lista los temas de discusión de la comunidad.
+  - `GET /software/forum/:id`: Obtiene el detalle de un tema de discusión.
+  - `POST /software/forum`: Crea un nuevo tema en el foro.
 * **Proyectos (`/software/projects`)**:
   - `GET /software/projects`: Lista los proyectos registrados en el catálogo.
   - `GET /software/projects/:id`: Obtiene el detalle de un proyecto.

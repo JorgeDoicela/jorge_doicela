@@ -63,8 +63,10 @@ frontend/web/src/
     └── (software)/         # Proyectos de Software (software.jorgedoicela.com)
         ├── software/
         │   └── page.tsx    # Ruta física interna de Next.js
-        ├── features/       # Funcionalidades de software (FSD)
-        │   └── projects/   # Catálogo y detalle de proyectos
+        ├── features/       # Funcionalidades del Hub de Software (FSD)
+        │   ├── articles/   # Contenidos (Noticias, Blog, IA, Ciberseguridad, Tutoriales)
+        │   ├── forum/      # Foros de discusión comunitarios
+        │   └── projects/   # Catálogo y detalle de proyectos showcase
         ├── globals.css     # Estilos independientes de software
         └── layout.tsx
 ```

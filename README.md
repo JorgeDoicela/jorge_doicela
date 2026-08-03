@@ -18,7 +18,7 @@ El monorepo está configurado utilizando los workspaces de pnpm. Cuenta con un b
   * **Landing Page**: `jorgedoicela.com`
   * **Portfolio (Terminal)**: `portfolio.jorgedoicela.com`
   * **Bible (Biblia)**: `bible.jorgedoicela.com`
-  * **Software (Proyectos)**: `software.jorgedoicela.com`
+  * **Software (Hub Tecológico)**: `software.jorgedoicela.com` (Noticias, Blog, Foros, IA, Ciberseguridad, Tutoriales y Proyectos)
 * **[frontend/mobile](frontend/mobile/)**: Cliente móvil independiente en React Native / Expo.
 * **Infraestructura y Despliegue**: Ver [infraestructura.md](docs/infraestructura.md) para el detalle de la configuración de AWS Lightsail, DNS perimetral de Cloudflare y políticas de seguridad SSL/TLS.
 

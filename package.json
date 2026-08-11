@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
+    "check-secrets": "node scripts/check-secrets.js",
     "dev": "pnpm -r --parallel dev",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",

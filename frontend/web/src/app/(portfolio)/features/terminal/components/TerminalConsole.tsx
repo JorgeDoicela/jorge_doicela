@@ -2,91 +2,334 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useTerminalSocket } from '../hooks/useTerminalSocket';
+import { TerminalHeader } from './TerminalHeader';
+import { MatrixRain } from './MatrixRain';
+import { MobileTerminalBanner } from './MobileTerminalBanner';
+import { parseAnsiToReact, stripAnsi } from '../utils/ansiParser';
+import { Copy, Check, Terminal as TerminalIcon } from 'lucide-react';
 
 export const TerminalConsole: React.FC = () => {
-    const { history, sendCommand, isConnected } = useTerminalSocket();
-    const [input, setInput] = useState('');
-    const containerRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    tabs,
+    activeTab,
+    activeTabId,
+    setActiveTabId,
+    addTab,
+    closeTab,
+    sendCommand,
+    requestTabComplete,
+    navigateHistory,
+    completions,
+    setCompletions,
+    connectionStatus,
+    isMatrixActive,
+    setIsMatrixActive,
+    isMirrorMode,
+    shareSession,
+    notifyResize,
+  } = useTerminalSocket();
 
-    useEffect(() => {
-        if (containerRef.current) {
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  const [input, setInput] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isMobileExpanded, setIsMobileExpanded] = useState(true);
+  const [copiedItemIndex, setCopiedItemIndex] = useState<string | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalBoxRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll al final cuando llega nuevo contenido
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [activeTab.history, completions]);
+
+  // Observador de redimensionado de terminal (PTY resize)
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        const height = entry.contentRect.height;
+        const cols = Math.max(40, Math.floor(width / 8.5));
+        const rows = Math.max(10, Math.floor(height / 20));
+        notifyResize(cols, rows);
+      }
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [notifyResize]);
+
+  // Manejador de teclado para Tab, Flecha Arriba/Abajo, Ctrl+L
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Autocompletado con Tab
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (!input.trim()) return;
+
+      // Si ya hay sugerencias y el usuario presiona Tab
+      if (completions.length === 1) {
+        const parts = input.split(/\s+/);
+        if (parts.length <= 1) {
+          setInput(completions[0] + ' ');
+        } else {
+          parts[parts.length - 1] = completions[0];
+          setInput(parts.join(' ') + ' ');
         }
-    }, [history]);
+        setCompletions([]);
+      } else {
+        requestTabComplete(input);
+      }
+      return;
+    }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!input.trim()) return;
-        sendCommand(input);
-        setInput('');
-    };
+    // Navegación por historial con Flecha Arriba
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const previousCommand = navigateHistory('up', input);
+      setInput(previousCommand);
+      return;
+    }
 
-    const focusInput = () => {
-        inputRef.current?.focus();
-    };
+    // Navegación por historial con Flecha Abajo
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextCommand = navigateHistory('down', input);
+      setInput(nextCommand);
+      return;
+    }
 
-    return (
+    // Atajo Ctrl+L para limpiar pantalla
+    if (e.ctrlKey && e.key === 'l') {
+      e.preventDefault();
+      sendCommand('clear');
+      return;
+    }
+
+    // Atajo Ctrl+C para cancelar entrada
+    if (e.ctrlKey && e.key === 'c') {
+      e.preventDefault();
+      setInput('');
+      setCompletions([]);
+      return;
+    }
+
+    // Si escribe cualquier otra tecla, limpiar sugerencias previas
+    if (completions.length > 0 && e.key !== 'Shift' && e.key !== 'Control') {
+      setCompletions([]);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    sendCommand(input);
+    setInput('');
+    setCompletions([]);
+  };
+
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
+
+  // Copiar todo el buffer de la pestaña activa
+  const handleCopyAll = () => {
+    const allText = activeTab.history
+      .map((item) =>
+        item.type === 'command'
+          ? `${item.prompt || 'jorge@vps-1gb-ram:~$ '} ${item.content}`
+          : stripAnsi(item.content)
+      )
+      .join('\n');
+    navigator.clipboard.writeText(allText);
+  };
+
+  // Copiar un bloque individual
+  const handleCopyBlock = (content: string, id: string) => {
+    const plainText = stripAnsi(content);
+    navigator.clipboard.writeText(plainText);
+    setCopiedItemIndex(id);
+    setTimeout(() => setCopiedItemIndex(null), 2000);
+  };
+
+  // Limpiar pestaña activa
+  const handleClear = () => {
+    sendCommand('clear');
+  };
+
+  // Seleccionar sugerencia de autocompletado
+  const handleSelectCompletion = (completion: string) => {
+    const parts = input.split(/\s+/);
+    if (parts.length <= 1) {
+      setInput(completion + ' ');
+    } else {
+      parts[parts.length - 1] = completion;
+      setInput(parts.join(' ') + ' ');
+    }
+    setCompletions([]);
+    inputRef.current?.focus();
+  };
+
+  return (
+    <div className="w-full relative">
+      {/* Banner informativo para dispositivos móviles */}
+      <MobileTerminalBanner
+        isMobileExpanded={isMobileExpanded}
+        onToggleMobileExpand={() => setIsMobileExpanded(!isMobileExpanded)}
+      />
+
+      {/* Contenedor principal de la Terminal */}
+      {isMobileExpanded && (
         <div
-            onClick={focusInput}
-            className="w-full max-w-4xl mx-auto rounded-xl bg-surface border border-gold-b shadow-2xl p-6 font-mono text-sm cursor-text relative overflow-hidden luxury-glow-hover transition-colors duration-200"
+          ref={terminalBoxRef}
+          onClick={focusInput}
+          className={`w-full font-mono text-sm cursor-text relative overflow-hidden transition-all duration-300 ${
+            isFullscreen
+              ? 'fixed inset-0 z-50 rounded-none bg-surface/98 border-none p-6 md:p-10 flex flex-col backdrop-blur-xl shadow-2xl'
+              : 'max-w-5xl mx-auto rounded-xl bg-surface/95 border border-border-gold shadow-2xl p-5 md:p-6 luxury-glow-hover'
+          }`}
         >
-            {/* Decorative terminal header bar */}
-            <div className="flex justify-between items-center pb-4 mb-4 border-b border-gold-b/50 text-gold-s/70 text-xs select-none">
-                <div className="flex gap-2">
-                    <span className="w-3 h-3 rounded-full bg-gold-p/70"></span>
-                    <span className="w-3 h-3 rounded-full bg-gold-s/50"></span>
-                    <span className="w-3 h-3 rounded-full bg-foreground/15"></span>
-                </div>
-                <div className="tracking-wider">Jorge Doicela</div>
-                <div className="flex items-center gap-1.5">
-                    <span
-                        className={`w-1.5 h-1.5 rounded-full ${isConnected
-                            ? 'bg-gold-p shadow-[0_0_6px_rgba(197,168,128,0.8)] animate-pulse'
-                            : 'bg-foreground/20'
-                            }`}
-                    ></span>
-                    <span className="text-[10px] tracking-widest uppercase">
-                        {isConnected ? 'online' : 'offline'}
-                    </span>
-                </div>
-            </div>
+          {/* Capa de animación Matrix cuando está activa */}
+          {isMatrixActive && (
+            <MatrixRain onClose={() => setIsMatrixActive(false)} />
+          )}
 
-            {/* Output history */}
-            <div
-                ref={containerRef}
-                className="h-[400px] overflow-y-auto pr-2 space-y-2 select-text whitespace-pre-wrap leading-relaxed text-foreground/80 scrollbar-thin scrollbar-thumb-gold-b"
+          {/* Cabecera con pestañas tmux y acciones */}
+          <TerminalHeader
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onSelectTab={setActiveTabId}
+            onAddTab={addTab}
+            onCloseTab={closeTab}
+            connectionStatus={connectionStatus}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+            onCopyAll={handleCopyAll}
+            onClear={handleClear}
+            onShareSession={shareSession}
+            isMirrorMode={isMirrorMode}
+          />
+
+          {/* Área de salida con scroll */}
+          <div
+            ref={containerRef}
+            className={`overflow-y-auto pr-2 space-y-2 select-text whitespace-pre-wrap leading-relaxed text-foreground/85 font-mono text-xs md:text-sm scrollbar-thin scrollbar-thumb-border-gold hover:scrollbar-thumb-gold-500/40 ${
+              isFullscreen ? 'flex-1 min-h-[500px]' : 'h-[380px] md:h-[420px]'
+            }`}
+          >
+            {activeTab.history.map((item) => {
+              if (item.type === 'command') {
+                return (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between group text-foreground font-medium tracking-wide py-0.5"
+                  >
+                    <div>
+                      <span className="text-gold-300 font-semibold mr-2">
+                        {item.prompt || `jorge@vps-1gb-ram:${item.cwd || '~'}$`}
+                      </span>
+                      <span>{item.content}</span>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyBlock(item.content, item.id);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1 text-foreground/40 hover:text-gold-300 rounded transition-opacity"
+                      title="Copiar comando"
+                    >
+                      {copiedItemIndex === item.id ? (
+                        <Check className="w-3 h-3 text-emerald-400" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
+                    </button>
+                  </div>
+                );
+              }
+
+              return (
+                <div
+                  key={item.id}
+                  className="group relative hover:bg-white/[0.02] rounded px-1 -mx-1 py-0.5 transition-colors"
+                >
+                  <div className="text-foreground/85">
+                    {parseAnsiToReact(item.content)}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyBlock(item.content, item.id);
+                    }}
+                    className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 p-1 text-foreground/40 hover:text-gold-300 bg-surface/80 rounded transition-opacity"
+                    title="Copiar bloque de salida"
+                  >
+                    {copiedItemIndex === item.id ? (
+                      <Check className="w-3 h-3 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+
+            {/* Sugerencias de autocompletado Tab */}
+            {completions.length > 0 && (
+              <div className="p-3 my-2 rounded-lg bg-surface-raised border border-gold-400/30 text-xs animate-fade-in">
+                <div className="text-gold-300 font-semibold mb-1.5 flex items-center gap-1.5">
+                  <TerminalIcon className="w-3.5 h-3.5" />
+                  <span>Sugerencias disponibles (Usa Tab o haz clic):</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {completions.map((comp, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectCompletion(comp);
+                      }}
+                      className="px-2 py-1 rounded bg-background/80 hover:bg-gold-400/20 text-foreground/90 hover:text-gold-200 border border-border/50 text-[11px] transition-colors cursor-pointer"
+                    >
+                      {comp}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Fila de entrada interactiva */}
+          {!isMirrorMode ? (
+            <form
+              onSubmit={handleSubmit}
+              className="flex items-center mt-3 border-t border-border/40 pt-3"
             >
-                {history.map((line, index) => {
-                    // If this was a command sent by the user, render it with prompt prefix
-                    if (
-                        line.indexOf('\n') === -1 &&
-                        !line.startsWith('Bienvenido') &&
-                        !line.startsWith('[Error]') &&
-                        !line.endsWith('~$ ')
-                    ) {
-                        return (
-                            <div key={index} className="text-foreground font-medium tracking-wide">
-                                <span className="text-gold-p">doicela@shell:~$</span> {line}
-                            </div>
-                        );
-                    }
-                    return <div key={index} className="text-foreground/60">{line}</div>;
-                })}
-            </div>
-
-            {/* Input row */}
-            <form onSubmit={handleSubmit} className="flex items-center mt-4 border-t border-gold-b/20 pt-4">
-                <span className="text-gold-p font-medium select-none mr-2">doicela@shell:~$</span>
-                <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    className="flex-1 bg-transparent text-foreground border-none outline-none focus:ring-0 p-0 font-mono placeholder-gold-s/30"
-                    placeholder="Escribe un comando o ayuda..."
-                />
+              <span className="text-gold-300 font-semibold select-none mr-2 text-xs md:text-sm shrink-0">
+                jorge@vps-1gb-ram:{activeTab.cwd}$
+              </span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-1 bg-transparent text-foreground border-none outline-none focus:ring-0 p-0 font-mono placeholder-foreground/30 text-xs md:text-sm"
+                placeholder='Escribe un comando (ej: "help", "neofetch", "skills", "ls")...'
+                autoComplete="off"
+                spellCheck="false"
+              />
             </form>
+          ) : (
+            <div className="mt-3 border-t border-border/40 pt-3 text-xs text-sky-300 font-mono flex items-center justify-between">
+              <span>Sesión en tiempo real (Modo solo lectura activado)</span>
+              <span className="text-[10px] text-muted uppercase">Espectador</span>
+            </div>
+          )}
         </div>
-    );
+      )}
+    </div>
+  );
 };

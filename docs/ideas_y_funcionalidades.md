@@ -81,35 +81,35 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 ### Terminal Virtual SSH (WebSockets)
 > ⚠️ **Toda esta sección es 🌐 — exclusiva de escritorio.** Los teclados virtuales de iOS/Android no tienen teclas de flecha, Tab ni secuencias ANSI estándar. En viewports móviles mostrar un banner informativo ("Visita desde un ordenador para acceder a la terminal interactiva") y redireccionar al contenido visual del portafolio.
 
-- [ ] 🌐 **Historial de comandos con tecla flecha arriba/abajo**: Navegar entre los comandos previamente escritos durante la sesión, como en una terminal real.
-- [ ] 🌐 **Autocompletado con Tab**: Al presionar Tab, la terminal sugiere y completa el comando más probable o muestra las opciones disponibles.
-- [ ] 🌐 **Comando `cat <archivo>`**: Simula la lectura de archivos de texto plano (ej. cat README.md devuelve un texto predefinido sobre el portafolio).
-- [ ] 🌐 **Comando `ls`**: Lista los "archivos" disponibles del portafolio virtual (README.md, skills.json, experience.log, etc.).
-- [ ] 🌐 **Comando `cd <carpeta>`**: Cambia el "directorio" actual del prompt, añadiendo profundidad a la simulación.
-- [ ] 🌐 **Comando `whoami`**: Devuelve información del perfil del usuario.
-- [ ] 🌐 **Comando `date`**: Devuelve la hora y fecha actuales del servidor.
-- [ ] 🌐 **Comando `uptime`**: Devuelve cuánto tiempo lleva el servidor en línea desde el último reinicio.
-- [ ] 🌐 **Comando `man <comando>`**: Devuelve una página de manual simulada con la descripción detallada del comando.
-- [ ] 🌐 **Comando `echo`**: Imprime en pantalla el argumento pasado.
-- [ ] 🌐 **Comando `curl <url>`**: Simula una llamada HTTP y devuelve JSON formateado de la info del portafolio.
-- [ ] 🌐 **Comando `git log`**: Imprime un historial de commits ficticios con el historial de hitos de la vida de Jorge.
-- [ ] 🌐 **Comando `sudo`**: Devuelve un mensaje de acceso denegado con humor (ej. "Este incidente ha sido reportado.").
-- [ ] 🌐 **Comando `open`**: Abre en una nueva pestaña un enlace predefinido (LinkedIn, GitHub, etc.).
-- [ ] 🌐 **Comando `matrix`**: Activa una animación de lluvia de caracteres tipo Matrix en la pantalla de la terminal durante unos segundos.
-- [ ] 🌐 **Comando `clear`**: Limpia todo el historial de la terminal en pantalla.
-- [ ] 🌐 **Comando `exit`**: Cierra la ventana de la terminal con una animación de desconexión SSH.
-- [ ] 🌐 **Múltiples sesiones/pestañas de terminal**: Interfaz con pestañas al estilo tmux para abrir varias terminales simultáneamente.
-- [ ] 🌐 **Color ANSI real**: Soporte para secuencias de escape ANSI para colorear la salida de los comandos.
-- [ ] 🌐 **Indicador de conexión en tiempo real**: Semáforo visual que refleja el estado del WebSocket (verde = conectado, amarillo = reconectando, rojo = desconectado).
-- [ ] 🌐 **Redimensionado de la terminal (PTY resize)**: La terminal detecta el tamaño de la ventana y ajusta las columnas de texto.
-- [ ] 🌐 **Modo pantalla completa**: Botón para expandir la terminal a pantalla completa con animación.
-- [ ] 🌐 **Copiar salida al portapapeles**: Botón de copiar en cada línea de salida de la terminal.
-- [ ] 🌐 **Compartir sesión de terminal en modo lectura**: Generar un enlace único que permite a un visitante ver la sesión en tiempo real (modo espejo).
+- [x] 🌐 **Historial de comandos con tecla flecha arriba/abajo**: Navegar entre los comandos previamente escritos durante la sesión, como en una terminal real.
+- [x] 🌐 **Autocompletado con Tab**: Al presionar Tab, la terminal sugiere y completa el comando más probable o muestra las opciones disponibles.
+- [x] 🌐 **Comando `cat <archivo>`**: Simula la lectura de archivos de texto plano (ej. cat README.md devuelve un texto predefinido sobre el portafolio).
+- [x] 🌐 **Comando `ls`**: Lista los "archivos" disponibles del portafolio virtual (README.md, skills.json, experience.log, etc.).
+- [x] 🌐 **Comando `cd <carpeta>`**: Cambia el "directorio" actual del prompt, añadiendo profundidad a la simulación.
+- [x] 🌐 **Comando `whoami`**: Devuelve información del perfil del usuario.
+- [x] 🌐 **Comando `date`**: Devuelve la hora y fecha actuales del servidor.
+- [x] 🌐 **Comando `uptime`**: Devuelve cuánto tiempo lleva el servidor en línea desde el último reinicio.
+- [x] 🌐 **Comando `man <comando>`**: Devuelve una página de manual simulada con la descripción detallada del comando.
+- [x] 🌐 **Comando `echo`**: Imprime en pantalla el argumento pasado.
+- [x] 🌐 **Comando `curl <url>`**: Simula una llamada HTTP y devuelve JSON formateado de la info del portafolio.
+- [x] 🌐 **Comando `git log`**: Imprime un historial de commits ficticios con el historial de hitos de la vida de Jorge.
+- [x] 🌐 **Comando `sudo`**: Devuelve un mensaje de acceso denegado con humor (ej. "Este incidente ha sido reportado.").
+- [x] 🌐 **Comando `open`**: Abre en una nueva pestaña un enlace predefinido (LinkedIn, GitHub, etc.).
+- [x] 🌐 **Comando `matrix`**: Activa una animación de lluvia de caracteres tipo Matrix en la pantalla de la terminal durante unos segundos.
+- [x] 🌐 **Comando `clear`**: Limpia todo el historial de la terminal en pantalla.
+- [x] 🌐 **Comando `exit`**: Cierra la ventana de la terminal con una animación de desconexión SSH.
+- [x] 🌐 **Múltiples sesiones/pestañas de terminal**: Interfaz con pestañas al estilo tmux para abrir varias terminales simultáneamente.
+- [x] 🌐 **Color ANSI real**: Soporte para secuencias de escape ANSI para colorear la salida de los comandos.
+- [x] 🌐 **Indicador de conexión en tiempo real**: Semáforo visual que refleja el estado del WebSocket (verde = conectado, amarillo = reconectando, rojo = desconectado).
+- [x] 🌐 **Redimensionado de la terminal (PTY resize)**: La terminal detecta el tamaño de la ventana y ajusta las columnas de texto.
+- [x] 🌐 **Modo pantalla completa**: Botón para expandir la terminal a pantalla completa con animación.
+- [x] 🌐 **Copiar salida al portapapeles**: Botón de copiar en cada línea de salida de la terminal.
+- [x] 🌐 **Compartir sesión de terminal en modo lectura**: Generar un enlace único que permite a un visitante ver la sesión en tiempo real (modo espejo).
 
 ### Secciones del Portafolio Visual
 - [ ] 🔀 **Tarjetas 3D del stack tecnológico**: Las tarjetas rotan y muestran más información al hacer hover, con efecto de profundidad. *(En móvil: reemplazar hover por tap con flip animation.)*
 
-- [ ] ✅ **Animación de escritura en el rol profesional**: El subtítulo alterna cíclicamente entre distintos roles ("Full Stack Developer", "AI Engineer", "Security Researcher").
+- [x] ✅ **Animación de escritura en el rol profesional**: El subtítulo alterna cíclicamente entre distintos roles ("Full Stack Developer", "AI Engineer", "Security Researcher").
 
 - [ ] ✅ **Timeline de experiencia interactiva**: Línea de tiempo animada y scrolleable donde cada punto despliega un panel de detalle expandible.
 
@@ -121,7 +121,7 @@ Este documento es el catálogo exhaustivo de **todo lo que se puede implementar*
 
 - [ ] ✅ **Reproductor de demo de proyectos**: Video corto o GIF que se reproduce al hacer hover sobre la tarjeta del proyecto.
 
-- [ ] ✅ **Sección de valores y filosofía de trabajo**: Texto inspiracional con la filosofía de desarrollo guiada por valores (fe cristiana, excelencia técnica).
+- [x] ✅ **Sección de valores y filosofía de trabajo**: Texto inspiracional con la filosofía de desarrollo guiada por valores (fe cristiana, excelencia técnica).
 
 - [ ] ✅ **Sección de certificaciones**: Tarjetas de certificaciones obtenidas con enlace de verificación.
 

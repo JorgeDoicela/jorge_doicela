@@ -1,5 +1,7 @@
 import { TerminalConsole } from '../features/terminal/components/TerminalConsole';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { TypewriterRole } from '../components/TypewriterRole';
+import { ValuesPhilosophySection } from '../components/ValuesPhilosophySection';
 import {
     Mail,
     MapPin,
@@ -30,9 +32,14 @@ export default function PortfolioPage() {
                     <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
                         Jorge Ismael Doicela Molina
                     </h1>
-                    <p className="text-foreground/80 text-xs md:text-sm tracking-wider font-mono uppercase">
-                        Desarrollador de Software con enfoque en DevSecOps
-                    </p>
+                    <TypewriterRole
+                        roles={[
+                            'Full Stack Developer',
+                            'AI Engineer & Cybersecurity Specialist',
+                            'DevSecOps & Software Architect',
+                            'Desarrollador de Software con enfoque en DevSecOps'
+                        ]}
+                    />
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <span className="luxury-badge">
@@ -312,7 +319,12 @@ export default function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 6: Consola Interactiva (La Única Caja Bento / Luxury Card del Portafolio) */}
+                {/* Sección 6: Filosofía & Valores Fundamentales */}
+                <ValuesPhilosophySection />
+
+                <hr className="luxury-divider" />
+
+                {/* Sección 7: Consola Interactiva (La Única Caja Bento / Luxury Card del Portafolio) */}
                 <section className="md:col-span-3 flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
                         <div className="flex items-center justify-between">

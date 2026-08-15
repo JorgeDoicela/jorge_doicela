@@ -103,8 +103,8 @@ export default function LandingPage() {
             <InteractiveParticles />
 
             {/* Header Superior Apple Style */}
-            <header 
-                className="animate-fade-in-up w-full max-w-5xl flex justify-between items-center mb-8 border-b border-card-border/40 pb-6 px-2 md:px-0 z-20"
+            <header
+                className="animate-fade-in-up w-full max-w-5xl flex justify-between items-center mb-8 pb-6 px-2 md:px-0 z-20"
                 style={{ animationDelay: '0ms' }}
             >
                 <div className="flex flex-col gap-1">
@@ -247,7 +247,7 @@ export default function LandingPage() {
             </main>
 
             {/* Footer minimalista */}
-            <footer 
+            <footer
                 className="animate-fade-in-up w-full max-w-5xl mt-16 border-t border-card-border/40 pt-8 px-2 md:px-0 flex justify-center text-xs text-text-subtitle font-mono uppercase tracking-wider"
                 style={{ animationDelay: '800ms' }}
             >

@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react';
 import ParallaxBackground from './components/ParallaxBackground';
 import InteractiveParticles from './components/InteractiveParticles';
-import TypewriterRole from './components/TypewriterRole';
-import ReactiveCursorGradient from './components/ReactiveCursorGradient';
 import SkipToContent from './components/SkipToContent';
 import { AppleHeroShowcase } from './components/AppleHeroShowcase';
 import { AppleHighlightsCarousel } from './components/AppleHighlightsCarousel';
@@ -97,55 +95,45 @@ export default function LandingPage() {
             {/* Atajo Accesible Saltar al Contenido para Navegación por Teclado */}
             <SkipToContent />
 
-            {/* Fondo Parallax Decorativo Tridimensional, Gradiente Reactivo al Cursor y Partículas Interactivas */}
+            {/* Fondo Parallax Decorativo y Partículas Interactivas */}
             <ParallaxBackground />
-            <ReactiveCursorGradient />
             <InteractiveParticles />
 
-            {/* Header Superior Apple Style */}
+            {/* Header Superior Flotante en la Esquina Superior Derecha */}
             <header
-                className="animate-fade-in-up w-full max-w-5xl flex justify-between items-center mb-8 pb-6 px-2 md:px-0 z-20"
+                className="animate-fade-in-up fixed top-5 right-5 sm:top-6 sm:right-8 md:top-7 md:right-10 z-50 flex items-center gap-3 sm:gap-4.5"
                 style={{ animationDelay: '0ms' }}
             >
-                <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                        Jorge Doicela
-                    </h2>
-                    <TypewriterRole />
+                {/* Widget de Hora Local Minimalista */}
+                <div className="hidden sm:flex flex-col items-end text-right font-mono px-2 py-1 rounded-xl bg-card/40 backdrop-blur-md border border-card-border/60" aria-label={`Hora local en Quito Ecuador: ${time || '--:--:--'}`}>
+                    <span className="text-xs text-foreground font-medium tracking-wider">{time || '--:--:--'}</span>
+                    <span className="text-[8px] text-text-subtitle uppercase tracking-widest mt-0.5">{t.location}</span>
                 </div>
 
-                <div className="flex items-center gap-3 sm:gap-5">
-                    {/* Widget de Hora Local Minimalista */}
-                    <div className="hidden sm:flex flex-col items-end text-right font-mono" aria-label={`Hora local en Quito Ecuador: ${time || '--:--:--'}`}>
-                        <span className="text-xs text-foreground tracking-widest">{time || '--:--:--'}</span>
-                        <span className="text-[8px] text-text-subtitle uppercase tracking-widest mt-0.5">{t.location}</span>
-                    </div>
+                {/* Selector de Idioma ES / EN */}
+                <button
+                    onClick={toggleLanguage}
+                    className="px-3.5 py-2 rounded-full border border-card-border bg-card/80 backdrop-blur-md text-foreground hover:bg-card hover:border-card-hover-border active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-300 shadow-sm cursor-pointer flex items-center gap-1.5 text-xs font-semibold tracking-tight"
+                    aria-label={t.toggleLang}
+                    title={t.toggleLang}
+                >
+                    <Globe className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" aria-hidden="true" />
+                    <span>{language.toUpperCase()}</span>
+                </button>
 
-                    {/* Selector de Idioma ES / EN */}
-                    <button
-                        onClick={toggleLanguage}
-                        className="px-3 py-2 rounded-full border border-card-border bg-card text-foreground hover:bg-card-border/70 hover:border-card-hover-border active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-300 shadow-sm cursor-pointer flex items-center gap-1.5 text-xs font-mono font-medium"
-                        aria-label={t.toggleLang}
-                        title={t.toggleLang}
-                    >
-                        <Globe className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" aria-hidden="true" />
-                        <span>{language.toUpperCase()}</span>
-                    </button>
-
-                    {/* Botón de Alternar Tema */}
-                    <button
-                        onClick={toggleTheme}
-                        className="p-3 rounded-full border border-card-border bg-card text-foreground hover:bg-card-border/70 hover:border-card-hover-border active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-300 shadow-sm cursor-pointer"
-                        aria-label={t.toggleTheme}
-                        title={t.toggleTheme}
-                    >
-                        {theme === 'dark' ? (
-                            <Sun className="w-4.5 h-4.5 text-zinc-400 hover:text-amber-400 transition-colors duration-300" aria-hidden="true" />
-                        ) : (
-                            <Moon className="w-4.5 h-4.5 text-zinc-500 hover:text-indigo-600 transition-colors duration-300" aria-hidden="true" />
-                        )}
-                    </button>
-                </div>
+                {/* Botón de Alternar Tema */}
+                <button
+                    onClick={toggleTheme}
+                    className="p-2.5 rounded-full border border-card-border bg-card/80 backdrop-blur-md text-foreground hover:bg-card hover:border-card-hover-border active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-300 shadow-sm cursor-pointer"
+                    aria-label={t.toggleTheme}
+                    title={t.toggleTheme}
+                >
+                    {theme === 'dark' ? (
+                        <Sun className="w-4.5 h-4.5 text-zinc-400 hover:text-amber-400 transition-colors duration-300" aria-hidden="true" />
+                    ) : (
+                        <Moon className="w-4.5 h-4.5 text-zinc-500 hover:text-indigo-600 transition-colors duration-300" aria-hidden="true" />
+                    )}
+                </button>
             </header>
 
             {/* Contenido Principal en Estructura Apple Mac Showcase */}
@@ -163,16 +151,16 @@ export default function LandingPage() {
                 {/* 4. Sección de Conexión & Canales Directos */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full pt-4">
                     {/* Canales de Contacto Directo */}
-                    <div className="rounded-[2.5rem] bg-card border border-card-border p-8 flex flex-col justify-between shadow-lg backdrop-blur-xl">
-                        <div className="flex flex-col gap-2 mb-6">
-                            <div className="flex items-center gap-2 text-accent-light font-mono text-xs tracking-widest uppercase">
+                    <div className="rounded-[2.5rem] bg-card border border-card-border p-8 md:p-10 flex flex-col justify-between shadow-lg backdrop-blur-xl">
+                        <div className="flex flex-col gap-2.5 mb-6">
+                            <div className="flex items-center gap-2 text-accent-light text-xs sm:text-sm font-semibold tracking-[-0.01em] uppercase">
                                 <Mail className="w-4 h-4" />
                                 <span>{t.cardContactTag}</span>
                             </div>
-                            <h3 className="text-2xl font-bold text-foreground">
+                            <h3 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-foreground">
                                 {t.cardContactTitle}
                             </h3>
-                            <p className="text-text-muted text-xs md:text-sm font-light leading-relaxed">
+                            <p className="text-text-muted text-sm sm:text-base font-normal leading-relaxed tracking-[-0.011em]">
                                 {t.cardContactDescription}
                             </p>
                         </div>
@@ -180,9 +168,9 @@ export default function LandingPage() {
                         <div className="flex flex-col gap-2.5">
                             <a
                                 href="mailto:jorge.doicela.m@gmail.com"
-                                className="flex items-center justify-between px-4 py-3 rounded-2xl border border-card-border bg-inner-card hover:bg-card-border/40 text-xs font-mono text-text-muted hover:text-foreground transition-all"
+                                className="flex items-center justify-between px-5 py-3 rounded-full border border-card-border bg-inner-card hover:bg-card-border/40 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer"
                             >
-                                <span className="flex items-center gap-2">
+                                <span className="flex items-center gap-2.5">
                                     <Mail className="w-4 h-4 text-indigo-400" />
                                     <span>jorge.doicela.m@gmail.com</span>
                                 </span>
@@ -193,9 +181,9 @@ export default function LandingPage() {
                                 href="https://github.com/JorgeDoicela"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-between px-4 py-3 rounded-2xl border border-card-border bg-inner-card hover:bg-card-border/40 text-xs font-mono text-text-muted hover:text-foreground transition-all"
+                                className="flex items-center justify-between px-5 py-3 rounded-full border border-card-border bg-inner-card hover:bg-card-border/40 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer"
                             >
-                                <span className="flex items-center gap-2">
+                                <span className="flex items-center gap-2.5">
                                     <svg className="w-4 h-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
                                         <path d="M9 18c-4.51 2-5-2-7-2" />
@@ -209,9 +197,9 @@ export default function LandingPage() {
                                 href="https://www.tiktok.com/@jorge.doicela"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-between px-4 py-3 rounded-2xl border border-card-border bg-inner-card hover:bg-card-border/40 text-xs font-mono text-text-muted hover:text-foreground transition-all"
+                                className="flex items-center justify-between px-5 py-3 rounded-full border border-card-border bg-inner-card hover:bg-card-border/40 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer"
                             >
-                                <span className="flex items-center gap-2">
+                                <span className="flex items-center gap-2.5">
                                     <svg className="w-4 h-4 text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                                     </svg>
@@ -223,23 +211,23 @@ export default function LandingPage() {
                     </div>
 
                     {/* Filosofía & Enfoque */}
-                    <div className="rounded-[2.5rem] bg-card border border-card-border p-8 flex flex-col justify-between shadow-lg backdrop-blur-xl">
+                    <div className="rounded-[2.5rem] bg-card border border-card-border p-8 md:p-10 flex flex-col justify-between shadow-lg backdrop-blur-xl">
                         <div className="flex flex-col gap-3">
-                            <div className="flex items-center gap-2 text-accent-light font-mono text-xs tracking-widest uppercase">
+                            <div className="flex items-center gap-2 text-accent-light text-xs sm:text-sm font-semibold tracking-[-0.01em] uppercase">
                                 <Compass className="w-4 h-4" />
                                 <span>{t.cardApproachTag}</span>
                             </div>
-                            <h3 className="text-2xl font-bold text-foreground">
+                            <h3 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-foreground">
                                 {language === 'es' ? 'Ingeniería con Propósito' : 'Engineering with Purpose'}
                             </h3>
-                            <blockquote className="text-sm md:text-base font-serif italic text-text-muted leading-relaxed font-light mt-2 border-l-2 border-indigo-400/50 pl-4">
+                            <blockquote className="text-sm md:text-base font-serif italic text-text-muted leading-relaxed font-normal mt-2 border-l-2 border-indigo-400/50 pl-4">
                                 {t.cardApproachQuote}
                             </blockquote>
                         </div>
 
                         <div className="pt-6 border-t border-card-border/40 flex items-center justify-between text-xs font-mono text-text-subtitle">
                             <span>{language === 'es' ? 'Gloria a Dios' : 'Glory to God'}</span>
-                            <span className="text-accent-light">Colosenses 3:23</span>
+                            <span className="text-accent-light font-semibold">Colosenses 3:23</span>
                         </div>
                     </div>
                 </section>

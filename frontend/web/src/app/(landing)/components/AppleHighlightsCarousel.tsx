@@ -87,9 +87,12 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
 
   return (
     <section id="highlights" className="w-full flex flex-col gap-6 py-8">
-      {/* Título de Sección Apple Style */}
-      <div className="flex flex-col gap-2">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+      {/* Título de Sección Apple Style (Imagen 2: Mira lo más destacado.) */}
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm sm:text-base font-semibold tracking-[-0.01em] text-text-subtitle">
+          {isEs ? 'Ecosistema de Plataformas' : 'Platform Ecosystem'}
+        </span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-[-0.035em] text-foreground leading-tight">
           {isEs ? 'Mira lo más destacado.' : 'Get the highlights.'}
         </h2>
       </div>
@@ -103,21 +106,21 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
           <div className="flex flex-col justify-between h-full gap-8 relative z-10">
             {/* Tag superior & Icono */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-accent-light font-mono text-xs tracking-widest uppercase">
+              <div className="flex items-center gap-2 text-accent-light text-xs font-semibold tracking-[-0.01em] uppercase">
                 <IconComponent className="w-4 h-4" />
                 <span>{currentSlide.tag}</span>
               </div>
-              <div className="px-3 py-1 rounded-full bg-inner-card border border-inner-card-border text-[11px] font-mono text-text-subtitle">
+              <div className="px-3.5 py-1 rounded-full bg-inner-card border border-inner-card-border text-[11px] font-semibold tracking-tight text-text-subtitle">
                 {currentSlide.badgeText}
               </div>
             </div>
 
             {/* Contenido Central con Gran Tipografía */}
             <div className="flex flex-col gap-4 max-w-3xl">
-              <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-tight">
+              <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-[-0.03em] leading-[1.12]">
                 {currentSlide.headline}
               </h3>
-              <p className="text-text-muted text-sm sm:text-base font-light leading-relaxed max-w-2xl">
+              <p className="text-text-muted text-base sm:text-lg font-normal leading-relaxed tracking-[-0.011em] max-w-2xl">
                 {currentSlide.description}
               </p>
             </div>
@@ -128,7 +131,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 {currentSlide.badgeSub}
               </div>
 
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity">
+              <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-foreground text-background font-medium text-xs sm:text-sm tracking-tight hover:opacity-90 transition-opacity cursor-pointer">
                 <span>{currentSlide.linkText}</span>
                 <ArrowUpRight className="w-4 h-4" />
               </div>

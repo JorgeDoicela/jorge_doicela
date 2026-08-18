@@ -44,13 +44,13 @@ export default function TypewriterRole() {
     }, [currentText, isDeleting, currentRoleIndex, roles]);
 
     return (
-        <div className="flex items-center min-h-[20px]" aria-live="polite">
+        <div className="flex items-center justify-center min-h-[24px]" aria-live="polite">
             <p 
-                className="text-[10px] md:text-xs text-text-subtitle font-mono tracking-widest uppercase mt-0.5 flex items-center"
+                className="text-xs sm:text-sm md:text-base text-text-subtitle font-semibold tracking-[-0.01em] uppercase flex items-center justify-center"
                 aria-label={`Especialidad: ${roles[currentRoleIndex] || roles[0]}`}
             >
                 <span>{currentText}</span>
-                <span className="inline-block w-1.5 h-3 md:h-3.5 bg-indigo-500/80 dark:bg-indigo-400/90 ml-1 animate-pulse rounded-xs" aria-hidden="true" />
+                <span className="inline-block w-1.5 h-3.5 md:h-4 bg-indigo-500/80 dark:bg-indigo-400/90 ml-1.5 animate-pulse rounded-xs" aria-hidden="true" />
             </p>
         </div>
     );

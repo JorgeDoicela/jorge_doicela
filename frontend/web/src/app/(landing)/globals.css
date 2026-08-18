@@ -31,6 +31,17 @@
     --chip-bg: rgba(255, 255, 255, 0.04);
     --chip-border: rgba(255, 255, 255, 0.08);
     --chip-hover-bg: rgba(255, 255, 255, 0.09);
+
+    /* Chasis y Pantalla de Laptop MacBook */
+    --laptop-bezel: #18181f;
+    --laptop-bezel-border: #272730;
+    --laptop-screen-bg: #09090d;
+    --laptop-screen-border: rgba(255, 255, 255, 0.08);
+    --laptop-card-bg: rgba(255, 255, 255, 0.05);
+    --laptop-card-border: rgba(255, 255, 255, 0.12);
+    --laptop-base-top: #3f3f46;
+    --laptop-base-bottom: #18181b;
+    --laptop-notch: #050508;
 }
 
 :root.light {
@@ -62,6 +73,17 @@
     --chip-bg: rgba(15, 23, 42, 0.03);
     --chip-border: rgba(15, 23, 42, 0.06);
     --chip-hover-bg: rgba(15, 23, 42, 0.07);
+
+    /* Chasis y Pantalla de Laptop MacBook */
+    --laptop-bezel: #e2e8f0;
+    --laptop-bezel-border: #cbd5e1;
+    --laptop-screen-bg: #ffffff;
+    --laptop-screen-border: rgba(15, 23, 42, 0.08);
+    --laptop-card-bg: rgba(241, 245, 249, 0.85);
+    --laptop-card-border: rgba(15, 23, 42, 0.08);
+    --laptop-base-top: #cbd5e1;
+    --laptop-base-bottom: #94a3b8;
+    --laptop-notch: #64748b;
 }
 
 @theme inline {
@@ -82,14 +104,29 @@
     --color-chip-bg: var(--chip-bg);
     --color-chip-border: var(--chip-border);
     --color-chip-hover-bg: var(--chip-hover-bg);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+    --color-laptop-bezel: var(--laptop-bezel);
+    --color-laptop-bezel-border: var(--laptop-bezel-border);
+    --color-laptop-screen: var(--laptop-screen-bg);
+    --color-laptop-screen-border: var(--laptop-screen-border);
+    --color-laptop-card: var(--laptop-card-bg);
+    --color-laptop-card-border: var(--laptop-card-border);
+    --color-laptop-notch: var(--laptop-notch);
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", var(--font-geist-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", var(--font-geist-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.011em;
     transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

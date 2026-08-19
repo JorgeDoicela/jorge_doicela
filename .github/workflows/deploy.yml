@@ -68,6 +68,13 @@ jobs:
             cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/
             cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/
             
+            # Actualizar y validar configuración de Nginx de forma automática
+            if [ -f "nginx/jorgedoicela.com.conf" ]; then
+              sudo cp nginx/jorgedoicela.com.conf /etc/nginx/sites-available/jorgedoicela.com
+              sudo ln -sf /etc/nginx/sites-available/jorgedoicela.com /etc/nginx/sites-enabled/
+              sudo nginx -t && sudo systemctl reload nginx
+            fi
+
             pm2 delete all || true
             pm2 start pm2.config.js
             pm2 save

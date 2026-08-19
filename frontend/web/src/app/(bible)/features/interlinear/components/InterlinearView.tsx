@@ -20,6 +20,7 @@ import { MorphologyDetailModal } from './MorphologyDetailModal';
 import { GreekMorphologyModal } from './GreekMorphologyModal';
 import { ReverseInterlinearReader } from './ReverseInterlinearReader';
 import { StrongLexiconDrawer } from './StrongLexiconDrawer';
+import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 interface InterlinearViewProps {
   selectedBookAbbr?: string | null;
@@ -336,6 +337,15 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
         entry={selectedStrongEntry}
         audioSpeed={settings.audioSpeed}
       />
+
+      {/* Aviso de Expansión Continua de Manuscritos Interlineales */}
+      <div className="pt-6">
+        <OngoingExpansionNotice
+          contextTitle="Módulo Interlineal en Crecimiento"
+          contextDescription="Esta plataforma es nueva y por eso aún no cuenta con muchas cosas. Me esfuerzo cada día por brindarte un trabajo riguroso y de máxima calidad, indexando y lematizando morfológicamente cada término hebreo, arameo y griego palabra por palabra junto con su pronunciación y concordancia Strong."
+          activeItemsSummary="Capítulos activos listos: Génesis 1, 2 y Juan 1 (BHS / NA28 / SBLGNT) con morfología completa."
+        />
+      </div>
     </div>
   );
 };

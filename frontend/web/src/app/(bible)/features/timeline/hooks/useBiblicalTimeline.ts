@@ -60,8 +60,12 @@ export function useBiblicalTimeline() {
   // Año central visible en a.C. (ej. 850)
   const [centerYearBC, setCenterYearBC] = useState<number>(850);
   const [zoomLevel, setZoomLevel] = useState<number>(1.2);
-  const [cursorYearBC, setCursorYearBC] = useState<number | null>(701);
+  const [pinnedYearBC, setPinnedYearBC] = useState<number>(701);
+  const [hoverYearBC, setHoverYearBC] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<TimelineSelectedItem | null>(null);
+
+  // El año efectivo para la sincronización es el del hover si el cursor está sobre el lienzo, o el fijado si se retira
+  const cursorYearBC = hoverYearBC ?? pinnedYearBC;
 
   // Arrastre horizontal
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -88,17 +92,27 @@ export function useBiblicalTimeline() {
   }, []);
 
   const handleZoomIn = useCallback(() => {
-    setZoomLevel((prev) => Math.min(prev + 0.3, 3.5));
+    setZoomLevel((prev) => Math.min(Number((prev + 0.4).toFixed(2)), 12.0));
   }, []);
 
   const handleZoomOut = useCallback(() => {
-    setZoomLevel((prev) => Math.max(prev - 0.3, 0.5));
+    setZoomLevel((prev) => Math.max(Number((prev - 0.4).toFixed(2)), 0.4));
   }, []);
 
   const handleJumpToEra = useCallback((shortcut: TimelineEraShortcut) => {
     setCenterYearBC(shortcut.yearBC);
-    setCursorYearBC(shortcut.yearBC);
+    setPinnedYearBC(shortcut.yearBC);
+    setHoverYearBC(null);
     setZoomLevel(shortcut.zoom);
+  }, []);
+
+  const handlePinYear = useCallback((year: number) => {
+    setPinnedYearBC(year);
+    setHoverYearBC(null);
+  }, []);
+
+  const handleSetHoverYear = useCallback((year: number | null) => {
+    setHoverYearBC(year);
   }, []);
 
   const handleMouseDown = useCallback(
@@ -121,6 +135,61 @@ export function useBiblicalTimeline() {
     [isDragging, dragStartX, initialCenterYear, zoomLevel],
   );
 
+  // Manejo de gestos táctiles para móviles (1 dedo: arrastre, 2 dedos: pinch-to-zoom)
+  const [touchStartDistance, setTouchStartDistance] = useState<number | null>(null);
+  const [initialZoom, setInitialZoom] = useState<number>(1.2);
+
+  const handleZoomDelta = useCallback((delta: number) => {
+    setZoomLevel((prev) => {
+      const next = Number((prev + delta).toFixed(2));
+      return Math.min(Math.max(next, 0.4), 12.0);
+    });
+  }, []);
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length === 1) {
+        setIsDragging(true);
+        setDragStartX(e.touches[0].clientX);
+        setInitialCenterYear(centerYearBC);
+        setTouchStartDistance(null);
+      } else if (e.touches.length === 2) {
+        setIsDragging(false);
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY,
+        );
+        setTouchStartDistance(dist);
+        setInitialZoom(zoomLevel);
+      }
+    },
+    [centerYearBC, zoomLevel],
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length === 1 && isDragging) {
+        const deltaX = e.touches[0].clientX - dragStartX;
+        const yearsShift = deltaX / (zoomLevel * 3.5);
+        setCenterYearBC(Math.round(initialCenterYear + yearsShift));
+      } else if (e.touches.length === 2 && touchStartDistance !== null) {
+        const currentDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY,
+        );
+        const ratio = currentDist / touchStartDistance;
+        const newZoom = Number((initialZoom * ratio).toFixed(2));
+        setZoomLevel(Math.min(Math.max(newZoom, 0.5), 3.5));
+      }
+    },
+    [isDragging, dragStartX, initialCenterYear, zoomLevel, touchStartDistance, initialZoom],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+    setTouchStartDistance(null);
+  }, []);
+
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
   }, []);
@@ -129,8 +198,12 @@ export function useBiblicalTimeline() {
     centerYearBC,
     setCenterYearBC,
     zoomLevel,
+    setZoomLevel,
+    pinnedYearBC,
+    hoverYearBC,
     cursorYearBC,
-    setCursorYearBC,
+    handlePinYear,
+    handleSetHoverYear,
     selectedItem,
     setSelectedItem,
     isDragging,
@@ -139,9 +212,13 @@ export function useBiblicalTimeline() {
     shortcuts: TIMELINE_ERA_SHORTCUTS,
     handleZoomIn,
     handleZoomOut,
+    handleZoomDelta,
     handleJumpToEra,
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
   };
 }

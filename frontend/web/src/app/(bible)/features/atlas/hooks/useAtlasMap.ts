@@ -121,6 +121,63 @@ export function useAtlasMap() {
     setSelectedPlaceId(place.id);
   }, []);
 
+  // Manejo de gestos táctiles para móviles en el mapa
+  const [touchStartDistance, setTouchStartDistance] = useState<number | null>(null);
+  const [initialZoom, setInitialZoom] = useState<number>(1);
+  const [initialPan, setInitialPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const handleZoomDelta = useCallback((delta: number) => {
+    setZoomLevel((prev) => {
+      const next = Number((prev + delta).toFixed(2));
+      return Math.min(Math.max(next, 0.8), 3.5);
+    });
+  }, []);
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length === 1) {
+        setIsDragging(true);
+        setDragStart({ x: e.touches[0].clientX - panOffset.x, y: e.touches[0].clientY - panOffset.y });
+        setTouchStartDistance(null);
+      } else if (e.touches.length === 2) {
+        setIsDragging(false);
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY,
+        );
+        setTouchStartDistance(dist);
+        setInitialZoom(zoomLevel);
+        setInitialPan({ ...panOffset });
+      }
+    },
+    [panOffset, zoomLevel],
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length === 1 && isDragging) {
+        setPanOffset({
+          x: e.touches[0].clientX - dragStart.x,
+          y: e.touches[0].clientY - dragStart.y,
+        });
+      } else if (e.touches.length === 2 && touchStartDistance !== null) {
+        const currentDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY,
+        );
+        const ratio = currentDist / touchStartDistance;
+        const newZoom = Number((initialZoom * ratio).toFixed(2));
+        setZoomLevel(Math.min(Math.max(newZoom, 0.8), 3.5));
+      }
+    },
+    [isDragging, dragStart, touchStartDistance, initialZoom],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+    setTouchStartDistance(null);
+  }, []);
+
   return {
     activeLayer,
     setActiveLayer,
@@ -140,10 +197,14 @@ export function useAtlasMap() {
     isDragging,
     handleZoomIn,
     handleZoomOut,
+    handleZoomDelta,
     handleResetView,
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
     focusOnPlace,
   };
 }

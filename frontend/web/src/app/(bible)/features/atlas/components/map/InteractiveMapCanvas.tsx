@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { AncientPlace, MapLayerType } from '../../types';
 import { projectGeoToCanvas } from '../../hooks/useAtlasMap';
 
@@ -15,6 +16,10 @@ interface InteractiveMapCanvasProps {
   onMouseDown: (e: React.MouseEvent) => void;
   onMouseMove: (e: React.MouseEvent) => void;
   onMouseUp: () => void;
+  onZoomDelta?: (delta: number) => void;
+  onTouchStart?: (e: React.TouchEvent) => void;
+  onTouchMove?: (e: React.TouchEvent) => void;
+  onTouchEnd?: (e: React.TouchEvent) => void;
 }
 
 export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
@@ -28,38 +33,56 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
   onMouseDown,
   onMouseMove,
   onMouseUp,
+  onZoomDelta,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
 }) => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
+  const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredPlace, setHoveredPlace] = useState<AncientPlace | null>(null);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Estilos de fondo según la capa
-  const layerBackground =
-    activeLayer === 'historical'
-      ? 'bg-[#181611] text-[#e6dfd3]' // Papiro oscuro de biblioteca antigua
-      : activeLayer === 'topographic'
-      ? 'bg-[#0f1712] text-[#e2ece9]' // Verde oscuro topográfico
-      : 'bg-[#080d1a] text-[#e0e7ff]'; // Satelital espacial profundo
+  // Listener no-pasivo nativo para prevenir el scroll de la página al usar la rueda del ratón en el mapa
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !onZoomDelta) return;
 
-  const waterColor =
-    activeLayer === 'historical'
-      ? '#263445'
-      : activeLayer === 'topographic'
-      ? '#132e2d'
-      : '#0a1d37';
+    const handleWheelNonPassive = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const delta = e.deltaY < 0 ? 0.15 : -0.15;
+      onZoomDelta(delta);
+    };
 
-  const landColor =
-    activeLayer === 'historical'
-      ? '#2a261f'
-      : activeLayer === 'topographic'
-      ? '#1e2d24'
-      : '#172033';
+    el.addEventListener('wheel', handleWheelNonPassive, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', handleWheelNonPassive);
+    };
+  }, [onZoomDelta]);
+
+  // Colores dinámicos precisos para renderizado SVG según el tema
+  const waterColor1 = isDark ? '#0b162c' : '#dbeafe';
+  const waterColor2 = isDark ? '#050c1a' : '#bfdbfe';
+  const landColor = isDark ? '#161f30' : '#ffffff';
+  const landStroke = isDark ? '#283955' : '#94a3b8';
+  const gridColor = isDark ? '#22324d' : '#94a3b8';
+  const textColor = isDark ? '#f1f5f9' : '#0f172a';
+  const textMutedColor = isDark ? '#64748b' : '#64748b';
+  const textStrokeHalo = isDark ? '#050c1a' : '#ffffff';
 
   return (
     <div
-      className={`relative w-full h-[540px] rounded-xl overflow-hidden border border-accents-2 shadow-inner select-none ${layerBackground} ${
-        isDragging ? 'cursor-grabbing' : 'cursor-grab'
-      }`}
+      ref={containerRef}
+      className={`relative w-full h-[540px] rounded-xl overflow-hidden border border-accents-2 shadow-inner select-none transition-colors duration-200 touch-none ${
+        isDark ? 'bg-[#050c1a]' : 'bg-[#dbeafe]'
+      } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
       onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
       onMouseMove={(e) => {
         onMouseMove(e);
         const rect = e.currentTarget.getBoundingClientRect();
@@ -77,21 +100,21 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         }}
       >
         <defs>
-          {/* Gradiente para masa de agua */}
+          {/* Gradiente para masa de agua adaptable a claro y oscuro */}
           <linearGradient id="mediterraneanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={waterColor} stopOpacity="0.8" />
-            <stop offset="100%" stopColor={waterColor} stopOpacity="0.95" />
+            <stop offset="0%" stopColor={waterColor1} stopOpacity="1" />
+            <stop offset="100%" stopColor={waterColor2} stopOpacity="1" />
           </linearGradient>
 
-          {/* Patrón de cuadrícula de coordenadas náuticas antiguas */}
+          {/* Patrón de cuadrícula de coordenadas náuticas */}
           <pattern id="gridPattern" width="100" height="100" patternUnits="userSpaceOnUse">
             <path
               d="M 100 0 L 0 0 0 100"
               fill="none"
-              stroke={activeLayer === 'historical' ? '#4a3f2d' : '#1e293b'}
-              strokeWidth="0.5"
+              stroke={gridColor}
+              strokeWidth="0.6"
               strokeDasharray="2,4"
-              opacity="0.4"
+              opacity={isDark ? '0.35' : '0.45'}
             />
           </pattern>
         </defs>
@@ -103,7 +126,7 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         <rect width="1000" height="650" fill="url(#gridPattern)" />
 
         {/* Tierras emergidas vectoriales aproximadas del Mediterráneo Oriental y Cercano Oriente */}
-        <g fill={landColor} stroke="#3d372e" strokeWidth="0.8" opacity="0.9">
+        <g fill={landColor} stroke={landStroke} strokeWidth="1" opacity="0.98">
           {/* Península Itálica (Roma) */}
           <path d="M 30,50 Q 80,110 120,200 L 140,230 L 100,260 L 70,210 Z" />
 
@@ -119,15 +142,17 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
           {/* Chipre */}
           <path d="M 640,270 L 710,260 L 715,280 L 650,290 Z" />
 
-          {/* Levante Bíblico, Sinaí y Egipto (Canaán, Fenicia, Siria, Delta del Nilo, Arabia) */}
-          <path d="M 730,170 L 820,180 L 890,260 L 980,300 L 980,650 L 520,650 L 520,440 L 600,430 L 680,480 L 710,480 L 735,390 L 725,270 Z" />
+          {/* Levante / Canaán / Siria / Palestina / Jordania */}
+          <path d="M 730,190 L 790,200 L 820,260 L 790,320 L 760,370 L 740,430 L 730,510 L 680,520 L 640,470 L 680,420 L 720,360 L 720,270 L 710,220 Z" />
+
+          {/* Egipto y Costa del Norte de África */}
+          <path d="M 10,290 L 200,290 L 340,360 L 480,360 L 530,420 L 630,480 L 670,540 L 630,620 L 450,620 L 380,540 L 200,530 L 10,500 Z" />
         </g>
 
-        {/* Golfo de Suez y Golfo de Aqaba (Península del Sinaí) */}
+        {/* Golfo de Suez y Mar Rojo */}
         <path
-          d="M 650,490 L 670,590 L 685,530 L 710,480"
-          fill="none"
-          stroke={waterColor}
+          d="M 660,540 L 645,640"
+          stroke={waterColor2}
           strokeWidth="6"
           strokeLinecap="round"
         />
@@ -182,7 +207,7 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         />
 
         {/* Regiones y Etiquetas Geográficas Bíblicas Tenues */}
-        <g fill="currentColor" opacity="0.35" fontSize="10" fontFamily="monospace" textAnchor="middle">
+        <g fill={textMutedColor} opacity={isDark ? '0.45' : '0.7'} fontSize="10" fontWeight="600" fontFamily="monospace" textAnchor="middle">
           <text x="200" y="240" transform="rotate(-15, 200, 240)">
             MARE INTERNUM (MEDITERRÁNEO)
           </text>
@@ -198,22 +223,22 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         </g>
 
         {/* Rosa de los Vientos Náutica Bíblica */}
-        <g transform="translate(80, 560)" opacity="0.65">
-          <circle r="32" fill="none" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2,3" />
+        <g transform="translate(80, 560)" opacity={isDark ? '0.65' : '0.85'}>
+          <circle r="32" fill="none" stroke={textColor} strokeWidth="0.8" strokeDasharray="2,3" />
           <path d="M 0,-30 L 5,-8 L 0,0 L -5,-8 Z" fill="#ef4444" />
-          <path d="M 0,30 L 5,8 L 0,0 L -5,8 Z" fill="currentColor" />
-          <path d="M -30,0 L -8,5 L 0,0 L -8,-5 Z" fill="currentColor" />
-          <path d="M 30,0 L 8,5 L 0,0 L 8,-5 Z" fill="currentColor" />
+          <path d="M 0,30 L 5,8 L 0,0 L -5,8 Z" fill={textColor} />
+          <path d="M -30,0 L -8,5 L 0,0 L -8,-5 Z" fill={textColor} />
+          <path d="M 30,0 L 8,5 L 0,0 L 8,-5 Z" fill={textColor} />
           <text x="0" y="-34" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#ef4444">
             N
           </text>
-          <text x="0" y="42" fontSize="8" textAnchor="middle" fill="currentColor">
+          <text x="0" y="42" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
             S
           </text>
-          <text x="38" y="3" fontSize="8" textAnchor="middle" fill="currentColor">
+          <text x="38" y="3" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
             E
           </text>
-          <text x="-38" y="3" fontSize="8" textAnchor="middle" fill="currentColor">
+          <text x="-38" y="3" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
             O
           </text>
         </g>
@@ -226,12 +251,12 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
 
           const markerColor =
             place.category === 'city'
-              ? '#3b82f6' // Azul
+              ? '#2563eb' // Azul vibrante
               : place.category === 'mountain'
-              ? '#f59e0b' // Ámbar/Naranja
+              ? '#d97706' // Ámbar intenso
               : place.category === 'water'
-              ? '#06b6d4' // Cian
-              : '#10b981'; // Verde arqueológico
+              ? '#0284c7' // Cian agua
+              : '#059669'; // Verde esmeralda
 
           return (
             <g
@@ -266,19 +291,22 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
               <circle
                 r={isSelected ? '6.5' : isHovered ? '5.5' : '4.5'}
                 fill={markerColor}
-                stroke="#ffffff"
-                strokeWidth={isSelected ? '2' : '1.2'}
+                stroke={isDark ? '#050c1a' : '#ffffff'}
+                strokeWidth={isSelected ? '2.5' : '1.5'}
                 className="transition-all"
               />
 
-              {/* Etiqueta de texto */}
+              {/* Etiqueta de texto de alta nitidez */}
               <text
                 x="8"
                 y="3.5"
                 fontSize={isSelected ? '11' : '9.5'}
-                fontWeight={isSelected ? 'bold' : 'normal'}
-                fill={isSelected ? '#ffffff' : isHovered ? '#38bdf8' : '#e2e8f0'}
-                className="select-none font-sans drop-shadow-md"
+                fontWeight={isSelected ? 'bold' : '600'}
+                fill={isSelected ? (isDark ? '#ffffff' : '#000000') : isHovered ? '#2563eb' : textColor}
+                stroke={textStrokeHalo}
+                strokeWidth={isDark ? '0.4' : '0.8'}
+                paintOrder="stroke fill"
+                className="select-none font-sans"
               >
                 {place.name}
               </text>

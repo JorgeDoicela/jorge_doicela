@@ -1,287 +1,378 @@
 'use client';
 
-import React, { useState } from 'react';
-import { VerseList, useVerses } from '../features/verses';
-import { BookSelector, useBooks } from '../features/books';
-import { TranslationSelector, useTranslations } from '../features/translations';
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
-  ParallelToolbar,
-  ParallelViewGrid,
-  useParallelVerses,
-  ParallelVerseRow,
-  BibleStudyMode,
-} from '../features/parallel-view';
-import { TextualDiffModal, VerseComparisonData } from '../features/textual-diff';
-import { InterlinearView } from '../features/interlinear';
-import { LiteraryAnalysisView } from '../features/literary-analysis';
-import { LexiconView } from '../features/lexicons';
-import { GrammarSearchDashboard } from '../features/grammar-search';
-import { AtlasDashboard } from '../features/atlas';
-import { TimelineDashboard } from '../features/timeline';
-import { ArchaeologyFeedDashboard } from '../features/archaeology-feed';
+    BookOpen,
+    Columns2,
+    Languages,
+    ScrollText,
+    Library,
+    Search,
+    MapPin,
+    Clock,
+    Landmark,
+    ArrowRight,
+    ChevronDown,
+} from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { BibleLogo } from '../components/BibleLogo';
 
+export default function BibleLandingPage() {
+    const studyUrl = '/bible/study';
 
+    return (
+        <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-foreground selection:text-background">
+            {/* Header Sticky de la Landing */}
+            <header className="sticky top-0 z-50 w-full border-b border-accents-2 bg-background/90 backdrop-blur-md">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <BibleLogo size={20} />
+                        <span className="text-accents-2 font-mono select-none">/</span>
+                        <span className="text-xs font-bold tracking-wider uppercase text-foreground">
+                            Bible
+                        </span>
+                    </div>
 
-export default function BibleHome() {
-  const [studyMode, setStudyMode] = useState<BibleStudyMode>('standard');
-  const [diffModalOpen, setDiffModalOpen] = useState(false);
-  const [activeDiffData, setActiveDiffData] = useState<VerseComparisonData | null>(null);
-  const [rowVersesMap, setRowVersesMap] = useState<
-    Record<number, { text: string; name: string; abbreviation: string }>
-  >({});
+                    <nav className="hidden md:flex items-center gap-6 text-xs text-accents-5 font-medium">
+                        <a href="#motores" className="hover:text-foreground transition-colors">
+                            Motores de Estudio
+                        </a>
+                        <a href="#versiones" className="hover:text-foreground transition-colors">
+                            Versiones & Lenguas
+                        </a>
+                        <a href="#movil" className="hover:text-foreground transition-colors">
+                            App Móvil
+                        </a>
+                    </nav>
 
-  // Hook de traducción y versículos estándar
-  const {
-    verses,
-    loading: versesLoading,
-    error: versesError,
-    selectedBookId,
-    setSelectedBookId,
-    selectedTranslationId,
-    setSelectedTranslationId,
-  } = useVerses();
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href={studyUrl}
+                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-foreground text-background hover:opacity-90 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        >
+                            <span>Abrir Estudio</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                        <ThemeToggle />
+                    </div>
+                </div>
+            </header>
 
-  const { books } = useBooks();
-  const { translations } = useTranslations();
+            {/* Hero Section */}
+            <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden border-b border-accents-2">
+                {/* Glow de fondo suave */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-foreground/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
-  const selectedBook = books.find((b) => b.id === selectedBookId);
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accents-2 bg-accents-1/80 text-[11px] font-mono text-accents-5">
+                        <span>Versión 1.0 • Exégesis en Lenguas Originales</span>
+                    </div>
 
-  // Hook para gestión de columnas y filas paralelas
-  const {
-    columns,
-    rows,
-    loading: parallelLoading,
-    error: parallelError,
-    addColumn,
-    removeColumn,
-    updateColumnTranslation,
-  } = useParallelVerses(
-    selectedBookId,
-    null,
-    selectedTranslationId ? [selectedTranslationId, selectedTranslationId === 1 ? 2 : 1] : [1, 2],
-  );
+                    <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
+                        Una Plataforma de Estudio Bíblico
+                    </h1>
 
-  const handleOpenDiffModal = (row: ParallelVerseRow) => {
-    // Obtener los datos de todas las traducciones disponibles en esta fila
-    const validTranslations = Object.values(row.translations).filter(
-      (v): v is NonNullable<typeof v> => v !== null,
+                    <p className="text-accents-5 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                        Lectura editorial fluida, exégesis morfológica en Hebreo, Arameo y Griego, análisis de quiasmos semíticos, atlas georreferenciado y sincronismo histórico en un entorno unificado.
+                    </p>
+
+                    <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                        <Link
+                            href={studyUrl}
+                            className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-foreground text-background hover:opacity-90 transition-all flex items-center gap-2 shadow-sm cursor-pointer"
+                        >
+                            <span>Comenzar Lectura y Estudio</span>
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+
+                        <a
+                            href="#motores"
+                            className="px-5 py-2.5 text-sm font-medium rounded-xl border border-accents-2 bg-background hover:border-foreground text-foreground transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+                        >
+                            <span>Explorar Herramientas</span>
+                            <ChevronDown className="w-4 h-4 text-accents-5" />
+                        </a>
+                    </div>
+
+                    {/* Tarjeta de Vista Previa Interactiva del Workspace */}
+                    <div className="pt-8 max-w-4xl mx-auto">
+                        <div className="rounded-2xl border border-accents-2 bg-background p-4 sm:p-6 shadow-xl text-left space-y-4">
+                            <div className="flex items-center justify-between border-b border-accents-2 pb-3">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
+                                    <div className="w-3 h-3 rounded-full bg-amber-500/20 border border-amber-500/40" />
+                                    <div className="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500/40" />
+                                    <span className="text-[11px] font-mono text-accents-4 ml-2">
+                                        Salmos 23:1-4 • Comparación Multi-Versión & Original
+                                    </span>
+                                </div>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accents-1 text-accents-5 border border-accents-2">
+                                    Live Preview
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
+                                <div className="p-4 rounded-xl border border-accents-2 bg-accents-1/30 space-y-2">
+                                    <div className="flex justify-between font-mono text-[10px] text-accents-5">
+                                        <span>Reina-Valera 1960</span>
+                                        <span>RV1960</span>
+                                    </div>
+                                    <p className="font-serif text-sm text-foreground/90 leading-relaxed">
+                                        <sup className="text-[10px] font-mono text-accents-4 mr-1">1</sup>
+                                        Jehová es mi pastor; nada me faltará.{' '}
+                                        <sup className="text-[10px] font-mono text-accents-4 mr-1">2</sup>
+                                        En lugares de delicados pastos me hará descansar; junto a aguas de reposo me pastoreará.
+                                    </p>
+                                </div>
+
+                                <div className="p-4 rounded-xl border border-accents-2 bg-accents-1/30 space-y-2" dir="rtl">
+                                    <div className="flex justify-between font-mono text-[10px] text-accents-5" dir="ltr">
+                                        <span>Biblia Hebraica Stuttgartensia</span>
+                                        <span>BHS (WLC)</span>
+                                    </div>
+                                    <p className="font-serif text-sm text-foreground/90 leading-relaxed">
+                                        <sup className="text-[10px] font-mono text-accents-4 ml-1">1</sup>
+                                        מִזְמ֥וֹר לְדָוִ֑ד יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃{' '}
+                                        <sup className="text-[10px] font-mono text-accents-4 ml-1">2</sup>
+                                        בִּנְא֣וֹת דֶּ֭שֶׁא יַרְבִּיצֵ֑נִי עַל־מֵ֖י מְנֻח֣וֹת יְנַהֲלֵֽנִי׃
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Sección: Los 9 Motores de Estudio Bíblico */}
+            <section id="motores" className="py-20 border-b border-accents-2 bg-accents-1/20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+                    <div className="text-center space-y-2 max-w-2xl mx-auto">
+                        <h2 className="text-xs font-mono uppercase tracking-widest text-accents-5">
+                            Capacidades Exegéticas
+                        </h2>
+                        <p className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                            9 Módulos Especializados en una Sola Plataforma
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {/* 1. Lectura Editorial */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-accents-1 border border-accents-2 flex items-center justify-center text-foreground font-mono text-sm">
+                                <BookOpen className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Lectura Editorial Continua</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Lectura en prosa natural con superíndices, alternancia de versículo a versículo, ajuste de tamaño tipográfico y soporte para fuentes Serif y Sans.
+                            </p>
+                        </div>
+
+                        {/* 2. Vista Paralela */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 font-mono text-sm">
+                                <Columns2 className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Vista Paralela & Diff Textual</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Comparación simultánea de hasta 4 traducciones bíblicas alineadas versículo por versículo, con detección visual de variantes léxicas.
+                            </p>
+                        </div>
+
+                        {/* 3. Interlineal Inverso */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 font-mono text-sm">
+                                <Languages className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Interlineal Morfológico Inverso</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Desglose palabra por palabra en Hebreo, Arameo y Griego Koiné con lemas, códigos Strong, análisis morfológico y pronunciación fonética.
+                            </p>
+                        </div>
+
+                        {/* 4. Quiasmos */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 font-mono text-sm">
+                                <ScrollText className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Quiasmos y Análisis Literario</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Visualización de simetrías poéticas concéntricas semíticas (A-B-C-B&apos;-A&apos;) y mapas lógicos de argumentación en las epístolas paulinas.
+                            </p>
+                        </div>
+
+                        {/* 5. Léxicos */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500 font-mono text-sm">
+                                <Library className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Diccionarios Léxicos Integrados</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Consulta directa de referencias clásicas: Brown-Driver-Briggs (BDB), Gesenius, Thayer, DTAT, Liddell-Scott-Jones (LSJ) y Robertson.
+                            </p>
+                        </div>
+
+                        {/* 6. Búsqueda Morfológica */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500 font-mono text-sm">
+                                <Search className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Búsqueda Gramatical & FTS5</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Motor de búsqueda de texto completo con operadores booleanos sobre SQLite FTS5 y gráfico canónico de densidad léxica en los 66 libros.
+                            </p>
+                        </div>
+
+                        {/* 7. Atlas 3D */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 font-mono text-sm">
+                                <MapPin className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Atlas Bíblico & Rutas Históricas</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Cartografía georreferenciada con coordenadas WGS84, viajes misioneros del apóstol Pablo, ruta del Éxodo y visualización tridimensional.
+                            </p>
+                        </div>
+
+                        {/* 8. Línea de Tiempo */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-500 font-mono text-sm">
+                                <Clock className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Cronología Sincrónica</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Línea de tiempo interactiva que sincroniza los reinos de Judá e Israel con los profetas bíblicos y los imperios contemporáneos.
+                            </p>
+                        </div>
+
+                        {/* 9. Arqueología */}
+                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
+                            <div className="w-9 h-9 rounded-xl bg-teal-400/10 border border-teal-400/20 flex items-center justify-center text-teal-500 font-mono text-sm">
+                                <Landmark className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-sm font-bold text-foreground">Actualidad Arqueológica</h3>
+                            <p className="text-xs text-accents-5 leading-relaxed">
+                                Artículos, hallazgos epigráficos en Tierra Santa, manuscritos de Qumrán y evidencias materiales con filtro apologético e histórico.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Sección: Versiones y Lenguas Originales */}
+            <section id="versiones" className="py-20 border-b border-accents-2">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-8">
+                    <div className="space-y-2">
+                        <h2 className="text-xs font-mono uppercase tracking-widest text-accents-5">
+                            Corpus Textual
+                        </h2>
+                        <p className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                            Lenguas Originales y Traducciones Canónicas
+                        </p>
+                    </div>
+
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {[
+                            { code: 'BHS', name: 'Biblia Hebraica Stuttgartensia', lang: 'Hebreo / Arameo' },
+                            { code: 'LXX', name: 'Septuaginta Griega', lang: 'Griego Koiné' },
+                            { code: 'RV1960', name: 'Reina-Valera 1960', lang: 'Español' },
+                            { code: 'NVI', name: 'Nueva Versión Internacional', lang: 'Español' },
+                            { code: 'LBLA', name: 'La Biblia de las Américas', lang: 'Español' },
+                            { code: 'JER', name: 'Biblia de Jerusalén', lang: 'Español' },
+                            { code: 'KJV', name: 'King James Version', lang: 'Inglés' },
+                        ].map((v) => (
+                            <div
+                                key={v.code}
+                                className="px-4 py-3 rounded-xl border border-accents-2 bg-background shadow-xs text-left min-w-[200px]"
+                            >
+                                <div className="text-[10px] font-mono text-accents-4 uppercase">{v.code}</div>
+                                <div className="text-xs font-semibold text-foreground">{v.name}</div>
+                                <div className="text-[11px] text-accents-5 font-mono">{v.lang}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Sección: App Móvil */}
+            <section id="movil" className="py-20 border-b border-accents-2 bg-accents-1/20">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-10">
+                    <div className="space-y-4 max-w-lg">
+                        <div className="inline-flex items-center gap-2 text-xs font-mono text-accents-5">
+                            <span>Expo Router • React Native</span>
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                            Lectura 100% Offline en la App Móvil
+                        </h2>
+                        <p className="text-xs sm:text-sm text-accents-5 leading-relaxed">
+                            Desarrollada en <code className="font-mono text-foreground">frontend/mobile</code> para brindar rendimiento fluido a 60 fps con <code className="font-mono text-foreground">FlashList</code>, almacenamiento local cifrado de notas y notificaciones del versículo del día sin depender de conexión a internet.
+                        </p>
+                    </div>
+
+                    <div className="w-full max-w-sm p-6 rounded-2xl border border-accents-2 bg-background space-y-4 shadow-lg font-mono text-xs">
+                        <div className="flex justify-between items-center text-[10px] text-accents-4 border-b border-accents-2 pb-2">
+                            <span>MOBILE SPECS</span>
+                            <span className="text-emerald-500">OFFLINE READY</span>
+                        </div>
+                        <div className="space-y-2 text-accents-6">
+                            <div className="flex justify-between">
+                                <span>Motor de Listas:</span>
+                                <span className="text-foreground">Shopify FlashList</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Almacenamiento:</span>
+                                <span className="text-foreground">expo-file-system</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Notificaciones:</span>
+                                <span className="text-foreground">expo-notifications</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Gestos:</span>
+                                <span className="text-foreground">Swipe entre capítulos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Final */}
+            <section className="py-20 text-center space-y-6">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-4">
+                    <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
+                        Comienza tu Estudio Bíblico
+                    </h2>
+                    <p className="text-xs sm:text-sm text-accents-5 max-w-lg mx-auto">
+                        Accede de forma inmediata a la plataforma sin necesidad de registro ni configuraciones complejas.
+                    </p>
+                    <div className="pt-2">
+                        <Link
+                            href={studyUrl}
+                            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-foreground text-background font-semibold text-sm hover:opacity-90 transition-all shadow-sm cursor-pointer"
+                        >
+                            <span>Abrir Estudio Bíblico Ahora</span>
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="border-t border-accents-2 w-full py-8 bg-background">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
+                    <div>Jorge Doicela &copy; {new Date().getFullYear()} • Estudio de la biblia</div>
+                    <div className="flex gap-4">
+                        <Link href={studyUrl} className="hover:text-foreground transition-colors">
+                            Estudio Bíblico
+                        </Link>
+                        <span className="text-accents-2">|</span>
+                        <span className="hover:text-foreground transition-colors cursor-default">
+                            Sagradas Escrituras
+                        </span>
+                    </div>
+                </div>
+            </footer>
+        </div>
     );
-
-    if (validTranslations.length < 2) {
-      return;
-    }
-
-    const tA = validTranslations[0];
-    const tB = validTranslations[1];
-
-    const map: Record<number, { text: string; name: string; abbreviation: string }> = {};
-    for (const item of validTranslations) {
-      map[item.translationId] = {
-        text: item.text,
-        name: item.translationName,
-        abbreviation: item.translationAbbreviation,
-      };
-    }
-
-    setRowVersesMap(map);
-    setActiveDiffData({
-      bookName: tA.bookName,
-      chapter: tA.chapter,
-      verseNumber: row.verseNumber,
-      translationA: {
-        id: tA.translationId,
-        abbreviation: tA.translationAbbreviation,
-        name: tA.translationName,
-        text: tA.text,
-      },
-      translationB: {
-        id: tB.translationId,
-        abbreviation: tB.translationAbbreviation,
-        name: tB.translationName,
-        text: tB.text,
-      },
-    });
-    setDiffModalOpen(true);
-  };
-
-  return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* Navbar superior fija al estilo Vercel */}
-      <header className="sticky top-0 z-50 w-full border-b border-accents-2 bg-background/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <svg
-              viewBox="0 0 75 65"
-              fill="currentColor"
-              className="h-4.5 w-4.5 text-foreground"
-              aria-label="Vercel Isotype"
-            >
-              <polygon points="37.5,0 75,65 0,65" />
-            </svg>
-            <span className="text-accents-2 font-mono select-none">/</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">
-              Bible
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {studyMode === 'standard' && (
-              <TranslationSelector
-                selectedTranslationId={selectedTranslationId}
-                onSelectTranslation={setSelectedTranslationId}
-              />
-            )}
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="pt-16 pb-12 text-center max-w-3xl mx-auto px-4 sm:px-6">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl mb-3 leading-none select-none">
-          La Biblia Modular
-        </h1>
-        <p className="text-accents-5 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-          Plataforma de lectura, estudio comparativo y exégesis morfológica profunda de las Sagradas Escrituras en lenguas originales y traducciones globales.
-        </p>
-      </section>
-
-      {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-24 space-y-6">
-        {/* Filtro de Libros en un contenedor plano Vercel */}
-        <section className="border border-accents-2 rounded-xl bg-background p-5 sm:p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-              Libros Bíblicos
-            </h2>
-            <span className="text-[11px] font-mono text-accents-4">
-              Antiguo y Nuevo Testamento
-            </span>
-          </div>
-          <BookSelector
-            selectedBookId={selectedBookId}
-            onSelectBook={setSelectedBookId}
-          />
-        </section>
-
-        {/* Barra de herramientas y alternancia de modo */}
-        <ParallelToolbar
-          studyMode={studyMode}
-          onChangeStudyMode={setStudyMode}
-          columnCount={columns.length}
-          availableTranslations={translations}
-          activeTranslationIds={columns.map((c) => c.translationId)}
-          onAddColumn={addColumn}
-        />
-
-        {/* Sección de Escrituras */}
-        <section className="space-y-4">
-          <div className="flex justify-between items-center pb-2 border-b border-accents-2">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-              {studyMode === 'parallel'
-                ? 'Estudio Comparativo en Paralelo'
-                : studyMode === 'interlinear'
-                ? 'Modo Interlineal Inverso e Interactivo'
-                : studyMode === 'literary'
-                ? 'Análisis de Estructuras Literarias, Quiasmos y Discurso Paulino'
-                : studyMode === 'lexicon'
-                ? 'Motor Lingüístico y Diccionarios Léxicos Integrados'
-                : studyMode === 'grammar-search'
-                ? 'Búsqueda Morfológica, Scatter Plot Canónico y Concordancia FTS5'
-                : studyMode === 'atlas'
-                ? 'Atlas Bíblico Georreferenciado, Rutas Históricas y Visualizador 3D'
-                : studyMode === 'timeline'
-                ? 'Línea de Tiempo Cronológica Dinámica y Sincronismo Histórico'
-                : studyMode === 'archaeology'
-                ? 'Actualidad Arqueológica, Manuscritos de Qumrán y Apologética'
-                : 'Lectura de Escrituras'}
-            </h2>
-            <span className="text-[10px] font-mono text-accents-4">
-              {studyMode === 'parallel'
-                ? `${rows.length} versículos alineados (${columns.length} versiones)`
-                : studyMode === 'interlinear'
-                ? 'Interlineal Español ↔ Hebreo/Arameo/Griego'
-                : studyMode === 'literary'
-                ? 'Patrones Poéticos Semíticos & Gramática del Discurso'
-                : studyMode === 'lexicon'
-                ? 'BDB • Gesenius • DTAT • Thayer • LSJ • Robertson • Vincent'
-                : studyMode === 'grammar-search'
-                ? 'Parsing Robinson • Densidad Canónica • Búsqueda Booleana'
-                : studyMode === 'atlas'
-                ? 'Cartografía WGS84 • Itinerarios Bíblicos • Modelos 3D Arqueológicos'
-                : studyMode === 'timeline'
-                ? 'Reyes de Judá & Israel • Profetas • Imperios Mundiales • Arqueología'
-                : studyMode === 'archaeology'
-                ? 'Excavaciones en Tierra Santa • Rollos del Mar Muerto • Epigrafía'
-                : `${verses.length} versículos encontrados`}
-            </span>
-          </div>
-
-          {studyMode === 'parallel' ? (
-            <ParallelViewGrid
-              columns={columns}
-              rows={rows}
-              loading={parallelLoading}
-              error={parallelError}
-              availableTranslations={translations}
-              onSelectTranslation={updateColumnTranslation}
-              onRemoveColumn={removeColumn}
-              onCompareRow={handleOpenDiffModal}
-            />
-          ) : studyMode === 'interlinear' ? (
-            <InterlinearView selectedBookAbbr={selectedBook?.abbreviation} />
-          ) : studyMode === 'literary' ? (
-            <LiteraryAnalysisView />
-          ) : studyMode === 'lexicon' ? (
-            <LexiconView />
-          ) : studyMode === 'grammar-search' ? (
-            <GrammarSearchDashboard />
-          ) : studyMode === 'atlas' ? (
-            <AtlasDashboard />
-          ) : studyMode === 'timeline' ? (
-            <TimelineDashboard />
-          ) : studyMode === 'archaeology' ? (
-            <ArchaeologyFeedDashboard />
-          ) : (
-            <VerseList
-              verses={verses}
-              loading={versesLoading}
-              error={versesError}
-            />
-          )}
-
-
-        </section>
-      </main>
-
-      {/* Modal de análisis de variantes textuales */}
-      <TextualDiffModal
-        isOpen={diffModalOpen}
-        onClose={() => setDiffModalOpen(false)}
-        initialData={activeDiffData}
-        availableTranslations={translations}
-        allVersesByTranslation={rowVersesMap}
-      />
-
-      {/* Footer minimalista */}
-      <footer className="border-t border-accents-2 w-full py-8 bg-background">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
-          <div>Jorge Doicela &copy; {new Date().getFullYear()}</div>
-          <div className="flex gap-4">
-            <span className="text-accents-2">|</span>
-            <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-              Sagradas Escrituras
-            </span>
-            <span className="text-accents-2">|</span>
-            <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-              Lectura Multi-Versión
-            </span>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
 }
-
-

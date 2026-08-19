@@ -29,7 +29,7 @@ export class GetVersesFilterDto {
   @Type(() => Number)
   @IsInt({ message: 'El límite de paginación debe ser un número entero.' })
   @Min(1, { message: 'El límite mínimo de paginación es 1.' })
-  limit?: number = 20;
+  limit?: number = 200;
 
   @IsOptional()
   @Type(() => Number)

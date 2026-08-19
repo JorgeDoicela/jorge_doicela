@@ -1,10 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useTheme } from 'next-themes';
 import { useRoutePlayer } from '../../hooks/useRoutePlayer';
 import { projectGeoToCanvas } from '../../hooks/useAtlasMap';
 
 export const HistoricalRoutesPlayer: React.FC = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
   const {
     allRoutes,
     selectedRouteId,
@@ -29,6 +33,10 @@ export const HistoricalRoutesPlayer: React.FC = () => {
   const pathD = routePoints.reduce((acc, point, index) => {
     return index === 0 ? `M ${point.x},${point.y}` : `${acc} L ${point.x},${point.y}`;
   }, '');
+
+  const seaColor = isDark ? '#0c192c' : '#dbeafe';
+  const landColor = isDark ? '#151c2d' : '#ffffff';
+  const landStroke = isDark ? '#232f48' : '#94a3b8';
 
   return (
     <div className="space-y-4">
@@ -59,8 +67,12 @@ export const HistoricalRoutesPlayer: React.FC = () => {
 
       {/* Grid: Canvas de la Ruta + Panel de Parada Activa */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Canvas de Trazado de Ruta */}
-        <div className="lg:col-span-8 relative h-[480px] bg-[#14120e] rounded-xl border border-accents-2 overflow-hidden shadow-inner flex flex-col justify-between">
+        {/* Canvas de Trazado de Ruta Adaptable */}
+        <div
+          className={`lg:col-span-8 relative h-[480px] rounded-xl border border-accents-2 overflow-hidden shadow-inner flex flex-col justify-between transition-colors duration-200 ${
+            isDark ? 'bg-[#070b14]' : 'bg-[#dbeafe]'
+          }`}
+        >
           <svg viewBox="0 0 1000 650" className="w-full h-full">
             <defs>
               <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -69,11 +81,11 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               </linearGradient>
             </defs>
 
-            {/* Mar y fondo cartográfico tenue */}
-            <rect width="1000" height="650" fill="#1e2633" />
+            {/* Mar y fondo cartográfico adaptable */}
+            <rect width="1000" height="650" fill={seaColor} />
 
             {/* Tierra firme */}
-            <g fill="#2d2820" stroke="#3d372e" strokeWidth="0.8" opacity="0.85">
+            <g fill={landColor} stroke={landStroke} strokeWidth="1" opacity="0.98">
               <path d="M 30,50 Q 80,110 120,200 L 140,230 L 100,260 L 70,210 Z" />
               <path d="M 280,60 L 370,80 L 390,140 L 340,190 L 350,230 L 310,240 L 290,180 Z" />
               <path d="M 330,300 L 410,295 L 420,310 L 340,315 Z" />

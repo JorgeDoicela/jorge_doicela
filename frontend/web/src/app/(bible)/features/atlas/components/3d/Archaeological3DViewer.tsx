@@ -1,10 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useTheme } from 'next-themes';
 import { use3DOrbitControls } from '../../hooks/use3DOrbitControls';
 import { AncientStructureId } from '../../types';
 
 export const Archaeological3DViewer: React.FC = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
   const {
     structures,
     selectedStructureId,
@@ -55,10 +59,14 @@ export const Archaeological3DViewer: React.FC = () => {
     };
   };
 
+  const floorGlowCenter = isDark ? '#1e293b' : '#e2e8f0';
+  const floorGlowOuter = isDark ? '#070b14' : '#ffffff';
+  const gridLineColor = isDark ? '#334155' : '#cbd5e1';
+
   return (
     <div className="space-y-4">
       {/* Selector de Estructuras Arqueológicas 3D */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {structures.map((struct) => {
           const isSelected = struct.id === selectedStructureId;
           return (
@@ -83,11 +91,11 @@ export const Archaeological3DViewer: React.FC = () => {
 
       {/* Grid: Visor 3D Interactivo + Panel de Ficha Técnica */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Visor 3D Interactivo Canvas SVG */}
+        {/* Visor 3D Interactivo Canvas SVG Adaptable */}
         <div
-          className={`lg:col-span-8 relative h-[520px] rounded-xl border border-accents-2 bg-[#0d1117] overflow-hidden select-none shadow-2xl ${
-            isOrbiting ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
+          className={`lg:col-span-8 relative h-[520px] rounded-xl border border-accents-2 overflow-hidden select-none shadow-2xl transition-colors duration-200 ${
+            isDark ? 'bg-[#070b14]' : 'bg-[#ffffff]'
+          } ${isOrbiting ? 'cursor-grabbing' : 'cursor-grab'}`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -96,8 +104,8 @@ export const Archaeological3DViewer: React.FC = () => {
           <svg viewBox="0 0 1000 640" className="w-full h-full">
             <defs>
               <radialGradient id="floorGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#1e293b" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#0d1117" stopOpacity="0" />
+                <stop offset="0%" stopColor={floorGlowCenter} stopOpacity="0.8" />
+                <stop offset="100%" stopColor={floorGlowOuter} stopOpacity="0" />
               </radialGradient>
               <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#fbbf24" />
@@ -117,7 +125,7 @@ export const Archaeological3DViewer: React.FC = () => {
             <ellipse cx="500" cy="460" rx="360" ry="120" fill="url(#floorGlow)" />
 
             {/* Cuadrícula isométrica de referencia arquitectónica */}
-            <g stroke="#334155" strokeWidth="0.5" strokeDasharray="3,3" opacity="0.4">
+            <g stroke={gridLineColor} strokeWidth="0.6" strokeDasharray="3,3" opacity="0.7">
               {[-1.5, -1, -0.5, 0, 0.5, 1, 1.5].map((val, i) => {
                 const p1 = project3D(val, 0, -1.5);
                 const p2 = project3D(val, 0, 1.5);

@@ -30,10 +30,14 @@ export const AtlasDashboard: React.FC = () => {
     isDragging,
     handleZoomIn,
     handleZoomOut,
+    handleZoomDelta,
     handleResetView,
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
     focusOnPlace,
   } = useAtlasMap();
 
@@ -118,6 +122,10 @@ export const AtlasDashboard: React.FC = () => {
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
+              onZoomDelta={handleZoomDelta}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             />
 
             <PlaceDetailsDrawer

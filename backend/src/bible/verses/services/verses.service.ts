@@ -13,6 +13,7 @@ import {
 } from '../../../common/domain/domain-errors';
 import { BooksService } from '../../books/services/books.service';
 import { TranslationsService } from '../../translations/services/translations.service';
+import { GENESIS_1_2_3_VERSES } from '../data/genesisSeedData';
 
 @Injectable()
 export class VersesService implements OnModuleInit {
@@ -198,13 +199,48 @@ export class VersesService implements OnModuleInit {
         text: 'כִּדְנָה֙ תֵּאמְר֣וּן לְה֔וֹם אֱלָ֣הַיָּ֔א דִּֽי־שְׁמַיָּ֥א וְאַרְקָ֖א לָ֣א עֲבַ֑דוּ יֵאבַ֧דוּ מֵֽאַרְעָ֛א וּמִן־תְּח֥וֹת שְׁמַיָּ֖א אֵֽלֶּה׃',
       },
 
-      // Salmos 23:1
+      // Salmos 23 completo
       {
         bookAbbr: 'SAL',
         transAbbr: 'RV1960',
         ch: 23,
         v: 1,
         text: 'Jehová es mi pastor; nada me faltará.',
+      },
+      {
+        bookAbbr: 'SAL',
+        transAbbr: 'RV1960',
+        ch: 23,
+        v: 2,
+        text: 'En lugares de delicados pastos me hará descansar; Junto a aguas de reposo me pastoreará.',
+      },
+      {
+        bookAbbr: 'SAL',
+        transAbbr: 'RV1960',
+        ch: 23,
+        v: 3,
+        text: 'Confortará mi alma; Me guiará por sendas de justicia por amor de su nombre.',
+      },
+      {
+        bookAbbr: 'SAL',
+        transAbbr: 'RV1960',
+        ch: 23,
+        v: 4,
+        text: 'Aunque ande en valle de sombra de muerte, No temeré mal alguno, porque tú estarás conmigo; Tu vara y tu cayado me infundirán aliento.',
+      },
+      {
+        bookAbbr: 'SAL',
+        transAbbr: 'RV1960',
+        ch: 23,
+        v: 5,
+        text: 'Aderezas mesa delante de mí en presencia de mis angustiadores; Unges mi cabeza con aceite; mi copa está rebosando.',
+      },
+      {
+        bookAbbr: 'SAL',
+        transAbbr: 'RV1960',
+        ch: 23,
+        v: 6,
+        text: 'Ciertamente el bien y la misericordia me seguirán todos los días de mi vida, Y en la casa de Jehová moraré por largos días.',
       },
       {
         bookAbbr: 'SAL',
@@ -240,6 +276,59 @@ export class VersesService implements OnModuleInit {
         ch: 23,
         v: 1,
         text: 'מִזְמ֥וֹר לְדָוִ֑ד יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃',
+      },
+
+      // Génesis 1:3-5 (RV1960)
+      {
+        bookAbbr: 'GEN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 3,
+        text: 'Y dijo Dios: Sea la luz; y fue la luz.',
+      },
+      {
+        bookAbbr: 'GEN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 4,
+        text: 'Y vio Dios que la luz era buena; y separó Dios la luz de las tinieblas.',
+      },
+      {
+        bookAbbr: 'GEN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 5,
+        text: 'Y llamó Dios a la luz Día, y a las tinieblas llamó Noche. Y fue la tarde y la mañana un día.',
+      },
+
+      // Juan 1:2-5 (RV1960)
+      {
+        bookAbbr: 'JN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 2,
+        text: 'Este era en el principio con Dios.',
+      },
+      {
+        bookAbbr: 'JN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 3,
+        text: 'Todas las cosas por él fueron hechas, y sin él nada de lo que ha sido hecho, fue hecho.',
+      },
+      {
+        bookAbbr: 'JN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 4,
+        text: 'En él estaba la vida, y la vida era la luz de los hombres.',
+      },
+      {
+        bookAbbr: 'JN',
+        transAbbr: 'RV1960',
+        ch: 1,
+        v: 5,
+        text: 'La luz en las tinieblas resplandece, y las tinieblas no prevalecieron contra ella.',
       },
 
       // Juan 1:1
@@ -331,7 +420,9 @@ export class VersesService implements OnModuleInit {
       },
     ];
 
-    for (const v of sampleVerses) {
+    const allSeedVerses = [...sampleVerses, ...GENESIS_1_2_3_VERSES];
+
+    for (const v of allSeedVerses) {
       const book = booksMap.get(v.bookAbbr);
       const translation = translationsMap.get(v.transAbbr);
       if (book && translation) {
@@ -372,7 +463,7 @@ export class VersesService implements OnModuleInit {
       bookId,
       translationId,
       chapter,
-      limit = 20,
+      limit = 200,
       offset = 0,
     } = filterDto;
     const query = this.verseRepository
@@ -389,6 +480,10 @@ export class VersesService implements OnModuleInit {
     if (chapter !== undefined) {
       query.andWhere('verse.chapter = :chapter', { chapter });
     }
+
+    query
+      .orderBy('verse.chapter', 'ASC')
+      .addOrderBy('verse.verseNumber', 'ASC');
 
     query.skip(offset).take(limit);
     return query.getMany();

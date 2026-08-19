@@ -4,6 +4,7 @@ import React from 'react';
 import { ParallelColumn, ParallelVerseRow } from '../types';
 import { ParallelColumnHeader } from './ParallelColumnHeader';
 import { Translation } from '../../translations/hooks/useTranslations';
+import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 interface ParallelViewGridProps {
   columns: ParallelColumn[];
@@ -28,30 +29,19 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
 }) => {
   if (error) {
     return (
-      <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 text-red-500 text-xs font-mono text-center my-6">
+      <div className="p-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono text-center">
         {error}
       </div>
     );
   }
 
-  // Clases dinámicas de grid según cantidad de columnas
-  const getGridColsClass = () => {
-    switch (columns.length) {
-      case 2:
-        return 'grid-cols-1 md:grid-cols-2';
-      case 3:
-        return 'grid-cols-1 md:grid-cols-3';
-      case 4:
-        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
-      default:
-        return 'grid-cols-1 md:grid-cols-2';
-    }
-  };
-
   return (
-    <div className="w-full border border-accents-2 rounded-xl bg-background overflow-hidden shadow-sm">
-      {/* Cabeceras fijas de cada columna */}
-      <div className={`grid ${getGridColsClass()} divide-y md:divide-y-0 md:divide-x divide-accents-2 border-b border-accents-2`}>
+    <div className="rounded-xl border border-accents-2 bg-background overflow-hidden shadow-xs">
+      {/* Cabecera pegajosa con selectores de versión */}
+      <div
+        className="grid border-b border-accents-2 bg-background/95 backdrop-blur-md sticky top-0 z-20"
+        style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+      >
         {columns.map((col, idx) => (
           <ParallelColumnHeader
             key={col.id}
@@ -59,18 +49,22 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
             columnIndex={idx}
             currentTranslationId={col.translationId}
             availableTranslations={availableTranslations}
-            canRemove={columns.length > 2}
             onSelectTranslation={onSelectTranslation}
             onRemoveColumn={onRemoveColumn}
+            canRemove={columns.length > 2}
           />
         ))}
       </div>
 
-      {/* Estado de carga */}
+      {/* Esqueleto de carga */}
       {loading && (
-        <div className="p-6 space-y-6 animate-pulse">
-          {Array.from({ length: 4 }).map((_, rIdx) => (
-            <div key={rIdx} className={`grid ${getGridColsClass()} gap-4 pt-4 border-t border-accents-1 first:border-0`}>
+        <div className="p-6 space-y-4 animate-pulse">
+          {[...Array(5)].map((_, idx) => (
+            <div
+              key={idx}
+              className="grid gap-4"
+              style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+            >
               {columns.map((col) => (
                 <div key={col.id} className="space-y-2 p-3 rounded bg-accents-1/40">
                   <div className="h-4 w-12 bg-accents-2 rounded" />
@@ -83,15 +77,14 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
         </div>
       )}
 
-      {/* Estado sin versículos */}
+      {/* Estado sin versículos con Aviso de Expansión */}
       {!loading && rows.length === 0 && (
-        <div className="py-16 px-6 text-center">
-          <p className="text-accents-5 text-sm">
-            No se encontraron versículos en común para las versiones seleccionadas.
-          </p>
-          <p className="text-accents-4 text-xs font-mono mt-1">
-            Intenta seleccionar otro libro o capítulo con el selector superior.
-          </p>
+        <div className="p-8 sm:p-12">
+          <OngoingExpansionNotice
+            contextTitle="No hay versículos sincronizados para este capítulo"
+            contextDescription="Esta plataforma es nueva y estoy sincronizando versículo por versículo entre las diversas traducciones. Me esfuerzo día a día para brindarte una herramienta de comparación fiel y de gran calidad."
+            className="border-0 shadow-none bg-transparent"
+          />
         </div>
       )}
 
@@ -122,7 +115,10 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                 )}
               </div>
 
-              <div className={`grid ${getGridColsClass()} divide-y md:divide-y-0 md:divide-x divide-accents-2`}>
+              <div
+                className="grid divide-y md:divide-y-0 md:divide-x divide-accents-2"
+                style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+              >
                 {columns.map((col) => {
                   const verseData = row.translations[col.translationId];
                   return (

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { LiteraryViewSubMode } from '../types';
 import { ChiasmViewer } from './ChiasmViewer';
 import { PaulineDiscourseViewer } from './PaulineDiscourseViewer';
+import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 export const LiteraryAnalysisView: React.FC = () => {
   const [subMode, setSubMode] = useState<LiteraryViewSubMode>('poetic_chiasm');
@@ -56,6 +57,15 @@ export const LiteraryAnalysisView: React.FC = () => {
       ) : (
         <PaulineDiscourseViewer />
       )}
+
+      {/* Aviso de Expansión Continua de Quiasmos y Discursos */}
+      <div className="pt-6">
+        <OngoingExpansionNotice
+          contextTitle="Análisis Literario y Quiasmos en Crecimiento"
+          contextDescription="Esta plataforma es nueva y por eso aún no cuenta con muchas cosas. Me esfuerzo con dedicación para ofrecerte un trabajo confiable y de excelencia, diagramando y validando académicamente más estructuras quiásticas concéntricas y flujos de discurso paulino en todo el canon bíblico."
+          activeItemsSummary="Pasajes poéticos y epístolas activas: Salmo 23, Isaías 6, Génesis 1-11, Proverbios 3, Romanos 8 y Efesios 1."
+        />
+      </div>
     </div>
   );
 };

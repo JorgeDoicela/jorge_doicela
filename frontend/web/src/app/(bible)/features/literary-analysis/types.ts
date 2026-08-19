@@ -24,7 +24,7 @@ export interface ChiasmStructure {
   passageRef: string; // Ej: "Salmo 67:1-7"
   title: string;
   description: string;
-  literaryCategory: 'Salmos' | 'Proverbios' | 'Profetas';
+  literaryCategory: 'Salmos' | 'Proverbios' | 'Profetas' | 'Pentateuco';
   focalMessage: string; // El mensaje teológico central del clímax quiástico
   cola: PoeticColon[];
 }

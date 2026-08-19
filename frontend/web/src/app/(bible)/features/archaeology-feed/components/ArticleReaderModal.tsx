@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArchaeologyArticle } from '../types';
 import { EpigraphyViewer } from './EpigraphyViewer';
 
@@ -10,11 +10,30 @@ interface ArticleReaderModalProps {
 }
 
 export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article, onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
   if (!article) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl max-h-[90vh] bg-background border border-accents-2 rounded-2xl shadow-2xl overflow-y-auto flex flex-col p-6 sm:p-8 space-y-6">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl max-h-[90vh] bg-background border border-accents-2 rounded-2xl shadow-2xl overflow-y-auto flex flex-col p-6 sm:p-8 space-y-6 cursor-default"
+      >
         {/* Cabecera del Lector */}
         <div className="flex items-start justify-between border-b border-accents-2 pb-4">
           <div className="space-y-1">

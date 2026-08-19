@@ -20,3 +20,14 @@ export interface Verse {
   verseNumber: number;
   text: string;
 }
+
+export type ReaderLayoutMode = 'continuous' | 'verse-by-verse';
+export type ReaderFontSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ReaderFontFamily = 'sans' | 'serif';
+
+export interface ReaderSettings {
+  layoutMode: ReaderLayoutMode;
+  fontSize: ReaderFontSize;
+  fontFamily: ReaderFontFamily;
+  showVerseNumbers: boolean;
+}

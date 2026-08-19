@@ -2,6 +2,17 @@ import { ArchaeologicalMilestone } from '../types';
 
 export const ARCHAEOLOGICAL_MILESTONES: ArchaeologicalMilestone[] = [
   {
+    id: 'creation_tablets_nineveh',
+    yearBC: 1600,
+    title: 'Tablillas Cosmogónicas de Nínive y Eridu (Fondo Arqueológico de Génesis 1-3)',
+    location: 'Biblioteca Real de Asurbanipal, Nínive (Irak)',
+    biblicalReference: 'Génesis 1:1-31; 2:8-15; 3:1-24',
+    artifactFound: 'Tablillas de arcilla cuneiforme con cosmogonías y jardines sagrados mesopotámicos',
+    museumLocation: 'Museo Británico (Londres)',
+    significance: 'Demuestra el contexto lingüístico y geográfico histórico de la cuenca del Tigris y Éufrates frente al monoteísmo puro y soberano del relato de Génesis.',
+    historicalEra: 'Historia Primordial',
+  },
+  {
     id: 'merneptah_stele',
     yearBC: 1208,
     title: 'Estela del Faraón Merneptah (Estela de Israel)',

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AncientPlace } from '../../types';
 
 interface PlaceDetailsDrawerProps {
@@ -9,10 +9,23 @@ interface PlaceDetailsDrawerProps {
 }
 
 export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
   if (!place) return null;
 
   return (
-    <div className="absolute top-4 right-4 bottom-4 w-88 max-w-[calc(100%-2rem)] bg-background/95 backdrop-blur-md border border-accents-2 rounded-xl shadow-2xl p-5 overflow-y-auto z-30 flex flex-col space-y-4 animate-in fade-in slide-in-from-right-4 duration-200">
+    <div className="absolute inset-x-3 bottom-3 max-h-[82%] sm:inset-x-auto sm:top-4 sm:right-4 sm:bottom-4 sm:w-88 sm:max-w-[calc(100%-2rem)] sm:max-h-none bg-background/95 backdrop-blur-md border border-accents-2 rounded-2xl sm:rounded-xl shadow-2xl p-4 sm:p-5 overflow-y-auto z-30 flex flex-col space-y-4 animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-right-4 duration-200">
       {/* Cabecera */}
       <div className="flex items-start justify-between border-b border-accents-2 pb-3">
         <div>
@@ -78,9 +91,9 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
 
       {/* Referencias Bíblicas Clave */}
       <div className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-          Pasajes Bíblicos Clave
-        </h4>
+        <span className="text-[10px] font-mono uppercase text-accents-4 block mb-1">
+          Pasajes Bíblicos Clave:
+        </span>
         <div className="space-y-1.5">
           {place.biblicalReferences.map((ref, i) => (
             <div key={i} className="p-2 rounded-md border border-accents-2 bg-background text-xs space-y-0.5">

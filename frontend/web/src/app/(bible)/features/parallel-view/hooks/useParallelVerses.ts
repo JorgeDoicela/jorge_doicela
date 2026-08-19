@@ -75,7 +75,7 @@ export function useParallelVerses(
         if (bookId !== null) params.append('bookId', bookId.toString());
         if (chapter !== null) params.append('chapter', chapter.toString());
         params.append('translationId', tId.toString());
-        params.append('limit', '100');
+        params.append('limit', '200');
 
         const res = await fetch(`${API_URL}/bible/verses?${params.toString()}`);
         if (!res.ok) {

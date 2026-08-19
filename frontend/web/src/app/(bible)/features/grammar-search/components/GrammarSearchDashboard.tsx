@@ -8,6 +8,7 @@ import { MorphologyFilterForm } from './MorphologyFilterForm';
 import { MorphologyResultsList } from './MorphologyResultsList';
 import { LemmaFrequencyAnalysis } from './LemmaFrequencyAnalysis';
 import { ExhaustiveConcordanceSearch } from './ExhaustiveConcordanceSearch';
+import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 export const GrammarSearchDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<GrammarSearchTab>('morphology');
@@ -62,16 +63,12 @@ export const GrammarSearchDashboard: React.FC = () => {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            Concordancia Exhaustiva FTS5
+            Buscador Booleano & Concordancia
           </button>
         </div>
 
-        <div className="text-[11px] font-mono text-accents-4 px-2 hidden md:block">
-          {activeTab === 'morphology'
-            ? 'Filtrado por parsing Robinson, tiempo, voz, modo y casos'
-            : activeTab === 'lemma_scatter'
-            ? 'Distribución cuantitativa en los 66 libros del canon'
-            : 'Búsqueda instantánea con comodines, frases y booleanos'}
+        <div className="text-[11px] font-mono text-accents-4 hidden lg:block pr-2">
+          Análisis sintáctico y lematización de textos originales
         </div>
       </div>
 
@@ -101,6 +98,15 @@ export const GrammarSearchDashboard: React.FC = () => {
       {activeTab === 'lemma_scatter' && <LemmaFrequencyAnalysis />}
 
       {activeTab === 'concordance' && <ExhaustiveConcordanceSearch />}
+
+      {/* Aviso de Expansión Continua de Tagging Morfológico */}
+      <div className="pt-6">
+        <OngoingExpansionNotice
+          contextTitle="Motor de Búsqueda Morfológica en Crecimiento"
+          contextDescription="Esta es una plataforma nueva que está en constante desarrollo. Me esfuerzo al máximo por realizar un trabajo minucioso y de excelencia, etiquetando cada raíz, binyan hebreo (Qal, Piel, Hifil), tiempo verbal griego y caso sintáctico en todo el corpus bíblico."
+          activeItemsSummary="Consultas sintácticas activas: Verbos Aoristos en Juan y Romanos, Participios Absolutos y Formas Cohortativas."
+        />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Verse } from '../types';
-
+import {
+  Verse,
+  ReaderLayoutMode,
+  ReaderFontSize,
+  ReaderFontFamily,
+  ReaderSettings,
+} from '../types';
 import { API_URL } from '../../../../config';
 
 export function useVerses() {
@@ -8,62 +13,166 @@ export function useVerses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
-  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(null);
+  // Por defecto: Génesis (id: 1), Reina-Valera 1960 (id: 1), Capítulo 1
+  const [selectedBookId, setSelectedBookId] = useState<number | null>(1);
+  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(1);
+  const [selectedChapter, setSelectedChapter] = useState<number | null>(1);
 
-  const fetchVerses = useCallback(async (bookId: number | null, translationId: number | null) => {
-    setLoading(true);
-    setError(null);
+  // Configuraciones de visualización del lector
+  const [readerSettings, setReaderSettings] = useState<ReaderSettings>({
+    layoutMode: 'continuous',
+    fontSize: 'md',
+    fontFamily: 'serif',
+    showVerseNumbers: true,
+  });
+
+  // Cargar configuraciones guardadas en localStorage
+  useEffect(() => {
     try {
-      let url = `${API_URL}/bible/verses`;
-      const params = new URLSearchParams();
-      
-      if (bookId !== null) {
-        params.append('bookId', bookId.toString());
+      const saved = localStorage.getItem('bible_reader_settings');
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
+        setReaderSettings((prev) => ({ ...prev, ...parsed }));
       }
-      if (translationId !== null) {
-        params.append('translationId', translationId.toString());
-      }
-      
-      const queryString = params.toString();
-      if (queryString) {
-        url += `?${queryString}`;
-      }
-
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error('No se pudieron cargar los versículos');
-      }
-      const data = await res.json();
-      setVerses(data.data as Verse[]);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error al conectar con el servidor');
-    } finally {
-      setLoading(false);
+    } catch {
+      // Ignorar errores de parsing
     }
+  }, []);
+
+  const updateReaderSettings = useCallback((newSettings: Partial<ReaderSettings>) => {
+    setReaderSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      try {
+        localStorage.setItem('bible_reader_settings', JSON.stringify(updated));
+      } catch {
+        // Fallback si localStorage no está disponible
+      }
+      return updated;
+    });
+  }, []);
+
+  const setLayoutMode = useCallback(
+    (layoutMode: ReaderLayoutMode) => updateReaderSettings({ layoutMode }),
+    [updateReaderSettings],
+  );
+
+  const setFontSize = useCallback(
+    (fontSize: ReaderFontSize) => updateReaderSettings({ fontSize }),
+    [updateReaderSettings],
+  );
+
+  const setFontFamily = useCallback(
+    (fontFamily: ReaderFontFamily) => updateReaderSettings({ fontFamily }),
+    [updateReaderSettings],
+  );
+
+  const toggleVerseNumbers = useCallback(() => {
+    setReaderSettings((prev) => {
+      const updated = { ...prev, showVerseNumbers: !prev.showVerseNumbers };
+      try {
+        localStorage.setItem('bible_reader_settings', JSON.stringify(updated));
+      } catch {
+        // Fallback
+      }
+      return updated;
+    });
+  }, []);
+
+  const fetchVerses = useCallback(
+    async (
+      bookId: number | null,
+      translationId: number | null,
+      chapter: number | null,
+    ) => {
+      setLoading(true);
+      setError(null);
+      try {
+        let url = `${API_URL}/bible/verses`;
+        const params = new URLSearchParams();
+
+        if (bookId !== null) {
+          params.append('bookId', bookId.toString());
+        }
+        if (translationId !== null) {
+          params.append('translationId', translationId.toString());
+        }
+        if (chapter !== null) {
+          params.append('chapter', chapter.toString());
+        }
+        params.append('limit', '200');
+
+        const queryString = params.toString();
+        if (queryString) {
+          url += `?${queryString}`;
+        }
+
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error('No se pudieron cargar los versículos');
+        }
+        const data = await res.json();
+        setVerses((data.data as Verse[]) || []);
+      } catch (err: unknown) {
+        setError(
+          err instanceof Error ? err.message : 'Error al conectar con el servidor',
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  // Al cambiar de libro, seleccionar el capítulo 1 por defecto
+  const handleSelectBook = useCallback((id: number | null) => {
+    setSelectedBookId(id);
+    setSelectedChapter(id !== null ? 1 : null);
+  }, []);
+
+  const nextChapter = useCallback((maxChapters: number = 150) => {
+    setSelectedChapter((prev) => {
+      if (prev === null) return 1;
+      return prev < maxChapters ? prev + 1 : prev;
+    });
+  }, []);
+
+  const prevChapter = useCallback(() => {
+    setSelectedChapter((prev) => {
+      if (prev === null || prev <= 1) return 1;
+      return prev - 1;
+    });
   }, []);
 
   useEffect(() => {
     let active = true;
     const load = async () => {
       if (active) {
-        await fetchVerses(selectedBookId, selectedTranslationId);
+        await fetchVerses(selectedBookId, selectedTranslationId, selectedChapter);
       }
     };
     void load();
     return () => {
       active = false;
     };
-  }, [fetchVerses, selectedBookId, selectedTranslationId]);
+  }, [fetchVerses, selectedBookId, selectedTranslationId, selectedChapter]);
 
   return {
     verses,
     loading,
     error,
     selectedBookId,
-    setSelectedBookId,
+    setSelectedBookId: handleSelectBook,
     selectedTranslationId,
     setSelectedTranslationId,
-    refetch: () => fetchVerses(selectedBookId, selectedTranslationId),
+    selectedChapter,
+    setSelectedChapter,
+    readerSettings,
+    setLayoutMode,
+    setFontSize,
+    setFontFamily,
+    toggleVerseNumbers,
+    nextChapter,
+    prevChapter,
+    refetch: () => fetchVerses(selectedBookId, selectedTranslationId, selectedChapter),
   };
 }

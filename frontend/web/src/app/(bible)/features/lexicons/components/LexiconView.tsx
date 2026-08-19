@@ -11,6 +11,7 @@ import { GREEK_LEXICONS_DATABASE } from '../data/greekLexiconsData';
 import { HebrewRootBrowser } from './HebrewRootBrowser';
 import { GreekLemmaBrowser } from './GreekLemmaBrowser';
 import { LexiconEntryDetail } from './LexiconEntryDetail';
+import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 export const LexiconView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<LexiconLanguageTab>('hebrew');
@@ -61,28 +62,18 @@ export const LexiconView: React.FC = () => {
           </div>
         </div>
 
-        {/* Campo de Búsqueda */}
-        <div className="relative flex-1 max-w-md">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-accents-4">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
+        {/* Buscador de Raíz / Lema */}
+        <div className="relative w-full md:w-80">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
               activeTab === 'hebrew'
-                ? 'Buscar por raíz (ב-ר-א), lema, Strong (H1254) o glosa...'
-                : 'Buscar por lema (λόγος), transliteración, Strong (G3056)...'
+                ? 'Buscar raíz hebrea (ej. shalom, bara, elohim)...'
+                : 'Buscar lema griego (ej. logos, agape, theos)...'
             }
-            className="w-full pl-9 pr-4 py-2 bg-accents-1/50 border border-accents-2 focus:border-foreground rounded-lg text-xs text-foreground placeholder-accents-4 outline-none transition-all"
+            className="w-full px-3.5 py-2 rounded-lg bg-accents-1 border border-accents-2 text-xs text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground/40 transition-colors"
           />
           {searchQuery && (
             <button
@@ -123,6 +114,15 @@ export const LexiconView: React.FC = () => {
             <LexiconEntryDetail entry={selectedGreekEntry} type="greek" />
           )}
         </div>
+      </div>
+
+      {/* Aviso de Expansión Continua de Diccionarios y Raíces */}
+      <div className="pt-6">
+        <OngoingExpansionNotice
+          contextTitle="Léxicos e Índices Etimológicos en Crecimiento"
+          contextDescription="Esta plataforma es un proyecto nuevo que recién comienza. Me esfuerzo por entregarte un trabajo fiel y completo, integrando progresivamente las más de 8.600 entradas del BDB/Gesenius para el hebreo-arameo y las más de 5.600 raíces de Thayer/LSJ para el griego koiné."
+          activeItemsSummary="Raíces teológicas activas: B'reshit, Elohim, YHWH, Shalom, Chesed, Logos, Agape, Pneuma, Charis y más."
+        />
       </div>
     </div>
   );

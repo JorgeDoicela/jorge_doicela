@@ -8,6 +8,7 @@ import {
   GreekInterlinearVerse,
   InterlinearDisplaySettings,
 } from '../types';
+import { Volume2, Sparkles } from 'lucide-react';
 import { biblicalAudioService } from '../services/biblicalAudioService';
 
 interface ReverseInterlinearReaderProps {
@@ -119,70 +120,74 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
         </div>
       </div>
 
-      {/* Ficha Activa Flotante / Preview Rápido */}
-      {activeToken && (
-        <div className="p-4 rounded-xl bg-accents-1 border border-amber-500/30 animate-in fade-in zoom-in-95 duration-150 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div
-              dir={'hebrew' in activeToken ? 'rtl' : 'ltr'}
-              lang={'hebrew' in activeToken ? 'he' : 'el'}
-              className="text-2xl sm:text-3xl font-serif font-bold text-foreground"
-            >
-              {'hebrew' in activeToken ? activeToken.hebrew : activeToken.greek}
-            </div>
-
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="font-bold text-foreground">/{activeToken.transliteration}/</span>
-                {activeToken.ipa && <span className="text-accents-4">{activeToken.ipa}</span>}
-                <button
-                  type="button"
-                  onClick={() => onOpenStrong(activeToken.strong)}
-                  className="px-2 py-0.5 rounded bg-foreground text-background font-bold text-[10px] hover:bg-foreground/80 cursor-pointer"
-                >
-                  {activeToken.strong}
-                </button>
+      {/* Ficha Activa Flotante / Preview Rápido con Altura Estable (Cero Salto de Diseño) */}
+      <div className="min-h-[74px] rounded-xl border transition-all flex items-center justify-between p-3 sm:p-4 bg-accents-1/30">
+        {activeToken ? (
+          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-100">
+            <div className="flex items-center gap-4">
+              <div
+                dir={'hebrew' in activeToken ? 'rtl' : 'ltr'}
+                lang={'hebrew' in activeToken ? 'he' : 'el'}
+                className="text-2xl sm:text-3xl font-serif font-bold text-foreground"
+              >
+                {'hebrew' in activeToken ? activeToken.hebrew : activeToken.greek}
               </div>
-              <p className="text-xs text-accents-5">
-                Traducción: <strong className="text-foreground">«{activeToken.gloss}»</strong> • {activeToken.partOfSpeech}
-              </p>
+
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2 text-xs font-mono">
+                  <span className="font-bold text-foreground">/{activeToken.transliteration}/</span>
+                  {activeToken.ipa && <span className="text-accents-4">{activeToken.ipa}</span>}
+                  <button
+                    type="button"
+                    onClick={() => onOpenStrong(activeToken.strong)}
+                    className="px-2 py-0.5 rounded bg-foreground text-background font-bold text-[10px] hover:bg-foreground/80 cursor-pointer"
+                  >
+                    {activeToken.strong}
+                  </button>
+                </div>
+                <p className="text-xs text-accents-5">
+                  Traducción: <strong className="text-foreground">«{activeToken.gloss}»</strong> • {activeToken.partOfSpeech}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={(e) => handlePlayAudio(e, activeToken)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-background border border-accents-2 hover:border-foreground text-xs font-mono text-foreground font-semibold cursor-pointer shadow-xs transition-all"
+              >
+                {playingId === activeToken.id ? (
+                  <span className="text-amber-500">Sonando...</span>
+                ) : (
+                  <>
+                    <Volume2 className="w-3.5 h-3.5 text-accents-5" />
+                    <span>Pronunciar</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectToken(activeToken)}
+                className="px-3 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold hover:bg-foreground/90 cursor-pointer transition-colors"
+              >
+                Ver Análisis Morfológico
+              </button>
             </div>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={(e) => handlePlayAudio(e, activeToken)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-background border border-accents-2 hover:border-foreground text-xs font-mono text-foreground font-semibold cursor-pointer shadow-xs transition-all"
-            >
-              {playingId === activeToken.id ? (
-                <span className="text-amber-500">Sonando...</span>
-              ) : (
-                <>
-                  <svg className="w-3.5 h-3.5 text-accents-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
-                    />
-                  </svg>
-                  <span>Pronunciar</span>
-                </>
-              )}
-            </button>
-
-
-            <button
-              type="button"
-              onClick={() => onSelectToken(activeToken)}
-              className="px-3 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold hover:bg-foreground/90 cursor-pointer transition-colors"
-            >
-              Ver Análisis Morfológico
-            </button>
+        ) : (
+          <div className="w-full flex items-center justify-between text-xs font-mono text-accents-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-accents-4" />
+              <span>Pasa el cursor sobre cualquier palabra del texto para ver su pronunciación fonética, raíz y análisis morfológico.</span>
+            </div>
+            <span className="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-accents-1 border border-accents-2">
+              Hover Activo
+            </span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Vista 2: Matriz Interlineal Palabra por Palabra Sincronizada */}
       <div className="space-y-3">

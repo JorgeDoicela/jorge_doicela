@@ -1,138 +1,149 @@
 ---
 name: bible-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de la Biblia Modular (bible.jorgedoicela.com), incluyendo el frontend web Next.js, la app móvil nativa en Expo (frontend/mobile), el backend en NestJS y la base de datos bible.sqlite.
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de la Biblia Modular (bible.jorgedoicela.com), incluyendo el frontend web Next.js (FSD), la app móvil nativa en Expo (frontend/mobile), el backend en NestJS, los 9 motores de estudio exegético, la morfología Strong y la persistencia escalable en bible.sqlite.
 ---
 # Directrices de Desarrollo: Biblia Modular (bible.jorgedoicela.com)
 
-Esta habilidad define los estándares técnicos, el modelo de datos, la arquitectura web y móvil para el subproyecto de la **Biblia Modular** de Jorge Doicela.
+Esta habilidad define los estándares técnicos, el modelo de datos relacional, la arquitectura web (Next.js 16), la app móvil (Expo) y la estrategia de persistencia y escalabilidad para la plataforma de la **Biblia Modular**.
 
 ---
 
-## 1. Arquitectura y Aislamiento
+## 1. Arquitectura y Aislamiento (Principio de Cajas Negras)
 
-* **Subdominio Web:** `bible.jorgedoicela.com` (en desarrollo: `bible.localhost:3001`).
+* **Subdominio Web:** `bible.jorgedoicela.com` (en desarrollo: `bible.localhost:3001` o subruta `/bible`).
 * **App Móvil:** `frontend/mobile/` (React Native / Expo).
 * **Frontend Web:** Grupo de rutas `frontend/web/src/app/(bible)/`.
-* **Backend:** Módulo modular aislado `backend/src/bible/`.
+* **Backend:** Módulo aislado `backend/src/bible/`.
 * **Persistencia:** Base de datos SQLite física independiente `bible.sqlite` conectada mediante `'bibleConnection'` en TypeORM.
-* **Aislamiento de Estilos:** Utiliza exclusivamente su propio archivo `(bible)/globals.css` (estética minimalista inspirada en la consola de Vercel y shadcn/ui).
-* **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/bible/`.
+* **Restricción de Hardware en VPS (1 GB de RAM):** Paginación por capítulo (`limit: 200`), consultas indexadas, cero carga masiva en memoria y sembrado transaccional por lotes (< 20 MB RAM).
+* **Aislamiento de Estilos y Assets:** Estilos en `(bible)/globals.css` (estética consola Vercel / Linear) y assets en `frontend/web/public/bible/`.
 
 ---
 
-## 2. Frontend Web (Next.js 16) y App Móvil (Expo)
+## 2. Frontend Web: Enrutamiento y Feature-Sliced Design (FSD)
 
-### 2.1 Estructura Frontend Web (Feature-Sliced Design)
+### 2.1 Enrutamiento
+1. **Landing Page (`/bible` - `bible/page.tsx`):**
+   - Presentación general de la plataforma y corpus textual.
+   - Live Preview interactivo con comparación de textos (*Salmos 23 en RV1960 vs BHS Hebreo*).
+   - Vitrina de los 9 motores de exégesis con iconos SVG de Lucide.
+   - Especificaciones de la App Móvil nativa y métricas de infraestructura en 1 GB de RAM.
+2. **Espacio de Estudio (`/bible/study` - `bible/study/page.tsx`):**
+   - Aloja el componente reutilizable `BibleStudyWorkspace.tsx`.
+   - Header unificado en **1 sola línea horizontal** (`BibleHeaderNav.tsx`) con navegación de 9 pestañas, selector de versión y conmutador de tema claro/oscuro.
+   - Barra de control de pasaje integrada (`ReaderToolbar.tsx`) con popover buscador de libros (AT/NT), chips compactos de capítulos (`1, 2, 3...`), alternancia párrafo/versículo y controles tipográficos.
+   - Canvas de lectura ampliado (`max-w-5xl`) con sangría editorial y superíndices interactivos.
+
+### 2.2 Catálogo de los 9 Motores de Estudio Exegético
+
 ```text
-frontend/web/src/app/(bible)/
-├── bible/
-│   └── page.tsx            # Interfaz principal de lectura bíblica
-├── features/
-│   ├── verses/             # Lectura, renderizado y filtrado de versículos
-│   │   ├── components/     # VerseList.tsx, VerseItem.tsx
-│   │   ├── hooks/          # useVerses.ts
-│   │   └── types.ts        # Tipado local Verse
-│   ├── books/              # Selector de libros (OT / NT)
-│   │   ├── components/     # BookSelector.tsx
-│   │   ├── hooks/          # useBooks.ts
-│   │   └── types.ts        # Tipado local Book
-│   └── translations/       # Selector de traducciones bíblicas
-│       ├── components/     # TranslationSelector.tsx
-│       └── types.ts        # Tipado local Translation
-├── components/             # Header, ModeToggle, QuickFilters
-├── globals.css             # Estilos independientes de la Biblia
-└── layout.tsx              # Layout independiente
+frontend/web/src/app/(bible)/features/
+├── verses/               # 1. Lectura continua y versículo a versículo (ReaderToolbar, ContinuousReadingView)
+├── parallel-view/        # 2. Vista paralela de 2 a 4 columnas sincronizadas por capítulo (ParallelViewGrid)
+├── textual-diff/         # 3. Comparador y algoritmo LCS de diferencias textuales (TextualDiffModal)
+├── interlinear/          # 4. Interlineal inverso Hebreo/Griego, morfología y Strong (InterlinearView)
+├── literary-analysis/    # 5. Quiasmos semíticos y discurso lógico paulino (ChiasmViewer, PaulineDiscourseViewer)
+├── lexicons/             # 6. Diccionarios integrados: BDB, Gesenius, Thayer, DTAT, LSJ (LexiconView)
+├── grammar-search/       # 7. Búsqueda morfológica, scatter plot canónico y concordancia FTS5 (GrammarSearchDashboard)
+├── atlas/                # 8. Atlas georreferenciado WGS84, rutas históricas y visualizador 3D (AtlasDashboard)
+├── timeline/             # 9. Cronología sincrónica de reyes, profetas, imperios y arqueología (TimelineDashboard)
+├── archaeology-feed/     # Feed de descubrimientos epigráficos y Rollos del Mar Muerto (ArchaeologyFeedDashboard)
+├── books/                # Selector y catálogo de libros bíblicos (BookSelector)
+└── translations/         # Selector de versiones bíblicas (TranslationSelector)
 ```
 
-### 2.2 App Móvil Nativa (`frontend/mobile` - React Native / Expo)
+---
+
+## 3. App Móvil Nativa (`frontend/mobile` - React Native / Expo)
+
 * **Arquitectura de Rutas:** Desarrollada con `expo-router` con navegación por pestañas (`app/(tabs)/`).
 * **Estrategia Offline-First:**
   * Almacenamiento local de libros y capítulos descargados vía `expo-file-system`.
   * Persistencia de notas privadas, historial y versículos favoritos mediante `@react-native-async-storage/async-storage`.
-* **Rendimiento de Renderizado:** Uso estricto de `FlashList` (Shopify) o `FlatList` virtualizada para renderizar versículos a 60 fps constantes.
-* **Notificaciones Locales:** Versículo del día programado con `expo-notifications` (100% offline, sin dependencia de servidores externos).
-* **Gestos y Hápticos:** Swipe horizontal entre capítulos con `react-native-gesture-handler` y vibración sutil con `expo-haptics`.
+* **Rendimiento de Renderizado:** Uso estricto de `FlashList` (Shopify) para renderizar versículos a 60 fps constantes sin fugas de memoria.
+* **Notificaciones Locales:** Versículo del día programado con `expo-notifications` (100% offline).
+* **Gestos y Hápticos:** Swipe horizontal entre capítulos con `react-native-gesture-handler` y respuesta háptica con `expo-haptics`.
 
 ---
 
-## 3. Backend y Modelo de Datos (NestJS 11)
+## 4. Backend y Modelo de Persistencia (`NestJS 11` & `bible.sqlite`)
 
-### 3.1 Entidades de Persistencia (TypeORM en `bible.sqlite`)
+### 4.1 Las 5 Entidades Relacionales (`TypeORM` en `bibleConnection`)
 
-1. **`Translation` (`translation.entity.ts`):**
-   * `id`: Clave primaria alfanumérica (ej. `'rv1960'`, `'nvi'`).
-   * `name`: Nombre descriptivo completo (ej. "Reina Valera 1960").
-   * `language`: Código ISO (por defecto `'es'`).
-   * `verses`: Relación `OneToMany` hacia `Verse`.
-
-2. **`Book` (`book.entity.ts`):**
-   * `id`: Clave primaria con abreviatura del libro (ej. `'gen'`, `'exo'`, `'mat'`).
-   * `name`: Nombre completo (ej. "Génesis", "Mateo").
-   * `testament`: Clasificación (`'OT'` para Antiguo Testamento, `'NT'` para Nuevo Testamento).
-   * `verses`: Relación `OneToMany` hacia `Verse`.
-
+1. **`Translation` (`translation.entity.ts`):** `id` (numérico), `name`, `abbreviation` (`RV1960`, `NVI`, `BHS`, `LXX`), `language`.
+2. **`Book` (`book.entity.ts`):** `id` (numérico), `name`, `abbreviation` (`GEN`, `SAL`, `ROM`), `testament` (`OT`/`NT`).
 3. **`Verse` (`verse.entity.ts`):**
-   * `id`: Entero autoincremental.
-   * `book`: Relación `ManyToOne` con `Book` (eager: true, onDelete: 'CASCADE').
-   * `translation`: Relación `ManyToOne` con `Translation` (eager: true, onDelete: 'CASCADE').
-   * `chapter`: Número de capítulo (entero).
-   * `verseNumber`: Número de versículo (entero).
-   * `text`: Contenido textual sagrado.
-   * **Índice Compuesto Único Obligatorio:** `@Index(['translation', 'book', 'chapter', 'verseNumber'], { unique: true })` para garantizar integridad y evitar duplicados.
+   - `id`, `book` (FK `bookId`), `translation` (FK `translationId`), `chapter`, `verseNumber`, `text`.
+   - **Índice Compuesto Único Obligatorio:** `@Index(['translation', 'book', 'chapter', 'verseNumber'], { unique: true })`.
+4. **`LexiconEntry` (`lexicon-entry.entity.ts`):**
+   - `id`, `strongCode` (`H7225`, `G3056` con índice único), `language` (`Hebrew`/`Aramaic`/`Greek`), `lemma`, `transliteration`, `ipa`, `partOfSpeech`, `shortDefinition`, `extendedDefinition` (BDB, Thayer, Gesenius).
+5. **`MorphologyToken` (`morphology-token.entity.ts`):**
+   - `id`, `verse` (FK `verseId`), `wordOrder`, `surfaceText`, `consonantsOnly`, `transliteration`, `strongCode`, `morphologyCode` (parsing Robinson/WLC), `gloss`.
+   - **Índice Compuesto Único:** `@Index(['verse', 'wordOrder'], { unique: true })`.
 
-### 3.2 Catálogo de Endpoints REST (`/bible/*`)
-* **Versículos:**
-  * `GET /bible/verses`: Lista de versículos con filtros query params opcionales `bookId` y `translationId`.
-  * `GET /bible/verses/:id`: Detalle de un versículo individual.
-  * `POST /bible/verses`: Crear versículo (`CreateVerseDto`).
-  * `PATCH /bible/verses/:id`: Actualizar versículo.
-  * `DELETE /bible/verses/:id`: Eliminar versículo.
-* **Libros:**
-  * `GET /bible/books`: Catálogo completo de libros ordenados.
-  * `GET /bible/books/:id`: Detalle de un libro.
-  * `POST /bible/books`: Registrar nuevo libro.
-  * `DELETE /bible/books/:id`: Eliminar libro.
-* **Traducciones:**
-  * `GET /bible/translations`: Listar versiones disponibles.
-  * `GET /bible/translations/:id`: Detalle de traducción.
-  * `POST /bible/translations`: Agregar traducción.
-  * `DELETE /bible/translations/:id`: Eliminar traducción.
+### 4.2 Catálogo de Endpoints REST (`/bible/*`)
+
+| Método | Endpoint | Descripción | Parámetros Clave |
+|---|---|---|---|
+| `GET` | `/bible/books` | Lista de libros bíblicos | `?testament=OT` o `NT` |
+| `GET` | `/bible/books/:id` | Detalle de un libro | `id` |
+| `GET` | `/bible/translations` | Lista de versiones disponibles | — |
+| `GET` | `/bible/translations/:id` | Detalle de traducción | `id` |
+| `GET` | `/bible/verses` | Consulta filtrada de versículos | `?bookId=1&translationId=1&chapter=1&limit=200` |
+| `GET` | `/bible/verses/:id` | Detalle de un versículo individual | `id` |
+| `GET` | `/bible/morphology/verse/:verseId` | Tokens interlineales ordenados | `verseId` |
+| `GET` | `/bible/morphology/lexicon/:strong` | Definición académica Strong | `strongCode` (ej. `H7225`, `G3056`) |
+| `GET` | `/bible/morphology/lexicon` | Búsqueda de lemas y raíces | `?q=logos` |
 
 ---
 
-## 4. 📊 Estado de Implementación (Hoja de Ruta)
+## 5. Estrategia de Escalabilidad y Corpus de Textos
 
-| Funcionalidad | Estado | Ubicación / Notas |
-|---|:---:|---|
-| CRUD base de Versículos, Libros y Traducciones | ✅ Completado | `backend/src/bible/` |
-| Selector de libros y traducciones en web | ✅ Completado | `BookSelector.tsx`, `TranslationSelector.tsx` |
-| Conexión TypeORM con `bible.sqlite` | ✅ Completado | `bibleConnection` configurada |
-| Aislamiento de estilos FSD en web | ✅ Completado | `(bible)/globals.css` |
-| Paginación y navegación fluida por capítulos | ⏳ Pendiente | Botones Anterior / Siguiente en web |
-| Búsqueda Full-Text rápida (FTS5) | ⏳ Pendiente | Barra de búsqueda con operadores y resaltado |
-| Motor Interlineal Morfológico (Hebreo, Arameo, Griego) | ⏳ Pendiente | Desglose morfológico, Strong, audio fonético |
-| Sistema de Resaltado Semántico y Notas | ⏳ Pendiente | `localStorage` / `IndexedDB` y exportación |
-| Red de Referencias Cruzadas (TSK - 340k enlaces) | ⏳ Pendiente | Grafo visual y panel de pasajes paralelos |
-| Atlas Bíblico y Rutas Históricas Interactivas | ⏳ Pendiente | Mapas vectoriales, viajes de Pablo, Éxodo |
-| Feed de Noticias Arqueológicas y Manuscritos | ⏳ Pendiente | Artículos de descubrimientos en Tierra Santa |
-| App móvil nativa completa con Expo Router | ⏳ Pendiente | Estructura en `frontend/mobile/` |
-| Notificaciones locales de versículo del día | ⏳ Pendiente | `expo-notifications` en app móvil |
-| Importador masivo de versículos (JSON/CSV) | ⏳ Pendiente | Script de siembra / seeder en backend |
+Para almacenar toda la Biblia (~31.102 versículos por versión y millones de palabras) sin colapsar el bundle de TypeScript ni la memoria del VPS:
+
+```text
+backend/src/bible/
+├── corpus/                      # Archivos de datos fuente ordenados por versión
+│   └── rv1960/
+│       └── 01_genesis.json      # JSON compacto libro por libro
+└── cli/
+    └── seed-corpus.ts           # Cargador transaccional por lotes (Chunks de 500 filas)
+```
+
+* **Sembrador Transaccional por Lotes:** Inserciones en bloques atómicos usando `better-sqlite3` (`INSERT OR REPLACE INTO verses ...`).
+* **Rendimiento Medido:** **80 versículos indexados en 13 ms** con consumo de memoria `< 20 MB`.
+* **Comando de Ejecución:** `pnpm --filter backend seed:bible`.
 
 ---
 
-## 5. ❌ Anti-Patrones Prohibidos
+## 6. Comandos de Calidad y Mantenimiento
+
+```bash
+# 1. Comprobación estricta de tipos en todo el monorepo (0 errores)
+pnpm -r typecheck
+
+# 2. Sembrado masivo desde el corpus estructurado
+pnpm --filter backend seed:bible
+
+# 3. Levantar entorno de desarrollo
+pnpm dev
+```
+
+---
+
+## 7. ❌ Anti-Patrones Prohibidos
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
-| Omitir el índice único compuesto en `Verse` | Permite insertar duplicados del mismo versículo para un libro y capítulo. | Asegurar `@Index(['translation', 'book', 'chapter', 'verseNumber'], { unique: true })`. |
-| Instalar librerías de Expo (`expo-*`) en `frontend/web` | Contamina el bundle web con módulos móviles incompatibles. | Usar `pnpm --filter mobile add <paquete-expo>`. |
+| Omitir el índice único compuesto en `Verse` o `MorphologyToken` | Permite insertar duplicados del mismo versículo o palabra. | Asegurar `@Index(['translation', 'book', 'chapter', 'verseNumber'], { unique: true })`. |
+| Hardcodear arrays masivos de 31.000 versículos en código TypeScript | Agota la memoria de `tsc` y satura la compilación en 1 GB de RAM. | Almacenar en `backend/src/bible/corpus/<version>/` y sembrar con `seed:bible`. |
+| Traer toda la Biblia o libros completos sin filtrar por capítulo | Bloquea el event loop de NestJS y satura el ancho de banda. | Filtrar siempre por libro (`bookId`) y capítulo (`chapter`). |
+| Instalar librerías de Expo (`expo-*`) en `frontend/web` | Contamina el bundle web con módulos nativos incompatibles. | Usar `pnpm --filter mobile add <paquete-expo>`. |
+| Compartir interfaces entre la app móvil y el backend | Rompe el principio de autonomía de la aplicación móvil. | Definir los tipos locales en `frontend/mobile/src/types/`. |
 | Inyectar repositorios sin `'bibleConnection'` | Falla en runtime o consulta la base de datos equivocada. | Usar `@InjectRepository(Verse, 'bibleConnection')`. |
-| Compartir interfaces entre la app móvil y el backend | Acopla la app móvil al monorepo en vez de mantenerla autónoma. | Definir los tipos locales en `frontend/mobile/src/types/`. |
-| Traer todos los versículos de la Biblia en una sola petición | Provoca bloqueos de memoria y saturación en 1 GB de RAM. | Filtrar siempre por libro (`bookId`) y capítulo (`chapter`). |
 
 ---
 
-## 6. 🔗 Combinar con
+## 8. 🔗 Combinar con
 * **General:** `general-jorge-doicela` (para el uso estricto de `--filter` y duplicación de interfaces).
-* **Infraestructura:** `infraestructura-jorge-doicela` (para el proxy Nginx en `/bible` y despliegues).
+* **Infraestructura:** `infraestructura-jorge-doicela` (para proxy Nginx, Cloudflare mTLS y PM2).

@@ -1,64 +1,151 @@
 'use client';
 
 import React from 'react';
-import { VerseCard } from '../verse-card/VerseCard';
-import { Verse } from '../../types';
+import {
+  Verse,
+  ReaderSettings,
+  ReaderLayoutMode,
+  ReaderFontSize,
+  ReaderFontFamily,
+  BookInfo,
+} from '../../types';
+import { ReaderToolbar } from '../reader-toolbar/ReaderToolbar';
+import { ContinuousReadingView } from '../continuous-view/ContinuousReadingView';
+import { LineByLineReadingView } from '../line-by-line-view/LineByLineReadingView';
+import { ChapterNavigator } from '../chapter-navigator/ChapterNavigator';
+import { OngoingExpansionNotice } from '../../../../components/OngoingExpansionNotice';
 
 interface VerseListProps {
   verses: Verse[];
   loading: boolean;
   error: string | null;
+  readerSettings: ReaderSettings;
+  onLayoutModeChange: (mode: ReaderLayoutMode) => void;
+  onFontSizeChange: (size: ReaderFontSize) => void;
+  onFontFamilyChange: (family: ReaderFontFamily) => void;
+  onToggleVerseNumbers: () => void;
+  books?: (BookInfo | { id: number; name: string; abbreviation: string; testament: string })[];
+  selectedBookId?: number | null;
+  onSelectBook?: (id: number | null) => void;
+  selectedBookName?: string;
+  selectedBookAbbr?: string;
+  selectedChapter: number | null;
+  onSelectChapter: (chapter: number | null) => void;
+  onPrevChapter: () => void;
+  onNextChapter: (maxChapters?: number) => void;
+  activeTranslationName?: string;
+  activeTranslationAbbr?: string;
 }
 
-export const VerseList: React.FC<VerseListProps> = ({ verses, loading, error }) => {
+export const VerseList: React.FC<VerseListProps> = ({
+  verses,
+  loading,
+  error,
+  readerSettings,
+  onLayoutModeChange,
+  onFontSizeChange,
+  onFontFamilyChange,
+  onToggleVerseNumbers,
+  books = [],
+  selectedBookId,
+  onSelectBook,
+  selectedBookName,
+  selectedBookAbbr,
+  selectedChapter,
+  onSelectChapter,
+  onPrevChapter,
+  onNextChapter,
+  activeTranslationName,
+  activeTranslationAbbr,
+}) => {
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full space-y-4">
+      {/* Barra de herramientas integrada del lector */}
+      <ReaderToolbar
+        readerSettings={readerSettings}
+        onLayoutModeChange={onLayoutModeChange}
+        onFontSizeChange={onFontSizeChange}
+        onFontFamilyChange={onFontFamilyChange}
+        onToggleVerseNumbers={onToggleVerseNumbers}
+        books={books}
+        selectedBookId={selectedBookId}
+        onSelectBook={onSelectBook}
+        selectedBookAbbr={selectedBookAbbr}
+        selectedBookName={selectedBookName}
+        selectedChapter={selectedChapter}
+        onSelectChapter={onSelectChapter}
+        verses={verses}
+        activeTranslationName={activeTranslationName}
+      />
+
+      {/* Estado de carga con Skeleton editorial */}
       {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="p-5 rounded-lg border border-accents-2 bg-background flex flex-col justify-between min-h-[140px] animate-pulse"
-            >
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-4.5 w-16 bg-accents-1 rounded" />
-                    <div className="h-3 w-8 bg-accents-1 rounded" />
-                  </div>
-                  <div className="h-4.5 w-10 bg-accents-1 rounded" />
-                </div>
-                <div className="space-y-2">
-                  <div className="h-3.5 w-full bg-accents-1 rounded" />
-                  <div className="h-3.5 w-11/12 bg-accents-1 rounded" />
-                  <div className="h-3.5 w-3/4 bg-accents-1 rounded" />
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="w-full max-w-5xl mx-auto bg-background rounded-2xl border border-accents-2 p-8 sm:p-12 space-y-4 animate-pulse">
+          <div className="h-6 w-48 bg-accents-1 rounded mx-auto mb-6" />
+          <div className="space-y-3">
+            <div className="h-4 bg-accents-1 rounded w-full" />
+            <div className="h-4 bg-accents-1 rounded w-11/12" />
+            <div className="h-4 bg-accents-1 rounded w-full" />
+            <div className="h-4 bg-accents-1 rounded w-4/5" />
+            <div className="h-4 bg-accents-1 rounded w-full" />
+            <div className="h-4 bg-accents-1 rounded w-3/4" />
+          </div>
         </div>
       )}
 
+      {/* Estado de Error */}
       {error && (
-        <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/20 text-red-500 text-xs font-mono text-center mb-6">
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono text-center">
           {error}
         </div>
       )}
 
+      {/* Estado Vacío con Aviso de Plataforma Nueva y Crecimiento Continuo */}
       {!loading && !error && verses.length === 0 && (
-        <p className="text-center text-accents-5 text-sm py-12">
-          No se encontraron versículos para esta selección.
-        </p>
+        <OngoingExpansionNotice
+          contextTitle={`Capítulo ${selectedChapter || ''} de ${selectedBookName || 'este libro'} en proceso de compilación`}
+          contextDescription="Esta plataforma de estudio bíblico es nueva y por eso varios capítulos aún se encuentran en preparación. Me esfuerzo con dedicación por realizar un trabajo de máxima fidelidad y cuidado en cada libro."
+          onExploreAvailable={() => onSelectChapter(1)}
+          availableChapterText="Ir a Génesis 1"
+        />
       )}
 
+      {/* Renderizado de Lectura según el modo seleccionado */}
       {!loading && !error && verses.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {verses.map((verse) => (
-            <VerseCard key={verse.id} verse={verse} />
-          ))}
-        </div>
+        <>
+          {readerSettings.layoutMode === 'continuous' ? (
+            <ContinuousReadingView
+              verses={verses}
+              fontSize={readerSettings.fontSize}
+              fontFamily={readerSettings.fontFamily}
+              showVerseNumbers={readerSettings.showVerseNumbers}
+              bookName={selectedBookName}
+              chapter={selectedChapter}
+              translationName={activeTranslationName}
+              translationAbbr={activeTranslationAbbr}
+            />
+          ) : (
+            <LineByLineReadingView
+              verses={verses}
+              fontSize={readerSettings.fontSize}
+              fontFamily={readerSettings.fontFamily}
+              bookName={selectedBookName}
+              chapter={selectedChapter}
+              translationAbbr={activeTranslationAbbr}
+            />
+          )}
+
+          {/* Navegador secuencial de capítulos */}
+          <ChapterNavigator
+            selectedBookName={selectedBookName}
+            selectedBookAbbr={selectedBookAbbr}
+            selectedChapter={selectedChapter}
+            onPrevChapter={onPrevChapter}
+            onNextChapter={onNextChapter}
+            translationAbbr={activeTranslationAbbr}
+          />
+        </>
       )}
     </div>
   );
 };
-

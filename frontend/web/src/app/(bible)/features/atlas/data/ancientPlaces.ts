@@ -498,4 +498,36 @@ export const ANCIENT_PLACES: AncientPlace[] = [
       verifiedByBiblicalArchaeology: true,
     },
   },
+  {
+    id: 'eden',
+    name: 'Huerto de Edén (Mesopotamia / Creciente Fértil)',
+    originalName: {
+      hebrew: 'גַּן־עֵדֶן',
+      transliteration: 'Gan ‘Ēḏen',
+      meaning: 'Huerto de las delicias / Lugar de deleite',
+    },
+    coordinates: { lat: 31.0000, lng: 47.4500 },
+    category: 'region',
+    era: ['patriarchs'],
+    modernName: 'Al-Qurnah / Confluencia Tigris-Éufrates',
+    country: 'Irak / Cuenca Mesopotámica',
+    elevationMeters: 4,
+    description:
+      'El hogar paradisíaco primordial plantado por Dios al oriente, regado por un río que se dividía en cuatro brazos (Pisón, Gihón, Hidekel/Tigris y Éufrates). Escenario de la creación del hombre, la comunión con Dios, la caída y la promesa del Protoevangelio.',
+    biblicalReferences: [
+      { reference: 'Génesis 2:8-15', context: 'Dios planta el huerto y coloca al hombre para labrarlo y guardarlo' },
+      { reference: 'Génesis 2:10-14', context: 'Los cuatro ríos del Edén: Pisón, Gihón, Hidekel (Tigris) y Éufrates' },
+      { reference: 'Génesis 3:15', context: 'El Protoevangelio: enemistad entre la serpiente y la simiente de la mujer' },
+      { reference: 'Génesis 3:23-24', context: 'Expulsión del hombre y querubines con espada encendida' },
+    ],
+    archaeologicalNotes: {
+      discoveries: [
+        'Topografía fluvial histórica de los ríos Tigris y Éufrates',
+        'Textos cuneiformes sumerios sobre jardines sagrados primordiales (Dilmún)',
+        'Rutas comerciales de oro y piedras preciosas de Havila (bedelio y ónice)',
+      ],
+      excavationStatus: 'Región arqueológica mesopotámica',
+      verifiedByBiblicalArchaeology: true,
+    },
+  },
 ];

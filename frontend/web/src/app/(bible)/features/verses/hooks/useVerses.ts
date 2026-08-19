@@ -109,10 +109,11 @@ export function useVerses() {
 
         const res = await fetch(url);
         if (!res.ok) {
-          throw new Error('No se pudieron cargar los versículos desde el servidor');
+          throw new Error(`Servidor respondió con código ${res.status}: No se pudieron cargar los versículos`);
         }
         const data = await res.json();
         const serverVerses = (data.data as Verse[]) || [];
+
         if (serverVerses.length > 0) {
           setVerses(serverVerses);
         } else if (bookId === 1 && chapter === 1) {
@@ -122,7 +123,8 @@ export function useVerses() {
         } else {
           setVerses([]);
         }
-      } catch {
+      } catch (err: unknown) {
+        console.error('[Bible:useVerses] Error al conectar con el servidor:', err);
         // En caso de fallo de red o servidor, usar fallback canónico si aplica
         if (bookId === 1 && chapter === 1) {
           setVerses(FALLBACK_GENESIS_1);

@@ -77,7 +77,8 @@ export function useParallelVerses(
         params.append('translationId', tId.toString());
         params.append('limit', '200');
 
-        const res = await fetch(`${API_URL}/bible/verses?${params.toString()}`);
+        const requestUrl = `${API_URL}/bible/verses?${params.toString()}`;
+        const res = await fetch(requestUrl);
         if (!res.ok) {
           throw new Error(`Error al obtener versículos para la traducción #${tId}`);
         }
@@ -128,6 +129,7 @@ export function useParallelVerses(
 
       setRows(generatedRows);
     } catch (err: unknown) {
+      console.error('[Bible:useParallelVerses] Error durante fetchAllColumns:', err);
       setError(err instanceof Error ? err.message : 'Error al conectar con el servidor');
     } finally {
       setLoading(false);

@@ -91,7 +91,7 @@ export function useBooks() {
       try {
         const res = await fetch(`${API_URL}/bible/books`);
         if (!res.ok) {
-          throw new Error('No se pudieron cargar los libros desde el servidor');
+          throw new Error(`Servidor respondió con ${res.status}: No se pudieron cargar los libros`);
         }
         const data = await res.json();
         const serverBooks = (data.data as Book[]) || [];
@@ -99,7 +99,7 @@ export function useBooks() {
           setBooks(serverBooks);
         }
       } catch {
-        // Mantiene el catálogo canónico de respaldo si la API falla o está vacía
+        // Mantiene el catálogo canónico de respaldo (66 libros) si la API falla o está vacía
       } finally {
         if (active) {
           setLoading(false);

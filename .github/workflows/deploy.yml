@@ -63,6 +63,9 @@ jobs:
             # Instalar dependencias del backend de forma dedicada en producción sin ejecutar scripts de desarrollo (Husky)
             cd backend && pnpm install --prod --frozen-lockfile --ignore-scripts && cd ..
             
+            # Sincronización transaccional del corpus bíblico en la base de datos de producción
+            cd backend && node dist/bible/cli/seed-corpus.js && cd ..
+            
             # Copiar recursos estáticos obligatorios requeridos por Next.js en modo Standalone
             mkdir -p frontend/web/.next/standalone/frontend/web/.next
             cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/

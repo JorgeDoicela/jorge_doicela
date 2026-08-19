@@ -30,7 +30,7 @@ export function useTranslations() {
       try {
         const res = await fetch(`${API_URL}/bible/translations`);
         if (!res.ok) {
-          throw new Error('No se pudieron cargar las traducciones desde el servidor');
+          throw new Error(`Servidor respondió con ${res.status}: No se pudieron cargar las traducciones`);
         }
         const data = await res.json();
         const serverTranslations = (data.data as Translation[]) || [];
@@ -38,7 +38,7 @@ export function useTranslations() {
           setTranslations(serverTranslations);
         }
       } catch {
-        // Mantiene el catálogo canónico de respaldo si la API falla o está vacía
+        // Mantiene el catálogo canónico de respaldo (7 versiones) si la API falla o está vacía
       } finally {
         if (active) {
           setLoading(false);

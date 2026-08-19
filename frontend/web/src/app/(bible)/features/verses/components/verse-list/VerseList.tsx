@@ -74,6 +74,8 @@ export const VerseList: React.FC<VerseListProps> = ({
         selectedBookName={selectedBookName}
         selectedChapter={selectedChapter}
         onSelectChapter={onSelectChapter}
+        onPrevChapter={onPrevChapter}
+        onNextChapter={onNextChapter}
         verses={verses}
         activeTranslationName={activeTranslationName}
       />

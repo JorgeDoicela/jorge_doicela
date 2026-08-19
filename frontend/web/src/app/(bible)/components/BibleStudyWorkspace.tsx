@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { VerseList, useVerses } from '../features/verses';
-import { BookSelector, useBooks } from '../features/books';
+import { UnifiedPassagePicker, useBooks } from '../features/books';
 import { useTranslations } from '../features/translations';
 import {
   ParallelViewGrid,
@@ -111,6 +111,13 @@ export function BibleStudyWorkspace() {
     setDiffModalOpen(true);
   };
 
+  const handlePassageSelect = (bookId: number, chapter: number) => {
+    setSelectedBookId(bookId);
+    setSelectedChapter(chapter);
+  };
+
+  const isPassageBasedMode = ['parallel', 'interlinear', 'literary', 'grammar-search'].includes(studyMode);
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Navegación Superior Fija en 1 Sola Línea */}
@@ -127,21 +134,46 @@ export function BibleStudyWorkspace() {
 
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 pb-20 space-y-4">
-        {/* Selector de libros en modos que lo requieren */}
-        {studyMode !== 'standard' && (
-          <section className="border border-accents-2 rounded-xl bg-background p-3.5 sm:p-4 shadow-xs">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-                Libro Seleccionado: <span className="text-foreground">{selectedBook?.name || 'Todos'}</span>
-              </h2>
-              <span className="text-[11px] font-mono text-accents-4">
-                Antiguo y Nuevo Testamento
+        {/* Barra de Pasaje Compacta para Modos de Estudio de Texto */}
+        {isPassageBasedMode && (
+          <section className="border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-accents-5 hidden sm:inline">
+                Pasaje Activo:
               </span>
+              <UnifiedPassagePicker
+                books={books}
+                selectedBookId={selectedBookId}
+                selectedChapter={selectedChapter}
+                onSelectPassage={handlePassageSelect}
+                onPrevChapter={prevChapter}
+                onNextChapter={nextChapter}
+                size="sm"
+              />
             </div>
-            <BookSelector
-              selectedBookId={selectedBookId}
-              onSelectBook={setSelectedBookId}
-            />
+
+            <div className="flex items-center gap-2">
+              {studyMode === 'parallel' && (
+                <span className="text-[11px] font-mono text-accents-4 bg-accents-1 px-2.5 py-1 rounded-lg border border-accents-2">
+                  {columns.length} {columns.length === 1 ? 'versión' : 'versiones'} en paralelo
+                </span>
+              )}
+              {studyMode === 'interlinear' && (
+                <span className="text-[11px] font-mono text-amber-500/90 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
+                  {selectedBook?.testament === 'NT' ? 'Griego (NA28 / TR)' : 'Hebreo / Arameo (BHS)'}
+                </span>
+              )}
+              {studyMode === 'literary' && (
+                <span className="text-[11px] font-mono text-emerald-500/90 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                  Estructuras Quiásticas
+                </span>
+              )}
+              {studyMode === 'grammar-search' && (
+                <span className="text-[11px] font-mono text-cyan-500/90 bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">
+                  Motor Morfológico
+                </span>
+              )}
+            </div>
           </section>
         )}
 

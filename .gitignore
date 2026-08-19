@@ -69,5 +69,14 @@ coverage/
 # Local SQLite databases
 *.sqlite
 **/*.sqlite
+*.sqlite3
+**/*.sqlite3
+*.db
+**/*.db
 *.sqlite-journal
 **/*.sqlite-journal
+*.sqlite-wal
+**/*.sqlite-wal
+*.sqlite-shm
+**/*.sqlite-shm
+

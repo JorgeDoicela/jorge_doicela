@@ -1,0 +1,326 @@
+'use client';
+
+import React, { useState } from 'react';
+import { AncientPlace, MapLayerType } from '../../types';
+import { projectGeoToCanvas } from '../../hooks/useAtlasMap';
+
+interface InteractiveMapCanvasProps {
+  places: AncientPlace[];
+  selectedPlaceId: string | null;
+  onSelectPlace: (place: AncientPlace) => void;
+  activeLayer: MapLayerType;
+  zoomLevel: number;
+  panOffset: { x: number; y: number };
+  isDragging: boolean;
+  onMouseDown: (e: React.MouseEvent) => void;
+  onMouseMove: (e: React.MouseEvent) => void;
+  onMouseUp: () => void;
+}
+
+export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
+  places,
+  selectedPlaceId,
+  onSelectPlace,
+  activeLayer,
+  zoomLevel,
+  panOffset,
+  isDragging,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
+}) => {
+  const [hoveredPlace, setHoveredPlace] = useState<AncientPlace | null>(null);
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  // Estilos de fondo según la capa
+  const layerBackground =
+    activeLayer === 'historical'
+      ? 'bg-[#181611] text-[#e6dfd3]' // Papiro oscuro de biblioteca antigua
+      : activeLayer === 'topographic'
+      ? 'bg-[#0f1712] text-[#e2ece9]' // Verde oscuro topográfico
+      : 'bg-[#080d1a] text-[#e0e7ff]'; // Satelital espacial profundo
+
+  const waterColor =
+    activeLayer === 'historical'
+      ? '#263445'
+      : activeLayer === 'topographic'
+      ? '#132e2d'
+      : '#0a1d37';
+
+  const landColor =
+    activeLayer === 'historical'
+      ? '#2a261f'
+      : activeLayer === 'topographic'
+      ? '#1e2d24'
+      : '#172033';
+
+  return (
+    <div
+      className={`relative w-full h-[540px] rounded-xl overflow-hidden border border-accents-2 shadow-inner select-none ${layerBackground} ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      }`}
+      onMouseDown={onMouseDown}
+      onMouseMove={(e) => {
+        onMouseMove(e);
+        const rect = e.currentTarget.getBoundingClientRect();
+        setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      }}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
+    >
+      <svg
+        viewBox="0 0 1000 650"
+        className="w-full h-full transform transition-transform duration-75"
+        style={{
+          transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
+          transformOrigin: 'center center',
+        }}
+      >
+        <defs>
+          {/* Gradiente para masa de agua */}
+          <linearGradient id="mediterraneanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={waterColor} stopOpacity="0.8" />
+            <stop offset="100%" stopColor={waterColor} stopOpacity="0.95" />
+          </linearGradient>
+
+          {/* Patrón de cuadrícula de coordenadas náuticas antiguas */}
+          <pattern id="gridPattern" width="100" height="100" patternUnits="userSpaceOnUse">
+            <path
+              d="M 100 0 L 0 0 0 100"
+              fill="none"
+              stroke={activeLayer === 'historical' ? '#4a3f2d' : '#1e293b'}
+              strokeWidth="0.5"
+              strokeDasharray="2,4"
+              opacity="0.4"
+            />
+          </pattern>
+        </defs>
+
+        {/* Fondo del mar / masa oceánica */}
+        <rect width="1000" height="650" fill="url(#mediterraneanGrad)" />
+
+        {/* Cuadrícula de coordenadas */}
+        <rect width="1000" height="650" fill="url(#gridPattern)" />
+
+        {/* Tierras emergidas vectoriales aproximadas del Mediterráneo Oriental y Cercano Oriente */}
+        <g fill={landColor} stroke="#3d372e" strokeWidth="0.8" opacity="0.9">
+          {/* Península Itálica (Roma) */}
+          <path d="M 30,50 Q 80,110 120,200 L 140,230 L 100,260 L 70,210 Z" />
+
+          {/* Grecia y Macedonia (Atenas, Corinto, Filipos, Tesalónica) */}
+          <path d="M 280,60 L 370,80 L 390,140 L 340,190 L 350,230 L 310,240 L 290,180 Z" />
+
+          {/* Creta */}
+          <path d="M 330,300 L 410,295 L 420,310 L 340,315 Z" />
+
+          {/* Asia Menor / Anatolia (Éfeso, Tróade, Antioquía Pisidia, Galacia) */}
+          <path d="M 420,70 L 680,60 L 740,120 L 730,220 L 640,240 L 460,220 L 420,160 Z" />
+
+          {/* Chipre */}
+          <path d="M 640,270 L 710,260 L 715,280 L 650,290 Z" />
+
+          {/* Levante Bíblico, Sinaí y Egipto (Canaán, Fenicia, Siria, Delta del Nilo, Arabia) */}
+          <path d="M 730,170 L 820,180 L 890,260 L 980,300 L 980,650 L 520,650 L 520,440 L 600,430 L 680,480 L 710,480 L 735,390 L 725,270 Z" />
+        </g>
+
+        {/* Golfo de Suez y Golfo de Aqaba (Península del Sinaí) */}
+        <path
+          d="M 650,490 L 670,590 L 685,530 L 710,480"
+          fill="none"
+          stroke={waterColor}
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+
+        {/* Cuerpos de agua bíblicos interiores */}
+        {/* Mar de Galilea (Kinneret) */}
+        <ellipse
+          cx="730"
+          cy="325"
+          rx="5.5"
+          ry="8"
+          fill="#38bdf8"
+          stroke="#0284c7"
+          strokeWidth="1.2"
+          className="animate-pulse"
+        />
+
+        {/* Río Jordán */}
+        <path
+          d="M 730,333 Q 731,350 729,370 Q 730,390 728,405"
+          fill="none"
+          stroke="#38bdf8"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        />
+
+        {/* Mar Muerto (Yam HaMelaj) */}
+        <path
+          d="M 728,405 C 725,415 723,440 727,455 C 730,465 726,480 724,485 C 721,480 720,440 723,405 Z"
+          fill="#0ea5e9"
+          stroke="#0369a1"
+          strokeWidth="1.5"
+        />
+
+        {/* Río Nilo y Delta */}
+        <path
+          d="M 570,440 L 580,470 L 590,560 L 585,650"
+          fill="none"
+          stroke="#0284c7"
+          strokeWidth="3.5"
+          opacity="0.8"
+        />
+
+        {/* Ríos Éufrates y Tigris (Mesopotamia) */}
+        <path
+          d="M 780,120 Q 860,180 920,290 Q 980,410 990,500"
+          fill="none"
+          stroke="#0284c7"
+          strokeWidth="2"
+          strokeDasharray="4,2"
+          opacity="0.6"
+        />
+
+        {/* Regiones y Etiquetas Geográficas Bíblicas Tenues */}
+        <g fill="currentColor" opacity="0.35" fontSize="10" fontFamily="monospace" textAnchor="middle">
+          <text x="200" y="240" transform="rotate(-15, 200, 240)">
+            MARE INTERNUM (MEDITERRÁNEO)
+          </text>
+          <text x="540" y="150">ASIA MENOR</text>
+          <text x="330" y="110">MACEDONIA & AQUEA</text>
+          <text x="800" y="220">SIRIA</text>
+          <text x="765" y="360">GALILEA</text>
+          <text x="765" y="410">SAMARIA</text>
+          <text x="765" y="460">JUDEA</text>
+          <text x="640" y="550">PENÍNSULA DEL SINAÍ</text>
+          <text x="540" y="500">EGIPTO (GOSÉN)</text>
+          <text x="860" y="450">ARABIA / MOAB</text>
+        </g>
+
+        {/* Rosa de los Vientos Náutica Bíblica */}
+        <g transform="translate(80, 560)" opacity="0.65">
+          <circle r="32" fill="none" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2,3" />
+          <path d="M 0,-30 L 5,-8 L 0,0 L -5,-8 Z" fill="#ef4444" />
+          <path d="M 0,30 L 5,8 L 0,0 L -5,8 Z" fill="currentColor" />
+          <path d="M -30,0 L -8,5 L 0,0 L -8,-5 Z" fill="currentColor" />
+          <path d="M 30,0 L 8,5 L 0,0 L 8,-5 Z" fill="currentColor" />
+          <text x="0" y="-34" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#ef4444">
+            N
+          </text>
+          <text x="0" y="42" fontSize="8" textAnchor="middle" fill="currentColor">
+            S
+          </text>
+          <text x="38" y="3" fontSize="8" textAnchor="middle" fill="currentColor">
+            E
+          </text>
+          <text x="-38" y="3" fontSize="8" textAnchor="middle" fill="currentColor">
+            O
+          </text>
+        </g>
+
+        {/* Renderizado de Lugares Bíblicos */}
+        {places.map((place) => {
+          const { x, y } = projectGeoToCanvas(place.coordinates.lat, place.coordinates.lng);
+          const isSelected = place.id === selectedPlaceId;
+          const isHovered = hoveredPlace?.id === place.id;
+
+          const markerColor =
+            place.category === 'city'
+              ? '#3b82f6' // Azul
+              : place.category === 'mountain'
+              ? '#f59e0b' // Ámbar/Naranja
+              : place.category === 'water'
+              ? '#06b6d4' // Cian
+              : '#10b981'; // Verde arqueológico
+
+          return (
+            <g
+              key={place.id}
+              transform={`translate(${x}, ${y})`}
+              className="cursor-pointer transition-transform duration-150"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectPlace(place);
+              }}
+              onMouseEnter={() => setHoveredPlace(place)}
+              onMouseLeave={() => setHoveredPlace(null)}
+            >
+              {/* Círculo de pulsación en lugar seleccionado */}
+              {isSelected && (
+                <circle
+                  r="14"
+                  fill={markerColor}
+                  fillOpacity="0.25"
+                  stroke={markerColor}
+                  strokeWidth="1.5"
+                  className="animate-ping"
+                />
+              )}
+
+              {/* Halo hover */}
+              {isHovered && (
+                <circle r="10" fill={markerColor} fillOpacity="0.3" stroke={markerColor} strokeWidth="1" />
+              )}
+
+              {/* Marcador central */}
+              <circle
+                r={isSelected ? '6.5' : isHovered ? '5.5' : '4.5'}
+                fill={markerColor}
+                stroke="#ffffff"
+                strokeWidth={isSelected ? '2' : '1.2'}
+                className="transition-all"
+              />
+
+              {/* Etiqueta de texto */}
+              <text
+                x="8"
+                y="3.5"
+                fontSize={isSelected ? '11' : '9.5'}
+                fontWeight={isSelected ? 'bold' : 'normal'}
+                fill={isSelected ? '#ffffff' : isHovered ? '#38bdf8' : '#e2e8f0'}
+                className="select-none font-sans drop-shadow-md"
+              >
+                {place.name}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* Tooltip flotante interactivo */}
+      {hoveredPlace && (
+        <div
+          className="absolute z-20 pointer-events-none p-2.5 rounded-lg bg-background/95 border border-accents-2 shadow-xl backdrop-blur-md max-w-xs space-y-1 transform -translate-x-1/2 -translate-y-full -mt-3"
+          style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-bold text-foreground">{hoveredPlace.name}</span>
+            <span className="text-[10px] font-mono text-amber-500 font-serif">
+              {hoveredPlace.originalName.hebrew || hoveredPlace.originalName.greek}
+            </span>
+          </div>
+          <p className="text-[10px] text-accents-4 line-clamp-2">{hoveredPlace.description}</p>
+          <div className="text-[9px] font-mono text-blue-400">
+            {hoveredPlace.biblicalReferences[0]?.reference}
+          </div>
+        </div>
+      )}
+
+      {/* Leyenda en esquina inferior izquierda */}
+      <div className="absolute bottom-3 left-3 z-10 flex items-center gap-3 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md border border-accents-2 text-[10px] font-mono text-accents-4">
+        <span className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> Ciudades
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> Montes
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-cyan-500 inline-block" /> Aguas
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> Yacimientos
+        </span>
+      </div>
+    </div>
+  );
+};

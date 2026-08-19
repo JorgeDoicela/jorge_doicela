@@ -108,9 +108,13 @@ frontend/web/src/app/(bible)/
 | Selector de libros y traducciones en web | ✅ Completado | `BookSelector.tsx`, `TranslationSelector.tsx` |
 | Conexión TypeORM con `bible.sqlite` | ✅ Completado | `bibleConnection` configurada |
 | Aislamiento de estilos FSD en web | ✅ Completado | `(bible)/globals.css` |
-| Paginación y navegación por capítulos | ⏳ Pendiente | Botones Anterior / Siguiente en web |
-| Búsqueda de versículos en tiempo real | ⏳ Pendiente | Barra de búsqueda con resaltado de texto |
-| Sistema de favoritos y notas locales | ⏳ Pendiente | `localStorage` en Web / `AsyncStorage` en App |
+| Paginación y navegación fluida por capítulos | ⏳ Pendiente | Botones Anterior / Siguiente en web |
+| Búsqueda Full-Text rápida (FTS5) | ⏳ Pendiente | Barra de búsqueda con operadores y resaltado |
+| Motor Interlineal Morfológico (Hebreo, Arameo, Griego) | ⏳ Pendiente | Desglose morfológico, Strong, audio fonético |
+| Sistema de Resaltado Semántico y Notas | ⏳ Pendiente | `localStorage` / `IndexedDB` y exportación |
+| Red de Referencias Cruzadas (TSK - 340k enlaces) | ⏳ Pendiente | Grafo visual y panel de pasajes paralelos |
+| Atlas Bíblico y Rutas Históricas Interactivas | ⏳ Pendiente | Mapas vectoriales, viajes de Pablo, Éxodo |
+| Feed de Noticias Arqueológicas y Manuscritos | ⏳ Pendiente | Artículos de descubrimientos en Tierra Santa |
 | App móvil nativa completa con Expo Router | ⏳ Pendiente | Estructura en `frontend/mobile/` |
 | Notificaciones locales de versículo del día | ⏳ Pendiente | `expo-notifications` en app móvil |
 | Importador masivo de versículos (JSON/CSV) | ⏳ Pendiente | Script de siembra / seeder en backend |

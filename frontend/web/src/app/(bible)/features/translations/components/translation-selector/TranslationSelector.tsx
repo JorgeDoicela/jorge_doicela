@@ -26,14 +26,14 @@ export function TranslationSelector({
   }
 
   return (
-    <div className="relative inline-block w-full sm:w-auto">
+    <div className="relative inline-block max-w-[120px] xs:max-w-[150px] sm:max-w-[220px]">
       <select
         value={selectedTranslationId ?? ''}
         onChange={(e) => {
           const val = e.target.value;
           onSelectTranslation(val ? Number(val) : null);
         }}
-        className="w-full sm:w-auto pl-3 pr-8 py-1.5 bg-background border border-accents-2 hover:border-accents-4 text-foreground rounded-md text-xs font-medium focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-all duration-150 cursor-pointer appearance-none select-none"
+        className="w-full pl-2 sm:pl-3 pr-6 sm:pr-8 py-1 sm:py-1.5 bg-background border border-accents-2 hover:border-accents-4 text-foreground rounded-lg text-[11px] sm:text-xs font-medium focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-all duration-150 cursor-pointer appearance-none select-none truncate"
       >
         <option value="">Todas las Versiones</option>
         {translations.map((translation) => (
@@ -42,8 +42,8 @@ export function TranslationSelector({
           </option>
         ))}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-accents-4">
-        <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.5} />
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5 sm:pr-2.5 text-accents-4">
+        <ChevronDown className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={1.5} />
       </div>
     </div>
   );

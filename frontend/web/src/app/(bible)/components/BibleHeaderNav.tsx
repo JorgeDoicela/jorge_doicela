@@ -53,23 +53,23 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-accents-2 bg-background/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4">
         {/* Izquierda: Logotipo e Identidad (Link a Landing) */}
         <Link
           href="/bible"
-          className="shrink-0 flex items-center gap-2 sm:gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+          className="shrink-0 flex items-center gap-1.5 sm:gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
           title="Volver a la Presentación"
         >
-          <BibleLogo size={20} />
+          <BibleLogo size={18} />
           <span className="text-accents-2 font-mono select-none">/</span>
-          <span className="text-xs font-bold tracking-wider uppercase text-foreground">
+          <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-foreground">
             Bible
           </span>
         </Link>
 
         {/* Centro: Pestañas de Navegación en 1 sola línea con scroll horizontal suave */}
         <nav
-          className="flex-1 flex items-center gap-1 overflow-x-auto py-1 scrollbar-none select-none px-1"
+          className="min-w-0 flex-1 flex items-center gap-1 overflow-x-auto py-1 scrollbar-none select-none px-1"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {NAV_TABS.map((tab) => {
@@ -79,7 +79,7 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => onChangeStudyMode(tab.id)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                className={`px-2 sm:px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 cursor-pointer shrink-0 ${
                   isActive
                     ? 'bg-foreground text-background font-semibold shadow-xs'
                     : 'text-accents-5 hover:text-foreground hover:bg-accents-1'
@@ -87,7 +87,7 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({
               >
                 {tab.dotColor && (
                   <span
-                    className={`inline-block w-1.5 h-1.5 rounded-full ${tab.dotColor} ${
+                    className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${tab.dotColor} ${
                       isActive ? 'ring-1 ring-background' : ''
                     }`}
                   />
@@ -99,13 +99,13 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({
         </nav>
 
         {/* Derecha: Selector de Traducción, Acciones y Tema */}
-        <div className="shrink-0 flex items-center gap-2">
+        <div className="shrink-0 flex items-center gap-1 sm:gap-2">
           {/* Botón rápido Añadir Columna solo en Vista Paralela */}
           {studyMode === 'parallel' && columnCount < 4 && nextAvailableTranslation && (
             <button
               type="button"
               onClick={() => onAddColumn(nextAvailableTranslation.id)}
-              className="px-2.5 py-1 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:border-foreground text-foreground transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+              className="px-2 sm:px-2.5 py-1 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:border-foreground text-foreground transition-all flex items-center gap-1 cursor-pointer shadow-xs"
               title="Añadir otra columna para comparar"
             >
               <svg className="w-3.5 h-3.5 text-accents-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

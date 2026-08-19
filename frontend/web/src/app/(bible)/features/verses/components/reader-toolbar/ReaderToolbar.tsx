@@ -90,28 +90,28 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
       )}
 
       {/* Fila Principal de Control Integrado */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 relative z-40">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 relative z-40">
         {/* Selector de Libro y Capítulos */}
-        <div className="flex items-center gap-2 flex-wrap flex-1 min-w-[280px]">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           {/* Botón selector de Libro */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
               type="button"
               onClick={() => setBookPickerOpen(!bookPickerOpen)}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-accents-2 bg-accents-1 hover:border-foreground text-foreground transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+              className="px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg border border-accents-2 bg-accents-1 hover:border-foreground text-foreground transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer shadow-xs"
             >
-              <svg className="w-3.5 h-3.5 text-accents-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 text-accents-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
-              <span className="font-bold">{selectedBookName || 'Seleccionar Libro'}</span>
-              <svg className={`w-3 h-3 text-accents-4 transition-transform duration-150 ${bookPickerOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="font-bold truncate max-w-[110px] sm:max-w-[160px]">{selectedBookName || 'Seleccionar Libro'}</span>
+              <svg className={`w-3 h-3 text-accents-4 transition-transform duration-150 shrink-0 ${bookPickerOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
 
             {/* Dropdown flotante con buscador y tabs limpios */}
             {bookPickerOpen && (
-              <div className="absolute top-full left-0 mt-2 z-50 w-80 p-3 rounded-xl border border-accents-2 bg-background shadow-2xl space-y-2.5">
+              <div className="absolute top-full left-0 mt-2 z-50 w-[calc(100vw-2.5rem)] max-w-xs sm:w-80 p-3 rounded-xl border border-accents-2 bg-background shadow-2xl space-y-2.5">
                 {/* Input de búsqueda rápida */}
                 <input
                   type="text"
@@ -186,7 +186,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 
           {/* Chips de Capítulos Horizontales Compactos */}
           {selectedBookName && (
-            <div className="flex items-center gap-1 overflow-x-auto max-w-[360px] sm:max-w-md py-0.5 scrollbar-none" style={{ scrollbarWidth: 'none' }}>
+            <div className="flex items-center gap-1 overflow-x-auto min-w-0 flex-1 py-0.5 scrollbar-none" style={{ scrollbarWidth: 'none' }}>
               {Array.from({ length: totalChapters }).map((_, i) => {
                 const ch = i + 1;
                 const isSelected = selectedChapter === ch;
@@ -210,13 +210,13 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
         </div>
 
         {/* Controles de Formato y Tipografía a la Derecha */}
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
           {/* Modos de lectura */}
           <div className="flex items-center bg-accents-1 p-0.5 rounded-lg border border-accents-2">
             <button
               type="button"
               onClick={() => onLayoutModeChange('continuous')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2 sm:px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer flex items-center gap-1 ${
                 readerSettings.layoutMode === 'continuous'
                   ? 'bg-background text-foreground shadow-xs font-semibold'
                   : 'text-accents-5 hover:text-foreground'
@@ -226,7 +226,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h12" />
               </svg>
-              <span className="hidden md:inline">Párrafo</span>
+              <span className="hidden sm:inline">Párrafo</span>
             </button>
 
             <button

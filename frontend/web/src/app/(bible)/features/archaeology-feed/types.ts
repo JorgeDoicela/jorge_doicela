@@ -14,7 +14,7 @@ export type GeographicRegion =
 
 export interface EpigraphicTranscription {
   originalScript: string;
-  language: string; // 'Paleohebreo' | 'Arameo' | 'Griego Koiné' | 'Latín'
+  language: string;
   transliteration: string;
   translation: string;
   dateEstimate: string;
@@ -40,4 +40,15 @@ export interface ArchaeologyArticle {
   museumOrLocation: string;
   keyArtifact: string;
   tags: string[];
+}
+
+export interface AncientManuscript {
+  id: string;
+  name: string;
+  classification: string;
+  approximateDate: string;
+  contentsOverview: string;
+  importance: string;
+  language: string;
+  currentLocation: string;
 }

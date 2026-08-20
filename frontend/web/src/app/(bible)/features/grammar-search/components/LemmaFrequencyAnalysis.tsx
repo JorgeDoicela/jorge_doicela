@@ -16,8 +16,22 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
     activeLemmaData,
   } = useLemmaFrequency();
 
-  const isHebrew =
-    activeLemmaData.language === 'Hebreo' || activeLemmaData.language === 'Arameo';
+  const isHebrew = activeLemmaData
+    ? activeLemmaData.language === 'Hebreo' || activeLemmaData.language === 'Arameo'
+    : false;
+
+  if (!activeLemmaData) {
+    return (
+      <div className="p-8 text-center rounded-xl border border-accents-2 bg-background space-y-2">
+        <h3 className="text-sm font-semibold text-foreground">
+          Análisis de Raíz & Scatter Plot Canónico
+        </h3>
+        <p className="text-xs text-accents-4 max-w-md mx-auto">
+          Utiliza el buscador morfológico o realiza consultas léxicas para visualizar la distribución cuantitativa de lemas a lo largo de los 66 libros de la Biblia.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

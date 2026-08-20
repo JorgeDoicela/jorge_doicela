@@ -2,8 +2,22 @@
 
 import React, { useState } from 'react';
 import { LemmaCanonicalData, CanonicalGenre } from '../types';
-import { CANONICAL_BOOKS, GENRE_COLORS } from '../data/canonical-books';
+import { CANONICAL_BOOKS } from '../../books/hooks/useBooks';
+import { getChaptersForBookId } from '../../books/data/canonicCategories';
 import { ScatterPlotScale } from '../hooks/useLemmaFrequency';
+
+export const GENRE_COLORS: Record<string, { bg: string; text: string; border: string; dot: string }> = {
+  Pentateuco: { bg: 'bg-amber-500/10 dark:bg-amber-500/15', text: 'text-amber-700 dark:text-amber-400', border: 'border-amber-500/30', dot: '#f59e0b' },
+  Históricos: { bg: 'bg-orange-500/10 dark:bg-orange-500/15', text: 'text-orange-700 dark:text-orange-400', border: 'border-orange-500/30', dot: '#f97316' },
+  Poéticos: { bg: 'bg-emerald-500/10 dark:bg-emerald-500/15', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-500/30', dot: '#10b981' },
+  'Profetas Mayores': { bg: 'bg-indigo-500/10 dark:bg-indigo-500/15', text: 'text-indigo-700 dark:text-indigo-400', border: 'border-indigo-500/30', dot: '#6366f1' },
+  'Profetas Menores': { bg: 'bg-violet-500/10 dark:bg-violet-500/15', text: 'text-violet-700 dark:text-violet-400', border: 'border-violet-500/30', dot: '#8b5cf6' },
+  Evangelios: { bg: 'bg-blue-500/10 dark:bg-blue-500/15', text: 'text-blue-700 dark:text-blue-400', border: 'border-blue-500/30', dot: '#3b82f6' },
+  Hechos: { bg: 'bg-cyan-500/10 dark:bg-cyan-500/15', text: 'text-cyan-700 dark:text-cyan-400', border: 'border-cyan-500/30', dot: '#06b6d4' },
+  'Epístolas Paulinas': { bg: 'bg-purple-500/10 dark:bg-purple-500/15', text: 'text-purple-700 dark:text-purple-400', border: 'border-purple-500/30', dot: '#a855f7' },
+  'Epístolas Generales': { bg: 'bg-rose-500/10 dark:bg-rose-500/15', text: 'text-rose-700 dark:text-rose-400', border: 'border-rose-500/30', dot: '#f43f5e' },
+  Apocalipsis: { bg: 'bg-red-500/10 dark:bg-red-500/15', text: 'text-red-700 dark:text-red-400', border: 'border-red-500/30', dot: '#ef4444' },
+};
 
 interface CanonicalScatterPlotProps {
   lemmaData: LemmaCanonicalData;
@@ -20,7 +34,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
 
   // Obtener el valor máximo para el escalado
   const maxCount = Math.max(
-    ...CANONICAL_BOOKS.map((b) => lemmaData.distributionByBook[b.abbr] || 0),
+    ...CANONICAL_BOOKS.map((b) => lemmaData.distributionByBook[b.abbreviation] || 0),
     1,
   );
 
@@ -51,8 +65,8 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
     return 3.5 + (count / maxCount) * 8;
   };
 
-  const hoveredBook = CANONICAL_BOOKS.find((b) => b.abbr === hoveredBookAbbr);
-  const hoveredCount = hoveredBook ? lemmaData.distributionByBook[hoveredBook.abbr] || 0 : 0;
+  const hoveredBook = CANONICAL_BOOKS.find((b) => b.abbreviation === hoveredBookAbbr);
+  const hoveredCount = hoveredBook ? lemmaData.distributionByBook[hoveredBook.abbreviation] || 0 : 0;
   const hoveredPercentage =
     lemmaData.totalOccurrences > 0
       ? ((hoveredCount / lemmaData.totalOccurrences) * 100).toFixed(1)
@@ -150,8 +164,8 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
               const prevBook = CANONICAL_BOOKS[idx - 1];
               const prevX = 35 + ((idx - 1) / 65) * 700;
               const currX = 35 + (idx / 65) * 700;
-              const prevY = getYPosition(lemmaData.distributionByBook[prevBook.abbr] || 0);
-              const currY = getYPosition(lemmaData.distributionByBook[book.abbr] || 0);
+              const prevY = getYPosition(lemmaData.distributionByBook[prevBook.abbreviation] || 0);
+              const currY = getYPosition(lemmaData.distributionByBook[book.abbreviation] || 0);
 
               // Solo dibujar si pertenecen al mismo testamento para evitar saltos canónicos
               if (prevBook.testament !== book.testament) return null;
@@ -163,7 +177,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
                   y1={prevY}
                   x2={currX}
                   y2={currY}
-                  stroke={GENRE_COLORS[book.category]?.dot || '#3b82f6'}
+                  stroke="#3b82f6"
                   strokeOpacity="0.3"
                   strokeWidth="1.2"
                 />
@@ -172,21 +186,20 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
 
             {/* Puntos de dispersión de cada uno de los 66 libros */}
             {CANONICAL_BOOKS.map((book, idx) => {
-              const count = lemmaData.distributionByBook[book.abbr] || 0;
+              const count = lemmaData.distributionByBook[book.abbreviation] || 0;
               const cx = 35 + (idx / 65) * 700;
               const cy = getYPosition(count);
               const r = getRadius(count);
-              const isHovered = hoveredBookAbbr === book.abbr;
-              const genreStyle = GENRE_COLORS[book.category];
-              const dotColor = genreStyle ? genreStyle.dot : '#3b82f6';
+              const isHovered = hoveredBookAbbr === book.abbreviation;
+              const dotColor = '#3b82f6';
 
               return (
                 <g
                   key={book.id}
                   className="cursor-pointer transition-transform"
-                  onMouseEnter={() => setHoveredBookAbbr(book.abbr)}
+                  onMouseEnter={() => setHoveredBookAbbr(book.abbreviation)}
                   onMouseLeave={() => setHoveredBookAbbr(null)}
-                  onClick={() => setHoveredBookAbbr(book.abbr)}
+                  onClick={() => setHoveredBookAbbr(book.abbreviation)}
                 >
                   {/* Halo de hover */}
                   {isHovered && (
@@ -223,7 +236,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
                     textAnchor="middle"
                     fontFamily="monospace"
                   >
-                    {book.abbr}
+                    {book.abbreviation}
                   </text>
                 </g>
               );
@@ -235,13 +248,12 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
             <div className="absolute top-2 right-2 sm:right-6 p-3 rounded-lg border border-accents-2 bg-background/95 backdrop-blur-md shadow-md text-left z-20 pointer-events-none max-w-xs">
               <div className="flex items-center justify-between gap-2 mb-1">
                 <span className="font-bold text-xs text-foreground">
-                  {hoveredBook.name} ({hoveredBook.abbr})
+                  {hoveredBook.name} ({hoveredBook.abbreviation})
                 </span>
                 <span
-                  className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded text-white"
-                  style={{ backgroundColor: GENRE_COLORS[hoveredBook.category]?.dot || '#3b82f6' }}
+                  className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded text-white bg-blue-500"
                 >
-                  {hoveredBook.category}
+                  {hoveredBook.testament === 'OT' ? 'Antiguo Testamento' : 'Nuevo Testamento'}
                 </span>
               </div>
               <div className="text-[11px] text-accents-5 font-mono">
@@ -249,7 +261,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
                 {hoveredCount === 1 ? 'aparición' : 'apariciones'} ({hoveredPercentage}% del canon)
               </div>
               <div className="text-[10px] text-accents-4 mt-1 font-mono">
-                Libro #{hoveredBook.bookNumber} canónico • {hoveredBook.totalChapters} capítulos
+                Libro #{hoveredBook.id} canónico • {getChaptersForBookId(hoveredBook.id)} capítulos
               </div>
             </div>
           )}

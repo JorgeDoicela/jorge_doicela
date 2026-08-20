@@ -9,8 +9,9 @@ import {
   Verse,
   BookInfo,
 } from '../../types';
-import { getChapterCountForBook } from '../../data/bookChapters';
 import { UnifiedPassagePicker } from '../../../books/components/passage-picker/UnifiedPassagePicker';
+import { getChaptersForBookId } from '../../../books/data/canonicCategories';
+import { TranslationSelector } from '../../../translations/components/translation-selector/TranslationSelector';
 import { Book } from '../../../books/hooks/useBooks';
 
 interface ReaderToolbarProps {
@@ -29,6 +30,8 @@ interface ReaderToolbarProps {
   onPrevChapter?: () => void;
   onNextChapter?: (maxChapters?: number) => void;
   verses: Verse[];
+  selectedTranslationId?: number | null;
+  onSelectTranslation?: (id: number | null) => void;
   activeTranslationName?: string;
 }
 
@@ -47,12 +50,14 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   onSelectChapter,
   onPrevChapter,
   onNextChapter,
-  verses,
+  verses = [],
+  selectedTranslationId,
+  onSelectTranslation,
   activeTranslationName,
 }) => {
   const [copied, setCopied] = useState(false);
 
-  const totalChapters = getChapterCountForBook(selectedBookAbbr);
+  const totalChapters = getChaptersForBookId(selectedBookId);
 
   const handleCopyChapter = () => {
     if (verses.length === 0) return;
@@ -87,9 +92,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   return (
     <div className="border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs relative z-30">
       {/* Fila Principal de Control Integrado */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 relative z-40">
-        {/* Selector Unificado de Pasaje (Libro + Capítulo) */}
-        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 relative z-40">
+        {/* Izquierda: Pasaje (Libro + Capítulo) y Versión Bíblica */}
+        <div className="flex flex-wrap items-center gap-2 min-w-0">
           <UnifiedPassagePicker
             books={normalizedBooks}
             selectedBookId={selectedBookId || null}
@@ -99,6 +104,13 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             onNextChapter={() => onNextChapter?.(totalChapters)}
             size="sm"
           />
+
+          {onSelectTranslation && (
+            <TranslationSelector
+              selectedTranslationId={selectedTranslationId ?? null}
+              onSelectTranslation={onSelectTranslation}
+            />
+          )}
         </div>
 
         {/* Controles de Formato y Tipografía a la Derecha */}

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   MorphologyFilterState,
   MorphologicalTokenResult,
   ExegeticalPreset,
 } from '../types';
 import { MORPHOLOGY_TOKENS, EXEGETICAL_PRESETS } from '../data/morphology-database';
-import { CANONICAL_BOOKS } from '../data/canonical-books';
+import { searchGrammarTokens } from '../services/grammarSearchApiService';
 
 const DEFAULT_FILTER_STATE: MorphologyFilterState = {
   language: 'all',
@@ -27,6 +27,8 @@ const DEFAULT_FILTER_STATE: MorphologyFilterState = {
 export function useGrammarSearch() {
   const [filters, setFilters] = useState<MorphologyFilterState>(DEFAULT_FILTER_STATE);
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
+  const [serverTokens, setServerTokens] = useState<MorphologicalTokenResult[]>(MORPHOLOGY_TOKENS);
+  const [loading, setLoading] = useState(false);
 
   const updateFilter = <K extends keyof MorphologyFilterState>(
     key: K,
@@ -64,8 +66,35 @@ export function useGrammarSearch() {
     });
   };
 
+  useEffect(() => {
+    let active = true;
+    const fetchApiTokens = async () => {
+      setLoading(true);
+      try {
+        const results = await searchGrammarTokens({
+          query: filters.searchQuery || undefined,
+          book: filters.customBookAbbrs.length > 0 ? filters.customBookAbbrs[0] : undefined,
+          limit: 50,
+        });
+        if (active && results.length > 0) {
+          setServerTokens(results);
+        }
+      } catch {
+        // Fallback silencioso a MORPHOLOGY_TOKENS
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    fetchApiTokens();
+    return () => {
+      active = false;
+    };
+  }, [filters.searchQuery, filters.customBookAbbrs]);
+
   const filteredResults = useMemo(() => {
-    return MORPHOLOGY_TOKENS.filter((token) => {
+    const sourceTokens = serverTokens.length > 0 ? serverTokens : MORPHOLOGY_TOKENS;
+    return sourceTokens.filter((token) => {
       // 1. Filtro de Idioma
       if (filters.language === 'greek' && token.language !== 'Griego') return false;
       if (
@@ -80,94 +109,37 @@ export function useGrammarSearch() {
         return false;
       }
 
-      // 3. Filtro de Modo
-      if (filters.mood !== 'all' && token.mood !== filters.mood) {
-        return false;
-      }
-
-      // 4. Filtro de Tiempo / Binyan
-      if (filters.tense !== 'all' && token.tense !== filters.tense) {
-        return false;
-      }
-
-      // 5. Filtro de Voz
-      if (filters.voice !== 'all' && token.voice !== filters.voice) {
-        return false;
-      }
-
-      // 6. Filtro de Caso
-      if (
-        filters.grammaticalCase !== 'all' &&
-        token.grammaticalCase !== filters.grammaticalCase
-      ) {
-        return false;
-      }
-
-      // 7. Filtro de Género
-      if (filters.gender !== 'all' && token.gender !== filters.gender) {
-        return false;
-      }
-
-      // 8. Filtro de Número
-      if (filters.number !== 'all' && token.number !== filters.number) {
-        return false;
-      }
-
-      // 9. Filtro de Persona
-      if (filters.person !== 'all' && token.person !== filters.person) {
-        return false;
-      }
-
-      // 10. Filtro de Alcance Canónico
-      if (filters.scope === 'custom_books') {
-        if (
-          filters.customBookAbbrs.length > 0 &&
-          !filters.customBookAbbrs.includes(token.bookAbbr)
-        ) {
-          return false;
-        }
-      } else if (filters.scope !== 'all') {
-        const bookInfo = CANONICAL_BOOKS.find((b) => b.abbr === token.bookAbbr);
-        if (!bookInfo) return false;
-
-        if (filters.scope === 'OT' && bookInfo.testament !== 'OT') return false;
-        if (filters.scope === 'NT' && bookInfo.testament !== 'NT') return false;
-        if (filters.scope === 'pentateuch' && bookInfo.category !== 'Pentateuco') return false;
-        if (filters.scope === 'history' && bookInfo.category !== 'Históricos') return false;
-        if (filters.scope === 'poetry' && bookInfo.category !== 'Poéticos') return false;
-        if (
-          filters.scope === 'prophets' &&
-          bookInfo.category !== 'Profetas Mayores' &&
-          bookInfo.category !== 'Profetas Menores'
-        )
-          return false;
-        if (filters.scope === 'gospels' && bookInfo.category !== 'Evangelios') return false;
-        if (filters.scope === 'pauline' && bookInfo.category !== 'Epístolas Paulinas')
-          return false;
-        if (
-          filters.scope === 'general_epistles' &&
-          bookInfo.category !== 'Epístolas Generales'
-        )
-          return false;
-        if (filters.scope === 'revelation' && bookInfo.category !== 'Apocalipsis')
-          return false;
-      }
-
-      // 11. Búsqueda de Texto en Lema, Glosa o Strong
-      if (filters.searchQuery.trim()) {
-        const query = filters.searchQuery.trim().toLowerCase();
-        const matchesLemma = token.lemma.toLowerCase().includes(query);
-        const matchesGloss = token.gloss.toLowerCase().includes(query);
-        const matchesStrong = token.strong.toLowerCase().includes(query);
-        const matchesTranslit = token.transliteration.toLowerCase().includes(query);
+      // 3. Filtro de Búsqueda de Texto
+      if (filters.searchQuery.trim() !== '') {
+        const query = filters.searchQuery.toLowerCase().trim();
         const matchesWord = token.wordOriginal.toLowerCase().includes(query);
-        if (!matchesLemma && !matchesGloss && !matchesStrong && !matchesTranslit && !matchesWord) {
+        const matchesTranslit = (token.transliteration || '').toLowerCase().includes(query);
+        const matchesStrong = (token.strong || '').toLowerCase().includes(query);
+        const matchesParsing = token.parsingSummary.toLowerCase().includes(query);
+
+        if (!matchesWord && !matchesTranslit && !matchesStrong && !matchesParsing) {
           return false;
         }
       }
 
       return true;
     });
+  }, [filters, serverTokens]);
+
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (filters.language !== 'all') count++;
+    if (filters.partOfSpeech !== 'all') count++;
+    if (filters.mood !== 'all') count++;
+    if (filters.tense !== 'all') count++;
+    if (filters.voice !== 'all') count++;
+    if (filters.grammaticalCase !== 'all') count++;
+    if (filters.gender !== 'all') count++;
+    if (filters.number !== 'all') count++;
+    if (filters.person !== 'all') count++;
+    if (filters.scope !== 'all') count++;
+    if (filters.searchQuery.trim() !== '') count++;
+    return count;
   }, [filters]);
 
   return {
@@ -175,6 +147,9 @@ export function useGrammarSearch() {
     presets: EXEGETICAL_PRESETS,
     activePresetId,
     results: filteredResults,
+    totalCount: filteredResults.length,
+    activeFiltersCount,
+    loading,
     updateFilter,
     applyPreset,
     resetFilters,

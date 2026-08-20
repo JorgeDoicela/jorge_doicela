@@ -1,0 +1,87 @@
+[
+  {
+    "id": "jerusalem",
+    "name": "Jerusalén",
+    "originalName": {
+      "hebrew": "יְרוּשָׁלַיִם",
+      "greek": "Ἱεροσόλυμα",
+      "transliteration": "Yerushalayim",
+      "meaning": "Fundación o morada de paz"
+    },
+    "coordinates": { "lat": 31.7767, "lng": 35.2345 },
+    "category": "city",
+    "era": ["patriarchs", "monarchy", "exile_restoration", "second_temple", "apostolic"],
+    "modernName": "Al-Quds / Yerushalayim",
+    "country": "Israel / Palestina",
+    "elevationMeters": 754,
+    "description": "Centro espiritual, político y profético del pueblo de Dios. Antigua fortaleza jebusea conquistada por David, sede de los Templos de Salomón y Herodes, escenario de la pasión y resurrección de Cristo.",
+    "biblicalReferences": [
+      { "reference": "Génesis 14:18", "context": "Melquisedec rey de Salem" },
+      { "reference": "2 Samuel 5:6-9", "context": "David conquista la fortaleza de Sion" },
+      { "reference": "Hechos 2:1-4", "context": "Pentecostés en Jerusalén" }
+    ],
+    "archaeologicalNotes": {
+      "discoveries": [
+        "Túnel de Ezequías e inscripción de Siloé",
+        "Bulla de Ezequías y del profeta Isaías",
+        "Muro de las Lamentaciones y Calle Herodiana"
+      ],
+      "excavationStatus": "Excavación continua (Ciudad de David)",
+      "verifiedByBiblicalArchaeology": true
+    }
+  },
+  {
+    "id": "bethlehem",
+    "name": "Belén de Judá",
+    "originalName": {
+      "hebrew": "בֵּית לֶחֶם",
+      "greek": "Βηθλεέμ",
+      "transliteration": "Beit Lejem",
+      "meaning": "Casa del Pan"
+    },
+    "coordinates": { "lat": 31.7054, "lng": 35.2024 },
+    "category": "city",
+    "era": ["patriarchs", "monarchy", "second_temple"],
+    "modernName": "Beit Lahm",
+    "country": "Palestina (Cisjordania)",
+    "elevationMeters": 775,
+    "description": "Lugar de sepultura de Raquel, hogar de Rut y Booz, cuna del rey David y lugar profetizado del nacimiento del Mesías (Miqueas 5:2; Mateo 2:1).",
+    "biblicalReferences": [
+      { "reference": "Miqueas 5:2", "context": "Profecía mesiánica del origen eterno" },
+      { "reference": "Mateo 2:1", "context": "Nacimiento de Jesús en días de Herodes" }
+    ],
+    "archaeologicalNotes": {
+      "discoveries": [
+        "Basílica de la Natividad del s. IV",
+        "Bullas fiscales de Belén en la Ciudad de David"
+      ],
+      "excavationStatus": "Yacimiento activo",
+      "verifiedByBiblicalArchaeology": true
+    }
+  },
+  {
+    "id": "mount_sinai",
+    "name": "Monte Sinaí (Horeb)",
+    "originalName": {
+      "hebrew": "הַר סִינַי",
+      "transliteration": "Har Sinai",
+      "meaning": "Monte de la Alianza"
+    },
+    "coordinates": { "lat": 28.5394, "lng": 33.9753 },
+    "category": "mountain",
+    "era": ["patriarchs", "exodus"],
+    "modernName": "Jabal Musa",
+    "country": "Egipto (Península del Sinaí)",
+    "elevationMeters": 2285,
+    "description": "Monte sagrado donde Dios se reveló a Moisés en la zarza ardiendo y entregó la Torá y el Decálogo al pueblo de Israel.",
+    "biblicalReferences": [
+      { "reference": "Éxodo 19:1-25", "context": "Teofanía en el Sinaí" },
+      { "reference": "1 Reyes 19:8-18", "context": "Elías en la cueva de Horeb" }
+    ],
+    "archaeologicalNotes": {
+      "discoveries": ["Monasterio de Santa Catalina (s. VI)", "Códice Sinaítico"],
+      "excavationStatus": "Patrimonio histórico protegido",
+      "verifiedByBiblicalArchaeology": true
+    }
+  }
+]

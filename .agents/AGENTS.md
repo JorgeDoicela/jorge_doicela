@@ -36,15 +36,13 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 
 ## 5. Skills Especializadas y Documentación Oficial (`docs/`)
 
-El repositorio cuenta con **5 skills** que mapean 1 a 1 con las 5 carpetas de documentación:
-
 1. `infraestructura-global-jorge-doicela`: Reglas maestras de monorepo pnpm, arquitectura 1 GB RAM, FSD, 3 capas NestJS, despliegue en AWS Lightsail (Debian 13), Nginx mTLS, PM2, GitHub Actions y seguridad pre-commit (Husky / check-secrets).
    * Documentación: [`docs/01-infraestructura-global/`]()
-2. `landing-jorge-doicela`: Landing page principal (`jorgedoicela.com`), 100% cliente Next.js (sin backend/DB), i18n, PWA, SEO y Glassmorphism.
+2. `landing-jorge-doicela`: Landing page principal (`jorgedoicela.com`), 100% cliente Next.js (sin backend/DB), i18n, PWA, SEO y diseño en **Bento Grid**.
    * Documentación: [`docs/02-landing/`]()
-3. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets, contacto y `portfolio.sqlite`.
+3. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets, contacto, `portfolio.sqlite` y estética **Dark Luxury**.
    * Documentación: [`docs/03-portfolio/`]()
-4. `bible-jorge-doicela`: Biblia (`bible.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS y `bible.sqlite`.
+4. `bible-jorge-doicela`: Biblia (`bible.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `bible.sqlite` y estilo **Geist (Vercel Style)**.
    * Documentación: [`docs/04-bible/`]()
-5. `software-jorge-doicela`: Software Hub (`software.*`), 7 categorías temáticas, foros, proyectos y `software.sqlite`.
+5. `software-jorge-doicela`: Software Hub (`software.*`), 7 categorías temáticas, foros, proyectos, `software.sqlite` y estética **Neumorphism UI + Glassmorphism**.
    * Documentación: [`docs/05-software/`]()

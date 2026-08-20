@@ -5,16 +5,51 @@ export interface Translation {
   name: string;
   abbreviation: string;
   language: string;
+  copyrightNotice?: string;
+  copyrightOwner?: string;
 }
 
 export const CANONICAL_TRANSLATIONS: Translation[] = [
-  { id: 1, name: 'Reina-Valera 1960', abbreviation: 'RV1960', language: 'Español' },
-  { id: 2, name: 'Biblia Hebraica Stuttgartensia', abbreviation: 'BHS', language: 'Hebreo / Arameo' },
-  { id: 3, name: 'Septuaginta Griega', abbreviation: 'LXX', language: 'Griego Koiné' },
-  { id: 4, name: 'Nueva Versión Internacional', abbreviation: 'NVI', language: 'Español' },
-  { id: 5, name: 'King James Version', abbreviation: 'KJV', language: 'Inglés' },
-  { id: 6, name: 'La Biblia de las Américas', abbreviation: 'LBLA', language: 'Español' },
-  { id: 7, name: 'Biblia de Jerusalén', abbreviation: 'JER', language: 'Español' },
+  {
+    id: 1,
+    name: 'Nueva Biblia de las Américas',
+    abbreviation: 'NBLA',
+    language: 'Español',
+    copyrightOwner: 'The Lockman Foundation',
+    copyrightNotice: 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.',
+  },
+  {
+    id: 2,
+    name: 'Nueva Traducción Viviente',
+    abbreviation: 'NTV',
+    language: 'Español',
+    copyrightOwner: 'Tyndale House Foundation',
+    copyrightNotice: 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.',
+  },
+  {
+    id: 3,
+    name: 'New International Version',
+    abbreviation: 'NIV',
+    language: 'Inglés',
+    copyrightOwner: 'Biblica, Inc.',
+    copyrightNotice: 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.',
+  },
+  {
+    id: 4,
+    name: 'Biblia Hebraica Stuttgartensia (WLC)',
+    abbreviation: 'BHS',
+    language: 'Hebreo / Arameo',
+    copyrightOwner: 'Open Scriptures / Groves Center',
+    copyrightNotice: 'Westminster Leningrad Codex (WLC). Licencia Académica Abierta CC BY 4.0.',
+  },
+  {
+    id: 5,
+    name: 'Septuaginta Griega (LXX)',
+    abbreviation: 'LXX',
+    language: 'Griego Koiné',
+    copyrightOwner: 'Dominio Público',
+    copyrightNotice: 'Septuaginta Griega (LXX - Swete / Rahlfs). Dominio Público Académico.',
+  },
 ];
 
 import { API_URL } from '../../../../config';

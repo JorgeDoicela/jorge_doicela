@@ -25,6 +25,8 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 ```text
 backend/src/software/
 ├── software.module.ts         # Registro del módulo, conexión y entidades
+├── cli/
+│   └── seed-software.ts       # Sembrado transaccional atómico CLI (software.sqlite)
 ├── controllers/
 │   ├── articles.controller.ts # /software/articles
 │   ├── forum.controller.ts    # /software/forum

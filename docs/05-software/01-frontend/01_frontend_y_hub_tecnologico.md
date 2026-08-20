@@ -16,6 +16,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD):** `features/articles/` (noticias, blog, IA, seguridad, foros) y `features/projects/` (proyectos del autor).
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
+> * **Estética Neumorphism UI + Glassmorphism:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas.
 
 ---
 
@@ -23,7 +24,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 
 ```text
 frontend/web/src/app/(software)/
-├── globals.css                # Estilos aislados del Software Hub
+├── globals.css                # Estilos aislados del Software Hub (Neumorphism UI + Glassmorphism)
 ├── layout.tsx                 # Layout raíz del subdominio
 ├── software/
 │   └── page.tsx               # Contenedor de la vista principal
@@ -31,9 +32,9 @@ frontend/web/src/app/(software)/
 └── features/                  # FEATURE-SLICED DESIGN (FSD)
     ├── articles/              # FEATURE: ARTÍCULOS, NOTICIAS, BLOG, IA, SEGURIDAD, FOROS
     │   ├── components/
-    │   │   ├── ArticleCard.tsx    # Tarjeta de contenido con insignias
+    │   │   ├── ArticleCard.tsx    # Tarjeta táctil neumórfica con bordes vítreos
     │   │   ├── ArticleGrid.tsx    # Malla interactiva de publicaciones
-    │   │   ├── CategoryNav.tsx    # Barra de navegación por 7 categorías
+    │   │   ├── CategoryNav.tsx    # Barra de navegación neumórfica por 7 categorías
     │   │   └── ForumSection.tsx   # Módulo de debates comunitarios
     │   ├── hooks/
     │   │   ├── useArticles.ts     # Petición a /software/articles
@@ -42,7 +43,7 @@ frontend/web/src/app/(software)/
     │
     └── projects/              # FEATURE: CATÁLOGO DE PROYECTOS SHOWCASE
         ├── components/
-        │   ├── ProjectCard.tsx    # Tarjeta de proyecto con enlaces y tags
+        │   ├── ProjectCard.tsx    # Tarjeta de proyecto con estética neumórfica y cristal
         │   └── ProjectGrid.tsx    # Malla de proyectos
         ├── hooks/
         │   └── useProjects.ts     # Petición a /software/projects
@@ -63,8 +64,9 @@ frontend/web/src/app/(software)/
 
 ---
 
-## 4. Componentes de Interfaz
+## 4. Componentes de Interfaz y Estética Neumorphism UI + Glassmorphism
 
+* **Fusión Neumórfica y Vítrea:** Contenedores y tarjetas que combinan sombras cóncavas/convexas suaves con fondos de cristal esmerilado translúcido (`backdrop-blur-md`).
 * **Header Satinado Convexo:** Introducción visual con selector de tema claro/oscuro y chip de titanio grabado.
-* **Barra de Navegación Neumórfica (`CategoryNav`):** Filtros rápidos entre las 7 categorías temáticas.
-* **Buscador en Tiempo Real:** Filtra instantáneamente por texto, autor o etiquetas (`tags`).
+* **Barra de Navegación Neumórfica (`CategoryNav`):** Filtros rápidos interactivos entre las 7 categorías temáticas con pulsación háptica visual.
+* **Buscador en Tiempo Real:** Entrada de texto con profundidad inset neumórfica y filtro instantáneo por etiquetas (`tags`), autor o texto.

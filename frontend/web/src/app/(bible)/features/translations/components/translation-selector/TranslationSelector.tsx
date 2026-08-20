@@ -28,14 +28,13 @@ export function TranslationSelector({
   return (
     <div className="relative inline-block max-w-[120px] xs:max-w-[150px] sm:max-w-[220px]">
       <select
-        value={selectedTranslationId ?? ''}
+        value={selectedTranslationId ?? (translations[0]?.id || 1)}
         onChange={(e) => {
           const val = e.target.value;
-          onSelectTranslation(val ? Number(val) : null);
+          onSelectTranslation(val ? Number(val) : (translations[0]?.id || 1));
         }}
         className="w-full pl-2 sm:pl-3 pr-6 sm:pr-8 py-1 sm:py-1.5 bg-background border border-accents-2 hover:border-accents-4 text-foreground rounded-lg text-[11px] sm:text-xs font-medium focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-all duration-150 cursor-pointer appearance-none select-none truncate"
       >
-        <option value="">Todas las Versiones</option>
         {translations.map((translation) => (
           <option key={translation.id} value={translation.id}>
             {translation.name} ({translation.abbreviation})

@@ -173,6 +173,18 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
           })()}
         </div>
       )}
+
+      {/* Nota de Atribución Legal Oficial */}
+      <div className="pt-8 mt-8 border-t border-accents-2/60 text-center">
+        <p className="text-[11px] text-accents-4 font-mono leading-relaxed max-w-xl mx-auto">
+          {translationAbbr === 'NBLA' && 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.'}
+          {translationAbbr === 'NTV' && 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.'}
+          {translationAbbr === 'NIV' && 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.'}
+          {translationAbbr === 'BHS' && 'Texto Masorético WLC. J. Alan Groves Center / Open Scriptures. Licencia Abierta CC BY 4.0.'}
+          {translationAbbr === 'LXX' && 'Septuaginta Griega (LXX - Swete / Rahlfs). Dominio Público Académico.'}
+          {!['NBLA', 'NTV', 'NIV', 'BHS', 'LXX'].includes(translationAbbr || '') && 'Texto bíblico para propósitos de estudio y análisis exegético.'}
+        </p>
+      </div>
     </div>
   );
 };

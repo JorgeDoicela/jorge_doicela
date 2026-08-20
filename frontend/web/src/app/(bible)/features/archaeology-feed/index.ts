@@ -5,5 +5,3 @@ export * from './components/ArticleReaderModal';
 export * from './components/FeedFilterBar';
 export * from './components/EpigraphyViewer';
 export * from './hooks/useArchaeologyFeed';
-export * from './data/archaeologyArticles';
-export * from './data/ancientManuscripts';

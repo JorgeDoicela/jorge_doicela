@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Verse } from '../entities/verse.entity';
@@ -13,10 +13,10 @@ import {
 } from '../../../common/domain/domain-errors';
 import { BooksService } from '../../books/services/books.service';
 import { TranslationsService } from '../../translations/services/translations.service';
-import { GENESIS_1_2_3_VERSES } from '../data/genesisSeedData';
+import { ApiBibleService } from './api-bible.service';
 
 @Injectable()
-export class VersesService implements OnModuleInit {
+export class VersesService {
   constructor(
     @InjectRepository(Verse, 'bibleConnection')
     private readonly verseRepository: Repository<Verse>,
@@ -26,428 +26,8 @@ export class VersesService implements OnModuleInit {
     private readonly translationRepository: Repository<Translation>,
     private readonly booksService: BooksService,
     private readonly translationsService: TranslationsService,
+    private readonly apiBibleService: ApiBibleService,
   ) {}
-
-  async onModuleInit() {
-    // 1. Sembrar Traducciones principales
-    const translationsData = [
-      {
-        abbreviation: 'RV1960',
-        name: 'Reina-Valera 1960',
-        language: 'Español',
-      },
-      {
-        abbreviation: 'NVI',
-        name: 'Nueva Versión Internacional',
-        language: 'Español',
-      },
-      {
-        abbreviation: 'LBLA',
-        name: 'La Biblia de las Américas',
-        language: 'Español',
-      },
-      { abbreviation: 'KJV', name: 'King James Version', language: 'Inglés' },
-      { abbreviation: 'JER', name: 'Biblia de Jerusalén', language: 'Español' },
-      { abbreviation: 'LXX', name: 'Septuaginta Griega', language: 'Griego' },
-      {
-        abbreviation: 'BHS',
-        name: 'Biblia Hebraica Stuttgartensia (WLC)',
-        language: 'Hebreo/Arameo',
-      },
-    ];
-
-    const translationsMap = new Map<string, Translation>();
-    for (const t of translationsData) {
-      let found = await this.translationRepository.findOneBy({
-        abbreviation: t.abbreviation,
-      });
-      if (!found) {
-        found = await this.translationRepository.save(
-          this.translationRepository.create(t),
-        );
-      }
-      translationsMap.set(t.abbreviation, found);
-    }
-
-    // 2. Sembrar Libros
-    const booksData = [
-      { abbreviation: 'GEN', name: 'Génesis', testament: 'OT' as const },
-      { abbreviation: 'SAL', name: 'Salmos', testament: 'OT' as const },
-      { abbreviation: 'JEREMIAS', name: 'Jeremías', testament: 'OT' as const },
-      { abbreviation: 'DAN', name: 'Daniel', testament: 'OT' as const },
-      { abbreviation: 'ESD', name: 'Esdras', testament: 'OT' as const },
-      { abbreviation: 'JN', name: 'Juan', testament: 'NT' as const },
-      { abbreviation: 'ROM', name: 'Romanos', testament: 'NT' as const },
-    ];
-
-    const booksMap = new Map<string, Book>();
-    for (const b of booksData) {
-      let found = await this.bookRepository.findOneBy({
-        abbreviation: b.abbreviation,
-      });
-      if (!found) {
-        found = await this.bookRepository.save(this.bookRepository.create(b));
-      }
-      booksMap.set(b.abbreviation, found);
-    }
-
-    // 3. Sembrar Versículos en Múltiples Versiones
-    const sampleVerses = [
-      // Génesis 1:1
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 1,
-        text: 'En el principio creó Dios los cielos y la tierra.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'NVI',
-        ch: 1,
-        v: 1,
-        text: 'Dios, en el principio, creó los cielos y la tierra.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'LBLA',
-        ch: 1,
-        v: 1,
-        text: 'En el principio creó Dios los cielos y la tierra.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'KJV',
-        ch: 1,
-        v: 1,
-        text: 'In the beginning God created the heaven and the earth.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'JER',
-        ch: 1,
-        v: 1,
-        text: 'En el principio creó Dios los cielos y la tierra.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'LXX',
-        ch: 1,
-        v: 1,
-        text: 'Ἐν ἀρχῇ ἐποίησεν ὁ θεὸς τὸν οὐρανὸν καὶ τὴν γῆν.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'BHS',
-        ch: 1,
-        v: 1,
-        text: 'בְּרֵאשִׁ֖ית בָּרָ֣א אֱלֹהִ֑ים אֵ֥ת הַשָּׁמַ֖יִם וְאֵ֥ת הָאָֽרֶץ׃',
-      },
-
-      // Génesis 1:2
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 2,
-        text: 'Y la tierra estaba desordenada y vacía, y las tinieblas estaban sobre la faz del abismo, y el Espíritu de Dios se movía sobre la faz de las aguas.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'BHS',
-        ch: 1,
-        v: 2,
-        text: 'וְהָאָ֗רֶץ הָיְתָ֥ה תֹ֙הוּ֙ וָבֹ֔הוּ וְחֹ֖שֶׁךְ עַל־פְּנֵ֣י תְה֑וֹם וְר֣וּחַ אֱלֹהִ֔ים מְרַחֶ֖פֶת עַל־פְּנֵ֥י הַמָּֽיִם׃',
-      },
-
-      // Daniel 2:4 (Porción en Arameo Imperial)
-      {
-        bookAbbr: 'DAN',
-        transAbbr: 'RV1960',
-        ch: 2,
-        v: 4,
-        text: 'Entonces hablaron los caldeos al rey en lengua aramea: Rey, para siempre vive; di el sueño a tus siervos, y te mostraremos la interpretación.',
-      },
-      {
-        bookAbbr: 'DAN',
-        transAbbr: 'NVI',
-        ch: 2,
-        v: 4,
-        text: 'Los astrólogos respondieron al rey en lengua aramea: ¡Que viva el rey para siempre! Cuente Su Majestad el sueño a sus siervos, y nosotros se lo interpretaremos.',
-      },
-      {
-        bookAbbr: 'DAN',
-        transAbbr: 'BHS',
-        ch: 2,
-        v: 4,
-        text: 'וַיְדַבְּר֧וּ הַכַּשְׂדִּ֛ים לַמַּ֖לְכָּא אֲרָמִ֑ית מַלְכָּא֙ לְעָלְמִ֣ין חֱיִ֔י אֱמַ֥ר חֶלְמָ֛א לְעַבְדַיךְ֙ וּפִשְׁרָ֖א נְחַוֵּֽא׃',
-      },
-
-      // Jeremías 10:11 (Versículo en Arameo)
-      {
-        bookAbbr: 'JEREMIAS',
-        transAbbr: 'RV1960',
-        ch: 10,
-        v: 11,
-        text: 'Les diréis así: Los dioses que no hicieron los cielos ni la tierra, perezcan de la tierra y de debajo de estos cielos.',
-      },
-      {
-        bookAbbr: 'JEREMIAS',
-        transAbbr: 'BHS',
-        ch: 10,
-        v: 11,
-        text: 'כִּדְנָה֙ תֵּאמְר֣וּן לְה֔וֹם אֱלָ֣הַיָּ֔א דִּֽי־שְׁמַיָּ֥א וְאַרְקָ֖א לָ֣א עֲבַ֑דוּ יֵאבַ֧דוּ מֵֽאַרְעָ֛א וּמִן־תְּח֥וֹת שְׁמַיָּ֖א אֵֽלֶּה׃',
-      },
-
-      // Salmos 23 completo
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'RV1960',
-        ch: 23,
-        v: 1,
-        text: 'Jehová es mi pastor; nada me faltará.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'RV1960',
-        ch: 23,
-        v: 2,
-        text: 'En lugares de delicados pastos me hará descansar; Junto a aguas de reposo me pastoreará.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'RV1960',
-        ch: 23,
-        v: 3,
-        text: 'Confortará mi alma; Me guiará por sendas de justicia por amor de su nombre.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'RV1960',
-        ch: 23,
-        v: 4,
-        text: 'Aunque ande en valle de sombra de muerte, No temeré mal alguno, porque tú estarás conmigo; Tu vara y tu cayado me infundirán aliento.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'RV1960',
-        ch: 23,
-        v: 5,
-        text: 'Aderezas mesa delante de mí en presencia de mis angustiadores; Unges mi cabeza con aceite; mi copa está rebosando.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'RV1960',
-        ch: 23,
-        v: 6,
-        text: 'Ciertamente el bien y la misericordia me seguirán todos los días de mi vida, Y en la casa de Jehová moraré por largos días.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'NVI',
-        ch: 23,
-        v: 1,
-        text: 'El Señor es mi pastor, nada me falta.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'LBLA',
-        ch: 23,
-        v: 1,
-        text: 'El Señor es mi pastor, nada me faltará.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'KJV',
-        ch: 23,
-        v: 1,
-        text: 'The LORD is my shepherd; I shall not want.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'JER',
-        ch: 23,
-        v: 1,
-        text: 'Yahveh es mi pastor, nada me falta.',
-      },
-      {
-        bookAbbr: 'SAL',
-        transAbbr: 'BHS',
-        ch: 23,
-        v: 1,
-        text: 'מִזְמ֥וֹר לְדָוִ֑ד יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃',
-      },
-
-      // Génesis 1:3-5 (RV1960)
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 3,
-        text: 'Y dijo Dios: Sea la luz; y fue la luz.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 4,
-        text: 'Y vio Dios que la luz era buena; y separó Dios la luz de las tinieblas.',
-      },
-      {
-        bookAbbr: 'GEN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 5,
-        text: 'Y llamó Dios a la luz Día, y a las tinieblas llamó Noche. Y fue la tarde y la mañana un día.',
-      },
-
-      // Juan 1:2-5 (RV1960)
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 2,
-        text: 'Este era en el principio con Dios.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 3,
-        text: 'Todas las cosas por él fueron hechas, y sin él nada de lo que ha sido hecho, fue hecho.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 4,
-        text: 'En él estaba la vida, y la vida era la luz de los hombres.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 5,
-        text: 'La luz en las tinieblas resplandece, y las tinieblas no prevalecieron contra ella.',
-      },
-
-      // Juan 1:1
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'RV1960',
-        ch: 1,
-        v: 1,
-        text: 'En el principio era el Verbo, y el Verbo era con Dios, y el Verbo era Dios.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'NVI',
-        ch: 1,
-        v: 1,
-        text: 'En el principio ya existía el Verbo, y el Verbo estaba con Dios, y el Verbo era Dios.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'LBLA',
-        ch: 1,
-        v: 1,
-        text: 'En el principio existía el Verbo, y el Verbo estaba con Dios, y el Verbo era Dios.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'KJV',
-        ch: 1,
-        v: 1,
-        text: 'In the beginning was the Word, and the Word was with God, and the Word was God.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'JER',
-        ch: 1,
-        v: 1,
-        text: 'En el principio existía la Palabra y la Palabra estaba con Dios, y la Palabra era Dios.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'LXX',
-        ch: 1,
-        v: 1,
-        text: 'Ἐν ἀρχῇ ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν, καὶ θεὸς ἦν ὁ λόγος.',
-      },
-
-      // Juan 3:16
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'RV1960',
-        ch: 3,
-        v: 16,
-        text: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'NVI',
-        ch: 3,
-        v: 16,
-        text: 'Porque tanto amó Dios al mundo que dio a su Hijo unigénito, para que todo el que cree en él no se pierda, sino que tenga vida eterna.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'LBLA',
-        ch: 3,
-        v: 16,
-        text: 'Porque de tal manera amó Dios al mundo, que dio a su Hijo unigénito, para que todo aquel que cree en Él, no se pierda, mas tenga vida eterna.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'KJV',
-        ch: 3,
-        v: 16,
-        text: 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'JER',
-        ch: 3,
-        v: 16,
-        text: 'Porque tanto amó Dios al mundo que dio a su Hijo único, para que todo el que crea en él no perezca, sino que tenga vida eterna.',
-      },
-      {
-        bookAbbr: 'JN',
-        transAbbr: 'LXX',
-        ch: 3,
-        v: 16,
-        text: 'Οὕτως γὰρ ἠγάπησεν ὁ θεὸς τὸν κόσμον, ὥστε τὸν υἱὸν τὸν μονογενῆ ἔδωκεν, ἵνα πᾶς ὁ πιστεύων εἰς αὐτὸν μὴ ἀπόληται ἀλλ’ ἔχῃ ζωὴν αἰώνιον.',
-      },
-    ];
-
-    const allSeedVerses = [...sampleVerses, ...GENESIS_1_2_3_VERSES];
-
-    for (const v of allSeedVerses) {
-      const book = booksMap.get(v.bookAbbr);
-      const translation = translationsMap.get(v.transAbbr);
-      if (book && translation) {
-        const exists = await this.verseRepository.findOne({
-          where: {
-            book: { id: book.id },
-            translation: { id: translation.id },
-            chapter: v.ch,
-            verseNumber: v.v,
-          },
-        });
-        if (!exists) {
-          await this.verseRepository.save(
-            this.verseRepository.create({
-              book,
-              translation,
-              chapter: v.ch,
-              verseNumber: v.v,
-              text: v.text,
-            }),
-          );
-        }
-      }
-    }
-  }
 
   async findAll(): Promise<Verse[]> {
     return this.verseRepository.find({
@@ -486,7 +66,49 @@ export class VersesService implements OnModuleInit {
       .addOrderBy('verse.verseNumber', 'ASC');
 
     query.skip(offset).take(limit);
-    return query.getMany();
+    const existing = await query.getMany();
+
+    if (existing.length > 0 || !bookId || !translationId || !chapter) {
+      return existing;
+    }
+
+    // Si no está en SQLite pero la API está configurada, consultar API.Bible bajo demanda
+    if (this.apiBibleService.isConfigured()) {
+      const book = await this.bookRepository.findOne({ where: { id: bookId } });
+      const translation = await this.translationRepository.findOne({
+        where: { id: translationId },
+      });
+
+      if (book && translation) {
+        const remoteVerses = await this.apiBibleService.fetchChapterVerses(
+          translation.abbreviation,
+          book.abbreviation,
+          chapter,
+        );
+
+        if (remoteVerses && remoteVerses.length > 0) {
+          const entitiesToInsert = remoteVerses.map((v) =>
+            this.verseRepository.create({
+              book,
+              translation,
+              chapter,
+              verseNumber: v.verseNumber,
+              text: v.text,
+            }),
+          );
+
+          try {
+            await this.verseRepository.save(entitiesToInsert);
+          } catch {
+            // Si hubo concurrencia, ignorar error de duplicado
+          }
+
+          return entitiesToInsert;
+        }
+      }
+    }
+
+    return existing;
   }
 
   async findOne(id: number): Promise<Verse> {

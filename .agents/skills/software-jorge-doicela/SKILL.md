@@ -1,6 +1,6 @@
 ---
 name: software-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento del Software Hub (software.jorgedoicela.com), incluyendo el frontend en Next.js (estética neumórfica/satinada, artículos, foros, proyectos), backend en NestJS y la base de datos software.sqlite.
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento del Software Hub (software.jorgedoicela.com), incluyendo el frontend en Next.js (estética Neumorphism UI + Glassmorphism, artículos, foros, proyectos), backend en NestJS y la base de datos software.sqlite.
 ---
 # Directrices de Desarrollo: Plataforma y Hub de Software (software.jorgedoicela.com)
 
@@ -20,7 +20,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(software)/`.
 * **Backend:** Módulo modular aislado `backend/src/software/`.
 * **Persistencia:** Base de datos SQLite física independiente `software.sqlite` conectada mediante `'softwareConnection'` en TypeORM.
-* **Aislamiento de Estilos:** Utiliza exclusivamente su propio archivo `(software)/globals.css` (estética avanzada con paneles satinados cóncavos/convexos y bordes esmerilados).
+* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(software)/globals.css` (estética **Neumorphism UI + Glassmorphism**, combinando paneles táctiles cóncavos/convexos con desenfoques vítreos, reflejos esmerilados y sombras suaves superpuestas).
 * **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/software/`.
 
 ---
@@ -73,11 +73,14 @@ frontend/web/src/app/(software)/
 ## 4. Comandos de Operación
 
 ```bash
-# Agregar librerías al módulo
+# 1. Sembrado transaccional del Software Hub (artículos, foros, proyectos)
+pnpm --filter backend seed:software
+
+# 2. Agregar librerías al módulo
 pnpm --filter backend add <paquete>
 pnpm --filter web add <paquete>
 
-# Chequeo de tipos
+# 3. Chequeo de tipos
 pnpm -r typecheck
 ```
 

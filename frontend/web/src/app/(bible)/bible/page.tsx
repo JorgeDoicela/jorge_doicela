@@ -116,14 +116,14 @@ export default function BibleLandingPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
                                 <div className="p-4 rounded-xl border border-accents-2 bg-accents-1/30 space-y-2">
                                     <div className="flex justify-between font-mono text-[10px] text-accents-5">
-                                        <span>Reina-Valera 1960</span>
-                                        <span>RV1960</span>
+                                        <span>Nueva Biblia de las Américas</span>
+                                        <span>NBLA</span>
                                     </div>
                                     <p className="font-serif text-sm text-foreground/90 leading-relaxed">
                                         <sup className="text-[10px] font-mono text-accents-4 mr-1">1</sup>
-                                        Jehová es mi pastor; nada me faltará.{' '}
+                                        El Señor es mi pastor, nada me faltará.{' '}
                                         <sup className="text-[10px] font-mono text-accents-4 mr-1">2</sup>
-                                        En lugares de delicados pastos me hará descansar; junto a aguas de reposo me pastoreará.
+                                        En lugares de verdes pastos me hace descansar; junto a aguas de reposo me conduce.
                                     </p>
                                 </div>
 
@@ -159,103 +159,130 @@ export default function BibleLandingPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         {/* 1. Lectura Editorial */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-accents-1 border border-accents-2 flex items-center justify-center text-foreground font-mono text-sm">
+                        <Link
+                            href="/bible/study/standard"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-accents-1 border border-accents-2 flex items-center justify-center text-foreground font-mono text-sm group-hover:scale-105 transition-transform">
                                 <BookOpen className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Lectura Editorial Continua</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Lectura en prosa natural con superíndices, alternancia de versículo a versículo, ajuste de tamaño tipográfico y soporte para fuentes Serif y Sans.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 2. Vista Paralela */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/parallel"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <Columns2 className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Vista Paralela & Diff Textual</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Comparación simultánea de hasta 4 traducciones bíblicas alineadas versículo por versículo, con detección visual de variantes léxicas.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 3. Interlineal Inverso */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/interlinear"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <Languages className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Interlineal Morfológico Inverso</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Desglose palabra por palabra en Hebreo, Arameo y Griego Koiné con lemas, códigos Strong, análisis morfológico y pronunciación fonética.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 4. Quiasmos */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/literary"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <ScrollText className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Quiasmos y Análisis Literario</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Visualización de simetrías poéticas concéntricas semíticas (A-B-C-B&apos;-A&apos;) y mapas lógicos de argumentación en las epístolas paulinas.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 5. Léxicos */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/word-study"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <Library className="w-4 h-4" />
                             </div>
-                            <h3 className="text-sm font-bold text-foreground">Diccionarios Léxicos Integrados</h3>
+                            <h3 className="text-sm font-bold text-foreground">Diccionarios Léxicos Strong</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Consulta directa de referencias clásicas: Brown-Driver-Briggs (BDB), Gesenius, Thayer, DTAT, Liddell-Scott-Jones (LSJ) y Robertson.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 6. Búsqueda Morfológica */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/word-study"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <Search className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Búsqueda Gramatical & FTS5</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Motor de búsqueda de texto completo con operadores booleanos sobre SQLite FTS5 y gráfico canónico de densidad léxica en los 66 libros.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 7. Atlas 3D */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/historical-context"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <MapPin className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Atlas Bíblico & Rutas Históricas</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Cartografía georreferenciada con coordenadas WGS84, viajes misioneros del apóstol Pablo, ruta del Éxodo y visualización tridimensional.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 8. Línea de Tiempo */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/historical-context"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <Clock className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Cronología Sincrónica</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Línea de tiempo interactiva que sincroniza los reinos de Judá e Israel con los profetas bíblicos y los imperios contemporáneos.
                             </p>
-                        </div>
+                        </Link>
 
                         {/* 9. Arqueología */}
-                        <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 transition-colors">
-                            <div className="w-9 h-9 rounded-xl bg-teal-400/10 border border-teal-400/20 flex items-center justify-center text-teal-500 font-mono text-sm">
+                        <Link
+                            href="/bible/study/historical-context"
+                            className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs hover:border-foreground/40 hover:-translate-y-0.5 transition-all block cursor-pointer group"
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-teal-400/10 border border-teal-400/20 flex items-center justify-center text-teal-500 font-mono text-sm group-hover:scale-105 transition-transform">
                                 <Landmark className="w-4 h-4" />
                             </div>
                             <h3 className="text-sm font-bold text-foreground">Actualidad Arqueológica</h3>
                             <p className="text-xs text-accents-5 leading-relaxed">
                                 Artículos, hallazgos epigráficos en Tierra Santa, manuscritos de Qumrán y evidencias materiales con filtro apologético e histórico.
                             </p>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -274,13 +301,11 @@ export default function BibleLandingPage() {
 
                     <div className="flex flex-wrap justify-center gap-3">
                         {[
+                            { code: 'NBLA', name: 'Nueva Biblia de las Américas', lang: 'Español (Formal)' },
+                            { code: 'NTV', name: 'Nueva Traducción Viviente', lang: 'Español (Dinámica)' },
+                            { code: 'NIV', name: 'New International Version', lang: 'Inglés (Internacional)' },
                             { code: 'BHS', name: 'Biblia Hebraica Stuttgartensia', lang: 'Hebreo / Arameo' },
                             { code: 'LXX', name: 'Septuaginta Griega', lang: 'Griego Koiné' },
-                            { code: 'RV1960', name: 'Reina-Valera 1960', lang: 'Español' },
-                            { code: 'NVI', name: 'Nueva Versión Internacional', lang: 'Español' },
-                            { code: 'LBLA', name: 'La Biblia de las Américas', lang: 'Español' },
-                            { code: 'JER', name: 'Biblia de Jerusalén', lang: 'Español' },
-                            { code: 'KJV', name: 'King James Version', lang: 'Inglés' },
                         ].map((v) => (
                             <div
                                 key={v.code}
@@ -304,6 +329,7 @@ export default function BibleLandingPage() {
                         </div>
                         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                             Lectura 100% Offline en la App Móvil
+                            (Dios mediante en un futuro)
                         </h2>
                         <p className="text-xs sm:text-sm text-accents-5 leading-relaxed">
                             Desarrollada en <code className="font-mono text-foreground">frontend/mobile</code> para brindar rendimiento fluido a 60 fps con <code className="font-mono text-foreground">FlashList</code>, almacenamiento local cifrado de notas y notificaciones del versículo del día sin depender de conexión a internet.

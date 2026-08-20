@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
-import { ANCIENT_PLACES } from '../data/ancientPlaces';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { AncientPlace, HistoricalEra, MapLayerType, PlaceCategory } from '../types';
+import { fetchAtlasPlaces } from '../services/atlasApiService';
 
 // Límites geográficos del Oriente Próximo y Mediterráneo Bíblico
 export const MAP_BOUNDS = {
@@ -22,12 +22,13 @@ export function projectGeoToCanvas(
   viewHeight = 650,
 ): { x: number; y: number } {
   const x = ((lng - MAP_BOUNDS.minLng) / (MAP_BOUNDS.maxLng - MAP_BOUNDS.minLng)) * viewWidth;
-  // Mercator simplificado para la latitud
   const y = ((MAP_BOUNDS.maxLat - lat) / (MAP_BOUNDS.maxLat - MAP_BOUNDS.minLat)) * viewHeight;
   return { x, y };
 }
 
 export function useAtlasMap() {
+  const [places, setPlaces] = useState<AncientPlace[]>([]);
+  const [loading, setLoading] = useState(false);
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('historical');
   const [activeEra, setActiveEra] = useState<HistoricalEra>('all');
   const [selectedCategory, setSelectedCategory] = useState<PlaceCategory | 'all'>('all');
@@ -40,35 +41,38 @@ export function useAtlasMap() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
+  useEffect(() => {
+    let active = true;
+    const loadPlaces = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchAtlasPlaces(selectedCategory, searchQuery);
+        if (active) setPlaces(data);
+      } catch {
+        if (active) setPlaces([]);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    loadPlaces();
+    return () => {
+      active = false;
+    };
+  }, [selectedCategory, searchQuery]);
+
   // Filtrado de lugares según criterios activos
   const filteredPlaces = useMemo(() => {
-    return ANCIENT_PLACES.filter((place) => {
-      // Filtro por época
-      if (activeEra !== 'all' && !place.era.includes(activeEra)) {
+    return places.filter((place) => {
+      if (activeEra !== 'all' && place.era && !place.era.includes(activeEra)) {
         return false;
-      }
-      // Filtro por categoría
-      if (selectedCategory !== 'all' && place.category !== selectedCategory) {
-        return false;
-      }
-      // Filtro por búsqueda textual
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase().trim();
-        const matchesName = place.name.toLowerCase().includes(query);
-        const matchesModern = place.modernName.toLowerCase().includes(query);
-        const matchesMeaning = place.originalName.meaning.toLowerCase().includes(query);
-        const matchesRef = place.biblicalReferences.some(
-          (r) => r.reference.toLowerCase().includes(query) || r.context.toLowerCase().includes(query),
-        );
-        return matchesName || matchesModern || matchesMeaning || matchesRef;
       }
       return true;
     });
-  }, [activeEra, selectedCategory, searchQuery]);
+  }, [places, activeEra]);
 
   const selectedPlace = useMemo(() => {
-    return ANCIENT_PLACES.find((p) => p.id === selectedPlaceId) || null;
-  }, [selectedPlaceId]);
+    return places.find((p) => p.id === selectedPlaceId) || null;
+  }, [places, selectedPlaceId]);
 
   // Controles de navegación de zoom
   const handleZoomIn = useCallback(() => {
@@ -121,10 +125,33 @@ export function useAtlasMap() {
     setSelectedPlaceId(place.id);
   }, []);
 
+  // Presets de enfoque por regiones bíblicas
+  const focusOnRegion = useCallback((region: 'all' | 'holyland' | 'greece_asia' | 'egypt_sinai') => {
+    switch (region) {
+      case 'holyland':
+        setZoomLevel(2.4);
+        setPanOffset({ x: -660, y: -260 });
+        break;
+      case 'greece_asia':
+        setZoomLevel(1.8);
+        setPanOffset({ x: 40, y: 140 });
+        break;
+      case 'egypt_sinai':
+        setZoomLevel(1.9);
+        setPanOffset({ x: -280, y: -360 });
+        break;
+      case 'all':
+      default:
+        setZoomLevel(1);
+        setPanOffset({ x: 0, y: 0 });
+        break;
+    }
+    setSelectedPlaceId(null);
+  }, []);
+
   // Manejo de gestos táctiles para móviles en el mapa
   const [touchStartDistance, setTouchStartDistance] = useState<number | null>(null);
   const [initialZoom, setInitialZoom] = useState<number>(1);
-  const [initialPan, setInitialPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const handleZoomDelta = useCallback((delta: number) => {
     setZoomLevel((prev) => {
@@ -147,7 +174,6 @@ export function useAtlasMap() {
         );
         setTouchStartDistance(dist);
         setInitialZoom(zoomLevel);
-        setInitialPan({ ...panOffset });
       }
     },
     [panOffset, zoomLevel],
@@ -179,6 +205,7 @@ export function useAtlasMap() {
   }, []);
 
   return {
+    loading,
     activeLayer,
     setActiveLayer,
     activeEra,
@@ -191,7 +218,7 @@ export function useAtlasMap() {
     setSelectedPlaceId,
     selectedPlace,
     filteredPlaces,
-    allPlaces: ANCIENT_PLACES,
+    allPlaces: places,
     zoomLevel,
     panOffset,
     isDragging,
@@ -206,5 +233,6 @@ export function useAtlasMap() {
     handleTouchMove,
     handleTouchEnd,
     focusOnPlace,
+    focusOnRegion,
   };
 }

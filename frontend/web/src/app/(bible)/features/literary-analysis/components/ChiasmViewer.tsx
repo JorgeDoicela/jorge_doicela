@@ -6,14 +6,26 @@ import { POETIC_STRUCTURES_DATABASE } from '../data/poeticStructuresData';
 
 export const ChiasmViewer: React.FC = () => {
   const [selectedStructureId, setSelectedStructureId] = useState<string>(
-    POETIC_STRUCTURES_DATABASE[0].id,
+    POETIC_STRUCTURES_DATABASE[0]?.id || '',
   );
   const [hoveredColonId, setHoveredColonId] = useState<string | null>(null);
   const [activeColon, setActiveColon] = useState<PoeticColon | null>(null);
 
   const currentStructure =
     POETIC_STRUCTURES_DATABASE.find((s) => s.id === selectedStructureId) ||
-    POETIC_STRUCTURES_DATABASE[0];
+    POETIC_STRUCTURES_DATABASE[0] ||
+    null;
+
+  if (!currentStructure) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
+        <div className="text-sm font-semibold text-foreground">Visualizador de Quiasmos y Estructuras Poéticas</div>
+        <p className="text-xs text-accents-4 max-w-md mx-auto">
+          Módulo de análisis de paralelismos semánticos y simetrías concéntricas del texto bíblico.
+        </p>
+      </div>
+    );
+  }
 
   const getIndentPadding = (label: string, isCenter?: boolean) => {
     if (isCenter) return 'pl-10 sm:pl-16 border-l-4 border-amber-500 bg-amber-500/10';

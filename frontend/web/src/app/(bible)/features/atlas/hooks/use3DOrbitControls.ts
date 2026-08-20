@@ -6,23 +6,23 @@ import { AncientStructureId, AncientStructure3D, StructureHotspot } from '../typ
 
 export function use3DOrbitControls() {
   const [selectedStructureId, setSelectedStructureId] = useState<AncientStructureId>('tabernacle');
-  const [yaw, setYaw] = useState<number>(35); // Ángulo horizontal (grados)
-  const [pitch, setPitch] = useState<number>(25); // Ángulo vertical (grados)
+  const [yaw, setYaw] = useState<number>(35);
+  const [pitch, setPitch] = useState<number>(25);
   const [zoom, setZoom] = useState<number>(1);
   const [isCrossSection, setIsCrossSection] = useState<boolean>(false);
   const [autoRotate, setAutoRotate] = useState<boolean>(false);
   const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(null);
 
-  // Arrastre con mouse/touch
   const [isOrbiting, setIsOrbiting] = useState<boolean>(false);
   const [lastMousePos, setLastMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const activeStructure: AncientStructure3D = useMemo(() => {
-    return ANCIENT_STRUCTURES_3D.find((s) => s.id === selectedStructureId) || ANCIENT_STRUCTURES_3D[0];
+  const activeStructure: AncientStructure3D | null = useMemo(() => {
+    if (ANCIENT_STRUCTURES_3D.length === 0) return null;
+    return ANCIENT_STRUCTURES_3D.find((s: AncientStructure3D) => s.id === selectedStructureId) || ANCIENT_STRUCTURES_3D[0] || null;
   }, [selectedStructureId]);
 
   const activeHotspot: StructureHotspot | null = useMemo(() => {
-    if (!selectedHotspotId) return null;
+    if (!selectedHotspotId || !activeStructure) return null;
     return activeStructure.hotspots.find((h) => h.id === selectedHotspotId) || null;
   }, [activeStructure, selectedHotspotId]);
 

@@ -10,7 +10,7 @@ import { PAULINE_DISCOURSE_DATABASE } from '../data/paulineDiscourseData';
 
 export const PaulineDiscourseViewer: React.FC = () => {
   const [selectedPassageId, setSelectedPassageId] = useState<string>(
-    PAULINE_DISCOURSE_DATABASE[0].id,
+    PAULINE_DISCOURSE_DATABASE[0]?.id || '',
   );
   const [activeCategoryFilter, setActiveCategoryFilter] =
     useState<ConjunctionCategory | 'all'>('all');
@@ -20,7 +20,19 @@ export const PaulineDiscourseViewer: React.FC = () => {
 
   const currentPassage =
     PAULINE_DISCOURSE_DATABASE.find((p) => p.id === selectedPassageId) ||
-    PAULINE_DISCOURSE_DATABASE[0];
+    PAULINE_DISCOURSE_DATABASE[0] ||
+    null;
+
+  if (!currentPassage) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
+        <div className="text-sm font-semibold text-foreground">Análisis de Discurso y Sintaxis Paulina</div>
+        <p className="text-xs text-accents-4 max-w-md mx-auto">
+          Módulo de segmentación proposicional y conectores lógicos del Corpus Paulino.
+        </p>
+      </div>
+    );
+  }
 
   const getConjunctionBadgeStyle = (category?: ConjunctionCategory) => {
     switch (category) {

@@ -1,0 +1,3383 @@
+[
+  {
+    "chapter": 1,
+    "verseNumber": 1,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "בְּרֵאשִׁ֖ית",
+        "consonantsOnly": "בראשית",
+        "transliteration": "bərē’šîṯ",
+        "strongCode": "H7225",
+        "morphologyCode": "HR/Ncfsa",
+        "gloss": "En el principio"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "בָּרָ֣א",
+        "consonantsOnly": "ברא",
+        "transliteration": "bārā’",
+        "strongCode": "H1254",
+        "morphologyCode": "HVqp3ms",
+        "gloss": "creó"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֱלֹהִ֑ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "אֵ֥ת",
+        "consonantsOnly": "את",
+        "transliteration": "’ēṯ",
+        "strongCode": "H853",
+        "morphologyCode": "HTo",
+        "gloss": "[objeto directo]"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "הַשָּׁמַ֖יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "וְאֵ֥ת",
+        "consonantsOnly": "ואת",
+        "transliteration": "wə’ēṯ",
+        "strongCode": "H853",
+        "morphologyCode": "HC/To",
+        "gloss": "y [objeto]"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "הָאָֽרֶץ׃",
+        "consonantsOnly": "הארץ",
+        "transliteration": "hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 2,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וְהָאָ֗רֶץ",
+        "consonantsOnly": "והארץ",
+        "transliteration": "wəhā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HC/Td/Ncfsa",
+        "gloss": "Y la tierra"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "הָיְתָ֥ה",
+        "consonantsOnly": "היתה",
+        "transliteration": "hāyəṯâ",
+        "strongCode": "H1961",
+        "morphologyCode": "HVqp3fs",
+        "gloss": "estaba"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "תֹ֙הוּ֙",
+        "consonantsOnly": "תהו",
+        "transliteration": "ṯōhû",
+        "strongCode": "H8414",
+        "morphologyCode": "HNcmsa",
+        "gloss": "sin forma"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "וָבֹ֔הוּ",
+        "consonantsOnly": "ובהו",
+        "transliteration": "wāḇōhû",
+        "strongCode": "H922",
+        "morphologyCode": "HC/Ncmsa",
+        "gloss": "y vacía,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וְחֹ֖שֶׁךְ",
+        "consonantsOnly": "וחשך",
+        "transliteration": "wəḥōšeḵ",
+        "strongCode": "H2822",
+        "morphologyCode": "HC/Ncmsa",
+        "gloss": "y las tinieblas [estaban]"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "עַל־פְּנֵ֣י",
+        "consonantsOnly": "על־פני",
+        "transliteration": "‘al-pənê",
+        "strongCode": "H6440",
+        "morphologyCode": "HR/Ncbpc",
+        "gloss": "sobre la faz de"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "תְה֑וֹם",
+        "consonantsOnly": "תהום",
+        "transliteration": "ṯəhôm",
+        "strongCode": "H8415",
+        "morphologyCode": "HNcfsa",
+        "gloss": "el abismo,"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וְר֣וּחַ",
+        "consonantsOnly": "ורוח",
+        "transliteration": "wərûaḥ",
+        "strongCode": "H7307",
+        "morphologyCode": "HC/Ncbsc",
+        "gloss": "y el Espíritu de"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "מְרַחֶ֖פֶת",
+        "consonantsOnly": "מרחפת",
+        "transliteration": "məraḥep̱eṯ",
+        "strongCode": "H7363",
+        "morphologyCode": "HVprmfsa",
+        "gloss": "se movía / aleteaba"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "עַל־פְּנֵ֥י",
+        "consonantsOnly": "על־פני",
+        "transliteration": "‘al-pənê",
+        "strongCode": "H6440",
+        "morphologyCode": "HR/Ncbpc",
+        "gloss": "sobre la faz de"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "הַמָּֽיִם׃",
+        "consonantsOnly": "המים",
+        "transliteration": "hammāyim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 3,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֥אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "יְהִ֣י",
+        "consonantsOnly": "יהי",
+        "transliteration": "yəhî",
+        "strongCode": "H1961",
+        "morphologyCode": "HVqj3ms",
+        "gloss": "Sea / Haya"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "א֑וֹר",
+        "consonantsOnly": "אור",
+        "transliteration": "’ôr",
+        "strongCode": "H216",
+        "morphologyCode": "HNcmsa",
+        "gloss": "luz;"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וַֽיְהִי־אֽוֹר׃",
+        "consonantsOnly": "ויהי־אור",
+        "transliteration": "wayhî-’ôr",
+        "strongCode": "H216",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la luz."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 4,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיַּ֧רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֛ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־הָא֖וֹר",
+        "consonantsOnly": "את־האור",
+        "transliteration": "’eṯ-hā’ôr",
+        "strongCode": "H216",
+        "morphologyCode": "HTo/Td/Ncmsa",
+        "gloss": "la luz"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "כִּי־ט֑וֹב",
+        "consonantsOnly": "כי־טוב",
+        "transliteration": "kî-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Aamsa",
+        "gloss": "que era buena;"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וַיַּבְדֵּ֣ל",
+        "consonantsOnly": "ויבדל",
+        "transliteration": "wayyaḇdēl",
+        "strongCode": "H914",
+        "morphologyCode": "HC/Vhw3ms",
+        "gloss": "y separó"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "בֵּ֥ין",
+        "consonantsOnly": "בין",
+        "transliteration": "bên",
+        "strongCode": "H996",
+        "morphologyCode": "HR",
+        "gloss": "entre"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "הָא֖וֹר",
+        "consonantsOnly": "האור",
+        "transliteration": "hā’ôr",
+        "strongCode": "H216",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "la luz"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וּבֵ֥ין",
+        "consonantsOnly": "ובין",
+        "transliteration": "ûḇên",
+        "strongCode": "H996",
+        "morphologyCode": "HC/R",
+        "gloss": "y entre"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "הַחֹֽשֶׁךְ׃",
+        "consonantsOnly": "החשך",
+        "transliteration": "haḥōšeḵ",
+        "strongCode": "H2822",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "las tinieblas."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 5,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיִּקְרָ֨א",
+        "consonantsOnly": "ויקרא",
+        "transliteration": "wayyiqrā’",
+        "strongCode": "H7121",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y llamó"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֤ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "לָאוֹר֙",
+        "consonantsOnly": "לאור",
+        "transliteration": "lā’ôr",
+        "strongCode": "H216",
+        "morphologyCode": "HRd/Ncmsa",
+        "gloss": "a la luz"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "י֔וֹם",
+        "consonantsOnly": "יום",
+        "transliteration": "yôm",
+        "strongCode": "H3117",
+        "morphologyCode": "HNcmsa",
+        "gloss": "Día,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וְלַחֹ֖שֶׁךְ",
+        "consonantsOnly": "ולחשך",
+        "transliteration": "wəlaḥōšeḵ",
+        "strongCode": "H2822",
+        "morphologyCode": "HC/Rd/Ncmsa",
+        "gloss": "y a las tinieblas"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "קָ֣רָא",
+        "consonantsOnly": "קרא",
+        "transliteration": "qārā’",
+        "strongCode": "H7121",
+        "morphologyCode": "HVqp3ms",
+        "gloss": "llamó"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "לָ֑יְלָה",
+        "consonantsOnly": "לילה",
+        "transliteration": "lāyəlâ",
+        "strongCode": "H3915",
+        "morphologyCode": "HNcmsa",
+        "gloss": "Noche."
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וַֽיְהִי־עֶ֥רֶב",
+        "consonantsOnly": "ויהי־ערב",
+        "transliteration": "wayhî-‘ereḇ",
+        "strongCode": "H6153",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "Y fue la tarde"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וַֽיְהִי־בֹ֖קֶר",
+        "consonantsOnly": "ויהי־בקר",
+        "transliteration": "wayhî-ḇōqer",
+        "strongCode": "H1242",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la mañana"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "י֥וֹם אֶחָֽד׃",
+        "consonantsOnly": "יום אחד",
+        "transliteration": "yôm ’eḥāḏ",
+        "strongCode": "H259",
+        "morphologyCode": "HNcmsa/Acmsa",
+        "gloss": "un día (día primero)."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 6,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "יְהִ֥י",
+        "consonantsOnly": "יהי",
+        "transliteration": "yəhî",
+        "strongCode": "H1961",
+        "morphologyCode": "HVqj3ms",
+        "gloss": "Haya"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "רָקִ֖יעַ",
+        "consonantsOnly": "רקיע",
+        "transliteration": "rāqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HNcmsa",
+        "gloss": "expansión / firmamento"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "בְּת֣וֹךְ",
+        "consonantsOnly": "בתוך",
+        "transliteration": "bəṯôḵ",
+        "strongCode": "H8432",
+        "morphologyCode": "HR/Ncmsc",
+        "gloss": "en medio de"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "הַמָּ֑יִם",
+        "consonantsOnly": "המים",
+        "transliteration": "hammāyim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas,"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "וִיהִ֣י",
+        "consonantsOnly": "ויהי",
+        "transliteration": "wîhî",
+        "strongCode": "H1961",
+        "morphologyCode": "HC/Vqj3ms",
+        "gloss": "y sea"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "מַבְדִּ֔יל",
+        "consonantsOnly": "מבדיל",
+        "transliteration": "maḇdîl",
+        "strongCode": "H914",
+        "morphologyCode": "HVhrmsa",
+        "gloss": "separación"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "בֵּ֥ין",
+        "consonantsOnly": "בין",
+        "transliteration": "bên",
+        "strongCode": "H996",
+        "morphologyCode": "HR",
+        "gloss": "entre"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "מַ֖יִם",
+        "consonantsOnly": "מים",
+        "transliteration": "mayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HNcmpa",
+        "gloss": "aguas"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "לָמָֽיִם׃",
+        "consonantsOnly": "למים",
+        "transliteration": "lāmāyim",
+        "strongCode": "H4325",
+        "morphologyCode": "HRd/Ncmpa",
+        "gloss": "de aguas."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 7,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיַּ֣עַשׂ",
+        "consonantsOnly": "ויעש",
+        "transliteration": "wayya‘aś",
+        "strongCode": "H6213",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "E hizo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִים֮",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־הָרָקִיעַ֒",
+        "consonantsOnly": "את־הרקיע",
+        "transliteration": "’eṯ-hārāqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HTo/Td/Ncmsa",
+        "gloss": "la expansión,"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "וַיַּבְדֵּ֗ל",
+        "consonantsOnly": "ויבדל",
+        "transliteration": "wayyaḇdēl",
+        "strongCode": "H914",
+        "morphologyCode": "HC/Vhw3ms",
+        "gloss": "y separó"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "בֵּ֤ין",
+        "consonantsOnly": "בין",
+        "transliteration": "bên",
+        "strongCode": "H996",
+        "morphologyCode": "HR",
+        "gloss": "entre"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "הַמַּ֙יִם֙",
+        "consonantsOnly": "המים",
+        "transliteration": "hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "אֲשֶׁר֙",
+        "consonantsOnly": "אשר",
+        "transliteration": "’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTr",
+        "gloss": "que [estaban]"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "מִתַּ֣חַת",
+        "consonantsOnly": "מתחת",
+        "transliteration": "mittaḥaṯ",
+        "strongCode": "H8478",
+        "morphologyCode": "HR/R",
+        "gloss": "debajo de"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "לָרָקִ֔יעַ",
+        "consonantsOnly": "לרקיע",
+        "transliteration": "lārāqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HRd/Ncmsa",
+        "gloss": "la expansión,"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וּבֵ֣ין",
+        "consonantsOnly": "ובין",
+        "transliteration": "ûḇên",
+        "strongCode": "H996",
+        "morphologyCode": "HC/R",
+        "gloss": "y entre"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "הַמַּ֔יִם",
+        "consonantsOnly": "המים",
+        "transliteration": "hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "אֲשֶׁ֖ר",
+        "consonantsOnly": "אשר",
+        "transliteration": "’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTr",
+        "gloss": "que [estaban]"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "מֵעַ֣ל",
+        "consonantsOnly": "מעל",
+        "transliteration": "mē‘al",
+        "strongCode": "H5921",
+        "morphologyCode": "HR/R",
+        "gloss": "sobre"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "לָרָקִ֑יעַ",
+        "consonantsOnly": "לרקיע",
+        "transliteration": "lārāqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HRd/Ncmsa",
+        "gloss": "la expansión."
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "וַֽיְהִי־כֵֽן׃",
+        "consonantsOnly": "ויהי־כן",
+        "transliteration": "wayhî-ḵēn",
+        "strongCode": "H3651",
+        "morphologyCode": "HC/Vqw3ms-D",
+        "gloss": "Y fue así."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 8,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיִּקְרָ֧א",
+        "consonantsOnly": "ויקרא",
+        "transliteration": "wayyiqrā’",
+        "strongCode": "H7121",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y llamó"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֛ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "לָֽרָקִ֖יעַ",
+        "consonantsOnly": "לרקיע",
+        "transliteration": "lārāqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HRd/Ncmsa",
+        "gloss": "a la expansión"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "שָׁמָ֑יִם",
+        "consonantsOnly": "שמים",
+        "transliteration": "šāmāyim",
+        "strongCode": "H8064",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Cielos."
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וַֽיְהִי־עֶ֥רֶב",
+        "consonantsOnly": "ויהי־ערב",
+        "transliteration": "wayhî-‘ereḇ",
+        "strongCode": "H6153",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "Y fue la tarde"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "וַֽיְהִי־בֹ֖קֶר",
+        "consonantsOnly": "ויהי־בקר",
+        "transliteration": "wayhî-ḇōqer",
+        "strongCode": "H1242",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la mañana"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "י֥וֹם שֵׁנִֽי׃",
+        "consonantsOnly": "יום שני",
+        "transliteration": "yôm šēnî",
+        "strongCode": "H8145",
+        "morphologyCode": "HNcmsa/Aomsa",
+        "gloss": "el día segundo."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 9,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֗ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "יִקָּו֨וּ",
+        "consonantsOnly": "יקוו",
+        "transliteration": "yiqqāwû",
+        "strongCode": "H6960",
+        "morphologyCode": "HVNi3mp",
+        "gloss": "Júntense"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הַמַּ֜יִם",
+        "consonantsOnly": "המים",
+        "transliteration": "hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "מִתַּ֤חַת",
+        "consonantsOnly": "מתחת",
+        "transliteration": "mittaḥaṯ",
+        "strongCode": "H8478",
+        "morphologyCode": "HR/R",
+        "gloss": "debajo de"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "הַשָּׁמַ֙יִם֙",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "אֶל־מָק֣וֹם",
+        "consonantsOnly": "אל־מקום",
+        "transliteration": "’el-māqôm",
+        "strongCode": "H4725",
+        "morphologyCode": "HR/Ncmsa",
+        "gloss": "en un lugar"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "אֶחָ֔ד",
+        "consonantsOnly": "אחד",
+        "transliteration": "’eḥāḏ",
+        "strongCode": "H259",
+        "morphologyCode": "HAcmsa",
+        "gloss": "uno / solo,"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וְתֵרָאֶ֖ה",
+        "consonantsOnly": "ותראה",
+        "transliteration": "wəṯērā’eh",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/VNi3fs",
+        "gloss": "y descúbrase / aparezca"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "הַיַּבָּשָׁ֑ה",
+        "consonantsOnly": "היבשה",
+        "transliteration": "hayyabbāšâ",
+        "strongCode": "H3004",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "lo seco / la tierra seca."
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "וַֽיְהִי־כֵֽן׃",
+        "consonantsOnly": "ויהי־כן",
+        "transliteration": "wayhî-ḵēn",
+        "strongCode": "H3651",
+        "morphologyCode": "HC/Vqw3ms-D",
+        "gloss": "Y fue así."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 10,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיִּקְרָ֨א",
+        "consonantsOnly": "ויקרא",
+        "transliteration": "wayyiqrā’",
+        "strongCode": "H7121",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y llamó"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֤ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "לַיַּבָּשָׁה֙",
+        "consonantsOnly": "ליבשה",
+        "transliteration": "layyabbāšâ",
+        "strongCode": "H3004",
+        "morphologyCode": "HRd/Ncfsa",
+        "gloss": "a lo seco"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "אֶ֔רֶץ",
+        "consonantsOnly": "ארץ",
+        "transliteration": "’ereṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HNcfsa",
+        "gloss": "Tierra,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וּלְמִקְוֵ֥ה",
+        "consonantsOnly": "ולמקוה",
+        "transliteration": "ûləmiqwēh",
+        "strongCode": "H4723",
+        "morphologyCode": "HC/Rd/Ncmsc",
+        "gloss": "y a la reunión de"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "הַמַּ֖יִם",
+        "consonantsOnly": "המים",
+        "transliteration": "hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "קָרָ֣א",
+        "consonantsOnly": "קרא",
+        "transliteration": "qārā’",
+        "strongCode": "H7121",
+        "morphologyCode": "HVqp3ms",
+        "gloss": "llamó"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "יַמִּ֑ים",
+        "consonantsOnly": "ימים",
+        "transliteration": "yammîm",
+        "strongCode": "H3220",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Mares."
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וַיַּ֥רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "כִּי־טֽוֹב׃",
+        "consonantsOnly": "כי־טוב",
+        "transliteration": "kî-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Aamsa",
+        "gloss": "que era bueno."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 11,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֗ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "תַּֽדְשֵׁ֤א",
+        "consonantsOnly": "תדשא",
+        "transliteration": "taḏšē’",
+        "strongCode": "H1876",
+        "morphologyCode": "HVhj3fs",
+        "gloss": "Produzca / Brote"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הָאָ֙רֶץ֙",
+        "consonantsOnly": "הארץ",
+        "transliteration": "hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "דֶּ֔שֶׁא",
+        "consonantsOnly": "דשא",
+        "transliteration": "deše’",
+        "strongCode": "H1877",
+        "morphologyCode": "HNcmsa",
+        "gloss": "hierba verde,"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "עֵ֚שֶׂב",
+        "consonantsOnly": "עשב",
+        "transliteration": "‘ēśeḇ",
+        "strongCode": "H6212",
+        "morphologyCode": "HNcmsa",
+        "gloss": "hierba que"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "מַזְרִ֣יעַ",
+        "consonantsOnly": "מזריע",
+        "transliteration": "mazrîa‘",
+        "strongCode": "H2232",
+        "morphologyCode": "HVhrmsa",
+        "gloss": "dé / produzca"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "זֶ֔רַע",
+        "consonantsOnly": "זרע",
+        "transliteration": "zera‘",
+        "strongCode": "H2233",
+        "morphologyCode": "HNcmsa",
+        "gloss": "semilla;"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "עֵ֣ץ",
+        "consonantsOnly": "עץ",
+        "transliteration": "‘ēṣ",
+        "strongCode": "H6086",
+        "morphologyCode": "HNcmsc",
+        "gloss": "árbol"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "פְּרִ֞י",
+        "consonantsOnly": "פרי",
+        "transliteration": "pərî",
+        "strongCode": "H6529",
+        "morphologyCode": "HNcmsa",
+        "gloss": "de fruto"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "עֹ֤שֶׂה",
+        "consonantsOnly": "עשה",
+        "transliteration": "‘ōśeh",
+        "strongCode": "H6213",
+        "morphologyCode": "HVqrmsa",
+        "gloss": "que dé"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "פְּרִי֙",
+        "consonantsOnly": "פרי",
+        "transliteration": "pərî",
+        "strongCode": "H6529",
+        "morphologyCode": "HNcmsa",
+        "gloss": "fruto"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "לְמִינ֔וֹ",
+        "consonantsOnly": "למינו",
+        "transliteration": "ləmînô",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3ms",
+        "gloss": "según su género / especie,"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "אֲשֶׁ֥ר",
+        "consonantsOnly": "אשר",
+        "transliteration": "’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTr",
+        "gloss": "cuya"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "זַרְעוֹ־ב֖וֹ",
+        "consonantsOnly": "זרעו־בו",
+        "transliteration": "zar‘ô-ḇô",
+        "strongCode": "H2233",
+        "morphologyCode": "HNcmsc/Sp3ms-R/Sp3ms",
+        "gloss": "semilla esté en él"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "עַל־הָאָ֑רֶץ",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra."
+      },
+      {
+        "wordOrder": 17,
+        "surfaceText": "וַֽיְהִי־כֵֽן׃",
+        "consonantsOnly": "ויהי־כן",
+        "transliteration": "wayhî-ḵēn",
+        "strongCode": "H3651",
+        "morphologyCode": "HC/Vqw3ms-D",
+        "gloss": "Y fue así."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 12,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַתּוֹצֵ֨א",
+        "consonantsOnly": "ותוצא",
+        "transliteration": "wattôṣē’",
+        "strongCode": "H3318",
+        "morphologyCode": "HC/Vhw3fs",
+        "gloss": "Y produjo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "הָאָ֜רֶץ",
+        "consonantsOnly": "הארץ",
+        "transliteration": "hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "דֶּ֠שֶׁא",
+        "consonantsOnly": "דשא",
+        "transliteration": "deše’",
+        "strongCode": "H1877",
+        "morphologyCode": "HNcmsa",
+        "gloss": "hierba verde,"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "עֵ֣שֶׂב",
+        "consonantsOnly": "עשב",
+        "transliteration": "‘ēśeḇ",
+        "strongCode": "H6212",
+        "morphologyCode": "HNcmsa",
+        "gloss": "hierba que"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "מַזְרִ֤יעַ",
+        "consonantsOnly": "מזריע",
+        "transliteration": "mazrîa‘",
+        "strongCode": "H2232",
+        "morphologyCode": "HVhrmsa",
+        "gloss": "da"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "זֶ֙רַע֙",
+        "consonantsOnly": "זרע",
+        "transliteration": "zera‘",
+        "strongCode": "H2233",
+        "morphologyCode": "HNcmsa",
+        "gloss": "semilla"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "לְמִינֵ֔הוּ",
+        "consonantsOnly": "למינהו",
+        "transliteration": "ləmînēhû",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3ms",
+        "gloss": "según su especie,"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וְעֵ֧ץ",
+        "consonantsOnly": "ועץ",
+        "transliteration": "wə‘ēṣ",
+        "strongCode": "H6086",
+        "morphologyCode": "HC/Ncmsc",
+        "gloss": "y árbol"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "עֹֽשֶׂה־פְּרִ֛י",
+        "consonantsOnly": "עשה־פרי",
+        "transliteration": "‘ōśeh-pərî",
+        "strongCode": "H6529",
+        "morphologyCode": "HVqrmsa-Ncmsa",
+        "gloss": "que da fruto,"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "אֲשֶׁ֥ר",
+        "consonantsOnly": "אשר",
+        "transliteration": "’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTr",
+        "gloss": "cuya"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "זַרְעוֹ־ב֖וֹ",
+        "consonantsOnly": "זרעו־בו",
+        "transliteration": "zar‘ô-ḇô",
+        "strongCode": "H2233",
+        "morphologyCode": "HNcmsc/Sp3ms-R/Sp3ms",
+        "gloss": "semilla está en él"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "לְמִינֵ֑הוּ",
+        "consonantsOnly": "למינהו",
+        "transliteration": "ləmînēhû",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3ms",
+        "gloss": "según su especie."
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "וַיַּ֥רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "כִּי־טֽוֹב׃",
+        "consonantsOnly": "כי־טוב",
+        "transliteration": "kî-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Aamsa",
+        "gloss": "que era bueno."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 13,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַֽיְהִי־עֶ֥רֶב",
+        "consonantsOnly": "ויהי־ערב",
+        "transliteration": "wayhî-‘ereḇ",
+        "strongCode": "H6153",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "Y fue la tarde"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "וַֽיְהִי־בֹ֖קֶר",
+        "consonantsOnly": "ויהי־בקר",
+        "transliteration": "wayhî-ḇōqer",
+        "strongCode": "H1242",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la mañana"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "י֥וֹם שְׁלִישִֽׁי׃",
+        "consonantsOnly": "יום שלישי",
+        "transliteration": "yôm šəlîšî",
+        "strongCode": "H7992",
+        "morphologyCode": "HNcmsa/Aomsa",
+        "gloss": "el día tercero."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 14,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֗ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "יְהִ֤י",
+        "consonantsOnly": "יהי",
+        "transliteration": "yəhî",
+        "strongCode": "H1961",
+        "morphologyCode": "HVqj3ms",
+        "gloss": "Haya"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "מְאֹרֹת֙",
+        "consonantsOnly": "מארת",
+        "transliteration": "mə’ōrōṯ",
+        "strongCode": "H3974",
+        "morphologyCode": "HNcfpa",
+        "gloss": "lumbreras"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "בִּרְקִ֣יעַ",
+        "consonantsOnly": "ברקיע",
+        "transliteration": "birqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HR/Ncmsc",
+        "gloss": "en la expansión de"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "הַשָּׁמַ֔יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "לְהַבְדִּ֕יל",
+        "consonantsOnly": "להבדיל",
+        "transliteration": "ləhaḇdîl",
+        "strongCode": "H914",
+        "morphologyCode": "HR/Vhc",
+        "gloss": "para separar"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "בֵּ֥ין",
+        "consonantsOnly": "בין",
+        "transliteration": "bên",
+        "strongCode": "H996",
+        "morphologyCode": "HR",
+        "gloss": "entre"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "הַיּ֖וֹם",
+        "consonantsOnly": "היום",
+        "transliteration": "hayyôm",
+        "strongCode": "H3117",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "el día"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וּבֵ֣ין",
+        "consonantsOnly": "ובין",
+        "transliteration": "ûḇên",
+        "strongCode": "H996",
+        "morphologyCode": "HC/R",
+        "gloss": "y entre"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "הַלָּ֑יְלָה",
+        "consonantsOnly": "הלילה",
+        "transliteration": "hallayəlâ",
+        "strongCode": "H3915",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "la noche;"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "וְהָי֤וּ",
+        "consonantsOnly": "והיו",
+        "transliteration": "wəhāyû",
+        "strongCode": "H1961",
+        "morphologyCode": "HC/Vqq3cp",
+        "gloss": "y sirvan"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "לְאֹתֹת֙",
+        "consonantsOnly": "לאתת",
+        "transliteration": "lə’ōṯōṯ",
+        "strongCode": "H226",
+        "morphologyCode": "HR/Ncfpa",
+        "gloss": "de señales"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "וּלְמ֣וֹעֲדִ֔ים",
+        "consonantsOnly": "ולמועדים",
+        "transliteration": "ûləmô‘ăḏîm",
+        "strongCode": "H4150",
+        "morphologyCode": "HC/R/Ncmpa",
+        "gloss": "y para estaciones / fiestas,"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "וּלְיָמִ֖ים",
+        "consonantsOnly": "ולימים",
+        "transliteration": "ûləyāmîm",
+        "strongCode": "H3117",
+        "morphologyCode": "HC/R/Ncmpa",
+        "gloss": "para días"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "וְשָׁנִֽים׃",
+        "consonantsOnly": "ושנים",
+        "transliteration": "wəšānîm",
+        "strongCode": "H8141",
+        "morphologyCode": "HC/Ncfpa",
+        "gloss": "y años."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 15,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וְהָי֤וּ",
+        "consonantsOnly": "והיו",
+        "transliteration": "wəhāyû",
+        "strongCode": "H1961",
+        "morphologyCode": "HC/Vqq3cp",
+        "gloss": "Y sean"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "לִמְאוֹרֹת֙",
+        "consonantsOnly": "למאורת",
+        "transliteration": "lim’ôrōṯ",
+        "strongCode": "H3974",
+        "morphologyCode": "HR/Ncfpa",
+        "gloss": "por lumbreras"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "בִּרְקִ֣יעַ",
+        "consonantsOnly": "ברקיע",
+        "transliteration": "birqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HR/Ncmsc",
+        "gloss": "en la expansión de"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הַשָּׁמַ֔יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "לְהָאִ֖יר",
+        "consonantsOnly": "להאיר",
+        "transliteration": "ləhā’îr",
+        "strongCode": "H215",
+        "morphologyCode": "HR/Vhc",
+        "gloss": "para alumbrar"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "עַל־הָאָ֑רֶץ",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra."
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "וַֽיְהִי־כֵֽן׃",
+        "consonantsOnly": "ויהי־כן",
+        "transliteration": "wayhî-ḵēn",
+        "strongCode": "H3651",
+        "morphologyCode": "HC/Vqw3ms-D",
+        "gloss": "Y fue así."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 16,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיַּ֣עַשׂ",
+        "consonantsOnly": "ויעש",
+        "transliteration": "wayya‘aś",
+        "strongCode": "H6213",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "E hizo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־שְׁנֵ֥י",
+        "consonantsOnly": "את־שני",
+        "transliteration": "’eṯ-šənê",
+        "strongCode": "H8147",
+        "morphologyCode": "HTo/Acmdc",
+        "gloss": "las dos"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הַמְּאֹרֹ֖ת",
+        "consonantsOnly": "המארת",
+        "transliteration": "hammə’ōrōṯ",
+        "strongCode": "H3974",
+        "morphologyCode": "HTd/Ncfpa",
+        "gloss": "lumbreras"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "הַגְּדֹלִ֑ים",
+        "consonantsOnly": "הגדלים",
+        "transliteration": "haggəḏōlîm",
+        "strongCode": "H1419",
+        "morphologyCode": "HTd/Aampa",
+        "gloss": "grandes:"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "אֶת־הַמָּא֤וֹר",
+        "consonantsOnly": "את־המאור",
+        "transliteration": "’eṯ-hammā’ôr",
+        "strongCode": "H3974",
+        "morphologyCode": "HTo/Td/Ncmsa",
+        "gloss": "la lumbrera"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "הַגָּדֹל֙",
+        "consonantsOnly": "הגדל",
+        "transliteration": "haggāḏōl",
+        "strongCode": "H1419",
+        "morphologyCode": "HTd/Aamsa",
+        "gloss": "mayor"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "לְמֶמְשֶׁ֣לֶת",
+        "consonantsOnly": "לממשלת",
+        "transliteration": "ləmemšeleṯ",
+        "strongCode": "H4475",
+        "morphologyCode": "HR/Ncfsc",
+        "gloss": "para señorear en"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "הַיּ֔וֹם",
+        "consonantsOnly": "היום",
+        "transliteration": "hayyôm",
+        "strongCode": "H3117",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "el día,"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וְאֶת־הַמָּא֤וֹר",
+        "consonantsOnly": "ואת־המאור",
+        "transliteration": "wə’eṯ-hammā’ôr",
+        "strongCode": "H3974",
+        "morphologyCode": "HC/To/Td/Ncmsa",
+        "gloss": "y la lumbrera"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "הַקָּטֹן֙",
+        "consonantsOnly": "הקטן",
+        "transliteration": "haqqāṭōn",
+        "strongCode": "H6996",
+        "morphologyCode": "HTd/Aamsa",
+        "gloss": "menor"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "לְמֶמְשֶׁ֣לֶת",
+        "consonantsOnly": "לממשלת",
+        "transliteration": "ləmemšeleṯ",
+        "strongCode": "H4475",
+        "morphologyCode": "HR/Ncfsc",
+        "gloss": "para señorear en"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "הַלַּ֔יְלָה",
+        "consonantsOnly": "הלילה",
+        "transliteration": "hallayəlâ",
+        "strongCode": "H3915",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "la noche;"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "וְאֵ֖ת",
+        "consonantsOnly": "ואת",
+        "transliteration": "wə’ēṯ",
+        "strongCode": "H853",
+        "morphologyCode": "HC/To",
+        "gloss": "hizo también"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "הַכּוֹכָבִֽים׃",
+        "consonantsOnly": "הכוכבים",
+        "transliteration": "hakkôḵāḇîm",
+        "strongCode": "H3556",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las estrellas."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 17,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיִּתֵּ֥ן",
+        "consonantsOnly": "ויתן",
+        "transliteration": "wayyittēn",
+        "strongCode": "H5414",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y las puso"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֹתָ֛ם",
+        "consonantsOnly": "אתם",
+        "transliteration": "’ōṯām",
+        "strongCode": "H853",
+        "morphologyCode": "HTo/Sp3mp",
+        "gloss": "a ellas"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "בִּרְקִ֣יעַ",
+        "consonantsOnly": "ברקיע",
+        "transliteration": "birqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HR/Ncmsc",
+        "gloss": "en la expansión de"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "הַשָּׁמָ֑יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmāyim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "לְהָאִ֖יר",
+        "consonantsOnly": "להאיר",
+        "transliteration": "ləhā’îr",
+        "strongCode": "H215",
+        "morphologyCode": "HR/Vhc",
+        "gloss": "para alumbrar"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "עַל־הָאָֽרֶץ׃",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra,"
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 18,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וְלִמְשֹׁל֙",
+        "consonantsOnly": "ולמשל",
+        "transliteration": "wəlimšōl",
+        "strongCode": "H4910",
+        "morphologyCode": "HC/R/Vqc",
+        "gloss": "y para señorear"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "בַּיּ֣וֹם",
+        "consonantsOnly": "ביום",
+        "transliteration": "bayyôm",
+        "strongCode": "H3117",
+        "morphologyCode": "HRd/Ncmsa",
+        "gloss": "en el día"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "וּבַלַּ֔יְלָה",
+        "consonantsOnly": "ובלילה",
+        "transliteration": "ûḇallayəlâ",
+        "strongCode": "H3915",
+        "morphologyCode": "HC/Rd/Ncmsa",
+        "gloss": "y en la noche,"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "וּֽלֲהַבְדִּ֔יל",
+        "consonantsOnly": "ולהבדיל",
+        "transliteration": "ûləhaḇdîl",
+        "strongCode": "H914",
+        "morphologyCode": "HC/R/Vhc",
+        "gloss": "y para separar"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "בֵּ֥ין",
+        "consonantsOnly": "בין",
+        "transliteration": "bên",
+        "strongCode": "H996",
+        "morphologyCode": "HR",
+        "gloss": "entre"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "הָא֖וֹר",
+        "consonantsOnly": "האור",
+        "transliteration": "hā’ôr",
+        "strongCode": "H216",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "la luz"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "וּבֵ֥ין",
+        "consonantsOnly": "ובין",
+        "transliteration": "ûḇên",
+        "strongCode": "H996",
+        "morphologyCode": "HC/R",
+        "gloss": "y entre"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "הַחֹ֑שֶׁךְ",
+        "consonantsOnly": "החשך",
+        "transliteration": "haḥōšeḵ",
+        "strongCode": "H2822",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "las tinieblas."
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וַיַּ֥רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "כִּי־טֽוֹב׃",
+        "consonantsOnly": "כי־טוב",
+        "transliteration": "kî-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Aamsa",
+        "gloss": "que era bueno."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 19,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַֽיְהִי־עֶ֥רֶב",
+        "consonantsOnly": "ויהי־ערב",
+        "transliteration": "wayhî-‘ereḇ",
+        "strongCode": "H6153",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "Y fue la tarde"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "וַֽיְהִי־בֹ֖קֶר",
+        "consonantsOnly": "ויהי־בקר",
+        "transliteration": "wayhî-ḇōqer",
+        "strongCode": "H1242",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la mañana"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "י֥וֹם רְבִיעִֽי׃",
+        "consonantsOnly": "יום רביעי",
+        "transliteration": "yôm rəḇî‘î",
+        "strongCode": "H7243",
+        "morphologyCode": "HNcmsa/Aomsa",
+        "gloss": "el día cuarto."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 20,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "יִשְׁרְצ֣וּ",
+        "consonantsOnly": "ישרצו",
+        "transliteration": "yišrəṣû",
+        "strongCode": "H8317",
+        "morphologyCode": "HVqi3mp",
+        "gloss": "Produzcan en abundancia"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הַמַּ֔יִם",
+        "consonantsOnly": "המים",
+        "transliteration": "hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "שֶׁ֖רֶץ",
+        "consonantsOnly": "שרץ",
+        "transliteration": "šereṣ",
+        "strongCode": "H8318",
+        "morphologyCode": "HNcmsa",
+        "gloss": "seres vivientes / enjambre"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "נֶ֣פֶשׁ",
+        "consonantsOnly": "נפש",
+        "transliteration": "nep̱eš",
+        "strongCode": "H5315",
+        "morphologyCode": "HNcfsa",
+        "gloss": "de alma / vida"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "חַיָּ֑ה",
+        "consonantsOnly": "חיה",
+        "transliteration": "ḥayyâ",
+        "strongCode": "H2416",
+        "morphologyCode": "HAfsa",
+        "gloss": "viviente,"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וְעוֹף֙",
+        "consonantsOnly": "ועוף",
+        "transliteration": "wə‘ôp̱",
+        "strongCode": "H5775",
+        "morphologyCode": "HC/Ncmsa",
+        "gloss": "y aves"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "יְעוֹפֵ֣ף",
+        "consonantsOnly": "יעופף",
+        "transliteration": "yə‘ôp̱ēp̱",
+        "strongCode": "H5774",
+        "morphologyCode": "HVpi3ms",
+        "gloss": "vuelen"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "עַל־הָאָ֔רֶץ",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra,"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "עַל־פְּנֵ֖י",
+        "consonantsOnly": "על־פני",
+        "transliteration": "‘al-pənê",
+        "strongCode": "H6440",
+        "morphologyCode": "HR/Ncbpc",
+        "gloss": "en la abierta"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "רְקִ֥יעַ",
+        "consonantsOnly": "רקיע",
+        "transliteration": "rəqîa‘",
+        "strongCode": "H7549",
+        "morphologyCode": "HNcmsc",
+        "gloss": "expansión de"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "הַשָּׁמָֽיִם׃",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmāyim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 21,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיִּבְרָ֣א",
+        "consonantsOnly": "ויברא",
+        "transliteration": "wayyiḇrā’",
+        "strongCode": "H1254",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y creó"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־הַתַּנִּינִ֖ם",
+        "consonantsOnly": "את־התנינם",
+        "transliteration": "’eṯ-hattannînîm",
+        "strongCode": "H8577",
+        "morphologyCode": "HTo/Td/Ncmpa",
+        "gloss": "los grandes monstruos marinos,"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הַגְּדֹלִ֑ים",
+        "consonantsOnly": "הגדלים",
+        "transliteration": "haggəḏōlîm",
+        "strongCode": "H1419",
+        "morphologyCode": "HTd/Aampa",
+        "gloss": "grandes,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וְאֵ֣ת",
+        "consonantsOnly": "ואת",
+        "transliteration": "wə’ēṯ",
+        "strongCode": "H853",
+        "morphologyCode": "HC/To",
+        "gloss": "y todo"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "כָּל־נֶ֣פֶשׁ",
+        "consonantsOnly": "כל־נפש",
+        "transliteration": "kāl-nep̱eš",
+        "strongCode": "H5315",
+        "morphologyCode": "HNcmsc/Ncfsa",
+        "gloss": "ser"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "הַֽחַיָּ֣ה",
+        "consonantsOnly": "החיה",
+        "transliteration": "haḥayyâ",
+        "strongCode": "H2416",
+        "morphologyCode": "HTd/Afsa",
+        "gloss": "viviente"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "הָֽרֹמֶ֡שֶׂת",
+        "consonantsOnly": "הרמשת",
+        "transliteration": "hārōmeśeṯ",
+        "strongCode": "H7430",
+        "morphologyCode": "HTd/Vqrfsa",
+        "gloss": "que se mueve,"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "אֲשֶׁר֩",
+        "consonantsOnly": "אשר",
+        "transliteration": "’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTr",
+        "gloss": "que"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "שָׁרְצ֨וּ",
+        "consonantsOnly": "שרצו",
+        "transliteration": "šārəṣû",
+        "strongCode": "H8317",
+        "morphologyCode": "HVqp3cp",
+        "gloss": "produjeron en abundancia"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "הַמַּ֜יִם",
+        "consonantsOnly": "המים",
+        "transliteration": "hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "לְמִֽינֵהֶ֗ם",
+        "consonantsOnly": "למינהם",
+        "transliteration": "ləmînēhem",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3mp",
+        "gloss": "según su especie,"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "וְאֵ֨ת",
+        "consonantsOnly": "ואת",
+        "transliteration": "wə’ēṯ",
+        "strongCode": "H853",
+        "morphologyCode": "HC/To",
+        "gloss": "y toda"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "כָּל־ע֤וֹף",
+        "consonantsOnly": "כל־עוף",
+        "transliteration": "kāl-‘ôp̱",
+        "strongCode": "H5775",
+        "morphologyCode": "HNcmsc/Ncmsa",
+        "gloss": "ave"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "כָּנָף֙",
+        "consonantsOnly": "כנף",
+        "transliteration": "kānāp̱",
+        "strongCode": "H3671",
+        "morphologyCode": "HNcfsa",
+        "gloss": "alada"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "לְמִינֵ֔הוּ",
+        "consonantsOnly": "למינהו",
+        "transliteration": "ləmînēhû",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3ms",
+        "gloss": "según su especie."
+      },
+      {
+        "wordOrder": 17,
+        "surfaceText": "וַיַּ֥רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 18,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 19,
+        "surfaceText": "כִּי־טֽוֹב׃",
+        "consonantsOnly": "כי־טוב",
+        "transliteration": "kî-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Aamsa",
+        "gloss": "que era bueno."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 22,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיְבָ֧רֶךְ",
+        "consonantsOnly": "ויברך",
+        "transliteration": "wayḇāreḵ",
+        "strongCode": "H1288",
+        "morphologyCode": "HC/Vpw3ms",
+        "gloss": "Y los bendijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֹתָ֛ם",
+        "consonantsOnly": "אתם",
+        "transliteration": "’ōṯām",
+        "strongCode": "H853",
+        "morphologyCode": "HTo/Sp3mp",
+        "gloss": "a ellos"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios,"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "לֵאמֹ֑ר",
+        "consonantsOnly": "לאמר",
+        "transliteration": "lē’mōr",
+        "strongCode": "H559",
+        "morphologyCode": "HR/Vqc",
+        "gloss": "diciendo:"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "פְּר֣וּ",
+        "consonantsOnly": "פרו",
+        "transliteration": "pərû",
+        "strongCode": "H6509",
+        "morphologyCode": "HVqv2mp",
+        "gloss": "Fructificad"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "וּרְב֗וּ",
+        "consonantsOnly": "ורבו",
+        "transliteration": "ûrḇû",
+        "strongCode": "H7235",
+        "morphologyCode": "HC/Vqv2mp",
+        "gloss": "y multiplicaos,"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "וּמִלְא֤וּ",
+        "consonantsOnly": "ומלאו",
+        "transliteration": "ûmil’û",
+        "strongCode": "H4390",
+        "morphologyCode": "HC/Vqv2mp",
+        "gloss": "y llenad"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "אֶת־הַמַּ֙יִם֙",
+        "consonantsOnly": "את־המים",
+        "transliteration": "’eṯ-hammayim",
+        "strongCode": "H4325",
+        "morphologyCode": "HTo/Td/Ncmpa",
+        "gloss": "las aguas"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "בַּיַּמִּ֔ים",
+        "consonantsOnly": "בימים",
+        "transliteration": "bayyammîm",
+        "strongCode": "H3220",
+        "morphologyCode": "HRd/Ncmpa",
+        "gloss": "en los mares,"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וְהָע֖וֹף",
+        "consonantsOnly": "והעוף",
+        "transliteration": "wəhā‘ôp̱",
+        "strongCode": "H5775",
+        "morphologyCode": "HC/Td/Ncmsa",
+        "gloss": "y las aves"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "יִ֥רֶב",
+        "consonantsOnly": "ירב",
+        "transliteration": "yireḇ",
+        "strongCode": "H7235",
+        "morphologyCode": "HVqj3ms",
+        "gloss": "se multipliquen"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "בָּאָֽרֶץ׃",
+        "consonantsOnly": "בארץ",
+        "transliteration": "bā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HRd/Ncfsa",
+        "gloss": "en la tierra."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 23,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַֽיְהִי־עֶ֥רֶב",
+        "consonantsOnly": "ויהי־ערב",
+        "transliteration": "wayhî-‘ereḇ",
+        "strongCode": "H6153",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "Y fue la tarde"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "וַֽיְהִי־בֹ֖קֶר",
+        "consonantsOnly": "ויהי־בקר",
+        "transliteration": "wayhî-ḇōqer",
+        "strongCode": "H1242",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la mañana"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "י֥וֹם חֲמִישִֽׁי׃",
+        "consonantsOnly": "יום חמישי",
+        "transliteration": "yôm ḥămîšî",
+        "strongCode": "H2549",
+        "morphologyCode": "HNcmsa/Aomsa",
+        "gloss": "el día quinto."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 24,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֗ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "תּוֹצֵ֨א",
+        "consonantsOnly": "תוצא",
+        "transliteration": "tôṣē’",
+        "strongCode": "H3318",
+        "morphologyCode": "HVhj3fs",
+        "gloss": "Produzca"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הָאָ֜רֶץ",
+        "consonantsOnly": "הארץ",
+        "transliteration": "hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "נֶ֤פֶשׁ",
+        "consonantsOnly": "נפש",
+        "transliteration": "nep̱eš",
+        "strongCode": "H5315",
+        "morphologyCode": "HNcfsa",
+        "gloss": "seres"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "חַיָּה֙",
+        "consonantsOnly": "חיה",
+        "transliteration": "ḥayyâ",
+        "strongCode": "H2416",
+        "morphologyCode": "HAfsa",
+        "gloss": "vivientes"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "לְמִינָ֔הּ",
+        "consonantsOnly": "למינה",
+        "transliteration": "ləmînāh",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3fs",
+        "gloss": "según su especie:"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "בְּהֵמָ֥ה",
+        "consonantsOnly": "בהמה",
+        "transliteration": "bəhēmâ",
+        "strongCode": "H929",
+        "morphologyCode": "HNcfsa",
+        "gloss": "bestias,"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וָרֶ֛מֶשׂ",
+        "consonantsOnly": "ורמש",
+        "transliteration": "wāremeś",
+        "strongCode": "H7431",
+        "morphologyCode": "HC/Ncmsa",
+        "gloss": "reptiles / animales que se arrastran,"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וְחַֽיְתוֹ־אֶ֖רֶץ",
+        "consonantsOnly": "וחיתו־ארץ",
+        "transliteration": "wəḥaytô-’ereṣ",
+        "strongCode": "H2416",
+        "morphologyCode": "HC/Ncfsc-Ncfsa",
+        "gloss": "y animales de la tierra"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "לְמִינָ֑הּ",
+        "consonantsOnly": "למינה",
+        "transliteration": "ləmînāh",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3fs",
+        "gloss": "según su especie."
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "וַֽיְהִי־כֵֽן׃",
+        "consonantsOnly": "ויהי־כן",
+        "transliteration": "wayhî-ḵēn",
+        "strongCode": "H3651",
+        "morphologyCode": "HC/Vqw3ms-D",
+        "gloss": "Y fue así."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 25,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיַּ֣עַשׂ",
+        "consonantsOnly": "ויעש",
+        "transliteration": "wayya‘aś",
+        "strongCode": "H6213",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "E hizo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִים֩",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־חַיַּ֨ת",
+        "consonantsOnly": "את־חית",
+        "transliteration": "’eṯ-ḥayyaṯ",
+        "strongCode": "H2416",
+        "morphologyCode": "HTo/Ncfsc",
+        "gloss": "los animales de"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הָאָ֜רֶץ",
+        "consonantsOnly": "הארץ",
+        "transliteration": "hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "לְמִינָ֗הּ",
+        "consonantsOnly": "למינה",
+        "transliteration": "ləmînāh",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3fs",
+        "gloss": "según su especie,"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "וְאֶת־הַבְּהֵמָה֙",
+        "consonantsOnly": "ואת־הבהמה",
+        "transliteration": "wə’eṯ-habbəhēmâ",
+        "strongCode": "H929",
+        "morphologyCode": "HC/To/Td/Ncfsa",
+        "gloss": "y el ganado"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "לְמִינָ֔הּ",
+        "consonantsOnly": "למינה",
+        "transliteration": "ləmînāh",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3fs",
+        "gloss": "según su especie,"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וְאֵ֛ת",
+        "consonantsOnly": "ואת",
+        "transliteration": "wə’ēṯ",
+        "strongCode": "H853",
+        "morphologyCode": "HC/To",
+        "gloss": "y todo"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "כָּל־רֶ֥מֶשׂ",
+        "consonantsOnly": "כל־רמש",
+        "transliteration": "kāl-remeś",
+        "strongCode": "H7431",
+        "morphologyCode": "HNcmsc/Ncmsa",
+        "gloss": "animal que se arrastra sobre"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "הָֽאֲדָמָ֖ה",
+        "consonantsOnly": "האדמה",
+        "transliteration": "hā’ăḏāmâ",
+        "strongCode": "H127",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "לְמִינֵ֑הוּ",
+        "consonantsOnly": "למינהו",
+        "transliteration": "ləmînēhû",
+        "strongCode": "H4327",
+        "morphologyCode": "HR/Ncmsc/Sp3ms",
+        "gloss": "según su especie."
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "וַיַּ֥רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "כִּי־טֽוֹב׃",
+        "consonantsOnly": "כי־טוב",
+        "transliteration": "kî-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Aamsa",
+        "gloss": "que era bueno."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 26,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֔ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "נַֽעֲשֶׂ֥ה",
+        "consonantsOnly": "נעשה",
+        "transliteration": "na‘ăśeh",
+        "strongCode": "H6213",
+        "morphologyCode": "HVqh1cp",
+        "gloss": "Hagamos"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "אָדָ֛ם",
+        "consonantsOnly": "אדם",
+        "transliteration": "’āḏām",
+        "strongCode": "H120",
+        "morphologyCode": "HNcmsa",
+        "gloss": "al hombre"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "בְּצַלְמֵ֖נוּ",
+        "consonantsOnly": "בצלמנו",
+        "transliteration": "bəṣalmēnû",
+        "strongCode": "H6754",
+        "morphologyCode": "HR/Ncmsc/Sp1cp",
+        "gloss": "a nuestra imagen,"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "כִּדְמוּתֵ֑נוּ",
+        "consonantsOnly": "כדמותנו",
+        "transliteration": "kiḏmûṯēnû",
+        "strongCode": "H1823",
+        "morphologyCode": "HR/Ncfsc/Sp1cp",
+        "gloss": "conforme a nuestra semejanza;"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "וְיִרְדּוּ֩",
+        "consonantsOnly": "וירדו",
+        "transliteration": "wəyirddû",
+        "strongCode": "H7287",
+        "morphologyCode": "HC/Vqj3mp",
+        "gloss": "y señoreen"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "בִדְגַ֨ת",
+        "consonantsOnly": "בדגת",
+        "transliteration": "ḇiḏgaṯ",
+        "strongCode": "H1710",
+        "morphologyCode": "HR/Ncfsc",
+        "gloss": "en los peces de"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "הַיָּ֜ם",
+        "consonantsOnly": "הים",
+        "transliteration": "hayyām",
+        "strongCode": "H3220",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "el mar,"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וּבְע֣וֹף",
+        "consonantsOnly": "ובעוף",
+        "transliteration": "ûḇə‘ôp̱",
+        "strongCode": "H5775",
+        "morphologyCode": "HC/R/Ncmsc",
+        "gloss": "y en las aves de"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "הַשָּׁמַ֗יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos,"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "וּבַבְּהֵמָה֙",
+        "consonantsOnly": "ובבהמה",
+        "transliteration": "ûḇabbəhēmâ",
+        "strongCode": "H929",
+        "morphologyCode": "HC/Rd/Ncfsa",
+        "gloss": "y en las bestias,"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "וּבְכָל־הָאָ֔רֶץ",
+        "consonantsOnly": "ובכל־הארץ",
+        "transliteration": "ûḇəḵāl-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HC/R/Ncmsc/Td/Ncfsa",
+        "gloss": "y en toda la tierra,"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "וּבְכָל־הָרֶ֖מֶשׂ",
+        "consonantsOnly": "ובכל־הרמש",
+        "transliteration": "ûḇəḵāl-hāremeś",
+        "strongCode": "H7431",
+        "morphologyCode": "HC/R/Ncmsc/Td/Ncmsa",
+        "gloss": "y en todo animal"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "הָֽרֹמֵ֥שׂ",
+        "consonantsOnly": "הרמש",
+        "transliteration": "hārōmēś",
+        "strongCode": "H7430",
+        "morphologyCode": "HTd/Vqrmsa",
+        "gloss": "que se arrastra"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "עַל־הָאָֽרֶץ׃",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 27,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיִּבְרָ֨א",
+        "consonantsOnly": "ויברא",
+        "transliteration": "wayyiḇrā’",
+        "strongCode": "H1254",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y creó"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֤ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־הָֽאָדָם֙",
+        "consonantsOnly": "את־האדם",
+        "transliteration": "’eṯ-hā’āḏām",
+        "strongCode": "H120",
+        "morphologyCode": "HTo/Td/Ncmsa",
+        "gloss": "al hombre"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "בְּצַלְמ֔וֹ",
+        "consonantsOnly": "בצלמו",
+        "transliteration": "bəṣalmô",
+        "strongCode": "H6754",
+        "morphologyCode": "HR/Ncmsc/Sp3ms",
+        "gloss": "a su imagen,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "בְּצֶ֥לֶם",
+        "consonantsOnly": "בצלם",
+        "transliteration": "bəṣelem",
+        "strongCode": "H6754",
+        "morphologyCode": "HR/Ncmsc",
+        "gloss": "a imagen de"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "אֱלֹהִ֖ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "בָּרָ֣א",
+        "consonantsOnly": "ברא",
+        "transliteration": "bārā’",
+        "strongCode": "H1254",
+        "morphologyCode": "HVqp3ms",
+        "gloss": "lo creó;"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "אֹת֑וֹ",
+        "consonantsOnly": "אתו",
+        "transliteration": "’ōṯô",
+        "strongCode": "H853",
+        "morphologyCode": "HTo/Sp3ms",
+        "gloss": "a él,"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "זָכָ֥ר",
+        "consonantsOnly": "זכר",
+        "transliteration": "zāḵār",
+        "strongCode": "H2145",
+        "morphologyCode": "HNcmsa",
+        "gloss": "varón"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "וּנְקֵבָ֖ה",
+        "consonantsOnly": "ונקבה",
+        "transliteration": "ûnəqēḇâ",
+        "strongCode": "H5347",
+        "morphologyCode": "HC/Ncfsa",
+        "gloss": "y hembra"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "בָּרָ֥א",
+        "consonantsOnly": "ברא",
+        "transliteration": "bārā’",
+        "strongCode": "H1254",
+        "morphologyCode": "HVqp3ms",
+        "gloss": "los creó"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "אֹתָֽם׃",
+        "consonantsOnly": "אתם",
+        "transliteration": "’ōṯām",
+        "strongCode": "H853",
+        "morphologyCode": "HTo/Sp3mp",
+        "gloss": "a ellos."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 28,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיְבָ֣רֶךְ",
+        "consonantsOnly": "ויברך",
+        "transliteration": "wayḇāreḵ",
+        "strongCode": "H1288",
+        "morphologyCode": "HC/Vpw3ms",
+        "gloss": "Y los bendijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֹתָם֮",
+        "consonantsOnly": "אתם",
+        "transliteration": "’ōṯām",
+        "strongCode": "H853",
+        "morphologyCode": "HTo/Sp3mp",
+        "gloss": "Dios,"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֱלֹהִים֒",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "y les dijo"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "וַיֹּ֨אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "לָהֶ֜ם",
+        "consonantsOnly": "להם",
+        "transliteration": "lāhem",
+        "strongCode": "H3807",
+        "morphologyCode": "HR/Sp3mp",
+        "gloss": "a ellos,"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "אֱלֹהִ֗ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "פְּר֥וּ",
+        "consonantsOnly": "פרו",
+        "transliteration": "pərû",
+        "strongCode": "H6509",
+        "morphologyCode": "HVqv2mp",
+        "gloss": "Fructificad"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וּרְב֛וּ",
+        "consonantsOnly": "ורבו",
+        "transliteration": "ûrḇû",
+        "strongCode": "H7235",
+        "morphologyCode": "HC/Vqv2mp",
+        "gloss": "y multiplicaos;"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "וּמִלְא֥וּ",
+        "consonantsOnly": "ומלאו",
+        "transliteration": "ûmil’û",
+        "strongCode": "H4390",
+        "morphologyCode": "HC/Vqv2mp",
+        "gloss": "llenad"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "אֶת־הָאָ֖רֶץ",
+        "consonantsOnly": "את־הארץ",
+        "transliteration": "’eṯ-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTo/Td/Ncfsa",
+        "gloss": "la tierra"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "וְכִבְשֻׁ֑הָ",
+        "consonantsOnly": "וכבשה",
+        "transliteration": "wəḵiḇšuhā",
+        "strongCode": "H3533",
+        "morphologyCode": "HC/Vqv2mp/Sp3fs",
+        "gloss": "y sojuzgadla,"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "וּרְד֞וּ",
+        "consonantsOnly": "ורדו",
+        "transliteration": "ûrədû",
+        "strongCode": "H7287",
+        "morphologyCode": "HC/Vqv2mp",
+        "gloss": "y señoread"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "בִּדְגַ֤ת",
+        "consonantsOnly": "בדגת",
+        "transliteration": "biḏgaṯ",
+        "strongCode": "H1710",
+        "morphologyCode": "HR/Ncfsc",
+        "gloss": "en los peces de"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "הַיָּם֙",
+        "consonantsOnly": "הים",
+        "transliteration": "hayyām",
+        "strongCode": "H3220",
+        "morphologyCode": "HTd/Ncmsa",
+        "gloss": "el mar,"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "וּבְע֣וֹף",
+        "consonantsOnly": "ובעוף",
+        "transliteration": "ûḇə‘ôp̱",
+        "strongCode": "H5775",
+        "morphologyCode": "HC/R/Ncmsc",
+        "gloss": "y en las aves de"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "הַשָּׁמַ֔יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos,"
+      },
+      {
+        "wordOrder": 17,
+        "surfaceText": "וּבְכָל־חַיָּ֖ה",
+        "consonantsOnly": "ובכל־חיה",
+        "transliteration": "ûḇəḵāl-ḥayyâ",
+        "strongCode": "H2416",
+        "morphologyCode": "HC/R/Ncmsc/Ncfsa",
+        "gloss": "y en todas las bestias"
+      },
+      {
+        "wordOrder": 18,
+        "surfaceText": "הָֽרֹמֶ֥שֶׂת",
+        "consonantsOnly": "הרמשת",
+        "transliteration": "hārōmeśeṯ",
+        "strongCode": "H7430",
+        "morphologyCode": "HTd/Vqrfsa",
+        "gloss": "que se mueven"
+      },
+      {
+        "wordOrder": 19,
+        "surfaceText": "עַל־הָאָֽרֶץ׃",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 29,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיֹּ֣אמֶר",
+        "consonantsOnly": "ויאמר",
+        "transliteration": "wayyō’mer",
+        "strongCode": "H559",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y dijo"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִ֗ים",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios:"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "הִנֵּה֩",
+        "consonantsOnly": "הנה",
+        "transliteration": "hinnēh",
+        "strongCode": "H2009",
+        "morphologyCode": "HTm",
+        "gloss": "He aquí"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "נָתַ֨תִּי",
+        "consonantsOnly": "נתתי",
+        "transliteration": "nāṯattî",
+        "strongCode": "H5414",
+        "morphologyCode": "HVqp1cs",
+        "gloss": "que os he dado"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "לָכֶ֜ם",
+        "consonantsOnly": "לכם",
+        "transliteration": "lāḵem",
+        "strongCode": "H3807",
+        "morphologyCode": "HR/Sp2mp",
+        "gloss": "a vosotros"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "אֶת־כָּל־עֵ֣שֶׂב",
+        "consonantsOnly": "את־כל־עשב",
+        "transliteration": "’eṯ-kāl-‘ēśeḇ",
+        "strongCode": "H6212",
+        "morphologyCode": "HTo/Ncmsc/Ncmsa",
+        "gloss": "toda planta"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "זֹרֵ֣עַ",
+        "consonantsOnly": "זרע",
+        "transliteration": "zōrēa‘",
+        "strongCode": "H2232",
+        "morphologyCode": "HVqrmsa",
+        "gloss": "que da"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "זֶ֗רַע",
+        "consonantsOnly": "זרע",
+        "transliteration": "zera‘",
+        "strongCode": "H2233",
+        "morphologyCode": "HNcmsa",
+        "gloss": "semilla,"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "אֲשֶׁר֙",
+        "consonantsOnly": "אשר",
+        "transliteration": "’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTr",
+        "gloss": "que [está]"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "עַל־פְּנֵ֣י",
+        "consonantsOnly": "על־פני",
+        "transliteration": "‘al-pənê",
+        "strongCode": "H6440",
+        "morphologyCode": "HR/Ncbpc",
+        "gloss": "sobre la faz de"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "כָל־הָאָ֔רֶץ",
+        "consonantsOnly": "כל־הארץ",
+        "transliteration": "ḵāl-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HNcmsc/Td/Ncfsa",
+        "gloss": "toda la tierra,"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "וְאֶת־כָּל־הָעֵ֛ץ",
+        "consonantsOnly": "ואת־כל־העץ",
+        "transliteration": "wə’eṯ-kāl-hā‘ēṣ",
+        "strongCode": "H6086",
+        "morphologyCode": "HC/To/Ncmsc/Td/Ncmsa",
+        "gloss": "y todo árbol"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "אֲשֶׁר־בּ֥וֹ",
+        "consonantsOnly": "אשר־בו",
+        "transliteration": "’ăšer-bô",
+        "strongCode": "H834",
+        "morphologyCode": "HTr-R/Sp3ms",
+        "gloss": "en que hay"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "פְרִי־עֵ֖ץ",
+        "consonantsOnly": "פרי־עץ",
+        "transliteration": "pərî-‘ēṣ",
+        "strongCode": "H6529",
+        "morphologyCode": "HNcmsc/Ncmsa",
+        "gloss": "fruto de árbol"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "זֹרֵ֣עַ",
+        "consonantsOnly": "זרע",
+        "transliteration": "zōrēa‘",
+        "strongCode": "H2232",
+        "morphologyCode": "HVqrmsa",
+        "gloss": "que da"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "זָ֑רַע",
+        "consonantsOnly": "זרע",
+        "transliteration": "zāra‘",
+        "strongCode": "H2233",
+        "morphologyCode": "HNcmsa",
+        "gloss": "semilla;"
+      },
+      {
+        "wordOrder": 17,
+        "surfaceText": "לָכֶ֥ם",
+        "consonantsOnly": "לכם",
+        "transliteration": "lāḵem",
+        "strongCode": "H3807",
+        "morphologyCode": "HR/Sp2mp",
+        "gloss": "os"
+      },
+      {
+        "wordOrder": 18,
+        "surfaceText": "יִֽהְיֶ֖ה",
+        "consonantsOnly": "יהיה",
+        "transliteration": "yihyeh",
+        "strongCode": "H1961",
+        "morphologyCode": "HVqi3ms",
+        "gloss": "será"
+      },
+      {
+        "wordOrder": 19,
+        "surfaceText": "לְאָכְלָֽה׃",
+        "consonantsOnly": "לאכלה",
+        "transliteration": "lə’āḵəlâ",
+        "strongCode": "H402",
+        "morphologyCode": "HR/Ncfsa",
+        "gloss": "para comer."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 30,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וּֽלְכָל־חַיַּ֣ת",
+        "consonantsOnly": "ולכל־חית",
+        "transliteration": "ûləḵāl-ḥayyaṯ",
+        "strongCode": "H2416",
+        "morphologyCode": "HC/R/Ncmsc/Ncfsc",
+        "gloss": "Y a toda bestia de"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "הָ֠אָרֶץ",
+        "consonantsOnly": "הארץ",
+        "transliteration": "hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HTd/Ncfsa",
+        "gloss": "la tierra,"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "וּלְכָל־ע֨וֹף",
+        "consonantsOnly": "ולכל־עוף",
+        "transliteration": "ûləḵāl-‘ôp̱",
+        "strongCode": "H5775",
+        "morphologyCode": "HC/R/Ncmsc/Ncmsa",
+        "gloss": "y a todas las aves de"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "הַשָּׁמַ֜יִם",
+        "consonantsOnly": "השמים",
+        "transliteration": "haššāmayim",
+        "strongCode": "H8064",
+        "morphologyCode": "HTd/Ncmpa",
+        "gloss": "los cielos,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וּלְכֹ֣ל",
+        "consonantsOnly": "ולכל",
+        "transliteration": "ûləḵōl",
+        "strongCode": "H3605",
+        "morphologyCode": "HC/R/Ncmsc",
+        "gloss": "y a todo"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "רוֹמֵ֣שׂ",
+        "consonantsOnly": "רומש",
+        "transliteration": "rômēś",
+        "strongCode": "H7430",
+        "morphologyCode": "HVqrmsa",
+        "gloss": "lo que se arrastra"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "עַל־הָאָ֗רֶץ",
+        "consonantsOnly": "על־הארץ",
+        "transliteration": "‘al-hā’āreṣ",
+        "strongCode": "H776",
+        "morphologyCode": "HR/Td/Ncfsa",
+        "gloss": "sobre la tierra,"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "אֲשֶׁר־בּוֹ֙",
+        "consonantsOnly": "אשר־בו",
+        "transliteration": "’ăšer-bô",
+        "strongCode": "H834",
+        "morphologyCode": "HTr-R/Sp3ms",
+        "gloss": "en que hay"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "נֶ֣פֶשׁ",
+        "consonantsOnly": "נפש",
+        "transliteration": "nep̱eš",
+        "strongCode": "H5315",
+        "morphologyCode": "HNcfsa",
+        "gloss": "aliento de"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "חַיָּ֔ה",
+        "consonantsOnly": "חיה",
+        "transliteration": "ḥayyâ",
+        "strongCode": "H2416",
+        "morphologyCode": "HAfsa",
+        "gloss": "vida,"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "אֶת־כָּל־יֶ֥רֶק",
+        "consonantsOnly": "את־כל־ירק",
+        "transliteration": "’eṯ-kāl-yereq",
+        "strongCode": "H3418",
+        "morphologyCode": "HTo/Ncmsc/Ncmsc",
+        "gloss": "toda planta verde"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "עֵ֖שֶׂב",
+        "consonantsOnly": "עשב",
+        "transliteration": "‘ēśeḇ",
+        "strongCode": "H6212",
+        "morphologyCode": "HNcmsa",
+        "gloss": "les será"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "לְאָכְלָ֑ה",
+        "consonantsOnly": "לאכלה",
+        "transliteration": "lə’āḵəlâ",
+        "strongCode": "H402",
+        "morphologyCode": "HR/Ncfsa",
+        "gloss": "para comer."
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "וַֽיְהִי־כֵֽן׃",
+        "consonantsOnly": "ויהי־כן",
+        "transliteration": "wayhî-ḵēn",
+        "strongCode": "H3651",
+        "morphologyCode": "HC/Vqw3ms-D",
+        "gloss": "Y fue así."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 31,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "וַיַּ֤רְא",
+        "consonantsOnly": "וירא",
+        "transliteration": "wayyar’",
+        "strongCode": "H7200",
+        "morphologyCode": "HC/Vqw3ms",
+        "gloss": "Y vio"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "אֱלֹהִים֙",
+        "consonantsOnly": "אלהים",
+        "transliteration": "’ĕlōhîm",
+        "strongCode": "H430",
+        "morphologyCode": "HNcmpa",
+        "gloss": "Dios"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "אֶת־כָּל־אֲשֶׁ֣ר",
+        "consonantsOnly": "את־כל־אשר",
+        "transliteration": "’eṯ-kāl-’ăšer",
+        "strongCode": "H834",
+        "morphologyCode": "HTo/Ncmsc/Tr",
+        "gloss": "todo lo que"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "עָשָׂ֔ה",
+        "consonantsOnly": "עשה",
+        "transliteration": "‘āśâ",
+        "strongCode": "H6213",
+        "morphologyCode": "HVqp3ms",
+        "gloss": "había hecho,"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "וְהִנֵּה־ט֖וֹב",
+        "consonantsOnly": "והנה־טוב",
+        "transliteration": "wəhinnēh-ṭôḇ",
+        "strongCode": "H2896",
+        "morphologyCode": "HC/Tm-Aamsa",
+        "gloss": "y he aquí [que era] bueno"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "מְאֹ֑ד",
+        "consonantsOnly": "מאד",
+        "transliteration": "mə’ōḏ",
+        "strongCode": "H3966",
+        "morphologyCode": "HD",
+        "gloss": "en gran manera."
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "וַֽיְהִי־עֶ֥רֶב",
+        "consonantsOnly": "ויהי־ערב",
+        "transliteration": "wayhî-‘ereḇ",
+        "strongCode": "H6153",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "Y fue la tarde"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "וַֽיְהִי־בֹ֖קֶר",
+        "consonantsOnly": "ויהי־בקר",
+        "transliteration": "wayhî-ḇōqer",
+        "strongCode": "H1242",
+        "morphologyCode": "HC/Vqw3ms-Ncmsa",
+        "gloss": "y fue la mañana"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "י֥וֹם הַשִּׁשִּֽׁי׃",
+        "consonantsOnly": "יום הששי",
+        "transliteration": "yôm haššiššî",
+        "strongCode": "H8345",
+        "morphologyCode": "HNcmsa/Td/Aomsa",
+        "gloss": "el día sexto."
+      }
+    ]
+  }
+]

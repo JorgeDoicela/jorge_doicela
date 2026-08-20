@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useBooks } from '../../hooks/useBooks';
-import { CANONICAL_CATEGORIES } from '../../data/canonicCategories';
+import { CANONICAL_CATEGORIES, isBookInCategory } from '../../data/canonicCategories';
 
 interface BookSelectorProps {
   selectedBookId: number | null;
@@ -119,7 +119,7 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
             if (activeTab === 'NT') return cat.testament === 'NT';
             return true;
           }).map((cat) => {
-            const catBooks = books.filter((b) => cat.bookIds.includes(b.id));
+            const catBooks = books.filter((b) => isBookInCategory(cat, b));
             if (catBooks.length === 0) return null;
             return (
               <div key={cat.id} className="space-y-1.5">

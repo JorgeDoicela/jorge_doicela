@@ -7,17 +7,38 @@ import {
   ReaderSettings,
 } from '../types';
 import { API_URL } from '../../../../config';
-import { FALLBACK_GENESIS_1, FALLBACK_SALMOS_23 } from '../data/fallbackVerses';
 
-export function useVerses() {
+export function useVerses(
+  externalBookId?: number | null,
+  externalChapter?: number | null,
+  externalTranslationId?: number | null,
+) {
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Por defecto: Génesis (id: 1), Reina-Valera 1960 (id: 1), Capítulo 1
-  const [selectedBookId, setSelectedBookId] = useState<number | null>(1);
-  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(1);
-  const [selectedChapter, setSelectedChapter] = useState<number | null>(1);
+  const [selectedBookId, setSelectedBookId] = useState<number | null>(
+    externalBookId !== undefined ? externalBookId : 1,
+  );
+  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(
+    externalTranslationId !== undefined ? externalTranslationId : 1,
+  );
+  const [selectedChapter, setSelectedChapter] = useState<number | null>(
+    externalChapter !== undefined ? externalChapter : 1,
+  );
+
+  useEffect(() => {
+    if (externalBookId !== undefined) setSelectedBookId(externalBookId);
+  }, [externalBookId]);
+
+  useEffect(() => {
+    if (externalChapter !== undefined) setSelectedChapter(externalChapter);
+  }, [externalChapter]);
+
+  useEffect(() => {
+    if (externalTranslationId !== undefined) setSelectedTranslationId(externalTranslationId);
+  }, [externalTranslationId]);
 
   // Configuraciones de visualización del lector
   const [readerSettings, setReaderSettings] = useState<ReaderSettings>({
@@ -113,26 +134,11 @@ export function useVerses() {
         }
         const data = await res.json();
         const serverVerses = (data.data as Verse[]) || [];
-
-        if (serverVerses.length > 0) {
-          setVerses(serverVerses);
-        } else if (bookId === 1 && chapter === 1) {
-          setVerses(FALLBACK_GENESIS_1);
-        } else if (bookId === 19 && chapter === 23) {
-          setVerses(FALLBACK_SALMOS_23);
-        } else {
-          setVerses([]);
-        }
+        setVerses(serverVerses);
       } catch (err: unknown) {
         console.error('[Bible:useVerses] Error al conectar con el servidor:', err);
-        // En caso de fallo de red o servidor, usar fallback canónico si aplica
-        if (bookId === 1 && chapter === 1) {
-          setVerses(FALLBACK_GENESIS_1);
-        } else if (bookId === 19 && chapter === 23) {
-          setVerses(FALLBACK_SALMOS_23);
-        } else {
-          setVerses([]);
-        }
+        setError(err instanceof Error ? err.message : 'Error de conexión con el servidor');
+        setVerses([]);
       } finally {
         setLoading(false);
       }

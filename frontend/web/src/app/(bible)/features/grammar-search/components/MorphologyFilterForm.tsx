@@ -14,7 +14,7 @@ import {
   GrammaticalPersonFilter,
   CanonScopeFilter,
 } from '../types';
-import { CANONICAL_BOOKS } from '../data/canonical-books';
+import { CANONICAL_BOOKS } from '../../books/hooks/useBooks';
 
 interface MorphologyFilterFormProps {
   filters: MorphologyFilterState;

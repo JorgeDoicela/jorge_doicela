@@ -3,6 +3,7 @@ export interface BookCategory {
   name: string;
   testament: 'OT' | 'NT';
   bookIds: number[];
+  abbreviations: string[];
 }
 
 export const CANONICAL_CATEGORIES: BookCategory[] = [
@@ -12,30 +13,41 @@ export const CANONICAL_CATEGORIES: BookCategory[] = [
     name: 'Pentateuco / Torá',
     testament: 'OT',
     bookIds: [1, 2, 3, 4, 5],
+    abbreviations: ['GEN', 'EXO', 'LEV', 'NUM', 'DEU'],
   },
   {
     id: 'historical_ot',
     name: 'Históricos',
     testament: 'OT',
     bookIds: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+    abbreviations: [
+      'JOS', 'JUE', 'RUT', '1SA', '2SA', '1RE', '2RE',
+      '1CR', '2CR', 'ESD', 'NEH', 'EST',
+    ],
   },
   {
     id: 'poetic',
     name: 'Poéticos y Sapienciales',
     testament: 'OT',
     bookIds: [18, 19, 20, 21, 22],
+    abbreviations: ['JOB', 'SAL', 'PRO', 'ECL', 'CAN'],
   },
   {
     id: 'major_prophets',
     name: 'Profetas Mayores',
     testament: 'OT',
     bookIds: [23, 24, 25, 26, 27],
+    abbreviations: ['ISA', 'JER', 'JEREMIAS', 'LAM', 'EZE', 'DAN'],
   },
   {
     id: 'minor_prophets',
     name: 'Profetas Menores',
     testament: 'OT',
     bookIds: [28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    abbreviations: [
+      'OSE', 'JOE', 'AMO', 'ABD', 'JON', 'MIQ',
+      'NAH', 'HAB', 'SOF', 'HAG', 'ZAC', 'MAL',
+    ],
   },
   // Nuevo Testamento
   {
@@ -43,26 +55,44 @@ export const CANONICAL_CATEGORIES: BookCategory[] = [
     name: 'Evangelios y Hechos',
     testament: 'NT',
     bookIds: [40, 41, 42, 43, 44],
+    abbreviations: ['MAT', 'MAR', 'LUC', 'JUA', 'JN', 'HEC'],
   },
   {
     id: 'pauline_epistles',
     name: 'Epístolas Paulinas',
     testament: 'NT',
     bookIds: [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57],
+    abbreviations: [
+      'ROM', '1CO', '2CO', 'GAL', 'EFE', 'FIL', 'COL',
+      '1TE', '2TE', '1TI', '2TI', 'TIT', 'FLM',
+    ],
   },
   {
     id: 'general_epistles',
     name: 'Epístolas Generales',
     testament: 'NT',
     bookIds: [58, 59, 60, 61, 62, 63, 64, 65],
+    abbreviations: ['HEB', 'STG', '1PE', '2PE', '1JU', '2JU', '3JU', 'JUD'],
   },
   {
     id: 'apocalypse',
     name: 'Profecía',
     testament: 'NT',
     bookIds: [66],
+    abbreviations: ['APO'],
   },
 ];
+
+export function isBookInCategory(
+  category: BookCategory,
+  book: { id: number; abbreviation: string },
+): boolean {
+  const upper = (book.abbreviation || '').toUpperCase();
+  return (
+    category.abbreviations.includes(upper) ||
+    category.bookIds.includes(book.id)
+  );
+}
 
 export const CHAPTER_COUNTS_BY_BOOK_ID: Record<number, number> = {
   1: 50, // Génesis

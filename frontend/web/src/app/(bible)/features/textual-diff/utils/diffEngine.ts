@@ -4,35 +4,30 @@ import { DiffResult, DiffToken, TranslationApproachInfo } from '../types';
  * Mapeo de filosofías de traducción bíblica conocidas
  */
 export const TRANSLATION_APPROACHES: Record<string, TranslationApproachInfo> = {
-  RV1960: {
+  NBLA: {
     philosophy: 'Formal',
-    description: 'Equivalencia Formal (literal y tradicional)',
-    badgeColor: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-  },
-  LBLA: {
-    philosophy: 'Formal',
-    description: 'Equivalencia Formal estricta de alta precisión exegética',
+    description: 'Equivalencia Formal (literal y académica)',
     badgeColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
   },
-  KJV: {
-    philosophy: 'Formal',
-    description: 'Equivalencia Formal clásica sobre el Textus Receptus',
-    badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-  },
-  NVI: {
+  NTV: {
     philosophy: 'Dinámica',
-    description: 'Equivalencia Dinámica / Funcional contemporánea',
+    description: 'Equivalencia Dinámica / Funcional contemporánea y fluida',
     badgeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
   },
-  JER: {
-    philosophy: 'Crítica',
-    description: 'Traducción exegética con aparato crítico y fidelidad poética',
-    badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+  NIV: {
+    philosophy: 'Dinámica',
+    description: 'Equivalencia Dinámica en inglés contemporáneo internacional',
+    badgeColor: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+  },
+  BHS: {
+    philosophy: 'Histórica',
+    description: 'Texto Masorético Hebreo / Arameo (Códice de Leningrado WLC)',
+    badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
   },
   LXX: {
     philosophy: 'Histórica',
-    description: 'Texto griego alejandrino de la Septuaginta (LXX)',
-    badgeColor: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
+    description: 'Septuaginta Griega (Alejandría, s. III a.C.)',
+    badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
   },
 };
 

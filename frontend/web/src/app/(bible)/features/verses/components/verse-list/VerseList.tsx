@@ -33,6 +33,8 @@ interface VerseListProps {
   onSelectChapter: (chapter: number | null) => void;
   onPrevChapter: () => void;
   onNextChapter: (maxChapters?: number) => void;
+  selectedTranslationId?: number | null;
+  onSelectTranslation?: (id: number | null) => void;
   activeTranslationName?: string;
   activeTranslationAbbr?: string;
 }
@@ -55,6 +57,8 @@ export const VerseList: React.FC<VerseListProps> = ({
   onSelectChapter,
   onPrevChapter,
   onNextChapter,
+  selectedTranslationId,
+  onSelectTranslation,
   activeTranslationName,
   activeTranslationAbbr,
 }) => {
@@ -77,6 +81,8 @@ export const VerseList: React.FC<VerseListProps> = ({
         onPrevChapter={onPrevChapter}
         onNextChapter={onNextChapter}
         verses={verses}
+        selectedTranslationId={selectedTranslationId}
+        onSelectTranslation={onSelectTranslation}
         activeTranslationName={activeTranslationName}
       />
 

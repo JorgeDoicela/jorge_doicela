@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   HebrewAramaicToken,
   GreekToken,
@@ -9,9 +9,10 @@ import {
   GreekInterlinearVerse,
   StrongLexiconEntry,
 } from '../types';
-import { MASORETIC_INTERLINEAR_DATA } from '../data/masoreticData';
-import { GREEK_INTERLINEAR_DATA } from '../data/greekData';
-import { STRONG_LEXICON_DATABASE } from '../data/strongLexiconData';
+import {
+  fetchInterlinearPassage,
+  fetchStrongLexiconEntry,
+} from '../services/interlinearApiService';
 import { InterlinearControls } from './InterlinearControls';
 import { HebrewWordCard } from './HebrewWordCard';
 import { GreekWordCard } from './GreekWordCard';
@@ -24,12 +25,19 @@ import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNoti
 
 interface InterlinearViewProps {
   selectedBookAbbr?: string | null;
+  chapter?: number;
+  testament?: 'OT' | 'NT';
 }
 
 export const InterlinearView: React.FC<InterlinearViewProps> = ({
-  selectedBookAbbr,
+  selectedBookAbbr = 'GEN',
+  chapter = 1,
+  testament,
 }) => {
   const [activeCanon, setActiveCanon] = useState<'OT' | 'NT'>('OT');
+  const [hebrewVerses, setHebrewVerses] = useState<InterlinearVerse[]>([]);
+  const [greekVerses, setGreekVerses] = useState<GreekInterlinearVerse[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [settings, setSettings] = useState<InterlinearDisplaySettings>({
     layout: 'reverse_interlinear',
@@ -50,9 +58,8 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
     useState<HebrewAramaicToken | null>(null);
   const [hebrewModalOpen, setHebrewModalOpen] = useState(false);
 
-  const [selectedGreekToken, setSelectedGreekToken] = useState<GreekToken | null>(
-    null,
-  );
+  const [selectedGreekToken, setSelectedGreekToken] =
+    useState<GreekToken | null>(null);
   const [greekModalOpen, setGreekModalOpen] = useState(false);
 
   // Modal / Drawer de Léxico Strong
@@ -60,105 +67,52 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
     useState<StrongLexiconEntry | null>(null);
   const [strongDrawerOpen, setStrongDrawerOpen] = useState(false);
 
-  const handleOpenStrong = (strongCode: string) => {
-    const entry = STRONG_LEXICON_DATABASE[strongCode];
-    if (entry) {
-      setSelectedStrongEntry(entry);
-      setStrongDrawerOpen(true);
-    } else {
-      // Entrada sintética de respaldo si no está precalculada
-      setSelectedStrongEntry({
-        strong: strongCode,
-        language: strongCode.startsWith('H') ? 'Hebrew' : 'Greek',
-        lemma: strongCode.startsWith('H') ? 'שָׁרָשׁ' : 'λόγος',
-        transliteration: strongCode,
-        ipa: `/${strongCode}/`,
-        pronunciationGuide: strongCode,
-        partOfSpeech: 'Entrada Léxica',
-        shortDefinition: `Código de Concordancia Strong ${strongCode}.`,
-        extendedDefinition: [
-          `Entrada exegética para el código ${strongCode}.`,
-        ],
-      });
-      setStrongDrawerOpen(true);
-    }
-  };
+  const handleOpenStrong = useCallback(async (strongCode: string) => {
+    const entry = await fetchStrongLexiconEntry(strongCode);
+    setSelectedStrongEntry(entry);
+    setStrongDrawerOpen(true);
+  }, []);
 
-  // Sincronizar automáticamente el canon según el libro seleccionado
+  // Sincronizar automáticamente el canon según el libro o testamento seleccionado
   useEffect(() => {
-    if (selectedBookAbbr) {
+    if (testament) {
+      setActiveCanon(testament);
+    } else if (selectedBookAbbr) {
       const upper = selectedBookAbbr.toUpperCase();
-      if (upper === 'JN' || upper === 'ROM' || upper === 'MAT') {
+      if (upper === 'JN' || upper === 'ROM' || upper === 'MAT' || upper === 'JUA' || upper === 'APO') {
         setActiveCanon('NT');
-      } else if (
-        upper === 'GEN' ||
-        upper === 'SAL' ||
-        upper === 'DAN' ||
-        upper === 'JEREMIAS' ||
-        upper === 'ESD'
-      ) {
+      } else {
         setActiveCanon('OT');
       }
     }
-  }, [selectedBookAbbr]);
+  }, [selectedBookAbbr, testament]);
 
-  // Versículos en Hebreo / Arameo
-  const displayHebrewVerses: InterlinearVerse[] = React.useMemo(() => {
-    if (!selectedBookAbbr) return MASORETIC_INTERLINEAR_DATA;
-    const filtered = MASORETIC_INTERLINEAR_DATA.filter(
-      (v) => v.bookAbbreviation.toUpperCase() === selectedBookAbbr.toUpperCase(),
-    );
-    return filtered.length > 0 ? filtered : MASORETIC_INTERLINEAR_DATA;
-  }, [selectedBookAbbr]);
+  // Carga asíncrona de datos desde el backend NestJS con fallback local
+  useEffect(() => {
+    let isMounted = true;
+    const book = selectedBookAbbr || 'GEN';
+    const canon = testament || (book.toUpperCase() === 'JN' || book.toUpperCase() === 'ROM' ? 'NT' : 'OT');
 
-  // Versículos en Griego Koiné
-  const displayGreekVerses: GreekInterlinearVerse[] = React.useMemo(() => {
-    if (!selectedBookAbbr) return GREEK_INTERLINEAR_DATA;
-    const filtered = GREEK_INTERLINEAR_DATA.filter(
-      (v) => v.bookAbbreviation.toUpperCase() === selectedBookAbbr.toUpperCase(),
-    );
-    return filtered.length > 0 ? filtered : GREEK_INTERLINEAR_DATA;
-  }, [selectedBookAbbr]);
+    setIsLoading(true);
+    fetchInterlinearPassage(book, chapter, canon)
+      .then((data) => {
+        if (isMounted) {
+          setHebrewVerses(data.hebrewVerses);
+          setGreekVerses(data.greekVerses);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedBookAbbr, chapter, testament]);
 
   return (
-    <div className="space-y-6">
-      {/* Selector de Testamento / Lengua Original */}
-      <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-accents-2 bg-accents-1/40">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-accents-4">Testamento Original:</span>
-          <div className="inline-flex rounded-lg border border-accents-2 bg-background p-1 text-xs">
-            <button
-              type="button"
-              onClick={() => setActiveCanon('OT')}
-              className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                activeCanon === 'OT'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
-                  : 'text-accents-4 hover:text-foreground'
-              }`}
-            >
-              Antiguo Testamento (Hebreo / Arameo BHS)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveCanon('NT')}
-              className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                activeCanon === 'NT'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
-                  : 'text-accents-4 hover:text-foreground'
-              }`}
-            >
-              Nuevo Testamento (Griego NA28 / TR)
-            </button>
-          </div>
-        </div>
-
-        <div className="text-[11px] font-mono text-accents-4 hidden md:block">
-          {activeCanon === 'OT'
-            ? 'Texto Masorético Vocalizado'
-            : 'Novum Testamentum Graece Politónico'}
-        </div>
-      </div>
-
+    <div className="space-y-5">
       {/* Controles de visualización y modo */}
       <InterlinearControls
         settings={settings}
@@ -171,7 +125,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
       {settings.layout === 'reverse_interlinear' && (
         <div className="space-y-8">
           {activeCanon === 'OT' &&
-            displayHebrewVerses.map((verse) => (
+            hebrewVerses.map((verse) => (
               <ReverseInterlinearReader
                 key={`${verse.bookAbbreviation}-${verse.chapter}-${verse.verseNumber}`}
                 hebrewVerse={verse}
@@ -187,7 +141,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
             ))}
 
           {activeCanon === 'NT' &&
-            displayGreekVerses.map((verse) => (
+            greekVerses.map((verse) => (
               <ReverseInterlinearReader
                 key={`${verse.bookAbbreviation}-${verse.chapter}-${verse.verseNumber}`}
                 greekVerse={verse}
@@ -211,7 +165,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
         <>
           {activeCanon === 'OT' && (
             <div className="space-y-8">
-              {displayHebrewVerses.map((verse) => (
+              {hebrewVerses.map((verse) => (
                 <div
                   key={`${verse.bookAbbreviation}-${verse.chapter}-${verse.verseNumber}`}
                   className="p-5 sm:p-6 rounded-2xl border border-accents-2 bg-background space-y-4 shadow-xs"
@@ -270,7 +224,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
 
           {activeCanon === 'NT' && (
             <div className="space-y-8">
-              {displayGreekVerses.map((verse) => (
+              {greekVerses.map((verse) => (
                 <div
                   key={`${verse.bookAbbreviation}-${verse.chapter}-${verse.verseNumber}`}
                   className="p-5 sm:p-6 rounded-2xl border border-accents-2 bg-background space-y-4 shadow-xs"

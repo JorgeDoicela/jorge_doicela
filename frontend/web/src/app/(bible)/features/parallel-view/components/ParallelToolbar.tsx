@@ -7,7 +7,10 @@ export type BibleStudyMode =
   | 'standard'
   | 'parallel'
   | 'interlinear'
+  | 'word-study'
   | 'literary'
+  | 'historical-context'
+  // Modos y aliases compatibles
   | 'lexicon'
   | 'grammar-search'
   | 'atlas'
@@ -78,6 +81,18 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           </button>
           <button
             type="button"
+            onClick={() => onChangeStudyMode('word-study')}
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+              studyMode === 'word-study' || studyMode === 'lexicon' || studyMode === 'grammar-search'
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-accents-5 hover:text-foreground'
+            }`}
+          >
+            <span className="inline-block w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+            Análisis de Palabra (Léxicos & Morfología)
+          </button>
+          <button
+            type="button"
             onClick={() => onChangeStudyMode('literary')}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
               studyMode === 'literary'
@@ -86,67 +101,19 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Quiasmos & Discurso
+            Estructura & Quiasmos
           </button>
           <button
             type="button"
-            onClick={() => onChangeStudyMode('lexicon')}
+            onClick={() => onChangeStudyMode('historical-context')}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'lexicon'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-accents-5 hover:text-foreground'
-            }`}
-          >
-            <span className="inline-block w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
-            Léxicos & Diccionarios
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeStudyMode('grammar-search')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'grammar-search'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-accents-5 hover:text-foreground'
-            }`}
-          >
-            <span className="inline-block w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            Búsqueda Morfológica
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeStudyMode('atlas')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'atlas'
+              studyMode === 'historical-context' || studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology'
                 ? 'bg-background text-foreground shadow-sm font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-            Atlas & 3D
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeStudyMode('timeline')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'timeline'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-accents-5 hover:text-foreground'
-            }`}
-          >
-            <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            Línea de Tiempo
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeStudyMode('archaeology')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'archaeology'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-accents-5 hover:text-foreground'
-            }`}
-          >
-            <span className="inline-block w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-            Actualidad Arqueológica
+            Contexto Histórico & Geográfico
           </button>
         </div>
 
@@ -199,38 +166,17 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
         </div>
       )}
 
-      {/* Indicador para vista de léxicos */}
-      {studyMode === 'lexicon' && (
+      {/* Indicador para vista de Análisis de Palabra */}
+      {(studyMode === 'word-study' || studyMode === 'lexicon' || studyMode === 'grammar-search') && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          BDB • Gesenius • DTAT • Thayer • LSJ • Robertson • Vincent
+          Diccionarios Strong • BDB • Thayer • Parsing Gramatical • Densidad Canónica FTS5
         </div>
       )}
 
-      {/* Indicador para vista de búsqueda morfológica */}
-      {studyMode === 'grammar-search' && (
+      {/* Indicador para vista de Contexto Histórico */}
+      {(studyMode === 'historical-context' || studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology') && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Parsing Robinson • Scatter Plot Canónico • SQLite FTS5
-        </div>
-      )}
-
-      {/* Indicador para vista de Atlas y 3D */}
-      {studyMode === 'atlas' && (
-        <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Atlas Georreferenciado • Rutas Bíblicas • Modelos 3D Arqueológicos
-        </div>
-      )}
-
-      {/* Indicador para vista de Línea de Tiempo */}
-      {studyMode === 'timeline' && (
-        <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Cronología Sincrónica • Reyes de Judá e Israel • Profetas • Imperios Mundiales
-        </div>
-      )}
-
-      {/* Indicador para vista de Actualidad Arqueológica */}
-      {studyMode === 'archaeology' && (
-        <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Hallazgos en Tierra Santa • Manuscritos de Qumrán • Epigrafía • Apologética Histórica
+          Atlas Vectorial • Rutas Bíblicas • Línea Temporal Sincrónica • Hallazgos Arqueológicos
         </div>
       )}
     </div>

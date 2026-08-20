@@ -9,7 +9,7 @@ import {
 } from '../types';
 
 interface LexiconEntryDetailProps {
-  entry: HebrewLexiconEntry | GreekLexiconEntry;
+  entry: HebrewLexiconEntry | GreekLexiconEntry | null;
   type: 'hebrew' | 'greek';
 }
 
@@ -19,6 +19,19 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
 }) => {
   const [hebrewSource, setHebrewSource] = useState<HebrewLexiconSource>('BDB');
   const [greekSource, setGreekSource] = useState<GreekLexiconSource>('Thayer');
+
+  if (!entry) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
+        <div className="text-sm font-semibold text-foreground">
+          {type === 'hebrew' ? 'Diccionario Hebreo & Arameo' : 'Léxico Griego Koiné'}
+        </div>
+        <p className="text-xs text-accents-4 max-w-md mx-auto">
+          Selecciona una raíz del índice o busca un vocablo teológico para consultar las definiciones exegéticas de BDB, Gesenius, Thayer y LSJ.
+        </p>
+      </div>
+    );
+  }
 
   if (type === 'hebrew') {
     const heb = entry as HebrewLexiconEntry;

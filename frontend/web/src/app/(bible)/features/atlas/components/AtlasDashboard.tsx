@@ -39,6 +39,7 @@ export const AtlasDashboard: React.FC = () => {
     handleTouchMove,
     handleTouchEnd,
     focusOnPlace,
+    focusOnRegion,
   } = useAtlasMap();
 
   return (
@@ -107,6 +108,7 @@ export const AtlasDashboard: React.FC = () => {
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onResetView={handleResetView}
+            onSelectRegion={focusOnRegion}
             zoomLevel={zoomLevel}
           />
 

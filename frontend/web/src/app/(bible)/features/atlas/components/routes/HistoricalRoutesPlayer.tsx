@@ -25,6 +25,17 @@ export const HistoricalRoutesPlayer: React.FC = () => {
     handleTogglePlay,
   } = useRoutePlayer();
 
+  if (!activeRoute || !currentStop) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
+        <div className="text-sm font-semibold text-foreground">Rutas Históricas Trazadas</div>
+        <p className="text-xs text-accents-4 max-w-md mx-auto">
+          Módulo de trazado e itinerarios de peregrinación bíblica (Ruta del Éxodo, Conquista de Canaán, Ministerio de Jesús y Viajes Misioneros de Pablo).
+        </p>
+      </div>
+    );
+  }
+
   // Generación de puntos SVG para el trazado de la ruta
   const routePoints = activeRoute.stops.map((stop) => {
     return projectGeoToCanvas(stop.coordinates.lat, stop.coordinates.lng);

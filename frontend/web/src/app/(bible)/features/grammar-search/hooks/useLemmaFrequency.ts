@@ -27,9 +27,10 @@ export function useLemmaFrequency() {
     );
   }, [availableLemmas, searchQuery]);
 
-  const activeLemmaData: LemmaCanonicalData = useMemo(() => {
+  const activeLemmaData: LemmaCanonicalData | null = useMemo(() => {
+    if (availableLemmas.length === 0) return null;
     const found = availableLemmas.find((item) => item.id === selectedLemmaId);
-    return found || availableLemmas[0];
+    return found || availableLemmas[0] || null;
   }, [availableLemmas, selectedLemmaId]);
 
   return {

@@ -1,0 +1,84 @@
+[
+  {
+    "id": "enuma-elish-tablets-creation",
+    "title": "Las Tablillas del Enuma Elish y Génesis 1: Análisis Comparativo de la Cosmovisión de la Creación",
+    "slug": "enuma-elish-genesis-1-creacion-comparativa",
+    "category": "apologetics",
+    "region": "mesopotamia_syria",
+    "regionLabel": "Mesopotamia (Nínive / Babilonia)",
+    "publishDate": "2026-01-15",
+    "institutionOrAuthor": "British Museum / Dr. Irving Finkel",
+    "readTimeMinutes": 8,
+    "summary": "Descubiertas en la Biblioteca de Asurbanipal en Nínive, las 7 tablillas cuneiformes del Enuma Elish contrastan radicalmente con la teología monoteísta, soberana y ex-nihilo de Génesis 1.",
+    "contentMarkdown": "### El Hallazgo en Nínive\nEn 1849, el arqueólogo Austen Henry Layard desenterró en las ruinas del Palacio de Asurbanipal en Nínive las célebres siete tablillas del mito babilónico de la creación, conocido por sus palabras iniciales: *Enûma Eliš* ('Cuando en lo alto').\n\n### Contraste Teológico Radical con Génesis 1\n1. **Monoteísmo Absoluto vs. Teomaquia Sangrienta:** En el Enuma Elish, el cosmos surge tras una guerra entre dioses (Marduk despedazando a Tiamat). En Génesis 1, no hay lucha cósmica ni fuerzas rivales: Dios crea por el poder soberano de su Palabra (*fiat lux*).\n2. **Dignidad del Ser Humano (Imago Dei):** En Babilonia, el hombre es creado a partir de la sangre del dios rebelde Kingu como un esclavo para alimentar a los dioses. En Génesis 1:26-27, el ser humano es coronado a imagen y semejanza de Dios (*Imago Dei*) con dominio y mayordomía sobre la tierra.\n3. **Desmitologización de los Cuerpos Celestes:** El sol y la luna, adorados como deidades primarias en Mesopotamia (Shamash y Sin), son llamados sobriamente en Génesis 1:16 'lumbrera mayor' y 'lumbrera menor' para servir como relojes cósmicos de las estaciones.",
+    "biblicalReferences": [
+      { "reference": "Génesis 1:1-3", "context": "Creación soberana por la Palabra de Dios" },
+      { "reference": "Génesis 1:26-27", "context": "La dignidad del ser humano a imagen de Dios" },
+      { "reference": "Salmos 104:1-9", "context": "Himno a la soberanía del Creador sobre las aguas" }
+    ],
+    "epigraphy": {
+      "originalScript": "𒂊𒉡𒈠 𒂊𒇺 𒆷 𒈾𒁍𒌑 registers",
+      "language": "Acadio Cuneiforme",
+      "transliteration": "Enūma eliš lā nabû šamāmū",
+      "translation": "Cuando en lo alto los cielos no habían sido nombrados",
+      "dateEstimate": "c. 1750 - 1200 a.C."
+    },
+    "museumOrLocation": "British Museum (Londres) / Museo de Pérgamo (Berlín)",
+    "keyArtifact": "Tablillas cuneiformes de arcilla I a VII del Enuma Elish",
+    "tags": ["Génesis 1", "Enuma Elish", "Mesopotamia", "Imago Dei", "Creación"]
+  },
+  {
+    "id": "siloam-pool-excavation",
+    "title": "Excavación Integral de la Piscina de Siloé y la Calle Escalonada Herodiana",
+    "slug": "excavacion-integral-piscina-siloe-calle-escalonada",
+    "category": "recent_discoveries",
+    "region": "jerusalem_judea",
+    "regionLabel": "Jerusalén (Ciudad de David)",
+    "publishDate": "2025-11-14",
+    "institutionOrAuthor": "Israel Antiquities Authority (IAA)",
+    "readTimeMinutes": 6,
+    "summary": "La excavación a gran escala en el extremo sur de la Ciudad de David ha dejado al descubierto la monumental Piscina de Siloé del siglo I.",
+    "contentMarkdown": "### Contexto del Descubrimiento\nLas excavaciones continuas en la Ciudad de David han permitido revelar el perímetro completo de la **Piscina de Siloé** construida en el período del Segundo Templo.",
+    "biblicalReferences": [
+      { "reference": "Juan 9:1-11", "context": "Sanidad del ciego de nacimiento en Siloé" },
+      { "reference": "Nehemías 3:15", "context": "Salum repara el muro de Siloé" }
+    ],
+    "epigraphy": {
+      "originalScript": "שִׁלֹחַ",
+      "language": "Hebreo",
+      "transliteration": "Shilóaj",
+      "translation": "Enviado",
+      "dateEstimate": "Siglo VIII a.C."
+    },
+    "museumOrLocation": "Parque Nacional Ciudad de David (Jerusalén)",
+    "keyArtifact": "Escalinatas monumentales y canal de drenaje herodiano",
+    "tags": ["Jerusalén", "Juan 9", "Herodes", "Poncio Pilato"]
+  },
+  {
+    "id": "ketef-hinnom-silver-scrolls",
+    "title": "Los Amuletos de Plata de Ketef Hinnom: La Cita Bíblica más Antigua de la Historia",
+    "slug": "amuletos-plata-ketef-hinnom-cita-antigua",
+    "category": "manuscripts",
+    "region": "jerusalem_judea",
+    "regionLabel": "Jerusalén (Valle de Hinom)",
+    "publishDate": "2025-10-02",
+    "institutionOrAuthor": "Universidad de Tel Aviv / Prof. Gabriel Barkay",
+    "readTimeMinutes": 6,
+    "summary": "Dos diminutos rollos de lámina de plata pura del siglo VII a.C. desenterrados en Jerusalén contienen la Bendición Sacerdotal de Números 6:24-26.",
+    "contentMarkdown": "### El Hallazgo Epigráfico del Siglo\nEn 1979, el arqueólogo Gabriel Barkay descubrió en la tumba 24 de Ketef Hinnom dos rollos de plata miniaturizados con inscripción paleohebrea arcaica.",
+    "biblicalReferences": [
+      { "reference": "Números 6:24-26", "context": "La Bendición Sacerdotal Aarónica" },
+      { "reference": "Deuteronomio 7:9", "context": "El Dios fiel que guarda el pacto" }
+    ],
+    "epigraphy": {
+      "originalScript": "יְבָרֶכְךָ יְהוָה וְיִשְׁמְרֶךָ",
+      "language": "Paleohebreo Arcaico",
+      "transliteration": "Yevarejeja YHWH veyishmereja",
+      "translation": "Te bendiga YHWH y te guarde",
+      "dateEstimate": "c. 650 - 600 a.C."
+    },
+    "museumOrLocation": "Museo de Israel (Jerusalén)",
+    "keyArtifact": "Láminas de plata Ketef Hinnom 1 y 2",
+    "tags": ["Ketef Hinnom", "Números 6", "Paleohebreo"]
+  }
+]

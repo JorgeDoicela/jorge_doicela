@@ -1,6 +1,6 @@
 ---
 name: landing-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de la Landing Page principal (jorgedoicela.com), 100% en el cliente Next.js (Glassmorphism, i18n, PWA, SEO Schema JSON-LD, reloj en horario Quito, accesibilidad WCAG AA y rendimiento).
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de la Landing Page principal (jorgedoicela.com), 100% en el cliente Next.js (Bento Grid, i18n, PWA, SEO Schema JSON-LD, reloj en horario Quito, accesibilidad WCAG AA y rendimiento).
 ---
 # Directrices de Desarrollo: Landing Page Principal (jorgedoicela.com)
 
@@ -18,7 +18,7 @@ Esta habilidad define los estándares técnicos, estéticos, de accesibilidad y 
 * **Dominio:** `jorgedoicela.com` (en desarrollo: `localhost:3001` sin subdominio).
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(landing)/`.
 * **100% Frontend del lado del Cliente (Next.js):** La Landing es completamente estática y autónoma. **No realiza consultas a NestJS ni posee backend o base de datos**.
-* **Aislamiento de Estilos:** Utiliza exclusivamente su propio archivo `(landing)/globals.css` (Glassmorphism de alta fidelidad, fuentes Inter y Outfit, elipses degradadas con desenfoque de 130px y soporte de temas claro/oscuro).
+* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(landing)/globals.css` (diseño estructurado en **Bento Grid** asimétrico, micro-animaciones interactivas, fuentes Inter y Outfit, elipses de profundidad sutil y soporte de temas claro/oscuro).
 * **Aislamiento de Assets Estáticos:** Todos los assets, iconos e imágenes deben residir exclusivamente bajo `frontend/web/public/landing/`.
 
 ---

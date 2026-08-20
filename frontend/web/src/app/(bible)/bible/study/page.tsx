@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { BibleStudyWorkspace } from '../../components/BibleStudyWorkspace';
+import StandardStudyPage from './standard/page';
 
-export default function BibleStudyPage() {
-  return <BibleStudyWorkspace />;
+export default function BibleStudyRootPage() {
+  return <StandardStudyPage />;
 }

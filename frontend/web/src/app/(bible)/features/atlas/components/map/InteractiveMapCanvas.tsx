@@ -258,6 +258,58 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
               ? '#0284c7' // Cian agua
               : '#059669'; // Verde esmeralda
 
+          // Obtener nombre corto limpio para evitar saturar el lienzo
+          const getCleanShortName = (rawName: string, id: string) => {
+            if (id === 'jerusalem') return 'Jerusalén';
+            if (id === 'sea_of_galilee') return 'Galilea';
+            if (id === 'dead_sea') return 'Mar Muerto';
+            if (id === 'jordan_river') return 'Río Jordán';
+            if (id === 'mount_nebo') return 'Mte. Nebo';
+            if (id === 'mount_sinai') return 'Mte. Sinaí';
+            if (id === 'antioch_syria') return 'Antioquía';
+            if (id === 'garden_of_eden') return 'Edén';
+            if (id === 'babylon') return 'Babilonia';
+            if (id === 'nineveh') return 'Nínive';
+            return rawName.split('/')[0].trim();
+          };
+
+          const shortName = getCleanShortName(place.name, place.id);
+
+          // Ciudades primarias que se muestran siempre en vista lejana
+          const isPrimary = ['jerusalem', 'rome', 'athens', 'ephesus', 'antioch_syria', 'mount_sinai'].includes(
+            place.id,
+          );
+
+          // Solo mostrar etiqueta si:
+          // 1. Está seleccionado o con hover
+          // 2. O el zoom es >= 1.3 (vista cercana)
+          // 3. O es una ciudad primaria en vista panorámica
+          const shouldShowLabel = isSelected || isHovered || zoomLevel >= 1.3 || isPrimary;
+
+          // Desplazamiento inteligente para evitar que se pisen puntos vecinos
+          let labelOffsetX = 7;
+          let labelOffsetY = 3.5;
+          let textAnchor: 'start' | 'end' | 'middle' = 'start';
+
+          if (place.id === 'jerusalem') {
+            labelOffsetX = -7;
+            textAnchor = 'end';
+          } else if (place.id === 'corinth') {
+            labelOffsetX = -7;
+            textAnchor = 'end';
+          } else if (place.id === 'athens') {
+            labelOffsetX = 7;
+            textAnchor = 'start';
+          } else if (place.id === 'sea_of_galilee') {
+            labelOffsetY = -7;
+            labelOffsetX = 0;
+            textAnchor = 'middle';
+          } else if (place.id === 'dead_sea') {
+            labelOffsetY = 12;
+            labelOffsetX = 0;
+            textAnchor = 'middle';
+          }
+
           return (
             <g
               key={place.id}
@@ -289,27 +341,30 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
 
               {/* Marcador central */}
               <circle
-                r={isSelected ? '6.5' : isHovered ? '5.5' : '4.5'}
+                r={isSelected ? '6' : isHovered ? '5' : '4'}
                 fill={markerColor}
                 stroke={isDark ? '#050c1a' : '#ffffff'}
-                strokeWidth={isSelected ? '2.5' : '1.5'}
+                strokeWidth={isSelected ? '2' : '1.5'}
                 className="transition-all"
               />
 
-              {/* Etiqueta de texto de alta nitidez */}
-              <text
-                x="8"
-                y="3.5"
-                fontSize={isSelected ? '11' : '9.5'}
-                fontWeight={isSelected ? 'bold' : '600'}
-                fill={isSelected ? (isDark ? '#ffffff' : '#000000') : isHovered ? '#2563eb' : textColor}
-                stroke={textStrokeHalo}
-                strokeWidth={isDark ? '0.4' : '0.8'}
-                paintOrder="stroke fill"
-                className="select-none font-sans"
-              >
-                {place.name}
-              </text>
+              {/* Etiqueta de texto limpia y no invasiva */}
+              {shouldShowLabel && (
+                <text
+                  x={labelOffsetX}
+                  y={labelOffsetY}
+                  textAnchor={textAnchor}
+                  fontSize={isSelected ? '10' : isHovered ? '9.5' : '8.5'}
+                  fontWeight={isSelected || isHovered ? 'bold' : '600'}
+                  fill={isSelected ? (isDark ? '#ffffff' : '#000000') : isHovered ? '#2563eb' : textColor}
+                  stroke={textStrokeHalo}
+                  strokeWidth={isDark ? '0.4' : '0.8'}
+                  paintOrder="stroke fill"
+                  className="select-none font-sans transition-opacity duration-150"
+                >
+                  {shortName}
+                </text>
+              )}
             </g>
           );
         })}

@@ -5,6 +5,7 @@ import { Book } from '../../hooks/useBooks';
 import {
   CANONICAL_CATEGORIES,
   getChaptersForBookId,
+  isBookInCategory,
 } from '../../data/canonicCategories';
 
 interface UnifiedPassagePickerProps {
@@ -306,7 +307,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                     if (activeTab === 'NT') return cat.testament === 'NT';
                     return true;
                   }).map((cat) => {
-                    const catBooks = books.filter((b) => cat.bookIds.includes(b.id));
+                    const catBooks = books.filter((b) => isBookInCategory(cat, b));
                     if (catBooks.length === 0) return null;
                     return (
                       <div key={cat.id} className="space-y-1.5">

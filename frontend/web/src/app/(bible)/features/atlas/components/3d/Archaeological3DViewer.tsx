@@ -63,6 +63,17 @@ export const Archaeological3DViewer: React.FC = () => {
   const floorGlowOuter = isDark ? '#070b14' : '#ffffff';
   const gridLineColor = isDark ? '#334155' : '#cbd5e1';
 
+  if (!activeStructure) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
+        <div className="text-sm font-semibold text-foreground">Visualizador 3D Arqueológico</div>
+        <p className="text-xs text-accents-4 max-w-md mx-auto">
+          Modelos arquitectónicos tridimensionales del Tabernáculo en el Desierto, el Templo de Salomón y el Templo de Herodes.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Selector de Estructuras Arqueológicas 3D */}

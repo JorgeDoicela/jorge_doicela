@@ -1,6 +1,6 @@
 ---
 name: portfolio-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento del Portafolio Profesional (portfolio.jorgedoicela.com), incluyendo el frontend en Next.js (Linear look, terminal interactiva), backend en NestJS (WebSockets SSH, formulario de contacto) y la base de datos portfolio.sqlite.
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento del Portafolio Profesional (portfolio.jorgedoicela.com), incluyendo el frontend en Next.js (estética Dark Luxury, terminal interactiva), backend en NestJS (WebSockets SSH, formulario de contacto) y la base de datos portfolio.sqlite.
 ---
 # Directrices de Desarrollo: Portafolio Profesional (portfolio.jorgedoicela.com)
 
@@ -20,7 +20,7 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(portfolio)/`.
 * **Backend:** Módulo modular aislado `backend/src/portfolio/`.
 * **Persistencia:** Base de datos SQLite física independiente `portfolio.sqlite` conectada mediante `'portfolioConnection'` en TypeORM.
-* **Aislamiento de Estilos:** Utiliza exclusivamente su propio archivo `(portfolio)/globals.css` (estética Linear/Minimalista oscura y elegante con tipografía Geist/Mono).
+* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(portfolio)/globals.css` (estética **Dark Luxury** con fondos oscuros profundos, toques metálicos/dorados refinados, tipografía Geist/Mono de alta gama y contrastes de lujo).
 * **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/portfolio/`.
 
 ---

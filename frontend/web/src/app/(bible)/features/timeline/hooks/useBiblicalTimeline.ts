@@ -91,6 +91,39 @@ export function useBiblicalTimeline() {
     setVisibleTracks((prev) => ({ ...prev, [trackKey]: !prev[trackKey] }));
   }, []);
 
+  const setPresetMode = useCallback((mode: 'kings_prophets' | 'bible_archaeology' | 'all') => {
+    switch (mode) {
+      case 'kings_prophets':
+        setVisibleTracks({
+          judah: true,
+          israel: true,
+          prophets: true,
+          empires: false,
+          milestones: false,
+        });
+        break;
+      case 'bible_archaeology':
+        setVisibleTracks({
+          judah: true,
+          israel: false,
+          prophets: false,
+          empires: true,
+          milestones: true,
+        });
+        break;
+      case 'all':
+      default:
+        setVisibleTracks({
+          judah: true,
+          israel: true,
+          prophets: true,
+          empires: true,
+          milestones: true,
+        });
+        break;
+    }
+  }, []);
+
   const handleZoomIn = useCallback(() => {
     setZoomLevel((prev) => Math.min(Number((prev + 0.4).toFixed(2)), 12.0));
   }, []);
@@ -209,6 +242,7 @@ export function useBiblicalTimeline() {
     isDragging,
     visibleTracks,
     toggleTrack,
+    setPresetMode,
     shortcuts: TIMELINE_ERA_SHORTCUTS,
     handleZoomIn,
     handleZoomOut,

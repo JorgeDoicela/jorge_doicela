@@ -13,7 +13,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 > * **Aislamiento:** Proyecto 100% independiente del lado del cliente. No se comunica con bases de datos ni posee backend dedicado en NestJS.
 >
 > **Arquitectura Micro:**
-> * **Aislamiento de Estilos:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css`.
+> * **Aislamiento de Estilos:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones, fuentes Inter y Outfit).
 > * **Componentes Locales:** Modularizados dentro de `(landing)/components/` (reloj de Quito, i18n, PWA, SEO).
 
 ---
@@ -21,7 +21,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 ## 2. Descripción y Aislamiento
 
 * **100% del Lado del Cliente (Next.js):** La Landing Page no posee base de datos ni endpoints dedicados en NestJS. Es un portal de bienvenida ultra-rápido y optimizado.
-* **Aislamiento de Estilos:** Posee su propio archivo independiente `frontend/web/src/app/(landing)/globals.css` que configura fuentes (Inter y Outfit) y tokens visuales de Tailwind CSS v4.
+* **Aislamiento de Estilos:** Posee su propio archivo independiente `frontend/web/src/app/(landing)/globals.css` que configura la estructura **Bento Grid**, fuentes (Inter y Outfit) y tokens visuales de Tailwind CSS v4.
 * **Enrutamiento:** El middleware (`src/middleware.ts`) redirige automáticamente las peticiones sin subdominio hacia el grupo de rutas `(landing)`.
 
 ---
@@ -60,8 +60,9 @@ Un script en React (`useEffect`) evalúa el host de navegación:
 
 ---
 
-## 4. Estética Visual y Glassmorphism
+## 4. Estética Visual y Bento Grid
 
-* **Static Glass Cards:** Paneles con fondo translúcido, desenfoque de alta densidad y bordes ultra-finos que simulan cristal templado.
-* **Interactive Glass Cards:** Micro-animaciones al hacer hover (iluminación de bordes y desplazamiento vectorial en flechas).
-* **Fondo Dinámico Sutil:** Elipses degradadas con desenfoque de 130px (`blur-[130px]`) que aportan profundidad 3D con consumo nulo de GPU.
+* **Disposición Modular Bento Grid:** Cuadrícula asimétrica y responsiva con tarjetas de tamaños jerárquicos (`col-span-*`, `row-span-*`) que presentan de forma balanceada las diferentes facetas, enlaces a subdominios y proyectos.
+* **Static & Interactive Bento Cards:** Tarjetas modulares con micro-animaciones al hacer hover (elevación sutil, iluminación de bordes y desplazamiento interactivo de flechas).
+* **Fondo de Profundidad Sutil:** Elipses degradadas con desenfoque suave (`blur-[130px]`) que aportan tridimensionalidad moderna sin penalizar el rendimiento ni la GPU.
+* **Compatibilidad de Temas:** Soporte integral para modo oscuro (`dark`) y modo claro (`light`) mediante variables CSS.

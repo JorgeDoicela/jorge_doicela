@@ -1,0 +1,302 @@
+[
+  {
+    "strongCode": "H7225",
+    "language": "Hebrew",
+    "lemma": "רֵאשִׁית",
+    "transliteration": "rē’šîṯ",
+    "ipa": "/reːˈʃiːt/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Principio, comienzo, primicias, lo principal.",
+    "extendedDefinition": "BDB / Gesenius: 1. Punto de partida temporal o procesal (Gn 1:1, Pr 8:22). 2. Lo mejor o más selecto de una cosecha o posesión (Éx 23:19). 3. Primacía en rango o dignidad."
+  },
+  {
+    "strongCode": "H1254",
+    "language": "Hebrew",
+    "lemma": "בָּרָא",
+    "transliteration": "bārā’",
+    "ipa": "/baːˈraːʔ/",
+    "partOfSpeech": "Verbo (Tronco Qal)",
+    "shortDefinition": "Crear, dar origen de la nada, moldear soberanamente.",
+    "extendedDefinition": "BDB: Verbo reservado exclusivamente a la actividad creadora de Dios en la Biblia Hebrea. Nunca tiene como sujeto a un ser humano ni menciona materia preexistente. Expresa la originación absoluta y soberana por parte de Yahvé."
+  },
+  {
+    "strongCode": "H430",
+    "language": "Hebrew",
+    "lemma": "אֱלֹהִים",
+    "transliteration": "’ĕlōhîm",
+    "ipa": "/ʔĕloːˈhiːm/",
+    "partOfSpeech": "Sustantivo masculino plural",
+    "shortDefinition": "Dios, el Creador Supremo, la Deidad Única.",
+    "extendedDefinition": "BDB / Gesenius: Plural de majestad o plenitud de poder divino (pluralis majestatis / excellentiae). Cuando se refiere al Dios verdadero de Israel, rige invariablemente verbos y adjetivos en singular (ej. bara en Gn 1:1), enfatizando su unidad intrínseca y su infinita soberanía."
+  },
+  {
+    "strongCode": "H8064",
+    "language": "Hebrew",
+    "lemma": "שָׁמַיִם",
+    "transliteration": "šāmayim",
+    "ipa": "/ʃaːˈmajim/",
+    "partOfSpeech": "Sustantivo masculino dual / plural",
+    "shortDefinition": "Cielos, bóveda celeste, morada de la gloria de Dios.",
+    "extendedDefinition": "BDB: 1. El firmamento visible y la atmósfera cósmica. 2. Las altas regiones de los cuerpos celestes. 3. La dimensión trascendente y trono de la presencia divina."
+  },
+  {
+    "strongCode": "H776",
+    "language": "Hebrew",
+    "lemma": "אֶרֶץ",
+    "transliteration": "’ereṣ",
+    "ipa": "/ˈʔɛrɛsˤ/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Tierra, suelo, mundo terrenal, territorio habitado.",
+    "extendedDefinition": "BDB: 1. El globo terráqueo en oposición a los cielos (merisma cósmico en Gn 1:1: cielos y tierra = todo el universo). 2. Suelo firme y seco. 3. País o territorio geográfico específico."
+  },
+  {
+    "strongCode": "H8414",
+    "language": "Hebrew",
+    "lemma": "תֹּהוּ",
+    "transliteration": "tōhû",
+    "ipa": "/ˈtoːhuː/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Desolación, sin forma, informe, lugar desierto.",
+    "extendedDefinition": "BDB: Estado primordial no configurado ni estructurado previo a los mandatos ordenadores de los Días 1-3. Formulado en el pareado asonante Tohu va-Vohu."
+  },
+  {
+    "strongCode": "H922",
+    "language": "Hebrew",
+    "lemma": "בֹּהוּ",
+    "transliteration": "bōhû",
+    "ipa": "/ˈboːhuː/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Vacío, sin habitantes ni contenido.",
+    "extendedDefinition": "BDB: Ausencia de plenitud o habitantes previo a los mandatos de llenado de los Días 4-6. Describe el cosmos antes de ser poblado por lumbreras, criaturas marinas, aves y seres terrestres."
+  },
+  {
+    "strongCode": "H2822",
+    "language": "Hebrew",
+    "lemma": "חֹשֶׁךְ",
+    "transliteration": "ḥōšek",
+    "ipa": "/ˈħoːʃɛx/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Tinieblas, oscuridad, ausencia de luz visible.",
+    "extendedDefinition": "BDB: Densas tinieblas primordiales sobre el abismo antes del primer fiat divino (Gn 1:2-3)."
+  },
+  {
+    "strongCode": "H8415",
+    "language": "Hebrew",
+    "lemma": "תְּהוֹם",
+    "transliteration": "təhôm",
+    "ipa": "/təˈhoːm/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Abismo, profundidad oceánica primordial, aguas subterráneas.",
+    "extendedDefinition": "BDB: La masa oceánica profunda primordial que cubría la tierra antes de la emergencia del suelo seco."
+  },
+  {
+    "strongCode": "H7307",
+    "language": "Hebrew",
+    "lemma": "רוּחַ",
+    "transliteration": "rûaḥ",
+    "ipa": "/ˈruːaħ/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Espíritu, aliento, viento, presencia vivificante de Dios.",
+    "extendedDefinition": "BDB: 1. Ruaj Elohim: El Espíritu de Dios en acción soberana sobre la faz de las aguas primordiales (Gn 1:2). 2. Aliento de vida y principio vital impartido a las criaturas."
+  },
+  {
+    "strongCode": "H4325",
+    "language": "Hebrew",
+    "lemma": "מַיִם",
+    "transliteration": "mayim",
+    "ipa": "/ˈmajim/",
+    "partOfSpeech": "Sustantivo masculino dual",
+    "shortDefinition": "Aguas, mares, ríos, líquido vivificante.",
+    "extendedDefinition": "BDB: Masa acuática primordial y elementos hidrológicos del orden creado."
+  },
+  {
+    "strongCode": "H216",
+    "language": "Hebrew",
+    "lemma": "אוֹר",
+    "transliteration": "’ôr",
+    "ipa": "/ʔoːr/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Luz, resplandor, iluminación divina, aurora.",
+    "extendedDefinition": "BDB: La primera entidad llamada a existir por la palabra de Dios (Día 1: 'Hágase la luz'). Representa orden, claridad, vida y la revelación de la gloria divina."
+  },
+  {
+    "strongCode": "H7549",
+    "language": "Hebrew",
+    "lemma": "רָקִיעַ",
+    "transliteration": "rāqîa‘",
+    "ipa": "/raːˈqiːaʕ/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Expansión, bóveda celeste, firmamento.",
+    "extendedDefinition": "BDB / Gesenius: Espacio extendido o lámina atmosférica creada en el Día 2 para separar las aguas superiores (humedad, nubes) de las aguas inferiores (océanos, mares)."
+  },
+  {
+    "strongCode": "H3117",
+    "language": "Hebrew",
+    "lemma": "יוֹם",
+    "transliteration": "yôm",
+    "ipa": "/joːm/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Día, período diurno de luz, época, jornada.",
+    "extendedDefinition": "BDB: 1. El período diurno en contraste con la noche (Gn 1:5). 2. Ciclo compuesto de tarde y mañana (yom ejad, yom sheni...). 3. Tiempo o período determinado."
+  },
+  {
+    "strongCode": "H3915",
+    "language": "Hebrew",
+    "lemma": "לַיְלָה",
+    "transliteration": "laylâ",
+    "ipa": "/ˈlajlaː/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Noche, tiempo de reposo, oscuridad regulada.",
+    "extendedDefinition": "BDB: El espacio de tiempo oscuro designado por Dios y gobernado por la lumbrera menor y las estrellas (Gn 1:5, 16)."
+  },
+  {
+    "strongCode": "H3974",
+    "language": "Hebrew",
+    "lemma": "מָאוֹר",
+    "transliteration": "mā’ôr",
+    "ipa": "/maːˈʔoːr/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Lumbrera, cuerpo luminoso, astro emisor de luz.",
+    "extendedDefinition": "BDB: Los cuerpos celestes (sol, luna y estrellas) fijados en el firmamento en el Día 4 para regular el calendario, las estaciones y la iluminación de la tierra."
+  },
+  {
+    "strongCode": "H5775",
+    "language": "Hebrew",
+    "lemma": "עוֹף",
+    "transliteration": "‘ôp̱",
+    "ipa": "/ʕoːf/",
+    "partOfSpeech": "Sustantivo masculino colectivo",
+    "shortDefinition": "Aves, criaturas aladas voladoras.",
+    "extendedDefinition": "BDB: Todo ser dotado de alas que vuela en la atmósfera y expansión de los cielos (Gn 1:20-22)."
+  },
+  {
+    "strongCode": "H8577",
+    "language": "Hebrew",
+    "lemma": "תַּנִּין",
+    "transliteration": "tannîn",
+    "ipa": "/tanˈniːn/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Grandes monstruos marinos, cetáceos, reptiles gigantes.",
+    "extendedDefinition": "BDB: Las colosales criaturas marinas creadas en el Día 5 (Gn 1:21), desmitologizadas frente a las leyendas paganas de dragones acuáticos caóticos."
+  },
+  {
+    "strongCode": "H929",
+    "language": "Hebrew",
+    "lemma": "בְּהֵמָה",
+    "transliteration": "bəhēmâ",
+    "ipa": "/bəheːˈmaː/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Bestia, ganado, animal cuadrúpedo doméstico.",
+    "extendedDefinition": "BDB: Animales terrestres de gran porte y ganado domesticable creados en el Día 6 (Gn 1:24-25)."
+  },
+  {
+    "strongCode": "H120",
+    "language": "Hebrew",
+    "lemma": "אָדָם",
+    "transliteration": "’āḏām",
+    "ipa": "/ʔaːˈdaːm/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Hombre, ser humano, humanidad, el primer hombre Adán.",
+    "extendedDefinition": "BDB / Gesenius: La raza humana constituida como cumbre de la creación, modelada a imagen de Dios y relacionada etimológicamente con la tierra (Adamah)."
+  },
+  {
+    "strongCode": "H5315",
+    "language": "Hebrew",
+    "lemma": "נֶפֶשׁ",
+    "transliteration": "nepeš",
+    "ipa": "/ˈnɛfɛʃ/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Alma, ser viviente, vida, criatura animada, persona.",
+    "extendedDefinition": "BDB: 1. Nefesh jayyah: Ser viviente animado con respiración y vitalidad orgánica (Gn 1:20, 24). 2. La vida intrínseca de los animales y del ser humano."
+  },
+  {
+    "strongCode": "H6754",
+    "language": "Hebrew",
+    "lemma": "צֶלֶם",
+    "transliteration": "ṣelem",
+    "ipa": "/ˈsˤɛlɛm/",
+    "partOfSpeech": "Sustantivo masculino",
+    "shortDefinition": "Imagen, representación, semejanza representativa.",
+    "extendedDefinition": "BDB / Gesenius: Imago Dei (Gn 1:26-27). El ser humano constituido como representante y mayordomo soberano de Dios en la tierra, dotado de capacidad moral, racional, relacional y dominio delegado."
+  },
+  {
+    "strongCode": "H1823",
+    "language": "Hebrew",
+    "lemma": "דְּמוּת",
+    "transliteration": "dəmûṯ",
+    "ipa": "/dəˈmuːt/",
+    "partOfSpeech": "Sustantivo femenino",
+    "shortDefinition": "Semejanza, patrón, afinidad de naturaleza y carácter.",
+    "extendedDefinition": "BDB: Término complementario a tselem que enfatiza la correspondencia y reflejo fiel del carácter y los propósitos de Dios en la criatura humana."
+  },
+  {
+    "strongCode": "H2896",
+    "language": "Hebrew",
+    "lemma": "טוֹב",
+    "transliteration": "ṭôḇ",
+    "ipa": "/tˤoːv/",
+    "partOfSpeech": "Adjetivo masculino",
+    "shortDefinition": "Bueno, perfecto, armónico, placentero, provechoso.",
+    "extendedDefinition": "BDB: Declaración evaluativa divina del cosmos: 'Ki-tov' (Porque era bueno) repetida 7 veces en la semana de la Creación, culminando en 'Tov Me'od' (Bueno en gran manera) en Gn 1:31."
+  },
+  {
+    "strongCode": "H1288",
+    "language": "Hebrew",
+    "lemma": "בָּרַךְ",
+    "transliteration": "bāraḵ",
+    "ipa": "/baːˈrax/",
+    "partOfSpeech": "Verbo (Tronco Piel)",
+    "shortDefinition": "Bendecir, impartir fecundidad, prosperar.",
+    "extendedDefinition": "BDB: Acto divino de conferir capacidad reproductiva, vida abundante y prosperidad vital a las criaturas marinas, aves y a la humanidad (Gn 1:22, 28)."
+  },
+  {
+    "strongCode": "H6509",
+    "language": "Hebrew",
+    "lemma": "פָּרָה",
+    "transliteration": "pārâ",
+    "ipa": "/paːˈraː/",
+    "partOfSpeech": "Verbo (Tronco Qal)",
+    "shortDefinition": "Fructificar, ser fecundo, dar fruto.",
+    "extendedDefinition": "BDB: Mandato creacional de fecundidad y desarrollo de la vida orgánica sobre la tierra."
+  },
+  {
+    "strongCode": "H7235",
+    "language": "Hebrew",
+    "lemma": "רָבָה",
+    "transliteration": "rāḇâ",
+    "ipa": "/raːˈvaː/",
+    "partOfSpeech": "Verbo (Tronco Qal)",
+    "shortDefinition": "Multiplicar, aumentar en número y plenitud.",
+    "extendedDefinition": "BDB: Crecimiento expansivo de la población de las criaturas creadas para poblar los nichos cósmicos."
+  },
+  {
+    "strongCode": "H3533",
+    "language": "Hebrew",
+    "lemma": "כָּבַשׁ",
+    "transliteration": "kāḇaš",
+    "ipa": "/kaːˈvaʃ/",
+    "partOfSpeech": "Verbo (Tronco Qal)",
+    "shortDefinition": "Sojuzgar, cultivar responsablemente, poner en orden.",
+    "extendedDefinition": "BDB: Mayordomía delegada a la humanidad para gobernar pacíficamente los recursos naturales y desplegar el potencial de la creación."
+  },
+  {
+    "strongCode": "H7287",
+    "language": "Hebrew",
+    "lemma": "רָדָה",
+    "transliteration": "rādâ",
+    "ipa": "/raːˈdaː/",
+    "partOfSpeech": "Verbo (Tronco Qal)",
+    "shortDefinition": "Señorear, gobernar benévolamente, ejercer dominio.",
+    "extendedDefinition": "BDB: Mayordomía vicaria del hombre como virrey de Dios sobre los reinos acuático, aéreo y terrestre."
+  },
+  {
+    "strongCode": "H7673",
+    "language": "Hebrew",
+    "lemma": "שָׁבַת",
+    "transliteration": "šāḇaṯ",
+    "ipa": "/ʃaːˈvat/",
+    "partOfSpeech": "Verbo (Tronco Qal)",
+    "shortDefinition": "Cesar, reposar, concluir la obra, santificar el descanso.",
+    "extendedDefinition": "BDB: Cesar la labor productiva tras completar plenamente la obra cósmica. Base del Shabat (Día Séptimo, Gn 2:1-3)."
+  }
+]

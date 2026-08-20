@@ -21,6 +21,83 @@ interface BookCorpus {
   chapters: ChapterItem[];
 }
 
+interface SeedLexiconEntry {
+  strongCode: string;
+  language: string;
+  lemma: string;
+  transliteration: string;
+  ipa?: string;
+  partOfSpeech: string;
+  shortDefinition: string;
+  extendedDefinition?: string;
+}
+
+interface SeedVerseToken {
+  wordOrder: number;
+  surfaceText: string;
+  consonantsOnly?: string;
+  transliteration: string;
+  strongCode?: string;
+  morphologyCode: string;
+  gloss: string;
+}
+
+interface SeedVerseTokensGroup {
+  chapter: number;
+  verseNumber: number;
+  tokens: SeedVerseToken[];
+}
+
+interface SeedHistoricalPlace {
+  id: string;
+  name: string;
+  originalName?: unknown;
+  coordinates: unknown;
+  category: string;
+  era?: unknown;
+  modernName?: string;
+  country?: string;
+  elevationMeters?: number;
+  description: string;
+  biblicalReferences?: unknown;
+  archaeologicalNotes?: unknown;
+}
+
+interface SeedTimelineEvent {
+  id: string;
+  name: string;
+  type: string;
+  originalName?: unknown;
+  startYearBC: number;
+  endYearBC: number;
+  kingdom?: string;
+  evaluation?: string;
+  dynastyOrOrigin?: string;
+  contemporaryEntities?: unknown;
+  biblicalReferences?: unknown;
+  keyEvents?: unknown;
+  details?: string;
+}
+
+interface SeedArchaeologyArticle {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  region: string;
+  regionLabel: string;
+  publishDate: string;
+  institutionOrAuthor: string;
+  readTimeMinutes: number;
+  summary: string;
+  contentMarkdown: string;
+  biblicalReferences?: unknown;
+  epigraphy?: unknown;
+  museumOrLocation?: string;
+  keyArtifact?: string;
+  tags?: unknown;
+}
+
 export const CANONICAL_BOOKS = [
   // Antiguo Testamento (39 libros)
   { id: 1, name: 'Génesis', abbreviation: 'GEN', testament: 'OT' },
@@ -94,57 +171,197 @@ export const CANONICAL_BOOKS = [
 
 export function seedCorpus(dbPath: string = 'bible.sqlite') {
   const startTime = Date.now();
-  console.log(`[CorpusSeeder] Conectando a la base de datos: ${dbPath}...`);
+  console.log(
+    `[CorpusSeeder] 🚀 Recreando base de datos desde cero: ${dbPath}...`,
+  );
 
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   db.pragma('synchronous = NORMAL');
 
-  // Asegurar esquema base si la base de datos es nueva
+  // 1. Reset limpio total de las 8 tablas del corpus
+  console.log('[CorpusSeeder] Purgando tablas anteriores (Reset Limpio)...');
   db.exec(`
-    CREATE TABLE IF NOT EXISTS books (
+    DROP TABLE IF EXISTS morphology_tokens;
+    DROP TABLE IF EXISTS lexicon_entries;
+    DROP TABLE IF EXISTS verses;
+    DROP TABLE IF EXISTS translations;
+    DROP TABLE IF EXISTS books;
+    DROP TABLE IF EXISTS historical_places;
+    DROP TABLE IF EXISTS timeline_events;
+    DROP TABLE IF EXISTS archaeology_articles;
+
+    CREATE TABLE books (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR NOT NULL,
       abbreviation VARCHAR NOT NULL UNIQUE,
       testament VARCHAR NOT NULL
     );
-    CREATE TABLE IF NOT EXISTS translations (
+
+    CREATE TABLE translations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR NOT NULL,
       abbreviation VARCHAR NOT NULL UNIQUE,
       language VARCHAR NOT NULL
     );
-    CREATE TABLE IF NOT EXISTS verses (
+
+    CREATE TABLE verses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       chapter INTEGER NOT NULL,
       verseNumber INTEGER NOT NULL,
       text TEXT NOT NULL,
       bookId INTEGER NOT NULL,
-      translationId INTEGER NOT NULL
+      translationId INTEGER NOT NULL,
+      FOREIGN KEY (bookId) REFERENCES books(id) ON DELETE CASCADE,
+      FOREIGN KEY (translationId) REFERENCES translations(id) ON DELETE CASCADE
     );
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_verse_unique ON verses(translationId, bookId, chapter, verseNumber);
+    CREATE INDEX IF NOT EXISTS IDX_verse_lookup ON verses(bookId, translationId, chapter);
+
+    CREATE TABLE lexicon_entries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      strongCode VARCHAR(10) NOT NULL UNIQUE,
+      language VARCHAR(20) NOT NULL,
+      lemma VARCHAR(100) NOT NULL,
+      transliteration VARCHAR(100) NOT NULL,
+      ipa VARCHAR(50),
+      partOfSpeech VARCHAR(100) NOT NULL,
+      shortDefinition TEXT NOT NULL,
+      extendedDefinition TEXT
+    );
+    CREATE INDEX IF NOT EXISTS IDX_lexicon_strong ON lexicon_entries(strongCode);
+
+    CREATE TABLE morphology_tokens (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      verseId INTEGER NOT NULL,
+      wordOrder INTEGER NOT NULL,
+      surfaceText VARCHAR(100) NOT NULL,
+      consonantsOnly VARCHAR(100),
+      transliteration VARCHAR(100) NOT NULL,
+      strongCode VARCHAR(10),
+      morphologyCode VARCHAR(50) NOT NULL,
+      gloss VARCHAR(150) NOT NULL,
+      FOREIGN KEY (verseId) REFERENCES verses(id) ON DELETE CASCADE
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_morph_token_unique ON morphology_tokens(verseId, wordOrder);
+    CREATE INDEX IF NOT EXISTS IDX_morph_strong ON morphology_tokens(strongCode);
+
+    CREATE TABLE historical_places (
+      id VARCHAR(64) PRIMARY KEY,
+      name VARCHAR(128) NOT NULL,
+      originalName TEXT,
+      coordinates TEXT NOT NULL,
+      category VARCHAR(32) NOT NULL,
+      era TEXT,
+      modernName VARCHAR(128),
+      country VARCHAR(64),
+      elevationMeters INTEGER,
+      description TEXT NOT NULL,
+      biblicalReferences TEXT,
+      archaeologicalNotes TEXT
+    );
+    CREATE INDEX IF NOT EXISTS IDX_places_category ON historical_places(category);
+
+    CREATE TABLE timeline_events (
+      id VARCHAR(64) PRIMARY KEY,
+      name VARCHAR(128) NOT NULL,
+      type VARCHAR(32) NOT NULL,
+      originalName TEXT,
+      startYearBC INTEGER NOT NULL,
+      endYearBC INTEGER NOT NULL,
+      kingdom VARCHAR(32),
+      evaluation VARCHAR(16),
+      dynastyOrOrigin VARCHAR(128),
+      contemporaryEntities TEXT,
+      biblicalReferences TEXT,
+      keyEvents TEXT,
+      details TEXT
+    );
+    CREATE INDEX IF NOT EXISTS IDX_timeline_type ON timeline_events(type);
+    CREATE INDEX IF NOT EXISTS IDX_timeline_start ON timeline_events(startYearBC);
+    CREATE INDEX IF NOT EXISTS IDX_timeline_end ON timeline_events(endYearBC);
+
+    CREATE TABLE archaeology_articles (
+      id VARCHAR(64) PRIMARY KEY,
+      title VARCHAR(256) NOT NULL,
+      slug VARCHAR(256) UNIQUE NOT NULL,
+      category VARCHAR(64) NOT NULL,
+      region VARCHAR(64) NOT NULL,
+      regionLabel VARCHAR(128) NOT NULL,
+      publishDate VARCHAR(32) NOT NULL,
+      institutionOrAuthor VARCHAR(256) NOT NULL,
+      readTimeMinutes INTEGER NOT NULL,
+      summary TEXT NOT NULL,
+      contentMarkdown TEXT NOT NULL,
+      biblicalReferences TEXT,
+      epigraphy TEXT,
+      museumOrLocation VARCHAR(256),
+      keyArtifact VARCHAR(256),
+      tags TEXT
+    );
+    CREATE INDEX IF NOT EXISTS IDX_articles_cat ON archaeology_articles(category);
+    CREATE INDEX IF NOT EXISTS IDX_articles_slug ON archaeology_articles(slug);
   `);
 
-  // Sembrar los 66 libros canónicos de forma segura e idempotente
+  // Sembrar los 66 libros canónicos de forma segura
   console.log('[CorpusSeeder] Sembrando catálogo de 66 libros canónicos...');
   const seedBooksTx = db.transaction(() => {
-    const checkStmt = db.prepare('SELECT id FROM books WHERE abbreviation = ?');
-    const updateStmt = db.prepare(
-      'UPDATE books SET name = ?, testament = ? WHERE abbreviation = ?',
-    );
     const insertStmt = db.prepare(
-      'INSERT INTO books (name, abbreviation, testament) VALUES (?, ?, ?)',
+      'INSERT INTO books (id, name, abbreviation, testament) VALUES (?, ?, ?, ?)',
     );
 
     for (const b of CANONICAL_BOOKS) {
-      const existing = checkStmt.get(b.abbreviation);
-      if (existing) {
-        updateStmt.run(b.name, b.testament, b.abbreviation);
-      } else {
-        insertStmt.run(b.name, b.abbreviation, b.testament);
-      }
+      insertStmt.run(b.id, b.name, b.abbreviation, b.testament);
     }
   });
   seedBooksTx();
+
+  // Sembrar las 5 traducciones oficiales autorizadas
+  console.log(
+    '[CorpusSeeder] Sembrando catálogo de 5 traducciones oficiales...',
+  );
+  const OFFICIAL_TRANSLATIONS = [
+    {
+      id: 1,
+      name: 'Biblia Hebraica Stuttgartensia (WLC)',
+      abbreviation: 'BHS',
+      language: 'he',
+    },
+    {
+      id: 2,
+      name: 'Septuaginta Griega (LXX)',
+      abbreviation: 'LXX',
+      language: 'el',
+    },
+    {
+      id: 3,
+      name: 'Nueva Biblia de las Américas',
+      abbreviation: 'NBLA',
+      language: 'es',
+    },
+    {
+      id: 4,
+      name: 'Nueva Traducción Viviente',
+      abbreviation: 'NTV',
+      language: 'es',
+    },
+    {
+      id: 5,
+      name: 'New International Version',
+      abbreviation: 'NIV',
+      language: 'en',
+    },
+  ];
+
+  const seedTranslationsTx = db.transaction(() => {
+    const insertStmt = db.prepare(
+      'INSERT INTO translations (id, name, abbreviation, language) VALUES (?, ?, ?, ?)',
+    );
+    for (const t of OFFICIAL_TRANSLATIONS) {
+      insertStmt.run(t.id, t.name, t.abbreviation, t.language);
+    }
+  });
+  seedTranslationsTx();
 
   const corpusDir = path.resolve(__dirname, '../corpus');
   if (!fs.existsSync(corpusDir)) {
@@ -158,6 +375,7 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
   let totalVersesInserted = 0;
 
   for (const transFolder of translations) {
+    if (transFolder === 'historical' || transFolder === 'morphology') continue;
     const transPath = path.join(corpusDir, transFolder);
     if (!fs.statSync(transPath).isDirectory()) continue;
 
@@ -230,6 +448,199 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
       const count = insertBatch(data.chapters);
       totalVersesInserted += count;
       console.log(`[CorpusSeeder] -> ${count} versículos procesados en lote.`);
+    }
+  }
+
+  // 4. Sembrado Transaccional de Morfología y Léxicos Strong
+  const morphDir = path.join(corpusDir, 'morphology');
+  if (fs.existsSync(morphDir)) {
+    // A. Lexicon Entries (Strong BDB / Gesenius)
+    const lexiconPath = path.join(morphDir, 'genesis_01_lexicon.json');
+    if (fs.existsSync(lexiconPath)) {
+      const entries = JSON.parse(
+        fs.readFileSync(lexiconPath, 'utf8'),
+      ) as SeedLexiconEntry[];
+      const insertLexicon = db.prepare(`
+        INSERT INTO lexicon_entries (strongCode, language, lemma, transliteration, ipa, partOfSpeech, shortDefinition, extendedDefinition)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txLexicon = db.transaction((items: SeedLexiconEntry[]) => {
+        for (const e of items) {
+          insertLexicon.run(
+            e.strongCode,
+            e.language,
+            e.lemma,
+            e.transliteration,
+            e.ipa || null,
+            e.partOfSpeech,
+            e.shortDefinition,
+            e.extendedDefinition || null,
+          );
+        }
+      });
+      txLexicon(entries);
+      console.log(
+        `[MorphologySeeder] -> ${entries.length} entradas léxicas Strong indexadas.`,
+      );
+    }
+
+    // B. Morphology Tokens (Interlineal por versículo)
+    const tokensPath = path.join(morphDir, 'genesis_01_tokens.json');
+    if (fs.existsSync(tokensPath)) {
+      const verseTokensList = JSON.parse(
+        fs.readFileSync(tokensPath, 'utf8'),
+      ) as SeedVerseTokensGroup[];
+      const findVerseStmt = db.prepare(`
+        SELECT v.id FROM verses v
+        JOIN books b ON v.bookId = b.id
+        JOIN translations t ON v.translationId = t.id
+        WHERE b.abbreviation = 'GEN' AND t.abbreviation = 'BHS' AND v.chapter = ? AND v.verseNumber = ?
+      `);
+
+      const insertTokenStmt = db.prepare(`
+        INSERT INTO morphology_tokens (verseId, wordOrder, surfaceText, consonantsOnly, transliteration, strongCode, morphologyCode, gloss)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+
+      const txTokens = db.transaction((list: SeedVerseTokensGroup[]) => {
+        let count = 0;
+        for (const item of list) {
+          const row = findVerseStmt.get(item.chapter, item.verseNumber) as
+            | { id: number }
+            | undefined;
+          const verseId = row ? row.id : 1;
+          for (const tok of item.tokens) {
+            insertTokenStmt.run(
+              verseId,
+              tok.wordOrder,
+              tok.surfaceText,
+              tok.consonantsOnly || null,
+              tok.transliteration,
+              tok.strongCode || null,
+              tok.morphologyCode,
+              tok.gloss,
+            );
+            count++;
+          }
+        }
+        return count;
+      });
+
+      const totalTokens = txTokens(verseTokensList);
+      console.log(
+        `[MorphologySeeder] -> ${totalTokens} tokens morfológicos masoréticos indexados.`,
+      );
+    }
+  }
+
+  // 5. Sembrado Transaccional de Contexto Histórico
+  const historicalDir = path.join(corpusDir, 'historical');
+  if (fs.existsSync(historicalDir)) {
+    // A. Historical Places (Atlas)
+    const placesPath = path.join(historicalDir, 'atlas_locations.json');
+    if (fs.existsSync(placesPath)) {
+      const places = JSON.parse(
+        fs.readFileSync(placesPath, 'utf8'),
+      ) as SeedHistoricalPlace[];
+      const insertPlace = db.prepare(`
+        INSERT INTO historical_places (id, name, originalName, coordinates, category, era, modernName, country, elevationMeters, description, biblicalReferences, archaeologicalNotes)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txPlaces = db.transaction((items: SeedHistoricalPlace[]) => {
+        for (const p of items) {
+          insertPlace.run(
+            p.id,
+            p.name,
+            JSON.stringify(p.originalName || null),
+            JSON.stringify(p.coordinates),
+            p.category,
+            JSON.stringify(p.era || []),
+            p.modernName || null,
+            p.country || null,
+            p.elevationMeters || null,
+            p.description,
+            JSON.stringify(p.biblicalReferences || []),
+            JSON.stringify(p.archaeologicalNotes || null),
+          );
+        }
+      });
+      txPlaces(places);
+      console.log(
+        `[HistoricalSeeder] -> ${places.length} ubicaciones geográficas indexadas.`,
+      );
+    }
+
+    // B. Timeline Events
+    const timelinePath = path.join(historicalDir, 'timeline_events.json');
+    if (fs.existsSync(timelinePath)) {
+      const events = JSON.parse(
+        fs.readFileSync(timelinePath, 'utf8'),
+      ) as SeedTimelineEvent[];
+      const insertEvent = db.prepare(`
+        INSERT INTO timeline_events (id, name, type, originalName, startYearBC, endYearBC, kingdom, evaluation, dynastyOrOrigin, contemporaryEntities, biblicalReferences, keyEvents, details)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txEvents = db.transaction((items: SeedTimelineEvent[]) => {
+        for (const e of items) {
+          insertEvent.run(
+            e.id,
+            e.name,
+            e.type,
+            JSON.stringify(e.originalName || null),
+            e.startYearBC,
+            e.endYearBC,
+            e.kingdom || null,
+            e.evaluation || null,
+            e.dynastyOrOrigin || null,
+            JSON.stringify(e.contemporaryEntities || []),
+            JSON.stringify(e.biblicalReferences || []),
+            JSON.stringify(e.keyEvents || []),
+            e.details || null,
+          );
+        }
+      });
+      txEvents(events);
+      console.log(
+        `[HistoricalSeeder] -> ${events.length} entidades cronológicas indexadas.`,
+      );
+    }
+
+    // C. Archaeology Articles
+    const articlesPath = path.join(historicalDir, 'archaeology_articles.json');
+    if (fs.existsSync(articlesPath)) {
+      const articles = JSON.parse(
+        fs.readFileSync(articlesPath, 'utf8'),
+      ) as SeedArchaeologyArticle[];
+      const insertArticle = db.prepare(`
+        INSERT INTO archaeology_articles (id, title, slug, category, region, regionLabel, publishDate, institutionOrAuthor, readTimeMinutes, summary, contentMarkdown, biblicalReferences, epigraphy, museumOrLocation, keyArtifact, tags)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txArticles = db.transaction((items: SeedArchaeologyArticle[]) => {
+        for (const a of items) {
+          insertArticle.run(
+            a.id,
+            a.title,
+            a.slug,
+            a.category,
+            a.region,
+            a.regionLabel,
+            a.publishDate,
+            a.institutionOrAuthor,
+            a.readTimeMinutes,
+            a.summary,
+            a.contentMarkdown,
+            JSON.stringify(a.biblicalReferences || []),
+            JSON.stringify(a.epigraphy || null),
+            a.museumOrLocation || null,
+            a.keyArtifact || null,
+            JSON.stringify(a.tags || []),
+          );
+        }
+      });
+      txArticles(articles);
+      console.log(
+        `[HistoricalSeeder] -> ${articles.length} artículos arqueológicos indexados.`,
+      );
     }
   }
 

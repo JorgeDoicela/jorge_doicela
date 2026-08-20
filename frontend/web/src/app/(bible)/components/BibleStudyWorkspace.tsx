@@ -18,6 +18,8 @@ import { GrammarSearchDashboard } from '../features/grammar-search';
 import { AtlasDashboard } from '../features/atlas';
 import { TimelineDashboard } from '../features/timeline';
 import { ArchaeologyFeedDashboard } from '../features/archaeology-feed';
+import { WordStudyView } from './WordStudyView';
+import { HistoricalContextView } from './HistoricalContextView';
 import { BibleHeaderNav } from './BibleHeaderNav';
 
 export function BibleStudyWorkspace() {
@@ -121,16 +123,7 @@ export function BibleStudyWorkspace() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Navegación Superior Fija en 1 Sola Línea */}
-      <BibleHeaderNav
-        studyMode={studyMode}
-        onChangeStudyMode={setStudyMode}
-        selectedTranslationId={selectedTranslationId}
-        onSelectTranslation={setSelectedTranslationId}
-        columnCount={columns.length}
-        availableTranslations={translations}
-        activeTranslationIds={columns.map((c) => c.translationId)}
-        onAddColumn={addColumn}
-      />
+      <BibleHeaderNav />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 pb-20 space-y-4">
@@ -192,18 +185,22 @@ export function BibleStudyWorkspace() {
             />
           ) : studyMode === 'interlinear' ? (
             <InterlinearView selectedBookAbbr={selectedBook?.abbreviation} />
+          ) : studyMode === 'word-study' ? (
+            <WordStudyView />
+          ) : studyMode === 'historical-context' ? (
+            <HistoricalContextView />
           ) : studyMode === 'literary' ? (
             <LiteraryAnalysisView />
           ) : studyMode === 'lexicon' ? (
-            <LexiconView />
+            <WordStudyView initialSubTab="lexicon" />
           ) : studyMode === 'grammar-search' ? (
-            <GrammarSearchDashboard />
+            <WordStudyView initialSubTab="morphology" />
           ) : studyMode === 'atlas' ? (
-            <AtlasDashboard />
+            <HistoricalContextView initialSubTab="atlas" />
           ) : studyMode === 'timeline' ? (
-            <TimelineDashboard />
+            <HistoricalContextView initialSubTab="timeline" />
           ) : studyMode === 'archaeology' ? (
-            <ArchaeologyFeedDashboard />
+            <HistoricalContextView initialSubTab="archaeology" />
           ) : (
             <VerseList
               verses={verses}
@@ -223,6 +220,8 @@ export function BibleStudyWorkspace() {
               onSelectChapter={setSelectedChapter}
               onPrevChapter={prevChapter}
               onNextChapter={nextChapter}
+              selectedTranslationId={selectedTranslationId}
+              onSelectTranslation={setSelectedTranslationId}
               activeTranslationName={activeTranslation?.name}
               activeTranslationAbbr={activeTranslation?.abbreviation}
             />

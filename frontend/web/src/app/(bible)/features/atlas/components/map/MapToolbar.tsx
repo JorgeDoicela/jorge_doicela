@@ -15,6 +15,7 @@ interface MapToolbarProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetView: () => void;
+  onSelectRegion?: (region: 'all' | 'holyland' | 'greece_asia' | 'egypt_sinai') => void;
   zoomLevel: number;
 }
 
@@ -30,19 +31,20 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
   onZoomIn,
   onZoomOut,
   onResetView,
+  onSelectRegion,
   zoomLevel,
 }) => {
   return (
     <div className="flex flex-col gap-3 p-3.5 rounded-xl border border-accents-2 bg-background/80 backdrop-blur-md">
-      {/* Fila 1: Buscador y Selector de Capas */}
+      {/* Fila 1: Buscador, Presets de Región y Selector de Capas */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         {/* Buscador de Lugares */}
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="relative flex-1 min-w-[180px] max-w-xs">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onChangeSearchQuery(e.target.value)}
-            placeholder="Buscar ciudad, monte, río o pasaje..."
+            placeholder="Buscar ciudad, monte, río..."
             className="w-full pl-8 pr-3 py-1.5 text-xs bg-background border border-accents-2 rounded-lg text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground transition-all"
           />
           <svg
@@ -62,12 +64,50 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
             <button
               type="button"
               onClick={() => onChangeSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-accents-4 hover:text-foreground text-xs"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-accents-4 hover:text-foreground text-xs cursor-pointer"
             >
               ✕
             </button>
           )}
         </div>
+
+        {/* Enfoque Rapido por Regiones Biblicas */}
+        {onSelectRegion && (
+          <div className="flex items-center gap-1 p-1 bg-accents-1 border border-accents-2 rounded-lg text-xs">
+            <button
+              type="button"
+              onClick={() => onSelectRegion('all')}
+              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
+              title="Vista global de todo el mundo biblico"
+            >
+              Todo el Mundo
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectRegion('holyland')}
+              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
+              title="Enfocar Jerusalen, Galilea, Jordan y Mar Muerto"
+            >
+              Tierra Santa
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectRegion('greece_asia')}
+              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
+              title="Enfocar Grecia, Macedonia y Asia Menor"
+            >
+              Grecia y Asia
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectRegion('egypt_sinai')}
+              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
+              title="Enfocar Egipto y Peninsula del Sinai"
+            >
+              Egipto y Sinai
+            </button>
+          </div>
+        )}
 
         {/* Selector de Capas del Mapa */}
         <div className="flex items-center gap-1 p-1 bg-accents-1 border border-accents-2 rounded-lg text-xs">
@@ -102,7 +142,7 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Satelital Híbrido
+            Satelital
           </button>
         </div>
 

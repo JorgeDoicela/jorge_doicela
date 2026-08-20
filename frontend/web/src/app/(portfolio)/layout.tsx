@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+    metadataBase: new URL("https://portfolio.jorgedoicela.com"),
     title: "Jorge Doicela — Portfolio",
     description: "Portafolio interactivo de Jorge Doicela. Desarrollador de Software.",
     icons: {

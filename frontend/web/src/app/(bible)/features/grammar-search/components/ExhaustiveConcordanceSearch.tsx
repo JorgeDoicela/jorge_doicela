@@ -16,13 +16,11 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
 
   const translationsList = [
     { abbr: 'all', name: 'Todas las Versiones' },
-    { abbr: 'RV1960', name: 'Reina-Valera 1960' },
-    { abbr: 'NVI', name: 'Nueva Versión Internacional' },
-    { abbr: 'LBLA', name: 'La Biblia de las Américas' },
-    { abbr: 'KJV', name: 'King James Version' },
-    { abbr: 'JER', name: 'Biblia de Jerusalén' },
-    { abbr: 'LXX', name: 'Septuaginta LXX' },
+    { abbr: 'NBLA', name: 'Nueva Biblia de las Américas' },
+    { abbr: 'NTV', name: 'Nueva Traducción Viviente' },
+    { abbr: 'NIV', name: 'New International Version' },
     { abbr: 'BHS', name: 'Biblia Hebraica (WLC)' },
+    { abbr: 'LXX', name: 'Septuaginta LXX' },
   ];
 
   const highlightText = (text: string, matchedSpans: string[]) => {

@@ -14,6 +14,7 @@ interface TimelineControlsProps {
     milestones: boolean;
   };
   onToggleTrack: (trackKey: 'judah' | 'israel' | 'prophets' | 'empires' | 'milestones') => void;
+  onSetPresetMode?: (mode: 'kings_prophets' | 'bible_archaeology' | 'all') => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   zoomLevel: number;
@@ -26,33 +27,90 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
   onSelectShortcut,
   visibleTracks,
   onToggleTrack,
+  onSetPresetMode,
   onZoomIn,
   onZoomOut,
   zoomLevel,
   isFullscreen = false,
   onToggleFullscreen,
 }) => {
+  const isKingsProphetsOnly =
+    visibleTracks.judah &&
+    visibleTracks.israel &&
+    visibleTracks.prophets &&
+    !visibleTracks.empires &&
+    !visibleTracks.milestones;
+
+  const isArchaeologyOnly =
+    visibleTracks.judah &&
+    !visibleTracks.israel &&
+    !visibleTracks.prophets &&
+    visibleTracks.empires &&
+    visibleTracks.milestones;
+
+  const isAllVisible =
+    visibleTracks.judah &&
+    visibleTracks.israel &&
+    visibleTracks.prophets &&
+    visibleTracks.empires &&
+    visibleTracks.milestones;
+
   return (
     <div className="flex flex-col gap-3 p-3.5 rounded-xl border border-accents-2 bg-background/80 backdrop-blur-md shadow-xs">
-      {/* Fila 1: Atajos de Eras Bíblicas Clave */}
+      {/* Fila 1: Modos de Estudio y Controles de Zoom */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {isFullscreen ? (
-            <div className="flex items-center gap-1.5 mr-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-foreground uppercase tracking-wide font-mono">
-                Cronología Bíblica
-              </span>
-            </div>
-          ) : (
-            <span className="text-[11px] font-mono text-accents-4 uppercase mr-1">Épocas:</span>
-          )}
+        {/* Modos Predefinidos de Visualizacion */}
+        {onSetPresetMode && (
+          <div className="flex items-center gap-1 p-1 bg-accents-1 border border-accents-2 rounded-lg text-xs">
+            <span className="text-[10px] font-mono text-accents-4 uppercase px-1.5 hidden md:inline">Modo:</span>
+            <button
+              type="button"
+              onClick={() => onSetPresetMode('kings_prophets')}
+              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                isKingsProphetsOnly
+                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  : 'text-accents-5 hover:text-foreground'
+              }`}
+              title="Ver unicamente tronos y profetas biblicos"
+            >
+              Reyes vs Profetas
+            </button>
+            <button
+              type="button"
+              onClick={() => onSetPresetMode('bible_archaeology')}
+              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                isArchaeologyOnly
+                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  : 'text-accents-5 hover:text-foreground'
+              }`}
+              title="Comparar Juda con potencias e hitos arqueologicos"
+            >
+              Biblia y Arqueologia
+            </button>
+            <button
+              type="button"
+              onClick={() => onSetPresetMode('all')}
+              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                isAllVisible
+                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  : 'text-accents-5 hover:text-foreground'
+              }`}
+              title="Ver todas las 5 pistas sincronizadas"
+            >
+              Todo Sincronizado
+            </button>
+          </div>
+        )}
+
+        {/* Atajos de Eras Bíblicas */}
+        <div className="flex flex-wrap items-center gap-1">
+          <span className="text-[11px] font-mono text-accents-4 uppercase mr-1">Época:</span>
           {shortcuts.map((shortcut) => (
             <button
               key={shortcut.id}
               type="button"
               onClick={() => onSelectShortcut(shortcut)}
-              className="px-2.5 py-1 rounded-md text-xs bg-accents-1 hover:bg-accents-2 text-accents-5 hover:text-foreground transition-all cursor-pointer font-medium"
+              className="px-2 py-0.5 rounded-md text-[11px] bg-accents-1/80 hover:bg-accents-2 text-accents-5 hover:text-foreground transition-all cursor-pointer font-medium"
               title={shortcut.description}
             >
               {shortcut.label}
@@ -101,16 +159,13 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                   <span className="hidden sm:inline">Restaurar</span>
-                  <kbd className="hidden sm:inline-block text-[9px] font-mono px-1 rounded bg-background/20 ml-0.5">
-                    ESC
-                  </kbd>
                 </>
               ) : (
                 <>
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                   </svg>
-                  <span className="hidden sm:inline">Vista Ampliada</span>
+                  <span className="hidden sm:inline">Ampliar</span>
                 </>
               )}
             </button>
@@ -118,15 +173,15 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
         </div>
       </div>
 
-      {/* Fila 2: Toggles de Pistas Sincrónicas */}
+      {/* Fila 2: Toggles de Pistas Sincrónicas Individuales */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-accents-2 text-xs">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] font-mono text-accents-4 mr-1">Pistas Sincronizadas:</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[11px] font-mono text-accents-4 mr-1">Pistas:</span>
 
           <button
             type="button"
             onClick={() => onToggleTrack('judah')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-2 cursor-pointer border ${
+            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
               visibleTracks.judah
                 ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
                 : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
@@ -139,7 +194,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('israel')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-2 cursor-pointer border ${
+            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
               visibleTracks.israel
                 ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
                 : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
@@ -152,7 +207,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('prophets')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-2 cursor-pointer border ${
+            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
               visibleTracks.prophets
                 ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
                 : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
@@ -165,7 +220,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('empires')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-2 cursor-pointer border ${
+            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
               visibleTracks.empires
                 ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
                 : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
@@ -178,19 +233,19 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('milestones')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-2 cursor-pointer border ${
+            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
               visibleTracks.milestones
                 ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
                 : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-amber-500" />
-            <span>Hitos Arqueológicos</span>
+            <span>Arqueología</span>
           </button>
         </div>
 
-        <span className="text-[10px] font-mono text-accents-4 hidden sm:inline">
-          Arrastra horizontalmente o haz clic para sincronizar
+        <span className="text-[10px] font-mono text-accents-4 hidden md:inline">
+          Haz clic o arrastra sobre el lienzo para sincronizar el año
         </span>
       </div>
     </div>

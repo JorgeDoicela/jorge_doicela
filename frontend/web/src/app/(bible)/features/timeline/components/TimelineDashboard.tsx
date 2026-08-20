@@ -24,6 +24,7 @@ export const TimelineDashboard: React.FC = () => {
     isDragging,
     visibleTracks,
     toggleTrack,
+    setPresetMode,
     shortcuts,
     handleZoomIn,
     handleZoomOut,
@@ -70,6 +71,7 @@ export const TimelineDashboard: React.FC = () => {
         onSelectShortcut={handleJumpToEra}
         visibleTracks={visibleTracks}
         onToggleTrack={toggleTrack}
+        onSetPresetMode={setPresetMode}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
         zoomLevel={zoomLevel}

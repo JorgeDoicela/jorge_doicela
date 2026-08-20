@@ -167,12 +167,12 @@ El pipeline se dispara automáticamente ante cada `git push` a la rama `main` y 
 graph TD
     A[Push a main] --> B[GitHub Runner: Checkout & Node 22]
     B --> C[pnpm install --frozen-lockfile]
-    C --> D[pnpm run typecheck]
+    B --> D[pnpm run typecheck]
     D --> E[pnpm run build: NestJS dist + Next.js Standalone]
     E --> F[rsync compilados vía SSH a Lightsail]
     F --> G[SSH Script en Servidor]
     G --> H[pnpm install --prod en backend]
-    G --> I[node dist/bible/cli/seed-corpus.js]
+    G --> I[node dist/bible/cli/seed-corpus.js & seed-software.js]
     G --> J[Copiar assets a standalone: public y static]
     G --> K[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
     G --> L[pm2 start pm2.config.js]
@@ -184,7 +184,7 @@ graph TD
 3. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sube los archivos excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
 4. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
    * Instala dependencias de producción en `backend/` (`--prod --ignore-scripts`).
-   * Ejecuta la sincronización transaccional del corpus bíblico (`seed-corpus.js`).
+   * Ejecuta la sincronización transaccional de bases de datos (`seed-corpus.js` y `seed-software.js`).
    * Copia los directorios `public/` y `.next/static/` a la carpeta `standalone/` de Next.js.
    * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída.
    * Reinicia los procesos con `pm2 start pm2.config.js`.

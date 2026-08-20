@@ -72,7 +72,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ### 5.3 Pipeline CI/CD (`.github/workflows/deploy.yml`)
 1. Compilación y validación de tipos en GitHub Actions (`ubuntu-latest`).
 2. Transferencia segura por `rsync` excluyendo `.sqlite` y `node_modules`.
-3. Sincronización automática del corpus bíblico (`node dist/bible/cli/seed-corpus.js`).
+3. Sincronización automática de bases de datos (`node dist/bible/cli/seed-corpus.js` y `node dist/software/cli/seed-software.js`).
 4. Sincronización de `nginx/jorgedoicela.com.conf` y recarga en caliente de Nginx.
 5. Reinicio de procesos en PM2.
 

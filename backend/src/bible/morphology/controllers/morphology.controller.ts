@@ -7,11 +7,37 @@ import { LexiconEntry } from '../entities/lexicon-entry.entity';
 export class MorphologyController {
   constructor(private readonly morphologyService: MorphologyService) {}
 
+  @Get('passage')
+  async getTokensByPassage(
+    @Query('book') bookAbbr: string,
+    @Query('chapter', ParseIntPipe) chapter: number,
+  ): Promise<MorphologyToken[]> {
+    if (!bookAbbr) return [];
+    return this.morphologyService.getTokensByPassage(bookAbbr, chapter);
+  }
+
   @Get('verse/:verseId')
   async getTokensByVerse(
     @Param('verseId', ParseIntPipe) verseId: number,
   ): Promise<MorphologyToken[]> {
     return this.morphologyService.getTokensByVerse(verseId);
+  }
+
+  @Get('tokens/search')
+  async searchTokens(
+    @Query('q') query?: string,
+    @Query('book') book?: string,
+    @Query('strong') strongCode?: string,
+    @Query('morph') morphologyCode?: string,
+    @Query('limit') limit?: string,
+  ): Promise<MorphologyToken[]> {
+    return this.morphologyService.searchTokens({
+      query,
+      book,
+      strongCode,
+      morphologyCode,
+      limit: limit ? parseInt(limit, 10) : 50,
+    });
   }
 
   @Get('lexicon/:strongCode')
@@ -22,10 +48,15 @@ export class MorphologyController {
   }
 
   @Get('lexicon')
-  async searchLexicon(@Query('q') query?: string): Promise<LexiconEntry[]> {
-    if (!query || query.trim() === '') {
-      return [];
-    }
-    return this.morphologyService.searchLexicon(query);
+  async searchLexicon(
+    @Query('q') query?: string,
+    @Query('lang') language?: string,
+    @Query('limit') limit?: string,
+  ): Promise<LexiconEntry[]> {
+    return this.morphologyService.searchLexicon(
+      query,
+      language,
+      limit ? parseInt(limit, 10) : 30,
+    );
   }
 }

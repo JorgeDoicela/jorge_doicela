@@ -5,17 +5,20 @@ import { HebrewLexiconEntry } from '../types';
 import { HEBREW_LEXICONS_DATABASE } from '../data/hebrewLexiconsData';
 
 interface HebrewRootBrowserProps {
+  entries?: HebrewLexiconEntry[];
   selectedEntryId: string;
   onSelectEntry: (entry: HebrewLexiconEntry) => void;
   searchQuery: string;
 }
 
 export const HebrewRootBrowser: React.FC<HebrewRootBrowserProps> = ({
+  entries = HEBREW_LEXICONS_DATABASE,
   selectedEntryId,
   onSelectEntry,
   searchQuery,
 }) => {
-  const filteredEntries = HEBREW_LEXICONS_DATABASE.filter((entry) => {
+  const sourceList = entries.length > 0 ? entries : HEBREW_LEXICONS_DATABASE;
+  const filteredEntries = sourceList.filter((entry) => {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
     return (

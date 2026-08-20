@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bible.jorgedoicela.com"),
   title: "Biblia Modular",
   description: "Módulo de Biblia con soporte de modo claro y oscuro al estilo Vercel.com",
   icons: {

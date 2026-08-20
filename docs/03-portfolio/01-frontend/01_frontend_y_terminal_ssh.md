@@ -16,6 +16,7 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD):** El código se organiza en `features/terminal/` (consola SSH) y `features/contact/` (formulario).
 > * **Jerarquía de Componentes:** Componentes compartidos del subdominio en `(portfolio)/components/` vs componentes específicos en `features/<feature>/components/`.
+> * **Estética Dark Luxury:** Fondos oscuros premium, acentos metálicos y dorados sutiles, tipografía Geist/Mono y alto contraste elegante.
 
 ---
 
@@ -23,7 +24,7 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 
 ```text
 frontend/web/src/app/(portfolio)/
-├── globals.css                # Estilos aislados del portafolio (Linear Look)
+├── globals.css                # Estilos aislados del portafolio (Dark Luxury Look)
 ├── layout.tsx                 # Layout raíz con ThemeProvider local
 ├── theme-provider.tsx         # Proveedor de tema claro/oscuro
 ├── portfolio/
@@ -80,3 +81,12 @@ La terminal realiza una conexión bidireccional de baja latencia con el servidor
 
 * Formulario reactivo (`ContactForm.tsx`) conectado mediante el hook `useContact.ts`.
 * Envía un payload JSON con `name`, `email` y `message` a `POST /portfolio/contact`.
+
+---
+
+## 5. Estética Visual y Dark Luxury
+
+* **Paleta de Negros Profundos:** Fondo `#08080a` con elevaciones graduales en `#111116` y bordes oscuros de alta definición.
+* **Acentos Metálicos y Dorados:** Resaltes sutiles en tonos oro suave / bronce / titanio para insignias, estado de terminal y focos de acción.
+* **Tipografía de Lujo:** Uso de Geist y fuentes monoespaciadas de precisión para dar aspecto de terminal ejecutiva de élite.
+* **Terminal Virtual SSH de Alta Gama:** Aspecto sobrio con parser ANSI, barra de título minimalista y controles discretos.

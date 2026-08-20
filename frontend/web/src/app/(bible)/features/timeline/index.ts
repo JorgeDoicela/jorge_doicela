@@ -6,7 +6,3 @@ export * from './components/TimelineDetailDrawer';
 export * from './components/SynchronousComparisonView';
 export * from './hooks/useBiblicalTimeline';
 export * from './hooks/useSyncFilter';
-export * from './data/kingsJudahIsrael';
-export * from './data/biblicalProphets';
-export * from './data/worldEmpires';
-export * from './data/archaeologicalMilestones';

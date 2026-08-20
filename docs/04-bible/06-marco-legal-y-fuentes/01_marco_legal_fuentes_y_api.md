@@ -29,9 +29,8 @@ Este documento define la política legal, el catálogo de fuentes textuales de d
 
 | Texto Original | Abreviación | Edición Crítica / Manuscrito | Estado Legal | Ubicación / Fuente |
 |---|---|---|---|---|
-| **Hebreo Masorético (AT)** | `BHS` | **Códice de Leningrado (WLC, 1008 d.C.)** | **Dominio Público Universal** | *J. Alan Groves Center* / *Open Scriptures* |
-| **Griego Nuevo Testamento** | `GNT` | **Nestle 1904 (*Novum Testamentum Graece*)** | **Dominio Público Universal** | *Internet Archive* / BFBS (1904) |
-| **Septuaginta Griega (AT)** | `LXX` | **Septuaginta de H. B. Swete (1887–1894)** | **Dominio Público Universal** | *Cambridge University Press* / *Internet Archive* |
+| **Hebreo Masorético (AT)** | `BHS` | **Códice de Leningrado (WLC / BHS, 1008 d.C.)** | **Dominio Público Universal** | *J. Alan Groves Center* / *Open Scriptures* |
+| **Griego Nuevo Testamento** | `NA28` | **Texto Crítico Griego (Nestle-Aland 28 / UBS 5 / Nestle 1904)** | **Dominio Público Universal** | *Internet Archive* / SBLGNT |
 
 ---
 

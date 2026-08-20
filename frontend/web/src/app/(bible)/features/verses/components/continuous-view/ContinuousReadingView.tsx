@@ -180,9 +180,10 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
           {translationAbbr === 'NBLA' && 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.'}
           {translationAbbr === 'NTV' && 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.'}
           {translationAbbr === 'NIV' && 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.'}
-          {translationAbbr === 'BHS' && 'Texto Masorético WLC. J. Alan Groves Center / Open Scriptures. Licencia Abierta CC BY 4.0.'}
-          {translationAbbr === 'LXX' && 'Septuaginta Griega (LXX - Swete / Rahlfs). Dominio Público Académico.'}
-          {!['NBLA', 'NTV', 'NIV', 'BHS', 'LXX'].includes(translationAbbr || '') && 'Texto bíblico para propósitos de estudio y análisis exegético.'}
+          {translationAbbr === 'BHS' && 'Texto Hebreo Masorético (Biblia Hebraica Stuttgartensia / WLC). Dominio Público / Licencia Académica Abierta.'}
+          {translationAbbr === 'NA28' && 'Texto Crítico Griego (Novum Testamentum Graece — NA28 / UBS 5). Dominio Público Académico.'}
+          {translationAbbr === 'RV1909' && 'Santa Biblia, Versión Reina-Valera (1909). Dominio Público Universal.'}
+          {!['NBLA', 'NTV', 'NIV', 'BHS', 'NA28', 'RV1909'].includes(translationAbbr || '') && 'Texto bíblico para propósitos de estudio y análisis exegético.'}
         </p>
       </div>
     </div>

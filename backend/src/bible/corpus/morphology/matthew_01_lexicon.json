@@ -1,0 +1,102 @@
+[
+  {
+    "strongCode": "G976",
+    "language": "greek",
+    "lemma": "βίβλος",
+    "transliteration": "biblos",
+    "ipa": "ˈvi.vlos",
+    "partOfSpeech": "Sustantivo Femenino",
+    "shortDefinition": "rollo, libro escrito, registro o documento",
+    "extendedDefinition": "Códice o rollo de papiro preparado para escritura. En Mateo 1:1 designa el registro genealógico oficial mesiánico."
+  },
+  {
+    "strongCode": "G1078",
+    "language": "greek",
+    "lemma": "γένεσις",
+    "transliteration": "genesis",
+    "ipa": "ˈʝe.ne.sis",
+    "partOfSpeech": "Sustantivo Femenino",
+    "shortDefinition": "origen, linaje, nacimiento, genealogía",
+    "extendedDefinition": "Principio histórico, árbol genealógico o generación. Vincula directamente el inicio del Evangelio con el libro de Génesis en la Septuaginta."
+  },
+  {
+    "strongCode": "G2424",
+    "language": "greek",
+    "lemma": "Ἰησοῦς",
+    "transliteration": "Iēsous",
+    "ipa": "i.iˈsus",
+    "partOfSpeech": "Sustantivo Propio Masculino",
+    "shortDefinition": "Jesús (hebreo: Yeshúa, 'Yahweh es Salvación')",
+    "extendedDefinition": "Nombre propio del Mesías prometido. En Mateo 1:21 se explicita la razón teológica de su nombre: 'porque Él salvará a su pueblo de sus pecados'."
+  },
+  {
+    "strongCode": "G5547",
+    "language": "greek",
+    "lemma": "Χριστός",
+    "transliteration": "Christos",
+    "ipa": "xriˈstos",
+    "partOfSpeech": "Sustantivo Masculino / Adjetivo",
+    "shortDefinition": "el Ungido, Mesías",
+    "extendedDefinition": "Traducción griega del hebreo Mashíaj (H4899). Designa a aquel consagrado solemnemente por Dios con la unción real, profética y sacerdotal."
+  },
+  {
+    "strongCode": "G5207",
+    "language": "greek",
+    "lemma": "υἱός",
+    "transliteration": "huios",
+    "ipa": "iˈos",
+    "partOfSpeech": "Sustantivo Masculino",
+    "shortDefinition": "hijo, descendiente legal o biológico",
+    "extendedDefinition": "Hijo legítimo o sucesor dinástico. En Mateo 1:1 califica a Jesús como 'Hijo de David' (heredero del trono real) e 'Hijo de Abraham' (heredero de la promesa universal)."
+  },
+  {
+    "strongCode": "G1138",
+    "language": "greek",
+    "lemma": "Δαυίδ",
+    "transliteration": "Dauid",
+    "ipa": "ðaˈvið",
+    "partOfSpeech": "Sustantivo Propio Masculino",
+    "shortDefinition": "David ('Amado')",
+    "extendedDefinition": "Segundo rey de Israel y cabeza del pacto davídico mesiánico eterno (2 Samuel 7)."
+  },
+  {
+    "strongCode": "G11",
+    "language": "greek",
+    "lemma": "Ἀβραάμ",
+    "transliteration": "Abraam",
+    "ipa": "a.vraˈam",
+    "partOfSpeech": "Sustantivo Propio Masculino",
+    "shortDefinition": "Abraham ('Padre de multitudes')",
+    "extendedDefinition": "Patriarca hebreo receptor del pacto incondicional de bendición para todas las familias de la tierra (Génesis 12:1-3)."
+  },
+  {
+    "strongCode": "G3933",
+    "language": "greek",
+    "lemma": "παρθένος",
+    "transliteration": "parthenos",
+    "ipa": "parˈθe.nos",
+    "partOfSpeech": "Sustantivo Femenino",
+    "shortDefinition": "doncella, virgen",
+    "extendedDefinition": "Mujer joven soltera que no ha tenido relaciones íntimas. Cumplimiento de la profecía de Isaías 7:14 en Mateo 1:23."
+  },
+  {
+    "strongCode": "G1694",
+    "language": "greek",
+    "lemma": "Ἐμμανουήλ",
+    "transliteration": "Emmanouēl",
+    "ipa": "e.ma.nuˈil",
+    "partOfSpeech": "Sustantivo Propio Masculino",
+    "shortDefinition": "Emanuel ('Con nosotros Dios')",
+    "extendedDefinition": "Nombre profético hebreo (Immanu-El) que declara la encarnación visible y redentora de Dios en medio de la humanidad."
+  },
+  {
+    "strongCode": "G2316",
+    "language": "greek",
+    "lemma": "θεός",
+    "transliteration": "theos",
+    "ipa": "θeˈos",
+    "partOfSpeech": "Sustantivo Masculino",
+    "shortDefinition": "Dios, deidad suprema",
+    "extendedDefinition": "El único Dios Creador y Soberano del universo en la teología bíblica."
+  }
+]

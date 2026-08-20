@@ -4,6 +4,16 @@ import { DiffResult, DiffToken, TranslationApproachInfo } from '../types';
  * Mapeo de filosofías de traducción bíblica conocidas
  */
 export const TRANSLATION_APPROACHES: Record<string, TranslationApproachInfo> = {
+  BHS: {
+    philosophy: 'Histórica',
+    description: 'Texto Hebreo Masorético (Biblia Hebraica Stuttgartensia / WLC)',
+    badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+  },
+  NA28: {
+    philosophy: 'Histórica',
+    description: 'Texto Crítico Griego del NT (Nestle-Aland 28 / UBS 5)',
+    badgeColor: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+  },
   NBLA: {
     philosophy: 'Formal',
     description: 'Equivalencia Formal (literal y académica)',
@@ -19,15 +29,10 @@ export const TRANSLATION_APPROACHES: Record<string, TranslationApproachInfo> = {
     description: 'Equivalencia Dinámica en inglés contemporáneo internacional',
     badgeColor: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
   },
-  BHS: {
-    philosophy: 'Histórica',
-    description: 'Texto Masorético Hebreo / Arameo (Códice de Leningrado WLC)',
-    badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-  },
-  LXX: {
-    philosophy: 'Histórica',
-    description: 'Septuaginta Griega (Alejandría, s. III a.C.)',
-    badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+  RV1909: {
+    philosophy: 'Formal',
+    description: 'Equivalencia Formal tradicional histórica (Reina-Valera 1909)',
+    badgeColor: 'text-amber-300 bg-amber-500/10 border-amber-500/20',
   },
 };
 

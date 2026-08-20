@@ -1,0 +1,482 @@
+[
+  {
+    "chapter": 1,
+    "verseNumber": 1,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "Βίβλος",
+        "transliteration": "Biblos",
+        "strongCode": "G976",
+        "morphologyCode": "N-NSF",
+        "gloss": "Libro"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "γενέσεως",
+        "transliteration": "geneseōs",
+        "strongCode": "G1078",
+        "morphologyCode": "N-GSF",
+        "gloss": "de la genealogía"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "Ἰησοῦ",
+        "transliteration": "Iēsou",
+        "strongCode": "G2424",
+        "morphologyCode": "N-GSM",
+        "gloss": "de Jesús"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "Χριστοῦ",
+        "transliteration": "Christou",
+        "strongCode": "G5547",
+        "morphologyCode": "N-GSM",
+        "gloss": "Cristo"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "υἱοῦ",
+        "transliteration": "huiou",
+        "strongCode": "G5207",
+        "morphologyCode": "N-GSM",
+        "gloss": "hijo"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "Δαυὶδ",
+        "transliteration": "Dauid",
+        "strongCode": "G1138",
+        "morphologyCode": "N-PRI",
+        "gloss": "de David"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "υἱοῦ",
+        "transliteration": "huiou",
+        "strongCode": "G5207",
+        "morphologyCode": "N-GSM",
+        "gloss": "hijo"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "Ἀβραάμ.",
+        "transliteration": "Abraam",
+        "strongCode": "G11",
+        "morphologyCode": "N-PRI",
+        "gloss": "de Abraham"
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 18,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "Τοῦ",
+        "transliteration": "Tou",
+        "strongCode": "G3588",
+        "morphologyCode": "T-GSM",
+        "gloss": "El"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "δὲ",
+        "transliteration": "de",
+        "strongCode": "G1161",
+        "morphologyCode": "CONJ",
+        "gloss": "ahora bien"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "Ἰησοῦ",
+        "transliteration": "Iēsou",
+        "strongCode": "G2424",
+        "morphologyCode": "N-GSM",
+        "gloss": "de Jesús"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "Χριστοῦ",
+        "transliteration": "Christou",
+        "strongCode": "G5547",
+        "morphologyCode": "N-GSM",
+        "gloss": "Cristo"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "ἡ",
+        "transliteration": "hē",
+        "strongCode": "G3588",
+        "morphologyCode": "T-NSF",
+        "gloss": "el"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "γένεσις",
+        "transliteration": "genesis",
+        "strongCode": "G1078",
+        "morphologyCode": "N-NSF",
+        "gloss": "nacimiento"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "οὕτως",
+        "transliteration": "houtōs",
+        "strongCode": "G3779",
+        "morphologyCode": "ADV",
+        "gloss": "así"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "ἦν.",
+        "transliteration": "ēn",
+        "strongCode": "G2258",
+        "morphologyCode": "V-IAI-3S",
+        "gloss": "fue"
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 21,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "τέξεται",
+        "transliteration": "texetai",
+        "strongCode": "G5088",
+        "morphologyCode": "V-FDI-3S",
+        "gloss": "dará a luz"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "δὲ",
+        "transliteration": "de",
+        "strongCode": "G1161",
+        "morphologyCode": "CONJ",
+        "gloss": "y"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "υἱὸν",
+        "transliteration": "huion",
+        "strongCode": "G5207",
+        "morphologyCode": "N-ASM",
+        "gloss": "un hijo"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "καὶ",
+        "transliteration": "kai",
+        "strongCode": "G2532",
+        "morphologyCode": "CONJ",
+        "gloss": "y"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "καλέσεις",
+        "transliteration": "kaleseis",
+        "strongCode": "G2564",
+        "morphologyCode": "V-FAI-2S",
+        "gloss": "llamarás"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "τὸ",
+        "transliteration": "to",
+        "strongCode": "G3588",
+        "morphologyCode": "T-ASN",
+        "gloss": "el"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "ὄνομα",
+        "transliteration": "onoma",
+        "strongCode": "G3686",
+        "morphologyCode": "N-ASN",
+        "gloss": "nombre"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "αὐτοῦ",
+        "transliteration": "autou",
+        "strongCode": "G846",
+        "morphologyCode": "P-GSM",
+        "gloss": "de él"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "Ἰησοῦν,",
+        "transliteration": "Iēsoun",
+        "strongCode": "G2424",
+        "morphologyCode": "N-ASM",
+        "gloss": "JESÚS"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "αὐτὸς",
+        "transliteration": "autos",
+        "strongCode": "G846",
+        "morphologyCode": "P-NSM",
+        "gloss": "él"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "γὰρ",
+        "transliteration": "gar",
+        "strongCode": "G1063",
+        "morphologyCode": "CONJ",
+        "gloss": "porque"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "σώσει",
+        "transliteration": "sōsei",
+        "strongCode": "G4982",
+        "morphologyCode": "V-FAI-3S",
+        "gloss": "salvará"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "τὸν",
+        "transliteration": "ton",
+        "strongCode": "G3588",
+        "morphologyCode": "T-ASM",
+        "gloss": "a la"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "λαὸν",
+        "transliteration": "laon",
+        "strongCode": "G2992",
+        "morphologyCode": "N-ASM",
+        "gloss": "gente"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "αὐτοῦ",
+        "transliteration": "autou",
+        "strongCode": "G846",
+        "morphologyCode": "P-GSM",
+        "gloss": "suya"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "ἀπὸ",
+        "transliteration": "apo",
+        "strongCode": "G575",
+        "morphologyCode": "PREP",
+        "gloss": "de"
+      },
+      {
+        "wordOrder": 17,
+        "surfaceText": "τῶν",
+        "transliteration": "tōn",
+        "strongCode": "G3588",
+        "morphologyCode": "T-GPF",
+        "gloss": "los"
+      },
+      {
+        "wordOrder": 18,
+        "surfaceText": "ἁμαρτιῶν",
+        "transliteration": "hamartiōn",
+        "strongCode": "G266",
+        "morphologyCode": "N-GPF",
+        "gloss": "pecados"
+      },
+      {
+        "wordOrder": 19,
+        "surfaceText": "αὐτῶν.",
+        "transliteration": "autōn",
+        "strongCode": "G846",
+        "morphologyCode": "P-GPM",
+        "gloss": "de ellos"
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "verseNumber": 23,
+    "tokens": [
+      {
+        "wordOrder": 1,
+        "surfaceText": "Ἰδοὺ",
+        "transliteration": "Idou",
+        "strongCode": "G2400",
+        "morphologyCode": "V-2AAM-2S",
+        "gloss": "He aquí"
+      },
+      {
+        "wordOrder": 2,
+        "surfaceText": "ἡ",
+        "transliteration": "hē",
+        "strongCode": "G3588",
+        "morphologyCode": "T-NSF",
+        "gloss": "la"
+      },
+      {
+        "wordOrder": 3,
+        "surfaceText": "παρθένος",
+        "transliteration": "parthenos",
+        "strongCode": "G3933",
+        "morphologyCode": "N-NSF",
+        "gloss": "virgen"
+      },
+      {
+        "wordOrder": 4,
+        "surfaceText": "ἐν",
+        "transliteration": "en",
+        "strongCode": "G1722",
+        "morphologyCode": "PREP",
+        "gloss": "en"
+      },
+      {
+        "wordOrder": 5,
+        "surfaceText": "γαστρὶ",
+        "transliteration": "gastri",
+        "strongCode": "G1064",
+        "morphologyCode": "N-DSF",
+        "gloss": "vientre"
+      },
+      {
+        "wordOrder": 6,
+        "surfaceText": "ἕξει",
+        "transliteration": "hexei",
+        "strongCode": "G2192",
+        "morphologyCode": "V-FAI-3S",
+        "gloss": "concebirá"
+      },
+      {
+        "wordOrder": 7,
+        "surfaceText": "καὶ",
+        "transliteration": "kai",
+        "strongCode": "G2532",
+        "morphologyCode": "CONJ",
+        "gloss": "y"
+      },
+      {
+        "wordOrder": 8,
+        "surfaceText": "τέξεται",
+        "transliteration": "texetai",
+        "strongCode": "G5088",
+        "morphologyCode": "V-FDI-3S",
+        "gloss": "dará a luz"
+      },
+      {
+        "wordOrder": 9,
+        "surfaceText": "υἱόν,",
+        "transliteration": "huion",
+        "strongCode": "G5207",
+        "morphologyCode": "N-ASM",
+        "gloss": "un hijo"
+      },
+      {
+        "wordOrder": 10,
+        "surfaceText": "καὶ",
+        "transliteration": "kai",
+        "strongCode": "G2532",
+        "morphologyCode": "CONJ",
+        "gloss": "y"
+      },
+      {
+        "wordOrder": 11,
+        "surfaceText": "καλέσουσιν",
+        "transliteration": "kalesousin",
+        "strongCode": "G2564",
+        "morphologyCode": "V-FAI-3P",
+        "gloss": "llamarán"
+      },
+      {
+        "wordOrder": 12,
+        "surfaceText": "τὸ",
+        "transliteration": "to",
+        "strongCode": "G3588",
+        "morphologyCode": "T-ASN",
+        "gloss": "el"
+      },
+      {
+        "wordOrder": 13,
+        "surfaceText": "ὄνομα",
+        "transliteration": "onoma",
+        "strongCode": "G3686",
+        "morphologyCode": "N-ASN",
+        "gloss": "nombre"
+      },
+      {
+        "wordOrder": 14,
+        "surfaceText": "αὐτοῦ",
+        "transliteration": "autou",
+        "strongCode": "G846",
+        "morphologyCode": "P-GSM",
+        "gloss": "de él"
+      },
+      {
+        "wordOrder": 15,
+        "surfaceText": "Ἐμμανουήλ,",
+        "transliteration": "Emmanouēl",
+        "strongCode": "G1694",
+        "morphologyCode": "N-PRI",
+        "gloss": "Emanuel"
+      },
+      {
+        "wordOrder": 16,
+        "surfaceText": "ὅ",
+        "transliteration": "ho",
+        "strongCode": "G3739",
+        "morphologyCode": "R-NSN",
+        "gloss": "que"
+      },
+      {
+        "wordOrder": 17,
+        "surfaceText": "ἐστιν",
+        "transliteration": "estin",
+        "strongCode": "G2076",
+        "morphologyCode": "V-PAI-3S",
+        "gloss": "es"
+      },
+      {
+        "wordOrder": 18,
+        "surfaceText": "μεθερμηνευόμενον",
+        "transliteration": "methermēneuomenon",
+        "strongCode": "G3177",
+        "morphologyCode": "V-PPP-NSN",
+        "gloss": "traducido"
+      },
+      {
+        "wordOrder": 19,
+        "surfaceText": "μεθ’",
+        "transliteration": "meth’",
+        "strongCode": "G3326",
+        "morphologyCode": "PREP",
+        "gloss": "con"
+      },
+      {
+        "wordOrder": 20,
+        "surfaceText": "ἡμῶν",
+        "transliteration": "hēmōn",
+        "strongCode": "G2257",
+        "morphologyCode": "P-1GP",
+        "gloss": "nosotros"
+      },
+      {
+        "wordOrder": 21,
+        "surfaceText": "ὁ",
+        "transliteration": "ho",
+        "strongCode": "G3588",
+        "morphologyCode": "T-NSM",
+        "gloss": "el"
+      },
+      {
+        "wordOrder": 22,
+        "surfaceText": "θεός.",
+        "transliteration": "theos",
+        "strongCode": "G2316",
+        "morphologyCode": "N-NSM",
+        "gloss": "Dios"
+      }
+    ]
+  }
+]

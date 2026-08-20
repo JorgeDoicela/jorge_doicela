@@ -12,6 +12,22 @@ export interface Translation {
 export const CANONICAL_TRANSLATIONS: Translation[] = [
   {
     id: 1,
+    name: 'Texto Hebreo Masorético',
+    abbreviation: 'BHS',
+    language: 'Hebreo / Arameo',
+    copyrightOwner: 'Open Scriptures / Groves Center',
+    copyrightNotice: 'Westminster Leningrad Codex (Biblia Hebraica Stuttgartensia). Dominio Público / Licencia Académica Abierta.',
+  },
+  {
+    id: 2,
+    name: 'Texto Crítico Griego',
+    abbreviation: 'NA28',
+    language: 'Griego Koiné',
+    copyrightOwner: 'Dominio Público',
+    copyrightNotice: 'Texto Crítico Griego (Novum Testamentum Graece — NA28 / UBS 5). Dominio Público Académico.',
+  },
+  {
+    id: 3,
     name: 'Nueva Biblia de las Américas',
     abbreviation: 'NBLA',
     language: 'Español',
@@ -19,7 +35,7 @@ export const CANONICAL_TRANSLATIONS: Translation[] = [
     copyrightNotice: 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.',
   },
   {
-    id: 2,
+    id: 4,
     name: 'Nueva Traducción Viviente',
     abbreviation: 'NTV',
     language: 'Español',
@@ -27,7 +43,7 @@ export const CANONICAL_TRANSLATIONS: Translation[] = [
     copyrightNotice: 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.',
   },
   {
-    id: 3,
+    id: 5,
     name: 'New International Version',
     abbreviation: 'NIV',
     language: 'Inglés',
@@ -35,20 +51,12 @@ export const CANONICAL_TRANSLATIONS: Translation[] = [
     copyrightNotice: 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.',
   },
   {
-    id: 4,
-    name: 'Biblia Hebraica Stuttgartensia (WLC)',
-    abbreviation: 'BHS',
-    language: 'Hebreo / Arameo',
-    copyrightOwner: 'Open Scriptures / Groves Center',
-    copyrightNotice: 'Westminster Leningrad Codex (WLC). Licencia Académica Abierta CC BY 4.0.',
-  },
-  {
-    id: 5,
-    name: 'Septuaginta Griega (LXX)',
-    abbreviation: 'LXX',
-    language: 'Griego Koiné',
+    id: 6,
+    name: 'Reina-Valera 1909',
+    abbreviation: 'RV1909',
+    language: 'Español',
     copyrightOwner: 'Dominio Público',
-    copyrightNotice: 'Septuaginta Griega (LXX - Swete / Rahlfs). Dominio Público Académico.',
+    copyrightNotice: 'Santa Biblia, Versión Reina-Valera (1909). Dominio Público Universal.',
   },
 ];
 

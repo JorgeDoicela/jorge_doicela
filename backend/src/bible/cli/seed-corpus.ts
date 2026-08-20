@@ -323,14 +323,14 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
   const OFFICIAL_TRANSLATIONS = [
     {
       id: 1,
-      name: 'Biblia Hebraica Stuttgartensia (WLC)',
+      name: 'Texto Hebreo Masorético',
       abbreviation: 'BHS',
       language: 'he',
     },
     {
       id: 2,
-      name: 'Septuaginta Griega (LXX)',
-      abbreviation: 'LXX',
+      name: 'Texto Crítico Griego',
+      abbreviation: 'NA28',
       language: 'el',
     },
     {
@@ -350,6 +350,12 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
       name: 'New International Version',
       abbreviation: 'NIV',
       language: 'en',
+    },
+    {
+      id: 6,
+      name: 'Reina-Valera 1909',
+      abbreviation: 'RV1909',
+      language: 'es',
     },
   ];
 
@@ -454,16 +460,20 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
   // 4. Sembrado Transaccional de Morfología y Léxicos Strong
   const morphDir = path.join(corpusDir, 'morphology');
   if (fs.existsSync(morphDir)) {
-    // A. Lexicon Entries (Strong BDB / Gesenius)
-    const lexiconPath = path.join(morphDir, 'genesis_01_lexicon.json');
-    if (fs.existsSync(lexiconPath)) {
+    const morphFiles = fs.readdirSync(morphDir);
+
+    // A. Lexicon Entries
+    const lexiconFiles = morphFiles.filter((f) => f.endsWith('_lexicon.json'));
+    const insertLexicon = db.prepare(`
+      INSERT OR REPLACE INTO lexicon_entries (strongCode, language, lemma, transliteration, ipa, partOfSpeech, shortDefinition, extendedDefinition)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    let totalLexiconCount = 0;
+    for (const lf of lexiconFiles) {
       const entries = JSON.parse(
-        fs.readFileSync(lexiconPath, 'utf8'),
+        fs.readFileSync(path.join(morphDir, lf), 'utf8'),
       ) as SeedLexiconEntry[];
-      const insertLexicon = db.prepare(`
-        INSERT INTO lexicon_entries (strongCode, language, lemma, transliteration, ipa, partOfSpeech, shortDefinition, extendedDefinition)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `);
       const txLexicon = db.transaction((items: SeedLexiconEntry[]) => {
         for (const e of items) {
           insertLexicon.run(
@@ -479,35 +489,45 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
         }
       });
       txLexicon(entries);
-      console.log(
-        `[MorphologySeeder] -> ${entries.length} entradas léxicas Strong indexadas.`,
-      );
+      totalLexiconCount += entries.length;
     }
+    console.log(
+      `[MorphologySeeder] -> ${totalLexiconCount} entradas léxicas Strong indexadas.`,
+    );
 
-    // B. Morphology Tokens (Interlineal por versículo)
-    const tokensPath = path.join(morphDir, 'genesis_01_tokens.json');
-    if (fs.existsSync(tokensPath)) {
+    // B. Morphology Tokens
+    const tokenFiles = morphFiles.filter((f) => f.endsWith('_tokens.json'));
+    const findVerseStmt = db.prepare(`
+      SELECT v.id FROM verses v
+      JOIN books b ON v.bookId = b.id
+      JOIN translations t ON v.translationId = t.id
+      WHERE b.abbreviation = ? AND (t.abbreviation = 'BHS' OR t.abbreviation = 'NA28') AND v.chapter = ? AND v.verseNumber = ?
+    `);
+
+    const insertTokenStmt = db.prepare(`
+      INSERT INTO morphology_tokens (verseId, wordOrder, surfaceText, consonantsOnly, transliteration, strongCode, morphologyCode, gloss)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    let totalTokensCount = 0;
+    for (const tf of tokenFiles) {
+      const bookAbbr = tf.startsWith('genesis')
+        ? 'GEN'
+        : tf.startsWith('matthew')
+          ? 'MAT'
+          : 'GEN';
       const verseTokensList = JSON.parse(
-        fs.readFileSync(tokensPath, 'utf8'),
+        fs.readFileSync(path.join(morphDir, tf), 'utf8'),
       ) as SeedVerseTokensGroup[];
-      const findVerseStmt = db.prepare(`
-        SELECT v.id FROM verses v
-        JOIN books b ON v.bookId = b.id
-        JOIN translations t ON v.translationId = t.id
-        WHERE b.abbreviation = 'GEN' AND t.abbreviation = 'BHS' AND v.chapter = ? AND v.verseNumber = ?
-      `);
-
-      const insertTokenStmt = db.prepare(`
-        INSERT INTO morphology_tokens (verseId, wordOrder, surfaceText, consonantsOnly, transliteration, strongCode, morphologyCode, gloss)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `);
 
       const txTokens = db.transaction((list: SeedVerseTokensGroup[]) => {
         let count = 0;
         for (const item of list) {
-          const row = findVerseStmt.get(item.chapter, item.verseNumber) as
-            | { id: number }
-            | undefined;
+          const row = findVerseStmt.get(
+            bookAbbr,
+            item.chapter,
+            item.verseNumber,
+          ) as { id: number } | undefined;
           const verseId = row ? row.id : 1;
           for (const tok of item.tokens) {
             insertTokenStmt.run(
@@ -526,11 +546,11 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
         return count;
       });
 
-      const totalTokens = txTokens(verseTokensList);
-      console.log(
-        `[MorphologySeeder] -> ${totalTokens} tokens morfológicos masoréticos indexados.`,
-      );
+      totalTokensCount += txTokens(verseTokensList);
     }
+    console.log(
+      `[MorphologySeeder] -> ${totalTokensCount} tokens morfológicos interlineales indexados.`,
+    );
   }
 
   // 5. Sembrado Transaccional de Contexto Histórico

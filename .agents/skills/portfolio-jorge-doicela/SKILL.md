@@ -4,7 +4,13 @@ description: Activa esta skill para tareas de desarrollo, diseño o mantenimient
 ---
 # Directrices de Desarrollo: Portafolio Profesional (portfolio.jorgedoicela.com)
 
-Esta habilidad define los estándares y la arquitectura completa para el subproyecto del **Portafolio Profesional** de Jorge Doicela.
+Esta habilidad define los estándares y la arquitectura completa para el subproyecto del Portafolio Profesional de Jorge Doicela.
+
+---
+
+## Documentación Técnica Oficial
+* [01_frontend_y_terminal_ssh.md](../../../docs/03-portfolio/01-frontend/01_frontend_y_terminal_ssh.md)
+* [02_backend_y_persistencia.md](../../../docs/03-portfolio/02-backend/01_backend_y_persistencia.md)
 
 ---
 
@@ -27,26 +33,25 @@ frontend/web/src/app/(portfolio)/
 ├── portfolio/
 │   └── page.tsx            # Página principal del portafolio
 ├── features/
-│   ├── terminal/           # Terminal virtual interactiva (Desktop)
-│   │   ├── components/     # TerminalUI, CommandOutput, SessionTabs
+│   ├── terminal/           # Feature: Terminal virtual interactiva
+│   │   ├── components/     # TerminalConsole.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
 │   │   ├── hooks/          # useTerminalSocket.ts (Socket.io client)
+│   │   ├── utils/          # ansiParser.tsx
 │   │   └── types.ts        # Tipos de la terminal
-│   └── contact/            # Formulario de contacto
+│   └── contact/            # Feature: Formulario de contacto
 │       ├── components/     # ContactForm.tsx
 │       ├── hooks/          # useContact.ts
 │       └── types.ts        # Tipos del formulario
-├── components/             # Hero, ExperienceTimeline, TechStack, Education
+├── components/             # ThemeToggle.tsx, TypewriterRole.tsx, ValuesPhilosophySection.tsx
 ├── globals.css             # Estilos específicos del portafolio
 └── layout.tsx              # Layout independiente
 ```
 
 ### Secciones Principales y Adaptabilidad Móvil
 1. **Hero & Biografía:** Presentación profesional con valores de fe cristiana, visión de ingeniería en IA y ciberseguridad.
-2. **Stack Tecnológico:** Grid interactiva clasificada en Frontend, Backend y DevOps/Datos.
-3. **Experiencia & Educación:** Línea de tiempo interactiva con historial laboral y títulos académicos.
-4. **Terminal Virtual SSH (Exclusiva de Escritorio):**
-   * En pantallas móviles/táctiles, **no se inicializa el WebSocket ni se renderiza la consola interactiva** debido a la falta de teclas de flecha, Tab y secuencias ANSI en teclados móviles. En su lugar, se muestra un banner explicativo y tarjetas adaptadas al tacto.
-5. **Formulario de Contacto:** Envíos directos validados hacia el backend.
+2. **Terminal Virtual SSH (Desktop):**
+   * En pantallas móviles/táctiles, **no se inicializa el WebSocket ni se renderiza la consola interactiva** debido a la falta de teclas de flecha, Tab y secuencias ANSI en teclados móviles. En su lugar, se muestra un banner explicativo (`MobileTerminalBanner.tsx`).
+3. **Formulario de Contacto:** Envíos directos validados hacia `POST /portfolio/contact`.
 
 ---
 
@@ -60,7 +65,7 @@ frontend/web/src/app/(portfolio)/
   * Cliente emite: `execute-command` enviando el texto del comando.
   * Servidor emite: `terminal-output` con el resultado procesado.
 * **Comandos Soportados en `PortfolioService`:**
-  * `help`, `about`, `neofetch` (resumen de OS, kernel, memoria 1GB, faith y status), `contact`, `skills`, `clear`, `matrix`, `date`, `uptime`, `ls`, `cat`, `whoami`, `exit`.
+  * `help`, `about`, `neofetch`, `contact`, `skills`, `clear`, `matrix`, `date`, `uptime`, `ls`, `cat`, `whoami`, `exit`.
 
 ### 3.2 Formulario de Contacto (API REST)
 * **Endpoints:**
@@ -75,35 +80,29 @@ frontend/web/src/app/(portfolio)/
 
 ---
 
-## 4. 📊 Estado de Implementación (Hoja de Ruta)
+## 4. Comandos de Operación
 
-| Funcionalidad | Estado | Ubicación / Notas |
-|---|:---:|---|
-| Terminal virtual SSH con WebSockets | ✅ Completado | `PortfolioGateway`, `useTerminalSocket.ts` |
-| Comandos de consola (`neofetch`, `matrix`, etc.) | ✅ Completado | `PortfolioService` |
-| Formulario de contacto y persistencia SQLite | ✅ Completado | `ContactController`, `ContactMessage` entity |
-| Layout Linear look y tipografía Mono | ✅ Completado | `(portfolio)/globals.css` |
-| Desactivación inteligente de terminal en móvil | ✅ Completado | Vista condicional por viewport |
-| Tarjetas 3D del stack tecnológico | ⏳ Pendiente | Flip cards en hover / tap móvil |
-| Timeline interactiva expandible | ⏳ Pendiente | Acordeón en experiencia laboral |
-| Anti-spam con Cloudflare Turnstile | ⏳ Pendiente | Validación de token en backend |
-| Notificación por correo al recibir mensaje | ⏳ Pendiente | Integración Nodemailer / Resend en backend |
-| Panel admin protegido para ver mensajes | ⏳ Pendiente | Ruta `/admin/contact` con autenticación |
-| Exportación de mensajes a CSV | ⏳ Pendiente | Endpoint y botón en panel admin |
+```bash
+# Dependencias para backend o frontend
+pnpm --filter backend add <paquete>
+pnpm --filter web add <paquete>
+
+# Chequeo de tipos
+pnpm -r typecheck
+```
 
 ---
 
-## 5. ❌ Anti-Patrones Prohibidos
+## 5. Anti-Patrones Prohibidos
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
-| Inyectar `TypeOrmModule` sin especificar `'portfolioConnection'` | Conectaría a la base de datos por defecto en lugar de `portfolio.sqlite`. | Usar `@InjectRepository(ContactMessage, 'portfolioConnection')`. |
-| Poner bloques `try/catch` para devolver respuestas HTTP en el controlador | Duplica código y rompe el formateo estándar del filtro global. | Dejar que los errores sean capturados por `GlobalExceptionFilter`. |
+| Inyectar TypeOrmModule sin especificar 'portfolioConnection' | Conectaría a la base de datos por defecto en lugar de portfolio.sqlite. | Usar @InjectRepository(ContactMessage, 'portfolioConnection'). |
+| Poner bloques try/catch para devolver respuestas HTTP en el controlador | Duplica código y rompe el formateo estándar del filtro global. | Dejar que los errores sean capturados por GlobalExceptionFilter. |
 | Forzar la apertura de la terminal interactiva en pantallas móviles | En móviles no hay flechas, Tab ni secuencias ANSI; degrada la experiencia. | Mostrar vista adaptada de tarjetas en viewports móviles. |
-| Importar entidades de `software` o `bible` en el módulo `portfolio` | Viola la independencia estricta entre dominios. | Mantener las entidades dentro de `backend/src/portfolio/entities/`. |
+| Importar entidades de software o bible en el módulo portfolio | Viola la independencia estricta entre dominios. | Mantener las entidades dentro de backend/src/portfolio/entities/. |
 
 ---
 
-## 6. 🔗 Combinar con
-* **General:** `general-jorge-doicela` (para aislamiento, pnpm `--filter` y reglas de monorepo).
-* **Infraestructura:** `infraestructura-jorge-doicela` (para configuración de proxy Nginx `/socket.io/` y WebSockets de Cloudflare).
+## 6. Combinar con
+* **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para reglas de monorepo, FSD, configuración de Nginx /socket.io/ y PM2).

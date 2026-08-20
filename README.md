@@ -9,18 +9,31 @@ Este repositorio contiene la arquitectura modular para el desarrollo del Portafo
 
 ---
 
-## Estructura del Monorepo
+## Mapa de Documentación Técnica (`docs/`)
 
-El monorepo está configurado utilizando los workspaces de pnpm. Cuenta con un backend modular centralizado y un frontend Next.js unificado en el puerto 3001 que administra los subdominios de forma aislada:
+La documentación del repositorio se encuentra modularizada verticalmente por proyectos y dominios independientes con sus respectivas subcarpetas:
 
-* **[backend](backend/)**: Servidor único NestJS programado como un monolito modular (puerto 3000). Ver [backend.md](docs/backend.md).
-* **[frontend/web](frontend/web/)**: Único servidor Next.js que ejecuta los cuatro frontends de forma desacoplada y los resuelve mediante subdominios (puerto 3001). Ver [frontend_web.md](docs/frontend_web.md):
-  * **Landing Page**: `jorgedoicela.com`
-  * **Portfolio (Terminal)**: `portfolio.jorgedoicela.com`
-  * **Bible (Biblia)**: `bible.jorgedoicela.com`
-  * **Software (Hub Tecológico)**: `software.jorgedoicela.com` (Noticias, Blog, Foros, IA, Ciberseguridad, Tutoriales y Proyectos)
-* **[frontend/mobile](frontend/mobile/)**: Cliente móvil independiente en React Native / Expo.
-* **Infraestructura y Despliegue**: Ver [infraestructura.md](docs/infraestructura.md) para el detalle de la configuración de AWS Lightsail, DNS perimetral de Cloudflare y políticas de seguridad SSL/TLS.
+* **[01-infraestructura-global/](docs/01-infraestructura-global/)**:
+  * [01-arquitectura/01_arquitectura_macro_y_hardware.md](docs/01-infraestructura-global/01-arquitectura/01_arquitectura_macro_y_hardware.md): Monorepo, VPS 1 GB RAM, cajas negras, topología perimetral y middlewares.
+  * [01-arquitectura/02_patrones_microarquitectura_y_fsd.md](docs/01-infraestructura-global/01-arquitectura/02_patrones_microarquitectura_y_fsd.md): Estándar de codificación en capas para NestJS y Feature-Sliced Design (FSD) en Next.js.
+  * [02-despliegue-y-servidor/01_despliegue_pm2_y_cicd.md](docs/01-infraestructura-global/02-despliegue-y-servidor/01_despliegue_pm2_y_cicd.md): AWS Lightsail (Debian 13), Nginx mTLS, PM2 standalone y GitHub Actions.
+* **[02-landing/](docs/02-landing/)**:
+  * [01-arquitectura-y-diseno/01_arquitectura_y_diseno.md](docs/02-landing/01-arquitectura-y-diseno/01_arquitectura_y_diseno.md): Landing Page (`jorgedoicela.com`), Next.js 100% cliente, i18n, PWA, SEO y Glassmorphism.
+  * [02-roadmap/01_roadmap_landing.md](docs/02-landing/02-roadmap/01_roadmap_landing.md): Requerimientos e ideas de la Landing Page.
+* **[03-portfolio/](docs/03-portfolio/)**:
+  * [01-frontend/01_frontend_y_terminal_ssh.md](docs/03-portfolio/01-frontend/01_frontend_y_terminal_ssh.md): Frontend del portafolio (`portfolio.*`), terminal SSH por WebSockets y parser ANSI.
+  * [02-backend/01_backend_y_persistencia.md](docs/03-portfolio/02-backend/01_backend_y_persistencia.md): Gateway NestJS, comandos Unix, servicio de contacto y `portfolio.sqlite`.
+  * [03-roadmap/01_roadmap_portfolio.md](docs/03-portfolio/03-roadmap/01_roadmap_portfolio.md): Requerimientos e ideas del Portafolio.
+* **[04-bible/](docs/04-bible/)**:
+  * [01-frontend-web/01_lector_y_estudio_web.md](docs/04-bible/01-frontend-web/01_lector_y_estudio_web.md): Frontend web (`bible.*`), los 9 motores de estudio exegético y toolbar.
+  * [02-backend/01_backend_y_morfologia.md](docs/04-bible/02-backend/01_backend_y_morfologia.md): NestJS REST, tokens morfológicos hebreo/griego y códigos Strong.
+  * [03-base-de-datos/01_base_datos_y_seeder.md](docs/04-bible/03-base-de-datos/01_base_datos_y_seeder.md): `bible.sqlite`, catálogo canónico, corpus por lotes y seeder transaccional.
+  * [04-mobile-expo/01_app_movil_expo.md](docs/04-bible/04-mobile-expo/01_app_movil_expo.md): App nativa React Native / Expo, modo Offline-First y FlashList.
+  * [05-roadmap/01_roadmap_bible.md](docs/04-bible/05-roadmap/01_roadmap_bible.md): Requerimientos e ideas de la Biblia.
+* **[05-software/](docs/05-software/)**:
+  * [01-frontend/01_frontend_y_hub_tecnologico.md](docs/05-software/01-frontend/01_frontend_y_hub_tecnologico.md): Frontend web (`software.*`), las 7 categorías, buscador y foros.
+  * [02-backend/01_backend_y_persistencia.md](docs/05-software/02-backend/01_backend_y_persistencia.md): NestJS REST, foros, artículos, proyectos y `software.sqlite`.
+  * [03-roadmap/01_roadmap_software.md](docs/05-software/03-roadmap/01_roadmap_software.md): Requerimientos e ideas del Software Hub.
 
 ---
 

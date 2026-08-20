@@ -6,7 +6,7 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 
 ## 1. Justificación de Infraestructura y Runtimes Consolidados
 * El servidor VPS de producción en AWS Lightsail está limitado a **1 GB de RAM**.
-* Por este motivo físico exclusivo, el backend corre consolidado en un solo proceso NestJS (puerto 3000) y el frontend web corre consolidado en un solo proceso Next.js (puerto 3001) mediante `middleware.ts` para resolver subdominios.
+* Por este motivo físico exclusivo, el backend corre consolidado en un solo proceso NestJS (puerto `3000`) y el frontend web corre consolidado en un solo proceso Next.js (puerto `3001`) mediante `middleware.ts` para resolver subdominios.
 * **Principio de Cajas Negras:** A pesar de compartir procesos físicos, las 4 aplicaciones (`landing`, `portfolio`, `bible`, `software`) son **proyectos 100% aislados e independientes**. Nunca deben acoplarse ni depender entre sí.
 
 ---
@@ -29,16 +29,22 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 ---
 
 ## 4. Aislamiento de Tipos y Persistencia
-* **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales.
+* **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
 * **Persistencia Aislada:** Cada módulo del backend se conecta a su propia base de datos SQLite física independiente (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`).
 
 ---
 
-## 5. Skills Especializadas Disponibles en `.agents/skills/`
-Activa la skill adecuada según el contexto de tu tarea:
-1. `general-jorge-doicela`: Reglas maestras de monorepo, pnpm workspaces y calidad.
-2. `infraestructura-jorge-doicela`: Despliegue en AWS Lightsail (Debian 13), Cloudflare mTLS, Nginx, PM2 y CI/CD.
-3. `landing-jorge-doicela`: Landing page principal (`jorgedoicela.com`), 100% cliente Next.js, i18n, PWA, SEO.
-4. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets y formulario de contacto.
-5. `bible-jorge-doicela`: Biblia (`bible.*`), modelo relacional, endpoints REST y app móvil Expo (`frontend/mobile`).
-6. `software-jorge-doicela`: Software Hub (`software.*`), 7 categorías temáticas, foros y catálogo de proyectos.
+## 5. Skills Especializadas y Documentación Oficial (`docs/`)
+
+El repositorio cuenta con **5 skills** que mapean 1 a 1 con las 5 carpetas de documentación:
+
+1. `infraestructura-global-jorge-doicela`: Reglas maestras de monorepo pnpm, arquitectura 1 GB RAM, FSD, 3 capas NestJS, despliegue en AWS Lightsail (Debian 13), Nginx mTLS, PM2, GitHub Actions y seguridad pre-commit (Husky / check-secrets).
+   * Documentación: [`docs/01-infraestructura-global/`]()
+2. `landing-jorge-doicela`: Landing page principal (`jorgedoicela.com`), 100% cliente Next.js (sin backend/DB), i18n, PWA, SEO y Glassmorphism.
+   * Documentación: [`docs/02-landing/`]()
+3. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets, contacto y `portfolio.sqlite`.
+   * Documentación: [`docs/03-portfolio/`]()
+4. `bible-jorge-doicela`: Biblia (`bible.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS y `bible.sqlite`.
+   * Documentación: [`docs/04-bible/`]()
+5. `software-jorge-doicela`: Software Hub (`software.*`), 7 categorías temáticas, foros, proyectos y `software.sqlite`.
+   * Documentación: [`docs/05-software/`]()

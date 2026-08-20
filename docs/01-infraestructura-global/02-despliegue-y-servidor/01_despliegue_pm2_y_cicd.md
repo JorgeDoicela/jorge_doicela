@@ -1,0 +1,196 @@
+# Despliegue en Servidor, PM2, CI/CD, Nginx y Hooks de Seguridad
+
+Este documento detalla la infraestructura de despliegue completa, la preparación del sistema operativo en **AWS Lightsail (Debian 13)**, la plantilla viva de **Nginx** (`nginx/`), la suite de seguridad pre-commit (**Husky** y `scripts/check-secrets.js`), la orquestación de procesos con **PM2** y el pipeline automatizado de **GitHub Actions** (`.github/workflows/deploy.yml`).
+
+---
+
+## 1. Seguridad Local y Hooks de Pre-Commit (`.husky/` y `scripts/`)
+
+Para evitar fugas de información confidencial o subidas de código con errores al repositorio, el monorepo implementa un ciclo de validación estricto antes de cada `git commit`:
+
+### 1.1 Hook Pre-Commit (`.husky/pre-commit`)
+```bash
+pnpm check-secrets && pnpm lint-staged && pnpm typecheck
+```
+* **`pnpm check-secrets`:** Ejecuta el script de auditoría de seguridad `scripts/check-secrets.js`.
+* **`pnpm lint-staged`:** Aplica formateo y reglas de ESLint/Prettier exclusivamente a los archivos preparados (*staged*).
+* **`pnpm typecheck`:** Valida la consistencia estricta de tipos en TypeScript (`tsc --noEmit`) en todos los workspaces. Si hay un solo error tipográfico, el commit es abortado.
+
+### 1.2 Auditor de Fugas de Información (`scripts/check-secrets.js`)
+Script en Node.js que inspecciona los archivos staged mediante expresiones regulares para bloquear el commit si detecta:
+* **Archivos prohibidos:** `.env*`, `.pem`, `.key`, `.crt`, `.pfx`, `.p12`, `id_rsa*` y bases de datos locales `*.sqlite`.
+* **Patrones de secretos en código (+):**
+  * Bloques `BEGIN PRIVATE KEY` (SSH, RSA, EC, PGP).
+  * Llaves de AWS (`AKIA[0-9A-Z]{16}`).
+  * Llaves de Google API (`AIza[0-9A-Za-z_-]{35}`).
+  * Tokens personales de GitHub (`ghp_*`, `github_pat_*`).
+  * Cadenas de conexión con usuario y contraseña (`mongodb://`, `postgres://`, `mysql://`, `redis://`).
+  * Tokens de Slack, Stripe, SendGrid y JWT sospechosos.
+
+---
+
+## 2. Preparación del Servidor (Debian 13 en AWS Lightsail)
+
+### 2.1 Herramientas del Sistema y Compilación C++
+El driver de SQLite de alto rendimiento `better-sqlite3` compila extensiones nativas en C++:
+```bash
+sudo apt update
+sudo apt install -y build-essential python3 g++ make rsync nginx curl git
+```
+
+### 2.2 Instalación de Node.js v22 LTS, pnpm y PM2
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pnpm pm2
+```
+
+### 2.3 Memoria de Intercambio (Swap de 2 GB)
+Indispensable para absorber la sobrecarga de instalación de dependencias en el VPS de 1 GB de RAM:
+```bash
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+---
+
+## 3. Plantilla Viva de Nginx (`nginx/jorgedoicela.com.conf`)
+
+La configuración del servidor web está versionada directamente en el repositorio bajo `nginx/jorgedoicela.com.conf`. El pipeline de CI/CD se encarga de sincronizarla automáticamente con el servidor en cada despliegue.
+
+```nginx
+# Redirección HTTP -> HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name jorgedoicela.com *.jorgedoicela.com;
+    return 301 https://$host$request_uri;
+}
+
+# Servidor HTTPS con Certificados de Cloudflare y mTLS
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name jorgedoicela.com *.jorgedoicela.com;
+
+    # Certificados de Origen de Cloudflare
+    ssl_certificate /etc/ssl/certs/origin.pem;
+    ssl_certificate_key /etc/ssl/private/private.key;
+
+    # Authenticated Origin Pulls (Validación mutua TLS)
+    ssl_client_certificate /etc/ssl/certs/cloudflare.crt;
+    ssl_verify_client on;
+
+    error_page 496 =444 @cerrar_conexion;
+    location @cerrar_conexion { return 444; }
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    server_tokens off;
+
+    # Cabeceras de Seguridad
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Compresión Gzip
+    gzip on;
+    gzip_comp_level 6;
+    gzip_min_length 256;
+    gzip_proxied any;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+
+    # 1. API REST Backend NestJS (Puerto 3000)
+    location ~ ^/(bible/(verses|translations|morphology|books)|software/(projects|articles|forum)|portfolio/contact) {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # 2. WebSockets de la Terminal SSH (Socket.io)
+    location /socket.io/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # 3. Next.js Frontend Standalone (Puerto 3001)
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+---
+
+## 4. Orquestación de Procesos con PM2 (`pm2.config.js`)
+
+Controla el ciclo de vida y los límites de memoria de los procesos unificados en el VPS:
+* **`backend-nest`:** Inicia `./dist/main.js` desde `./backend` (puerto `3000`). Límite de reinicio: `300 MB`.
+* **`frontend-next`:** Inicia `.next/standalone/frontend/web/server.js` desde `./frontend/web` (puerto `3001`). Límite de reinicio: `450 MB`. Consumo real promedio: **~120 MB**.
+
+```bash
+# Comandos de gestión PM2:
+pm2 list
+pm2 reload pm2.config.js
+pm2 logs --lines 100
+pm2 save
+```
+
+---
+
+## 5. Pipeline CI/CD Automatizado (`.github/workflows/deploy.yml`)
+
+El pipeline se dispara automáticamente ante cada `git push` a la rama `main` y realiza todo el trabajo pesado en los servidores de GitHub para no consumir CPU ni RAM del VPS de 1 GB:
+
+```mermaid
+graph TD
+    A[Push a main] --> B[GitHub Runner: Checkout & Node 22]
+    B --> C[pnpm install --frozen-lockfile]
+    C --> D[pnpm run typecheck]
+    D --> E[pnpm run build: NestJS dist + Next.js Standalone]
+    E --> F[rsync compilados vía SSH a Lightsail]
+    F --> G[SSH Script en Servidor]
+    G --> H[pnpm install --prod en backend]
+    G --> I[node dist/bible/cli/seed-corpus.js]
+    G --> J[Copiar assets a standalone: public y static]
+    G --> K[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
+    G --> L[pm2 start pm2.config.js]
+```
+
+### 5.1 Fases del Pipeline:
+1. **Instalación y Caché:** Instala con pnpm utilizando la caché de la tienda local (`~/.local/share/pnpm/store`).
+2. **Validación y Compilación:** Ejecuta `pnpm run typecheck` y `pnpm run build` en el runner de GitHub.
+3. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sube los archivos excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
+4. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
+   * Instala dependencias de producción en `backend/` (`--prod --ignore-scripts`).
+   * Ejecuta la sincronización transaccional del corpus bíblico (`seed-corpus.js`).
+   * Copia los directorios `public/` y `.next/static/` a la carpeta `standalone/` de Next.js.
+   * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída.
+   * Reinicia los procesos con `pm2 start pm2.config.js`.
+
+### 5.2 Secretos de GitHub Requeridos:
+* `SSH_PRIVATE_KEY`: Llave privada SSH para autenticarse en AWS Lightsail.
+* `REMOTE_HOST`: IP estática del VPS.
+* `REMOTE_USER`: Usuario del sistema operativo (ej. `admin` o `debian`).
+* `TARGET_DIR`: Ruta absoluta en el servidor (ej. `/var/www/jorgedoicela`).

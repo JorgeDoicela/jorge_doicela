@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "guia-bastionado-ssh-seguridad-linux",
+    "title": "Guía Integral de Bastionado SSH y Seguridad en Servidores Linux",
+    "severity": "HIGH",
+    "postType": "hardening_guide",
+    "cveId": null,
+    "affectedSystems": "Linux Debian, Ubuntu, Arch, RHEL",
+    "remediation": "Deshabilitar PasswordAuthentication, activar llaves Ed25519 y configurar Fail2ban con reglas estrictas.",
+    "excerpt": "Estrategias defensivas esenciales para proteger servidores Cloud de ataques de fuerza bruta y escaneos no autorizados.",
+    "contentMarkdown": "El bastionado de SSH es la primera línea de defensa en cualquier servidor accesible por Internet.\n\n### Checklist de Seguridad Inmediata:\n1. **Cero Contraseñas:** Configurar PasswordAuthentication no en /etc/ssh/sshd_config.\n2. **Llaves Criptográficas Fuertes:** Usar exclusivamente ssh-keygen -t ed25519.\n3. **Protección Perimetral:** Limitar el acceso con ufw o grupos de seguridad en AWS Lightsail / Cloudflare.\n4. **Monitoreo Automático:** Desplegar fail2ban para banear IPs tras 3 intentos fallidos.",
+    "author": "Jorge Doicela",
+    "tags": "cybersecurity,linux,ssh,devsecops,security",
+    "views": 380,
+    "likes": 88
+  },
+  {
+    "slug": "analisis-vulnerabilidad-jwt-algoritmo-none",
+    "title": "Análisis y Mitigación de Vulnerabilidades en Tokens JWT: El Ataque \"none\"",
+    "severity": "CRITICAL",
+    "postType": "advisory",
+    "cveId": "CVE-2022-21449-SIM",
+    "affectedSystems": "Servicios de autenticación Node.js / Python sin validación estricta de algoritmo",
+    "remediation": "Forzar explícitamente algoritmos permitidos (ej. algorithms: [\"HS256\", \"RS256\"]) y validar firma criptográfica siempre.",
+    "excerpt": "Cómo los atacantes manipulan la cabecera del token JWT para eludir autenticación y cómo prevenirlo con código seguro.",
+    "contentMarkdown": "El ataque de algoritmo \"none\" ocurre cuando una librería decodifica tokens confiando ciegamente en el campo alg de la cabecera.\n\n### Mitigación en NestJS / TypeScript:\nForzar siempre lista blanca de algoritmos criptográficos y clave secreta robusta.",
+    "author": "Jorge Doicela",
+    "tags": "cybersecurity,jwt,auth,backend,security",
+    "views": 460,
+    "likes": 110
+  }
+]

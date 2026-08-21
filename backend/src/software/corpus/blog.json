@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "arquitectura-limpia-monolitos-modulares-nestjs",
+    "title": "Arquitectura Limpia y Monolitos Modulares en NestJS",
+    "subtitle": "Diseñando cajas negras independientes sobre 1 GB de RAM sin acoplamiento técnico",
+    "excerpt": "Cómo estructurar aplicaciones escalables con bases de datos desacopladas preparadas para migrar a servicios independientes.",
+    "contentMarkdown": "El patrón de Monolito Modular permite construir sistemas de alta robustez en infraestructuras con limitaciones de hardware (como VPS de 1 GB de RAM en AWS Lightsail) manteniendo un aislamiento estricto.\n\n## 1. Principio de Cajas Negras\nCada módulo de negocio opera como un subsistema autónomo con controladores, servicios y modelos propios.\n\n## 2. Persistencia Aislada Físicamente\nEn lugar de compartir un schema global, cada dominio se conecta a su propia base de datos SQLite independiente.\n\n## 3. Comunicación Orientada a Eventos\nCuando se requiere interacción intermodular, se utiliza un despachador asíncrono desacoplado.",
+    "author": "Jorge Doicela",
+    "tags": "nestjs,architecture,clean-code,typescript",
+    "series": "Arquitectura y Monolitos",
+    "tableOfContents": "1. Principio de Cajas Negras, 2. Persistencia Aislada, 3. Event Emitter",
+    "readTimeMinutes": 9,
+    "views": 540,
+    "likes": 128
+  },
+  {
+    "slug": "feature-sliced-design-nextjs-guia-senior",
+    "title": "Feature-Sliced Design (FSD) en Next.js: Guía Práctica para Proyectos Grandes",
+    "subtitle": "Cómo evitar el caos en la carpeta de componentes y organizar por funcionalidades",
+    "excerpt": "Estructuración modular del frontend agrupando componentes, hooks y tipos por funcionalidad.",
+    "contentMarkdown": "Feature-Sliced Design (FSD) es una metodología de arquitectura para aplicaciones frontend que busca resolver la desorganización de código a medida que la base de código crece.\n\n### Capas Principales:\n1. **App:** Enrutamiento y providers globales.\n2. **Features:** Funcionalidades de negocio de valor para el usuario.\n3. **Entities:** Modelos de negocio del cliente.\n4. **Shared / UI:** Componentes de interfaz reutilizables sin lógica de negocio.",
+    "author": "Jorge Doicela",
+    "tags": "nextjs,frontend,fsd,architecture,react",
+    "series": "Frontend Architecture",
+    "tableOfContents": "1. ¿Qué es FSD?, 2. Las 4 Capas, 3. Beneficios Reales",
+    "readTimeMinutes": 7,
+    "views": 410,
+    "likes": 95
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "slug": "portafolio-personal-dark-luxury",
+    "name": "Portafolio Profesional & Terminal SSH",
+    "description": "Sitio web personal interactivo con terminal virtual SSH integrada, estética Dark Luxury y formulario de contacto persistente.",
+    "techStack": "Next.js 16, NestJS 11, Socket.io, SQLite, TailwindCSS",
+    "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",
+    "liveUrl": "https://portfolio.jorgedoicela.com",
+    "status": "active",
+    "featured": true,
+    "stars": 45,
+    "views": 890,
+    "architectureDiagramUrl": "/portfolio/diagram.png"
+  },
+  {
+    "slug": "biblia-modular-estudio-exegetico",
+    "name": "Biblia Modular: 9 Motores Exegéticos",
+    "description": "Plataforma de estudio bíblico profundo con morfología hebrea/griega, códigos Strong, mapas WGS84 y modo Offline-First en Expo.",
+    "techStack": "Next.js, Expo React Native, NestJS, SQLite WAL, FSD",
+    "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",
+    "liveUrl": "https://bible.jorgedoicela.com",
+    "status": "active",
+    "featured": true,
+    "stars": 120,
+    "views": 1450,
+    "architectureDiagramUrl": "/bible/diagram.png"
+  },
+  {
+    "slug": "software-hub-tecnologico",
+    "name": "Software Hub & Tech Platform",
+    "description": "Centro de divulgación técnica con 7 categorías temáticas, foros comunitarios y estética Neumorphism UI + Glassmorphism.",
+    "techStack": "Next.js 16, NestJS 11, SQLite, TypeORM, Better-SQLite3",
+    "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",
+    "liveUrl": "https://software.jorgedoicela.com",
+    "status": "active",
+    "featured": true,
+    "stars": 88,
+    "views": 1120,
+    "architectureDiagramUrl": "/software/diagram.png"
+  }
+]

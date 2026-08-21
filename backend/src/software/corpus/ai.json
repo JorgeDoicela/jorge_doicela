@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "deepseek-r1-modelo-razonamiento-abierto",
+    "name": "DeepSeek-R1",
+    "type": "llm",
+    "provider": "DeepSeek AI",
+    "description": "Modelo de razonamiento avanzado de código abierto entrenado mediante aprendizaje por refuerzo a gran escala.",
+    "contentMarkdown": "DeepSeek-R1 demuestra capacidades de razonamiento matemático, algorítmico y de programación al nivel de modelos propietarios líderes.\n\n### Aspectos Destacados:\n- **Técnica de Entrenamiento:** RL puro sin dependencia masiva de datos sintéticos supervisados.\n- **Transparencia:** Pesos de modelo abiertos bajo licencia MIT.\n- **Destilación:** Modelos destilados de 1.5B a 70B para ejecución local eficiente.",
+    "license": "MIT",
+    "documentationUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
+    "paperUrl": "https://arxiv.org/abs/2501.12948",
+    "githubUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
+    "tags": "ai,llm,deepseek,reasoning,open-source",
+    "views": 680,
+    "likes": 195
+  },
+  {
+    "slug": "mcp-model-context-protocol-anthropic",
+    "name": "Model Context Protocol (MCP)",
+    "type": "mcp_server",
+    "provider": "Anthropic",
+    "description": "Estándar abierto para conectar modelos de lenguaje con fuentes de datos, servidores de herramientas y entornos de desarrollo.",
+    "contentMarkdown": "MCP estandariza la forma en que los asistentes de IA interactúan con bases de datos, APIs y sistemas de archivos locales o remotos.\n\n### Componentes:\n1. **MCP Hosts:** Aplicaciones cliente que orquestan el modelo.\n2. **MCP Clients:** Conectores que mantienen comunicación 1:1 con servidores.\n3. **MCP Servers:** Programas ligeros que exponen herramientas y recursos mediante JSON-RPC.",
+    "license": "MIT",
+    "documentationUrl": "https://modelcontextprotocol.io",
+    "paperUrl": null,
+    "githubUrl": "https://github.com/modelcontextprotocol",
+    "tags": "ai,mcp,agents,tools,anthropic",
+    "views": 520,
+    "likes": 142
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "novedades-nextjs-16-react-server-components",
+    "title": "Novedades de Next.js 16 y el Futuro de React Server Components",
+    "excerpt": "Análisis técnico sobre las mejoras de compilación estática, streaming y Server Actions.",
+    "contentMarkdown": "Next.js 16 redefine el estándar de rendimiento en desarrollo web moderno. Con la integración profunda de React 19 y optimizaciones en el compilador de server components, los desarrolladores pueden lograr TTFB ultra-bajos manteniendo un desacoplamiento limpio de la interfaz.\n\n### Puntos Destacados:\n- **Turbopack Estable:** Tiempos de hot-reload hasta un 70% más rápidos.\n- **Server Actions con Tipado Defensivo:** Validación automática de esquemas con inferencia directa.\n- **Reducción de Memoria:** Optimización crítica para despliegues en servidores con recursos acotados.",
+    "sourceUrl": "https://nextjs.org/blog",
+    "isBreaking": true,
+    "author": "Jorge Doicela",
+    "tags": "nextjs,react,web,performance",
+    "coverImage": "/software/images/nextjs16.jpg",
+    "readTimeMinutes": 5,
+    "views": 320,
+    "likes": 64
+  },
+  {
+    "slug": "typescript-5-8-lanzamiento-rendimiento-tipado",
+    "title": "TypeScript 5.8: Comprobación de Tipos Ultrarrápida y Mejoras en Módulos ESM",
+    "excerpt": "La nueva versión de TypeScript introduce comprobaciones más estrictas sin penalizar el tiempo de compilación.",
+    "contentMarkdown": "TypeScript 5.8 refina la inferencia en tipos condicionales complejos y acelera el análisis sintáctico de monorepos con múltiples paquetes referenciados.\n\n### Mejoras Clave:\n- Detección mejorada de retornos nunca alcanzados en bucles infinitos.\n- Soporte nativo para resolución de submódulos en package.json.\n- Disminución del 15% en el uso de memoria en proyectos con TypeORM y Decoradores.",
+    "sourceUrl": "https://devblogs.microsoft.com/typescript",
+    "isBreaking": false,
+    "author": "Jorge Doicela",
+    "tags": "typescript,javascript,compilers",
+    "coverImage": "/software/images/ts58.jpg",
+    "readTimeMinutes": 4,
+    "views": 215,
+    "likes": 49
+  }
+]

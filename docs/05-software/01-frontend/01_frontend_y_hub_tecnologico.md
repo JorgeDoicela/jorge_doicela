@@ -14,7 +14,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > * **Aislamiento de Dominio:** Estilos independientes en `(software)/globals.css`. Cero importaciones de otros subdominios.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** `features/articles/` (noticias, blog, IA, seguridad, foros) y `features/projects/` (proyectos del autor).
+> * **Feature-Sliced Design (FSD):** `features/news/`, `features/blog/`, `features/forum/`, `features/ai/`, `features/cybersecurity/`, `features/tutorials/`, `features/projects/`, `features/navigation/`.
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
 > * **Estética Neumorphism UI + Glassmorphism:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas.
 
@@ -24,43 +24,54 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 
 ```text
 frontend/web/src/app/(software)/
-├── globals.css                # Estilos aislados del Software Hub (Neumorphism UI + Glassmorphism)
-├── layout.tsx                 # Layout raíz del subdominio
-├── software/
-│   └── page.tsx               # Contenedor de la vista principal
+├── globals.css                       # Estilos aislados del Software Hub (Neumorphism UI + Glassmorphism)
+├── layout.tsx                        # Layout raíz del subdominio
+├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
+│   ├── page.tsx                      # Vista principal del Hub (Bento Grid + filtro dinámico de 7 categorías)
+│   ├── news/
+│   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
+│   │   └── [slug]/page.tsx           # Lector de noticia con fuente oficial
+│   ├── blog/
+│   │   ├── page.tsx                  # Catálogo de artículos del blog
+│   │   └── [slug]/page.tsx           # Lector de ensayo con tabla de contenidos
+│   ├── forum/
+│   │   ├── page.tsx                  # Lista de temas del foro con filtros de estado
+│   │   └── [slug]/page.tsx           # Hilo de discusión con árbol de respuestas y formulario
+│   ├── ai/
+│   │   ├── page.tsx                  # Directorio de modelos IA, agentes y MCP servers con filtro por tipo
+│   │   └── [slug]/page.tsx           # Ficha técnica de modelo / agente / MCP server
+│   ├── cybersecurity/
+│   │   ├── page.tsx                  # Matriz de avisos con filtro por severidad (LOW a CRITICAL)
+│   │   └── [slug]/page.tsx           # Aviso de seguridad con severidad y remediación
+│   ├── tutorials/
+│   │   ├── page.tsx                  # Malla de tutoriales con filtro por dificultad
+│   │   └── [slug]/page.tsx           # Tutorial interactivo paso a paso (StepWizard)
+│   └── projects/
+│       ├── page.tsx                  # Galería showcase con filtro por estado (activo / en desarrollo)
+│       └── [slug]/page.tsx           # Caso de estudio y arquitectura de proyecto
 │
-└── features/                  # FEATURE-SLICED DESIGN (FSD)
-    ├── articles/              # FEATURE: ARTÍCULOS, NOTICIAS, BLOG, IA, SEGURIDAD, FOROS
-    │   ├── components/
-    │   │   ├── ArticleCard.tsx    # Tarjeta táctil neumórfica con bordes vítreos
-    │   │   ├── ArticleGrid.tsx    # Malla interactiva de publicaciones
-    │   │   ├── CategoryNav.tsx    # Barra de navegación neumórfica por 7 categorías
-    │   │   └── ForumSection.tsx   # Módulo de debates comunitarios
-    │   ├── hooks/
-    │   │   ├── useArticles.ts     # Petición a /software/articles
-    │   │   └── useForum.ts        # Petición a /software/forum
-    │   └── types.ts
-    │
-    └── projects/              # FEATURE: CATÁLOGO DE PROYECTOS SHOWCASE
-        ├── components/
-        │   ├── ProjectCard.tsx    # Tarjeta de proyecto con estética neumórfica y cristal
-        │   └── ProjectGrid.tsx    # Malla de proyectos
-        ├── hooks/
-        │   └── useProjects.ts     # Petición a /software/projects
-        └── types.ts
+└── features/                         # FEATURE-SLICED DESIGN (FSD)
+    ├── navigation/                   # CategoryNav (filtro de las 7 categorías)
+    ├── news/                         # NewsCard, NewsGrid, useNews, types
+    ├── blog/                         # BlogCard, BlogGrid, useBlog, types
+    ├── forum/                        # TopicCard, ForumSection, useForum, types
+    ├── ai/                           # AiCard, AiGrid, useAi, types
+    ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
+    ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
+    └── projects/                     # ProjectCard, ProjectGrid, useProjects, types
 ```
 
 ---
 
 ## 3. Las 7 Categorías del Hub
 
-1. **Noticias:** Novedades y actualidad del desarrollo de software y tecnología.
-2. **Blog:** Artículos de opinión, reflexiones y arquitectura técnica.
-3. **Foros:** Espacio comunitario para debates técnicos y resolución de dudas.
-4. **Inteligencia Artificial:** Agentes, modelos de lenguaje, visión artificial y herramientas de IA.
-5. **Ciberseguridad:** Avisos de vulnerabilidades, guías de bastionado y seguridad defensiva/ofensiva.
-6. **Tutoriales y Guías:** Manuales paso a paso con código reproducible.
-7. **Proyectos:** Catálogo de sistemas, librerías y herramientas desarrolladas por Jorge.
+1. **Noticias (`news`):** Novedades y actualidad del desarrollo de software y tecnología con alertas breaking.
+2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software, patrones de diseño y buenas prácticas.
+3. **Foros (`forum`):** Espacio comunitario para debates técnicos, preguntas y respuestas anidadas.
+4. **Inteligencia Artificial (`ai`):** Modelos de razonamiento, agentes, servidores MCP y herramientas de IA.
+5. **Ciberseguridad (`cybersecurity`):** Avisos con matriz de severidad (LOW a CRITICAL), guías de bastionado y remediación.
+6. **Tutoriales y Guías (`tutorials`):** Manuales paso a paso con código reproducible y asistente StepWizard.
+7. **Proyectos (`projects`):** Catálogo de sistemas, librerías y herramientas desarrolladas por Jorge con enlaces demo/repo.
 
 ---
 

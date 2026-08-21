@@ -1,0 +1,49 @@
+{
+  "tutorials": [
+    {
+      "id": 1,
+      "slug": "tutorial-terminal-ssh-virtual-websockets-react",
+      "title": "Construyendo una Terminal SSH Virtual con WebSockets en React y NestJS",
+      "excerpt": "Aprende a implementar una consola interactiva en tiempo real utilizando Socket.io y React Hooks.",
+      "description": "Guía práctica paso a paso para diseñar una terminal interactiva en el navegador con soporte de comandos Unix y salida formateada.",
+      "difficulty": "intermediate",
+      "estimatedMinutes": 20,
+      "prerequisites": "Conocimientos de React, NestJS y WebSockets básicos",
+      "techStack": "React, NestJS, Socket.io, TypeScript",
+      "author": "Jorge Doicela",
+      "tags": "tutorial,react,websockets,typescript,frontend",
+      "coverImage": "/software/images/tutorial-terminal.jpg",
+      "views": 510,
+      "likes": 140
+    }
+  ],
+  "steps": [
+    {
+      "id": 1,
+      "tutorialId": 1,
+      "stepOrder": 1,
+      "title": "Configurar el Gateway de WebSockets en NestJS",
+      "contentMarkdown": "Creamos un WebSocketGateway bajo el namespace \"terminal\" para escuchar comandos del cliente y emitir secuencias de texto.",
+      "codeSnippet": "@WebSocketGateway({ namespace: \"terminal\", cors: { origin: \"*\" } })\nexport class TerminalGateway {\n  @SubscribeMessage(\"execute-command\")\n  handleCommand(@MessageBody() cmd: string) {\n    return { event: \"terminal-output\", data: `Ejecutando: ${cmd}\\n` };\n  }\n}",
+      "codeLanguage": "typescript"
+    },
+    {
+      "id": 2,
+      "tutorialId": 1,
+      "stepOrder": 2,
+      "title": "Crear el Hook useTerminalSocket en React",
+      "contentMarkdown": "Encapsulamos la conexión de Socket.io para manejar el buffer de salida y el estado de conexión.",
+      "codeSnippet": "export function useTerminalSocket() {\n  const [output, setOutput] = useState<string[]>([]);\n  const socketRef = useRef<Socket | null>(null);\n\n  useEffect(() => {\n    socketRef.current = io(\"/terminal\");\n    socketRef.current.on(\"terminal-output\", (data) => {\n      setOutput((prev) => [...prev, data]);\n    });\n    return () => { socketRef.current?.disconnect(); };\n  }, []);\n\n  const sendCommand = (cmd: string) => {\n    socketRef.current?.emit(\"execute-command\", cmd);\n  };\n\n  return { output, sendCommand };\n}",
+      "codeLanguage": "typescript"
+    },
+    {
+      "id": 3,
+      "tutorialId": 1,
+      "stepOrder": 3,
+      "title": "Renderizar la Consola con Estilo Neumórfico",
+      "contentMarkdown": "Diseñamos la caja de terminal con fondo oscuro profundo, cursor parpadeante y scroll automático al último mensaje.",
+      "codeSnippet": "<div className=\"terminal-container font-mono p-4 rounded-2xl bg-zinc-950 text-emerald-400\">\n  {output.map((line, i) => <div key={i}>{line}</div>)}\n  <input onKeyDown={handleKeyDown} className=\"bg-transparent outline-none w-full\" autoFocus />\n</div>",
+      "codeLanguage": "tsx"
+    }
+  ]
+}

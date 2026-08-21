@@ -1,0 +1,57 @@
+{
+  "topics": [
+    {
+      "id": 1,
+      "slug": "estrategia-estado-global-nextjs-app-router",
+      "title": "¿Cuál es la mejor estrategia para gestionar el estado global en Next.js App Router?",
+      "content": "Abro debate sobre cuándo conviene usar Zustand vs React Context vs delegar en Server Actions y URL searchParams en proyectos Next.js 16.",
+      "author": "Alex Dev",
+      "category": "frontend",
+      "isSolved": true,
+      "isPinned": true,
+      "repliesCount": 2,
+      "views": 290
+    },
+    {
+      "id": 2,
+      "slug": "optimizacion-ram-vps-1gb-nodejs",
+      "title": "Buenas prácticas de optimización de RAM en servidores VPS de 1GB para Node.js",
+      "content": "En producción con 1 GB de RAM, ¿qué banderas de V8 y configuraciones de PM2 les han dado mejores resultados para evitar reinicios por OOM?",
+      "author": "Jorge Doicela",
+      "category": "devops",
+      "isSolved": true,
+      "isPinned": false,
+      "repliesCount": 1,
+      "views": 430
+    }
+  ],
+  "replies": [
+    {
+      "id": 1,
+      "topicId": 1,
+      "parentId": null,
+      "author": "Jorge Doicela",
+      "content": "Para estado del servidor (caching, mutaciones), los Server Components + URL searchParams son lo más limpio. Para estado efímero del cliente (modales, toolbars interactivos), Zustand o React Context aislado por feature funciona de forma excelente sin penalizar el bundle.",
+      "isAcceptedAnswer": true,
+      "likes": 18
+    },
+    {
+      "id": 2,
+      "topicId": 1,
+      "parentId": 1,
+      "author": "Alex Dev",
+      "content": "Excelente punto, separar el estado de servidor del de cliente reduce drásticamente los rerenders innecesarios.",
+      "isAcceptedAnswer": false,
+      "likes": 5
+    },
+    {
+      "id": 3,
+      "topicId": 2,
+      "parentId": null,
+      "author": "DevOps Engineer",
+      "content": "Configurar --max-old-space-size=300 en PM2 para el proceso backend y activar swap de 1GB en Debian previene caídas drásticas por picos de tráfico.",
+      "isAcceptedAnswer": true,
+      "likes": 24
+    }
+  ]
+}

@@ -30,12 +30,6 @@ export default function RootLayout({
       </head>
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
         <CancelFallback />
-        {/* Capa de Orbes de Brillo de Fondo */}
-        <div className="tech-glow-container">
-          <div className="tech-glow-orb orb-violet" />
-          <div className="tech-glow-orb orb-cyan" />
-          <div className="tech-glow-orb orb-magenta" />
-        </div>
         {children}
       </body>
     </html>

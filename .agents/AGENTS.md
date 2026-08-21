@@ -37,12 +37,12 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 ## 5. Skills Especializadas y Documentación Oficial (`docs/`)
 
 1. `infraestructura-global-jorge-doicela`: Reglas maestras de monorepo pnpm, arquitectura 1 GB RAM, FSD, 3 capas NestJS, despliegue en AWS Lightsail (Debian 13), Nginx mTLS, PM2, GitHub Actions y seguridad pre-commit (Husky / check-secrets).
-   * Documentación: [`docs/01-infraestructura-global/`]()
+   * Documentación: [`docs/01-infraestructura-global/`](../docs/01-infraestructura-global/)
 2. `landing-jorge-doicela`: Landing page principal (`jorgedoicela.com`), 100% cliente Next.js (sin backend/DB), i18n, PWA, SEO y diseño en **Bento Grid**.
-   * Documentación: [`docs/02-landing/`]()
+   * Documentación: [`docs/02-landing/`](../docs/02-landing/)
 3. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets, contacto, `portfolio.sqlite` y estética **Dark Luxury**.
-   * Documentación: [`docs/03-portfolio/`]()
+   * Documentación: [`docs/03-portfolio/`](../docs/03-portfolio/)
 4. `bible-jorge-doicela`: Biblia (`bible.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `bible.sqlite` y estilo **Geist (Vercel Style)**.
-   * Documentación: [`docs/04-bible/`]()
+   * Documentación: [`docs/04-bible/`](../docs/04-bible/)
 5. `software-jorge-doicela`: Software Hub (`software.*`), 7 categorías temáticas, foros, proyectos, `software.sqlite` y estética **Neumorphism UI + Glassmorphism**.
-   * Documentación: [`docs/05-software/`]()
+   * Documentación: [`docs/05-software/`](../docs/05-software/)

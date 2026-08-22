@@ -40,6 +40,12 @@ jobs:
       - name: Compilar backend y frontend
         run: pnpm run build
 
+      - name: Preparar recursos estáticos de Next.js Standalone
+        run: |
+          mkdir -p frontend/web/.next/standalone/frontend/web/.next
+          cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/
+          cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/
+
       - name: Desplegar archivos compilados a AWS Lightsail
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
@@ -66,7 +72,7 @@ jobs:
             # Sincronización transaccional de bases de datos en producción (Biblia y Software Hub)
             cd backend && node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && cd ..
             
-            # Copiar recursos estáticos obligatorios requeridos por Next.js en modo Standalone
+            # Asegurar recursos estáticos en standalone por redundancia
             mkdir -p frontend/web/.next/standalone/frontend/web/.next
             cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/
             cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/
@@ -78,6 +84,6 @@ jobs:
               sudo nginx -t && sudo systemctl reload nginx
             fi
 
-            pm2 delete all || true
-            pm2 start pm2.config.js
+            # Reiniciar aplicaciones en PM2 con recarga limpia o iniciar si no estaban activas
+            pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js
             pm2 save

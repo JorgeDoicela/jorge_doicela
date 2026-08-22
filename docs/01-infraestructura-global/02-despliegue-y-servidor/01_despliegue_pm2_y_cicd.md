@@ -169,25 +169,27 @@ graph TD
     B --> C[pnpm install --frozen-lockfile]
     B --> D[pnpm run typecheck]
     D --> E[pnpm run build: NestJS dist + Next.js Standalone]
-    E --> F[rsync compilados vía SSH a Lightsail]
-    F --> G[SSH Script en Servidor]
-    G --> H[pnpm install --prod en backend]
-    G --> I[node dist/bible/cli/seed-corpus.js & seed-software.js]
-    G --> J[Copiar assets a standalone: public y static]
-    G --> K[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
-    G --> L[pm2 start pm2.config.js]
+    E --> F[Preparar bundle estático: copiar public y static a standalone]
+    F --> G[rsync bundle completo vía SSH a Lightsail]
+    G --> H[SSH Script en Servidor]
+    H --> I[pnpm install --prod en backend]
+    H --> J[node dist/bible/cli/seed-corpus.js & seed-software.js]
+    H --> K[Garantizar estructura de recursos estáticos en standalone]
+    H --> L[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
+    H --> M[pm2 reload con zero-downtime o start de resguardo]
 ```
 
 ### 5.1 Fases del Pipeline:
 1. **Instalación y Caché:** Instala con pnpm utilizando la caché de la tienda local (`~/.local/share/pnpm/store`).
 2. **Validación y Compilación:** Ejecuta `pnpm run typecheck` y `pnpm run build` en el runner de GitHub.
-3. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sube los archivos excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
-4. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
+3. **Empaquetado de Assets Standalone:** Copia `public/` y `.next/static/` directamente a `.next/standalone/frontend/web/` en el runner de GitHub Actions para que el bundle viaje completo y listo para producción sin sobrecargar la CPU del servidor.
+4. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sincroniza los archivos vía rsync excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
+5. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
    * Instala dependencias de producción en `backend/` (`--prod --ignore-scripts`).
    * Ejecuta la sincronización transaccional de bases de datos (`seed-corpus.js` y `seed-software.js`).
-   * Copia los directorios `public/` y `.next/static/` a la carpeta `standalone/` de Next.js.
-   * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída.
-   * Reinicia los procesos con `pm2 start pm2.config.js`.
+   * Verifica la integridad de los recursos estáticos en `standalone/`.
+   * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída (`sudo nginx -t && sudo systemctl reload nginx`).
+   * Recarga los procesos sin caída del servicio usando `pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js`.
 
 ### 5.2 Secretos de GitHub Requeridos:
 * `SSH_PRIVATE_KEY`: Llave privada SSH para autenticarse en AWS Lightsail.

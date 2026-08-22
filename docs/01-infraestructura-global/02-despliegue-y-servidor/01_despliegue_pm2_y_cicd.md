@@ -127,7 +127,23 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-    # 3. Next.js Frontend Standalone (Puerto 3001)
+    # 3. Next.js Static Assets servidos directamente por Nginx (Alto Rendimiento y Cero Errores MIME)
+    location /_next/static/ {
+        alias /home/admin/jorge_doicela/frontend/web/.next/static/;
+        expires 365d;
+        access_log off;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # 4. Next.js Public Assets (manifest.json, favicon, logos)
+    location /manifest.json {
+        alias /home/admin/jorge_doicela/frontend/web/public/manifest.json;
+        expires 1d;
+        access_log off;
+        add_header Cache-Control "public, max-age=86400, stale-while-revalidate=604800";
+    }
+
+    # 5. Next.js Frontend Standalone (Puerto 3001) - Páginas, RSC y Rutas Dinámicas
     location / {
         proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
@@ -146,13 +162,13 @@ server {
 ## 4. Orquestación de Procesos con PM2 (`pm2.config.js`)
 
 Controla el ciclo de vida y los límites de memoria de los procesos unificados en el VPS:
-* **`backend-nest`:** Inicia `./dist/main.js` desde `./backend` (puerto `3000`). Límite de reinicio: `300 MB`.
-* **`frontend-next`:** Inicia `.next/standalone/frontend/web/server.js` desde `./frontend/web` (puerto `3001`). Límite de reinicio: `450 MB`. Consumo real promedio: **~120 MB**.
+* **`backend-nest`:** Inicia `./dist/main.js` desde `./backend` (puerto `3000`). Límite de reinicio: `200 MB`.
+* **`frontend-next`:** Inicia `./server.js` con `cwd` en `./frontend/web/.next/standalone/frontend/web` (puerto `3001`). Límite de reinicio: `200 MB`. Consumo real promedio: **~90 MB**.
 
 ```bash
 # Comandos de gestión PM2:
 pm2 list
-pm2 reload pm2.config.js
+pm2 reload pm2.config.js --update-env
 pm2 logs --lines 100
 pm2 save
 ```

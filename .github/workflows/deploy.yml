@@ -42,9 +42,10 @@ jobs:
 
       - name: Preparar recursos estáticos de Next.js Standalone
         run: |
+          rm -rf frontend/web/.next/standalone/frontend/web/public frontend/web/.next/standalone/frontend/web/.next/static
           mkdir -p frontend/web/.next/standalone/frontend/web/.next
-          cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/
-          cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/
+          cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/public
+          cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/static
 
       - name: Desplegar archivos compilados a AWS Lightsail
         uses: easingthemes/ssh-deploy@v5.1.0
@@ -72,10 +73,11 @@ jobs:
             # Sincronización transaccional de bases de datos en producción (Biblia y Software Hub)
             cd backend && node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && cd ..
             
-            # Asegurar recursos estáticos en standalone por redundancia
+            # Asegurar recursos estáticos en standalone de forma limpia e idempotente
+            rm -rf frontend/web/.next/standalone/frontend/web/public frontend/web/.next/standalone/frontend/web/.next/static
             mkdir -p frontend/web/.next/standalone/frontend/web/.next
-            cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/
-            cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/
+            cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/public
+            cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/static
             
             # Actualizar y validar configuración de Nginx de forma automática
             if [ -f "nginx/jorgedoicela.com.conf" ]; then

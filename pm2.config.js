@@ -14,8 +14,8 @@ module.exports = {
     },
     {
       name: 'frontend-next',
-      script: '.next/standalone/frontend/web/server.js',
-      cwd: './frontend/web',
+      script: './server.js',
+      cwd: './frontend/web/.next/standalone/frontend/web',
       instances: 1,
       exec_mode: 'fork',
       watch: false,

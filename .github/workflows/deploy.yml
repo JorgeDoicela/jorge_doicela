@@ -79,6 +79,9 @@ jobs:
             cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/public
             cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/static
             
+            # Garantizar permisos de lectura del sistema operativo para el servidor web (Nginx)
+            chmod -R o+rX frontend/web/public frontend/web/.next
+            
             # Actualizar y validar configuración de Nginx de forma automática
             if [ -f "nginx/jorgedoicela.com.conf" ]; then
               sudo cp nginx/jorgedoicela.com.conf /etc/nginx/sites-available/jorgedoicela.com

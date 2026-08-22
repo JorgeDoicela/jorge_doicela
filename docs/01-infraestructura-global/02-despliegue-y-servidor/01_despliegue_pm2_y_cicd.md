@@ -55,6 +55,12 @@ sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
+### 2.4 Permisos del Sistema Operativo para Nginx (`www-data`)
+Para permitir que Nginx (`www-data`) acceda y sirva los archivos estáticos compilados ubicados en `/home/admin/jorge_doicela/`:
+```bash
+chmod 755 /home/admin
+```
+
 ---
 
 ## 3. Plantilla Viva de Nginx (`nginx/jorgedoicela.com.conf`)

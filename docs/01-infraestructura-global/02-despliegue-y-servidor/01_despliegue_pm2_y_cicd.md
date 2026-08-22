@@ -111,7 +111,7 @@ server {
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
 
     # 1. API REST Backend NestJS (Puerto 3000)
-    location ~ ^/(bible/(verses|translations|morphology|books)|software/(projects|articles|forum)|portfolio/contact) {
+    location ~ ^/(bible/(verses|translations|morphology|books|historical)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials)|portfolio/contact) {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;

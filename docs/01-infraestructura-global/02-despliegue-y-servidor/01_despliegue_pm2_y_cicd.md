@@ -141,12 +141,13 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable";
     }
 
-    # 4. Next.js Public Assets (manifest.json, favicon, logos)
-    location /manifest.json {
-        alias /home/admin/jorge_doicela/frontend/web/public/manifest.json;
-        expires 1d;
+    # 4. Next.js Public Assets (manifest.json, favicon, logos de proyectos, imágenes)
+    location ~ ^/(manifest\.json|sw\.js|favicon\.ico|landing/|bible/logo/|software/logo/|portfolio/logo/) {
+        root /home/admin/jorge_doicela/frontend/web/public;
+        expires 30d;
         access_log off;
-        add_header Cache-Control "public, max-age=86400, stale-while-revalidate=604800";
+        add_header Cache-Control "public, max-age=2592000, immutable";
+        try_files $uri =404;
     }
 
     # 5. Next.js Frontend Standalone (Puerto 3001) - Páginas, RSC y Rutas Dinámicas

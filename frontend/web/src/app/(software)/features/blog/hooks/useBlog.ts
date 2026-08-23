@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { BlogPost } from '../types';
 import { API_URL } from '../../../../config';
 
+import { safeFetchJson } from '../../../../utils/fetchJson';
+
 export function useBlog(search: string = '', series?: string) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,11 +22,8 @@ export function useBlog(search: string = '', series?: string) {
         if (series) params.append('series', series);
 
         const url = `${API_URL}/software/blog${params.toString() ? `?${params.toString()}` : ''}`;
-        const res = await fetch(url);
+        const data = await safeFetchJson<any>(url);
 
-        if (!res.ok) throw new Error(`Error: ${res.statusText}`);
-
-        const data = await res.json();
         const list = Array.isArray(data) ? data : data.data || [];
         setPosts(list);
       } catch (err: any) {

@@ -76,6 +76,7 @@ export default function SoftwareHubPage() {
                   width={32}
                   height={32}
                   className="object-contain"
+                  unoptimized
                 />
               </div>
               <div className="flex flex-col">
@@ -596,6 +597,7 @@ export default function SoftwareHubPage() {
                       width={28}
                       height={28}
                       className="object-contain"
+                      unoptimized
                     />
                   </div>
                   <span className="font-extrabold text-sm text-[var(--header-title)]">Software Hub</span>

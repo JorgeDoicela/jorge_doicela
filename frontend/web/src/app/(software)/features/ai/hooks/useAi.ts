@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { AiResource } from '../types';
 import { API_URL } from '../../../../config';
 
+import { safeFetchJson } from '../../../../utils/fetchJson';
+
 export function useAi(type?: string, search: string = '') {
   const [resources, setResources] = useState<AiResource[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,11 +22,8 @@ export function useAi(type?: string, search: string = '') {
         if (search.trim()) params.append('search', search.trim());
 
         const url = `${API_URL}/software/ai${params.toString() ? `?${params.toString()}` : ''}`;
-        const res = await fetch(url);
+        const data = await safeFetchJson<any>(url);
 
-        if (!res.ok) throw new Error(`Error: ${res.statusText}`);
-
-        const data = await res.json();
         const list = Array.isArray(data) ? data : data.data || [];
         setResources(list);
       } catch (err: any) {

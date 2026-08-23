@@ -110,9 +110,19 @@ server {
     gzip_proxied any;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
 
-    # 1. API REST Backend NestJS (Puerto 3000)
+```nginx
+# Mapa dinámico de enrutamiento: Peticiones de navegación de páginas web HTML van al frontend Next.js (3001),
+# mientras que peticiones de datos de la API REST (JSON) van al backend NestJS (3000).
+map $http_accept $backend_port {
+    default                 3000;
+    ~*text/html             3001;
+}
+
+server {
+    ...
+    # 1. API REST Backend NestJS / Frontend Next.js - Desacoplamiento inteligente por Accept Header
     location ~ ^/(bible/(verses|translations|morphology|books|historical)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials)|portfolio/contact) {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:$backend_port;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

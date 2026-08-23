@@ -38,6 +38,8 @@ jobs:
         run: pnpm run typecheck
 
       - name: Compilar backend y frontend
+        env:
+          NEXT_PUBLIC_API_URL: https://jorgedoicela.com
         run: pnpm run build
 
       - name: Preparar recursos estáticos de Next.js Standalone

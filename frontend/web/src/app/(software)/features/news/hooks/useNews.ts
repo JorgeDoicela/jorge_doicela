@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { NewsArticle } from '../types';
 import { API_URL } from '../../../../config';
 
+import { safeFetchJson } from '../../../../utils/fetchJson';
+
 export function useNews(search: string = '', tag?: string) {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,11 +22,8 @@ export function useNews(search: string = '', tag?: string) {
         if (tag) params.append('tag', tag);
 
         const url = `${API_URL}/software/news${params.toString() ? `?${params.toString()}` : ''}`;
-        const res = await fetch(url);
+        const data = await safeFetchJson<any>(url);
 
-        if (!res.ok) throw new Error(`Error: ${res.statusText}`);
-
-        const data = await res.json();
         const list = Array.isArray(data) ? data : data.data || [];
         setNews(list);
       } catch (err: any) {

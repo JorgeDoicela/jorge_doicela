@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Tutorial } from '../types';
 import { API_URL } from '../../../../config';
 
+import { safeFetchJson } from '../../../../utils/fetchJson';
+
 export function useTutorials(difficulty?: string, search: string = '') {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,11 +22,8 @@ export function useTutorials(difficulty?: string, search: string = '') {
         if (search.trim()) params.append('search', search.trim());
 
         const url = `${API_URL}/software/tutorials${params.toString() ? `?${params.toString()}` : ''}`;
-        const res = await fetch(url);
+        const data = await safeFetchJson<any>(url);
 
-        if (!res.ok) throw new Error(`Error: ${res.statusText}`);
-
-        const data = await res.json();
         const list = Array.isArray(data) ? data : data.data || [];
         setTutorials(list);
       } catch (err: any) {

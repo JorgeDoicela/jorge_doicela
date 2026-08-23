@@ -96,12 +96,12 @@ export default function ResourceErrorFallback() {
         }
       }
 
-      // 1. Escuchar errores físicos de carga de elementos (scripts y estilos)
+      // 1. Escuchar errores físicos de carga de elementos (scripts y estilos críticos)
       window.addEventListener('error', function(e) {
         if (e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
           var url = e.target.src || e.target.href || '';
-          console.log("[ResourceErrorFallback] Error detectado en elemento HTML de carga: " + url);
           if (url.indexOf('_next/static') !== -1 || url.indexOf('manifest.json') !== -1) {
+            console.log("[ResourceErrorFallback] Error detectado en elemento HTML crítico de carga: " + url);
             showVisualError("HTML Tag Error (" + url + ")");
           }
         }

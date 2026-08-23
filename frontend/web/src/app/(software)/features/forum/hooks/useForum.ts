@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { ForumTopic } from '../types';
 import { API_URL } from '../../../../config';
 
+import { safeFetchJson } from '../../../../utils/fetchJson';
+
 export function useForum(category: string = 'all', search: string = '') {
   const [topics, setTopics] = useState<ForumTopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,11 +21,8 @@ export function useForum(category: string = 'all', search: string = '') {
       if (search.trim()) params.append('search', search.trim());
 
       const url = `${API_URL}/software/forum${params.toString() ? `?${params.toString()}` : ''}`;
-      const res = await fetch(url);
+      const data = await safeFetchJson<any>(url);
 
-      if (!res.ok) throw new Error(`Error: ${res.statusText}`);
-
-      const data = await res.json();
       const list = Array.isArray(data) ? data : data.data || [];
       setTopics(list);
     } catch (err: any) {

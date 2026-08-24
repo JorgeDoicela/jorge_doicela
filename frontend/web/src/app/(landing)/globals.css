@@ -1,31 +1,24 @@
 @import "tailwindcss";
 
 :root {
-    /* Modo Oscuro por defecto (Cosmos Etéreo Suave) */
-    --background: #030303;
-    /* Foreground principal en Zinc 50 */
-    --foreground: #fafafa;
-    /* Card en Zinc 950 translúcido sutil (opacidad ligera y etérea) */
-    --card-bg: rgba(10, 10, 15, 0.48);
-    /* Borde cristalino sutil */
-    --card-border: rgba(255, 255, 255, 0.055);
-    /* Borde hover elegante */
-    --card-hover-border: rgba(255, 255, 255, 0.16);
-    /* Acentos */
+    /* Modo Oscuro (Apple Dark Slate & Deep Cosmos) */
+    --background: #030304;
+    --foreground: #f5f5f7;
+    --card-bg: rgba(22, 22, 24, 0.75);
+    --card-border: rgba(255, 255, 255, 0.09);
+    --card-hover-border: rgba(255, 255, 255, 0.18);
     --accent: #6366f1; /* Indigo 500 */
     --accent-light: #818cf8; /* Indigo 400 */
-    /* Texto secundario y párrafos en Zinc 300 */
-    --text-muted: #d4d4d8; 
-    /* Subtítulos, tags y etiquetas mono en Zinc 400 */
-    --text-subtitle: #a1a1aa; 
-    --glow-color: rgba(99, 102, 241, 0.15);
-    --shining-border: rgba(255, 255, 255, 0.06);
+    --text-muted: #a1a1a6; 
+    --text-subtitle: #86868b; 
+    --glow-color: rgba(99, 102, 241, 0.12);
+    --shining-border: rgba(255, 255, 255, 0.04);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: rgba(255, 255, 255, 0.03);
-    --inner-card-border: rgba(255, 255, 255, 0.12);
-    --btn-sec-bg: rgba(255, 255, 255, 0.05);
-    --btn-sec-hover-bg: rgba(255, 255, 255, 0.1);
+    --inner-card-bg: rgba(255, 255, 255, 0.04);
+    --inner-card-border: rgba(255, 255, 255, 0.08);
+    --btn-sec-bg: rgba(255, 255, 255, 0.06);
+    --btn-sec-hover-bg: rgba(255, 255, 255, 0.12);
 
     /* Chips de especialidades */
     --chip-bg: rgba(255, 255, 255, 0.04);
@@ -33,57 +26,59 @@
     --chip-hover-bg: rgba(255, 255, 255, 0.09);
 
     /* Chasis y Pantalla de Laptop MacBook */
-    --laptop-bezel: #18181f;
-    --laptop-bezel-border: #272730;
-    --laptop-screen-bg: #09090d;
+    --laptop-bezel: #1e1f26;
+    --laptop-bezel-border: #2e303b;
+    --laptop-screen-bg: #0d0e14;
+    --laptop-screen-text: #f4f4f6;
+    --laptop-screen-muted: #9496a1;
     --laptop-screen-border: rgba(255, 255, 255, 0.08);
     --laptop-card-bg: rgba(255, 255, 255, 0.05);
-    --laptop-card-border: rgba(255, 255, 255, 0.12);
-    --laptop-base-top: #3f3f46;
-    --laptop-base-bottom: #18181b;
-    --laptop-notch: #050508;
+    --laptop-card-border: rgba(255, 255, 255, 0.1);
+    --laptop-base-top: #4b4d58;
+    --laptop-base-bottom: #23242c;
+    --laptop-notch: #121318;
 }
 
-:root.light {
-    /* Modo Claro (Minimalismo Impoluto Estilo Apple / Stripe) */
-    --background: #f8fafc;
-    /* Zinc 950 */
-    --foreground: #0f172a;
-    /* Blanco esmerilado con alta definición */
-    --card-bg: rgba(255, 255, 255, 0.82);
-    /* Borde claro ultra preciso */
-    --card-border: rgba(15, 23, 42, 0.08);
-    /* Borde hover índigo cristalino */
-    --card-hover-border: rgba(99, 102, 241, 0.3);
-    /* Acentos */
+:root.light,
+html.light,
+.light,
+[data-theme='light'] {
+    /* Modo Claro (Apple Impoluto #f5f5f7 y Tipografía de Alto Contraste) */
+    --background: #fafafc;
+    --foreground: #1d1d1f;
+    --card-bg: rgba(245, 245, 247, 0.85);
+    --card-border: rgba(0, 0, 0, 0.08);
+    --card-hover-border: rgba(0, 0, 0, 0.18);
     --accent: #4f46e5; /* Indigo 600 */
     --accent-light: #6366f1; /* Indigo 500 */
-    --text-muted: #475569; /* Slate 600 */
-    --text-subtitle: #64748b; /* Slate 500 */
-    --glow-color: rgba(99, 102, 241, 0.12);
-    --shining-border: rgba(0, 0, 0, 0.03);
+    --text-muted: #6e6e73; /* Apple Secondary */
+    --text-subtitle: #86868b; /* Apple Tertiary */
+    --glow-color: rgba(99, 102, 241, 0.08);
+    --shining-border: rgba(0, 0, 0, 0.02);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: rgba(248, 250, 252, 0.6);
-    --inner-card-border: rgba(15, 23, 42, 0.08);
-    --btn-sec-bg: rgba(241, 245, 249, 0.8);
-    --btn-sec-hover-bg: rgba(226, 232, 240, 0.9);
+    --inner-card-bg: rgba(255, 255, 255, 0.9);
+    --inner-card-border: rgba(0, 0, 0, 0.07);
+    --btn-sec-bg: rgba(0, 0, 0, 0.04);
+    --btn-sec-hover-bg: rgba(0, 0, 0, 0.08);
 
     /* Chips de especialidades */
-    --chip-bg: rgba(15, 23, 42, 0.03);
-    --chip-border: rgba(15, 23, 42, 0.06);
-    --chip-hover-bg: rgba(15, 23, 42, 0.07);
+    --chip-bg: rgba(0, 0, 0, 0.03);
+    --chip-border: rgba(0, 0, 0, 0.06);
+    --chip-hover-bg: rgba(0, 0, 0, 0.06);
 
     /* Chasis y Pantalla de Laptop MacBook */
-    --laptop-bezel: #e2e8f0;
-    --laptop-bezel-border: #cbd5e1;
-    --laptop-screen-bg: #ffffff;
-    --laptop-screen-border: rgba(15, 23, 42, 0.08);
-    --laptop-card-bg: rgba(241, 245, 249, 0.85);
-    --laptop-card-border: rgba(15, 23, 42, 0.08);
-    --laptop-base-top: #cbd5e1;
-    --laptop-base-bottom: #94a3b8;
-    --laptop-notch: #64748b;
+    --laptop-bezel: #24252e;
+    --laptop-bezel-border: #383a48;
+    --laptop-screen-bg: #0e0f17;
+    --laptop-screen-text: #f4f4f6;
+    --laptop-screen-muted: #9496a1;
+    --laptop-screen-border: rgba(255, 255, 255, 0.08);
+    --laptop-card-bg: rgba(255, 255, 255, 0.06);
+    --laptop-card-border: rgba(255, 255, 255, 0.1);
+    --laptop-base-top: #5c5e6b;
+    --laptop-base-bottom: #2b2c36;
+    --laptop-notch: #14151b;
 }
 
 @theme inline {
@@ -111,6 +106,8 @@
     --color-laptop-card: var(--laptop-card-bg);
     --color-laptop-card-border: var(--laptop-card-border);
     --color-laptop-notch: var(--laptop-notch);
+    --color-laptop-screen-text: var(--laptop-screen-text);
+    --color-laptop-screen-muted: var(--laptop-screen-muted);
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", var(--font-geist-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -127,7 +124,14 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     letter-spacing: -0.011em;
-    transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevenir contorno rectangular por defecto del navegador en contenedores navegables */
+main:focus,
+main:focus-visible,
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+    outline: none !important;
 }
 
 /* Tarjetas de Vidrio Interactivas */
@@ -214,18 +218,37 @@ html, body, * {
     will-change: transform, opacity;
 }
 
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.99);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-fade-slide {
+    animation: fadeSlide 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .animate-fade-in-up {
         animation: fadeIn 0.4s ease forwards;
         transform: none !important;
+    }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
 }
-
-
-
-
 

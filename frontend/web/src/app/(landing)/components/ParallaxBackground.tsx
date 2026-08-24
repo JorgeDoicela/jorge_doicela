@@ -3,13 +3,13 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * ParallaxBackground Component (Real Cosmic Nebulae Engine)
+ * ParallaxBackground Component (Deep Galactic Cosmos & Nebula Engine)
  * 
- * Renderiza nubes de nebulosas espaciales envolventes en 3D:
- * - Capas orgánicas con degradados radiales multinivel (Púrpura Galáctico, Magenta Espacial,
- *   Índigo Interestelar, Cian Estelar y Polvo Dorado).
+ * Renderiza nubes de nebulosas cósmicas envolventes con respiración armónica:
+ * - Capas orgánicas de emisión gaseosa galáctica (Púrpura Interestelar, Magenta Andrómeda,
+ *   Cian de Vía Láctea, Polvo Cósmico Dorado y Azul Abisal).
  * - Movimiento Parallax independiente por capas según scroll y ratón/giroscopio.
- * - En Modo Claro mantiene auroras pastel ultra-limpias estilo Apple/Stripe.
+ * - En Modo Claro mantiene un ambiente limpio y translúcido.
  */
 export default function ParallaxBackground() {
     const cloud1Ref = useRef<HTMLDivElement>(null);
@@ -17,6 +17,7 @@ export default function ParallaxBackground() {
     const cloud3Ref = useRef<HTMLDivElement>(null);
     const cloud4Ref = useRef<HTMLDivElement>(null);
     const cloud5Ref = useRef<HTMLDivElement>(null);
+    const coreGlowRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -71,42 +72,49 @@ export default function ParallaxBackground() {
         window.addEventListener('scroll', handleScroll, { passive: true });
 
         const animate = () => {
-            current.x += (target.x - current.x) * 0.04;
-            current.y += (target.y - current.y) * 0.04;
+            current.x += (target.x - current.x) * 0.035;
+            current.y += (target.y - current.y) * 0.035;
 
-            // Capa 1: Nebulosa Violeta-Magenta (Arriba Izquierda, scroll 0.12x)
+            // Capa 1: Nebulosa Violeta / Magenta Cósmica (Arriba Izquierda, scroll 0.12x)
             if (cloud1Ref.current) {
-                const x1 = current.x * 50;
-                const y1 = current.y * 50 + scrollY * 0.12;
+                const x1 = current.x * 45;
+                const y1 = current.y * 45 + scrollY * 0.12;
                 cloud1Ref.current.style.transform = `translate3d(${x1.toFixed(2)}px, ${y1.toFixed(2)}px, 0px)`;
             }
 
-            // Capa 2: Corriente Índigo Profundo (Abajo Derecha, scroll 0.25x)
+            // Capa 2: Corriente Interestelar Índigo Profunda (Abajo Derecha, scroll 0.22x)
             if (cloud2Ref.current) {
                 const x2 = -current.x * 40;
-                const y2 = -current.y * 40 + scrollY * 0.25;
+                const y2 = -current.y * 40 + scrollY * 0.22;
                 cloud2Ref.current.style.transform = `translate3d(${x2.toFixed(2)}px, ${y2.toFixed(2)}px, 0px)`;
             }
 
-            // Capa 3: Polvo Cian Estelar (Centro Izquierda, scroll 0.18x)
+            // Capa 3: Polvo Celestial Cian & Vía Láctea (Centro Izquierda, scroll 0.16x)
             if (cloud3Ref.current) {
                 const x3 = current.x * 30;
-                const y3 = current.y * 30 + scrollY * 0.18;
+                const y3 = current.y * 30 + scrollY * 0.16;
                 cloud3Ref.current.style.transform = `translate3d(${x3.toFixed(2)}px, ${y3.toFixed(2)}px, 0px)`;
             }
 
-            // Capa 4: Núcleo Galáctico Rosado/Púrpura (Arriba Derecha, scroll 0.09x)
+            // Capa 4: Núcleo Galáctico Rosado / Púrpura (Arriba Derecha, scroll 0.08x)
             if (cloud4Ref.current) {
                 const x4 = -current.x * 25;
-                const y4 = -current.y * 25 + scrollY * 0.09;
+                const y4 = -current.y * 25 + scrollY * 0.08;
                 cloud4Ref.current.style.transform = `translate3d(${x4.toFixed(2)}px, ${y4.toFixed(2)}px, 0px)`;
             }
 
-            // Capa 5: Polvo Solar Dorado (Abajo Izquierda, scroll 0.20x)
+            // Capa 5: Destellos de Polvo Solar Ámbar (Abajo Izquierda, scroll 0.18x)
             if (cloud5Ref.current) {
                 const x5 = current.x * 35;
-                const y5 = current.y * 35 + scrollY * 0.20;
+                const y5 = current.y * 35 + scrollY * 0.18;
                 cloud5Ref.current.style.transform = `translate3d(${x5.toFixed(2)}px, ${y5.toFixed(2)}px, 0px)`;
+            }
+
+            // Núcleo galáctico central sutil
+            if (coreGlowRef.current) {
+                const xCore = current.x * 15;
+                const yCore = current.y * 15 + scrollY * 0.05;
+                coreGlowRef.current.style.transform = `translate3d(${xCore.toFixed(2)}px, ${yCore.toFixed(2)}px, 0px)`;
             }
 
             animationFrameId = requestAnimationFrame(animate);
@@ -124,48 +132,57 @@ export default function ParallaxBackground() {
 
     return (
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden select-none">
+            {/* Núcleo Central Galáctico Suave */}
+            <div
+                ref={coreGlowRef}
+                className="absolute top-[20%] left-[20%] w-[65vw] h-[65vw] max-w-[800px] max-h-[800px] rounded-full opacity-40 blur-[70px] will-change-transform"
+                style={{
+                    background: 'radial-gradient(circle at center, rgba(129, 140, 248, 0.18) 0%, rgba(99, 102, 241, 0.08) 35%, rgba(67, 56, 202, 0.03) 65%, transparent 80%)'
+                }}
+            />
+
             {/* Nube 1: Nebulosa Violeta / Magenta Cósmica */}
             <div
                 ref={cloud1Ref}
-                className="absolute top-[-15%] left-[-15%] w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full opacity-70 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
+                className="absolute top-[-10%] left-[-10%] w-[85vw] h-[85vw] max-w-[950px] max-h-[950px] rounded-full opacity-60 blur-[60px] will-change-transform"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.22) 0%, rgba(217, 70, 239, 0.10) 40%, rgba(168, 85, 247, 0.03) 65%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.24) 0%, rgba(217, 70, 239, 0.12) 35%, rgba(147, 51, 234, 0.04) 65%, transparent 80%)'
                 }}
             />
 
             {/* Nube 2: Corriente Interestelar Índigo Profunda */}
             <div
                 ref={cloud2Ref}
-                className="absolute bottom-[-15%] right-[-15%] w-[85vw] h-[85vw] max-w-[950px] max-h-[950px] rounded-full opacity-70 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
+                className="absolute bottom-[-10%] right-[-10%] w-[90vw] h-[90vw] max-w-[1000px] max-h-[1000px] rounded-full opacity-60 blur-[65px] will-change-transform"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.24) 0%, rgba(79, 70, 229, 0.12) 45%, rgba(99, 102, 241, 0.03) 65%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, rgba(79, 70, 229, 0.12) 40%, rgba(30, 27, 75, 0.04) 70%, transparent 85%)'
                 }}
             />
 
-            {/* Nube 3: Polvo Celestial Cian & Sky */}
+            {/* Nube 3: Polvo Celestial Cian & Vía Láctea */}
             <div
                 ref={cloud3Ref}
-                className="absolute top-[25%] left-[10%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full opacity-60 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
+                className="absolute top-[30%] left-[5%] w-[65vw] h-[65vw] max-w-[750px] max-h-[750px] rounded-full opacity-50 blur-[55px] will-change-transform"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.18) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.20) 0%, rgba(14, 165, 233, 0.08) 40%, rgba(6, 78, 59, 0.03) 70%, transparent 80%)'
                 }}
             />
 
-            {/* Nube 4: Núcleo Galáctico Rosado / Púrpura */}
+            {/* Nube 4: Núcleo Galáctico Rosado Andrómeda */}
             <div
                 ref={cloud4Ref}
-                className="absolute top-[10%] right-[5%] w-[55vw] h-[55vw] max-w-[650px] max-h-[650px] rounded-full opacity-60 dark:opacity-90 blur-[30px] transition-colors duration-500 will-change-transform"
+                className="absolute top-[8%] right-[8%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full opacity-50 blur-[55px] will-change-transform"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(236, 72, 153, 0.18) 0%, rgba(147, 51, 234, 0.08) 45%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(236, 72, 153, 0.20) 0%, rgba(192, 38, 211, 0.09) 40%, transparent 75%)'
                 }}
             />
 
             {/* Nube 5: Destellos de Polvo Solar Ámbar */}
             <div
                 ref={cloud5Ref}
-                className="absolute bottom-[10%] left-[20%] w-[45vw] h-[45vw] max-w-[550px] max-h-[550px] rounded-full opacity-50 dark:opacity-90 blur-[25px] transition-colors duration-500 will-change-transform"
+                className="absolute bottom-[12%] left-[18%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full opacity-40 blur-[50px] will-change-transform"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(251, 191, 36, 0.10) 0%, rgba(245, 158, 11, 0.03) 50%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(251, 191, 36, 0.12) 0%, rgba(245, 158, 11, 0.04) 45%, transparent 75%)'
                 }}
             />
         </div>

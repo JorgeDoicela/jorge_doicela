@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, BookOpen, Code, Terminal, Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Play, Pause } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface AppleHighlightsCarouselProps {
@@ -16,174 +16,302 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
   const { language } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   const isEs = language === 'es';
+  const SLIDE_DURATION = 6500;
 
   const slides = [
     {
       id: 'bible',
-      tag: isEs ? 'ESTUDIOS & RECURSOS BÍBLICOS' : 'BIBLE STUDIES & RESOURCES',
-      icon: BookOpen,
-      title: isEs ? 'La Biblia' : 'The Bible',
-      headline: isEs
-        ? 'Un ecosistema completo concebido para el estudio teológico y la edificación espiritual.'
-        : 'A complete ecosystem designed for theological study and spiritual growth.',
+      headline: isEs ? 'La Biblia Modular.' : 'The Modular Bible.',
       description: isEs
-        ? 'Lector minimalista, análisis bíblico, libros digitales y noticias cristianas, todo para la gloria de Dios.'
-        : 'Minimalist reader, biblical analysis, digital books, and Christian news, all for the glory of God.',
-      badgeText: isEs ? 'Salmos 119:105' : 'Psalms 119:105',
-      badgeSub: isEs ? '“Lámpara es a mis pies tu palabra”' : '“Your word is a lamp to my feet”',
+        ? '9 motores de exégesis teológica, análisis morfológico Strong y lectura pura libre de distracciones.'
+        : '9 theological exegesis engines, Strong morphology analysis, and distraction-free reading.',
       linkUrl: links.bible,
-      linkText: isEs ? 'Explorar recursos' : 'Explore resources',
-      accentGradient: 'from-amber-500/10 via-indigo-500/10 to-transparent',
+      linkText: isEs ? 'Abrir Biblia' : 'Open Bible',
+      renderVisual: () => (
+        <div className="w-full flex flex-col justify-center gap-5 sm:gap-6 text-left py-1">
+          {/* Cita Bíblica Principal */}
+          <div className="flex flex-col gap-1.5">
+            <p className="text-lg sm:text-2xl md:text-3xl font-light italic text-foreground leading-relaxed">
+              &ldquo;{isEs ? 'Lámpara es a mis pies tu palabra, y lumbrera a mi camino.' : 'Your word is a lamp to my feet and a light to my path.'}&rdquo;
+            </p>
+            <span className="text-xs sm:text-sm text-text-subtitle font-normal">
+              Salmos 119:105 · {isEs ? 'Texto Masorético y Septuaginta' : 'Masoretic Text and Septuagint'}
+            </span>
+          </div>
+
+          {/* Desglose Morfológico con Separadores Sutiles */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
+            <div className="flex flex-col gap-0.5 sm:pr-6 pb-2.5 sm:pb-0">
+              <span className="text-xs sm:text-sm font-semibold text-foreground">Niyr (Strong H5216)</span>
+              <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Lámpara y luz resplandeciente' : 'Lamp and shining light'}</span>
+            </div>
+
+            <div className="flex flex-col gap-0.5 sm:px-6 py-2.5 sm:py-0">
+              <span className="text-xs sm:text-sm font-semibold text-foreground">Dabar (Strong H1697)</span>
+              <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Palabra y mandato divino' : 'Word and divine decree'}</span>
+            </div>
+
+            <div className="flex flex-col gap-0.5 sm:pl-6 pt-2.5 sm:pt-0">
+              <span className="text-xs sm:text-sm font-semibold text-foreground">Owr (Strong H216)</span>
+              <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Lumbrera y claridad viva' : 'Luminance and bright light'}</span>
+            </div>
+          </div>
+        </div>
+      ),
     },
     {
       id: 'software',
-      tag: isEs ? 'PORTAL DE TECNOLOGÍA & IA' : 'TECH & AI PORTAL',
-      icon: Code,
-      title: isEs ? 'Software & Noticias' : 'Software & News',
-      headline: isEs
-        ? 'Tendencias de vanguardia en Inteligencia Artificial, DevSecOps y Ciberseguridad.'
-        : 'Cutting-edge trends in Artificial Intelligence, DevSecOps and Cybersecurity.',
+      headline: isEs ? 'Software & Inteligencia Artificial.' : 'Software & Artificial Intelligence.',
       description: isEs
-        ? 'Artículos especializados, novedades de modelos de lenguaje, guías de bastionado y análisis de sistemas.'
-        : 'Technical articles, LLM model updates, hardening tutorials, and systems engineering analysis.',
-      badgeText: 'DevSecOps & AI',
-      badgeSub: isEs ? '01 / Modelos • 02 / Hardening • 03 / CI/CD' : '01 / Models • 02 / Hardening • 03 / CI/CD',
+        ? 'Noticias de vanguardia, análisis de modelos de razonamiento, ciberseguridad y herramientas web.'
+        : 'Cutting-edge news, reasoning model analysis, cybersecurity, and modern web tools.',
       linkUrl: links.software,
-      linkText: isEs ? 'Entrar al portal' : 'Enter portal',
-      accentGradient: 'from-emerald-500/10 via-teal-500/10 to-transparent',
+      linkText: isEs ? 'Entrar a Software Hub' : 'Enter Software Hub',
+      renderVisual: () => (
+        <div className="w-full flex flex-col justify-center text-left py-1">
+          {/* Columnas Separadas por Línea Sutil */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
+            <div className="flex flex-col gap-1.5 sm:pr-8 pb-4 sm:pb-0">
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                {isEs ? 'IA Generativa & Modelos de Razonamiento' : 'Generative AI & Reasoning Models'}
+              </span>
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                {isEs
+                  ? 'Arquitecturas de inferencia, evaluación de benchmarks, agentes autónomos y técnicas avanzadas de prompting y RAG.'
+                  : 'Inference architectures, benchmark evaluations, autonomous agents, and advanced prompting and RAG techniques.'}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:pl-8 pt-4 sm:pt-0">
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                {isEs ? 'Ciberseguridad & Defensa Activa' : 'Cybersecurity & Active Defense'}
+              </span>
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                {isEs
+                  ? 'Análisis de vulnerabilidades, auditorías de dependencias, protección de APIs y políticas de seguridad zero-trust.'
+                  : 'Vulnerability analysis, dependency audits, API protection, and zero-trust security policies.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
     },
     {
       id: 'portfolio',
-      tag: isEs ? 'PORTAFOLIO & TERMINAL SSH' : 'PORTFOLIO & SSH CONSOLE',
-      icon: Terminal,
-      title: isEs ? 'Trayectoria & Perfil' : 'Career & Profile',
-      headline: isEs
-        ? 'Experiencia profesional, formación técnica y consola Unix en tiempo real.'
-        : 'Professional experience, technical education, and real-time Unix console.',
+      headline: isEs ? 'Portafolio Profesional & Servicios.' : 'Professional Portfolio & Services.',
       description: isEs
-        ? 'Navega por mi perfil de manera visual o interactúa mediante 24 comandos con autocompletado y modo espejo.'
-        : 'Explore my journey visually or interact via 24 commands with autocomplete and mirror mode.',
-      badgeText: 'Terminal SSH v1.0',
-      badgeSub: isEs ? 'WebSockets en vivo • 24 comandos Unix' : 'Live WebSockets • 24 Unix commands',
+        ? 'Arquitectura de software de alta calidad, proyectos de producción, consultoría y soluciones de ingeniería.'
+        : 'High-quality software architecture, production projects, technical consulting, and engineering solutions.',
       linkUrl: links.portfolio,
-      linkText: isEs ? 'Explorar portafolio' : 'Explore portfolio',
-      accentGradient: 'from-indigo-500/10 via-purple-500/10 to-transparent',
+      linkText: isEs ? 'Ver Portafolio' : 'View Portfolio',
+      renderVisual: () => (
+        <div className="w-full flex flex-col justify-center text-left py-1">
+          {/* 3 Pilares Separados por Líneas Sutiles */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
+            <div className="flex flex-col gap-1 sm:pr-6 pb-3 sm:pb-0">
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                {isEs ? 'Arquitectura Limpia' : 'Clean Architecture'}
+              </span>
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                {isEs
+                  ? 'Next.js 16, NestJS 11, TypeScript estricto y persistencia atómica aislada.'
+                  : 'Next.js 16, NestJS 11, strict TypeScript, and isolated persistence.'}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1 sm:px-6 py-3 sm:py-0">
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                {isEs ? 'Alto Rendimiento' : 'High Performance'}
+              </span>
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                {isEs
+                  ? 'Optimización de recursos en 1 GB de RAM, WebSockets en tiempo real y cero latencia.'
+                  : 'Resource optimization on 1 GB RAM, real-time WebSockets, and zero latency.'}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1 sm:pl-6 pt-3 sm:pt-0">
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                {isEs ? 'Soluciones End-to-End' : 'End-to-End Delivery'}
+              </span>
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                {isEs
+                  ? 'Diseño de experiencia UX/UI, desarrollo full stack y despliegue continuo con CI/CD.'
+                  : 'UX/UI experience design, full stack development, and continuous CI/CD deployment.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
     },
   ];
 
-  // Autoplay con temporizador suave
+  const totalSlides = slides.length;
+
+  const nextSlide = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % totalSlides);
+    setProgress(0);
+  }, [totalSlides]);
+
+  const prevSlide = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+    setProgress(0);
+  }, [totalSlides]);
+
+  const goToSlide = (idx: number) => {
+    setActiveIndex(idx);
+    setProgress(0);
+  };
+
   useEffect(() => {
     if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % slides.length);
-    }, 6500);
-    return () => clearInterval(interval);
-  }, [isPlaying, slides.length]);
 
-  const currentSlide = slides[activeIndex];
-  const IconComponent = currentSlide.icon;
+    const intervalTime = 50;
+    const step = (intervalTime / SLIDE_DURATION) * 100;
+
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          nextSlide();
+          return 0;
+        }
+        return prev + step;
+      });
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [isPlaying, nextSlide]);
+
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 45) {
+      if (diff > 0) nextSlide();
+      else prevSlide();
+    }
+    touchStartX.current = null;
+  };
 
   return (
-    <section id="highlights" className="w-full flex flex-col gap-6 py-8">
-      {/* Título de Sección Apple Style (Imagen 2: Mira lo más destacado.) */}
-      <div className="flex flex-col gap-1.5">
-        <span className="text-sm sm:text-base font-semibold tracking-[-0.01em] text-text-subtitle">
-          {isEs ? 'Ecosistema de Plataformas' : 'Platform Ecosystem'}
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-[-0.035em] text-foreground leading-tight">
+    <section
+      id="highlights"
+      className="w-screen relative left-1/2 -translate-x-1/2 flex flex-col gap-6 py-8 overflow-hidden [--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)] [--card-gap:1.25rem] sm:[--card-gap:1.75rem] md:[--card-gap:2.25rem]"
+    >
+      {/* Título de Sección Estilo Oficial Apple */}
+      <div className="w-full max-w-5xl mx-auto flex flex-col items-start px-5 sm:px-8">
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-[-0.04em] text-foreground leading-tight">
           {isEs ? 'Mira lo más destacado.' : 'Get the highlights.'}
         </h2>
       </div>
 
-      {/* Tarjeta Panorámica de Carrusel Apple Style */}
-      <div className="w-full relative group">
-        <a
-          href={currentSlide.linkUrl}
-          className={`block w-full min-h-[360px] md:min-h-[420px] rounded-[2.5rem] bg-card border border-card-border hover:border-card-hover-border p-8 md:p-14 shadow-lg backdrop-blur-xl transition-all duration-500 relative overflow-hidden bg-gradient-to-br ${currentSlide.accentGradient}`}
+      {/* Contenedor del Carrusel Multitarjeta con laterales asomados (Mismo tamaño y altura sin encogerse) */}
+      <div
+        className="w-full relative overflow-hidden py-4 select-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] items-center"
+          style={{
+            transform: `translateX(calc(50vw - (var(--card-w) / 2) - ${activeIndex} * (var(--card-w) + var(--card-gap))))`,
+          }}
         >
-          <div className="flex flex-col justify-between h-full gap-8 relative z-10">
-            {/* Tag superior & Icono */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-accent-light text-xs font-semibold tracking-[-0.01em] uppercase">
-                <IconComponent className="w-4 h-4" />
-                <span>{currentSlide.tag}</span>
-              </div>
-              <div className="px-3.5 py-1 rounded-full bg-inner-card border border-inner-card-border text-[11px] font-semibold tracking-tight text-text-subtitle">
-                {currentSlide.badgeText}
-              </div>
-            </div>
-
-            {/* Contenido Central con Gran Tipografía */}
-            <div className="flex flex-col gap-4 max-w-3xl">
-              <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-[-0.03em] leading-[1.12]">
-                {currentSlide.headline}
-              </h3>
-              <p className="text-text-muted text-base sm:text-lg font-normal leading-relaxed tracking-[-0.011em] max-w-2xl">
-                {currentSlide.description}
-              </p>
-            </div>
-
-            {/* Fila Inferior con Botón de Acción y Badge */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-card-border/40">
-              <div className="text-xs text-text-subtitle font-mono">
-                {currentSlide.badgeSub}
-              </div>
-
-              <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-foreground text-background font-medium text-xs sm:text-sm tracking-tight hover:opacity-90 transition-opacity cursor-pointer">
-                <span>{currentSlide.linkText}</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      {/* Barra de Control Apple Style con Píldoras y Botón Play/Pausa */}
-      <div className="flex items-center justify-center gap-4 pt-2">
-        <button
-          onClick={() => setActiveIndex((prev) => (prev - 1 + slides.length) % slides.length)}
-          className="p-2 rounded-full bg-card border border-card-border text-text-subtitle hover:text-foreground hover:bg-inner-card transition-colors"
-          aria-label={isEs ? 'Anterior' : 'Previous'}
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        {/* Píldoras de progreso interactivo */}
-        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-card-border shadow-sm">
           {slides.map((slide, idx) => {
             const isActive = idx === activeIndex;
+
+            return (
+              <div
+                key={slide.id}
+                onClick={() => {
+                  if (!isActive) {
+                    goToSlide(idx);
+                  } else {
+                    window.location.href = slide.linkUrl;
+                  }
+                }}
+                style={{ width: 'var(--card-w)', marginRight: 'var(--card-gap)' }}
+                className={`shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[530px] sm:h-[500px] md:h-[520px] cursor-pointer group ${
+                  isActive
+                    ? 'opacity-100 hover:border-card-hover-border'
+                    : 'opacity-50 hover:opacity-80'
+                }`}
+              >
+                {/* Cabecera: Limpia, directa, alineada a la izquierda */}
+                <div className="flex flex-col text-left max-w-2xl gap-1.5 mb-2">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-[-0.025em] text-foreground leading-snug">
+                    {slide.headline}
+                  </h3>
+                  <p className="text-xs sm:text-sm md:text-base text-text-muted font-normal leading-relaxed">
+                    {slide.description}
+                  </p>
+                </div>
+
+                {/* Contenido Visual con Separadores Sutiles */}
+                <div className="w-full flex-grow flex items-center justify-center my-2">
+                  {slide.renderVisual()}
+                </div>
+
+                {/* Botón de Enlace Directo Simple */}
+                <div className="flex items-center justify-end pt-3 border-t border-card-border">
+                  <span
+                    className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-foreground text-background font-medium text-xs sm:text-sm tracking-tight group-hover:opacity-90 active:scale-95 transition-all cursor-pointer select-none"
+                  >
+                    {slide.linkText}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Barra de Control Apple Style Oficial: Cápsula de Progreso + Botón Play Circular Separado */}
+      <div className="flex items-center justify-center gap-3 pt-3">
+        {/* Cápsula de Puntos y Progreso */}
+        <div className="h-11 sm:h-12 px-5 sm:px-6 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center gap-3">
+          {slides.map((slide, idx) => {
+            const isActive = idx === activeIndex;
+
             return (
               <button
                 key={slide.id}
-                onClick={() => setActiveIndex(idx)}
-                className={`transition-all duration-300 rounded-full h-2 ${
-                  isActive ? 'w-8 bg-foreground' : 'w-2 bg-text-subtitle/40 hover:bg-text-subtitle'
+                onClick={() => goToSlide(idx)}
+                className={`relative h-2 rounded-full transition-all duration-500 cursor-pointer overflow-hidden ${
+                  isActive ? 'w-10 sm:w-12 bg-foreground/20' : 'w-2 sm:w-2.5 bg-foreground/25 hover:bg-foreground/50'
                 }`}
                 aria-label={`Slide ${idx + 1}`}
-              />
+              >
+                {isActive && (
+                  <div
+                    className="absolute top-0 left-0 bottom-0 bg-foreground rounded-full transition-all duration-75"
+                    style={{ width: `${progress}%` }}
+                  />
+                )}
+              </button>
             );
           })}
-
-          <div className="w-px h-3 bg-card-border mx-1" />
-
-          {/* Botón Play / Pause */}
-          <button
-            onClick={() => setIsPlaying(!isPlaying)}
-            className="p-1 text-text-subtitle hover:text-foreground transition-colors"
-            aria-label={isPlaying ? 'Pausar carrusel' : 'Reanudar carrusel'}
-          >
-            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-          </button>
         </div>
 
+        {/* Botón Circular Separado de Play / Pause */}
         <button
-          onClick={() => setActiveIndex((prev) => (prev + 1) % slides.length)}
-          className="p-2 rounded-full bg-card border border-card-border text-text-subtitle hover:text-foreground hover:bg-inner-card transition-colors"
-          aria-label={isEs ? 'Siguiente' : 'Next'}
+          onClick={() => setIsPlaying(!isPlaying)}
+          className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer"
+          aria-label={isPlaying ? (isEs ? 'Pausar' : 'Pause') : (isEs ? 'Reproducir' : 'Play')}
         >
-          <ChevronRight className="w-4 h-4" />
+          {isPlaying ? (
+            <Pause className="w-4 h-4 fill-current" />
+          ) : (
+            <Play className="w-4 h-4 fill-current ml-0.5" />
+          )}
         </button>
       </div>
     </section>

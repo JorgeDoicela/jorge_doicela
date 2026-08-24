@@ -32,13 +32,13 @@ export default function SoftwarePage() {
   const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
 
   // Carga asíncrona de datos desde NestJS REST API
-  const { news } = useNews(search);
-  const { posts } = useBlog(search);
-  const { resources } = useAi(undefined, search);
-  const { posts: secPosts } = useCybersecurity(undefined, undefined, search);
-  const { tutorials } = useTutorials(undefined, search);
-  const { topics } = useForum('all', search);
-  const { projects } = useProjects(search);
+  const { news, loading: loadingNews } = useNews(search);
+  const { posts, loading: loadingBlog } = useBlog(search);
+  const { resources, loading: loadingAi } = useAi(undefined, search);
+  const { posts: secPosts, loading: loadingSec } = useCybersecurity(undefined, undefined, search);
+  const { tutorials, loading: loadingTut } = useTutorials(undefined, search);
+  const { topics, loading: loadingForum } = useForum('all', search);
+  const { projects, loading: loadingProj } = useProjects(search);
 
   // Destacados (Top 3)
   const featuredArticle1 = news[0];
@@ -70,6 +70,8 @@ export default function SoftwarePage() {
       document.documentElement.classList.remove('dark');
     }
   };
+
+  const isLoading = loadingNews && loadingBlog && loadingAi;
 
   return (
     <>
@@ -103,12 +105,12 @@ export default function SoftwarePage() {
               <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                 Publicaciones Destacadas
               </h2>
-              <span className="text-xs font-mono text-zinc-500">Última actualización técnica</span>
+              <span className="text-xs font-mono text-zinc-500">Últimas publicaciones técnicas</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Destacado 1: Noticias Breaking */}
-              {featuredArticle1 && (
+              {featuredArticle1 ? (
                 <Link
                   href={`/software/news/${featuredArticle1.slug}`}
                   className="group p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-cyan-500/40 transition-all flex flex-col justify-between"
@@ -137,10 +139,14 @@ export default function SoftwarePage() {
                     </span>
                   </div>
                 </Link>
+              ) : (
+                <div className="p-6 rounded-3xl glass-convex-panel animate-pulse text-xs font-mono text-zinc-500">
+                  Cargando noticias...
+                </div>
               )}
 
               {/* Destacado 2: Ensayo de Arquitectura */}
-              {featuredArticle2 && (
+              {featuredArticle2 ? (
                 <Link
                   href={`/software/blog/${featuredArticle2.slug}`}
                   className="group p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-blue-500/40 transition-all flex flex-col justify-between"
@@ -169,10 +175,14 @@ export default function SoftwarePage() {
                     </span>
                   </div>
                 </Link>
+              ) : (
+                <div className="p-6 rounded-3xl glass-convex-panel animate-pulse text-xs font-mono text-zinc-500">
+                  Cargando ensayos...
+                </div>
               )}
 
               {/* Destacado 3: Ciberseguridad / CVE */}
-              {featuredArticle3 && (
+              {featuredArticle3 ? (
                 <Link
                   href={`/software/cybersecurity/${featuredArticle3.slug}`}
                   className="group p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-rose-500/40 transition-all flex flex-col justify-between"
@@ -201,6 +211,10 @@ export default function SoftwarePage() {
                     </span>
                   </div>
                 </Link>
+              ) : (
+                <div className="p-6 rounded-3xl glass-convex-panel animate-pulse text-xs font-mono text-zinc-500">
+                  Cargando avisos...
+                </div>
               )}
             </div>
           </section>
@@ -228,15 +242,17 @@ export default function SoftwarePage() {
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-black/5 dark:border-white/5">
                 <h3 className="text-lg font-bold text-[var(--header-title)]">
-                  Últimos Artículos & Publicaciones
+                  {activeCategory === 'all'
+                    ? 'Últimos Artículos & Publicaciones'
+                    : CATEGORIES.find((c) => c.id === activeCategory)?.label}
                 </h3>
               </div>
 
               {/* Noticias */}
               {(activeCategory === 'all' || activeCategory === 'news') &&
-                news.slice(1).map((item) => (
+                news.map((item) => (
                   <Link
-                    key={item.id}
+                    key={`news-${item.id}`}
                     href={`/software/news/${item.slug}`}
                     className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-cyan-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
                   >
@@ -261,9 +277,9 @@ export default function SoftwarePage() {
 
               {/* Ensayos de Arquitectura */}
               {(activeCategory === 'all' || activeCategory === 'blog') &&
-                posts.slice(1).map((item) => (
+                posts.map((item) => (
                   <Link
-                    key={item.id}
+                    key={`blog-${item.id}`}
                     href={`/software/blog/${item.slug}`}
                     className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-blue-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
                   >
@@ -286,11 +302,65 @@ export default function SoftwarePage() {
                   </Link>
                 ))}
 
+              {/* Modelos IA & Inferencia (cuando se activa la pestaña 'ai') */}
+              {(activeCategory === 'all' || activeCategory === 'ai') &&
+                resources.map((res) => (
+                  <Link
+                    key={`ai-${res.id}`}
+                    href={`/software/ai/${res.slug}`}
+                    className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-indigo-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
+                  >
+                    <div className="space-y-1 pr-2">
+                      <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
+                        <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase">{res.type}</span>
+                        <span>•</span>
+                        <span>Por {res.provider}</span>
+                      </div>
+                      <h4 className="text-base font-bold text-[var(--header-title)] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        {res.name}
+                      </h4>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400 font-light line-clamp-2">
+                        {res.description}
+                      </p>
+                    </div>
+                    <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 font-bold shrink-0">
+                      Ficha →
+                    </span>
+                  </Link>
+                ))}
+
+              {/* Ciberseguridad & CVE (cuando se activa 'cybersecurity') */}
+              {(activeCategory === 'all' || activeCategory === 'cybersecurity') &&
+                secPosts.map((sec) => (
+                  <Link
+                    key={`sec-${sec.id}`}
+                    href={`/software/cybersecurity/${sec.slug}`}
+                    className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-rose-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
+                  >
+                    <div className="space-y-1 pr-2">
+                      <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
+                        <span className="text-rose-600 dark:text-rose-400 font-bold uppercase">{sec.severity}</span>
+                        <span>•</span>
+                        <span>{sec.cveId || 'CVE Alert'}</span>
+                      </div>
+                      <h4 className="text-base font-bold text-[var(--header-title)] hover:text-rose-600 dark:hover:text-rose-400 transition-colors">
+                        {sec.title}
+                      </h4>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400 font-light line-clamp-2">
+                        {sec.excerpt}
+                      </p>
+                    </div>
+                    <span className="text-xs font-mono text-rose-600 dark:text-rose-400 font-bold shrink-0">
+                      Ver aviso →
+                    </span>
+                  </Link>
+                ))}
+
               {/* Tutoriales */}
               {(activeCategory === 'all' || activeCategory === 'tutorials') &&
                 tutorials.map((item) => (
                   <Link
-                    key={item.id}
+                    key={`tut-${item.id}`}
                     href={`/software/tutorials/${item.slug}`}
                     className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-slate-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
                   >
@@ -317,7 +387,7 @@ export default function SoftwarePage() {
               {(activeCategory === 'all' || activeCategory === 'forum') &&
                 topics.map((item) => (
                   <Link
-                    key={item.id}
+                    key={`topic-${item.id}`}
                     href={`/software/forum/${item.slug}`}
                     className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-blue-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
                   >
@@ -339,9 +409,36 @@ export default function SoftwarePage() {
                     </span>
                   </Link>
                 ))}
+
+              {/* Proyectos Open Source (cuando se activa 'projects') */}
+              {(activeCategory === 'all' || activeCategory === 'projects') &&
+                projects.map((proj) => (
+                  <Link
+                    key={`proj-${proj.id}`}
+                    href={`/software/projects/${proj.slug}`}
+                    className="p-5 rounded-2xl glass-convex-panel hover:scale-[1.005] hover:border-blue-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 block"
+                  >
+                    <div className="space-y-1 pr-2">
+                      <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
+                        <span className="text-blue-600 dark:text-blue-400 font-bold uppercase">Proyecto</span>
+                        <span>•</span>
+                        <span>{proj.stars} stars</span>
+                      </div>
+                      <h4 className="text-base font-bold text-[var(--header-title)] hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        {proj.name}
+                      </h4>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400 font-light line-clamp-2">
+                        {proj.description}
+                      </p>
+                    </div>
+                    <span className="text-xs font-mono text-blue-600 dark:text-blue-400 font-bold shrink-0">
+                      Ver proyecto →
+                    </span>
+                  </Link>
+                ))}
             </div>
 
-            {/* Barra Lateral / Showcase & Modelos IA (1 columna) */}
+            {/* Barra Lateral / Widgets (1 columna) */}
             <div className="space-y-6">
               
               {/* Widget: Modelos IA & Inferencia */}
@@ -358,7 +455,7 @@ export default function SoftwarePage() {
                 <div className="space-y-3">
                   {resources.slice(0, 3).map((res) => (
                     <Link
-                      key={res.id}
+                      key={`widget-ai-${res.id}`}
                       href={`/software/ai/${res.slug}`}
                       className="p-3 rounded-2xl glass-concave-panel hover:bg-black/5 dark:hover:bg-white/5 transition-all block space-y-1"
                     >
@@ -388,7 +485,7 @@ export default function SoftwarePage() {
                 <div className="space-y-3">
                   {projects.slice(0, 3).map((proj) => (
                     <div
-                      key={proj.id}
+                      key={`widget-proj-${proj.id}`}
                       className="p-3 rounded-2xl glass-concave-panel space-y-1.5"
                     >
                       <div className="flex items-center justify-between text-xs">

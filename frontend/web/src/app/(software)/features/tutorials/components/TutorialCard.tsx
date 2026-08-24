@@ -10,9 +10,9 @@ interface TutorialCardProps {
 
 export function TutorialCard({ tutorial }: TutorialCardProps) {
   const diffColors: Record<string, string> = {
-    beginner: 'text-emerald-400 border-emerald-500/40',
-    intermediate: 'text-amber-400 border-amber-500/40',
-    advanced: 'text-rose-400 border-rose-500/40',
+    beginner: 'text-emerald-500 dark:text-emerald-400',
+    intermediate: 'text-amber-500 dark:text-amber-400',
+    advanced: 'text-rose-500 dark:text-rose-400',
   };
 
   const badge = diffColors[tutorial.difficulty] || diffColors.intermediate;
@@ -21,7 +21,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
     <div className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide border uppercase ${badge}`}>
+          <span className={`text-[11px] font-mono font-bold tracking-wide uppercase ${badge}`}>
             {tutorial.difficulty}
           </span>
           <span className="text-xs text-zinc-500 font-mono">{tutorial.estimatedMinutes} min</span>

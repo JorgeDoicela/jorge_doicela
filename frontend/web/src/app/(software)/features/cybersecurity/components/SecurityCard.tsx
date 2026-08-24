@@ -10,10 +10,10 @@ interface SecurityCardProps {
 
 export function SecurityCard({ post }: SecurityCardProps) {
   const severityColors: Record<string, string> = {
-    CRITICAL: 'text-rose-400 border-rose-500/40 animate-pulse',
-    HIGH: 'text-orange-400 border-orange-500/40',
-    MEDIUM: 'text-amber-400 border-amber-500/40',
-    LOW: 'text-emerald-400 border-emerald-500/40',
+    CRITICAL: 'text-rose-500 dark:text-rose-400 font-bold animate-pulse',
+    HIGH: 'text-orange-500 dark:text-orange-400 font-bold',
+    MEDIUM: 'text-amber-500 dark:text-amber-400 font-semibold',
+    LOW: 'text-emerald-500 dark:text-emerald-400 font-semibold',
   };
 
   const badgeColor = severityColors[post.severity] || severityColors.MEDIUM;
@@ -23,10 +23,10 @@ export function SecurityCard({ post }: SecurityCardProps) {
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeColor}`}>
+            <span className={`text-[11px] font-mono uppercase tracking-wider ${badgeColor}`}>
               {post.severity}
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide text-zinc-400 border border-zinc-700">
+            <span className="text-[11px] font-mono text-zinc-400">
               {post.postType}
             </span>
           </div>

@@ -10,7 +10,7 @@ export default function BlogCategoryPage() {
   const { posts, loading, error } = useBlog(search);
 
   return (
-    <div className="min-h-screen py-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 2xl:px-12 max-w-7xl 2xl:max-w-[1600px] mx-auto space-y-8">
       <Link
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"

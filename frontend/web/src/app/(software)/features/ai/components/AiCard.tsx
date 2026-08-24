@@ -10,11 +10,11 @@ interface AiCardProps {
 
 export function AiCard({ resource }: AiCardProps) {
   const typeLabels: Record<string, { label: string; color: string }> = {
-    llm: { label: 'LLM Reasoning', color: 'text-purple-400 border-purple-500/40' },
-    agent: { label: 'Agentic Framework', color: 'text-cyan-400 border-cyan-500/40' },
-    mcp_server: { label: 'MCP Server', color: 'text-emerald-400 border-emerald-500/40' },
-    framework: { label: 'Framework', color: 'text-indigo-400 border-indigo-500/40' },
-    tool: { label: 'AI Tool', color: 'text-blue-400 border-blue-500/40' },
+    llm: { label: 'LLM Reasoning', color: 'text-purple-500 dark:text-purple-400' },
+    agent: { label: 'Agentic Framework', color: 'text-cyan-500 dark:text-cyan-400' },
+    mcp_server: { label: 'MCP Server', color: 'text-emerald-500 dark:text-emerald-400' },
+    framework: { label: 'Framework', color: 'text-indigo-500 dark:text-indigo-400' },
+    tool: { label: 'AI Tool', color: 'text-blue-500 dark:text-blue-400' },
   };
 
   const badge = typeLabels[resource.type] || typeLabels.tool;
@@ -23,7 +23,7 @@ export function AiCard({ resource }: AiCardProps) {
     <div className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide border ${badge.color}`}>
+          <span className={`text-[11px] font-mono font-bold tracking-wide ${badge.color}`}>
             {badge.label}
           </span>
           <span className="text-xs text-zinc-500 font-mono">{resource.provider}</span>

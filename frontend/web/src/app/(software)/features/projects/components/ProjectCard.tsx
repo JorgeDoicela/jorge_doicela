@@ -10,9 +10,9 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const statusLabels: Record<string, { label: string; color: string }> = {
-    active: { label: 'Activo / Producción', color: 'text-emerald-400 border-emerald-500/40' },
-    wip: { label: 'En Desarrollo', color: 'text-amber-400 border-amber-500/40' },
-    archived: { label: 'Archivado', color: 'text-zinc-400 border-zinc-700' },
+    active: { label: 'Activo / Producción', color: 'text-emerald-500 dark:text-emerald-400 font-bold' },
+    wip: { label: 'En Desarrollo', color: 'text-amber-500 dark:text-amber-400 font-bold' },
+    archived: { label: 'Archivado', color: 'text-zinc-400 font-medium' },
   };
 
   const statusBadge = statusLabels[project.status] || statusLabels.active;
@@ -21,10 +21,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
     <div className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide border ${statusBadge.color}`}>
+          <span className={`text-[11px] font-mono tracking-wide ${statusBadge.color}`}>
             {statusBadge.label}
           </span>
-          <div className="flex items-center gap-1 text-xs text-amber-400 font-semibold">
+          <div className="flex items-center gap-1 text-xs text-amber-500 dark:text-amber-400 font-semibold">
             <span>{project.stars} stars</span>
           </div>
         </div>

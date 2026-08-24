@@ -64,7 +64,7 @@ export default function ForumTopicDetailPage({
   if (loading) {
     return (
       <div className="min-h-screen py-16 px-4 flex justify-center items-center">
-        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-sm">
+        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-sm font-mono">
           Cargando debate...
         </div>
       </div>
@@ -74,9 +74,9 @@ export default function ForumTopicDetailPage({
   if (error || !topic) {
     return (
       <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
-        <p className="text-rose-400 font-semibold">{error || 'Tema no encontrado'}</p>
-        <Link href="/software" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs">
-          ← Volver a Software
+        <p className="text-rose-500 font-semibold">{error || 'Tema no encontrado'}</p>
+        <Link href="/software/forum" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono">
+          ← Volver al Foro
         </Link>
       </div>
     );
@@ -89,118 +89,160 @@ export default function ForumTopicDetailPage({
   });
 
   return (
-    <div className="min-h-screen py-16 px-4 md:px-8 max-w-4xl mx-auto space-y-8">
-      <Link
-        href="/software"
-        className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
-      >
-        ← Volver a Software
-      </Link>
-
-      {/* Tema Principal */}
-      <div className="p-8 md:p-12 rounded-3xl glass-convex-panel">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase text-indigo-400 border border-indigo-500/30">
-            {topic.category}
-          </span>
-          {topic.isSolved && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-emerald-400 border border-emerald-500/40">
-              Resuelto
-            </span>
-          )}
-          <span className="text-xs text-zinc-500">• {formattedDate}</span>
-        </div>
-
-        <h1 className="text-2xl md:text-3xl font-bold text-[var(--foreground)] mb-4 leading-snug">
-          {topic.title}
-        </h1>
-
-        <p className="text-sm md:text-base text-zinc-300 font-light leading-relaxed whitespace-pre-line mb-6">
-          {topic.content}
-        </p>
-
-        <div className="flex items-center justify-between text-xs text-zinc-500 border-t border-white/5 pt-4">
-          <span>Iniciado por {topic.author}</span>
-          <span>{topic.repliesCount} respuestas</span>
-          <span>{topic.views} vistas</span>
-        </div>
+    <div className="min-h-screen py-10 md:py-14 px-4 sm:px-6 lg:px-8 2xl:px-12 max-w-7xl 2xl:max-w-[1500px] mx-auto space-y-8">
+      {/* Breadcrumb de navegación */}
+      <div className="flex items-center gap-3 text-xs font-mono text-zinc-500">
+        <Link href="/software" className="hover:text-[var(--foreground)] transition-colors">
+          Software
+        </Link>
+        <span>/</span>
+        <Link href="/software/forum" className="hover:text-[var(--foreground)] transition-colors">
+          Foros & Debates
+        </Link>
+        <span>/</span>
+        <span className="text-[var(--foreground)] truncate max-w-xs">{topic.title}</span>
       </div>
 
-      {/* Hilo de Respuestas */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold text-[var(--foreground)]">
-          Respuestas ({topic.replies?.length || 0})
-        </h3>
-
-        {(!topic.replies || topic.replies.length === 0) ? (
-          <div className="p-8 rounded-3xl glass-concave-panel text-center text-zinc-500 text-sm">
-            Sé el primero en responder a este debate.
-          </div>
-        ) : (
-          topic.replies.map((reply: ForumReply) => (
-            <div
-              key={reply.id}
-              className={`p-6 rounded-3xl ${
-                reply.isAcceptedAnswer
-                  ? 'glass-convex-panel border border-emerald-500/30'
-                  : 'glass-convex-panel'
-              } space-y-3`}
-            >
-              <div className="flex items-center justify-between text-xs text-zinc-400">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-indigo-400">{reply.author}</span>
-                  {reply.isAcceptedAnswer && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] text-emerald-400 border border-emerald-500/40 font-bold">
-                      Respuesta Aceptada
-                    </span>
-                  )}
-                </div>
-                <span className="font-mono text-zinc-500">
-                  {new Date(reply.createdAt).toLocaleDateString('es-ES')}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Columna Principal: Debate y Respuestas (8 cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Tema Principal */}
+          <div className="p-8 md:p-12 rounded-3xl glass-convex-panel">
+            <div className="flex items-center gap-3 mb-4 text-xs font-mono">
+              <span className="font-bold uppercase text-blue-600 dark:text-blue-400">
+                {topic.category}
+              </span>
+              {topic.isSolved && (
+                <span className="font-bold uppercase text-emerald-600 dark:text-emerald-400">
+                  ● Resuelto
                 </span>
-              </div>
-
-              <p className="text-sm text-zinc-300 font-light leading-relaxed whitespace-pre-line">
-                {reply.content}
-              </p>
+              )}
+              <span className="text-zinc-500">• {formattedDate}</span>
             </div>
-          ))
-        )}
+
+            <h1 className="text-2xl sm:text-4xl font-black text-[var(--header-title)] mb-4 leading-snug">
+              {topic.title}
+            </h1>
+
+            <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-300 font-light leading-relaxed whitespace-pre-line">
+              {topic.content}
+            </p>
+          </div>
+
+          {/* Hilo de Respuestas */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-[var(--header-title)] font-mono">
+              Respuestas ({topic.replies?.length || 0})
+            </h3>
+
+            {(!topic.replies || topic.replies.length === 0) ? (
+              <div className="p-8 rounded-3xl glass-concave-panel text-center text-zinc-500 text-sm font-mono">
+                Sé el primero en aportar una respuesta a este debate.
+              </div>
+            ) : (
+              topic.replies.map((reply: ForumReply) => (
+                <div
+                  key={reply.id}
+                  className={`p-6 rounded-3xl ${
+                    reply.isAcceptedAnswer
+                      ? 'glass-convex-panel border border-emerald-500/30'
+                      : 'glass-convex-panel'
+                  } space-y-3`}
+                >
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-blue-600 dark:text-blue-400">{reply.author}</span>
+                      {reply.isAcceptedAnswer && (
+                        <span className="text-emerald-500 font-bold">
+                          ✓ Respuesta Aceptada
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-zinc-500">
+                      {new Date(reply.createdAt).toLocaleDateString('es-ES')}
+                    </span>
+                  </div>
+
+                  <p className="text-sm text-zinc-700 dark:text-zinc-300 font-light leading-relaxed whitespace-pre-line">
+                    {reply.content}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Formulario de Respuesta */}
+          <form onSubmit={handlePostReply} className="p-8 rounded-3xl glass-convex-panel space-y-4">
+            <h4 className="text-base font-bold text-[var(--header-title)] font-mono">Añadir una respuesta</h4>
+
+            <div>
+              <input
+                type="text"
+                placeholder="Tu nombre o alias (opcional)"
+                value={authorName}
+                onChange={(e) => setAuthorName(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <textarea
+                required
+                rows={4}
+                placeholder="Escribe tu contribución técnica o solución..."
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-500 leading-relaxed font-light"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="px-6 py-2.5 rounded-xl glass-btn-neumorphic text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:text-white disabled:opacity-50 cursor-pointer"
+            >
+              {submitting ? 'Publicando...' : 'Publicar Respuesta'}
+            </button>
+          </form>
+        </div>
+
+        {/* Columna Lateral: Ficha del Debate (4 cols) */}
+        <aside className="lg:col-span-4 space-y-6">
+          <div className="p-6 rounded-3xl glass-convex-panel space-y-4 sticky top-20">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 pb-2 border-b border-black/5 dark:border-white/5">
+              Estado del Debate
+            </h3>
+
+            <div className="space-y-3 text-xs font-mono">
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500">Iniciado por:</span>
+                <span className="font-bold text-[var(--foreground)]">{topic.author}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500">Categoría:</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">{topic.category}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500">Respuestas:</span>
+                <span className="font-bold text-[var(--foreground)]">{topic.repliesCount}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500">Vistas:</span>
+                <span className="text-[var(--foreground)]">{topic.views}</span>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-black/5 dark:border-white/5">
+              <Link
+                href="/software/forum"
+                className="w-full py-2.5 rounded-2xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+              >
+                ← Ver Todos los Debates
+              </Link>
+            </div>
+          </div>
+        </aside>
       </div>
-
-      {/* Formulario de Respuesta */}
-      <form onSubmit={handlePostReply} className="p-8 rounded-3xl glass-convex-panel space-y-4">
-        <h4 className="text-base font-bold text-[var(--foreground)]">Añadir una respuesta</h4>
-
-        <div>
-          <input
-            type="text"
-            placeholder="Tu nombre o alias (opcional)"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <textarea
-            required
-            rows={4}
-            placeholder="Escribe tu contribución técnica o solución..."
-            value={replyContent}
-            onChange={(e) => setReplyContent(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={submitting}
-          className="px-6 py-2.5 rounded-xl glass-btn-neumorphic text-xs font-bold text-indigo-400 hover:text-indigo-300 disabled:opacity-50 cursor-pointer"
-        >
-          {submitting ? 'Publicando...' : 'Publicar Respuesta'}
-        </button>
-      </form>
     </div>
   );
 }

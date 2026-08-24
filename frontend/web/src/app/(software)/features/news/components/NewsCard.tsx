@@ -21,11 +21,11 @@ export function NewsCard({ article }: NewsCardProps) {
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
             {article.isBreaking && (
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-rose-400 border border-rose-500/40 animate-pulse">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-rose-500 dark:text-rose-400 animate-pulse">
                 Breaking
               </span>
             )}
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide text-blue-400 border border-blue-500/30">
+            <span className="text-[11px] font-mono font-bold tracking-wide text-cyan-500 dark:text-cyan-400">
               Noticia
             </span>
           </div>

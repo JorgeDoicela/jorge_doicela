@@ -14,127 +14,80 @@
 }
 
 .theme-software {
-  /* Fondo Neumórfico Claro - Plata */
-  --background: #e0e5ec;
-  --foreground: #09090b;
+  /* Fondo Claro - Titanio Técnico Frío */
+  --background: #eaf0f6;
+  --foreground: #090e17;
 
-  /* Modo Claro - Sinergia Glass-Neumorphism (Optimizado para legibilidad y contraste) */
-  --glass-bg-convex: rgba(255, 255, 255, 0.55); /* Base de opacidad sólida para dar buen contraste al texto */
-  --glass-border-convex: rgba(255, 255, 255, 0.85); /* Canto exterior brillante del cristal */
+  /* Modo Claro - Neumorphism + Glassmorphism Calibrado */
+  --glass-bg-convex: rgba(255, 255, 255, 0.72);
+  --glass-border-convex: rgba(255, 255, 255, 0.85);
+  --glass-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(238, 244, 251, 0.65) 100%);
+  --glass-blur: blur(14px);
   
-  /* Gradiente lineal diagonal de 135°: Imita la incidencia física de la luz sobre un plano de vidrio */
-  --glass-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.35) 100%);
+  --glass-shadow-convex: 6px 6px 16px rgba(162, 178, 198, 0.45), -6px -6px 16px rgba(255, 255, 255, 0.9);
+  --glass-shadow-convex-hover: 9px 9px 24px rgba(162, 178, 198, 0.4), -9px -9px 24px rgba(255, 255, 255, 0.95);
+
+  --glass-bg-concave: rgba(226, 234, 244, 0.6);
+  --glass-border-concave: rgba(162, 178, 198, 0.2);
+  --glass-shadow-concave: inset 3px 3px 6px rgba(162, 178, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+
+  --chip-text: #090e17;
+  --header-title: #090e17;
+  --header-p: #334155;
   
-  /* backdrop-filter de vidrio claro: Desenfoque estándar sin sobreexposición */
-  --glass-blur: blur(24px) brightness(1.02) saturate(100%);
-  
-  /* Sombras duales con bisel interno inset superior izquierdo (brillo del borde del vidrio) */
-  --glass-shadow-convex: 
-    7px 7px 18px rgba(163, 177, 198, 0.65), 
-    -7px -7px 18px rgba(255, 255, 255, 0.95),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.9);
+  --btn-shadow: 3px 3px 7px rgba(162, 178, 198, 0.4), -3px -3px 7px rgba(255, 255, 255, 0.9);
+  --btn-shadow-hover: 5px 5px 12px rgba(162, 178, 198, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.95);
 
-  /* CORRECCIÓN FÍSICA HOVER: Sombras más amplias, difusas y tenues (dispersión de luz al elevarse) */
-  --glass-shadow-convex-hover: 
-    12px 12px 28px rgba(163, 177, 198, 0.45), 
-    -12px -12px 28px rgba(255, 255, 255, 0.85),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.95);
+  --grid-color: rgba(15, 23, 42, 0.035);
 
-  --glass-bg-concave: rgba(224, 229, 236, 0.45);
-  --glass-border-concave: rgba(9, 9, 11, 0.03);
-  --glass-shadow-concave: 
-    inset 4px 4px 8px rgba(163, 177, 198, 0.6), 
-    inset -4px -4px 8px rgba(255, 255, 255, 0.95);
-
-  /* MEJORA ACCESIBILIDAD: Contraste de texto optimizado para legibilidad WCAG AA */
-  --chip-text: #18181b; /* zinc-900 para garantizar legibilidad */
-  --header-title: #09090b;
-  --header-p: #27272a; /* zinc-800 para contraste de lectura */
-  
-  --btn-shadow: 
-    3px 3px 7px rgba(163, 177, 198, 0.55), 
-    -3px -3px 7px rgba(255, 255, 255, 0.95),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.8);
-  --btn-shadow-hover: 
-    5px 5px 12px rgba(163, 177, 198, 0.4), 
-    -5px -5px 12px rgba(255, 255, 255, 0.85),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.9);
-
-  /* Color de cuadrícula técnica en modo claro */
-  --grid-color: rgba(9, 9, 11, 0.04);
-
-  /* Colores de acento semánticos para el proyecto (Modo Claro) */
-  --accent-ia: #8b5cf6;       /* Violeta para IA */
-  --accent-security: #3b82f6; /* Azul Eléctrico para Ciberseguridad (Reemplaza al Cian) */
-  --accent-software: #6366f1; /* Índigo para Software/Biblia (Reemplaza al Verde) */
-  --accent-tutorial: #f59e0b; /* Ámbar para Tutoriales */
-  --accent-blog: #ef4444;     /* Rojo para Blog/Noticias */
+  /* Acentos Tecnológicos Unificados (Modo Claro) */
+  --accent-primary: #2563eb;
+  --accent-cyan: #0284c7;
+  --accent-slate: #475569;
+  --accent-ia: #4f46e5;
+  --accent-security: #0284c7;
+  --accent-software: #2563eb;
+  --accent-tutorial: #64748b;
+  --accent-blog: #2563eb;
 }
 
 .theme-software.dark,
 html.dark .theme-software {
-  /* Fondo Neumórfico Oscuro - Obsidiana Azulada */
-  --background: #090a0f;
-  --foreground: #ede8df;
+  /* Fondo Oscuro - Obsidiana Azulada Profunda */
+  --background: #080c14;
+  --foreground: #f1f5f9;
 
-  /* Modo Oscuro - Sinergia Glass-Neumorphism */
-  --glass-bg-convex: rgba(17, 20, 32, 0.55);   /* Tono azul/grafito translúcido premium */
-  --glass-border-convex: rgba(255, 255, 255, 0.12); /* Borde de vidrio más definido */
-  
-  /* Gradiente diagonal oscuro: simula refracción interna sobre fondo obsidiana */
-  --glass-bg-gradient: linear-gradient(135deg, rgba(24, 28, 43, 0.65) 0%, rgba(10, 11, 18, 0.45) 100%);
-  
-  /* backdrop-filter retroiluminado: Aclara sutilmente (brightness 1.15) lo que hay detrás
-     para separar el cristal del fondo oscuro y proyectar la cuadrícula con fidelidad */
-  --glass-blur: blur(24px) brightness(1.15) saturate(110%);
+  /* Modo Oscuro - Neumorphism + Glassmorphism Calibrado */
+  --glass-bg-convex: rgba(13, 19, 32, 0.75);
+  --glass-border-convex: rgba(59, 130, 246, 0.12);
+  --glass-bg-gradient: linear-gradient(135deg, rgba(17, 24, 40, 0.8) 0%, rgba(10, 14, 25, 0.65) 100%);
+  --glass-blur: blur(16px);
 
-  /* NEUMORFISMO DE ALTO NIVEL EN MODO OSCURO:
-     En lugar de usar sombras claras blancas genéricas (muy chillonas), se emplea un brillo tecnológico
-     bicolor sutil en el lado superior izquierdo que combina Cian (Ciberseguridad) y Violeta (IA). */
-  --glass-shadow-convex: 
-    8px 8px 24px rgba(0, 0, 0, 0.85),             /* Sombra proyectada profunda */
-    -5px -5px 15px rgba(59, 130, 246, 0.05),     /* Resplandor azul eléctrico equilibrado (5%) */
-    -10px -10px 25px rgba(167, 139, 250, 0.05),   /* Resplandor violeta equilibrado (5%) */
-    inset 1px 1px 0px rgba(255, 255, 255, 0.12), /* Bisel de luz superior izquierdo calibrado */
-    inset -1px -1px 0px rgba(0, 0, 0, 0.6);      /* Sombra de contorno inferior derecho */
-    
-  /* CORRECCIÓN FÍSICA HOVER OSCURO: Mayor volumen con halos de color perceptibles pero refinados */
-  --glass-shadow-convex-hover: 
-    14px 14px 36px rgba(0, 0, 0, 0.9), 
-    -6px -6px 20px rgba(59, 130, 246, 0.09),     /* Resplandor azul eléctrico calibrado en hover (9%) */
-    -12px -12px 30px rgba(167, 139, 250, 0.09),   /* Resplandor violeta calibrado en hover (9%) */
-    inset 1px 1px 0px rgba(255, 255, 255, 0.17),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.7);
+  --glass-shadow-convex: 7px 7px 20px rgba(0, 0, 0, 0.65), -3px -3px 14px rgba(37, 99, 235, 0.08);
+  --glass-shadow-convex-hover: 10px 10px 28px rgba(0, 0, 0, 0.8), -4px -4px 18px rgba(37, 99, 235, 0.14);
 
-  --glass-bg-concave: rgba(5, 5, 8, 0.55);
-  --glass-border-concave: rgba(255, 255, 255, 0.012);
-  --glass-shadow-concave: 
-    inset 4px 4px 10px rgba(0, 0, 0, 0.9), 
-    inset -4px -4px 10px rgba(255, 255, 255, 0.02);
+  --glass-bg-concave: rgba(6, 10, 18, 0.65);
+  --glass-border-concave: rgba(255, 255, 255, 0.04);
+  --glass-shadow-concave: inset 3px 3px 7px rgba(0, 0, 0, 0.8), inset -2px -2px 5px rgba(255, 255, 255, 0.02);
 
-  /* MEJORA ACCESIBILIDAD OSCURO: Colores claros de alto contraste */
-  --chip-text: #f4f4f5; /* zinc-100 */
+  --chip-text: #f1f5f9;
   --header-title: #ffffff;
-  --header-p: #fafafa; /* zinc-50 */
+  --header-p: #94a3b8;
 
-  --btn-shadow: 
-    4px 4px 10px rgba(0, 0, 0, 0.8), 
-    -3px -3px 8px rgba(167, 139, 250, 0.06),     /* Brillo violeta equilibrado en reposo (6%) */
-    inset 1px 1px 0px rgba(255, 255, 255, 0.07);
-  --btn-shadow-hover: 
-    6px 6px 14px rgba(0, 0, 0, 0.85), 
-    -4px -4px 10px rgba(59, 130, 246, 0.10),     /* Brillo azul eléctrico equilibrado en hover (10%) */
-    inset 1px 1px 0px rgba(255, 255, 255, 0.10);
+  --btn-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6), -2px -2px 6px rgba(37, 99, 235, 0.06);
+  --btn-shadow-hover: 5px 5px 14px rgba(0, 0, 0, 0.75), -3px -3px 10px rgba(37, 99, 235, 0.12);
 
-  /* Color de cuadrícula técnica en modo oscuro (mayor definición) */
   --grid-color: rgba(255, 255, 255, 0.025);
 
-  /* Colores de acento semánticos para el proyecto (Modo Oscuro) */
-  --accent-ia: #a78bfa;       /* Violeta brillante */
-  --accent-security: #60a5fa; /* Azul Eléctrico brillante (Reemplaza al cian) */
-  --accent-software: #818cf8; /* Índigo brillante (Reemplaza al Verde) */
-  --accent-tutorial: #fbbf24; /* Ámbar brillante */
-  --accent-blog: #f87171;     /* Rojo brillante */
+  /* Acentos Tecnológicos Unificados (Modo Oscuro) */
+  --accent-primary: #3b82f6;
+  --accent-cyan: #38bdf8;
+  --accent-slate: #94a3b8;
+  --accent-ia: #818cf8;
+  --accent-security: #38bdf8;
+  --accent-software: #3b82f6;
+  --accent-tutorial: #94a3b8;
+  --accent-blog: #3b82f6;
 }
 
 /* Cobertura e Inmunidad Absoluta de Pantalla Completa:
@@ -194,56 +147,11 @@ body {
 .glass-convex-panel-interactive {
   cursor: pointer;
   position: relative;
-  overflow: hidden;
-}
-
-/* Reflejo de Vidrio en Hover (Barrido Diagonal de Luz) */
-.glass-convex-panel-interactive::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -70%;
-  width: 25%;
-  height: 200%;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 255, 255, 0.16) 30%,
-    rgba(255, 255, 255, 0.28) 50%,
-    rgba(255, 255, 255, 0.16) 70%,
-    transparent
-  );
-  transform: rotate(30deg);
-  pointer-events: none;
-  opacity: 0;
-  will-change: left, opacity;
-}
-
-.theme-software.dark .glass-convex-panel-interactive::after {
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 255, 255, 0.04) 30%,
-    rgba(255, 255, 255, 0.12) 50%,
-    rgba(255, 255, 255, 0.04) 70%,
-    transparent
-  );
-}
-
-.glass-convex-panel-interactive:hover::after {
-  opacity: 1;
-  left: 160%;
-  transition: left 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-in;
 }
 
 .glass-convex-panel-interactive:hover {
-  transform: translateY(-5px) translateZ(0);
+  transform: translateY(-3px) translateZ(0);
   box-shadow: var(--glass-shadow-convex-hover);
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.theme-software:not(.dark) .glass-convex-panel-interactive:hover {
-  border-color: rgba(255, 255, 255, 0.85);
 }
 
 .glass-convex-panel-interactive:active {
@@ -255,22 +163,11 @@ body {
 .glass-concave-panel {
   background-color: var(--glass-bg-concave);
   border: 1px solid var(--glass-border-concave);
-  
-  /* CORRECCIÓN FISICA: Bisel inferior brillante (reflejo de cristal tallado) */
-  box-shadow: 
-    var(--glass-shadow-concave),
-    inset -1px -1px 0px rgba(255, 255, 255, 0.1);
-    
+  box-shadow: var(--glass-shadow-concave);
   transition: 
-    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.theme-software:not(.dark) .glass-concave-panel {
-  box-shadow: 
-    var(--glass-shadow-concave),
-    inset -1px -1px 0px rgba(255, 255, 255, 0.7);
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* 3. Botón Neumórfico Físico */
@@ -313,47 +210,19 @@ body {
     inset -1px -1px 0px rgba(255, 255, 255, 0.1);
 }
 
-.theme-software:not(.dark) .glass-btn-neumorphic:active {
-  box-shadow: 
-    var(--glass-shadow-concave),
-    inset -1px -1px 0px rgba(255, 255, 255, 0.7);
-}
-
-/* 4. Entrada de Texto Neumórfica Cóncava */
+/* 4. Entrada de Texto */
 .glass-input-neumorphic {
   background-color: var(--glass-bg-concave);
   border: 1px solid var(--glass-border-concave);
-  
-  /* Bisel inferior brillante por defecto */
-  box-shadow: 
-    var(--glass-shadow-concave),
-    inset -1px -1px 0px rgba(255, 255, 255, 0.05);
-    
+  box-shadow: var(--glass-shadow-concave);
   color: var(--foreground);
   outline: none;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
 }
 
-.theme-software:not(.dark) .glass-input-neumorphic {
-  box-shadow: 
-    var(--glass-shadow-concave),
-    inset -1px -1px 0px rgba(255, 255, 255, 0.7);
-}
-
-/* CORRECCIÓN INTERACTIVA: El foco incrementa profundidad y resalta bordes en vez de flotar */
 .glass-input-neumorphic:focus {
-  background-color: var(--glass-bg-concave);
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 
-    inset 5px 5px 10px rgba(163, 177, 198, 0.65), 
-    inset -5px -5px 10px rgba(255, 255, 255, 0.95);
-}
-
-.theme-software.dark .glass-input-neumorphic:focus {
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 
-    inset 6px 6px 14px rgba(0, 0, 0, 0.98), 
-    inset -5px -5px 12px rgba(255, 255, 255, 0.02);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 /* ─── INDICADORES LED DE ESTADO ──────────────────────────────────── */

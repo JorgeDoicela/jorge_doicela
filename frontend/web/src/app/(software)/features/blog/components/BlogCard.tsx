@@ -20,7 +20,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide text-emerald-400 border border-emerald-500/30">
+            <span className="text-[11px] font-mono font-bold tracking-wide text-rose-500 dark:text-rose-400">
               {post.series || 'Arquitectura'}
             </span>
           </div>

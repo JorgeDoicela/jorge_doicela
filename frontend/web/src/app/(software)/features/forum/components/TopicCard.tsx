@@ -18,18 +18,18 @@ export function TopicCard({ topic }: TopicCardProps) {
   return (
     <div className="group relative flex flex-col md:flex-row md:items-center justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1 hover:shadow-xl gap-4">
       <div className="flex-1">
-        <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <div className="flex items-center gap-3 mb-2 flex-wrap">
           {topic.isPinned && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-amber-400 border border-amber-500/40">
+            <span className="text-[11px] font-mono font-bold uppercase text-amber-500 dark:text-amber-400">
               Fijado
             </span>
           )}
           {topic.isSolved && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-emerald-400 border border-emerald-500/40">
+            <span className="text-[11px] font-mono font-bold uppercase text-emerald-500 dark:text-emerald-400">
               Resuelto
             </span>
           )}
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase text-indigo-400 border border-indigo-500/30">
+          <span className="text-[11px] font-mono font-bold uppercase text-indigo-500 dark:text-indigo-400">
             {topic.category}
           </span>
           <span className="text-xs text-zinc-500">• Por {topic.author}</span>

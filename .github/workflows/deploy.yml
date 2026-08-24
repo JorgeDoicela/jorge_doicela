@@ -94,3 +94,16 @@ jobs:
             # Reiniciar aplicaciones en PM2 con recarga limpia o iniciar si no estaban activas
             pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js
             pm2 save
+
+      - name: Purgar automáticamente caché en Cloudflare
+        run: |
+          if [ -n "${{ secrets.CLOUDFLARE_ZONE_ID }}" ] && [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "Purgando caché de Cloudflare automáticamente vía API..."
+            curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+              -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              --data '{"purge_everything":true}'
+            echo "Caché de Cloudflare purgada exitosamente."
+          else
+            echo "Aviso: CLOUDFLARE_ZONE_ID o CLOUDFLARE_API_TOKEN no configurados en GitHub Secrets (el header no-cache de Nginx previene la caché)."
+          fi

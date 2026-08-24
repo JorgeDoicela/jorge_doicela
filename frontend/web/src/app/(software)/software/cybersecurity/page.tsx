@@ -24,7 +24,7 @@ export default function CybersecurityCategoryPage() {
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver al Software Hub
+        ← Volver a Software
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel text-center">

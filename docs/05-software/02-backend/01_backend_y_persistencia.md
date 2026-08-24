@@ -1,4 +1,4 @@
-# Software Hub - Backend, Submódulos y Persistencia (NestJS)
+# Software - Backend, Submódulos y Persistencia (NestJS)
 
 Este documento detalla la arquitectura macro y micro, submódulos verticales, controladores, modelos de persistencia y catálogo de endpoints REST del módulo de Software (`backend/src/software/`).
 

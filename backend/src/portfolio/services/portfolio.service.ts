@@ -171,14 +171,14 @@ export class PortfolioService {
                   content:
                     'Biblia Modular: Lector minimalista de las Sagradas Escrituras con Next.js, NestJS y SQLite.',
                 },
-                'software_hub.txt': {
+                'software.txt': {
                   type: 'file',
-                  name: 'software_hub.txt',
+                  name: 'software.txt',
                   size: 580,
                   permissions: '-rw-r--r--',
                   updatedAt: 'Aug 14 12:30',
                   content:
-                    'Software Hub: Plataforma de contenidos sobre IA, Ciberseguridad, Noticias, Tutoriales y Foros.',
+                    'Software: Plataforma de contenidos sobre IA, Ciberseguridad, Noticias, Tutoriales y Foros.',
                 },
                 'portfolio_ssh.txt': {
                   type: 'file',
@@ -508,7 +508,7 @@ export class PortfolioService {
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
               'Date:   Mon Jun 10 18:30:12 2024 -0500',
               '',
-              '    feat: complete Software Hub platform & modular Bible reader',
+              '    feat: complete Software platform & modular Bible reader',
               '',
               '\x1b[33mcommit 3e1f9a2b8c4d5e\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',

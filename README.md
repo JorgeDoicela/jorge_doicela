@@ -33,7 +33,7 @@ La documentación del repositorio se encuentra modularizada verticalmente por pr
 * **[05-software/](docs/05-software/)**:
   * [01-frontend/01_frontend_y_hub_tecnologico.md](docs/05-software/01-frontend/01_frontend_y_hub_tecnologico.md): Frontend web (`software.*`), las 7 categorías, buscador y foros.
   * [02-backend/01_backend_y_persistencia.md](docs/05-software/02-backend/01_backend_y_persistencia.md): NestJS REST, foros, artículos, proyectos y `software.sqlite`.
-  * [03-roadmap/01_roadmap_software.md](docs/05-software/03-roadmap/01_roadmap_software.md): Requerimientos e ideas del Software Hub.
+  * [03-roadmap/01_roadmap_software.md](docs/05-software/03-roadmap/01_roadmap_software.md): Requerimientos e ideas de Software.
 
 ---
 

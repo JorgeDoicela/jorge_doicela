@@ -116,4 +116,4 @@ Según el dominio específico en el que trabajes:
 * **Landing Page:** `landing-jorge-doicela`
 * **Portafolio Profesional:** `portfolio-jorge-doicela`
 * **Biblia Modular (Web y Móvil):** `bible-jorge-doicela`
-* **Software Hub:** `software-jorge-doicela`
+* **Software:** `software-jorge-doicela`

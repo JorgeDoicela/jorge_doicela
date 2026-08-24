@@ -1,10 +1,10 @@
 ---
 name: software-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento del Software Hub (software.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 7 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (7 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos software.sqlite (9 tablas relacionales).
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de Software (software.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 7 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (7 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos software.sqlite (9 tablas relacionales).
 ---
-# Directrices de Desarrollo: Plataforma y Hub de Software (software.jorgedoicela.com)
+# Directrices de Desarrollo: Plataforma de Software (software.jorgedoicela.com)
 
-Esta habilidad define los estándares técnicos, estructura, modelo de datos y buenas prácticas de desarrollo para el Software Hub de Jorge Doicela.
+Esta habilidad define los estándares técnicos, estructura, modelo de datos y buenas prácticas de desarrollo para Software de Jorge Doicela.
 
 ---
 
@@ -34,7 +34,7 @@ frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism
 ├── layout.tsx                        # Layout raíz del subdominio
 ├── software/                         # Subrutas individuales
-│   ├── page.tsx                      # Hub principal: Bento Grid + selector de 7 categorías
+│   ├── page.tsx                      # Página principal: Bento Grid + selector de 7 categorías
 │   ├── news/
 │   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
 │   │   └── [slug]/page.tsx           # Lector de noticia individual con fuente oficial
@@ -68,7 +68,7 @@ frontend/web/src/app/(software)/
     └── projects/                     # ProjectCard, ProjectGrid, useProjects, types
 ```
 
-### 2.2 Las 7 Áreas Temáticas del Hub
+### 2.2 Las 7 Áreas Temáticas de Software
 1. **Noticias (`news`):** Novedades y tendencias del sector de software con alertas breaking.
 2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software y buenas prácticas.
 3. **Foros (`forum`):** Espacio de discusión y debates técnicos comunitarios con respuestas anidadas.
@@ -150,7 +150,7 @@ pnpm run lint
 | Mezclar tipos de artículos con entidades de `bible` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/software/<modulo>/entities/`. |
 | Hardcodear datos en el frontend Next.js | Aumenta el bundle size del cliente y acopla datos con UI. | Consultar asíncronamente desde los endpoints de NestJS. |
 | Poner datos semilla dentro del archivo `seed-software.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
-| Usar emojis decorativos en la UI | Inconsistencia con la estética profesional del hub. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
+| Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de Software. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
 
 ---
 

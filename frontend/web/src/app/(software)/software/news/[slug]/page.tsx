@@ -46,7 +46,7 @@ export default function NewsDetailPage({
       <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
         <p className="text-rose-400 font-semibold">{error || 'Noticia no encontrada'}</p>
         <Link href="/software" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs">
-          ← Volver al Hub
+          ← Volver a Software
         </Link>
       </div>
     );
@@ -64,17 +64,17 @@ export default function NewsDetailPage({
         href="/software"
         className="inline-flex items-center gap-2 mb-8 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver al Software Hub
+        ← Volver a Software
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel mb-8">
         <div className="flex items-center gap-2 mb-4">
           {article.isBreaking && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-rose-400 border border-rose-500/40">
               Breaking News
             </span>
           )}
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium text-blue-400 border border-blue-500/30">
             Noticia
           </span>
           <span className="text-xs text-zinc-500 font-mono">• {formattedDate}</span>
@@ -108,10 +108,7 @@ export default function NewsDetailPage({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-xs font-semibold text-blue-400 hover:text-blue-300"
             >
-              <span>Fuente Oficial de la Noticia</span>
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
+              <span>Fuente Oficial de la Noticia ↗</span>
             </a>
           </div>
         )}

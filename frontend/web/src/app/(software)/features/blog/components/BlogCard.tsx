@@ -20,7 +20,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide text-emerald-400 border border-emerald-500/30">
               {post.series || 'Arquitectura'}
             </span>
           </div>
@@ -53,10 +53,7 @@ export function BlogCard({ post }: BlogCardProps) {
           href={`/software/blog/${post.slug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
         >
-          Leer ensayo
-          <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
+          Leer ensayo →
         </Link>
       </div>
     </div>

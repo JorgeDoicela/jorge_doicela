@@ -26,8 +26,8 @@
     "architectureDiagramUrl": "/bible/diagram.png"
   },
   {
-    "slug": "software-hub-tecnologico",
-    "name": "Software Hub & Tech Platform",
+    "slug": "software-tecnologico",
+    "name": "Software",
     "description": "Centro de divulgación técnica con 7 categorías temáticas, foros comunitarios y estética Neumorphism UI + Glassmorphism.",
     "techStack": "Next.js 16, NestJS 11, SQLite, TypeORM, Better-SQLite3",
     "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",

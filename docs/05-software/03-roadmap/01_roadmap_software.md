@@ -1,6 +1,6 @@
-# Roadmap y Funcionalidades: Software Hub
+# Roadmap y Funcionalidades: Software
 
-Catálogo de requerimientos completados y objetivos futuros para el **Software Hub** (`software.jorgedoicela.com`).
+Catálogo de requerimientos completados y objetivos futuros para **Software** (`software.jorgedoicela.com`).
 
 ---
 
@@ -12,7 +12,7 @@ Catálogo de requerimientos completados y objetivos futuros para el **Software H
 - [x] **Frontend Web Next.js 16 (FSD):** 8 features modulares (`navigation`, `news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`) con componentes, hooks y tipos desacoplados.
 - [x] **Páginas de Catálogo Dedicadas:** `/software/news`, `/software/blog`, `/software/forum`, `/software/ai`, `/software/cybersecurity`, `/software/tutorials`, `/software/projects`.
 - [x] **Lector Individual y Modo Interactivo `[slug]`:** Vistas individuales por categoría, incluyendo `StepWizard` interactivo para tutoriales e hilo de discusión para foros.
-- [x] **Landing / Hub Principal (`/software`):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.
+- [x] **Página Principal (`/software`):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.
 
 ---
 

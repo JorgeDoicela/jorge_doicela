@@ -76,7 +76,7 @@ export default function ForumTopicDetailPage({
       <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
         <p className="text-rose-400 font-semibold">{error || 'Tema no encontrado'}</p>
         <Link href="/software" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs">
-          ← Volver al Hub
+          ← Volver a Software
         </Link>
       </div>
     );
@@ -94,17 +94,17 @@ export default function ForumTopicDetailPage({
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver al Software Hub
+        ← Volver a Software
       </Link>
 
       {/* Tema Principal */}
       <div className="p-8 md:p-12 rounded-3xl glass-convex-panel">
         <div className="flex items-center gap-2 mb-4">
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase text-indigo-400 border border-indigo-500/30">
             {topic.category}
           </span>
           {topic.isSolved && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-emerald-400 border border-emerald-500/40">
               Resuelto
             </span>
           )}
@@ -142,7 +142,7 @@ export default function ForumTopicDetailPage({
               key={reply.id}
               className={`p-6 rounded-3xl ${
                 reply.isAcceptedAnswer
-                  ? 'glass-convex-panel border border-emerald-500/30 bg-emerald-950/10'
+                  ? 'glass-convex-panel border border-emerald-500/30'
                   : 'glass-convex-panel'
               } space-y-3`}
             >
@@ -150,7 +150,7 @@ export default function ForumTopicDetailPage({
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-indigo-400">{reply.author}</span>
                   {reply.isAcceptedAnswer && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 font-bold">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] text-emerald-400 border border-emerald-500/40 font-bold">
                       Respuesta Aceptada
                     </span>
                   )}

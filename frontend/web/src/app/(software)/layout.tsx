@@ -11,7 +11,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://software.jorgedoicela.com"),
-  title: "Software Hub | Jorge Doicela",
+  title: "Software | Jorge Doicela",
   description: "Galería de proyectos de software, IA y ciberseguridad con base de datos SQLite aislada.",
   icons: {
     icon: "/software/logo/logo_fondo_circular_color_.png",

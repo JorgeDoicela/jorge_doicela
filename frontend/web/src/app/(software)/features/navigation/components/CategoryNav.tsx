@@ -18,7 +18,7 @@ interface CategoryNavProps {
 }
 
 export const SOFTWARE_CATEGORIES: { id: SoftwareSection; label: string }[] = [
-  { id: 'all', label: 'Todo el Hub' },
+  { id: 'all', label: 'Todo' },
   { id: 'news', label: 'Noticias' },
   { id: 'blog', label: 'Blog' },
   { id: 'forum', label: 'Foros' },

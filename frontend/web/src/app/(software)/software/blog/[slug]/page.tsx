@@ -46,7 +46,7 @@ export default function BlogDetailPage({
       <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
         <p className="text-rose-400 font-semibold">{error || 'Artículo no encontrado'}</p>
         <Link href="/software" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs">
-          ← Volver al Hub
+          ← Volver a Software
         </Link>
       </div>
     );
@@ -64,12 +64,12 @@ export default function BlogDetailPage({
         href="/software"
         className="inline-flex items-center gap-2 mb-8 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver al Software Hub
+        ← Volver a Software
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium text-emerald-400 border border-emerald-500/30">
             {post.series || 'Blog Técnico'}
           </span>
           <span className="text-xs text-zinc-500 font-mono">• {formattedDate}</span>

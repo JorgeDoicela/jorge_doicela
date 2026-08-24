@@ -44,5 +44,5 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
    * Documentación: [`docs/03-portfolio/`](../docs/03-portfolio/)
 4. `bible-jorge-doicela`: Biblia (`bible.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `bible.sqlite` y estilo **Geist (Vercel Style)**.
    * Documentación: [`docs/04-bible/`](../docs/04-bible/)
-5. `software-jorge-doicela`: Software Hub (`software.*`), 7 categorías temáticas, foros, proyectos, `software.sqlite` y estética **Neumorphism UI + Glassmorphism**.
+5. `software-jorge-doicela`: Software (`software.*`), 7 categorías temáticas, foros, proyectos, `software.sqlite` y estética **Neumorphism UI + Glassmorphism**.
    * Documentación: [`docs/05-software/`](../docs/05-software/)

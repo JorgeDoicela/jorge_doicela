@@ -10,9 +10,9 @@ interface TutorialCardProps {
 
 export function TutorialCard({ tutorial }: TutorialCardProps) {
   const diffColors: Record<string, string> = {
-    beginner: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    intermediate: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    advanced: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    beginner: 'text-emerald-400 border-emerald-500/40',
+    intermediate: 'text-amber-400 border-amber-500/40',
+    advanced: 'text-rose-400 border-rose-500/40',
   };
 
   const badge = diffColors[tutorial.difficulty] || diffColors.intermediate;
@@ -45,10 +45,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
           href={`/software/tutorials/${tutorial.slug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
         >
-          Iniciar guía
-          <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
+          Iniciar guía →
         </Link>
       </div>
     </div>

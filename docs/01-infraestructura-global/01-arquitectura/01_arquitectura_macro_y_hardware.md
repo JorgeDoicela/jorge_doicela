@@ -10,7 +10,7 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 1. **Landing Page** (`jorgedoicela.com`): Portal de bienvenida y presentación general.
 2. **Portafolio Profesional** (`portfolio.jorgedoicela.com`): Portafolio interactivo con terminal SSH virtual en tiempo real.
 3. **Biblia Modular** (`bible.jorgedoicela.com`): Lector y suite exegética con análisis morfológico y multiversión.
-4. **Software Hub** (`software.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
+4. **Software** (`software.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
 
 ### 1.1 La Regla de Oro: Aislamiento Lógico vs. Consolidación Física
 > [!IMPORTANT]

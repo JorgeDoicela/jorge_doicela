@@ -10,9 +10,9 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const statusLabels: Record<string, { label: string; color: string }> = {
-    active: { label: 'Activo / Producción', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
-    wip: { label: 'En Desarrollo', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
-    archived: { label: 'Archivado', color: 'bg-zinc-800 text-zinc-400 border-zinc-700' },
+    active: { label: 'Activo / Producción', color: 'text-emerald-400 border-emerald-500/40' },
+    wip: { label: 'En Desarrollo', color: 'text-amber-400 border-amber-500/40' },
+    archived: { label: 'Archivado', color: 'text-zinc-400 border-zinc-700' },
   };
 
   const statusBadge = statusLabels[project.status] || statusLabels.active;
@@ -59,10 +59,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-1"
               >
-                <span>GitHub</span>
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
+                <span>GitHub ↗</span>
               </a>
             )}
             {project.liveUrl && (
@@ -72,10 +69,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center gap-1"
               >
-                <span>Demo</span>
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
+                <span>Demo ↗</span>
               </a>
             )}
           </div>
@@ -84,10 +78,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             href={`/software/projects/${project.slug}`}
             className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors inline-flex items-center gap-1"
           >
-            Arquitectura
-            <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
+            Arquitectura →
           </Link>
         </div>
       </div>

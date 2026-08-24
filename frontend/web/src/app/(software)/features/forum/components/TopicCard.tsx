@@ -20,16 +20,16 @@ export function TopicCard({ topic }: TopicCardProps) {
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-2 flex-wrap">
           {topic.isPinned && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-amber-400 border border-amber-500/40">
               Fijado
             </span>
           )}
           {topic.isSolved && (
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase text-emerald-400 border border-emerald-500/40">
               Resuelto
             </span>
           )}
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase text-indigo-400 border border-indigo-500/30">
             {topic.category}
           </span>
           <span className="text-xs text-zinc-500">• Por {topic.author}</span>
@@ -48,10 +48,7 @@ export function TopicCard({ topic }: TopicCardProps) {
 
       <div className="flex items-center gap-4 self-end md:self-center border-t md:border-t-0 pt-3 md:pt-0 border-white/5">
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel text-xs text-indigo-400 font-semibold">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-          <span>{topic.repliesCount}</span>
+          <span>{topic.repliesCount} respuestas</span>
         </div>
 
         <div className="text-xs text-zinc-500">
@@ -60,11 +57,9 @@ export function TopicCard({ topic }: TopicCardProps) {
 
         <Link
           href={`/software/forum/${topic.slug}`}
-          className="p-2 rounded-xl glass-btn-neumorphic text-zinc-400 hover:text-white"
+          className="px-3 py-1.5 rounded-xl glass-btn-neumorphic text-xs font-semibold text-zinc-400 hover:text-white"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-          </svg>
+          Ver debate →
         </Link>
       </div>
     </div>

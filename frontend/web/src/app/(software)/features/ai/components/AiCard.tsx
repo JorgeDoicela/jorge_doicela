@@ -10,11 +10,11 @@ interface AiCardProps {
 
 export function AiCard({ resource }: AiCardProps) {
   const typeLabels: Record<string, { label: string; color: string }> = {
-    llm: { label: 'LLM Reasoning', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
-    agent: { label: 'Agentic Framework', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' },
-    mcp_server: { label: 'MCP Server', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
-    framework: { label: 'Framework', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
-    tool: { label: 'AI Tool', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+    llm: { label: 'LLM Reasoning', color: 'text-purple-400 border-purple-500/40' },
+    agent: { label: 'Agentic Framework', color: 'text-cyan-400 border-cyan-500/40' },
+    mcp_server: { label: 'MCP Server', color: 'text-emerald-400 border-emerald-500/40' },
+    framework: { label: 'Framework', color: 'text-indigo-400 border-indigo-500/40' },
+    tool: { label: 'AI Tool', color: 'text-blue-400 border-blue-500/40' },
   };
 
   const badge = typeLabels[resource.type] || typeLabels.tool;
@@ -49,10 +49,7 @@ export function AiCard({ resource }: AiCardProps) {
           href={`/software/ai/${resource.slug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors"
         >
-          Ficha técnica
-          <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
+          Ficha técnica →
         </Link>
       </div>
     </div>

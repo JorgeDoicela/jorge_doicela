@@ -21,11 +21,11 @@ export function NewsCard({ article }: NewsCardProps) {
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
             {article.isBreaking && (
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-rose-400 border border-rose-500/40 animate-pulse">
                 Breaking
               </span>
             )}
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide text-blue-400 border border-blue-500/30">
               Noticia
             </span>
           </div>
@@ -52,10 +52,7 @@ export function NewsCard({ article }: NewsCardProps) {
           href={`/software/news/${article.slug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
         >
-          Leer nota
-          <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
+          Leer nota →
         </Link>
       </div>
     </div>

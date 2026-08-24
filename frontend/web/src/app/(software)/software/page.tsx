@@ -19,7 +19,7 @@ import { ProjectGrid } from '../features/projects/components/ProjectGrid';
 
 const QUICK_TAGS = ['Next.js 16', 'Monolito Modular', 'MCP Servers', 'Ciberseguridad CVE', 'Tutoriales'];
 
-export default function SoftwareHubPage() {
+export default function SoftwarePage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [mounted, setMounted] = useState(false);
   const [section, setSection] = useState<SoftwareSection>('all');
@@ -72,7 +72,7 @@ export default function SoftwareHubPage() {
               <div className="relative w-8 h-8 rounded-xl overflow-hidden glass-concave-panel flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
                 <Image
                   src="/software/logo/logo_fondo_circular_color_.png"
-                  alt="Software Hub"
+                  alt="Software"
                   width={32}
                   height={32}
                   className="object-contain"
@@ -80,11 +80,8 @@ export default function SoftwareHubPage() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="font-extrabold text-sm md:text-base tracking-tight text-[var(--header-title)] flex items-center gap-1.5">
-                  Software Hub
-                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-widest hidden sm:inline-block">
-                    v2.0
-                  </span>
+                <span className="font-extrabold text-sm md:text-base tracking-tight text-[var(--header-title)]">
+                  Software
                 </span>
                 <span className="text-[10px] text-zinc-400 font-medium">Plataforma Tecnológica</span>
               </div>
@@ -116,19 +113,11 @@ export default function SoftwareHubPage() {
               {mounted && (
                 <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-xl glass-btn-neumorphic cursor-pointer focus:outline-none transition-all duration-300 active:scale-95 text-zinc-400 hover:text-white"
+                  className="px-2.5 py-1.5 rounded-xl glass-btn-neumorphic cursor-pointer focus:outline-none transition-all duration-300 active:scale-95 text-xs font-mono font-semibold text-zinc-400 hover:text-white"
                   title="Cambiar tema"
                   aria-label="Cambiar tema"
                 >
-                  {theme === 'dark' ? (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707-.707m0-12.728l.707.707m12.728 12.728l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                  )}
+                  {theme === 'dark' ? 'LIGHT' : 'DARK'}
                 </button>
               )}
 
@@ -136,7 +125,7 @@ export default function SoftwareHubPage() {
                 href="#explorar"
                 className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition-all active:scale-95"
               >
-                Explorar Hub ↓
+                Explorar ↓
               </a>
             </div>
           </div>
@@ -147,9 +136,6 @@ export default function SoftwareHubPage() {
         ══════════════════════════════════════════════════════════ */}
         <header className="relative z-10 w-full max-w-6xl px-4 md:px-6 mb-12 text-center">
           <div className="relative p-8 md:p-16 rounded-3xl glass-convex-panel overflow-hidden">
-            {/* Glow sutil interno */}
-            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
-
             {/* Título Principal de Impacto */}
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[var(--header-title)] mb-6 leading-[1.08]">
               Ingeniería de Software,{' '}
@@ -171,11 +157,8 @@ export default function SoftwareHubPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar noticias, tutoriales, modelos IA, ciberseguridad o proyectos..."
-                  className="w-full px-5 py-4 pl-12 pr-24 rounded-2xl glass-concave-panel text-sm md:text-base text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all shadow-inner"
+                  className="w-full px-5 py-4 pl-5 pr-24 rounded-2xl glass-concave-panel text-sm md:text-base text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all shadow-inner"
                 />
-                <svg className="w-5 h-5 absolute left-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
                 {search && (
                   <button
                     onClick={() => setSearch('')}
@@ -229,7 +212,7 @@ export default function SoftwareHubPage() {
                 Áreas Temáticas
               </div>
               <h2 className="text-2xl md:text-4xl font-black tracking-tight text-[var(--header-title)]">
-                Los 7 Dominios del Software Hub
+                Los 7 Dominios de Software
               </h2>
             </div>
             <p className="text-xs text-zinc-400 max-w-md md:text-right font-light">
@@ -243,10 +226,9 @@ export default function SoftwareHubPage() {
               href="/software/news"
               className="md:col-span-2 p-7 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-cyan-500/30 transition-all group flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-cyan-950/40 text-cyan-400 border border-cyan-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-cyan-400 border border-cyan-500/30">
                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" /> 1. Noticias & Tendencias
                   </span>
                   <span className="text-xs font-mono text-zinc-500 group-hover:text-cyan-400 transition-colors">/software/news →</span>
@@ -269,10 +251,9 @@ export default function SoftwareHubPage() {
               href="/software/blog"
               className="md:col-span-1 lg:col-span-2 p-7 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-rose-500/30 transition-all group flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-950/40 text-rose-400 border border-rose-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-rose-400 border border-rose-500/30">
                     <span className="w-1.5 h-1.5 rounded-full bg-rose-400" /> 2. Blog de Arquitectura
                   </span>
                   <span className="text-xs font-mono text-zinc-500 group-hover:text-rose-400 transition-colors">/software/blog →</span>
@@ -295,10 +276,9 @@ export default function SoftwareHubPage() {
               href="/software/ai"
               className="p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-violet-500/30 transition-all group flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-violet-500/10 rounded-full blur-xl pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-violet-950/40 text-violet-400 border border-violet-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-violet-400 border border-violet-500/30">
                     3. IA & Agentes
                   </span>
                   <span className="text-[11px] font-mono text-zinc-500 group-hover:text-violet-400">/ai →</span>
@@ -321,10 +301,9 @@ export default function SoftwareHubPage() {
               href="/software/cybersecurity"
               className="p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-blue-500/30 transition-all group flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-xl pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-950/40 text-blue-400 border border-blue-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-blue-400 border border-blue-500/30">
                     4. Ciberseguridad
                   </span>
                   <span className="text-[11px] font-mono text-zinc-500 group-hover:text-blue-400">/security →</span>
@@ -347,10 +326,9 @@ export default function SoftwareHubPage() {
               href="/software/tutorials"
               className="p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-amber-500/30 transition-all group flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-950/40 text-amber-400 border border-amber-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-amber-400 border border-amber-500/30">
                     5. Tutoriales
                   </span>
                   <span className="text-[11px] font-mono text-zinc-500 group-hover:text-amber-400">/tutorials →</span>
@@ -373,10 +351,9 @@ export default function SoftwareHubPage() {
               href="/software/forum"
               className="p-6 rounded-3xl glass-convex-panel hover:scale-[1.01] hover:border-emerald-500/30 transition-all group flex flex-col justify-between relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl pointer-events-none" />
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-950/40 text-emerald-400 border border-emerald-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-emerald-400 border border-emerald-500/30">
                     6. Foros Técnicos
                   </span>
                   <span className="text-[11px] font-mono text-zinc-500 group-hover:text-emerald-400">/forum →</span>
@@ -399,9 +376,8 @@ export default function SoftwareHubPage() {
               href="/software/projects"
               className="md:col-span-3 lg:col-span-4 p-7 rounded-3xl glass-convex-panel hover:scale-[1.005] hover:border-indigo-500/30 transition-all group flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden"
             >
-              <div className="absolute top-0 right-1/4 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
               <div className="space-y-2 max-w-2xl">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-950/40 text-indigo-400 border border-indigo-500/30">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-indigo-400 border border-indigo-500/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" /> 7. Showcase de Proyectos
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-[var(--header-title)] group-hover:text-indigo-300 transition-colors">
@@ -519,11 +495,6 @@ export default function SoftwareHubPage() {
               {/* Tarjeta 1: Foros */}
               <div className="p-6 rounded-2xl glass-concave-panel flex flex-col justify-between">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                  </div>
                   <h4 className="text-base font-bold text-[var(--header-title)] mb-2">Foros Técnicos</h4>
                   <p className="text-xs text-zinc-400 leading-relaxed font-light mb-4">
                     Formula dudas sobre arquitectura, debate patrones de diseño y ayuda a otros desarrolladores resolviendo preguntas.
@@ -540,11 +511,6 @@ export default function SoftwareHubPage() {
               {/* Tarjeta 2: Tutoriales */}
               <div className="p-6 rounded-2xl glass-concave-panel flex flex-col justify-between">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
                   <h4 className="text-base font-bold text-[var(--header-title)] mb-2">Guías Paso a Paso</h4>
                   <p className="text-xs text-zinc-400 leading-relaxed font-light mb-4">
                     Tutoriales detallados con código fuente reproducible y el asistente interactivo StepWizard para guiar tu aprendizaje.
@@ -561,11 +527,6 @@ export default function SoftwareHubPage() {
               {/* Tarjeta 3: Proyectos */}
               <div className="p-6 rounded-2xl glass-concave-panel flex flex-col justify-between">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                    </svg>
-                  </div>
                   <h4 className="text-base font-bold text-[var(--header-title)] mb-2">Código Open Source</h4>
                   <p className="text-xs text-zinc-400 leading-relaxed font-light mb-4">
                     Inspecciona repositorios reales, diagramas de arquitectura y demos en producción creados por Jorge Doicela.
@@ -593,14 +554,14 @@ export default function SoftwareHubPage() {
                   <div className="w-7 h-7 rounded-lg glass-concave-panel flex items-center justify-center p-1">
                     <Image
                       src="/software/logo/logo_fondo_circular_color_.png"
-                      alt="Software Hub"
+                      alt="Software"
                       width={28}
                       height={28}
                       className="object-contain"
                       unoptimized
                     />
                   </div>
-                  <span className="font-extrabold text-sm text-[var(--header-title)]">Software Hub</span>
+                  <span className="font-extrabold text-sm text-[var(--header-title)]">Software</span>
                 </div>
                 <p className="text-xs text-zinc-500 leading-relaxed font-light">
                   Plataforma de ingeniería de software, arquitectura de sistemas y laboratorio de IA de Jorge Doicela.
@@ -637,10 +598,6 @@ export default function SoftwareHubPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>Plataforma activa y actualizada</span>
-              </div>
               <p>Jorge Doicela &copy; {new Date().getFullYear()} — Todos los derechos reservados.</p>
             </div>
           </div>

@@ -1,6 +1,6 @@
-# Software Hub - Frontend y Plataforma Tecnológica (Next.js)
+# Software - Frontend y Plataforma Tecnológica (Next.js)
 
-Este documento detalla la arquitectura macro y micro, componentes, categorías temáticas y diseño del **Software Hub** (`software.jorgedoicela.com`).
+Este documento detalla la arquitectura macro y micro, componentes, categorías temáticas y diseño de **Software** (`software.jorgedoicela.com`).
 
 ---
 
@@ -24,10 +24,10 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 
 ```text
 frontend/web/src/app/(software)/
-├── globals.css                       # Estilos aislados del Software Hub (Neumorphism UI + Glassmorphism)
+├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism)
 ├── layout.tsx                        # Layout raíz del subdominio
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
-│   ├── page.tsx                      # Vista principal del Hub (Bento Grid + filtro dinámico de 7 categorías)
+│   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)
 │   ├── news/
 │   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
 │   │   └── [slug]/page.tsx           # Lector de noticia con fuente oficial
@@ -63,7 +63,7 @@ frontend/web/src/app/(software)/
 
 ---
 
-## 3. Las 7 Categorías del Hub
+## 3. Las 7 Categorías de Software
 
 1. **Noticias (`news`):** Novedades y actualidad del desarrollo de software y tecnología con alertas breaking.
 2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software, patrones de diseño y buenas prácticas.

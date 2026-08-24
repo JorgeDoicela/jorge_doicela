@@ -10,10 +10,10 @@ interface SecurityCardProps {
 
 export function SecurityCard({ post }: SecurityCardProps) {
   const severityColors: Record<string, string> = {
-    CRITICAL: 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse',
-    HIGH: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
-    MEDIUM: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    LOW: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    CRITICAL: 'text-rose-400 border-rose-500/40 animate-pulse',
+    HIGH: 'text-orange-400 border-orange-500/40',
+    MEDIUM: 'text-amber-400 border-amber-500/40',
+    LOW: 'text-emerald-400 border-emerald-500/40',
   };
 
   const badgeColor = severityColors[post.severity] || severityColors.MEDIUM;
@@ -26,7 +26,7 @@ export function SecurityCard({ post }: SecurityCardProps) {
             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeColor}`}>
               {post.severity}
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide bg-zinc-800 text-zinc-300 border border-zinc-700">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide text-zinc-400 border border-zinc-700">
               {post.postType}
             </span>
           </div>
@@ -51,10 +51,7 @@ export function SecurityCard({ post }: SecurityCardProps) {
           href={`/software/cybersecurity/${post.slug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors"
         >
-          Ver remediación
-          <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
+          Ver remediación →
         </Link>
       </div>
     </div>

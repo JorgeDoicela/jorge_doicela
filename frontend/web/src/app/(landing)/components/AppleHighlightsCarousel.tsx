@@ -69,7 +69,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 ? 'Noticias de vanguardia, análisis de modelos de razonamiento, ciberseguridad y herramientas web.'
                 : 'Cutting-edge news, reasoning model analysis, cybersecurity, and modern web tools.',
             linkUrl: links.software,
-            linkText: isEs ? 'Entrar a Software Hub' : 'Enter Software Hub',
+            linkText: isEs ? 'Entrar a Software' : 'Enter Software',
             renderVisual: () => (
                 <div className="w-full flex flex-col justify-center text-left py-1">
                     {/* Columnas Separadas por Línea Sutil */}

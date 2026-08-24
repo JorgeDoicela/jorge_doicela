@@ -46,7 +46,7 @@ export default function ProjectDetailPage({
       <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
         <p className="text-rose-400 font-semibold">{error || 'Proyecto no encontrado'}</p>
         <Link href="/software" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs">
-          ← Volver al Hub
+          ← Volver a Software
         </Link>
       </div>
     );
@@ -58,12 +58,12 @@ export default function ProjectDetailPage({
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver al Software Hub
+        ← Volver a Software
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel">
         <div className="flex items-center justify-between gap-2 mb-4">
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-indigo-400 border border-indigo-500/30">
             {project.status === 'active' ? 'Producción' : project.status}
           </span>
           <span className="text-xs text-amber-400 font-semibold">{project.stars} stars</span>
@@ -96,10 +96,7 @@ export default function ProjectDetailPage({
               rel="noopener noreferrer"
               className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-bold text-zinc-200 hover:text-white inline-flex items-center gap-2"
             >
-              <span>Repositorio en GitHub</span>
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
+              <span>Repositorio en GitHub ↗</span>
             </a>
           )}
           {project.liveUrl && (
@@ -109,10 +106,7 @@ export default function ProjectDetailPage({
               rel="noopener noreferrer"
               className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-bold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-2"
             >
-              <span>Ver en Vivo</span>
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
+              <span>Ver en Vivo ↗</span>
             </a>
           )}
         </div>

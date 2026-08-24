@@ -36,6 +36,10 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
+  // NUNCA interceptar chunks internos de Next.js (dejar que el navegador y Nginx gestionen el hashing)
+  if (url.pathname.startsWith('/_next/')) return;
+
+
   // Red primero para la navegación de páginas HTML
   if (event.request.mode === 'navigate') {
     event.respondWith(

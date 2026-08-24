@@ -61,15 +61,11 @@ export default function BibleLandingPage() {
             </header>
 
             {/* Hero Section */}
-            <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden border-b border-accents-2">
+            <section className="relative pt-24 pb-20 sm:pt-32 md:pt-36 sm:pb-28 overflow-hidden border-b border-accents-2">
                 {/* Glow de fondo suave */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-foreground/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accents-2 bg-accents-1/80 text-[11px] font-mono text-accents-5">
-                        <span>Versión 1.0 • Exégesis en Lenguas Originales</span>
-                    </div>
-
                     <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
                         Una Plataforma de Estudio Bíblico
                     </h1>

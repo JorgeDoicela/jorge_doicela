@@ -62,7 +62,7 @@ export const TypewriterRole: React.FC<TypewriterRoleProps> = ({
 
   return (
     <div
-      className={`flex items-center min-h-[1.5rem] font-mono text-xs md:text-sm tracking-wider uppercase ${className}`}
+      className={`min-h-[1.5rem] font-mono text-xs md:text-sm tracking-wider uppercase ${className}`}
       aria-label={`Rol profesional: ${roles[currentRoleIndex]}`}
     >
       <span className="text-foreground/80 font-medium">
@@ -70,7 +70,7 @@ export const TypewriterRole: React.FC<TypewriterRoleProps> = ({
       </span>
       {/* Cursor titilante con estilo dorado y efecto glow */}
       <span
-        className="inline-block w-2 h-3.5 ml-1 bg-gold-400 shadow-[0_0_8px_rgba(230,200,139,0.8)] animate-pulse"
+        className="inline-block w-2 h-3.5 ml-1 bg-gold-400 shadow-[0_0_8px_rgba(230,200,139,0.8)] animate-pulse align-middle"
         aria-hidden="true"
       />
     </div>

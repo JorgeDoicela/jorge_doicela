@@ -17,7 +17,7 @@ export const AppleHeroIntro: React.FC = () => {
 
             {/* Titular Gigante Impactante Estilo Apple SF Pro Display */}
             <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[5.5rem] font-bold tracking-[-0.04em] text-foreground max-w-4xl leading-[1.04] mb-6">
-                Jorge Doicela.
+                Jorge Doicela
             </h1>
 
             {/* Párrafo Descriptivo Estilo Apple */}

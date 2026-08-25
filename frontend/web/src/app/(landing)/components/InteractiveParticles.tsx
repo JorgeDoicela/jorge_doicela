@@ -568,12 +568,15 @@ export default function InteractiveParticles() {
         };
 
         window.addEventListener('resize', onResize);
-        window.addEventListener('pointerdown', handlePointerDown);
-        window.addEventListener('mousemove', handleMouseMove, { passive: true });
-        window.addEventListener('mouseleave', handleMouseLeave);
-        window.addEventListener('touchmove', handleTouchMove, { passive: true });
-        window.addEventListener('touchstart', handleTouchMove, { passive: true });
-        window.addEventListener('touchend', handleTouchEnd);
+
+        if (!isLow) {
+            window.addEventListener('pointerdown', handlePointerDown);
+            window.addEventListener('mousemove', handleMouseMove, { passive: true });
+            window.addEventListener('mouseleave', handleMouseLeave);
+            window.addEventListener('touchmove', handleTouchMove, { passive: true });
+            window.addEventListener('touchstart', handleTouchMove, { passive: true });
+            window.addEventListener('touchend', handleTouchEnd);
+        }
 
         resizeCanvas();
         if (isLow) {
@@ -588,12 +591,14 @@ export default function InteractiveParticles() {
             }
             observer.disconnect();
             window.removeEventListener('resize', onResize);
-            window.removeEventListener('pointerdown', handlePointerDown);
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseleave', handleMouseLeave);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchstart', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
+            if (!isLow) {
+                window.removeEventListener('pointerdown', handlePointerDown);
+                window.removeEventListener('mousemove', handleMouseMove);
+                window.removeEventListener('mouseleave', handleMouseLeave);
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchstart', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
+            }
         };
     }, [tier]);
 

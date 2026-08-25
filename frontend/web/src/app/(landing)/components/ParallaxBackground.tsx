@@ -170,7 +170,7 @@ export default function ParallaxBackground() {
 
     const isLow = tier === 'low';
     const layerClass = isLow
-        ? 'absolute inset-[-40%] w-[180%] h-[180%] animate-cosmic-float pointer-events-none'
+        ? 'absolute inset-[-40%] w-[180%] h-[180%] pointer-events-none'
         : 'absolute inset-[-40%] w-[180%] h-[180%] will-change-transform pointer-events-none';
 
     return (

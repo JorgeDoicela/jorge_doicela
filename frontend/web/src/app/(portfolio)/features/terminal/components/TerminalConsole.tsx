@@ -188,7 +188,7 @@ export const TerminalConsole: React.FC = () => {
           className={`w-full font-mono text-sm cursor-text relative overflow-hidden transition-all duration-300 ${
             isFullscreen
               ? 'fixed inset-0 z-50 rounded-none bg-surface/98 border-none p-6 md:p-10 flex flex-col backdrop-blur-xl shadow-2xl'
-              : 'max-w-5xl mx-auto rounded-xl bg-surface/95 border border-border-gold shadow-2xl p-5 md:p-6 luxury-glow-hover'
+              : 'w-full max-w-7xl mx-auto rounded-xl bg-surface/95 border border-border-gold shadow-2xl p-5 md:p-6 luxury-glow-hover'
           }`}
         >
           {/* Capa de animación Matrix cuando está activa */}

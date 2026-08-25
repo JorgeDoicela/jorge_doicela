@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import ParallaxBackground from './components/ParallaxBackground';
 import InteractiveParticles from './components/InteractiveParticles';
+import CinematicSpiralGalaxy from './components/CinematicSpiralGalaxy';
 import SkipToContent from './components/SkipToContent';
 import { AppleHeroIntro } from './components/AppleHeroShowcase';
 import { AppleHighlightsCarousel } from './components/AppleHighlightsCarousel';
@@ -96,6 +97,7 @@ export default function LandingPage() {
 
             <ParallaxBackground />
             <InteractiveParticles />
+            <CinematicSpiralGalaxy />
 
             <header
                 className="animate-fade-in-up fixed top-5 left-5 right-5 sm:top-6 sm:left-8 sm:right-8 md:top-7 md:left-10 md:right-10 z-50 flex items-center justify-between pointer-events-none"

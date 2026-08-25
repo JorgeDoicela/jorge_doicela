@@ -27,7 +27,7 @@ export default function PortfolioPage() {
             </div>
 
             {/* Cabecera Principal */}
-            <header className="w-full max-w-5xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">
+            <header className="w-full max-w-7xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
                         Jorge Ismael Doicela Molina
@@ -53,7 +53,7 @@ export default function PortfolioPage() {
             </header>
 
             {/* Contenido Principal en Flujo Lineal y Asimétrico */}
-            <main className="w-full max-w-5xl mx-auto flex flex-col gap-16 animate-fade-up">
+            <main className="w-full max-w-7xl mx-auto flex flex-col gap-16 animate-fade-up">
 
                 {/* Sección 1: Sobre Mí & Contactos (Asimétrico, sin cajas rígidas) */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
@@ -347,7 +347,7 @@ export default function PortfolioPage() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full max-w-5xl mx-auto mt-20 border-t border-border/60 pt-8 text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
+            <footer className="w-full max-w-7xl mx-auto mt-20 border-t border-border/60 pt-8 text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
                 Jorge Ismael Doicela Molina &copy; {new Date().getFullYear()}
             </footer>
 

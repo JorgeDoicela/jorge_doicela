@@ -18,7 +18,10 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
   const badge = diffColors[tutorial.difficulty] || diffColors.intermediate;
 
   return (
-    <div className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
+    <Link
+      href={`/software/tutorials/${tutorial.slug}`}
+      className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl block cursor-pointer"
+    >
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <span className={`text-[11px] font-mono font-bold tracking-wide uppercase ${badge}`}>
@@ -37,17 +40,14 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
       </div>
 
       <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-        <div className="text-xs text-zinc-500 truncate max-w-[180px]">
+        <div className="text-xs text-zinc-500 truncate max-w-[180px] font-mono">
           {tutorial.techStack}
         </div>
 
-        <Link
-          href={`/software/tutorials/${tutorial.slug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
-        >
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 group-hover:translate-x-1 transition-transform">
           Iniciar guía →
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }

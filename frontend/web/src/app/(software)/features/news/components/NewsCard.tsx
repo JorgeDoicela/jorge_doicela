@@ -16,12 +16,15 @@ export function NewsCard({ article }: NewsCardProps) {
   });
 
   return (
-    <div className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
+    <Link
+      href={`/software/news/${article.slug}`}
+      className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl block cursor-pointer"
+    >
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
             {article.isBreaking && (
-              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-rose-500 dark:text-rose-400 animate-pulse">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-rose-500 dark:text-rose-400">
                 Breaking
               </span>
             )}
@@ -42,19 +45,16 @@ export function NewsCard({ article }: NewsCardProps) {
       </div>
 
       <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs text-zinc-500">
+        <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
           <span>{article.readTimeMinutes} min de lectura</span>
           <span>•</span>
           <span>{article.views} vistas</span>
         </div>
 
-        <Link
-          href={`/software/news/${article.slug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
-        >
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:translate-x-1 transition-transform">
           Leer nota →
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }

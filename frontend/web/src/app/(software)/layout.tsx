@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${plusJakartaSans.variable} h-full scroll-smooth theme-software`}>
+    <html lang="es" className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
       <head>
         <ResourceErrorFallback />
       </head>

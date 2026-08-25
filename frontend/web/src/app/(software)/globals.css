@@ -18,27 +18,27 @@
   --background: #eaf0f6;
   --foreground: #090e17;
 
-  /* Modo Claro - Neumorphism + Glassmorphism Calibrado */
-  --glass-bg-convex: rgba(255, 255, 255, 0.72);
-  --glass-border-convex: rgba(255, 255, 255, 0.85);
-  --glass-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(238, 244, 251, 0.65) 100%);
-  --glass-blur: blur(14px);
+  /* Modo Claro - Neumorphism + Glassmorphism Calibrado (Soft UI) */
+  --glass-bg-convex: rgba(255, 255, 255, 0.75);
+  --glass-border-convex: rgba(255, 255, 255, 0.7);
+  --glass-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%);
+  --glass-blur: blur(16px);
   
-  --glass-shadow-convex: 6px 6px 16px rgba(162, 178, 198, 0.45), -6px -6px 16px rgba(255, 255, 255, 0.9);
-  --glass-shadow-convex-hover: 9px 9px 24px rgba(162, 178, 198, 0.4), -9px -9px 24px rgba(255, 255, 255, 0.95);
+  --glass-shadow-convex: 4px 4px 14px rgba(162, 178, 198, 0.3), -4px -4px 14px rgba(255, 255, 255, 0.85);
+  --glass-shadow-convex-hover: 6px 6px 20px rgba(162, 178, 198, 0.35), -6px -6px 20px rgba(255, 255, 255, 0.95);
 
-  --glass-bg-concave: rgba(226, 234, 244, 0.6);
-  --glass-border-concave: rgba(162, 178, 198, 0.2);
-  --glass-shadow-concave: inset 3px 3px 6px rgba(162, 178, 198, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+  --glass-bg-concave: rgba(235, 241, 248, 0.5);
+  --glass-border-concave: rgba(162, 178, 198, 0.15);
+  --glass-shadow-concave: inset 2px 2px 5px rgba(162, 178, 198, 0.25), inset -2px -2px 5px rgba(255, 255, 255, 0.8);
 
   --chip-text: #090e17;
   --header-title: #090e17;
-  --header-p: #334155;
+  --header-p: #475569;
   
-  --btn-shadow: 3px 3px 7px rgba(162, 178, 198, 0.4), -3px -3px 7px rgba(255, 255, 255, 0.9);
-  --btn-shadow-hover: 5px 5px 12px rgba(162, 178, 198, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.95);
+  --btn-shadow: 2px 2px 6px rgba(162, 178, 198, 0.3), -2px -2px 6px rgba(255, 255, 255, 0.8);
+  --btn-shadow-hover: 4px 4px 10px rgba(162, 178, 198, 0.3), -4px -4px 10px rgba(255, 255, 255, 0.9);
 
-  --grid-color: rgba(15, 23, 42, 0.035);
+  --grid-color: rgba(15, 23, 42, 0.025);
 
   /* Acentos Tecnológicos Unificados (Modo Claro) */
   --accent-primary: #2563eb;
@@ -57,27 +57,27 @@ html.dark .theme-software {
   --background: #080c14;
   --foreground: #f1f5f9;
 
-  /* Modo Oscuro - Neumorphism + Glassmorphism Calibrado */
-  --glass-bg-convex: rgba(13, 19, 32, 0.75);
-  --glass-border-convex: rgba(59, 130, 246, 0.12);
-  --glass-bg-gradient: linear-gradient(135deg, rgba(17, 24, 40, 0.8) 0%, rgba(10, 14, 25, 0.65) 100%);
+  /* Modo Oscuro - Soft Neumorphism + Glassmorphism de Alta Precisión */
+  --glass-bg-convex: rgba(13, 19, 32, 0.6);
+  --glass-border-convex: rgba(255, 255, 255, 0.07);
+  --glass-bg-gradient: linear-gradient(135deg, rgba(16, 23, 38, 0.7) 0%, rgba(10, 14, 24, 0.5) 100%);
   --glass-blur: blur(16px);
 
-  --glass-shadow-convex: 7px 7px 20px rgba(0, 0, 0, 0.65), -3px -3px 14px rgba(37, 99, 235, 0.08);
-  --glass-shadow-convex-hover: 10px 10px 28px rgba(0, 0, 0, 0.8), -4px -4px 18px rgba(37, 99, 235, 0.14);
+  --glass-shadow-convex: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --glass-shadow-convex-hover: 0 16px 32px -6px rgba(0, 0, 0, 0.65), 0 4px 10px -2px rgba(59, 130, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-  --glass-bg-concave: rgba(6, 10, 18, 0.65);
-  --glass-border-concave: rgba(255, 255, 255, 0.04);
-  --glass-shadow-concave: inset 3px 3px 7px rgba(0, 0, 0, 0.8), inset -2px -2px 5px rgba(255, 255, 255, 0.02);
+  --glass-bg-concave: rgba(7, 11, 20, 0.5);
+  --glass-border-concave: rgba(255, 255, 255, 0.03);
+  --glass-shadow-concave: inset 2px 2px 6px rgba(0, 0, 0, 0.6), inset -1px -1px 3px rgba(255, 255, 255, 0.015);
 
   --chip-text: #f1f5f9;
   --header-title: #ffffff;
   --header-p: #94a3b8;
 
-  --btn-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6), -2px -2px 6px rgba(37, 99, 235, 0.06);
-  --btn-shadow-hover: 5px 5px 14px rgba(0, 0, 0, 0.75), -3px -3px 10px rgba(37, 99, 235, 0.12);
+  --btn-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --btn-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-  --grid-color: rgba(255, 255, 255, 0.025);
+  --grid-color: rgba(255, 255, 255, 0.015);
 
   /* Acentos Tecnológicos Unificados (Modo Oscuro) */
   --accent-primary: #3b82f6;

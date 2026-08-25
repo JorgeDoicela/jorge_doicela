@@ -5,8 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface MenuBarProps {
-  theme: 'light' | 'dark';
-  onToggleTheme: () => void;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
   onOpenSpotlight: () => void;
 }
 
@@ -21,7 +21,7 @@ const NAV_LINKS = [
 ];
 
 export function MenuBar({
-  theme,
+  theme = 'dark',
   onToggleTheme,
   onOpenSpotlight,
 }: MenuBarProps) {
@@ -93,6 +93,19 @@ export function MenuBar({
             title="Buscar en todo el catálogo (Cmd + K)"
             aria-label="Abrir buscador"
           >
+            <svg
+              className="w-3.5 h-3.5 text-zinc-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
             <span className="hidden sm:inline">Buscar...</span>
             <kbd className="px-1.5 py-0.5 rounded-md glass-btn-neumorphic text-[10px] font-mono text-zinc-400">
               ⌘K
@@ -106,15 +119,43 @@ export function MenuBar({
             </span>
           )}
 
-          {/* Tema */}
-          {mounted && (
+          {/* Selector de Tema con Iconos SVG (Oculto si no se provee onToggleTheme) */}
+          {mounted && onToggleTheme && (
             <button
               onClick={onToggleTheme}
-              className="px-2.5 py-1.5 rounded-xl glass-btn-neumorphic cursor-pointer focus:outline-none transition-all duration-300 active:scale-95 text-xs font-mono font-bold text-zinc-400 hover:text-[var(--foreground)]"
-              title="Cambiar tema"
+              className="w-8 h-8 rounded-xl glass-btn-neumorphic flex items-center justify-center cursor-pointer focus:outline-none transition-all duration-300 active:scale-95 text-zinc-400 hover:text-[var(--foreground)]"
+              title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               aria-label="Cambiar tema"
             >
-              {theme === 'dark' ? 'LIGHT' : 'DARK'}
+              {theme === 'dark' ? (
+                <svg
+                  className="w-4 h-4 text-amber-400 transition-transform duration-300 rotate-0 hover:rotate-45"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-4 h-4 text-indigo-600 transition-transform duration-300 -rotate-12 hover:rotate-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                  />
+                </svg>
+              )}
             </button>
           )}
         </div>

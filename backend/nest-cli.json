@@ -8,6 +8,10 @@
       {
         "include": "bible/corpus/**/*",
         "watchAssets": true
+      },
+      {
+        "include": "software/corpus/**/*",
+        "watchAssets": true
       }
     ]
   }

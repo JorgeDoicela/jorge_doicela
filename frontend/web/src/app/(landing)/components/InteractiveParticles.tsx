@@ -138,7 +138,7 @@ export default function InteractiveParticles() {
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
 
         const resizeCanvas = () => {
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            dpr = Math.min(window.devicePixelRatio || 1, 1.5);
             width = window.innerWidth;
             height = window.innerHeight;
 
@@ -157,7 +157,7 @@ export default function InteractiveParticles() {
             particles = [];
 
             // 1. Capa de Micro-Polvo Estelar Lejano
-            const distantCount = isMobile ? 90 : 190;
+            const distantCount = isMobile ? 50 : 110;
             for (let i = 0; i < distantCount; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -175,7 +175,7 @@ export default function InteractiveParticles() {
             }
 
             // 2. Capa Media
-            const midCount = isMobile ? 35 : 75;
+            const midCount = isMobile ? 25 : 55;
             for (let i = 0; i < midCount; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -193,7 +193,7 @@ export default function InteractiveParticles() {
             }
 
             // 3. Capa de Primer Plano (Estrellas con Difracción Óptica)
-            const brightCount = isMobile ? 8 : 15;
+            const brightCount = isMobile ? 6 : 10;
             for (let i = 0; i < brightCount; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -254,7 +254,7 @@ export default function InteractiveParticles() {
             if (isLight) return;
 
             const isMobile = width < 768;
-            const emberCount = isMobile ? 22 : 40;
+            const emberCount = isMobile ? 18 : 30;
             const primaryColor = COSMIC_PALETTE[Math.floor(Math.random() * COSMIC_PALETTE.length)];
 
             // 1. Nube de gas nebular efímero que ilumina el punto
@@ -282,7 +282,6 @@ export default function InteractiveParticles() {
             for (let i = 0; i < emberCount; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 2.8 + 0.6;
-                // Componente tangencial para simular vórtice/espiral galáctico
                 const tangentialVx = -Math.sin(angle) * baseSpin * speed * 0.6;
                 const tangentialVy = Math.cos(angle) * baseSpin * speed * 0.6;
                 const radialVx = Math.cos(angle) * speed;
@@ -439,17 +438,13 @@ export default function InteractiveParticles() {
                 const rgbaStr = `rgba(${color.r}, ${color.g}, ${color.b}, ${currentAlpha.toFixed(3)})`;
 
                 if (p.layer === 'bright' && currentAlpha > 0.25) {
-                    const glowRadius = p.size * 3.0;
-                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius);
-                    gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${(currentAlpha * 0.45).toFixed(3)})`);
-                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
+                    const glowRadius = p.size * 2.6;
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
-                    ctx.fillStyle = gradient;
+                    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${(currentAlpha * 0.18).toFixed(3)})`;
                     ctx.fill();
 
-                    drawStarFlare(p.x, p.y, p.size * 2.5, currentAlpha * 0.55, rgbaStr);
+                    drawStarFlare(p.x, p.y, p.size * 2.2, currentAlpha * 0.5, rgbaStr);
                 }
 
                 ctx.beginPath();

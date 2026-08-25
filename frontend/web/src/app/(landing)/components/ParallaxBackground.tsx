@@ -135,54 +135,54 @@ export default function ParallaxBackground() {
             {/* Núcleo Central Galáctico Suave */}
             <div
                 ref={coreGlowRef}
-                className="absolute top-[20%] left-[20%] w-[65vw] h-[65vw] max-w-[800px] max-h-[800px] rounded-full opacity-40 blur-[70px] will-change-transform"
+                className="absolute top-[20%] left-[20%] w-[65vw] h-[65vw] max-w-[800px] max-h-[800px] rounded-full opacity-60 will-change-transform pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(129, 140, 248, 0.18) 0%, rgba(99, 102, 241, 0.08) 35%, rgba(67, 56, 202, 0.03) 65%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(129, 140, 248, 0.22) 0%, rgba(99, 102, 241, 0.12) 30%, rgba(67, 56, 202, 0.04) 60%, transparent 75%)'
                 }}
             />
 
             {/* Nube 1: Nebulosa Violeta / Magenta Cósmica */}
             <div
                 ref={cloud1Ref}
-                className="absolute top-[-10%] left-[-10%] w-[85vw] h-[85vw] max-w-[950px] max-h-[950px] rounded-full opacity-60 blur-[60px] will-change-transform"
+                className="absolute top-[-10%] left-[-10%] w-[85vw] h-[85vw] max-w-[950px] max-h-[950px] rounded-full opacity-70 will-change-transform pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.24) 0%, rgba(217, 70, 239, 0.12) 35%, rgba(147, 51, 234, 0.04) 65%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.26) 0%, rgba(217, 70, 239, 0.14) 30%, rgba(147, 51, 234, 0.05) 55%, transparent 75%)'
                 }}
             />
 
             {/* Nube 2: Corriente Interestelar Índigo Profunda */}
             <div
                 ref={cloud2Ref}
-                className="absolute bottom-[-10%] right-[-10%] w-[90vw] h-[90vw] max-w-[1000px] max-h-[1000px] rounded-full opacity-60 blur-[65px] will-change-transform"
+                className="absolute bottom-[-10%] right-[-10%] w-[90vw] h-[90vw] max-w-[1000px] max-h-[1000px] rounded-full opacity-70 will-change-transform pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, rgba(79, 70, 229, 0.12) 40%, rgba(30, 27, 75, 0.04) 70%, transparent 85%)'
+                    background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.28) 0%, rgba(79, 70, 229, 0.14) 35%, rgba(30, 27, 75, 0.05) 65%, transparent 80%)'
                 }}
             />
 
             {/* Nube 3: Polvo Celestial Cian & Vía Láctea */}
             <div
                 ref={cloud3Ref}
-                className="absolute top-[30%] left-[5%] w-[65vw] h-[65vw] max-w-[750px] max-h-[750px] rounded-full opacity-50 blur-[55px] will-change-transform"
+                className="absolute top-[30%] left-[5%] w-[65vw] h-[65vw] max-w-[750px] max-h-[750px] rounded-full opacity-60 will-change-transform pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.20) 0%, rgba(14, 165, 233, 0.08) 40%, rgba(6, 78, 59, 0.03) 70%, transparent 80%)'
+                    background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.22) 0%, rgba(14, 165, 233, 0.10) 35%, rgba(6, 78, 59, 0.03) 60%, transparent 75%)'
                 }}
             />
 
             {/* Nube 4: Núcleo Galáctico Rosado Andrómeda */}
             <div
                 ref={cloud4Ref}
-                className="absolute top-[8%] right-[8%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full opacity-50 blur-[55px] will-change-transform"
+                className="absolute top-[8%] right-[8%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full opacity-60 will-change-transform pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(236, 72, 153, 0.20) 0%, rgba(192, 38, 211, 0.09) 40%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(236, 72, 153, 0.22) 0%, rgba(192, 38, 211, 0.10) 35%, transparent 70%)'
                 }}
             />
 
             {/* Nube 5: Destellos de Polvo Solar Ámbar */}
             <div
                 ref={cloud5Ref}
-                className="absolute bottom-[12%] left-[18%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full opacity-40 blur-[50px] will-change-transform"
+                className="absolute bottom-[12%] left-[18%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full opacity-50 will-change-transform pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at center, rgba(251, 191, 36, 0.12) 0%, rgba(245, 158, 11, 0.04) 45%, transparent 75%)'
+                    background: 'radial-gradient(circle at center, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.05) 40%, transparent 70%)'
                 }}
             />
         </div>

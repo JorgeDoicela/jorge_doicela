@@ -1,39 +1,39 @@
 @import "tailwindcss";
 
 :root {
-    /* Modo Oscuro (Apple Dark Slate & Deep Cosmos) */
+    /* Modo Oscuro (Apple Dark Slate & VisionOS Frosted Glass) */
     --background: #030304;
     --foreground: #f5f5f7;
-    --card-bg: rgba(22, 22, 24, 0.75);
-    --card-border: rgba(255, 255, 255, 0.09);
-    --card-hover-border: rgba(255, 255, 255, 0.18);
+    --card-bg: rgba(14, 15, 22, 0.48);
+    --card-border: rgba(255, 255, 255, 0.12);
+    --card-hover-border: rgba(255, 255, 255, 0.28);
     --accent: #6366f1; /* Indigo 500 */
     --accent-light: #818cf8; /* Indigo 400 */
-    --text-muted: #a1a1a6; 
-    --text-subtitle: #86868b; 
-    --glow-color: rgba(99, 102, 241, 0.12);
-    --shining-border: rgba(255, 255, 255, 0.04);
+    --text-muted: #a1a1aa; 
+    --text-subtitle: #8b8b94; 
+    --glow-color: rgba(99, 102, 241, 0.18);
+    --shining-border: rgba(255, 255, 255, 0.08);
 
     /* Tarjetas internas y botones */
-    --inner-card-bg: rgba(255, 255, 255, 0.04);
-    --inner-card-border: rgba(255, 255, 255, 0.08);
-    --btn-sec-bg: rgba(255, 255, 255, 0.06);
-    --btn-sec-hover-bg: rgba(255, 255, 255, 0.12);
+    --inner-card-bg: rgba(255, 255, 255, 0.05);
+    --inner-card-border: rgba(255, 255, 255, 0.10);
+    --btn-sec-bg: rgba(255, 255, 255, 0.08);
+    --btn-sec-hover-bg: rgba(255, 255, 255, 0.15);
 
     /* Chips de especialidades */
-    --chip-bg: rgba(255, 255, 255, 0.04);
-    --chip-border: rgba(255, 255, 255, 0.08);
-    --chip-hover-bg: rgba(255, 255, 255, 0.09);
+    --chip-bg: rgba(255, 255, 255, 0.05);
+    --chip-border: rgba(255, 255, 255, 0.10);
+    --chip-hover-bg: rgba(255, 255, 255, 0.10);
 
     /* Chasis y Pantalla de Laptop MacBook */
-    --laptop-bezel: #1e1f26;
-    --laptop-bezel-border: #2e303b;
-    --laptop-screen-bg: #0d0e14;
+    --laptop-bezel: #1a1b22;
+    --laptop-bezel-border: #2a2c38;
+    --laptop-screen-bg: #090a0f;
     --laptop-screen-text: #f4f4f6;
     --laptop-screen-muted: #9496a1;
-    --laptop-screen-border: rgba(255, 255, 255, 0.08);
-    --laptop-card-bg: rgba(255, 255, 255, 0.05);
-    --laptop-card-border: rgba(255, 255, 255, 0.1);
+    --laptop-screen-border: rgba(255, 255, 255, 0.10);
+    --laptop-card-bg: rgba(255, 255, 255, 0.06);
+    --laptop-card-border: rgba(255, 255, 255, 0.12);
     --laptop-base-top: #4b4d58;
     --laptop-base-bottom: #23242c;
     --laptop-notch: #121318;
@@ -200,6 +200,13 @@ html, body, * {
     scrollbar-color: var(--text-subtitle) var(--background);
 }
 
+/* Sistema de Fondo Aurora Mesh Eetérea Adaptativa (Claro / Oscuro) */
+.parallax-mesh-layer {
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.6s ease;
+    will-change: transform;
+    pointer-events: none;
+}
+
 /* Animación de Entrada Escalonada Premium (Staggered Fade-In + Slide-Up) */
 @keyframes fadeInUp {
     from {
@@ -229,8 +236,43 @@ html, body, * {
     }
 }
 
+@keyframes progressFill {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes ambientCosmicFloat {
+    0%, 100% {
+        transform: scale(1) translate3d(0, 0, 0);
+    }
+    50% {
+        transform: scale(1.04) translate3d(8px, -12px, 0);
+    }
+}
+
+.animate-cosmic-float {
+    animation: ambientCosmicFloat 18s ease-in-out infinite;
+    will-change: transform;
+}
+
 .animate-fade-slide {
     animation: fadeSlide 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.bg-card {
+    background-color: var(--card-bg);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.10), 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+}
+
+.light .bg-card,
+[data-theme='light'] .bg-card {
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.7), 0 16px 32px -8px rgba(0, 0, 0, 0.04);
 }
 
 @media (prefers-reduced-motion: reduce) {

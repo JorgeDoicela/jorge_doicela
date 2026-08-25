@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
+import { PerformanceProvider } from "./context/PerformanceContext";
 import PwaRegister from "./components/PwaRegister";
 import PersonJsonLd from "./components/PersonJsonLd";
 import ResourceErrorFallback from "../components/ResourceErrorFallback";
@@ -108,11 +109,13 @@ export default function LandingLayout({
             </head>
             <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500 selection:text-white">
                 <CancelFallback />
-                <LanguageProvider>
-                    <PwaRegister />
-                    <PersonJsonLd />
-                    {children}
-                </LanguageProvider>
+                <PerformanceProvider>
+                    <LanguageProvider>
+                        <PwaRegister />
+                        <PersonJsonLd />
+                        {children}
+                    </LanguageProvider>
+                </PerformanceProvider>
             </body>
         </html>
     );

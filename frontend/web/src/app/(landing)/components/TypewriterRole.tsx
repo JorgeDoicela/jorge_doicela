@@ -43,14 +43,23 @@ export default function TypewriterRole() {
         return () => clearTimeout(timer);
     }, [currentText, isDeleting, currentRoleIndex, roles]);
 
+    const cursorColorClasses = [
+        'bg-indigo-500 dark:bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.5)]',
+        'bg-purple-500 dark:bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.5)]',
+        'bg-blue-500 dark:bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]',
+    ];
+
     return (
         <div className="flex items-center justify-center min-h-[32px] sm:min-h-[24px] px-2" aria-live="polite">
             <p 
-                className="text-xs sm:text-sm md:text-base text-text-subtitle font-semibold tracking-[-0.01em] uppercase text-center leading-normal"
+                className="text-xs sm:text-sm md:text-base text-text-subtitle font-semibold tracking-[-0.01em] uppercase text-center leading-normal flex items-center justify-center"
                 aria-label={`Especialidad: ${roles[currentRoleIndex] || roles[0]}`}
             >
                 <span>{currentText}</span>
-                <span className="inline-block w-1.5 h-3.5 md:h-4 bg-indigo-500/80 dark:bg-indigo-400/90 ml-1 animate-pulse rounded-xs align-middle" aria-hidden="true" />
+                <span 
+                    className={`inline-block w-1.5 h-3.5 md:h-4 ml-1.5 animate-pulse rounded-full transition-colors duration-500 ${cursorColorClasses[currentRoleIndex % cursorColorClasses.length]}`} 
+                    aria-hidden="true" 
+                />
             </p>
         </div>
     );

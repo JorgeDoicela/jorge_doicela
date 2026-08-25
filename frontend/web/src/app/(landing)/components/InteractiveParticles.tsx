@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { usePerformanceTier } from '../context/PerformanceContext';
 
 interface Particle {
     x: number;
@@ -60,21 +61,14 @@ interface ShootingStar {
 }
 
 /**
- * Componente InteractiveParticles (Astrofísica Hiperrealista & Polvo Cósmico)
+ * Componente InteractiveParticles (Motor Estelar Adaptativo Multi-Nivel)
  * 
- * 1. CAMPO ESTELAR ORGÁNICO EN 3 CAPAS:
- *    - Capa 1: ~180 micro-estrellas distantes en titilación tenue.
- *    - Capa 2: ~70 estrellas intermedias con temperaturas estelares astronómicas.
- *    - Capa 3: ~14 estrellas brillantes con difracción óptica en cruz (`+`).
- *    - Meteoros / Estrellas fugaces periódicas con degradado de plasma.
- * 
- * 2. INTERACCIÓN CÓSMICA AL CLIC/TOQUE (Ondas Gravitacionales & Vórtice de Polvo Estelar):
- *    - Ondas de choque gravitacionales (Cosmic Shockwave Rings) que se expanden suavemente.
- *    - Nube de gas nebular efímero que ilumina el espacio local.
- *    - Micro-polvo estelar en espiral/vórtice (35-50 micro-puntos que flotan y se frenan con física de vacío).
- *    - CERO líneas rectas duras o fuegos artificiales artificiales.
+ * - Tier 'low' / Brave: Renderizado estático único sin bucle RAF (0% de bloqueo de Canvas Farbling).
+ * - Tier 'mid': Campo estelar dinámico a 60 FPS con atracción gravitacional y meteoros periódicos.
+ * - Tier 'high': Campo estelar completo con difracción óptica en cruz (`+`), vórtices de polvo cósmico y ondas gravitacionales.
  */
 export default function InteractiveParticles() {
+    const { tier } = usePerformanceTier();
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -84,16 +78,13 @@ export default function InteractiveParticles() {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-
         let animationFrameId: number;
 
         const pointer = {
             x: -1000,
             y: -1000,
             isActive: false,
-            radius: 140
+            radius: tier === 'high' ? 150 : 120
         };
 
         let width = 0;
@@ -118,6 +109,35 @@ export default function InteractiveParticles() {
             { r: 199, g: 210, b: 254 }, // Violeta / Índigo Interestelar
         ];
 
+        const isLow = tier === 'low';
+
+        const renderStaticStars = () => {
+            ctx.clearRect(0, 0, width, height);
+            if (isLight) return;
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                const color = COSMIC_PALETTE[p.colorType];
+                const alpha = p.baseAlpha;
+                const rgbaStr = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha.toFixed(3)})`;
+
+                if (p.layer === 'bright') {
+                    const glowRadius = p.size * 2.4;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${(alpha * 0.2).toFixed(3)})`;
+                    ctx.fill();
+
+                    drawStarFlare(p.x, p.y, p.size * 2.0, alpha * 0.45, rgbaStr);
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = rgbaStr;
+                ctx.fill();
+            }
+        };
+
         const checkTheme = () => {
             const wasLight = isLight;
             isLight = document.documentElement.classList.contains('light');
@@ -127,7 +147,11 @@ export default function InteractiveParticles() {
                     cancelAnimationFrame(animationFrameId);
                 }
             } else if (wasLight && !isLight) {
-                animationFrameId = requestAnimationFrame(render);
+                if (isLow) {
+                    renderStaticStars();
+                } else {
+                    animationFrameId = requestAnimationFrame(render);
+                }
             }
         };
 
@@ -138,16 +162,14 @@ export default function InteractiveParticles() {
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
 
         const resizeCanvas = () => {
-            dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            dpr = 1;
             width = window.innerWidth;
             height = window.innerHeight;
 
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
+            canvas.width = width;
+            canvas.height = height;
             canvas.style.width = `${width}px`;
             canvas.style.height = `${height}px`;
-
-            ctx.scale(dpr, dpr);
 
             initGalaxy();
         };
@@ -157,7 +179,7 @@ export default function InteractiveParticles() {
             particles = [];
 
             // 1. Capa de Micro-Polvo Estelar Lejano
-            const distantCount = isMobile ? 50 : 110;
+            const distantCount = isLow ? 40 : tier === 'mid' ? (isMobile ? 25 : 55) : (isMobile ? 40 : 85);
             for (let i = 0; i < distantCount; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -175,7 +197,7 @@ export default function InteractiveParticles() {
             }
 
             // 2. Capa Media
-            const midCount = isMobile ? 25 : 55;
+            const midCount = isLow ? 20 : tier === 'mid' ? (isMobile ? 14 : 28) : (isMobile ? 20 : 45);
             for (let i = 0; i < midCount; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -193,7 +215,7 @@ export default function InteractiveParticles() {
             }
 
             // 3. Capa de Primer Plano (Estrellas con Difracción Óptica)
-            const brightCount = isMobile ? 6 : 10;
+            const brightCount = isLow ? 6 : tier === 'mid' ? 4 : 8;
             for (let i = 0; i < brightCount; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -254,7 +276,7 @@ export default function InteractiveParticles() {
             if (isLight) return;
 
             const isMobile = width < 768;
-            const emberCount = isMobile ? 18 : 30;
+            const emberCount = isMobile ? 12 : 20;
             const primaryColor = COSMIC_PALETTE[Math.floor(Math.random() * COSMIC_PALETTE.length)];
 
             // 1. Nube de gas nebular efímero que ilumina el punto
@@ -262,7 +284,7 @@ export default function InteractiveParticles() {
                 x: clickX,
                 y: clickY,
                 radius: 10,
-                maxRadius: isMobile ? 65 : 110,
+                maxRadius: isMobile ? 60 : 95,
                 alpha: 0.55,
                 color: primaryColor
             });
@@ -272,16 +294,16 @@ export default function InteractiveParticles() {
                 x: clickX,
                 y: clickY,
                 radius: 4,
-                maxRadius: isMobile ? 55 : 90,
+                maxRadius: isMobile ? 50 : 80,
                 alpha: 0.75,
                 color: primaryColor
             });
 
-            // 3. Nube de micro-polvo estelar con movimiento en espiral / vórtice
+            // 3. Nube de micro-polvo estelar
             const baseSpin = (Math.random() - 0.5) * 1.5;
             for (let i = 0; i < emberCount; i++) {
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 2.8 + 0.6;
+                const speed = Math.random() * 2.5 + 0.6;
                 const tangentialVx = -Math.sin(angle) * baseSpin * speed * 0.6;
                 const tangentialVy = Math.cos(angle) * baseSpin * speed * 0.6;
                 const radialVx = Math.cos(angle) * speed;
@@ -290,14 +312,14 @@ export default function InteractiveParticles() {
                 const color = COSMIC_PALETTE[Math.floor(Math.random() * COSMIC_PALETTE.length)];
 
                 stardustEmbers.push({
-                    x: clickX + (Math.random() - 0.5) * 8,
-                    y: clickY + (Math.random() - 0.5) * 8,
+                    x: clickX + (Math.random() - 0.5) * 6,
+                    y: clickY + (Math.random() - 0.5) * 6,
                     vx: radialVx + tangentialVx,
                     vy: radialVy + tangentialVy,
-                    size: Math.random() * 0.9 + 0.45,
+                    size: Math.random() * 0.8 + 0.4,
                     color,
                     life: 1.0,
-                    decay: Math.random() * 0.016 + 0.009,
+                    decay: Math.random() * 0.018 + 0.01,
                     twinklePhase: Math.random() * Math.PI * 2,
                     twinkleSpeed: Math.random() * 0.05 + 0.02
                 });
@@ -336,7 +358,7 @@ export default function InteractiveParticles() {
 
         window.addEventListener('resize', resizeCanvas);
         window.addEventListener('pointerdown', handlePointerDown);
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
         window.addEventListener('mouseleave', handleMouseLeave);
         window.addEventListener('touchmove', handleTouchMove, { passive: true });
         window.addEventListener('touchstart', handleTouchMove, { passive: true });
@@ -401,7 +423,7 @@ export default function InteractiveParticles() {
                 ctx.restore();
             }
 
-            // 3. RENDERIZAR CAMPO ESTELAR AMBIENTAL (3 CAPAS)
+            // 3. RENDERIZAR CAMPO ESTELAR AMBIENTAL
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
 
@@ -417,20 +439,23 @@ export default function InteractiveParticles() {
                 const twinkleFactor = Math.sin(p.twinklePhase) * (p.layer === 'distant' ? 0.28 : 0.22);
                 let currentAlpha = Math.max(0.06, Math.min(1, p.baseAlpha + twinkleFactor));
 
-                // Micro-atracción gravitacional sutil
+                // Micro-atracción gravitacional rápida con chequeo de caja previa
                 if (pointer.isActive) {
                     const dx = p.x - pointer.x;
                     const dy = p.y - pointer.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < pointer.radius) {
-                        const force = (pointer.radius - dist) / pointer.radius;
-                        const angle = Math.atan2(dy, dx);
+                    if (Math.abs(dx) < pointer.radius && Math.abs(dy) < pointer.radius) {
+                        const dist = Math.sqrt(dx * dx + dy * dy);
 
-                        p.x += Math.cos(angle) * force * (p.layer === 'distant' ? 0.4 : 1.2);
-                        p.y += Math.sin(angle) * force * (p.layer === 'distant' ? 0.4 : 1.2);
+                        if (dist < pointer.radius) {
+                            const force = (pointer.radius - dist) / pointer.radius;
+                            const angle = Math.atan2(dy, dx);
 
-                        currentAlpha = Math.min(1, currentAlpha + force * 0.3);
+                            p.x += Math.cos(angle) * force * (p.layer === 'distant' ? 0.4 : 1.2);
+                            p.y += Math.sin(angle) * force * (p.layer === 'distant' ? 0.4 : 1.2);
+
+                            currentAlpha = Math.min(1, currentAlpha + force * 0.3);
+                        }
                     }
                 }
 
@@ -530,15 +555,39 @@ export default function InteractiveParticles() {
                 ctx.fill();
             }
 
-            animationFrameId = requestAnimationFrame(render);
+            if (!isLow) {
+                animationFrameId = requestAnimationFrame(render);
+            }
         };
 
-        render();
+        const onResize = () => {
+            resizeCanvas();
+            if (isLow) {
+                renderStaticStars();
+            }
+        };
+
+        window.addEventListener('resize', onResize);
+        window.addEventListener('pointerdown', handlePointerDown);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        window.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('touchmove', handleTouchMove, { passive: true });
+        window.addEventListener('touchstart', handleTouchMove, { passive: true });
+        window.addEventListener('touchend', handleTouchEnd);
+
+        resizeCanvas();
+        if (isLow) {
+            renderStaticStars();
+        } else {
+            animationFrameId = requestAnimationFrame(render);
+        }
 
         return () => {
-            cancelAnimationFrame(animationFrameId);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
             observer.disconnect();
-            window.removeEventListener('resize', resizeCanvas);
+            window.removeEventListener('resize', onResize);
             window.removeEventListener('pointerdown', handlePointerDown);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseleave', handleMouseLeave);
@@ -546,7 +595,7 @@ export default function InteractiveParticles() {
             window.removeEventListener('touchstart', handleTouchMove);
             window.removeEventListener('touchend', handleTouchEnd);
         };
-    }, []);
+    }, [tier]);
 
     return (
         <canvas

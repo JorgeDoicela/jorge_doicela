@@ -157,7 +157,7 @@ export default function LandingPage() {
                 <AppleDetailExplorer />
 
                 <section className="w-screen relative left-1/2 -translate-x-1/2 px-4 sm:px-8 max-w-[1280px] grid grid-cols-1 md:grid-cols-2 gap-6 w-full pt-4">
-                    <div className="rounded-[2.2rem] md:rounded-[2.8rem] bg-card border border-card-border p-8 md:p-12 flex flex-col justify-between backdrop-blur-2xl">
+                    <div className="rounded-[2.2rem] md:rounded-[2.8rem] bg-card border border-card-border p-8 md:p-12 flex flex-col justify-between backdrop-blur-2xl transition-all duration-300 hover:border-card-hover-border">
                         <div className="flex flex-col gap-2 mb-6">
                             <h3 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-foreground">
                                 {t.cardContactTitle}
@@ -199,7 +199,7 @@ export default function LandingPage() {
                     </div>
 
                     {/* Filosofía & Enfoque */}
-                    <div className="rounded-[2.2rem] md:rounded-[2.8rem] bg-card border border-card-border p-8 md:p-12 flex flex-col justify-between backdrop-blur-2xl">
+                    <div className="rounded-[2.2rem] md:rounded-[2.8rem] bg-card border border-card-border p-8 md:p-12 flex flex-col justify-between backdrop-blur-2xl transition-all duration-300 hover:border-card-hover-border">
                         <div className="flex flex-col gap-3">
                             <h3 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-foreground">
                                 {language === 'es' ? 'Ingeniería con Propósito' : 'Engineering with Purpose'}

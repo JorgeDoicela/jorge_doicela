@@ -31,6 +31,14 @@ export const AppleHeroIntro: React.FC = () => {
             <div className="flex flex-col items-center justify-center">
                 <a
                     href="#highlights"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const el = document.getElementById('highlights');
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            window.history.pushState(null, '', '#highlights');
+                        }
+                    }}
                     className="px-8 py-3.5 rounded-full bg-foreground text-background font-medium text-sm sm:text-base tracking-tight hover:opacity-90 active:scale-95 transition-all shadow-md cursor-pointer"
                 >
                     {isEs ? 'Explorar lo más destacado' : 'Explore highlights'}

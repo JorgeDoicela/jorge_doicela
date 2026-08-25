@@ -7,7 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 export const AppleDetailExplorer: React.FC = () => {
     const { language } = useLanguage();
     const [activeItem, setActiveItem] = useState<number>(0);
-    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const isEs = language === 'es';
 
@@ -259,6 +259,20 @@ export const AppleDetailExplorer: React.FC = () => {
         },
     ];
 
+    const renderWelcomeScreen = () => (
+        <div className="w-full h-full flex flex-col items-center justify-center p-6 sm:p-8 bg-card text-foreground font-sans select-none text-center transition-colors duration-300 relative overflow-hidden">
+            {/* Halo etéreo sutil */}
+            <div className="absolute inset-0 bg-radial from-indigo-500/10 via-transparent to-transparent pointer-events-none opacity-60" />
+
+            {/* Tipografía de Bienvenida Estilo Apple Hello */}
+            <div className="relative z-10 flex flex-col items-center justify-center">
+                <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
+                    {isEs ? 'Bienvenido' : 'Welcome'}
+                </h3>
+            </div>
+        </div>
+    );
+
     const total = details.length;
 
     const handleNext = () => {
@@ -320,7 +334,7 @@ export const AppleDetailExplorer: React.FC = () => {
                         {/* Píldoras y Tarjeta Expandida */}
                         <div className="flex flex-col gap-2.5 w-full">
                             {details.map((item, idx) => {
-                                const isActive = idx === activeItem;
+                                const isActive = isExpanded && idx === activeItem;
 
                                 if (isActive && isExpanded) {
                                     return (
@@ -370,8 +384,8 @@ export const AppleDetailExplorer: React.FC = () => {
 
                                 {/* Pantalla con Transición de Fundido Suave */}
                                 <div className="w-full h-full flex-grow relative overflow-hidden">
-                                    <div key={current.id} className="w-full h-full animate-fade-slide">
-                                        {current.renderScreen()}
+                                    <div key={isExpanded ? current.id : 'welcome'} className="w-full h-full animate-fade-slide">
+                                        {isExpanded ? current.renderScreen() : renderWelcomeScreen()}
                                     </div>
                                 </div>
                             </div>
@@ -400,8 +414,8 @@ export const AppleDetailExplorer: React.FC = () => {
 
                                 {/* Contenido de Pantalla con Animación */}
                                 <div className="w-full h-full flex-grow relative overflow-hidden">
-                                    <div key={current.id} className="w-full h-full animate-fade-slide">
-                                        {current.renderScreen()}
+                                    <div key={isExpanded ? current.id : 'welcome'} className="w-full h-full animate-fade-slide">
+                                        {isExpanded ? current.renderScreen() : renderWelcomeScreen()}
                                     </div>
                                 </div>
                             </div>

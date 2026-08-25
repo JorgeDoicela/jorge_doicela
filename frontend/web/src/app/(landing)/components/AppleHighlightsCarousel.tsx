@@ -16,7 +16,8 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
     const { language } = useLanguage();
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
-    const [progress, setProgress] = useState(0);
+    const [isInView, setIsInView] = useState(false);
+    const sectionRef = useRef<HTMLElement>(null);
 
     const isEs = language === 'es';
     const SLIDE_DURATION = 6500;
@@ -153,37 +154,40 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
 
     const nextSlide = useCallback(() => {
         setActiveIndex((prev) => (prev + 1) % totalSlides);
-        setProgress(0);
     }, [totalSlides]);
 
     const prevSlide = useCallback(() => {
         setActiveIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-        setProgress(0);
     }, [totalSlides]);
 
     const goToSlide = (idx: number) => {
         setActiveIndex(idx);
-        setProgress(0);
     };
 
     useEffect(() => {
-        if (!isPlaying) return;
+        const el = sectionRef.current;
+        if (!el) return;
 
-        const intervalTime = 50;
-        const step = (intervalTime / SLIDE_DURATION) * 100;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsInView(entry.isIntersecting);
+            },
+            { threshold: 0.35 }
+        );
 
-        const timer = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    nextSlide();
-                    return 0;
-                }
-                return prev + step;
-            });
-        }, intervalTime);
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
 
-        return () => clearInterval(timer);
-    }, [isPlaying, nextSlide]);
+    useEffect(() => {
+        if (!isPlaying || !isInView) return;
+
+        const timer = setTimeout(() => {
+            nextSlide();
+        }, SLIDE_DURATION);
+
+        return () => clearTimeout(timer);
+    }, [isPlaying, isInView, activeIndex, nextSlide]);
 
     const touchStartX = useRef<number | null>(null);
 
@@ -203,8 +207,9 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
 
     return (
         <section
+            ref={sectionRef}
             id="highlights"
-            className="w-screen relative left-1/2 -translate-x-1/2 flex flex-col gap-6 py-8 overflow-hidden [--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)] [--card-gap:1.25rem] sm:[--card-gap:1.75rem] md:[--card-gap:2.25rem]"
+            className="w-screen relative left-1/2 -translate-x-1/2 flex flex-col gap-6 py-8 overflow-hidden scroll-mt-16 sm:scroll-mt-24 md:scroll-mt-32 [--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)] [--card-gap:1.25rem] sm:[--card-gap:1.75rem] md:[--card-gap:2.25rem]"
         >
             {/* Título de Sección Estilo Oficial Apple */}
             <div className="w-full max-w-5xl mx-auto flex flex-col items-start px-5 sm:px-8">
@@ -312,8 +317,12 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                             >
                                 {isActive && (
                                     <div
-                                        className="absolute top-0 left-0 bottom-0 bg-foreground rounded-full transition-all duration-75"
-                                        style={{ width: `${progress}%` }}
+                                        key={`slide-prog-${activeIndex}-${isPlaying}-${isInView}`}
+                                        className="absolute top-0 left-0 bottom-0 bg-foreground rounded-full"
+                                        style={{
+                                            animation: isPlaying && isInView ? `progressFill ${SLIDE_DURATION}ms linear forwards` : 'none',
+                                            width: isPlaying && isInView ? '0%' : (isInView ? '100%' : '0%'),
+                                        }}
                                     />
                                 )}
                             </button>

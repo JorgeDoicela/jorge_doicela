@@ -24,5 +24,15 @@
     "eslint": "^9.39.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
+  },
+  "pnpm": {
+    "overrides": {
+      "next-intl": "4.13.0",
+      "use-intl": "4.13.0",
+      "icu-minify": "4.13.0",
+      "next-intl-swc-plugin-extractor": "4.13.0",
+      "@eloqnt/format-json": "0.0.2",
+      "@eloqnt/format-po": "0.0.2"
+    }
   }
 }

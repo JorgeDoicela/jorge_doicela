@@ -24,5 +24,15 @@
     "eslint": "^9.39.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "better-sqlite3",
+      "sharp",
+      "sqlite3",
+      "unrs-resolver"
+    ]
   }
 }

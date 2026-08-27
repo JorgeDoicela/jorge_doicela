@@ -3,7 +3,6 @@ packages:
   - 'frontend/mobile'
   - 'backend'
 
-
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "slug": "la-biblia-modular",
+    "title": "La Biblia Modular",
+    "description": "Plataforma de estudio bíblico y exégesis con 9 motores teológicos, morfología Strong masorética y Septuaginta, y app móvil nativa en Expo.",
+    "role": "Lead Architect & Full Stack Developer",
+    "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
+    "language": "es",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://bible.jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "slug": "the-modular-bible",
+    "title": "The Modular Bible",
+    "description": "Exegesis and scripture study platform featuring 9 theological engines, Masoretic BHS / LXX morphology, Strong dictionaries, and Expo native mobile app.",
+    "role": "Lead Architect & Full Stack Developer",
+    "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
+    "language": "en",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://bible.jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 3,
+    "slug": "software-tech-hub",
+    "title": "Software & Tech Hub",
+    "description": "Ecosistema de contenidos tecnológicos con 7 áreas temáticas, avisos de ciberseguridad, catálogo de modelos de IA, tutoriales interactivos y foros.",
+    "role": "Full Stack & DevSecOps Engineer",
+    "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Neumorphism UI", "Glassmorphism"],
+    "language": "es",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://software.jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 4,
+    "slug": "software-tech-hub-en",
+    "title": "Software & Tech Hub",
+    "description": "Technology hub featuring 7 categories: cybersecurity advisories, AI models showcase, step-by-step interactive tutorials, and technical forums.",
+    "role": "Full Stack & DevSecOps Engineer",
+    "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Neumorphism UI", "Glassmorphism"],
+    "language": "en",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://software.jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 5,
+    "slug": "infraestructura-lightsail-vps",
+    "title": "Arquitectura Cloud VPS (1 GB RAM)",
+    "description": "Despliegue de alta disponibilidad en AWS Lightsail (Debian 13) con Nginx mTLS, Cloudflare Edge, PM2 y pipeline CI/CD de GitHub Actions optimizado para 1 GB de RAM.",
+    "role": "DevSecOps & Cloud Architect",
+    "technologies": ["AWS Lightsail", "Debian 13", "Nginx", "Cloudflare mTLS", "PM2", "GitHub Actions"],
+    "language": "es",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 6,
+    "slug": "cloud-infrastructure-lightsail",
+    "title": "Cloud VPS Architecture (1 GB RAM)",
+    "description": "High-availability deployment on AWS Lightsail (Debian 13) featuring Nginx mTLS, Cloudflare Edge, PM2, and GitHub Actions CI/CD optimized for 1 GB RAM.",
+    "role": "DevSecOps & Cloud Architect",
+    "technologies": ["AWS Lightsail", "Debian 13", "Nginx", "Cloudflare mTLS", "PM2", "GitHub Actions"],
+    "language": "en",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 7,
+    "slug": "terminal-ssh-websockets",
+    "title": "Terminal Virtual SSH en Tiempo Real",
+    "description": "Emulador de terminal UNIX interactiva sobre WebSockets (Socket.io) con sistema de archivos virtual, coloreado ANSI y ejecución segura de comandos.",
+    "role": "Backend & Frontend Engineer",
+    "technologies": ["NestJS WebSockets", "Socket.io", "TypeScript", "ANSI Parser"],
+    "language": "es",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://portfolio.jorgedoicela.com",
+    "featured": true
+  },
+  {
+    "id": 8,
+    "slug": "terminal-ssh-websockets-en",
+    "title": "Real-time Virtual SSH Terminal",
+    "description": "Interactive UNIX terminal emulator over WebSockets (Socket.io) with virtual filesystem, ANSI color rendering, and secure command dispatching.",
+    "role": "Backend & Frontend Engineer",
+    "technologies": ["NestJS WebSockets", "Socket.io", "TypeScript", "ANSI Parser"],
+    "language": "en",
+    "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
+    "demoUrl": "https://portfolio.jorgedoicela.com",
+    "featured": true
+  }
+]

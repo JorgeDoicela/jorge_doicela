@@ -15,13 +15,20 @@ export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
   @Get()
-  async findAll(@Query('search') search?: string, @Query('tag') tag?: string) {
-    return this.newsService.findAll(search, tag);
+  async findAll(
+    @Query('search') search?: string,
+    @Query('tag') tag?: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.newsService.findAll(search, tag, lang);
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.newsService.findOne(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.newsService.findOne(idOrSlug, lang);
   }
 
   @Post()

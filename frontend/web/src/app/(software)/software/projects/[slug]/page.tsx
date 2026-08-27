@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { Project } from '../../../features/projects/types';
 import { API_URL } from '../../../../config';
 
@@ -11,6 +12,7 @@ export default function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const locale = useLocale();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +20,7 @@ export default function ProjectDetailPage({
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await fetch(`${API_URL}/software/projects/${slug}`);
+        const res = await fetch(`${API_URL}/software/projects/${slug}?lang=${locale}`);
         if (!res.ok) throw new Error('Proyecto no encontrado');
         const data = await res.json();
         setProject(data.data || data);
@@ -29,7 +31,7 @@ export default function ProjectDetailPage({
       }
     };
     fetchProject();
-  }, [slug]);
+  }, [slug, locale]);
 
   if (loading) {
     return (

@@ -1,7 +1,8 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { ForumTopic, ForumReply } from '../../../features/forum/types';
 import { API_URL } from '../../../../config';
 
@@ -11,6 +12,7 @@ export default function ForumTopicDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const locale = useLocale();
   const [topic, setTopic] = useState<ForumTopic | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -18,9 +20,9 @@ export default function ForumTopicDetailPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTopic = async () => {
+  const fetchTopic = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/software/forum/${slug}`);
+      const res = await fetch(`${API_URL}/software/forum/${slug}?lang=${locale}`);
       if (!res.ok) throw new Error('Tema no encontrado');
       const data = await res.json();
       setTopic(data.data || data);
@@ -29,11 +31,11 @@ export default function ForumTopicDetailPage({
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug, locale]);
 
   useEffect(() => {
     fetchTopic();
-  }, [slug]);
+  }, [fetchTopic]);
 
   const handlePostReply = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -46,3 +46,10 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
    * Documentación: [`docs/04-bible/`](../docs/04-bible/)
 5. `software-jorge-doicela`: Software (`software.*`), 7 categorías temáticas, foros, proyectos, `software.sqlite` y estética **Neumorphism UI + Glassmorphism**.
    * Documentación: [`docs/05-software/`](../docs/05-software/)
+
+---
+
+## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+* **Obligación de Sincronización:** Cada vez que se realicen cambios en el código (nuevas funcionalidades, refactorizaciones, cambios de contratos, adición/eliminación de endpoints, entidades o componentes), es **obligatorio actualizar la documentación técnica correspondiente en `docs/`** para reflejar siempre la realidad exacta del sistema.
+* **Autonomía Estructurada:** Si un cambio arquitectónico lo requiere, se autoriza plenamente crear nuevos archivos `.md`, reorganizar subcarpetas dentro de `docs/` o eliminar/depurar secciones obsoletas, manteniendo siempre un tono profesional, orden impecable y fidelidad técnica absoluta.
+

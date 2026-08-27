@@ -15,12 +15,12 @@ export type AiResourceType =
   | 'tool';
 
 @Entity('ai_resources')
+@Index(['slug', 'language'], { unique: true })
 export class AiResource {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -52,6 +52,9 @@ export class AiResource {
 
   @Column({ default: 'ai,llm' })
   tags: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ default: 0 })
   views: number;

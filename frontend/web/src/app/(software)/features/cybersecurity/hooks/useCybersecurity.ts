@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { SecurityPost } from '../types';
 import { API_URL } from '../../../../config';
-
 import { safeFetchJson } from '../../../../utils/fetchJson';
 
 export function useCybersecurity(severity?: string, postType?: string, search: string = '') {
+  const locale = useLocale();
   const [posts, setPosts] = useState<SecurityPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +22,7 @@ export function useCybersecurity(severity?: string, postType?: string, search: s
         if (severity && severity !== 'all') params.append('severity', severity);
         if (postType && postType !== 'all') params.append('postType', postType);
         if (search.trim()) params.append('search', search.trim());
+        if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/cybersecurity${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<any>(url);
@@ -36,7 +38,7 @@ export function useCybersecurity(severity?: string, postType?: string, search: s
     };
 
     fetchSecurity();
-  }, [severity, postType, search]);
+  }, [severity, postType, search, locale]);
 
   return { posts, loading, error };
 }

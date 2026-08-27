@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { Tutorial } from '../types';
 import { API_URL } from '../../../../config';
-
 import { safeFetchJson } from '../../../../utils/fetchJson';
 
 export function useTutorials(difficulty?: string, search: string = '') {
+  const locale = useLocale();
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export function useTutorials(difficulty?: string, search: string = '') {
         const params = new URLSearchParams();
         if (difficulty && difficulty !== 'all') params.append('difficulty', difficulty);
         if (search.trim()) params.append('search', search.trim());
+        if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/tutorials${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<any>(url);
@@ -35,7 +37,7 @@ export function useTutorials(difficulty?: string, search: string = '') {
     };
 
     fetchTutorials();
-  }, [difficulty, search]);
+  }, [difficulty, search, locale]);
 
   return { tutorials, loading, error };
 }

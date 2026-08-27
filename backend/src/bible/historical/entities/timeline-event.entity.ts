@@ -48,4 +48,7 @@ export class TimelineEventEntity {
 
   @Column('text', { nullable: true })
   details: string;
+
+  @Column({ default: 'es' })
+  language: string;
 }

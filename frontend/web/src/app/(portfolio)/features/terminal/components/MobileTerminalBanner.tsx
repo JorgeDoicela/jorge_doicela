@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Monitor, Smartphone, ChevronDown, ChevronUp } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface MobileTerminalBannerProps {
   isMobileExpanded: boolean;
@@ -12,6 +13,7 @@ export const MobileTerminalBanner: React.FC<MobileTerminalBannerProps> = ({
   isMobileExpanded,
   onToggleMobileExpand,
 }) => {
+  const t = useTranslations('Terminal');
   const [isMobileViewport, setIsMobileViewport] = useState(false);
 
   useEffect(() => {
@@ -33,9 +35,9 @@ export const MobileTerminalBanner: React.FC<MobileTerminalBannerProps> = ({
         </div>
         <div className="flex-1 text-foreground/85 leading-relaxed">
           <span className="font-semibold text-gold-300 block mb-0.5">
-            Experiencia Optimizada para Escritorio
+            {t('mobileBannerTitle')}
           </span>
-          La terminal virtual SSH utiliza comandos, secuencias ANSI y atajos de teclado (como <span className="text-gold-200 font-bold">Tab</span> y <span className="text-gold-200 font-bold">Flechas</span>) exclusivos para computadoras.
+          {t('mobileBannerDesc')}
         </div>
       </div>
 
@@ -45,7 +47,7 @@ export const MobileTerminalBanner: React.FC<MobileTerminalBannerProps> = ({
           className="flex items-center gap-1.5 text-gold-300 hover:text-gold-200 transition-colors font-medium cursor-pointer"
         >
           <Smartphone className="w-3.5 h-3.5" />
-          <span>{isMobileExpanded ? 'Ocultar terminal móvil' : 'Probar terminal de todas formas'}</span>
+          <span>{isMobileExpanded ? t('mobileHide') : t('mobileShow')}</span>
           {isMobileExpanded ? (
             <ChevronUp className="w-3.5 h-3.5" />
           ) : (
@@ -56,3 +58,4 @@ export const MobileTerminalBanner: React.FC<MobileTerminalBannerProps> = ({
     </div>
   );
 };
+

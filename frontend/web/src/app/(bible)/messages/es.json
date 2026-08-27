@@ -1,0 +1,21 @@
+{
+  "Metadata": {
+    "title": "Biblia Modular | Jorge Doicela",
+    "description": "Plataforma de estudio bíblico con 9 motores exegéticos, análisis morfológico Masorético BHS / LXX, diccionarios Strong y contexto histórico."
+  },
+  "Nav": {
+    "landing": "Inicio",
+    "standard": "Estándar",
+    "parallel": "Paralelo",
+    "interlinear": "Interlineal",
+    "wordStudy": "Análisis de Palabra",
+    "literary": "Estructura & Quiasmos",
+    "historical": "Contexto Histórico"
+  },
+  "Toolbar": {
+    "passage": "Pasaje Bíblico",
+    "version": "Traducción",
+    "fontSize": "Tamaño de Fuente",
+    "layout": "Diseño"
+  }
+}

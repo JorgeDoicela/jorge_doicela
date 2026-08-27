@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { NewsArticle } from '../../../features/news/types';
 import { API_URL } from '../../../../config';
 
@@ -11,6 +12,7 @@ export default function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const locale = useLocale();
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +20,7 @@ export default function NewsDetailPage({
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await fetch(`${API_URL}/software/news/${slug}`);
+        const res = await fetch(`${API_URL}/software/news/${slug}?lang=${locale}`);
         if (!res.ok) throw new Error('Noticia no encontrada');
         const data = await res.json();
         setArticle(data.data || data);
@@ -29,7 +31,7 @@ export default function NewsDetailPage({
       }
     };
     fetchArticle();
-  }, [slug]);
+  }, [slug, locale]);
 
   if (loading) {
     return (

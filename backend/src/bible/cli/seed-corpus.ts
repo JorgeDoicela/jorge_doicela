@@ -61,6 +61,7 @@ interface SeedHistoricalPlace {
   description: string;
   biblicalReferences?: unknown;
   archaeologicalNotes?: unknown;
+  language?: string;
 }
 
 interface SeedTimelineEvent {
@@ -77,6 +78,7 @@ interface SeedTimelineEvent {
   biblicalReferences?: unknown;
   keyEvents?: unknown;
   details?: string;
+  language?: string;
 }
 
 interface SeedArchaeologyArticle {
@@ -96,6 +98,7 @@ interface SeedArchaeologyArticle {
   museumOrLocation?: string;
   keyArtifact?: string;
   tags?: unknown;
+  language?: string;
 }
 
 export const CANONICAL_BOOKS = [
@@ -258,7 +261,8 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
       elevationMeters INTEGER,
       description TEXT NOT NULL,
       biblicalReferences TEXT,
-      archaeologicalNotes TEXT
+      archaeologicalNotes TEXT,
+      language VARCHAR(10) NOT NULL DEFAULT 'es'
     );
     CREATE INDEX IF NOT EXISTS IDX_places_category ON historical_places(category);
 
@@ -275,7 +279,8 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
       contemporaryEntities TEXT,
       biblicalReferences TEXT,
       keyEvents TEXT,
-      details TEXT
+      details TEXT,
+      language VARCHAR(10) NOT NULL DEFAULT 'es'
     );
     CREATE INDEX IF NOT EXISTS IDX_timeline_type ON timeline_events(type);
     CREATE INDEX IF NOT EXISTS IDX_timeline_start ON timeline_events(startYearBC);
@@ -284,7 +289,7 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
     CREATE TABLE archaeology_articles (
       id VARCHAR(64) PRIMARY KEY,
       title VARCHAR(256) NOT NULL,
-      slug VARCHAR(256) UNIQUE NOT NULL,
+      slug VARCHAR(256) NOT NULL,
       category VARCHAR(64) NOT NULL,
       region VARCHAR(64) NOT NULL,
       regionLabel VARCHAR(128) NOT NULL,
@@ -297,10 +302,11 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
       epigraphy TEXT,
       museumOrLocation VARCHAR(256),
       keyArtifact VARCHAR(256),
-      tags TEXT
+      tags TEXT,
+      language VARCHAR(10) NOT NULL DEFAULT 'es'
     );
     CREATE INDEX IF NOT EXISTS IDX_articles_cat ON archaeology_articles(category);
-    CREATE INDEX IF NOT EXISTS IDX_articles_slug ON archaeology_articles(slug);
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_articles_slug_lang ON archaeology_articles(slug, language);
   `);
 
   // Sembrar los 66 libros canónicos de forma segura
@@ -563,8 +569,8 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
         fs.readFileSync(placesPath, 'utf8'),
       ) as SeedHistoricalPlace[];
       const insertPlace = db.prepare(`
-        INSERT INTO historical_places (id, name, originalName, coordinates, category, era, modernName, country, elevationMeters, description, biblicalReferences, archaeologicalNotes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO historical_places (id, name, originalName, coordinates, category, era, modernName, country, elevationMeters, description, biblicalReferences, archaeologicalNotes, language)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       const txPlaces = db.transaction((items: SeedHistoricalPlace[]) => {
         for (const p of items) {
@@ -581,6 +587,7 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
             p.description,
             JSON.stringify(p.biblicalReferences || []),
             JSON.stringify(p.archaeologicalNotes || null),
+            p.language || 'es',
           );
         }
       });
@@ -597,8 +604,8 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
         fs.readFileSync(timelinePath, 'utf8'),
       ) as SeedTimelineEvent[];
       const insertEvent = db.prepare(`
-        INSERT INTO timeline_events (id, name, type, originalName, startYearBC, endYearBC, kingdom, evaluation, dynastyOrOrigin, contemporaryEntities, biblicalReferences, keyEvents, details)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO timeline_events (id, name, type, originalName, startYearBC, endYearBC, kingdom, evaluation, dynastyOrOrigin, contemporaryEntities, biblicalReferences, keyEvents, details, language)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       const txEvents = db.transaction((items: SeedTimelineEvent[]) => {
         for (const e of items) {
@@ -616,6 +623,7 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
             JSON.stringify(e.biblicalReferences || []),
             JSON.stringify(e.keyEvents || []),
             e.details || null,
+            e.language || 'es',
           );
         }
       });
@@ -632,8 +640,8 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
         fs.readFileSync(articlesPath, 'utf8'),
       ) as SeedArchaeologyArticle[];
       const insertArticle = db.prepare(`
-        INSERT INTO archaeology_articles (id, title, slug, category, region, regionLabel, publishDate, institutionOrAuthor, readTimeMinutes, summary, contentMarkdown, biblicalReferences, epigraphy, museumOrLocation, keyArtifact, tags)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO archaeology_articles (id, title, slug, category, region, regionLabel, publishDate, institutionOrAuthor, readTimeMinutes, summary, contentMarkdown, biblicalReferences, epigraphy, museumOrLocation, keyArtifact, tags, language)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       const txArticles = db.transaction((items: SeedArchaeologyArticle[]) => {
         for (const a of items) {
@@ -654,6 +662,7 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
             a.museumOrLocation || null,
             a.keyArtifact || null,
             JSON.stringify(a.tags || []),
+            a.language || 'es',
           );
         }
       });

@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LanguageToggle } from '../../navigation/components/LanguageToggle';
+
+
 
 interface MenuBarProps {
   theme?: 'light' | 'dark';
@@ -112,12 +115,16 @@ export function MenuBar({
             </kbd>
           </button>
 
+          {/* Language Toggle */}
+          <LanguageToggle />
+
           {/* Reloj */}
           {mounted && time && (
             <span className="font-mono text-xs text-zinc-400 hidden sm:inline-block tabular-nums pl-1">
               {time}
             </span>
           )}
+
 
           {/* Selector de Tema con Iconos SVG (Oculto si no se provee onToggleTheme) */}
           {mounted && onToggleTheme && (

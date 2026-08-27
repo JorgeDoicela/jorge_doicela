@@ -18,13 +18,17 @@ export class BlogController {
   async findAll(
     @Query('search') search?: string,
     @Query('series') series?: string,
+    @Query('lang') lang?: string,
   ) {
-    return this.blogService.findAll(search, series);
+    return this.blogService.findAll(search, series, lang);
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.blogService.findOne(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.blogService.findOne(idOrSlug, lang);
   }
 
   @Post()

@@ -19,8 +19,11 @@
     "seed:bible:prod": "node dist/bible/cli/seed-corpus.js",
     "seed:software": "ts-node src/software/cli/seed-software.ts",
     "seed:software:prod": "node dist/software/cli/seed-software.js",
-    "seed:all": "ts-node src/bible/cli/seed-corpus.ts && ts-node src/software/cli/seed-software.ts",
-    "seed:all:prod": "node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js",
+    "seed:portfolio": "ts-node src/portfolio/cli/seed-portfolio.ts",
+    "seed:portfolio:prod": "node dist/portfolio/cli/seed-portfolio.js",
+    "seed:all": "ts-node src/bible/cli/seed-corpus.ts && ts-node src/software/cli/seed-software.ts && ts-node src/portfolio/cli/seed-portfolio.ts",
+    "seed:all:prod": "node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && node dist/portfolio/cli/seed-portfolio.js",
+
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

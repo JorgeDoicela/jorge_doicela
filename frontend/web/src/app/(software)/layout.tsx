@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 import ResourceErrorFallback from "../components/ResourceErrorFallback";
 import CancelFallback from "../components/CancelFallback";
 
@@ -9,29 +11,48 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://software.jorgedoicela.com"),
-  title: "Software | Jorge Doicela",
-  description: "Galería de proyectos de software, IA y ciberseguridad con base de datos SQLite aislada.",
-  icons: {
-    icon: "/software/logo/logo_fondo_circular_color_.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations("Metadata");
 
-export default function RootLayout({
+
+  return {
+    metadataBase: new URL("https://software.jorgedoicela.com"),
+    title: t("title"),
+    description: t("description"),
+    icons: {
+      icon: "/software/logo/logo_fondo_circular_color_.png",
+    },
+    alternates: {
+      canonical: "https://software.jorgedoicela.com",
+      languages: {
+        "es-EC": "https://software.jorgedoicela.com",
+        "en-US": "https://software.jorgedoicela.com",
+      },
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="es" className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
+    <html lang={locale} className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
       <head>
         <ResourceErrorFallback />
       </head>
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
         <CancelFallback />
-        {children}
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );
 }
+

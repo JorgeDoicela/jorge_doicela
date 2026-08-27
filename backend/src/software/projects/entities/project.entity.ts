@@ -10,12 +10,12 @@ import {
 export type ProjectStatus = 'active' | 'archived' | 'wip';
 
 @Entity('projects')
+@Index(['slug', 'language'], { unique: true })
 export class Project {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -26,6 +26,9 @@ export class Project {
 
   @Column()
   techStack: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ nullable: true })
   repoUrl?: string;

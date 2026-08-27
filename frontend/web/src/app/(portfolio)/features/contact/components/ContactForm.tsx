@@ -1,19 +1,25 @@
 'use client';
 
 import { useContact } from '../hooks/useContact';
+import { useTranslations } from 'next-intl';
 
 export function ContactForm() {
   const { formData, loading, error, success, handleChange, submitForm } = useContact();
+  const t = useTranslations('Contact');
+
 
   return (
     <div className="w-full max-w-lg mx-auto bg-surface border border-gold-b rounded-xl p-8 shadow-2xl luxury-glow-hover transition-colors duration-200">
-      <h2 className="text-xl font-light tracking-[0.2em] uppercase text-foreground mb-6 text-center">
-        Envíame un mensaje
+      <h2 className="text-xl font-light tracking-[0.2em] uppercase text-foreground mb-2 text-center">
+        {t('title')}
       </h2>
+      <p className="text-xs text-muted font-light text-center mb-6">
+        {t('subtitle')}
+      </p>
 
       {success && (
         <div className="mb-6 p-4 rounded-md bg-gold-p/5 border border-gold-p/20 text-gold-p text-xs font-mono text-center">
-          ¡Mensaje enviado con éxito! Te responderé lo antes posible.
+          {t('successMsg')}
         </div>
       )}
 
@@ -26,7 +32,7 @@ export function ContactForm() {
       <form onSubmit={submitForm} className="space-y-5">
         <div>
           <label htmlFor="name" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
-            Nombre completo
+            {t('nameLabel')}
           </label>
           <input
             type="text"
@@ -36,13 +42,13 @@ export function ContactForm() {
             onChange={handleChange}
             required
             className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm"
-            placeholder="John Doe"
+            placeholder={t('namePlaceholder')}
           />
         </div>
 
         <div>
           <label htmlFor="email" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
-            Correo electrónico
+            {t('emailLabel')}
           </label>
           <input
             type="email"
@@ -52,29 +58,13 @@ export function ContactForm() {
             onChange={handleChange}
             required
             className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm"
-            placeholder="john@example.com"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="subject" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
-            Asunto
-          </label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm"
-            placeholder="Propuesta de proyecto / Contacto"
+            placeholder={t('emailPlaceholder')}
           />
         </div>
 
         <div>
           <label htmlFor="message" className="block text-[10px] font-mono uppercase tracking-widest text-gold-s/70 mb-2">
-            Mensaje
+            {t('messageLabel')}
           </label>
           <textarea
             id="message"
@@ -84,7 +74,7 @@ export function ContactForm() {
             onChange={handleChange}
             required
             className="w-full px-4 py-2.5 bg-background border border-gold-b rounded-md text-foreground placeholder-gold-s/20 focus:outline-none focus:border-gold-p focus:ring-1 focus:ring-gold-p transition-all duration-150 font-mono text-sm resize-none"
-            placeholder="Escribe tu mensaje aquí..."
+            placeholder={t('messagePlaceholder')}
           />
         </div>
 
@@ -93,9 +83,10 @@ export function ContactForm() {
           disabled={loading}
           className="w-full py-3.5 bg-gold-p text-foreground hover:bg-background hover:text-gold-p border border-gold-p font-medium tracking-[0.2em] uppercase text-[10px] rounded-md transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Enviando...' : 'Enviar mensaje'}
+          {loading ? t('sendingBtn') : t('sendBtn')}
         </button>
       </form>
     </div>
   );
 }
+

@@ -53,4 +53,7 @@ export class HistoricalPlaceEntity {
     excavationStatus?: string;
     verifiedByBiblicalArchaeology?: boolean;
   };
+
+  @Column({ default: 'es' })
+  language: string;
 }

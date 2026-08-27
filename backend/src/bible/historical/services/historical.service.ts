@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { HistoricalPlaceEntity } from '../entities/historical-place.entity';
 import { TimelineEventEntity } from '../entities/timeline-event.entity';
 import { ArchaeologyArticleEntity } from '../entities/archaeology-article.entity';
@@ -19,8 +19,12 @@ export class HistoricalService {
   async getPlaces(
     category?: string,
     query?: string,
+    lang?: string,
   ): Promise<HistoricalPlaceEntity[]> {
     const qb = this.placesRepo.createQueryBuilder('place');
+    if (lang) {
+      qb.andWhere('place.language = :lang', { lang });
+    }
     if (category && category !== 'all') {
       qb.andWhere('place.category = :category', { category });
     }
@@ -39,8 +43,12 @@ export class HistoricalService {
     type?: string,
     fromYearBC?: number,
     toYearBC?: number,
+    lang?: string,
   ): Promise<TimelineEventEntity[]> {
     const qb = this.timelineRepo.createQueryBuilder('event');
+    if (lang) {
+      qb.andWhere('event.language = :lang', { lang });
+    }
     if (type && type !== 'all') {
       qb.andWhere('event.type = :type', { type });
     }
@@ -60,8 +68,12 @@ export class HistoricalService {
   async getArticles(
     category?: string,
     query?: string,
+    lang?: string,
   ): Promise<ArchaeologyArticleEntity[]> {
     const qb = this.articlesRepo.createQueryBuilder('article');
+    if (lang) {
+      qb.andWhere('article.language = :lang', { lang });
+    }
     if (category && category !== 'all') {
       qb.andWhere('article.category = :category', { category });
     }
@@ -76,7 +88,12 @@ export class HistoricalService {
 
   async getArticleBySlug(
     slug: string,
+    lang?: string,
   ): Promise<ArchaeologyArticleEntity | null> {
-    return this.articlesRepo.findOne({ where: { slug } });
+    const where: FindOptionsWhere<ArchaeologyArticleEntity> = { slug };
+    if (lang) {
+      where.language = lang;
+    }
+    return this.articlesRepo.findOne({ where });
   }
 }

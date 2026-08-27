@@ -36,6 +36,11 @@ frontend/web/src/app/(portfolio)/
 │   └── ValuesPhilosophySection.tsx # Sección de valores y ética
 │
 └── features/                  # FEATURE-SLICED DESIGN (FSD)
+    ├── projects/              # FEATURE: SHOWCASE DE PROYECTOS
+    │   ├── components/
+    │   │   └── ProjectShowcase.tsx   # Galería con filtros reactivos y badges dorados
+    │   └── types.ts           # Interfaces de proyectos
+    │
     ├── terminal/              # FEATURE: TERMINAL VIRTUAL SSH
     │   ├── components/
     │   │   ├── TerminalConsole.tsx   # Ventana interactiva y prompt
@@ -84,9 +89,18 @@ La terminal realiza una conexión bidireccional de baja latencia con el servidor
 
 ---
 
-## 5. Estética Visual y Dark Luxury
+## 5. Internacionalización y SEO Dinámico (next-intl)
+
+* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Portfolio.Metadata` en `src/messages/es.json` y `src/messages/en.json`.
+* **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://portfolio.jorgedoicela.com`.
+* **Cero Parpadeos (SSR):** El layout raíz `(portfolio)/layout.tsx` resuelve el `locale` en el servidor con `getLocale()`, envolviendo a los hijos en `NextIntlClientProvider`.
+
+---
+
+## 6. Estética Visual y Dark Luxury
 
 * **Paleta de Negros Profundos:** Fondo `#08080a` con elevaciones graduales en `#111116` y bordes oscuros de alta definición.
 * **Acentos Metálicos y Dorados:** Resaltes sutiles en tonos oro suave / bronce / titanio para insignias, estado de terminal y focos de acción.
 * **Tipografía de Lujo:** Uso de Geist y fuentes monoespaciadas de precisión para dar aspecto de terminal ejecutiva de élite.
 * **Terminal Virtual SSH de Alta Gama:** Aspecto sobrio con parser ANSI, barra de título minimalista y controles discretos.
+

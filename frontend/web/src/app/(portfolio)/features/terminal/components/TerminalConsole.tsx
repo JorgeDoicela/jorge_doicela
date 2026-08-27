@@ -7,9 +7,12 @@ import { MatrixRain } from './MatrixRain';
 import { MobileTerminalBanner } from './MobileTerminalBanner';
 import { parseAnsiToReact, stripAnsi } from '../utils/ansiParser';
 import { Copy, Check, Terminal as TerminalIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export const TerminalConsole: React.FC = () => {
+  const t = useTranslations('Terminal');
   const {
+
     tabs,
     activeTab,
     activeTabId,
@@ -238,7 +241,7 @@ export const TerminalConsole: React.FC = () => {
                         handleCopyBlock(item.content, item.id);
                       }}
                       className="opacity-0 group-hover:opacity-100 p-1 text-foreground/40 hover:text-gold-300 rounded transition-opacity"
-                      title="Copiar comando"
+                      title={t('copyCmd')}
                     >
                       {copiedItemIndex === item.id ? (
                         <Check className="w-3 h-3 text-emerald-400" />
@@ -264,7 +267,7 @@ export const TerminalConsole: React.FC = () => {
                       handleCopyBlock(item.content, item.id);
                     }}
                     className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 p-1 text-foreground/40 hover:text-gold-300 bg-surface/80 rounded transition-opacity"
-                    title="Copiar bloque de salida"
+                    title={t('copyOutput')}
                   >
                     {copiedItemIndex === item.id ? (
                       <Check className="w-3 h-3 text-emerald-400" />
@@ -281,7 +284,7 @@ export const TerminalConsole: React.FC = () => {
               <div className="p-3 my-2 rounded-lg bg-surface-raised border border-gold-400/30 text-xs animate-fade-in">
                 <div className="text-gold-300 font-semibold mb-1.5 flex items-center gap-1.5">
                   <TerminalIcon className="w-3.5 h-3.5" />
-                  <span>Sugerencias disponibles (Usa Tab o haz clic):</span>
+                  <span>{t('suggestions')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {completions.map((comp, idx) => (
@@ -317,15 +320,15 @@ export const TerminalConsole: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="flex-1 bg-transparent text-foreground border-none outline-none focus:ring-0 p-0 font-mono placeholder-foreground/30 text-xs md:text-sm"
-                placeholder='Escribe un comando (ej: "help", "neofetch", "skills", "ls")...'
+                placeholder={t('placeholder')}
                 autoComplete="off"
                 spellCheck="false"
               />
             </form>
           ) : (
             <div className="mt-3 border-t border-border/40 pt-3 text-xs text-sky-300 font-mono flex items-center justify-between">
-              <span>Sesión en tiempo real (Modo solo lectura activado)</span>
-              <span className="text-[10px] text-muted uppercase">Espectador</span>
+              <span>{t('mirrorModeNotice')}</span>
+              <span className="text-[10px] text-muted uppercase">{t('spectator')}</span>
             </div>
           )}
         </div>
@@ -333,3 +336,4 @@ export const TerminalConsole: React.FC = () => {
     </div>
   );
 };
+

@@ -1,0 +1,47 @@
+{
+  "Metadata": {
+    "title": "Jorge Doicela — Software Developer & AI Engineer",
+    "description": "Official website and projects portal of Jorge Doicela: Software Developer, AI & Cybersecurity Engineering student based in Quito, Ecuador.",
+    "ogTitle": "Jorge Doicela — Software Developer & AI Engineer",
+    "ogDescription": "Software developer and Artificial Intelligence & Cybersecurity Engineering student. Explore my projects: Portfolio, Bible, and Software."
+  },
+  "Common": {
+    "location": "Quito, Ecuador",
+    "toggleTheme": "Toggle theme",
+    "toggleLang": "Switch to Spanish",
+    "loading": "Loading page...",
+    "footer": "© {year} Jorge Doicela. All rights reserved."
+  },
+  "Roles": [
+    "DEVSECOPS, ARTIFICIAL INTELLIGENCE & CYBERSECURITY",
+    "FULL STACK DEVELOPER",
+    "ARTIFICIAL INTELLIGENCE ENGINEERING",
+    "CYBERSECURITY & DEVSECOPS CULTURE"
+  ],
+  "Landing": {
+    "heroEyebrow": "Specialty",
+    "heroTitle": "Jorge Doicela",
+    "heroDescription": "Full Stack Development, Cybersecurity, and Web Technologies built with technical excellence, Christian faith, and passion for detail.",
+    "heroCta": "Explore highlights",
+    "bibleHeadline": "The Modular Bible",
+    "bibleDescription": "9 theological exegesis engines, Strong morphology analysis, and pure distraction-free reading.",
+    "bibleCta": "Open Bible",
+    "bibleQuote": "Your word is a lamp to my feet and a light to my path.",
+    "bibleRef": "Psalms 119:105 · Masoretic Text & Septuagint",
+    "softwareHeadline": "Software & Tech Hub",
+    "softwareDescription": "Ecosystem with 7 content areas, AI models, cybersecurity advisories, practical tutorials, and forums.",
+    "softwareCta": "Enter Hub",
+    "portfolioHeadline": "Portfolio & SSH Terminal",
+    "portfolioDescription": "Virtual interactive console over WebSockets, project architecture showcase, and professional career.",
+    "portfolioCta": "Explore Portfolio",
+    "contactTitle": "Connect with Jorge",
+    "contactDescription": "If you have an idea, project, or simply want to chat about software development, feel free to reach out.",
+    "philosophyTitle": "Engineering with Purpose",
+    "philosophyQuote": "“Creating simple solutions to complex problems. Prioritizing clarity, performance, and usability so that software is genuinely valuable.”",
+    "philosophySub": "Glory to God",
+    "philosophyRef": "Colossians 3:23",
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening"
+  }
+}

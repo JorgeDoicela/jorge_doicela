@@ -16,10 +16,11 @@ Catálogo de requerimientos completados y objetivos futuros para **Software** (`
 
 ---
 
-## 2. Objetivos y Funcionalidades Futuras
-- [ ] **Módulo de Comentarios en Artículos y Tutoriales:** Hilos de discusión debajo de cada post de blog y tutorial.
-- [ ] **Editor Markdown Web en Tiempo Real:** Soporte para previsualización enriquecida y resaltado de sintaxis dinámico.
-- [ ] **Sistema de Reacciones Dinámicas:** Votación en vivo y persistencia de votos por sesión/IP hash.
-- [ ] **Panel de Administración Protegido (`/admin/software`):** Publicación visual de contenido con control de acceso y estados `draft`/`published`.
-- [ ] **Feed RSS / Atom:** Generación automática de feed XML para lectores de noticias y podcasts tecnológicos.
-- [ ] **Exportación de Tutoriales a PDF:** Descarga de manuales de arquitectura y guías paso a paso en PDF formateado.
+---
+
+## 3. Internacionalización y SEO (next-intl)
+- [x] **Metadatos SEO Dinámicos (`generateMetadata`):** Títulos, descripciones y Open Graph en español e inglés.
+- [x] **Indexación Internacional (`hreflang`):** Etiquetas `es-EC` y `en-US` configuradas en `layout.tsx`.
+- [x] **Cero Parpadeos (SSR):** Integración con `NextIntlClientProvider` y `messages/*.json`.
+- [x] **Diccionarios UI Localizados:** Soporte para traducción de nombres de categorías y navegación.
+

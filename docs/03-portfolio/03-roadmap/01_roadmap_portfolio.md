@@ -29,10 +29,10 @@ Catálogo de ideas, funcionalidades completadas y requerimientos pendientes excl
 
 ---
 
-## 3. Formulario de Contacto y Notificaciones
-- [x] **Formulario de contacto funcional:** Envío asíncrono y persistencia en `portfolio.sqlite`.
-- [ ] **Validación en tiempo real:** Verificación sintáctica reactiva mientras se escribe.
-- [ ] **Protección anti-spam:** Integración de Cloudflare Turnstile en el endpoint de contacto.
-- [ ] **Notificación por correo al recibir mensaje:** Envío automático con Nodemailer.
-- [ ] **Notificación push móvil (Ntfy / Pushover):** Aviso inmediato al teléfono de Jorge.
-- [ ] **Panel de administración de mensajes (`/admin/contact`):** Gestión de mensajes con autenticación.
+---
+
+## 4. Internacionalización y SEO (next-intl)
+- [x] **Metadatos SEO Dinámicos (`generateMetadata`):** Emisión bilingüe de títulos y descripciones.
+- [x] **Indexación Internacional (`hreflang`):** Etiquetas `es-EC` y `en-US` configuradas en `layout.tsx`.
+- [x] **Cero Parpadeos (SSR):** Integración con `NextIntlClientProvider` y `messages/*.json`.
+

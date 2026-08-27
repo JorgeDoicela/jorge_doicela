@@ -20,16 +20,21 @@ export class TutorialsController {
   async findAll(
     @Query('difficulty') difficulty?: string,
     @Query('search') search?: string,
+    @Query('lang') lang?: string,
   ) {
     return this.tutorialsService.findAll(
       difficulty as TutorialDifficulty,
       search,
+      lang,
     );
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.tutorialsService.findOne(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.tutorialsService.findOne(idOrSlug, lang);
   }
 
   @Post()

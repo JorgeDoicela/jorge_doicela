@@ -18,8 +18,13 @@ export class ForumService {
   async findAllTopics(
     category?: string,
     search?: string,
+    lang?: string,
   ): Promise<ForumTopic[]> {
     const qb = this.topicRepository.createQueryBuilder('topic');
+
+    if (lang) {
+      qb.andWhere('topic.language = :lang', { lang });
+    }
 
     if (category && category !== 'all') {
       qb.andWhere('topic.category = :category', { category });
@@ -35,17 +40,29 @@ export class ForumService {
     return qb.getMany();
   }
 
-  async findTopic(idOrSlug: string): Promise<ForumTopic> {
+  async findTopic(idOrSlug: string, lang?: string): Promise<ForumTopic> {
     const isId = !isNaN(Number(idOrSlug));
-    const topic = isId
-      ? await this.topicRepository.findOne({
-          where: { id: Number(idOrSlug) },
+    let topic: ForumTopic | null = null;
+
+    if (isId) {
+      topic = await this.topicRepository.findOne({
+        where: { id: Number(idOrSlug) },
+        relations: { replies: true },
+      });
+    } else {
+      if (lang) {
+        topic = await this.topicRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
           relations: { replies: true },
-        })
-      : await this.topicRepository.findOne({
+        });
+      }
+      if (!topic) {
+        topic = await this.topicRepository.findOne({
           where: { slug: idOrSlug },
           relations: { replies: true },
         });
+      }
+    }
 
     if (!topic) {
       throw new NotFoundException(`Tema del foro "${idOrSlug}" no encontrado`);

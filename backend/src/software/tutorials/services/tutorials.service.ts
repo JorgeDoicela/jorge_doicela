@@ -18,8 +18,13 @@ export class TutorialsService {
   async findAll(
     difficulty?: TutorialDifficulty,
     search?: string,
+    lang?: string,
   ): Promise<Tutorial[]> {
     const qb = this.tutorialRepository.createQueryBuilder('tut');
+
+    if (lang) {
+      qb.andWhere('tut.language = :lang', { lang });
+    }
 
     if (difficulty) {
       qb.andWhere('tut.difficulty = :difficulty', { difficulty });
@@ -36,17 +41,29 @@ export class TutorialsService {
     return qb.getMany();
   }
 
-  async findOne(idOrSlug: string): Promise<Tutorial> {
+  async findOne(idOrSlug: string, lang?: string): Promise<Tutorial> {
     const isId = !isNaN(Number(idOrSlug));
-    const tutorial = isId
-      ? await this.tutorialRepository.findOne({
-          where: { id: Number(idOrSlug) },
+    let tutorial: Tutorial | null = null;
+
+    if (isId) {
+      tutorial = await this.tutorialRepository.findOne({
+        where: { id: Number(idOrSlug) },
+        relations: { steps: true },
+      });
+    } else {
+      if (lang) {
+        tutorial = await this.tutorialRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
           relations: { steps: true },
-        })
-      : await this.tutorialRepository.findOne({
+        });
+      }
+      if (!tutorial) {
+        tutorial = await this.tutorialRepository.findOne({
           where: { slug: idOrSlug },
           relations: { steps: true },
         });
+      }
+    }
 
     if (!tutorial) {
       throw new NotFoundException(`Tutorial "${idOrSlug}" no encontrado`);

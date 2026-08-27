@@ -25,8 +25,9 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * **Backend:** Módulo aislado `backend/src/bible/`.
 * **Persistencia:** Base de datos SQLite física independiente `bible.sqlite` conectada mediante `'bibleConnection'` en TypeORM.
 * **Cero Datos Hardcodeados en TypeScript:** Ningún archivo `.ts` o `.tsx` en el frontend contiene versículos, palabras, coordenadas geográficas ni artículos incrustados. Toda la data reside en archivos `.json` bajo `backend/src/bible/corpus/` y se consulta asíncronamente desde los endpoints de NestJS.
-* **Restricción de Hardware en VPS (1 GB de RAM):** Paginación por capítulo (`limit: 200`), consultas indexadas en SQLite en modo WAL, cero carga masiva en memoria y sembrado transaccional por lotes (< 165 MB RAM).
 * **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(bible)/globals.css` (estética **Geist / Vercel Style** monocromática de precisión, micro-interacciones de alta densidad, bordes ultra-delgados, tipografía Geist y legibilidad editorial para exégesis) y assets en `frontend/web/public/bible/`.
+* **Internacionalización y SEO (next-intl):** Diccionarios encapsulados en `(bible)/messages/es.json` y `en.json`. Layout raíz `(bible)/layout.tsx` integrado con `NextIntlClientProvider` y `generateMetadata()` dinámico con etiquetas `hreflang`. Soporte de base de datos bilingüe (`language: 'es' | 'en'`) en tablas explicativas (`archaeology_articles`, `timeline_events`, `historical_places`).
+
 
 ---
 
@@ -105,3 +106,16 @@ pnpm -r typecheck
 | Traer toda la Biblia o libros completos sin filtrar por capítulo | Bloquea el event loop de NestJS y satura el ancho de banda. | Filtrar siempre por libro (bookId) y capítulo (chapter). |
 | Instalar librerías de Expo (expo-*) en frontend/web | Contamina el bundle web con módulos nativos incompatibles. | Usar pnpm --filter mobile add <paquete-expo>. |
 | Inyectar repositorios sin 'bibleConnection' | Falla en runtime o consulta la base de datos equivocada. | Usar @InjectRepository(Verse, 'bibleConnection'). |
+
+---
+
+## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+
+* **Actualización Mandatoria ante Cambios:** Cada vez que se incorporen o modifiquen motores exegéticos, esquemas de morfología, fuentes en `corpus/`, endpoints REST, tablas en `bible.sqlite`, pantallas de Next.js o módulos de la app móvil Expo, es **obligatorio actualizar la documentación técnica correspondiente en `docs/04-bible/`**.
+* **Gestión Documental Proactiva:** Se autoriza crear nuevos archivos `.md`, estructurar nuevas subcarpetas en `docs/04-bible/` o depurar especificaciones obsoletas, manteniendo siempre la precisión exegética, orden riguroso y exactitud arquitectónica.
+
+---
+
+## 7. Combinar con
+* **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para reglas de monorepo, backend en 3 capas, FSD y pipeline CI/CD).
+

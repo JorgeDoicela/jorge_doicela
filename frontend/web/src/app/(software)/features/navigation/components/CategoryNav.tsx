@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 export type SoftwareSection =
   | 'all'
@@ -17,25 +18,28 @@ interface CategoryNavProps {
   onSelectCategory: (cat: SoftwareSection) => void;
 }
 
-export const SOFTWARE_CATEGORIES: { id: SoftwareSection; label: string }[] = [
-  { id: 'all', label: 'Todo el Contenido' },
-  { id: 'news', label: 'Noticias' },
-  { id: 'blog', label: 'Arquitectura' },
-  { id: 'ai', label: 'Inteligencia Artificial' },
-  { id: 'cybersecurity', label: 'Ciberseguridad' },
-  { id: 'tutorials', label: 'Tutoriales' },
-  { id: 'forum', label: 'Debates & Foro' },
-  { id: 'projects', label: 'Proyectos' },
+export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
+  { id: 'all', key: 'all' },
+  { id: 'news', key: 'news' },
+  { id: 'blog', key: 'blog' },
+  { id: 'ai', key: 'ai' },
+  { id: 'cybersecurity', key: 'cybersecurity' },
+  { id: 'tutorials', key: 'tutorials' },
+  { id: 'forum', key: 'forum' },
+  { id: 'projects', key: 'projects' },
 ];
 
 export function CategoryNav({
   selectedCategory,
   onSelectCategory,
 }: CategoryNavProps) {
+  const t = useTranslations('Nav');
+
+
   return (
-    <nav aria-label="Categorías de Software" className="w-full">
+    <nav aria-label={t('all')} className="w-full">
       <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-2xl glass-concave-panel scrollbar-none w-fit max-w-full">
-        {SOFTWARE_CATEGORIES.map((cat) => {
+        {SOFTWARE_CATEGORY_KEYS.map((cat) => {
           const isSelected = selectedCategory === cat.id;
           return (
             <button
@@ -47,7 +51,7 @@ export function CategoryNav({
                   : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
               }`}
             >
-              <span>{cat.label}</span>
+              <span>{t(cat.key as any)}</span>
             </button>
           );
         })}
@@ -55,3 +59,4 @@ export function CategoryNav({
     </nav>
   );
 }
+

@@ -21,13 +21,17 @@ export class ProjectsController {
   async findAll(
     @Query('status') status?: string,
     @Query('search') search?: string,
+    @Query('lang') lang?: string,
   ) {
-    return this.projectsService.findAll(status as ProjectStatus, search);
+    return this.projectsService.findAll(status as ProjectStatus, search, lang);
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.projectsService.findOne(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.projectsService.findOne(idOrSlug, lang);
   }
 
   @Post()

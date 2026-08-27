@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { Tutorial } from '../../../features/tutorials/types';
 import { API_URL } from '../../../../config';
 
@@ -11,6 +12,7 @@ export default function TutorialDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const locale = useLocale();
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -19,7 +21,7 @@ export default function TutorialDetailPage({
   useEffect(() => {
     const fetchTutorial = async () => {
       try {
-        const res = await fetch(`${API_URL}/software/tutorials/${slug}`);
+        const res = await fetch(`${API_URL}/software/tutorials/${slug}?lang=${locale}`);
         if (!res.ok) throw new Error('Tutorial no encontrado');
         const data = await res.json();
         setTutorial(data.data || data);
@@ -30,7 +32,7 @@ export default function TutorialDetailPage({
       }
     };
     fetchTutorial();
-  }, [slug]);
+  }, [slug, locale]);
 
   if (loading) {
     return (

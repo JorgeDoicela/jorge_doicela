@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useLocale } from 'next-intl';
 import { ForumTopic } from '../types';
 import { API_URL } from '../../../../config';
-
 import { safeFetchJson } from '../../../../utils/fetchJson';
 
 export function useForum(category: string = 'all', search: string = '') {
+  const locale = useLocale();
   const [topics, setTopics] = useState<ForumTopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTopics = async () => {
+  const fetchTopics = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -19,6 +20,7 @@ export function useForum(category: string = 'all', search: string = '') {
       const params = new URLSearchParams();
       if (category !== 'all') params.append('category', category);
       if (search.trim()) params.append('search', search.trim());
+      if (locale) params.append('lang', locale);
 
       const url = `${API_URL}/software/forum${params.toString() ? `?${params.toString()}` : ''}`;
       const data = await safeFetchJson<any>(url);
@@ -31,11 +33,11 @@ export function useForum(category: string = 'all', search: string = '') {
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, search, locale]);
 
   useEffect(() => {
     fetchTopics();
-  }, [category, search]);
+  }, [fetchTopics]);
 
   return { topics, loading, error, refetch: fetchTopics };
 }

@@ -19,13 +19,17 @@ export class AiController {
   async findAll(
     @Query('type') type?: string,
     @Query('search') search?: string,
+    @Query('lang') lang?: string,
   ) {
-    return this.aiService.findAll(type as AiResourceType, search);
+    return this.aiService.findAll(type as AiResourceType, search, lang);
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.aiService.findOne(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.aiService.findOne(idOrSlug, lang);
   }
 
   @Post()

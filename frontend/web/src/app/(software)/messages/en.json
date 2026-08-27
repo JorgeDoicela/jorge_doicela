@@ -1,0 +1,28 @@
+{
+  "Metadata": {
+    "title": "Software & Tech Hub | Jorge Doicela",
+    "description": "Tech hub featuring 7 categories: Tech News, Architecture Blog, Forums, Artificial Intelligence, Cybersecurity, Tutorials, and Projects Showcase."
+  },
+  "Nav": {
+    "all": "All Content",
+    "news": "News",
+    "blog": "Architecture",
+    "forum": "Discussions & Forum",
+    "ai": "Artificial Intelligence",
+    "cybersecurity": "Cybersecurity",
+    "tutorials": "Tutorials",
+    "projects": "Projects"
+  },
+  "Search": {
+    "placeholder": "Search news, articles, advisories, or projects...",
+    "spotlightHint": "Press ⌘K to search quickly"
+  },
+  "Common": {
+    "readMore": "Read more",
+    "readTime": "{min} min read",
+    "views": "{count} views",
+    "author": "By {name}",
+    "statusActive": "Active",
+    "statusWip": "In progress"
+  }
+}

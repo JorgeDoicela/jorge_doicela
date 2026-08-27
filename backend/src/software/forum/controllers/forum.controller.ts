@@ -11,13 +11,17 @@ export class ForumController {
   async findAll(
     @Query('category') category?: string,
     @Query('search') search?: string,
+    @Query('lang') lang?: string,
   ) {
-    return this.forumService.findAllTopics(category, search);
+    return this.forumService.findAllTopics(category, search, lang);
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.forumService.findTopic(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.forumService.findTopic(idOrSlug, lang);
   }
 
   @Post()

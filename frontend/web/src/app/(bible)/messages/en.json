@@ -1,0 +1,21 @@
+{
+  "Metadata": {
+    "title": "Modular Bible | Jorge Doicela",
+    "description": "Exegesis and Bible study platform featuring 9 study engines, Masoretic BHS / LXX morphology, Strong dictionaries, and historical context."
+  },
+  "Nav": {
+    "landing": "Home",
+    "standard": "Standard",
+    "parallel": "Parallel",
+    "interlinear": "Interlinear",
+    "wordStudy": "Word Study",
+    "literary": "Structure & Chiasms",
+    "historical": "Historical Context"
+  },
+  "Toolbar": {
+    "passage": "Scripture Passage",
+    "version": "Translation",
+    "fontSize": "Font Size",
+    "layout": "Layout"
+  }
+}

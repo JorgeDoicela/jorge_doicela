@@ -26,9 +26,10 @@ Catálogo exhaustivo de requerimientos, módulos completados y objetivos futuros
 
 ---
 
-## 3. App Móvil Nativa (Expo)
-- [ ] **Gestos de swipe entre capítulos:** Deslizamiento táctil horizontal.
-- [ ] **Feedback háptico:** Vibración sutil al marcar favoritos con `expo-haptics`.
-- [ ] **Descarga completa offline:** Guardado local de versiones enteras con `expo-file-system`.
-- [ ] **Compartir versículo como imagen nativa:** Generación gráfica para redes sociales con `react-native-view-shot`.
-- [ ] **Widget nativo de versículo del día:** Widget para iOS y Android.
+---
+
+## 4. Internacionalización y SEO (next-intl)
+- [x] **Metadatos SEO Dinámicos (`generateMetadata`):** Título, descripción y Open Graph en español e inglés.
+- [x] **Indexación Internacional (`hreflang`):** Etiquetas `es-EC` y `en-US` configuradas en `layout.tsx`.
+- [x] **Cero Parpadeos (SSR):** Integración con `NextIntlClientProvider` y `messages/*.json`.
+

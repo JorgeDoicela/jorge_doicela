@@ -87,7 +87,7 @@ backend/src/bible/
 * **`GET /bible/morphology/lexicon/:strong`**: Obtiene la definición académica y lema de un código Strong (ej. `H7225`, `G3056`).
 
 ### 3.5 Contexto Histórico (`/bible/historical/*`)
-* **`GET /bible/historical/atlas/places`**: Catálogo de ubicaciones geográficas y yacimientos arqueológicos con coordenadas WGS84 (`?category=city&q=jerusalen`).
-* **`GET /bible/historical/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500`).
-* **`GET /bible/historical/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos (`?category=recent_discoveries`).
-* **`GET /bible/historical/articles/:slug`**: Detalle completo de un artículo de evidencia material.
+* **`GET /bible/historical/atlas/places`**: Catálogo de ubicaciones geográficas y yacimientos arqueológicos con coordenadas WGS84 y soporte bilingüe (`?category=city&q=jerusalen&lang=es|en`).
+* **`GET /bible/historical/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500&lang=es|en`).
+* **`GET /bible/historical/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos con índice compuesto `(slug, language)` (`?category=recent_discoveries&lang=es|en`).
+* **`GET /bible/historical/articles/:slug`**: Detalle completo de un artículo de evidencia material localizado (`?lang=es|en`).

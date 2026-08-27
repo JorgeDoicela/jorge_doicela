@@ -75,9 +75,19 @@ frontend/web/src/app/(software)/
 
 ---
 
-## 4. Componentes de Interfaz y Estética Neumorphism UI + Glassmorphism
+## 4. Internacionalización y SEO Dinámico (next-intl)
+
+* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Software.Metadata` en `src/messages/es.json` y `src/messages/en.json`.
+* **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://software.jorgedoicela.com`.
+* **Cero Parpadeos (SSR):** El layout raíz `(software)/layout.tsx` resuelve el `locale` en el servidor con `getLocale()`, envolviendo a los hijos en `NextIntlClientProvider`.
+* **Diccionarios UI Localizados:** Soporte para traducción de nombres de las 7 categorías, placeholders del buscador y etiquetas de estado.
+
+---
+
+## 5. Componentes de Interfaz y Estética Neumorphism UI + Glassmorphism
 
 * **Fusión Neumórfica y Vítrea:** Contenedores y tarjetas que combinan sombras cóncavas/convexas suaves con fondos de cristal esmerilado translúcido (`backdrop-blur-md`).
 * **Header Satinado Convexo:** Introducción visual con selector de tema claro/oscuro y chip de titanio grabado.
 * **Barra de Navegación Neumórfica (`CategoryNav`):** Filtros rápidos interactivos entre las 7 categorías temáticas con pulsación háptica visual.
 * **Buscador en Tiempo Real:** Entrada de texto con profundidad inset neumórfica y filtro instantáneo por etiquetas (`tags`), autor o texto.
+

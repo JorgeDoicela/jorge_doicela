@@ -19,8 +19,13 @@ export class CybersecurityService {
     severity?: SecuritySeverity,
     postType?: SecurityPostType,
     search?: string,
+    lang?: string,
   ): Promise<SecurityPost[]> {
     const qb = this.securityRepository.createQueryBuilder('sec');
+
+    if (lang) {
+      qb.andWhere('sec.language = :lang', { lang });
+    }
 
     if (severity) {
       qb.andWhere('sec.severity = :severity', { severity });
@@ -41,13 +46,26 @@ export class CybersecurityService {
     return qb.getMany();
   }
 
-  async findOne(idOrSlug: string): Promise<SecurityPost> {
+  async findOne(idOrSlug: string, lang?: string): Promise<SecurityPost> {
     const isId = !isNaN(Number(idOrSlug));
-    const post = isId
-      ? await this.securityRepository.findOne({
-          where: { id: Number(idOrSlug) },
-        })
-      : await this.securityRepository.findOne({ where: { slug: idOrSlug } });
+    let post: SecurityPost | null = null;
+
+    if (isId) {
+      post = await this.securityRepository.findOne({
+        where: { id: Number(idOrSlug) },
+      });
+    } else {
+      if (lang) {
+        post = await this.securityRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
+        });
+      }
+      if (!post) {
+        post = await this.securityRepository.findOne({
+          where: { slug: idOrSlug },
+        });
+      }
+    }
 
     if (!post) {
       throw new NotFoundException(

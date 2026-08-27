@@ -12,8 +12,16 @@ export class ProjectsService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async findAll(status?: ProjectStatus, search?: string): Promise<Project[]> {
+  async findAll(
+    status?: ProjectStatus,
+    search?: string,
+    lang?: string,
+  ): Promise<Project[]> {
     const qb = this.projectRepository.createQueryBuilder('proj');
+
+    if (lang) {
+      qb.andWhere('proj.language = :lang', { lang });
+    }
 
     if (status) {
       qb.andWhere('proj.status = :status', { status });
@@ -30,13 +38,26 @@ export class ProjectsService {
     return qb.getMany();
   }
 
-  async findOne(idOrSlug: string): Promise<Project> {
+  async findOne(idOrSlug: string, lang?: string): Promise<Project> {
     const isId = !isNaN(Number(idOrSlug));
-    const project = isId
-      ? await this.projectRepository.findOne({
-          where: { id: Number(idOrSlug) },
-        })
-      : await this.projectRepository.findOne({ where: { slug: idOrSlug } });
+    let project: Project | null = null;
+
+    if (isId) {
+      project = await this.projectRepository.findOne({
+        where: { id: Number(idOrSlug) },
+      });
+    } else {
+      if (lang) {
+        project = await this.projectRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
+        });
+      }
+      if (!project) {
+        project = await this.projectRepository.findOne({
+          where: { slug: idOrSlug },
+        });
+      }
+    }
 
     if (!project) {
       throw new NotFoundException(`Proyecto "${idOrSlug}" no encontrado`);

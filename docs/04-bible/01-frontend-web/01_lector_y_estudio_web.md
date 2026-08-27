@@ -97,9 +97,19 @@ El catálogo oficial de traducciones opera bajo estricto cumplimiento de derecho
 
 ---
 
-## 5. Estética Visual y Geist (Vercel Style)
+## 5. Internacionalización y SEO Dinámico (next-intl)
+
+* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Bible.Metadata` en `src/messages/es.json` y `src/messages/en.json`.
+* **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://bible.jorgedoicela.com`.
+* **Cero Parpadeos (SSR):** El layout raíz `(bible)/layout.tsx` resuelve el `locale` en el servidor con `getLocale()`, envolviendo a los hijos en `NextIntlClientProvider`.
+* **Navegación de Suites Bilingüe:** Textos de las 6 suites de estudio y menús de cabecera localizables vía diccionarios tipados.
+
+---
+
+## 6. Estética Visual y Geist (Vercel Style)
 
 * **Monocromía de Alta Precisión:** Fondos oscuros de escala de grises zinc/neutral (`#000000`, `#09090b`, `#18181b`) con bordes ultra-delgados de 1px.
 * **Tipografía Geist:** Familia tipográfica Geist Sans y Geist Mono para una legibilidad óptima en lectura densa de textos bíblicos, aparatos críticos y léxicos.
 * **Componentes de Alta Densidad:** Pestañas compactas, botones mínimos, chips de libro y capítulo optimizados para el flujo de estudio exegético.
 * **Modo Oscuro / Claro Nativo:** Transiciones de contraste limpias respetando la jerarquía tipográfica sin distracciones visuales.
+

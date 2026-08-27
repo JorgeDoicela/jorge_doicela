@@ -8,12 +8,12 @@ import {
 } from 'typeorm';
 
 @Entity('news_articles')
+@Index(['slug', 'language'], { unique: true })
 export class NewsArticle {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -36,6 +36,9 @@ export class NewsArticle {
 
   @Column({ default: 'news,tech' })
   tags: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ nullable: true })
   coverImage?: string;

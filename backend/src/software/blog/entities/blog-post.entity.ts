@@ -8,12 +8,12 @@ import {
 } from 'typeorm';
 
 @Entity('blog_posts')
+@Index(['slug', 'language'], { unique: true })
 export class BlogPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -33,6 +33,9 @@ export class BlogPost {
 
   @Column({ default: 'architecture,clean-code' })
   tags: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ nullable: true })
   series?: string;

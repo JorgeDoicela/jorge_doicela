@@ -10,12 +10,12 @@ import {
 import { ForumReply } from './forum-reply.entity';
 
 @Entity('forum_topics')
+@Index(['slug', 'language'], { unique: true })
 export class ForumTopic {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -29,6 +29,9 @@ export class ForumTopic {
 
   @Column({ default: 'general' })
   category: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ default: false })
   isSolved: boolean;

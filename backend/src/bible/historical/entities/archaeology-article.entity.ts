@@ -1,6 +1,7 @@
 import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 
 @Entity('archaeology_articles')
+@Index(['slug', 'language'], { unique: true })
 export class ArchaeologyArticleEntity {
   @PrimaryColumn({ length: 64 })
   id: string;
@@ -8,7 +9,6 @@ export class ArchaeologyArticleEntity {
   @Column({ length: 256 })
   title: string;
 
-  @Index({ unique: true })
   @Column({ length: 256 })
   slug: string;
 
@@ -60,4 +60,7 @@ export class ArchaeologyArticleEntity {
 
   @Column('simple-json', { nullable: true })
   tags: string[];
+
+  @Column({ default: 'es' })
+  language: string;
 }

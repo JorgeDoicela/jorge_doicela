@@ -15,8 +15,9 @@ export class HistoricalController {
   async getPlaces(
     @Query('category') category?: string,
     @Query('q') query?: string,
+    @Query('lang') lang?: string,
   ) {
-    return this.historicalService.getPlaces(category, query);
+    return this.historicalService.getPlaces(category, query, lang);
   }
 
   @Get('timeline')
@@ -24,23 +25,33 @@ export class HistoricalController {
     @Query('type') type?: string,
     @Query('from') from?: string,
     @Query('to') to?: string,
+    @Query('lang') lang?: string,
   ) {
     const fromYearBC = from ? parseInt(from, 10) : undefined;
     const toYearBC = to ? parseInt(to, 10) : undefined;
-    return this.historicalService.getTimelineEvents(type, fromYearBC, toYearBC);
+    return this.historicalService.getTimelineEvents(
+      type,
+      fromYearBC,
+      toYearBC,
+      lang,
+    );
   }
 
   @Get('articles')
   async getArticles(
     @Query('category') category?: string,
     @Query('q') query?: string,
+    @Query('lang') lang?: string,
   ) {
-    return this.historicalService.getArticles(category, query);
+    return this.historicalService.getArticles(category, query, lang);
   }
 
   @Get('articles/:slug')
-  async getArticleBySlug(@Param('slug') slug: string) {
-    const article = await this.historicalService.getArticleBySlug(slug);
+  async getArticleBySlug(
+    @Param('slug') slug: string,
+    @Query('lang') lang?: string,
+  ) {
+    const article = await this.historicalService.getArticleBySlug(slug, lang);
     if (!article) {
       throw new NotFoundException(`Artículo con slug "${slug}" no encontrado`);
     }

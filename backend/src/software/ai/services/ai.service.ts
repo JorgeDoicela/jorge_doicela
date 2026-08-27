@@ -11,8 +11,16 @@ export class AiService {
     private readonly aiRepository: Repository<AiResource>,
   ) {}
 
-  async findAll(type?: AiResourceType, search?: string): Promise<AiResource[]> {
+  async findAll(
+    type?: AiResourceType,
+    search?: string,
+    lang?: string,
+  ): Promise<AiResource[]> {
     const qb = this.aiRepository.createQueryBuilder('ai');
+
+    if (lang) {
+      qb.andWhere('ai.language = :lang', { lang });
+    }
 
     if (type) {
       qb.andWhere('ai.type = :type', { type });
@@ -29,11 +37,26 @@ export class AiService {
     return qb.getMany();
   }
 
-  async findOne(idOrSlug: string): Promise<AiResource> {
+  async findOne(idOrSlug: string, lang?: string): Promise<AiResource> {
     const isId = !isNaN(Number(idOrSlug));
-    const resource = isId
-      ? await this.aiRepository.findOne({ where: { id: Number(idOrSlug) } })
-      : await this.aiRepository.findOne({ where: { slug: idOrSlug } });
+    let resource: AiResource | null = null;
+
+    if (isId) {
+      resource = await this.aiRepository.findOne({
+        where: { id: Number(idOrSlug) },
+      });
+    } else {
+      if (lang) {
+        resource = await this.aiRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
+        });
+      }
+      if (!resource) {
+        resource = await this.aiRepository.findOne({
+          where: { slug: idOrSlug },
+        });
+      }
+    }
 
     if (!resource) {
       throw new NotFoundException(`Recurso de IA "${idOrSlug}" no encontrado`);

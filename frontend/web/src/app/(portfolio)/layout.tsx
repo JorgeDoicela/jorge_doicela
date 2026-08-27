@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./theme-provider";
 import ResourceErrorFallback from "../components/ResourceErrorFallback";
 import CancelFallback from "../components/CancelFallback";
@@ -15,23 +17,39 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-    metadataBase: new URL("https://portfolio.jorgedoicela.com"),
-    title: "Jorge Doicela — Portfolio",
-    description: "Portafolio interactivo de Jorge Doicela. Desarrollador de Software.",
-    icons: {
-        icon: "/portfolio/logo/logo_fondo_circular_color_.png",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const locale = await getLocale();
+    const t = await getTranslations("Metadata");
 
-export default function RootLayout({
+
+    return {
+        metadataBase: new URL("https://portfolio.jorgedoicela.com"),
+        title: t("title"),
+        description: t("description"),
+        icons: {
+            icon: "/portfolio/logo/logo_fondo_circular_color_.png",
+        },
+        alternates: {
+            canonical: "https://portfolio.jorgedoicela.com",
+            languages: {
+                "es-EC": "https://portfolio.jorgedoicela.com",
+                "en-US": "https://portfolio.jorgedoicela.com",
+            },
+        },
+    };
+}
+
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const locale = await getLocale();
+    const messages = await getMessages();
+
     return (
         <html
-            lang="es"
+            lang={locale}
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
             suppressHydrationWarning
         >
@@ -40,11 +58,14 @@ export default function RootLayout({
             </head>
             <body className="min-h-full flex flex-col">
                 <CancelFallback />
-                <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-                    {children}
-                </ThemeProvider>
+                <NextIntlClientProvider messages={messages} locale={locale}>
+                    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+                        {children}
+                    </ThemeProvider>
+                </NextIntlClientProvider>
             </body>
         </html>
     );
 }
+
 

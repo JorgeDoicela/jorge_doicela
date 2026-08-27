@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { AiResource } from '../../../features/ai/types';
 import { API_URL } from '../../../../config';
 
@@ -11,6 +12,7 @@ export default function AiDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const locale = useLocale();
   const [resource, setResource] = useState<AiResource | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +20,7 @@ export default function AiDetailPage({
   useEffect(() => {
     const fetchResource = async () => {
       try {
-        const res = await fetch(`${API_URL}/software/ai/${slug}`);
+        const res = await fetch(`${API_URL}/software/ai/${slug}?lang=${locale}`);
         if (!res.ok) throw new Error('Recurso no encontrado');
         const data = await res.json();
         setResource(data.data || data);
@@ -29,7 +31,7 @@ export default function AiDetailPage({
       }
     };
     fetchResource();
-  }, [slug]);
+  }, [slug, locale]);
 
   if (loading) {
     return (

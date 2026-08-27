@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { Project } from '../types';
 import { API_URL } from '../../../../config';
-
 import { safeFetchJson } from '../../../../utils/fetchJson';
 
 export function useProjects(status?: string, search: string = '') {
+  const locale = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export function useProjects(status?: string, search: string = '') {
         const params = new URLSearchParams();
         if (status && status !== 'all') params.append('status', status);
         if (search.trim()) params.append('search', search.trim());
+        if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/projects${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<any>(url);
@@ -35,7 +37,7 @@ export function useProjects(status?: string, search: string = '') {
     };
 
     fetchProjects();
-  }, [status, search]);
+  }, [status, search, locale]);
 
   return { projects, loading, error };
 }

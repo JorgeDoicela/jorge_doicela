@@ -13,6 +13,7 @@ import {
   Eye,
 } from 'lucide-react';
 import { TerminalTab, ConnectionStatus } from '../types';
+import { useTranslations } from 'next-intl';
 
 interface TerminalHeaderProps {
   tabs: TerminalTab[];
@@ -43,6 +44,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
   onShareSession,
   isMirrorMode = false,
 }) => {
+  const t = useTranslations('Terminal');
   const [copiedAll, setCopiedAll] = useState(false);
   const [sharedToast, setSharedToast] = useState(false);
 
@@ -93,7 +95,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
                       onCloseTab(tab.id);
                     }}
                     className="hover:text-gold-200 text-muted p-0.5 rounded transition-colors"
-                    title="Cerrar pestaña"
+                    title={t('closeTab')}
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -106,7 +108,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
             <button
               onClick={onAddTab}
               className="p-1 rounded-md text-muted hover:text-gold-300 hover:bg-surface-raised border border-transparent hover:border-border-gold transition-all"
-              title="Abrir nueva sesión de terminal (+)"
+              title={t('newTab')}
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -120,7 +122,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
         {isMirrorMode && (
           <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-raised text-gold-300 border border-border-gold text-[10px] font-mono animate-pulse">
             <Eye className="w-3 h-3" />
-            <span>MODO ESPEJO</span>
+            <span>{t('mirrorMode')}</span>
           </span>
         )}
 
@@ -140,10 +142,10 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
           />
           <span className="text-[10px] uppercase font-mono tracking-wider text-gold-300">
             {connectionStatus === 'connected'
-              ? 'SSH ONLINE'
+              ? t('statusOnline')
               : connectionStatus === 'reconnecting'
-              ? 'RECONECTANDO'
-              : 'OFFLINE'}
+              ? t('statusReconnecting')
+              : t('statusOffline')}
           </span>
         </div>
 
@@ -152,12 +154,12 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
           <button
             onClick={handleShare}
             className="p-1.5 rounded-md hover:bg-surface-raised border border-border-gold text-muted hover:text-gold-200 transition-colors relative"
-            title="Compartir sesión en tiempo real (Modo espejo)"
+            title={t('shareSession')}
           >
             <Share2 className="w-3.5 h-3.5" />
             {sharedToast && (
               <span className="absolute -top-7 right-0 bg-gold-400 text-black font-semibold text-[9px] font-mono px-2 py-0.5 rounded shadow-lg whitespace-nowrap animate-fade-in">
-                ¡Enlace copiado!
+                {t('copySuccess')}
               </span>
             )}
           </button>
@@ -167,7 +169,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
         <button
           onClick={handleCopy}
           className="p-1.5 rounded-md hover:bg-surface-raised border border-border-gold text-muted hover:text-gold-200 transition-colors relative"
-          title="Copiar todo el texto de la terminal"
+          title={t('copyAll')}
         >
           {copiedAll ? (
             <Check className="w-3.5 h-3.5 text-gold-200" />
@@ -180,7 +182,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
         <button
           onClick={onClear}
           className="p-1.5 rounded-md hover:bg-surface-raised border border-border-gold text-muted hover:text-gold-200 transition-colors"
-          title="Limpiar pantalla (Ctrl+L)"
+          title={t('clearScreen')}
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>
@@ -189,7 +191,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
         <button
           onClick={onToggleFullscreen}
           className="p-1.5 rounded-md hover:bg-surface-raised border border-border-gold text-muted hover:text-gold-200 transition-colors"
-          title={isFullscreen ? 'Salir de pantalla completa' : 'Modo pantalla completa'}
+          title={isFullscreen ? t('exitFullscreen') : t('fullscreen')}
         >
           {isFullscreen ? (
             <Minimize2 className="w-3.5 h-3.5" />
@@ -201,3 +203,4 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
     </div>
   );
 };
+

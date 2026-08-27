@@ -26,8 +26,8 @@ Catálogo vivo de ideas, funcionalidades completadas y requerimientos pendientes
 ---
 
 ## 3. Funcionalidades Técnicas y Accesibilidad
-- [x] **Soporte multiidioma (i18n):** Alternancia reactiva español/inglés sin dependencias pesadas.
-- [x] **Metadatos SEO completos:** Open Graph, Twitter Cards y Schema.org JSON-LD.
+- [x] **Internacionalización Profesional (next-intl):** Server-Side Rendering (SSR) limpio, cero parpadeos (FOUC), cookies `NEXT_LOCALE` y cabeceras `Accept-Language`.
+- [x] **Metadatos SEO Internacionales Dinámicos:** Generación bilingüe con `generateMetadata()`, Open Graph, Twitter Cards, Schema.org JSON-LD y etiquetas `hreflang` (`es-EC` y `en-US`).
 - [x] **Sitemap dinámico (`sitemap.xml`):** Generación automática desde Next.js.
 - [x] **Robots.txt personalizado:** Reglas de indexación para bots.
 - [x] **Accesibilidad WCAG 2.1 AA:** SkipToContent, ARIA labels y navegación completa por teclado.

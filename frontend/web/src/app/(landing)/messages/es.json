@@ -1,0 +1,47 @@
+{
+  "Metadata": {
+    "title": "Jorge Doicela — Software Developer & AI Engineer",
+    "description": "Sitio web oficial y portal de proyectos de Jorge Doicela: Desarrollador de Software, Estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad en Quito, Ecuador.",
+    "ogTitle": "Jorge Doicela — Software Developer & AI Engineer",
+    "ogDescription": "Desarrollador de software y estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad. Explora mis proyectos: Portafolio, Biblia y Software."
+  },
+  "Common": {
+    "location": "Quito, Ecuador",
+    "toggleTheme": "Alternar tema",
+    "toggleLang": "Cambiar a inglés",
+    "loading": "Cargando página...",
+    "footer": "© {year} Jorge Doicela. Todos los derechos reservados."
+  },
+  "Roles": [
+    "DEVSECOPS, INTELIGENCIA ARTIFICIAL & CIBERSEGURIDAD",
+    "FULL STACK DEVELOPER",
+    "INGENIERÍA EN INTELIGENCIA ARTIFICIAL",
+    "CIBERSEGURIDAD & CULTURA DEVSECOPS"
+  ],
+  "Landing": {
+    "heroEyebrow": "Especialidad",
+    "heroTitle": "Jorge Doicela",
+    "heroDescription": "Desarrollo Full Stack, Ciberseguridad y Tecnologías Web construidas con excelencia técnica, fe cristiana y pasión por el detalle.",
+    "heroCta": "Explorar lo más destacado",
+    "bibleHeadline": "La Biblia Modular",
+    "bibleDescription": "9 motores de exégesis teológica, análisis morfológico Strong y lectura pura libre de distracciones.",
+    "bibleCta": "Abrir Biblia",
+    "bibleQuote": "Lámpara es a mis pies tu palabra, y lumbrera a mi camino.",
+    "bibleRef": "Salmos 119:105 · Texto Masorético y Septuaginta",
+    "softwareHeadline": "Software & Tech Hub",
+    "softwareDescription": "Ecosistema con 7 áreas de contenido, modelos de IA, guías de ciberseguridad, tutoriales prácticos y foros.",
+    "softwareCta": "Entrar al Hub",
+    "portfolioHeadline": "Portafolio & Terminal SSH",
+    "portfolioDescription": "Consola interactiva virtual sobre WebSockets, arquitectura de proyectos y experiencia profesional.",
+    "portfolioCta": "Explorar Portafolio",
+    "contactTitle": "Conectar con Jorge",
+    "contactDescription": "Si tienes una idea, proyecto o simplemente deseas conversar sobre desarrollo de software, no dudes en contactarme.",
+    "philosophyTitle": "Ingeniería con Propósito",
+    "philosophyQuote": "“Crear soluciones sencillas a problemas complejos. Priorizar la claridad, el rendimiento y la facilidad de uso para que el software sea verdaderamente valioso.”",
+    "philosophySub": "Gloria a Dios",
+    "philosophyRef": "Colosenses 3:23",
+    "greetingMorning": "Buenos días",
+    "greetingAfternoon": "Buenas tardes",
+    "greetingEvening": "Buenas noches"
+  }
+}

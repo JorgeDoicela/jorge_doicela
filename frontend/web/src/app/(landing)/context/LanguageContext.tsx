@@ -1,6 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useTransition } from 'react';
+import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { Language, translations, Translations } from '../i18n/translations';
 
 interface LanguageContextType {
@@ -8,42 +10,36 @@ interface LanguageContextType {
     setLanguage: (lang: Language) => void;
     toggleLanguage: () => void;
     t: Translations;
+    isPending: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguageState] = useState<Language>('es');
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-        const savedLang = localStorage.getItem('landing-lang') as Language | null;
-        if (savedLang === 'es' || savedLang === 'en') {
-            setLanguageState(savedLang);
-            document.documentElement.lang = savedLang;
-        } else if (typeof navigator !== 'undefined') {
-            const browserLang = navigator.language.toLowerCase().startsWith('en') ? 'en' : 'es';
-            setLanguageState(browserLang);
-            document.documentElement.lang = browserLang;
-        }
-    }, []);
+    const locale = useLocale() as Language;
+    const router = useRouter();
+    const [isPending, startTransition] = useTransition();
 
     const setLanguage = (lang: Language) => {
-        setLanguageState(lang);
-        localStorage.setItem('landing-lang', lang);
+        document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('landing-lang', lang);
+        }
         document.documentElement.lang = lang;
+        startTransition(() => {
+            router.refresh();
+        });
     };
 
     const toggleLanguage = () => {
-        const nextLang: Language = language === 'es' ? 'en' : 'es';
+        const nextLang: Language = locale === 'es' ? 'en' : 'es';
         setLanguage(nextLang);
     };
 
-    const t = translations[language];
+    const t = translations[locale] || translations.es;
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t }}>
+        <LanguageContext.Provider value={{ language: locale, setLanguage, toggleLanguage, t, isPending }}>
             {children}
         </LanguageContext.Provider>
     );
@@ -56,3 +52,4 @@ export function useLanguage(): LanguageContextType {
     }
     return context;
 }
+

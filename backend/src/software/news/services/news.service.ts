@@ -11,8 +11,16 @@ export class NewsService {
     private readonly newsRepository: Repository<NewsArticle>,
   ) {}
 
-  async findAll(search?: string, tag?: string): Promise<NewsArticle[]> {
+  async findAll(
+    search?: string,
+    tag?: string,
+    lang?: string,
+  ): Promise<NewsArticle[]> {
     const qb = this.newsRepository.createQueryBuilder('news');
+
+    if (lang) {
+      qb.andWhere('news.language = :lang', { lang });
+    }
 
     if (search) {
       qb.andWhere(
@@ -29,11 +37,26 @@ export class NewsService {
     return qb.getMany();
   }
 
-  async findOne(idOrSlug: string): Promise<NewsArticle> {
+  async findOne(idOrSlug: string, lang?: string): Promise<NewsArticle> {
     const isId = !isNaN(Number(idOrSlug));
-    const article = isId
-      ? await this.newsRepository.findOne({ where: { id: Number(idOrSlug) } })
-      : await this.newsRepository.findOne({ where: { slug: idOrSlug } });
+    let article: NewsArticle | null = null;
+
+    if (isId) {
+      article = await this.newsRepository.findOne({
+        where: { id: Number(idOrSlug) },
+      });
+    } else {
+      if (lang) {
+        article = await this.newsRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
+        });
+      }
+      if (!article) {
+        article = await this.newsRepository.findOne({
+          where: { slug: idOrSlug },
+        });
+      }
+    }
 
     if (!article) {
       throw new NotFoundException(`Noticia "${idOrSlug}" no encontrada`);

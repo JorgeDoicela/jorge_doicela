@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { BlogPost } from '../types';
 import { API_URL } from '../../../../config';
-
 import { safeFetchJson } from '../../../../utils/fetchJson';
 
 export function useBlog(search: string = '', series?: string) {
+  const locale = useLocale();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export function useBlog(search: string = '', series?: string) {
         const params = new URLSearchParams();
         if (search.trim()) params.append('search', search.trim());
         if (series) params.append('series', series);
+        if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/blog${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<any>(url);
@@ -35,7 +37,7 @@ export function useBlog(search: string = '', series?: string) {
     };
 
     fetchPosts();
-  }, [search, series]);
+  }, [search, series, locale]);
 
   return { posts, loading, error };
 }

@@ -31,9 +31,11 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 ### 2.1 Estructura de Directorios
 ```text
 frontend/web/src/app/(software)/
+├── messages/                         # Diccionarios locales de software (es.json, en.json)
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism
-├── layout.tsx                        # Layout raíz del subdominio
+├── layout.tsx                        # Layout raíz del subdominio (NextIntlClientProvider + generateMetadata dinámica)
 ├── software/                         # Subrutas individuales
+
 │   ├── page.tsx                      # Página principal: Bento Grid + selector de 7 categorías
 │   ├── news/
 │   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
@@ -154,5 +156,13 @@ pnpm run lint
 
 ---
 
-## 6. Combinar con
+## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+
+* **Actualización Mandatoria ante Cambios:** Cada vez que se agreguen, modifiquen, refactoricen o eliminen submódulos, controladores, servicios, endpoints REST, entidades TypeORM, esquemas en `software.sqlite`, datasets en `corpus/*.json` o componentes/rutas de Next.js, es **obligatorio actualizar la documentación técnica correspondiente en `docs/05-software/`**.
+* **Gestión Documental Proactiva:** Se autoriza crear nuevos archivos `.md`, estructurar nuevas subcarpetas en `docs/05-software/` o podar contenido obsoleto, asegurando siempre que la documentación represente con exactitud y profesionalismo el estado real de la plataforma.
+
+---
+
+## 7. Combinar con
 * **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para monorepo, pnpm --filter, FSD, proxy Nginx y despliegues).
+

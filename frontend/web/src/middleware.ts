@@ -14,6 +14,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Comprobar si viene el query param ?lang= para sincronizar cookie
+  const langParam = url.searchParams.get('lang');
+  let response: NextResponse | null = null;
+
   // Obtener el nombre del host en minúsculas y sin el puerto
   const hostname = host.split(':')[0].toLowerCase();
 
@@ -21,28 +25,35 @@ export function middleware(request: NextRequest) {
   if (hostname.startsWith('portfolio.')) {
     if (!url.pathname.startsWith('/portfolio')) {
       url.pathname = `/portfolio${url.pathname}`;
-      return NextResponse.rewrite(url);
+      response = NextResponse.rewrite(url);
     }
-  }
-
-  // Redirección interna para el subdominio 'bible'
-  if (hostname.startsWith('bible.')) {
+  } else if (hostname.startsWith('bible.')) {
+    // Redirección interna para el subdominio 'bible'
     if (!url.pathname.startsWith('/bible')) {
       url.pathname = `/bible${url.pathname}`;
-      return NextResponse.rewrite(url);
+      response = NextResponse.rewrite(url);
     }
-  }
-
-  // Redirección interna para el subdominio 'software'
-  if (hostname.startsWith('software.')) {
+  } else if (hostname.startsWith('software.')) {
+    // Redirección interna para el subdominio 'software'
     if (!url.pathname.startsWith('/software')) {
       url.pathname = `/software${url.pathname}`;
-      return NextResponse.rewrite(url);
+      response = NextResponse.rewrite(url);
     }
   }
 
-  // Por defecto (landing page principal jorgedoicela.com), se sirve la raíz
-  return NextResponse.next();
+  if (!response) {
+    response = NextResponse.next();
+  }
+
+  if (langParam === 'es' || langParam === 'en') {
+    response.cookies.set('NEXT_LOCALE', langParam, {
+      path: '/',
+      maxAge: 31536000,
+      sameSite: 'lax',
+    });
+  }
+
+  return response;
 }
 
 export const config = {
@@ -57,3 +68,4 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
+

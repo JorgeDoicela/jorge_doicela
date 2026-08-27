@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { SecurityPost } from '../../../features/cybersecurity/types';
 import { API_URL } from '../../../../config';
 
@@ -11,6 +12,7 @@ export default function SecurityDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const locale = useLocale();
   const [post, setPost] = useState<SecurityPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +20,7 @@ export default function SecurityDetailPage({
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`${API_URL}/software/cybersecurity/${slug}`);
+        const res = await fetch(`${API_URL}/software/cybersecurity/${slug}?lang=${locale}`);
         if (!res.ok) throw new Error('Aviso no encontrado');
         const data = await res.json();
         setPost(data.data || data);
@@ -29,7 +31,7 @@ export default function SecurityDetailPage({
       }
     };
     fetchPost();
-  }, [slug]);
+  }, [slug, locale]);
 
   if (loading) {
     return (

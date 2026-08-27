@@ -40,19 +40,25 @@ Un script en React (`useEffect`) evalúa el host de navegación:
   * 12:00 - 18:59 $\rightarrow$ *Buenas tardes*
   * 19:00 - 05:59 $\rightarrow$ *Buenas noches*
 
-### 3.3 Soporte Multiidioma (i18n ES/EN)
-* Diccionario bilingüe tipado en `translations.ts`.
-* Contexto ligero en React (`LanguageContext.tsx`) con persistencia en `localStorage` (`'landing-lang'`) y detección de idioma del navegador.
+### 3.3 Internacionalización Profesional (next-intl + SSR & SEO Gold Standard)
+* **Arquitectura de Servidor:** Configuración en `src/i18n/request.ts` integrada mediante `createNextIntlPlugin` en `next.config.ts`.
+* **Cero Parpadeos (SSR):** El servidor entrega el HTML ya traducido en el primer byte evitando el fenómeno *FOUC*.
+* **Detección y Negociación:** Detección automática por cookie `NEXT_LOCALE` o cabecera HTTP `Accept-Language` del visitante.
+* **Persistencia Reactiva:** El selector de idioma sincroniza la cookie `NEXT_LOCALE` y ejecuta `router.refresh()` para re-renderizado instantáneo en el servidor.
+* **Diccionarios Estructurados:** Archivos JSON organizados en `src/messages/es.json` y `src/messages/en.json`.
 
 ### 3.4 Progressive Web App (PWA)
 * Manifiesto W3C `manifest.json` (`#09090b`, modo `standalone`).
 * Service Worker nativo `sw.js` con estrategia *Network-First* para páginas y *Cache-First* para assets.
 * Registro del cliente en `PwaRegister.tsx`.
 
-### 3.5 Metadatos SEO y Datos Estructurados (Schema.org JSON-LD)
+### 3.5 Metadatos SEO Internacionales y Datos Estructurados (Schema.org JSON-LD)
+* **`generateMetadata()` Dinámica:** Títulos, descripciones y Open Graph localizados por idioma.
+* **Etiquetas `hreflang` para Google:** Mapeo de `alternates.languages` (`es-EC` y `en-US`) para posicionamiento bilingüe en motores de búsqueda.
 * Componente `PersonJsonLd.tsx` con especificación de Schema.org para indexación de perfil en Google.
 * Generador de previsualización para redes sociales en `opengraph-image.tsx` (tarjeta de 1200x630 px).
 * `sitemap.ts` y `robots.ts` nativos de Next.js.
+
 
 ### 3.6 Accesibilidad (WCAG 2.1 AA / ARIA 1.2)
 * Botón de atajo `SkipToContent.tsx` para saltar al contenido principal con la tecla Tab.

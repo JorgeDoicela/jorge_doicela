@@ -93,50 +93,61 @@ backend/src/software/
 
 ## 3. Catálogo de Endpoints REST
 
-| Dominio | Método y Ruta | Descripción |
-|---|---|---|
-| **Noticias** | `GET /software/news` | Listado filtrable por búsqueda (`search`) y etiqueta (`tag`) |
-| | `GET /software/news/:idOrSlug` | Detalle de la noticia por ID o slug |
-| | `POST /software/news` | Crear nuevo artículo de noticias |
-| | `DELETE /software/news/:id` | Eliminar artículo de noticias por ID |
-| **Blog** | `GET /software/blog` | Ensayos de arquitectura filtrables por búsqueda (`search`) y serie (`series`) |
-| | `GET /software/blog/:idOrSlug` | Detalle del post con tabla de contenidos |
-| | `POST /software/blog` | Publicar nuevo post editorial de blog |
-| | `DELETE /software/blog/:id` | Eliminar post de blog por ID |
-| **Foros** | `GET /software/forum` | Hilos de debate filtrables por categoría (`category`) y búsqueda (`search`) |
-| | `GET /software/forum/:idOrSlug` | Hilo principal con respuestas anidadas |
-| | `POST /software/forum` | Crear nuevo hilo de debate (`ForumTopic`) |
-| | `POST /software/forum/replies` | Publicar nueva respuesta a un tema (`ForumReply`) |
-| | `GET /software/forum/:id/replies` | Obtener todas las respuestas de un hilo por ID |
-| **IA** | `GET /software/ai` | Catálogo de modelos, agentes y MCP servers filtrable por `type` y `search` |
-| | `GET /software/ai/:idOrSlug` | Ficha técnica del recurso de IA |
-| | `POST /software/ai` | Registrar nuevo recurso de IA / agente / servidor MCP |
-| | `DELETE /software/ai/:id` | Eliminar recurso de IA por ID |
-| **Ciberseguridad** | `GET /software/cybersecurity` | Avisos por severidad (`severity`), tipo (`postType`) y búsqueda (`search`) |
-| | `GET /software/cybersecurity/:idOrSlug` | Detalle del aviso y guía de remediación |
-| | `POST /software/cybersecurity` | Registrar nuevo aviso o guía de seguridad |
-| | `DELETE /software/cybersecurity/:id` | Eliminar aviso de seguridad por ID |
-| **Tutoriales** | `GET /software/tutorials` | Guías paso a paso filtrables por dificultad (`difficulty`) y búsqueda (`search`) |
-| | `GET /software/tutorials/:idOrSlug` | Tutorial interactivo con pasos ordenados (`steps`) |
-| | `POST /software/tutorials` | Crear nuevo tutorial maestro |
-| | `POST /software/tutorials/steps` | Agregar paso con snippet de código a un tutorial |
-| | `DELETE /software/tutorials/:id` | Eliminar tutorial por ID |
-| **Proyectos** | `GET /software/projects` | Showcase filtrable por estado (`status`) y búsqueda (`search`) |
-| | `GET /software/projects/:idOrSlug` | Ficha, demo, repo y arquitectura del proyecto |
-| | `POST /software/projects` | Registrar nuevo proyecto showcase |
-| | `PATCH /software/projects/:id` | Actualizar campos o estado de un proyecto |
-| | `DELETE /software/projects/:id` | Eliminar proyecto por ID |
+Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|en` para entregar el contenido localizado y consultar de forma óptima los índices compuestos.
+
+| Dominio | Método y Ruta | Parámetros Query | Descripción |
+|---|---|---|---|
+| **Noticias** | `GET /software/news` | `search`, `tag`, `lang` | Listado filtrable por búsqueda, etiqueta e idioma |
+| | `GET /software/news/:idOrSlug` | `lang` | Detalle de la noticia por ID o slug con fallback de idioma |
+| | `POST /software/news` | - | Crear nuevo artículo de noticias |
+| | `DELETE /software/news/:id` | - | Eliminar artículo de noticias por ID |
+| **Blog** | `GET /software/blog` | `search`, `series`, `lang` | Ensayos de arquitectura filtrables por búsqueda, serie e idioma |
+| | `GET /software/blog/:idOrSlug` | `lang` | Detalle del post con tabla de contenidos e idioma |
+| | `POST /software/blog` | - | Publicar nuevo post editorial de blog |
+| | `DELETE /software/blog/:id` | - | Eliminar post de blog por ID |
+| **Foros** | `GET /software/forum` | `category`, `search`, `lang` | Hilos de debate filtrables por categoría, búsqueda e idioma |
+| | `GET /software/forum/:idOrSlug` | `lang` | Hilo principal con respuestas anidadas |
+| | `POST /software/forum` | - | Crear nuevo hilo de debate (`ForumTopic`) |
+| | `POST /software/forum/replies` | - | Publicar nueva respuesta a un tema (`ForumReply`) |
+| | `GET /software/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
+| **IA** | `GET /software/ai` | `type`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por tipo, búsqueda e idioma |
+| | `GET /software/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
+| | `POST /software/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
+| | `DELETE /software/ai/:id` | - | Eliminar recurso de IA por ID |
+| **Ciberseguridad** | `GET /software/cybersecurity` | `severity`, `postType`, `search`, `lang` | Avisos por severidad, tipo, búsqueda e idioma |
+| | `GET /software/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
+| | `POST /software/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
+| | `DELETE /software/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
+| **Tutoriales** | `GET /software/tutorials` | `difficulty`, `search`, `lang` | Guías paso a paso filtrables por dificultad, búsqueda e idioma |
+| | `GET /software/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
+| | `POST /software/tutorials` | - | Crear nuevo tutorial maestro |
+| | `POST /software/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
+| | `DELETE /software/tutorials/:id` | - | Eliminar tutorial por ID |
+| **Proyectos** | `GET /software/projects` | `status`, `search`, `lang` | Showcase filtrable por estado, búsqueda e idioma |
+| | `GET /software/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
+| | `POST /software/projects` | - | Registrar nuevo proyecto showcase |
+| | `PATCH /software/projects/:id` | - | Actualizar campos o estado de un proyecto |
+| | `DELETE /software/projects/:id` | - | Eliminar proyecto por ID |
 
 ---
 
-## 4. Modelo Relacional (`software.sqlite`)
+## 4. Modelo Relacional Bilingüe (`software.sqlite`)
 
-* `news_articles`: `id`, `slug` (UK), `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `author`, `tags`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`.
-* `blog_posts`: `id`, `slug` (UK), `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`.
-* `forum_topics`: `id`, `slug` (UK), `title`, `content`, `author`, `category`, `isSolved`, `isPinned`, `repliesCount`, `views`.
+La persistencia implementa soporte multiidioma nativo mediante la columna `language TEXT NOT NULL DEFAULT 'es'` e índices únicos compuestos `(slug, language)` para permitir registros homólogos en español e inglés sin colisión:
+
+* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `author`, `tags`, `language`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`.  
+  * **Índice Único:** `IDX_news_articles_slug_lang (slug, language)`.
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`.  
+  * **Índice Único:** `IDX_blog_posts_slug_lang (slug, language)`.
+* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `isSolved`, `isPinned`, `repliesCount`, `views`.  
+  * **Índice Único:** `IDX_forum_topics_slug_lang (slug, language)`.
 * `forum_replies`: `id`, `topicId` (FK), `parentId`, `author`, `content`, `isAcceptedAnswer`, `likes`.
-* `ai_resources`: `id`, `slug` (UK), `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `views`, `likes`.
-* `security_posts`: `id`, `slug` (UK), `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `views`, `likes`.
-* `tutorials`: `id`, `slug` (UK), `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `coverImage`, `views`, `likes`.
+* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `views`, `likes`.  
+  * **Índice Único:** `IDX_ai_resources_slug_lang (slug, language)`.
+* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`.  
+  * **Índice Único:** `IDX_security_posts_slug_lang (slug, language)`.
+* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`.  
+  * **Índice Único:** `IDX_tutorials_slug_lang (slug, language)`.
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`.
-* `projects`: `id`, `slug` (UK), `name`, `description`, `techStack`, `repoUrl`, `liveUrl`, `status`, `featured`, `stars`, `views`, `architectureDiagramUrl`.
+* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `repoUrl`, `liveUrl`, `status`, `featured`, `stars`, `views`, `architectureDiagramUrl`.  
+  * **Índice Único:** `IDX_projects_slug_lang (slug, language)`.

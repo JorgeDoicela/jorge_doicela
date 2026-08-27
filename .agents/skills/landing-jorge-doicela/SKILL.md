@@ -26,22 +26,27 @@ Esta habilidad define los estándares técnicos, estéticos, de accesibilidad y 
 ## 2. Estructura de Directorios del Proyecto
 
 ```text
-frontend/web/src/app/(landing)/
-├── components/
-│   ├── Header.tsx              # Cabecera con selector i18n (ES/EN), theme toggle y reloj Quito
-│   ├── PwaRegister.tsx         # Registro del Service Worker de la PWA
-│   ├── PersonJsonLd.tsx        # Datos estructurados Schema.org (SEO)
-│   ├── SkipToContent.tsx       # Atajo de accesibilidad por teclado (WCAG AA)
-│   ├── TypewriterRole.tsx      # Animación de máquina de escribir accesible (aria-live)
-│   └── GlassCard.tsx           # Tarjetas interactivas con micro-animaciones
-├── context/
-│   └── LanguageContext.tsx     # Proveedor de estado de idioma reactivo (ES/EN)
-├── i18n/
-│   └── translations.ts         # Diccionario bilingüe tipado estrictamente
-├── globals.css                 # Estilos específicos de la Landing Page
-├── layout.tsx                  # Metadatos SEO, Open Graph y contenedor
-└── page.tsx                    # Estructura principal y resolutor de subdominios
+frontend/web/
+├── src/
+│   ├── i18n/
+│   │   └── request.ts          # Configuración de servidor: carga dinámica de mensajes por subdominio
+│   ├── middleware.ts           # Enrutamiento de subdominios y query param ?lang=
+│   └── app/(landing)/
+│       ├── messages/           # Diccionarios locales de la Landing (es.json, en.json)
+│       ├── components/
+│       │   ├── Header.tsx              # Cabecera con selector i18n (ES/EN), theme toggle y reloj Quito
+│       │   ├── PwaRegister.tsx         # Registro del Service Worker de la PWA
+│       │   ├── PersonJsonLd.tsx        # Datos estructurados Schema.org (SEO)
+│       │   ├── SkipToContent.tsx       # Atajo de accesibilidad por teclado (WCAG AA)
+│       │   ├── TypewriterRole.tsx      # Animación de máquina de escribir accesible (aria-live)
+│       │   └── GlassCard.tsx           # Tarjetas interactivas con micro-animaciones
+│       ├── context/
+│       │   └── LanguageContext.tsx     # Adaptador reactivo conectado a next-intl y router.refresh()
+│       ├── globals.css                 # Estilos específicos de la Landing Page
+│       ├── layout.tsx                  # NextIntlClientProvider + generateMetadata dinámica
+│       └── page.tsx                    # Estructura principal y resolutor de subdominios
 ```
+
 
 ---
 
@@ -76,20 +81,24 @@ new Intl.DateTimeFormat('es-EC', {
 * Conmutador en el header que añade o quita la clase `.light` en `document.documentElement`.
 * Persistencia en `localStorage` bajo la clave `'landing-theme'`.
 
-### 3.4 Soporte Multiidioma (i18n ES/EN)
-* Alternancia instantánea entre Español e Inglés sin librerías externas pesadas.
-* Persistencia en `localStorage` bajo `'landing-lang'` y detección automática del idioma preferido del navegador.
+### 3.4 Internacionalización Profesional (next-intl + SSR & SEO Gold Standard)
+* **Server-Side Rendering (SSR):** El servidor entrega el HTML ya traducido desde la primera respuesta evitando parpadeos (*FOUC*).
+* **Detección Dual:** Lee la cookie `NEXT_LOCALE` o negocia automáticamente mediante la cabecera `Accept-Language` del visitante en `request.ts`.
+* **Persistencia Reactiva:** El selector de idioma actualiza la cookie `NEXT_LOCALE` y ejecuta `router.refresh()` para actualizar el contenido de forma instantánea.
 
 ### 3.5 Progressive Web App (PWA)
 * Manifiesto W3C (`public/manifest.json`) en modo `standalone` con theme color `#09090b`.
 * Service Worker (`public/sw.js`) con estrategia *Network-First* para páginas y *Cache-First* para assets e imágenes.
 * Registro asíncrono con `PwaRegister.tsx`.
 
-### 3.6 SEO, Datos Estructurados y Accesibilidad
+### 3.6 SEO Internacional, Datos Estructurados y Accesibilidad
+* **Metadatos Dinámicos Localizados (`generateMetadata`):** Emite títulos, descripciones y Open Graph en el idioma activo.
+* **Etiquetas `hreflang` para Google:** Configura `alternates.languages` (`es-EC` y `en-US`) para indexar ambas versiones en motores de búsqueda.
 * Script Schema.org de tipo `Person` y `WebSite` (`PersonJsonLd.tsx`).
 * `sitemap.ts` y `robots.ts` en la raíz de Next.js.
 * Previsualización dinámica de Open Graph en `src/app/opengraph-image.tsx` (1200x630).
 * Accesibilidad WCAG 2.1 AA con atajo para teclado `SkipToContent.tsx`, anillos de enfoque visibles y compatibilidad con lectores de pantalla.
+
 
 ---
 
@@ -116,5 +125,13 @@ pnpm -r typecheck
 
 ---
 
-## 6. Combinar con
+## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+
+* **Actualización Mandatoria ante Cambios:** Cada vez que se agreguen, modifiquen, optimicen o eliminen componentes, hooks, animaciones, esquemas SEO o estilos en la Landing Page, es **obligatorio actualizar la documentación técnica en `docs/02-landing/`**.
+* **Gestión Documental Proactiva:** Se autoriza la creación de nuevos archivos `.md`, reorganización de subcarpetas en `docs/02-landing/` o eliminación de contenido en desuso para preservar siempre la coherencia total entre el código y la documentación.
+
+---
+
+## 7. Combinar con
 * **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para estándares de monorepo, pnpm --filter web y calidad).
+

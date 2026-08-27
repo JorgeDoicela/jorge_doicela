@@ -57,6 +57,15 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * Estructurado por funcionalidades dentro de `src/app/(<dominio>)/features/<feature_name>/` (`components/`, `hooks/`, `utils/`, `types.ts`).
 * Aislamiento estricto de estilos: cada subdominio importa exclusivamente su propio `globals.css`.
 
+### 4.3 Internacionalización Descentralizada (next-intl + SSR & Cajas Negras)
+* **Aislamiento por Subdominio:** Diccionarios encapsulados en `src/app/(subproyecto)/messages/es.json` y `en.json`.
+* **Carga Perezosa en Memoria (1 GB RAM):** `src/i18n/request.ts` detecta el `host` y carga en memoria únicamente el diccionario del subdominio activo.
+* **Cero Parpadeos (SSR):** El servidor entrega el HTML ya traducido con `<html lang={locale}>` dinámico según la cookie `NEXT_LOCALE` o cabecera `Accept-Language`.
+* **SEO Internacional Dinámico:** Cada layout de subdominio implementa `generateMetadata()` y emite etiquetas `hreflang` (`es-EC` y `en-US`).
+* **Doble Nivel de i18n:** UI Chrome mediante `useTranslations()` y datos dinámicos en SQLite (`software.sqlite` y `bible.sqlite`) mediante columna `language: 'es' | 'en'` y filtros `?lang=`.
+
+
+
 ---
 
 ## 5. Servidor, Nginx, PM2 y Despliegue CI/CD
@@ -110,10 +119,18 @@ pnpm run build
 
 ---
 
-## 8. Combinar con Skills de Proyecto
+## 8. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+
+* **Actualización Mandatoria ante Cambios:** Cada vez que se implementen mejoras, nuevas herramientas, ajustes en scripts, cambios en CI/CD o en la infraestructura del servidor, es **obligatorio actualizar la documentación técnica correspondiente en `docs/01-infraestructura-global/`**.
+* **Gestión Documental Proactiva:** Se autoriza agregar nuevos archivos `.md`, crear subcarpetas o eliminar/podar contenido que haya quedado obsoleto, asegurando siempre que la documentación represente con exactitud y profesionalismo el estado real del sistema.
+
+---
+
+## 9. Combinar con Skills de Proyecto
 
 Según el dominio específico en el que trabajes:
 * **Landing Page:** `landing-jorge-doicela`
 * **Portafolio Profesional:** `portfolio-jorge-doicela`
 * **Biblia Modular (Web y Móvil):** `bible-jorge-doicela`
 * **Software:** `software-jorge-doicela`
+

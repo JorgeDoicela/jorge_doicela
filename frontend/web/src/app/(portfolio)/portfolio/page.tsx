@@ -1,7 +1,12 @@
 import { TerminalConsole } from '../features/terminal/components/TerminalConsole';
+import { ProjectShowcase } from '../features/projects/components/ProjectShowcase';
+import { ContactForm } from '../features/contact/components/ContactForm';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { LanguageToggle } from '../components/LanguageToggle';
 import { TypewriterRole } from '../components/TypewriterRole';
 import { ValuesPhilosophySection } from '../components/ValuesPhilosophySection';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { PortfolioProject } from '../features/projects/types';
 import {
     Mail,
     MapPin,
@@ -14,15 +19,155 @@ import {
     Briefcase,
     Shield,
     Server,
-    RefreshCw
+    RefreshCw,
+    MessageSquare
 } from 'lucide-react';
 
-export default function PortfolioPage() {
+async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]> {
+    try {
+        const res = await fetch(`http://127.0.0.1:3000/portfolio/projects?lang=${locale}`, {
+            next: { revalidate: 60 },
+        });
+        if (res.ok) {
+            const data = await res.json();
+            const rawProjects = Array.isArray(data) ? data : data.data || [];
+            return rawProjects.map((p: any) => ({
+                ...p,
+                technologies: Array.isArray(p.technologies)
+                    ? p.technologies
+                    : (typeof p.technologies === 'string' && p.technologies.trim().startsWith('[')
+                        ? JSON.parse(p.technologies)
+                        : (typeof p.technologies === 'string' ? p.technologies.split(',').map((s: string) => s.trim()) : [])),
+            }));
+        }
+    } catch {
+        // Fallback resiliente al corpus estático
+    }
+
+    const fallbackProjects: Record<string, PortfolioProject[]> = {
+        es: [
+            {
+                id: 1,
+                slug: 'la-biblia-modular',
+                title: 'La Biblia Modular',
+                description: 'Plataforma de estudio bíblico y exégesis con 9 motores teológicos, morfología Strong masorética y Septuaginta, y app móvil nativa en Expo.',
+                role: 'Lead Architect & Full Stack Developer',
+                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Expo', 'TypeScript', 'Tailwind CSS'],
+                language: 'es',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://bible.jorgedoicela.com',
+                featured: true
+            },
+            {
+                id: 3,
+                slug: 'software-tech-hub',
+                title: 'Software & Tech Hub',
+                description: 'Ecosistema de contenidos tecnológicos con 7 áreas temáticas, avisos de ciberseguridad, catálogo de modelos de IA, tutoriales interactivos y foros.',
+                role: 'Full Stack & DevSecOps Engineer',
+                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
+                language: 'es',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://software.jorgedoicela.com',
+                featured: true
+            },
+            {
+                id: 5,
+                slug: 'infraestructura-lightsail-vps',
+                title: 'Arquitectura Cloud VPS (1 GB RAM)',
+                description: 'Despliegue de alta disponibilidad en AWS Lightsail (Debian 13) con Nginx mTLS, Cloudflare Edge, PM2 y pipeline CI/CD optimizado para 1 GB de RAM.',
+                role: 'DevSecOps & Cloud Architect',
+                technologies: ['AWS Lightsail', 'Debian 13', 'Nginx', 'Cloudflare mTLS', 'PM2', 'GitHub Actions'],
+                language: 'es',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://jorgedoicela.com',
+                featured: true
+            },
+            {
+                id: 7,
+                slug: 'terminal-ssh-websockets',
+                title: 'Terminal Virtual SSH en Tiempo Real',
+                description: 'Emulador de terminal UNIX interactiva sobre WebSockets (Socket.io) con sistema de archivos virtual, coloreado ANSI y ejecución segura de comandos.',
+                role: 'Backend & Frontend Engineer',
+                technologies: ['NestJS WebSockets', 'Socket.io', 'TypeScript', 'ANSI Parser'],
+                language: 'es',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://portfolio.jorgedoicela.com',
+                featured: true
+            }
+        ],
+        en: [
+            {
+                id: 2,
+                slug: 'the-modular-bible',
+                title: 'The Modular Bible',
+                description: 'Exegesis and scripture study platform featuring 9 theological engines, Masoretic BHS / LXX morphology, Strong dictionaries, and Expo native mobile app.',
+                role: 'Lead Architect & Full Stack Developer',
+                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Expo', 'TypeScript', 'Tailwind CSS'],
+                language: 'en',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://bible.jorgedoicela.com',
+                featured: true
+            },
+            {
+                id: 4,
+                slug: 'software-tech-hub-en',
+                title: 'Software & Tech Hub',
+                description: 'Technology hub featuring 7 categories: cybersecurity advisories, AI models showcase, step-by-step interactive tutorials, and technical forums.',
+                role: 'Full Stack & DevSecOps Engineer',
+                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
+                language: 'en',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://software.jorgedoicela.com',
+                featured: true
+            },
+            {
+                id: 6,
+                slug: 'cloud-infrastructure-lightsail',
+                title: 'Cloud VPS Architecture (1 GB RAM)',
+                description: 'High-availability deployment on AWS Lightsail (Debian 13) featuring Nginx mTLS, Cloudflare Edge, PM2, and GitHub Actions CI/CD optimized for 1 GB RAM.',
+                role: 'DevSecOps & Cloud Architect',
+                technologies: ['AWS Lightsail', 'Debian 13', 'Nginx', 'Cloudflare mTLS', 'PM2', 'GitHub Actions'],
+                language: 'en',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://jorgedoicela.com',
+                featured: true
+            },
+            {
+                id: 8,
+                slug: 'terminal-ssh-websockets-en',
+                title: 'Real-time Virtual SSH Terminal',
+                description: 'Interactive UNIX terminal emulator over WebSockets (Socket.io) with virtual filesystem, ANSI color rendering, and secure command dispatching.',
+                role: 'Backend & Frontend Engineer',
+                technologies: ['NestJS WebSockets', 'Socket.io', 'TypeScript', 'ANSI Parser'],
+                language: 'en',
+                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
+                demoUrl: 'https://portfolio.jorgedoicela.com',
+                featured: true
+            }
+        ]
+    };
+
+    return fallbackProjects[locale] || fallbackProjects.es;
+}
+
+export default async function PortfolioPage() {
+    const locale = await getLocale();
+    const tHeader = await getTranslations('Header');
+    const tAbout = await getTranslations('About');
+    const tStack = await getTranslations('Stack');
+    const tExp = await getTranslations('Experience');
+    const tCloud = await getTranslations('Cloud');
+    const tTools = await getTranslations('Tools');
+    const tContact = await getTranslations('Contact');
+    const tTerm = await getTranslations('Terminal');
+    const projects = await getPortfolioProjects(locale);
+
     return (
         <div className="min-h-screen bg-background text-foreground py-16 md:py-24 px-6 md:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
 
-            {/* Header con ThemeToggle */}
-            <div className="fixed top-4 right-4 z-50">
+            {/* Header con Controls (ThemeToggle + LanguageToggle) */}
+            <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+                <LanguageToggle />
                 <ThemeToggle />
             </div>
 
@@ -30,59 +175,51 @@ export default function PortfolioPage() {
             <header className="w-full max-w-7xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
-                        Jorge Ismael Doicela Molina
+                        {tHeader('title')}
                     </h1>
                     <TypewriterRole
                         roles={[
-                            'Full Stack Developer',
-                            'AI Engineer & Cybersecurity Specialist',
-                            'DevSecOps & Software Architect',
-                            'Desarrollador de Software con enfoque en DevSecOps'
+                            tHeader('role1'),
+                            tHeader('role2'),
+                            tHeader('role3'),
+                            tHeader('role4')
                         ]}
                     />
+
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <span className="luxury-badge">
                         <Shield className="w-3.5 h-3.5 text-gold-300" />
-                        <span>IA & Ciberseguridad</span>
+                        <span>{tHeader('aiBadge')}</span>
                     </span>
                     <span className="luxury-badge luxury-pulse">
-                        <span>En progreso</span>
+                        <span>{tHeader('inProgress')}</span>
                     </span>
                 </div>
             </header>
 
             {/* Contenido Principal en Flujo Lineal y Asimétrico */}
-            <main className="w-full max-w-7xl mx-auto flex flex-col gap-16 animate-fade-up">
+            <main className="w-full max-w-7xl mx-auto flex flex-col gap-20 animate-fade-up">
 
-                {/* Sección 1: Sobre Mí & Contactos (Asimétrico, sin cajas rígidas) */}
+                {/* Sección 1: Sobre Mí & Contactos */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
-
-                    {/* Biografía (Columna izquierda y central - 2 cols) */}
                     <div className="md:col-span-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-gold-300">
                             <Cpu className="w-4 h-4" />
-                            <span className="text-[10px] font-mono tracking-widest uppercase">Sobre Mí</span>
+                            <span className="text-[10px] font-mono tracking-widest uppercase">{tAbout('title')}</span>
                         </div>
                         <h2 className="text-2xl md:text-3xl font-light text-foreground mb-2">
-                            Ingeniería & Valores
+                            {tAbout('title')}
                         </h2>
                         <div className="text-foreground/75 text-xs md:text-sm leading-relaxed font-light space-y-4">
-                            <p>
-                                Desarrollador de software radicado en Quito, Ecuador, y guiado por valores cristianos. Me apasiona el desarrollo de sistemas web, aplicaciones nativas y multiplataforma, así como la administración de servidores (locales y cloud), con un enfoque orientado a soluciones integrales, arquitecturas escalables, seguridad e Infraestructura como Código (IaC).
-                            </p>
-                            <p>
-                                Mi experiencia abarca el desarrollo Full-Stack, trabajando con tecnologías frontend y backend como React, Next.js, NestJS, Laravel / Blade y .NET, lenguajes de programación como PHP, C#, Python, C y C++, además de bases de datos relacionales (PostgreSQL y MySQL) y no relacionales (MongoDB). Integro prácticas de DevSecOps y principios de diseño seguro desde el inicio del ciclo de desarrollo.
-                            </p>
-                            <p>
-                                En paralelo, expando mis conocimientos cursando la Ingeniería en Inteligencia Artificial y Ciberseguridad, lo que me permite aplicar un enfoque de hardening a los sistemas que diseño. Con una marcada sensibilidad por la estética visual y un gran interés por el diseño limpio y minimalista, disfruto la aplicación de diferentes estilos de diseño (como el Linear Look y distribuciones Bento Grid).
-                            </p>
+                            <p>{tAbout('p1')}</p>
+                            <p>{tAbout('p2')}</p>
                         </div>
                     </div>
 
-                    {/* Contactos Rápidos (Columna derecha - 1 col) */}
+                    {/* Contactos Rápidos */}
                     <div className="flex flex-col gap-4 md:pl-6 md:border-l border-border/40">
-                        <span className="text-[10px] font-mono text-gold-300 tracking-widest uppercase mb-2">Conexiones</span>
+                        <span className="text-[10px] font-mono text-gold-300 tracking-widest uppercase mb-2">{tAbout('connections')}</span>
                         <a
                             href="https://linkedin.com/in/jorgedoicela"
                             target="_blank"
@@ -123,49 +260,49 @@ export default function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 2: Tecnologías & Stack (Grid de Etiquetas, sin cajas pesadas) */}
+                {/* Sección 2: Showcase de Proyectos de Ingeniería */}
+                <ProjectShowcase projects={projects} />
+
+                <hr className="luxury-divider" />
+
+                {/* Sección 3: Tecnologías & Stack Principal */}
                 <section className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 text-gold-300">
                         <Code className="w-4 h-4" />
-                        <span className="text-[10px] font-mono tracking-widest uppercase">Stack Principal</span>
+                        <span className="text-[10px] font-mono tracking-widest uppercase">{tStack('eyebrow')}</span>
                     </div>
                     <h2 className="text-2xl font-light text-foreground">
-                        Tecnologías & Stack Principal
+                        {tStack('title')}
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-2">
-                        {/* Grupo 1 */}
                         <div className="flex flex-col gap-3">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">Client & Frontend</span>
+                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">{tStack('client')}</span>
                             <div className="flex flex-wrap gap-2">
                                 <span className="luxury-badge">React</span>
-                                <span className="luxury-badge">Next.js</span>
+                                <span className="luxury-badge">Next.js 16</span>
                                 <span className="luxury-badge">TypeScript</span>
-                                <span className="luxury-badge">Vite</span>
+                                <span className="luxury-badge">Tailwind CSS</span>
+                                <span className="luxury-badge">Expo (Mobile)</span>
                             </div>
                         </div>
-                        {/* Grupo 2 */}
                         <div className="flex flex-col gap-3">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">Server & Backend</span>
+                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">{tStack('server')}</span>
                             <div className="flex flex-wrap gap-2">
-                                <span className="luxury-badge">NestJS</span>
-                                <span className="luxury-badge">Laravel</span>
-                                <span className="luxury-badge">Blade</span>
-                                <span className="luxury-badge">PHP</span>
-                                <span className="luxury-badge">C#</span>
-                                <span className="luxury-badge">C / C++</span>
+                                <span className="luxury-badge">NestJS 11</span>
+                                <span className="luxury-badge">Node.js</span>
+                                <span className="luxury-badge">C# / .NET</span>
+                                <span className="luxury-badge">PHP / Laravel</span>
                                 <span className="luxury-badge">Python</span>
                             </div>
                         </div>
-                        {/* Grupo 3 */}
                         <div className="flex flex-col gap-3">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">Data & DevSecOps</span>
+                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">{tStack('data')}</span>
                             <div className="flex flex-wrap gap-2">
+                                <span className="luxury-badge">SQLite (WAL)</span>
                                 <span className="luxury-badge">PostgreSQL</span>
-                                <span className="luxury-badge">MySQL</span>
-                                <span className="luxury-badge">MongoDB</span>
+                                <span className="luxury-badge">AWS Lightsail</span>
                                 <span className="luxury-badge">Docker</span>
-                                <span className="luxury-badge">AWS</span>
                                 <span className="luxury-badge">GitHub Actions</span>
                             </div>
                         </div>
@@ -174,63 +311,61 @@ export default function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 3: Experiencia & Educación (Disposición Lineal Asimétrica de 2 Columnas) */}
+                {/* Sección 4: Experiencia & Educación */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
-
-                    {/* Experiencia Laboral (2 Columnas de ancho) */}
                     <div className="md:col-span-2 flex flex-col gap-6">
                         <div className="flex items-center gap-2 text-gold-300">
                             <Briefcase className="w-4 h-4" />
-                            <span className="text-[10px] font-mono tracking-widest uppercase">Experiencia Laboral</span>
+                            <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eyebrow')}</span>
                         </div>
                         <h2 className="text-2xl font-light text-foreground mb-2">
-                            Experiencia Reciente
+                            {tExp('title')}
                         </h2>
 
                         <div className="space-y-8">
                             <div className="border-l border-border-gold pl-4 relative">
                                 <div className="absolute w-2 h-2 rounded-full bg-gold-400 -left-[5px] top-1.5 luxury-pulse"></div>
                                 <div className="flex justify-between items-start mb-1.5">
-                                    <h3 className="text-sm font-mono text-foreground font-semibold">Emplifi</h3>
-                                    <span className="text-[10px] font-mono text-muted uppercase">Full-Stack Developer</span>
+                                    <h3 className="text-sm font-mono text-foreground font-semibold">{tExp('role1Title')}</h3>
+                                    <span className="text-[10px] font-mono text-muted uppercase">{tExp('role1Sub')}</span>
                                 </div>
                                 <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
-                                    Desarrollo Full-Stack y optimización de APIs para el sistema de gestión de recursos humanos, mejorando el rendimiento general y la persistencia de datos.
+                                    {tExp('role1Desc')}
                                 </p>
                             </div>
 
                             <div className="border-l border-border-gold pl-4 relative">
                                 <div className="absolute w-2 h-2 rounded-full bg-gold-500 -left-[5px] top-1.5"></div>
                                 <div className="flex justify-between items-start mb-1.5">
-                                    <h3 className="text-sm font-mono text-foreground font-semibold">Plataforma de Capacitaciones (CNC)</h3>
-                                    <span className="text-[10px] font-mono text-muted uppercase">Desarrollador Backend</span>
+                                    <h3 className="text-sm font-mono text-foreground font-semibold">{tExp('role2Title')}</h3>
+                                    <span className="text-[10px] font-mono text-muted uppercase">{tExp('role2Sub')}</span>
                                 </div>
                                 <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
-                                    Estabilización de código, desarrollo de módulos backend y despliegue contenedorizado con Docker para el Consejo Nacional de Competencias.
+                                    {tExp('role2Desc')}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Educación (1 Columna de ancho) */}
+                    {/* Educación */}
                     <div className="flex flex-col gap-6 md:pl-6 md:border-l border-border/40 h-full justify-between">
                         <div className="flex flex-col gap-6">
                             <div className="flex items-center gap-2 text-gold-300">
                                 <GraduationCap className="w-4 h-4" />
-                                <span className="text-[10px] font-mono tracking-widest uppercase">Educación</span>
+                                <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eduEyebrow')}</span>
                             </div>
                             <h2 className="text-2xl font-light text-foreground mb-2">
-                                Formación
+                                {tExp('eduTitle')}
                             </h2>
 
                             <div className="space-y-5">
                                 <div>
-                                    <h3 className="text-xs md:text-sm font-mono text-foreground font-semibold">Ingeniería en Inteligencia Artificial y Ciberseguridad</h3>
-                                    <p className="text-[10px] text-gold-400 font-mono mt-1">UB - En progreso</p>
+                                    <h3 className="text-xs md:text-sm font-mono text-foreground font-semibold">{tExp('edu1Title')}</h3>
+                                    <p className="text-[10px] text-gold-400 font-mono mt-1">{tExp('edu1Sub')}</p>
                                 </div>
                                 <div className="border-t border-border/30 pt-4">
-                                    <h3 className="text-xs md:text-sm font-mono text-foreground font-semibold">Tecnólogo Superior en Desarrollo de Software</h3>
-                                    <p className="text-[10px] text-muted font-mono mt-1">Tecnológico Traversari - Egresado</p>
+                                    <h3 className="text-xs md:text-sm font-mono text-foreground font-semibold">{tExp('edu2Title')}</h3>
+                                    <p className="text-[10px] text-muted font-mono mt-1">{tExp('edu2Sub')}</p>
                                 </div>
                             </div>
                         </div>
@@ -239,42 +374,42 @@ export default function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 4: Cloud, CI/CD y Hardening (Lineal de 3 Columnas) */}
+                {/* Sección 5: Nube, CI/CD y Hardening */}
                 <section className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 text-gold-300">
                         <Shield className="w-4 h-4" />
-                        <span className="text-[10px] font-mono tracking-widest uppercase">Firma Técnica</span>
+                        <span className="text-[10px] font-mono tracking-widest uppercase">{tCloud('eyebrow')}</span>
                     </div>
                     <h2 className="text-2xl font-light text-foreground">
-                        Nube, DevSecOps & Ciberseguridad
+                        {tCloud('title')}
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-2">
                         <div className="flex flex-col gap-2.5">
                             <div className="flex items-center gap-2">
                                 <Server className="w-4.5 h-4.5 text-gold-400" />
-                                <h3 className="text-xs font-mono font-semibold text-foreground">Infraestructura Cloud</h3>
+                                <h3 className="text-xs font-mono font-semibold text-foreground">{tCloud('pillar1Title')}</h3>
                             </div>
                             <p className="text-muted text-xs leading-relaxed font-light">
-                                Despliegue de arquitecturas en la nube mediante servicios de Amazon Web Services (AWS) como Lightsail para mantener servidores VPS de alto rendimiento.
+                                {tCloud('pillar1Desc')}
                             </p>
                         </div>
                         <div className="flex flex-col gap-2.5 md:px-4 md:border-x border-border/40">
                             <div className="flex items-center gap-2">
                                 <RefreshCw className="w-4.5 h-4.5 text-gold-400" />
-                                <h3 className="text-xs font-mono font-semibold text-foreground">Automatización y CI/CD</h3>
+                                <h3 className="text-xs font-mono font-semibold text-foreground">{tCloud('pillar2Title')}</h3>
                             </div>
                             <p className="text-muted text-xs leading-relaxed font-light">
-                                Integración de pipelines de despliegue continuo (CI/CD) con herramientas como GitHub Actions, dirigidos de forma automatizada hacia VPS y servidores cloud.
+                                {tCloud('pillar2Desc')}
                             </p>
                         </div>
                         <div className="flex flex-col gap-2.5">
                             <div className="flex items-center gap-2">
                                 <Shield className="w-4.5 h-4.5 text-gold-400" />
-                                <h3 className="text-xs font-mono font-semibold text-foreground">Ciberseguridad</h3>
+                                <h3 className="text-xs font-mono font-semibold text-foreground">{tCloud('pillar3Title')}</h3>
                             </div>
                             <p className="text-muted text-xs leading-relaxed font-light">
-                                Integración de prácticas DevSecOps desde el diseño inicial, asegurando el empaquetado seguro en Docker y mitigando riesgos de seguridad a nivel de arquitectura.
+                                {tCloud('pillar3Desc')}
                             </p>
                         </div>
                     </div>
@@ -282,23 +417,23 @@ export default function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 5: Flujo & Herramientas (Lineal Asimétrica) */}
+                {/* Sección 6: Flujo & Herramientas */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
                     <div className="md:col-span-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-gold-300">
                             <Layers className="w-4 h-4" />
-                            <span className="text-[10px] font-mono tracking-widest uppercase">Entorno de Trabajo</span>
+                            <span className="text-[10px] font-mono tracking-widest uppercase">{tTools('eyebrow')}</span>
                         </div>
                         <h2 className="text-2xl font-light text-foreground mb-2">
-                            Flujo de Trabajo & Herramientas
+                            {tTools('title')}
                         </h2>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-2">
                             <div className="flex flex-col gap-2.5">
-                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/40 pb-1">Sistemas & Terminal</span>
+                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/40 pb-1">{tTools('systemsTitle')}</span>
                                 <div className="flex flex-wrap gap-2 mt-1">
                                     <span className="luxury-badge">Arch Linux</span>
-                                    <span className="luxury-badge">Debian</span>
+                                    <span className="luxury-badge">Debian 13</span>
                                     <span className="luxury-badge">Neovim</span>
                                     <span className="luxury-badge">tmux</span>
                                     <span className="luxury-badge">Alacritty</span>
@@ -307,10 +442,10 @@ export default function PortfolioPage() {
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/40 pb-1">Estudio Técnico</span>
-                                <span className="text-xs font-mono font-semibold text-foreground mt-1">Sioyek Lector PDF</span>
+                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/40 pb-1">{tTools('studyTitle')}</span>
+                                <span className="text-xs font-mono font-semibold text-foreground mt-1">{tTools('pdfTitle')}</span>
                                 <p className="text-muted text-xs leading-relaxed font-light">
-                                    Lector de PDFs técnicos enfocado en navegación ágil por teclado para agilizar el estudio académico y técnico profundo.
+                                    {tTools('pdfDesc')}
                                 </p>
                             </div>
                         </div>
@@ -319,26 +454,37 @@ export default function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 6: Filosofía & Valores Fundamentales */}
+                {/* Sección 7: Filosofía & Valores Fundamentales */}
                 <ValuesPhilosophySection />
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 7: Consola Interactiva (La Única Caja Bento / Luxury Card del Portafolio) */}
-                <section className="md:col-span-3 flex flex-col gap-4">
+                {/* Sección 8: Centro de Contacto Interactivo */}
+                <section className="flex flex-col gap-6">
+                    <div className="flex items-center gap-2 text-gold-300">
+                        <MessageSquare className="w-4 h-4" />
+                        <span className="text-[10px] font-mono tracking-widest uppercase">{tContact('eyebrow')}</span>
+                    </div>
+                    <ContactForm />
+                </section>
+
+                <hr className="luxury-divider" />
+
+                {/* Sección 9: Consola Interactiva Virtual SSH */}
+                <section className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-gold-300">
                                 <Terminal className="w-4 h-4" />
-                                <span className="text-[10px] font-mono tracking-widest uppercase">Módulo Interactivo</span>
+                                <span className="text-[10px] font-mono tracking-widest uppercase">{tTerm('eyebrow')}</span>
                             </div>
                             <span className="luxury-badge">Terminal v1.0</span>
                         </div>
                         <h2 className="text-xl font-light text-foreground mt-1">
-                            Consola Virtual
+                            {tTerm('title')}
                         </h2>
                         <p className="text-foreground/75 text-xs md:text-sm leading-relaxed font-light">
-                            Si prefieres la interacción clásica por comandos, puedes explorar mi perfil y proyectos ingresando comandos de Unix (como <code className="font-mono text-gold-300 bg-background/50 px-1.5 py-0.5 rounded text-[11px]">help</code> o <code className="font-mono text-gold-300 bg-background/50 px-1.5 py-0.5 rounded text-[11px]">projects</code>) en esta terminal virtual en tiempo real:
+                            {tTerm('subtitle', { commands: 'projects, skills, help' })}
                         </p>
                     </div>
                     <TerminalConsole />
@@ -354,3 +500,4 @@ export default function PortfolioPage() {
         </div>
     );
 }
+

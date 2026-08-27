@@ -30,9 +30,13 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 ### Estructura de Directorios (Feature-Sliced Design)
 ```text
 frontend/web/src/app/(portfolio)/
+├── messages/               # Diccionarios locales del portafolio (es.json, en.json)
 ├── portfolio/
-│   └── page.tsx            # Página principal del portafolio
+│   └── page.tsx            # Página principal del portafolio (9 secciones editoriales + SSR fallback)
 ├── features/
+│   ├── projects/           # Feature: Showcase y catálogo de proyectos
+│   │   ├── components/     # ProjectShowcase.tsx
+│   │   └── types.ts        # Tipos e interfaces de proyectos
 │   ├── terminal/           # Feature: Terminal virtual interactiva
 │   │   ├── components/     # TerminalConsole.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
 │   │   ├── hooks/          # useTerminalSocket.ts (Socket.io client)
@@ -42,22 +46,34 @@ frontend/web/src/app/(portfolio)/
 │       ├── components/     # ContactForm.tsx
 │       ├── hooks/          # useContact.ts
 │       └── types.ts        # Tipos del formulario
-├── components/             # ThemeToggle.tsx, TypewriterRole.tsx, ValuesPhilosophySection.tsx
+├── components/             # ThemeToggle.tsx, LanguageToggle.tsx, TypewriterRole.tsx, ValuesPhilosophySection.tsx
 ├── globals.css             # Estilos específicos del portafolio
-└── layout.tsx              # Layout independiente
+└── layout.tsx              # Layout independiente con NextIntlClientProvider y generateMetadata dinámico
 ```
+
+### Internacionalización y SEO (next-intl)
+* **Diccionarios Encapsulados:** Textos de UI gestionados en `(portfolio)/messages/es.json` y `en.json`.
+* **Metadatos Dinámicos Localizados:** `generateMetadata()` consume `getTranslations("Metadata")` para emitir títulos y descripciones en español e inglés.
+* **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) para posicionar el portafolio en motores de búsqueda internacionales.
+* **Cero Parpadeos (SSR):** `<html lang={locale}>` dinámico según la cookie `NEXT_LOCALE` o cabecera `Accept-Language`.
+
 
 ### Secciones Principales y Adaptabilidad Móvil
 1. **Hero & Biografía:** Presentación profesional con valores de fe cristiana, visión de ingeniería en IA y ciberseguridad.
-2. **Terminal Virtual SSH (Desktop):**
+2. **Showcase de Proyectos:** Galería con filtros reactivos por categoría, insignias de estado y soporte bilingüe (`ProjectShowcase.tsx`).
+3. **Terminal Virtual SSH (Desktop):**
    * En pantallas móviles/táctiles, **no se inicializa el WebSocket ni se renderiza la consola interactiva** debido a la falta de teclas de flecha, Tab y secuencias ANSI en teclados móviles. En su lugar, se muestra un banner explicativo (`MobileTerminalBanner.tsx`).
-3. **Formulario de Contacto:** Envíos directos validados hacia `POST /portfolio/contact`.
+4. **Formulario de Contacto:** Envíos directos validados hacia `POST /portfolio/contact`.
 
 ---
 
-## 3. Backend y WebSockets (NestJS 11)
+## 3. Backend, Corpus y Persistencia (NestJS 11)
 
-### 3.1 Terminal Virtual SSH (WebSockets sobre Socket.io)
+### 3.1 Corpus Maestro y Sembrado Atómico
+* **Corpus:** `backend/src/portfolio/corpus/projects.json` (Fuente de verdad en Git con 8 proyectos bilingües).
+* **Seeder:** `backend/src/portfolio/cli/seed-portfolio.ts` (Sembrado atómico en `portfolio.sqlite` usando `better-sqlite3` en modo WAL y transacción con `INSERT OR REPLACE`).
+
+### 3.2 Terminal Virtual SSH (WebSockets sobre Socket.io)
 * **Gateway:** `PortfolioGateway` (`backend/src/portfolio/gateways/portfolio.gateway.ts`).
 * **Namespace:** `terminal` (transporte WebSocket exclusivo sobre Socket.io).
 * **Flujo de Eventos:**
@@ -67,16 +83,15 @@ frontend/web/src/app/(portfolio)/
 * **Comandos Soportados en `PortfolioService`:**
   * `help`, `about`, `neofetch`, `contact`, `skills`, `clear`, `matrix`, `date`, `uptime`, `ls`, `cat`, `whoami`, `exit`.
 
-### 3.2 Formulario de Contacto (API REST)
-* **Endpoints:**
+### 3.3 Endpoints REST y Entidades TypeORM
+* **Proyectos:**
+  * `GET /portfolio/projects?lang=es|en`: Listado bilingüe con tecnologías parseadas como arreglo.
+  * `GET /portfolio/projects/:slug`: Detalle individual por slug.
+  * **Entidad:** `PortfolioProject` (`portfolio-project.entity.ts`) con índice único compuesto `@Index(['slug', 'language'], { unique: true })`.
+* **Contacto:**
   * `POST /portfolio/contact`: Recibe y valida `CreateContactMessageDto` (`name`, `email`, `message`).
   * `GET /portfolio/contact`: Listado de mensajes para auditoría administrativa.
-* **Entidad `ContactMessage` (`backend/src/portfolio/entities/contact-message.entity.ts`):**
-  * `id`: Clave primaria autoincremental de tipo entero.
-  * `name`: Nombre del remitente (string).
-  * `email`: Correo electrónico validado con `@IsEmail()`.
-  * `message`: Contenido del mensaje (string, `@IsNotEmpty()`).
-  * `createdAt`: Timestamp de creación automática.
+  * **Entidad:** `ContactMessage` (`contact-message.entity.ts`).
 
 ---
 
@@ -104,5 +119,13 @@ pnpm -r typecheck
 
 ---
 
-## 6. Combinar con
+## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+
+* **Actualización Mandatoria ante Cambios:** Cada vez que se agreguen, modifiquen, refactoricen o eliminen comandos de la terminal SSH, endpoints REST, entidades TypeORM, esquemas en `portfolio.sqlite`, datasets en `corpus/projects.json` o componentes del portafolio, es **obligatorio actualizar la documentación técnica en `docs/03-portfolio/`**.
+* **Gestión Documental Proactiva:** Se autoriza agregar nuevos archivos `.md`, estructurar nuevas subcarpetas en `docs/03-portfolio/` o podar contenido obsoleto, preservando el orden y la fidelidad técnica con el código implementado.
+
+---
+
+## 7. Combinar con
 * **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para reglas de monorepo, FSD, configuración de Nginx /socket.io/ y PM2).
+

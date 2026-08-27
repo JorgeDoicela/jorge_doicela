@@ -23,17 +23,22 @@ export class CybersecurityController {
     @Query('severity') severity?: string,
     @Query('postType') postType?: string,
     @Query('search') search?: string,
+    @Query('lang') lang?: string,
   ) {
     return this.securityService.findAll(
       severity as SecuritySeverity,
       postType as SecurityPostType,
       search,
+      lang,
     );
   }
 
   @Get(':idOrSlug')
-  async findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.securityService.findOne(idOrSlug);
+  async findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Query('lang') lang?: string,
+  ) {
+    return this.securityService.findOne(idOrSlug, lang);
   }
 
   @Post()

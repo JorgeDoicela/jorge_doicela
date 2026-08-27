@@ -11,12 +11,12 @@ export type SecuritySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type SecurityPostType = 'advisory' | 'hardening_guide' | 'writeup';
 
 @Entity('security_posts')
+@Index(['slug', 'language'], { unique: true })
 export class SecurityPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -48,6 +48,9 @@ export class SecurityPost {
 
   @Column({ default: 'cybersecurity,devsecops' })
   tags: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ default: 0 })
   views: number;

@@ -11,8 +11,16 @@ export class BlogService {
     private readonly blogRepository: Repository<BlogPost>,
   ) {}
 
-  async findAll(search?: string, series?: string): Promise<BlogPost[]> {
+  async findAll(
+    search?: string,
+    series?: string,
+    lang?: string,
+  ): Promise<BlogPost[]> {
     const qb = this.blogRepository.createQueryBuilder('blog');
+
+    if (lang) {
+      qb.andWhere('blog.language = :lang', { lang });
+    }
 
     if (search) {
       qb.andWhere(
@@ -29,11 +37,24 @@ export class BlogService {
     return qb.getMany();
   }
 
-  async findOne(idOrSlug: string): Promise<BlogPost> {
+  async findOne(idOrSlug: string, lang?: string): Promise<BlogPost> {
     const isId = !isNaN(Number(idOrSlug));
-    const post = isId
-      ? await this.blogRepository.findOne({ where: { id: Number(idOrSlug) } })
-      : await this.blogRepository.findOne({ where: { slug: idOrSlug } });
+    let post: BlogPost | null = null;
+
+    if (isId) {
+      post = await this.blogRepository.findOne({
+        where: { id: Number(idOrSlug) },
+      });
+    } else {
+      if (lang) {
+        post = await this.blogRepository.findOne({
+          where: { slug: idOrSlug, language: lang },
+        });
+      }
+      if (!post) {
+        post = await this.blogRepository.findOne({ where: { slug: idOrSlug } });
+      }
+    }
 
     if (!post) {
       throw new NotFoundException(

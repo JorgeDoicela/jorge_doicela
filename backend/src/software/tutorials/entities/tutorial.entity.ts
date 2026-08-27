@@ -12,12 +12,12 @@ import { TutorialStep } from './tutorial-step.entity';
 export type TutorialDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
 @Entity('tutorials')
+@Index(['slug', 'language'], { unique: true })
 export class Tutorial {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column()
@@ -46,6 +46,9 @@ export class Tutorial {
 
   @Column({ default: 'tutorial,guide' })
   tags: string;
+
+  @Column({ default: 'es' })
+  language: string;
 
   @Column({ nullable: true })
   coverImage?: string;

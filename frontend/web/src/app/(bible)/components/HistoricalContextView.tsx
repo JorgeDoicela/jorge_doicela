@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AtlasDashboard } from '../features/atlas';
 import { TimelineDashboard } from '../features/timeline';
 import { ArchaeologyFeedDashboard } from '../features/archaeology-feed';
@@ -15,6 +16,7 @@ interface HistoricalContextViewProps {
 export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
   initialSubTab = 'atlas',
 }) => {
+  const t = useTranslations('HistoricalContext');
   const [subTab, setSubTab] = useState<HistoricalContextSubTab>(initialSubTab);
 
   return (
@@ -23,7 +25,7 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-accents-2 bg-accents-1/40 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-accents-4 hidden sm:inline">
-            Eje de Contexto:
+            {t('axisTitle')}
           </span>
           <div className="inline-flex flex-wrap rounded-lg border border-accents-2 bg-background p-1 text-xs gap-1">
             <button
@@ -36,7 +38,7 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
               }`}
             >
               <Map className="w-3.5 h-3.5" />
-              <span>Atlas Bíblico & Rutas</span>
+              <span>{t('atlasTab')}</span>
             </button>
             <button
               type="button"
@@ -48,7 +50,7 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
-              <span>Cronología Sincrónica</span>
+              <span>{t('timelineTab')}</span>
             </button>
             <button
               type="button"
@@ -60,17 +62,17 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
               }`}
             >
               <Landmark className="w-3.5 h-3.5" />
-              <span>Evidencias & Arqueología</span>
+              <span>{t('archaeologyTab')}</span>
             </button>
           </div>
         </div>
 
         <div className="text-[11px] font-mono text-accents-4 hidden md:block">
           {subTab === 'atlas'
-            ? 'Georreferenciación WGS84, itinerarios y reconstrucciones arqueológicas'
+            ? t('atlasSubtitle')
             : subTab === 'timeline'
-            ? 'Sincronía de Reyes, Profetas e Imperios de la Antigüedad'
-            : 'Epigrafía, manuscritos del Mar Muerto y validación histórica'}
+            ? t('timelineSubtitle')
+            : t('archaeologySubtitle')}
         </div>
       </div>
 

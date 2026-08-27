@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Software & Tech Hub | Jorge Doicela",
-    "description": "Tech hub featuring 7 categories: Tech News, Architecture Blog, Forums, Artificial Intelligence, Cybersecurity, Tutorials, and Projects Showcase."
+    "description": "Technology platform featuring 7 categories: News, Architecture Blog, Technical Forums, Artificial Intelligence, Cybersecurity, Tutorials, and Projects Showcase."
   },
   "Nav": {
     "all": "All Content",
@@ -11,11 +11,14 @@
     "ai": "Artificial Intelligence",
     "cybersecurity": "Cybersecurity",
     "tutorials": "Tutorials",
-    "projects": "Projects"
+    "projects": "Projects",
+    "backToSoftware": "← Back to Software"
   },
   "Search": {
-    "placeholder": "Search news, articles, advisories, or projects...",
-    "spotlightHint": "Press ⌘K to search quickly"
+    "placeholder": "Search news, articles, advisories or projects...",
+    "spotlightHint": "Press ⌘K to search instantly",
+    "searchCatalog": "Search entire catalog (Cmd + K)",
+    "search": "Search..."
   },
   "Common": {
     "readMore": "Read more",
@@ -23,6 +26,70 @@
     "views": "{count} views",
     "author": "By {name}",
     "statusActive": "Active",
-    "statusWip": "In progress"
+    "statusWip": "In Progress",
+    "reading": "Reading Time:",
+    "published": "Published:",
+    "tags": "Tags:",
+    "articleMetadata": "Article Metadata",
+    "officialSource": "Official News Source ↗"
+  },
+  "News": {
+    "badge": "Latest & Tech News",
+    "title": "Technology News",
+    "subtitle": "Latest trends, framework releases, web standards, and industry updates.",
+    "searchPlaceholder": "Search news...",
+    "back": "← Back to News",
+    "allNews": "← View All News"
+  },
+  "Blog": {
+    "badge": "Software Engineering & Architecture",
+    "title": "Architecture Blog",
+    "subtitle": "In-depth articles on Clean Architecture, DevSecOps, extreme memory optimization (1 GB RAM), and distributed system design.",
+    "searchPlaceholder": "Search blog essays...",
+    "back": "← Back to Blog",
+    "allPosts": "← View All Essays"
+  },
+  "Forum": {
+    "badge": "Tech Community",
+    "title": "Engineering Forums & Discussions",
+    "subtitle": "Architecture debates, DevSecOps questions, infrastructure optimization, and technical feedback.",
+    "searchPlaceholder": "Search forums...",
+    "back": "← Back to Forum",
+    "newTopic": "New Topic",
+    "replies": "Replies",
+    "postReply": "Post Reply"
+  },
+  "Ai": {
+    "badge": "AI Models & Agents Directory",
+    "title": "Artificial Intelligence",
+    "subtitle": "Catalog of open-weight LLMs, embeddings, computer vision models, and prompt engineering tooling.",
+    "searchPlaceholder": "Search models or tools...",
+    "back": "← Back to AI Directory",
+    "all": "All",
+    "models": "Models",
+    "agents": "Agents",
+    "tools": "Tools"
+  },
+  "Cybersecurity": {
+    "badge": "Security Center & DevSecOps",
+    "title": "Cybersecurity Advisories",
+    "subtitle": "CVE vulnerability advisories, Linux/Nginx hardening guides, mTLS protocols, and threat mitigation.",
+    "searchPlaceholder": "Search advisories or CVE...",
+    "back": "← Back to Cybersecurity",
+    "allSeverities": "All Severities"
+  },
+  "Tutorials": {
+    "badge": "Hands-on Labs",
+    "title": "Interactive Tutorials",
+    "subtitle": "Step-by-step guides with reproducible code, interactive diagrams, and engineering challenges.",
+    "searchPlaceholder": "Search tutorials or stack...",
+    "back": "← Back to Tutorials"
+  },
+  "Projects": {
+    "badge": "Projects Showcase",
+    "title": "Software Projects",
+    "subtitle": "Production systems, open-source repositories, and reference architectures.",
+    "searchPlaceholder": "Search projects or stack...",
+    "back": "← Back to Projects"
   }
 }

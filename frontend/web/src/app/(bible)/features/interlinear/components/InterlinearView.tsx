@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   HebrewAramaicToken,
   GreekToken,
@@ -34,6 +35,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
   chapter = 1,
   testament,
 }) => {
+  const t = useTranslations('Interlinear');
   const [activeCanon, setActiveCanon] = useState<'OT' | 'NT'>('OT');
   const [hebrewVerses, setHebrewVerses] = useState<InterlinearVerse[]>([]);
   const [greekVerses, setGreekVerses] = useState<GreekInterlinearVerse[]>([]);
@@ -293,14 +295,14 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
       />
 
       {/* Aviso de Expansión Continua de Manuscritos Interlineales */}
-      <div className="pt-6">
+      <div className="pt-2">
         <OngoingExpansionNotice
-          contextTitle="Módulo Interlineal en Crecimiento"
-          contextDescription="Esta plataforma es nueva y por eso aún no cuenta con muchas cosas. Me esfuerzo cada día por brindarte un trabajo riguroso y de máxima calidad, indexando y lematizando morfológicamente cada término hebreo, arameo y griego palabra por palabra junto con su pronunciación y concordancia Strong."
-          activeItemsSummary="Capítulos activos listos: Génesis 1, 2 y Juan 1 (BHS / NA28 / SBLGNT) con morfología completa."
+          contextTitle={t('expansionTitle')}
+          activeItemsSummary={t('expansionSummary')}
         />
       </div>
     </div>
   );
 };
+
 

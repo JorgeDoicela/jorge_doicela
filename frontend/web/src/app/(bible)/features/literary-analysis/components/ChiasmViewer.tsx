@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChiasmStructure, PoeticColon } from '../types';
 import { POETIC_STRUCTURES_DATABASE } from '../data/poeticStructuresData';
 
 export const ChiasmViewer: React.FC = () => {
+  const t = useTranslations('LiteraryAnalysis');
   const [selectedStructureId, setSelectedStructureId] = useState<string>(
     POETIC_STRUCTURES_DATABASE[0]?.id || '',
   );
@@ -19,10 +21,7 @@ export const ChiasmViewer: React.FC = () => {
   if (!currentStructure) {
     return (
       <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
-        <div className="text-sm font-semibold text-foreground">Visualizador de Quiasmos y Estructuras Poéticas</div>
-        <p className="text-xs text-accents-4 max-w-md mx-auto">
-          Módulo de análisis de paralelismos semánticos y simetrías concéntricas del texto bíblico.
-        </p>
+        <div className="text-sm font-semibold text-foreground">{t('chiasmsTab')}</div>
       </div>
     );
   }
@@ -60,7 +59,7 @@ export const ChiasmViewer: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-accents-2 bg-background shadow-xs">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-accents-4 uppercase tracking-wider">
-            Pasaje Poético:
+            {t('poeticPassage')}
           </span>
           <div className="flex flex-wrap gap-1.5">
             {POETIC_STRUCTURES_DATABASE.map((item) => (
@@ -85,7 +84,7 @@ export const ChiasmViewer: React.FC = () => {
         </div>
 
         <div className="text-[11px] font-mono text-accents-4">
-          Patrones semíticos y simetría concéntrica
+          {t('chiasmSubtitle')}
         </div>
       </div>
 
@@ -107,24 +106,23 @@ export const ChiasmViewer: React.FC = () => {
         <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-500 flex items-start gap-2.5">
           <div>
             <strong className="font-semibold block uppercase text-[10px] tracking-wider mb-0.5">
-              Clímax Teológico del Quiasmo:
+              {t('theologicalClimax')}
             </strong>
             <p className="text-foreground leading-relaxed">
               {currentStructure.focalMessage}
             </p>
           </div>
         </div>
-
       </div>
 
       {/* Visualizador de la Estructura en Anillo / Concéntrica */}
       <div className="p-5 sm:p-6 rounded-2xl border border-accents-2 bg-background space-y-4 shadow-xs">
         <div className="flex items-center justify-between border-b border-accents-2 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-accents-4">
-            Diagrama de Simetría Concéntrica (Pasa el cursor sobre cada elemento para ver su gemelo):
+            {t('diagramTitle')}
           </span>
           <span className="text-[11px] font-mono text-accents-4">
-            {currentStructure.cola.length} elementos alineados
+            {t('elementsAligned', { count: currentStructure.cola.length })}
           </span>
         </div>
 
@@ -167,7 +165,7 @@ export const ChiasmViewer: React.FC = () => {
                       </span>
                       {colon.parallelismType && (
                         <span className="text-[10px] font-mono text-accents-4 px-1.5 py-0.2 rounded bg-accents-1 border border-accents-2">
-                          Paralelismo {colon.parallelismType}
+                          {colon.parallelismType}
                         </span>
                       )}
                     </div>
@@ -201,7 +199,7 @@ export const ChiasmViewer: React.FC = () => {
                 {colon.theologicalNote && (
                   <div className="mt-2.5 pt-2 border-t border-accents-2/60 text-xs text-accents-4 flex items-center gap-2">
                     <span className="font-mono font-bold text-accents-5 text-[10px] uppercase">
-                      Función Retórica:
+                      {t('rhetoricalFunction')}
                     </span>
                     <span className="text-accents-5">{colon.theologicalNote}</span>
                   </div>
@@ -217,7 +215,7 @@ export const ChiasmViewer: React.FC = () => {
         <div className="p-5 rounded-2xl bg-accents-1 border border-accents-2 space-y-2 animate-in fade-in duration-150">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-bold text-foreground uppercase">
-              Análisis del Elemento {activeColon.label} ({activeColon.verseRef}):
+              {t('syntacticAnalysis')} {activeColon.label} ({activeColon.verseRef})
             </span>
           </div>
           <p className="text-xs sm:text-sm text-accents-5 leading-relaxed">

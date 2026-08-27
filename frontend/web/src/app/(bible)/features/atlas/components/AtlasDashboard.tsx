@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AtlasSubTab } from '../types';
 import { useAtlasMap } from '../hooks/useAtlasMap';
 import { MapToolbar } from './map/MapToolbar';
@@ -10,6 +11,7 @@ import { HistoricalRoutesPlayer } from './routes/HistoricalRoutesPlayer';
 import { Archaeological3DViewer } from './3d/Archaeological3DViewer';
 
 export const AtlasDashboard: React.FC = () => {
+  const t = useTranslations('HistoricalContext');
   const [activeTab, setActiveTab] = useState<AtlasSubTab>('map');
 
   const {
@@ -56,7 +58,7 @@ export const AtlasDashboard: React.FC = () => {
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            <span>Atlas Vectorial Georreferenciado</span>
+            <span>{t('vectorAtlas')}</span>
           </button>
 
           <button
@@ -68,7 +70,7 @@ export const AtlasDashboard: React.FC = () => {
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            <span>Rutas Históricas Trazadas</span>
+            <span>{t('historicalRoutes')}</span>
           </button>
 
           <button
@@ -80,16 +82,16 @@ export const AtlasDashboard: React.FC = () => {
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            <span>Visualizador 3D Arqueológico</span>
+            <span>{t('viewer3d')}</span>
           </button>
         </div>
 
         <div className="text-[11px] font-mono text-accents-4 hidden sm:block">
           {activeTab === 'map'
-            ? `${filteredPlaces.length} ubicaciones bíblicas georreferenciadas`
+            ? t('locationsCount', { count: filteredPlaces.length })
             : activeTab === 'routes'
-            ? '7 itinerarios bíblicos con navegación paso a paso'
-            : '4 santuarios y ciudades sagradas en 3D'}
+            ? t('routesCount')
+            : t('sanctuariesCount')}
         </div>
       </div>
 

@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { LiteraryViewSubMode } from '../types';
 import { ChiasmViewer } from './ChiasmViewer';
 import { PaulineDiscourseViewer } from './PaulineDiscourseViewer';
 import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 export const LiteraryAnalysisView: React.FC = () => {
+  const t = useTranslations('LiteraryAnalysis');
   const [subMode, setSubMode] = useState<LiteraryViewSubMode>('poetic_chiasm');
 
   return (
@@ -15,7 +17,7 @@ export const LiteraryAnalysisView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-accents-2 bg-accents-1/40">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-accents-4">
-            Eje de Análisis:
+            {t('axisTitle')}
           </span>
           <div className="inline-flex rounded-lg border border-accents-2 bg-background p-1 text-xs">
             <button
@@ -27,7 +29,7 @@ export const LiteraryAnalysisView: React.FC = () => {
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
-              Quiasmos y Paralelismos Semíticos (Salmos/Profetas)
+              {t('chiasmsTab')}
             </button>
             <button
               type="button"
@@ -38,16 +40,15 @@ export const LiteraryAnalysisView: React.FC = () => {
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
-              Marcadores de Discurso y Cláusulas (Epístolas Paulinas)
+              {t('paulineTab')}
             </button>
-
           </div>
         </div>
 
         <div className="text-[11px] font-mono text-accents-4 hidden md:block">
           {subMode === 'poetic_chiasm'
-            ? 'Estructuras concéntricas semíticas (A-B-C-B\'-A\')'
-            : 'Diagramación de bloques y conectores lógicos griegos'}
+            ? t('chiasmSubtitle')
+            : t('paulineSubtitle')}
         </div>
       </div>
 
@@ -61,9 +62,8 @@ export const LiteraryAnalysisView: React.FC = () => {
       {/* Aviso de Expansión Continua de Quiasmos y Discursos */}
       <div className="pt-6">
         <OngoingExpansionNotice
-          contextTitle="Análisis Literario y Quiasmos en Crecimiento"
-          contextDescription="Esta plataforma es nueva y por eso aún no cuenta con muchas cosas. Me esfuerzo con dedicación para ofrecerte un trabajo confiable y de excelencia, diagramando y validando académicamente más estructuras quiásticas concéntricas y flujos de discurso paulino en todo el canon bíblico."
-          activeItemsSummary="Pasajes poéticos y epístolas activas: Salmo 23, Isaías 6, Génesis 1-11, Proverbios 3, Romanos 8 y Efesios 1."
+          contextTitle={t('expansionTitle')}
+          activeItemsSummary={t('expansionSummary')}
         />
       </div>
     </div>

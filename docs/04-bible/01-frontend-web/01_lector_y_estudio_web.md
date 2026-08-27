@@ -15,6 +15,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 >
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD):** Cada una de las 12 herramientas exegéticas está encapsulada en su propia subcarpeta funcional dentro de `(bible)/features/` (`verses`, `books`, `translations`, `interlinear`, `parallel-view`, `grammar-search`, `atlas`, `timeline`, `archaeology-feed`, etc.).
+> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todos los motores exegéticos (Interlineal Inverso, Quiasmos, Atlas, Cronología Sincrónica, Léxicos) consumen namespaces tipados sin cadenas hardcodeadas.
 > * **Cero Datos Hardcodeados en Cliente:** Ningún archivo TypeScript contiene versículos, palabras, coordenadas ni textos bíblicos incrustados. Toda la data se consume asíncronamente desde los endpoints de NestJS (`GET /bible/*`).
 > * **Header Unificado y Responsivo:** `BibleHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de 6 suites en pantallas móviles (`< md`).
 > * **Barra de Control Exegético:** `ReaderToolbar.tsx` agrupa pasaje (`UnifiedPassagePicker`), versión bíblica (`TranslationSelector`) y controles de tipografía/diseño (`ReaderLayoutMode`, `ReaderFontSize`, `ReaderFontFamily`) de forma 100% responsiva.

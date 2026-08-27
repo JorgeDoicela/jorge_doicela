@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   HebrewAramaicToken,
   GreekToken,
@@ -30,6 +31,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
   onSelectToken,
   onOpenStrong,
 }) => {
+  const t = useTranslations('Interlinear');
   const isOT = !!hebrewVerse;
   const verse = isOT ? hebrewVerse! : greekVerse!;
   const tokens = verse.tokens;
@@ -64,7 +66,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
             {verse.bookName} {verse.chapter}:{verse.verseNumber}
           </span>
           <span className="text-[11px] font-mono text-accents-4">
-            (Interlineal Inverso Español ↔ {isOT ? 'Hebreo / Arameo' : 'Griego Koiné'})
+            ({t('interlinearWith', { language: isOT ? (verse as InterlinearVerse).language === 'Aramaic' ? t('aramaic') : t('masoreticHebrew') : t('koineGreek') })})
           </span>
         </div>
 
@@ -79,75 +81,65 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
         >
           {isOT
             ? (verse as InterlinearVerse).language === 'Aramaic'
-              ? 'Arameo Imperial'
-              : 'Hebreo Masorético'
-            : 'Griego Koiné'}
+              ? t('aramaic')
+              : t('masoreticHebrew')
+            : t('koineGreek')}
         </span>
       </div>
 
-      {/* Vista 1: Lectura Fluida en Español con Iluminación Bidireccional */}
+      {/* Vista 1: Lectura Fluida con Iluminación Bidireccional */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-mono uppercase tracking-wider text-accents-4">
-            Texto en Español (Pasa el cursor o toca cada palabra):
+            {t('textInLanguage')}
           </span>
           <span className="text-[10px] font-mono text-accents-4">
-            Hover o tap sincronizado con la lengua original
+            {t('hoverActive')}
           </span>
         </div>
 
         <div className="p-5 rounded-xl bg-accents-1/40 border border-accents-2 text-base sm:text-lg leading-loose text-foreground font-serif">
           {tokens.map((tok) => {
-            if (!tok.spanishSpan || tok.spanishSpan.trim() === '') return null;
             const isHovered = activeTokenId === tok.id;
+            const isSelected = activeTokenId === tok.id;
+
             return (
               <span
                 key={tok.id}
                 onMouseEnter={() => onHoverToken(tok.id)}
                 onMouseLeave={() => onHoverToken(null)}
                 onClick={() => onSelectToken(tok)}
-                className={`inline-block px-1.5 py-0.5 mx-1 rounded-md transition-all cursor-pointer select-none ${
-                  isHovered
-                    ? 'bg-amber-500/20 text-amber-500 font-bold ring-2 ring-amber-500/50 shadow-xs scale-105'
-                    : 'hover:bg-accents-2 hover:text-foreground text-foreground'
+                className={`inline-block px-1.5 py-0.5 rounded-md cursor-pointer transition-all duration-150 mx-0.5 ${
+                  isHovered || isSelected
+                    ? 'bg-amber-500/20 text-foreground font-bold underline decoration-amber-500 decoration-2 underline-offset-4 shadow-xs'
+                    : 'hover:bg-accents-2'
                 }`}
-                title={`Original: ${'greek' in tok ? tok.greek : tok.hebrew} (${tok.strong})`}
               >
-                {tok.spanishSpan}
+                {tok.gloss}
               </span>
             );
           })}
         </div>
       </div>
 
-      {/* Ficha Activa Flotante / Preview Rápido con Altura Estable (Cero Salto de Diseño) */}
-      <div className="min-h-[74px] rounded-xl border transition-all flex items-center justify-between p-3 sm:p-4 bg-accents-1/30">
+      {/* Panel Flotante de Inspección Rápida de la Palabra Activa */}
+      <div className="min-h-[56px] p-3 rounded-xl border border-accents-2 bg-accents-1/30 flex items-center">
         {activeToken ? (
-          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-100">
-            <div className="flex items-center gap-4">
-              <div
-                dir={'hebrew' in activeToken ? 'rtl' : 'ltr'}
-                lang={'hebrew' in activeToken ? 'he' : 'el'}
-                className="text-2xl sm:text-3xl font-serif font-bold text-foreground"
+          <div className="w-full flex flex-wrap items-center justify-between gap-4 animate-in fade-in duration-150">
+            <div className="flex items-center gap-3">
+              <span
+                dir={isOT ? 'rtl' : 'ltr'}
+                className="text-2xl font-serif font-bold text-foreground"
               >
-                {'hebrew' in activeToken ? activeToken.hebrew : activeToken.greek}
-              </div>
-
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2 text-xs font-mono">
-                  <span className="font-bold text-foreground">/{activeToken.transliteration}/</span>
-                  {activeToken.ipa && <span className="text-accents-4">{activeToken.ipa}</span>}
-                  <button
-                    type="button"
-                    onClick={() => onOpenStrong(activeToken.strong)}
-                    className="px-2 py-0.5 rounded bg-foreground text-background font-bold text-[10px] hover:bg-foreground/80 cursor-pointer"
-                  >
-                    {activeToken.strong}
-                  </button>
-                </div>
-                <p className="text-xs text-accents-5">
-                  Traducción: <strong className="text-foreground">«{activeToken.gloss}»</strong> • {activeToken.partOfSpeech}
-                </p>
+                {'greek' in activeToken ? activeToken.greek : activeToken.hebrew}
+              </span>
+              <div className="flex flex-col">
+                <span className="text-xs font-mono text-accents-5">
+                  /{activeToken.transliteration}/
+                </span>
+                <span className="text-xs font-semibold text-foreground">
+                  «{activeToken.gloss}»
+                </span>
               </div>
             </div>
 
@@ -155,14 +147,15 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
               <button
                 type="button"
                 onClick={(e) => handlePlayAudio(e, activeToken)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-background border border-accents-2 hover:border-foreground text-xs font-mono text-foreground font-semibold cursor-pointer shadow-xs transition-all"
+                className="px-2.5 py-1.5 rounded-lg border border-accents-2 bg-background hover:bg-accents-1 text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors"
+                title="Escuchar pronunciación"
               >
                 {playingId === activeToken.id ? (
-                  <span className="text-amber-500">Sonando...</span>
+                  <span className="text-amber-500">...</span>
                 ) : (
                   <>
                     <Volume2 className="w-3.5 h-3.5 text-accents-5" />
-                    <span>Pronunciar</span>
+                    <span>Audio</span>
                   </>
                 )}
               </button>
@@ -172,7 +165,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
                 onClick={() => onSelectToken(activeToken)}
                 className="px-3 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold hover:bg-foreground/90 cursor-pointer transition-colors"
               >
-                Ver Análisis Morfológico
+                {t('seeMorphology')}
               </button>
             </div>
           </div>
@@ -180,10 +173,10 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
           <div className="w-full flex items-center justify-between text-xs font-mono text-accents-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5 text-accents-4" />
-              <span>Pasa el cursor sobre cualquier palabra del texto para ver su pronunciación fonética, raíz y análisis morfológico.</span>
+              <span>{t('hoverPrompt')}</span>
             </div>
             <span className="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-accents-1 border border-accents-2">
-              Hover Activo
+              {t('hoverActive')}
             </span>
           </div>
         )}
@@ -192,7 +185,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
       {/* Vista 2: Matriz Interlineal Palabra por Palabra Sincronizada */}
       <div className="space-y-3">
         <span className="text-[11px] font-mono uppercase tracking-wider text-accents-4 block">
-          Desglose Morfológico Interlineal Alineado:
+          {t('morphologyBreakdown')}
         </span>
 
         <div

@@ -11,11 +11,14 @@
     "ai": "Inteligencia Artificial",
     "cybersecurity": "Ciberseguridad",
     "tutorials": "Tutoriales",
-    "projects": "Proyectos"
+    "projects": "Proyectos",
+    "backToSoftware": "← Volver a Software"
   },
   "Search": {
     "placeholder": "Buscar noticias, artículos, avisos o proyectos...",
-    "spotlightHint": "Presiona ⌘K para buscar rápidamente"
+    "spotlightHint": "Presiona ⌘K para buscar rápidamente",
+    "searchCatalog": "Buscar en todo el catálogo (Cmd + K)",
+    "search": "Buscar..."
   },
   "Common": {
     "readMore": "Leer más",
@@ -23,6 +26,70 @@
     "views": "{count} vistas",
     "author": "Por {name}",
     "statusActive": "Activo",
-    "statusWip": "En progreso"
+    "statusWip": "En progreso",
+    "reading": "Lectura:",
+    "published": "Publicado:",
+    "tags": "Etiquetas:",
+    "articleMetadata": "Metadatos del Artículo",
+    "officialSource": "Fuente Oficial de la Noticia ↗"
+  },
+  "News": {
+    "badge": "Actualidad & Novedades",
+    "title": "Noticias Tecnológicas",
+    "subtitle": "Últimas tendencias, lanzamientos de frameworks, estándares web y novedades de la industria.",
+    "searchPlaceholder": "Buscar noticias...",
+    "back": "← Volver a Noticias",
+    "allNews": "← Ver Todas las Noticias"
+  },
+  "Blog": {
+    "badge": "Ingeniería de Software & Arquitectura",
+    "title": "Blog de Arquitectura",
+    "subtitle": "Artículos en profundidad sobre Clean Architecture, DevSecOps, optimización extrema de memoria (1 GB RAM) y diseño de sistemas distribuidos.",
+    "searchPlaceholder": "Buscar artículos del blog...",
+    "back": "← Volver al Blog",
+    "allPosts": "← Ver Todos los Ensayos"
+  },
+  "Forum": {
+    "badge": "Comunidad Técnica",
+    "title": "Foros & Debates de Ingeniería",
+    "subtitle": "Debates de arquitectura, preguntas sobre DevSecOps, optimización de infraestructura y retroalimentación técnica.",
+    "searchPlaceholder": "Buscar en los foros...",
+    "back": "← Volver al Foro",
+    "newTopic": "Nuevo Debate",
+    "replies": "Respuestas",
+    "postReply": "Publicar Respuesta"
+  },
+  "Ai": {
+    "badge": "Directorio de Modelos & Agentes",
+    "title": "Inteligencia Artificial",
+    "subtitle": "Catálogo de modelos LLM abiertos, embeddings, visión computacional y herramientas de ingeniería de prompts.",
+    "searchPlaceholder": "Buscar modelos o herramientas...",
+    "back": "← Volver a Directorio IA",
+    "all": "Todos",
+    "models": "Modelos",
+    "agents": "Agentes",
+    "tools": "Herramientas"
+  },
+  "Cybersecurity": {
+    "badge": "Centro de Seguridad & DevSecOps",
+    "title": "Avisos de Ciberseguridad",
+    "subtitle": "Boletines de vulnerabilidades CVE, guías de hardening para Linux/Nginx, mTLS y mitigación de amenazas.",
+    "searchPlaceholder": "Buscar avisos o CVE...",
+    "back": "← Volver a Ciberseguridad",
+    "allSeverities": "Todas las severidades"
+  },
+  "Tutorials": {
+    "badge": "Laboratorios Prácticos",
+    "title": "Tutoriales Interactivos",
+    "subtitle": "Guías paso a paso con código reproducible, diagramas interactivos y desafíos prácticos de ingeniería.",
+    "searchPlaceholder": "Buscar tutoriales o stack...",
+    "back": "← Volver a Tutoriales"
+  },
+  "Projects": {
+    "badge": "Showcase de Proyectos",
+    "title": "Proyectos de Software",
+    "subtitle": "Sistemas en producción, código abierto y arquitecturas de referencia.",
+    "searchPlaceholder": "Buscar proyectos o stack...",
+    "back": "← Volver a Proyectos"
   }
 }

@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { NewsArticle } from '../../../features/news/types';
 import { API_URL } from '../../../../config';
 
@@ -13,6 +13,9 @@ export default function NewsDetailPage({
 }) {
   const { slug } = use(params);
   const locale = useLocale();
+  const t = useTranslations('News');
+  const tCommon = useTranslations('Common');
+  const tNav = useTranslations('Nav');
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +40,7 @@ export default function NewsDetailPage({
     return (
       <div className="min-h-screen py-16 px-4 flex justify-center items-center">
         <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-sm font-mono">
-          Cargando noticia...
+          ...
         </div>
       </div>
     );
@@ -48,13 +51,13 @@ export default function NewsDetailPage({
       <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
         <p className="text-rose-500 font-semibold">{error || 'Noticia no encontrada'}</p>
         <Link href="/software/news" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono">
-          ← Volver a Noticias
+          {t('back')}
         </Link>
       </div>
     );
   }
 
-  const formattedDate = new Date(article.publishedAt || article.createdAt).toLocaleDateString('es-ES', {
+  const formattedDate = new Date(article.publishedAt || article.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -69,7 +72,7 @@ export default function NewsDetailPage({
         </Link>
         <span>/</span>
         <Link href="/software/news" className="hover:text-[var(--foreground)] transition-colors">
-          Noticias
+          {tNav('news')}
         </Link>
         <span>/</span>
         <span className="text-[var(--foreground)] truncate max-w-xs">{article.title}</span>
@@ -86,7 +89,7 @@ export default function NewsDetailPage({
                 </span>
               )}
               <span className="font-bold uppercase text-cyan-600 dark:text-cyan-400">
-                Noticia
+                {tNav('news')}
               </span>
               <span className="text-zinc-500">• {formattedDate}</span>
             </div>
@@ -113,7 +116,7 @@ export default function NewsDetailPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  <span>Fuente Oficial de la Noticia ↗</span>
+                  <span>{tCommon('officialSource')}</span>
                 </a>
               </div>
             )}
@@ -124,25 +127,25 @@ export default function NewsDetailPage({
         <aside className="lg:col-span-4 space-y-6">
           <div className="p-6 rounded-3xl glass-convex-panel space-y-4 sticky top-20">
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 pb-2 border-b border-black/5 dark:border-white/5">
-              Metadatos del Artículo
+              {tCommon('articleMetadata')}
             </h3>
 
             <div className="space-y-3 text-xs font-mono">
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">Autor:</span>
+                <span className="text-zinc-500">{tCommon('author', { name: '' }).replace('Por ', '').replace('By ', '')}</span>
                 <span className="font-bold text-[var(--foreground)]">{article.author}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">Lectura:</span>
-                <span className="text-[var(--foreground)]">{article.readTimeMinutes} minutos</span>
+                <span className="text-zinc-500">{tCommon('reading')}</span>
+                <span className="text-[var(--foreground)]">{tCommon('readTime', { min: article.readTimeMinutes })}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">Publicado:</span>
+                <span className="text-zinc-500">{tCommon('published')}</span>
                 <span className="text-[var(--foreground)]">{formattedDate}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">Vistas:</span>
-                <span className="text-[var(--foreground)]">{article.views} lecturas</span>
+                <span className="text-zinc-500">{tCommon('views', { count: '' }).trim()}</span>
+                <span className="text-[var(--foreground)]">{tCommon('views', { count: article.views })}</span>
               </div>
             </div>
 
@@ -151,7 +154,7 @@ export default function NewsDetailPage({
                 href="/software/news"
                 className="w-full py-2.5 rounded-2xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
               >
-                ← Ver Todas las Noticias
+                {t('allNews')}
               </Link>
             </div>
           </div>

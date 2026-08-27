@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { HistoricalEra, MapLayerType, PlaceCategory } from '../../types';
 
 interface MapToolbarProps {
@@ -34,6 +35,8 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
   onSelectRegion,
   zoomLevel,
 }) => {
+  const t = useTranslations('HistoricalContext');
+
   return (
     <div className="flex flex-col gap-3 p-3.5 rounded-xl border border-accents-2 bg-background/80 backdrop-blur-md">
       {/* Fila 1: Buscador, Presets de Región y Selector de Capas */}
@@ -44,7 +47,7 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => onChangeSearchQuery(e.target.value)}
-            placeholder="Buscar ciudad, monte, río..."
+            placeholder={t('searchPlaceholder')}
             className="w-full pl-8 pr-3 py-1.5 text-xs bg-background border border-accents-2 rounded-lg text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground transition-all"
           />
           <svg
@@ -78,33 +81,29 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
               type="button"
               onClick={() => onSelectRegion('all')}
               className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
-              title="Vista global de todo el mundo biblico"
             >
-              Todo el Mundo
+              {t('allWorld')}
             </button>
             <button
               type="button"
               onClick={() => onSelectRegion('holyland')}
               className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
-              title="Enfocar Jerusalen, Galilea, Jordan y Mar Muerto"
             >
-              Tierra Santa
+              {t('holyLand')}
             </button>
             <button
               type="button"
               onClick={() => onSelectRegion('greece_asia')}
               className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
-              title="Enfocar Grecia, Macedonia y Asia Menor"
             >
-              Grecia y Asia
+              {t('greeceAsia')}
             </button>
             <button
               type="button"
               onClick={() => onSelectRegion('egypt_sinai')}
               className="px-2.5 py-1 rounded-md text-[11px] font-medium text-accents-5 hover:text-foreground hover:bg-background transition-all cursor-pointer"
-              title="Enfocar Egipto y Peninsula del Sinai"
             >
-              Egipto y Sinai
+              {t('egyptSinai')}
             </button>
           </div>
         )}
@@ -120,7 +119,7 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Papiro Histórico
+            {t('papyrusLayer')}
           </button>
           <button
             type="button"
@@ -131,7 +130,7 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Topográfico
+            {t('topographicLayer')}
           </button>
           <button
             type="button"
@@ -142,7 +141,7 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Satelital
+            {t('satelliteLayer')}
           </button>
         </div>
 
@@ -152,7 +151,6 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
             type="button"
             onClick={onZoomOut}
             className="w-7 h-7 flex items-center justify-center rounded text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer"
-            title="Alejar mapa"
           >
             −
           </button>
@@ -163,7 +161,6 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
             type="button"
             onClick={onZoomIn}
             className="w-7 h-7 flex items-center justify-center rounded text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer"
-            title="Acercar mapa"
           >
             +
           </button>
@@ -171,9 +168,8 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
             type="button"
             onClick={onResetView}
             className="px-2 h-7 flex items-center justify-center rounded text-[10px] font-mono text-accents-5 hover:text-foreground hover:bg-background transition-colors cursor-pointer"
-            title="Restablecer vista centrada"
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
       </div>
@@ -182,21 +178,21 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-accents-2/70 text-xs">
         {/* Período Bíblico */}
         <div className="flex flex-wrap items-center gap-1">
-          <span className="text-[11px] text-accents-4 font-mono mr-1">Época:</span>
+          <span className="text-[11px] text-accents-4 font-mono mr-1">{t('era')}</span>
           {(
             [
-              { id: 'all', label: 'Todas' },
-              { id: 'patriarchs', label: 'Patriarcas' },
-              { id: 'exodus_conquest', label: 'Éxodo & Josué' },
-              { id: 'monarchy', label: 'Monarquía' },
-              { id: 'second_temple', label: 'Evangelios' },
-              { id: 'apostolic', label: 'Apostólica' },
+              { id: 'all', label: t('allEras') },
+              { id: 'patriarchs', label: t('patriarchs') },
+              { id: 'exodus_conquest', label: t('exodusJoshua') },
+              { id: 'monarchy', label: t('monarchy') },
+              { id: 'second_temple', label: t('gospels') },
+              { id: 'apostolic', label: t('apostolic') },
             ] as const
           ).map((era) => (
             <button
               key={era.id}
               type="button"
-              onClick={() => onChangeEra(era.id)}
+              onClick={() => onChangeEra(era.id as HistoricalEra)}
               className={`px-2 py-0.5 rounded-md text-[11px] transition-all cursor-pointer ${
                 activeEra === era.id
                   ? 'bg-foreground text-background font-semibold'
@@ -210,19 +206,19 @@ export const MapToolbar: React.FC<MapToolbarProps> = ({
 
         {/* Filtro por Categoría de Accidente / Lugar */}
         <div className="flex items-center gap-1">
-          <span className="text-[11px] text-accents-4 font-mono mr-1">Tipo:</span>
+          <span className="text-[11px] text-accents-4 font-mono mr-1">{t('type')}</span>
           {(
             [
-              { id: 'all', label: 'Todos' },
-              { id: 'city', label: 'Ciudades' },
-              { id: 'mountain', label: 'Montes' },
-              { id: 'water', label: 'Masa de Agua' },
+              { id: 'all', label: t('allTypes') },
+              { id: 'city', label: t('cities') },
+              { id: 'mountain', label: t('mountains') },
+              { id: 'water', label: t('waters') },
             ] as const
           ).map((cat) => (
             <button
               key={cat.id}
               type="button"
-              onClick={() => onChangeCategory(cat.id)}
+              onClick={() => onChangeCategory(cat.id as PlaceCategory | 'all')}
               className={`px-2 py-0.5 rounded-md text-[11px] transition-all cursor-pointer ${
                 selectedCategory === cat.id
                   ? 'bg-blue-600 text-white font-medium'

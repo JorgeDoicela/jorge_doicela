@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { InterlinearDisplaySettings } from '../types';
 
 interface InterlinearControlsProps {
@@ -12,6 +13,8 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
   settings,
   onChangeSettings,
 }) => {
+  const t = useTranslations('Interlinear');
+
   const toggleSetting = (
     key: keyof Omit<InterlinearDisplaySettings, 'fontSize' | 'layout' | 'audioSpeed'>,
   ) => {
@@ -26,7 +29,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
       {/* Selector de Modo de Estudio */}
       <div className="flex items-center gap-2">
         <span className="text-[11px] font-mono text-accents-4 uppercase tracking-wider">
-          Modo:
+          {t('mode')}
         </span>
         <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-1">
           <button
@@ -38,7 +41,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
-            Interlineal Inverso e Interactivo
+            {t('reverseInterlinear')}
           </button>
           <button
             type="button"
@@ -49,16 +52,15 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
-            Tarjetas Morfológicas
+            {t('morphologyCards')}
           </button>
-
         </div>
       </div>
 
       {/* Opciones de visualización */}
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-[11px] font-mono text-accents-4 uppercase tracking-wider mr-1 hidden lg:inline">
-          Capas:
+          {t('layers')}
         </span>
 
         <button
@@ -71,7 +73,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
           }`}
           title="Puntos vocálicos masoréticos y cantilación"
         >
-          Nikkud (Vocales)
+          {t('nikkud')}
         </button>
 
         <button
@@ -84,7 +86,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
           }`}
           title="Transliteración fonética internacional"
         >
-          Transliteración
+          {t('transliteration')}
         </button>
 
         <button
@@ -95,9 +97,9 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
               ? 'bg-foreground text-background font-semibold border-foreground'
               : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
           }`}
-          title="Traducción literal en español"
+          title="Traducción literal"
         >
-          Glosa Español
+          {t('gloss')}
         </button>
 
         <button
@@ -110,7 +112,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
           }`}
           title="Códigos de concordancia Strong"
         >
-          Strong
+          {t('strong')}
         </button>
 
         <button
@@ -123,7 +125,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
           }`}
           title="Etiqueta morfológica condensada"
         >
-          Morfología
+          {t('morphology')}
         </button>
       </div>
 
@@ -131,7 +133,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
       <div className="flex items-center gap-3">
         {/* Velocidad de Audio */}
         <div className="flex items-center gap-1">
-          <span className="text-[11px] font-mono text-accents-4">Audio:</span>
+          <span className="text-[11px] font-mono text-accents-4">{t('audio')}</span>
           <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-0.5">
             {[1.0, 0.75].map((speed) => (
               <button
@@ -153,7 +155,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
 
         {/* Tamaño de fuente */}
         <div className="flex items-center gap-1">
-          <span className="text-[11px] font-mono text-accents-4">Letra:</span>
+          <span className="text-[11px] font-mono text-accents-4">{t('fontSize')}</span>
           <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-0.5">
             {(['base', 'lg', 'xl', '2xl'] as const).map((size) => (
               <button

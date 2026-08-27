@@ -2,10 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { NewsGrid } from '../../features/news/components/NewsGrid';
 import { useNews } from '../../features/news/hooks/useNews';
 
 export default function NewsCategoryPage() {
+  const t = useTranslations('News');
+  const tNav = useTranslations('Nav');
   const [search, setSearch] = useState('');
   const { news, loading, error } = useNews(search);
 
@@ -15,20 +18,20 @@ export default function NewsCategoryPage() {
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver a Software
+        {tNav('backToSoftware')}
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase mb-4 text-[var(--chip-text)]">
-          Actualidad & Novedades
+          {t('badge')}
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--header-title)] mb-3">
-          Noticias Tecnológicas
+          {t('title')}
         </h1>
 
         <p className="text-sm md:text-base text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed mb-6">
-          Últimas tendencias, lanzamientos de frameworks, estándares web y novedades de la industria.
+          {t('subtitle')}
         </p>
 
         <div className="relative max-w-md mx-auto">
@@ -36,7 +39,7 @@ export default function NewsCategoryPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar noticias..."
+            placeholder={t('searchPlaceholder')}
             className="w-full px-5 py-3 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           />
         </div>

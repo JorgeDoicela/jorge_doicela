@@ -3,15 +3,14 @@ packages:
   - 'frontend/mobile'
   - 'backend'
 
-allowBuilds:
-  better-sqlite3: true
-  sharp: true
-  sqlite3: true
-  unrs-resolver: true
 
 onlyBuiltDependencies:
-  - sqlite3
+  - '@parcel/watcher'
+  - '@swc/core'
   - better-sqlite3
+  - sharp
+  - sqlite3
+  - unrs-resolver
 
 overrides:
   '@types/react': '^19.0.0'

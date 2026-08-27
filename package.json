@@ -25,14 +25,5 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@swc/core",
-      "better-sqlite3",
-      "sharp",
-      "sqlite3",
-      "unrs-resolver"
-    ]
-  }
+  "packageManager": "pnpm@10.33.0"
 }

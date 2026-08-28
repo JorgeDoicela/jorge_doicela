@@ -15,8 +15,9 @@ interface PortfolioProjectItem {
   featured: boolean;
 }
 
-export function seedPortfolio(): void {
-  const dbPath = path.resolve(__dirname, '../../../../portfolio.sqlite');
+export function seedPortfolio(
+  dbPath: string = process.env.DATABASE_PORTFOLIO_PATH || 'portfolio.sqlite',
+): void {
   console.log(`[PortfolioSeeder] 🚀 Sembrando base de datos: ${dbPath}...`);
 
   const db = new Database(dbPath);

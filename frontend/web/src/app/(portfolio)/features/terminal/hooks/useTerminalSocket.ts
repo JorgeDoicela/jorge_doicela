@@ -40,9 +40,10 @@ export const useTerminalSocket = () => {
     }
 
     const socket = io(`${API_URL}/terminal`, {
-      transports: ['websocket'],
-      reconnectionAttempts: 10,
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 15,
       reconnectionDelay: 1000,
+      timeout: 10000,
     });
     socketRef.current = socket;
 

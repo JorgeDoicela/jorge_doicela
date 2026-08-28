@@ -34,15 +34,22 @@ backend/src/portfolio/
 ├── controllers/
 │   ├── contact.controller.ts      # Endpoint REST POST y GET para mensajes de contacto
 │   └── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects y /:slug
+├── events/
+│   └── contact-message-created.event.ts # Evento de dominio desacoplado
+├── listeners/
+│   └── telegram-notification.listener.ts # Listener asíncrono que procesa el evento y despacha a Telegram
+├── guards/
+│   └── contact-throttle.guard.ts  # Guard de Rate Limiting en memoria para mitigar spam/DDoS
 ├── services/
 │   ├── portfolio.service.ts       # Intérprete y procesador de comandos Unix
-│   ├── contact-messages.service.ts # Servicio de persistencia de mensajes
+│   ├── contact-messages.service.ts # Servicio de persistencia y emisión de eventos
+│   ├── telegram-notification.service.ts # Servicio de comunicación HTTP con la API de Telegram
 │   └── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos
 ├── entities/
 │   ├── contact-message.entity.ts  # Entidad TypeORM para mensajes de contacto
 │   └── portfolio-project.entity.ts # Entidad TypeORM con índice compuesto (slug, language)
 └── dto/
-    └── create-contact-message.dto.ts # DTO con validación sintáctica
+    └── create-contact-message.dto.ts # DTO blindado con @MaxLength y validaciones estrictas
 ```
 
 ---
@@ -50,6 +57,7 @@ backend/src/portfolio/
 ## 3. Gateway WebSocket de la Terminal (`PortfolioGateway`)
 
 * **Namespace:** `terminal`
+* **Configuración CORS:** `origin: true`, `credentials: true` para aceptar conexiones cruzadas desde `localhost:3001` y dominios de producción.
 * **Manejo de Conexión (`handleConnection`):** Al conectarse un cliente web, el backend emite el banner SSH de bienvenida y el prompt interactivo inicial:
   ```text
   Jorge Doicela - Virtual SSH Console [Debian 13 / Arch Linux]

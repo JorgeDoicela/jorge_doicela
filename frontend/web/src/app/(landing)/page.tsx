@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import ParallaxBackground from './components/ParallaxBackground';
 import InteractiveParticles from './components/InteractiveParticles';
 import CinematicSpiralGalaxy from './components/CinematicSpiralGalaxy';
@@ -10,7 +11,7 @@ import { AppleHeroIntro } from './components/AppleHeroShowcase';
 import { AppleHighlightsCarousel } from './components/AppleHighlightsCarousel';
 import { AppleDetailExplorer } from './components/AppleDetailExplorer';
 import { useLanguage } from './context/LanguageContext';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, ArrowUpRight, Sparkles } from 'lucide-react';
 
 export default function LandingPage() {
     const { language, toggleLanguage, t } = useLanguage();
@@ -197,6 +198,14 @@ export default function LandingPage() {
                                 <span>tiktok.com/@jorge.doicela</span>
                                 <span className="text-[11px] text-text-subtitle font-medium">TikTok</span>
                             </a>
+
+                            <Link
+                                href="/consulta"
+                                className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-foreground/5 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer border border-transparent hover:border-card-border"
+                            >
+                                <span>{language === 'es' ? 'Solicitar Consulta & Presupuesto' : 'Request Consultation & Quote'}</span>
+                                <span className="text-[11px] text-text-subtitle font-medium">{language === 'es' ? 'Formulario' : 'Form'}</span>
+                            </Link>
                         </div>
                     </div>
 

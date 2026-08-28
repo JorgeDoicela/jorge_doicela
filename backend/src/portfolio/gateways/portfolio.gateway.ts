@@ -20,7 +20,8 @@ interface ClientSessionState {
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: true,
+    credentials: true,
   },
   namespace: 'terminal',
 })

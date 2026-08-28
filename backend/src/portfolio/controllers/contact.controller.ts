@@ -1,7 +1,8 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
 import { ContactMessagesService } from '../services/contact-messages.service';
 import { CreateContactMessageDto } from '../dto/create-contact-message.dto';
 import { ContactMessage } from '../entities/contact-message.entity';
+import { ContactThrottleGuard } from '../guards/contact-throttle.guard';
 
 @Controller('portfolio/contact')
 export class ContactController {
@@ -10,6 +11,7 @@ export class ContactController {
   ) {}
 
   @Post()
+  @UseGuards(ContactThrottleGuard)
   async create(
     @Body() createContactMessageDto: CreateContactMessageDto,
   ): Promise<ContactMessage> {

@@ -34,18 +34,28 @@ export function useContact() {
     setSuccess(false);
 
     try {
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
+        ...(formData.subject.trim() ? { subject: formData.subject.trim() } : {}),
+      };
+
       const response = await fetch(`${API_URL}/portfolio/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(result.message || 'Error al enviar el mensaje.');
+        const errorMsg = Array.isArray(result?.message)
+          ? result.message.join(' | ')
+          : result?.message || 'Error al enviar el mensaje.';
+        throw new Error(errorMsg);
       }
 
       setSuccess(true);
@@ -57,6 +67,12 @@ export function useContact() {
     }
   };
 
+  const resetForm = () => {
+    setSuccess(false);
+    setError(null);
+    setFormData({ name: '', email: '', subject: '', message: '' });
+  };
+
   return {
     formData,
     loading,
@@ -64,5 +80,6 @@ export function useContact() {
     success,
     handleChange,
     submitForm,
+    resetForm,
   };
 }

@@ -17,9 +17,19 @@ export default getRequestConfig(async () => {
 
   if (savedLocale && locales.includes(savedLocale as Locale)) {
     locale = savedLocale as Locale;
-  } else if (acceptLanguage && acceptLanguage.toLowerCase().startsWith('en')) {
-    locale = 'en';
+  } else if (acceptLanguage) {
+    const languages = acceptLanguage
+      .split(',')
+      .map((item) => item.split(';')[0].trim().toLowerCase());
+    
+    const enIndex = languages.findIndex((l) => l.startsWith('en'));
+    const esIndex = languages.findIndex((l) => l.startsWith('es'));
+
+    if (enIndex !== -1 && (esIndex === -1 || enIndex < esIndex)) {
+      locale = 'en';
+    }
   }
+
 
   // Resolver subdominio para cargar exclusivamente su diccionario local
   let subdomain = 'landing';

@@ -22,6 +22,12 @@ export class ContactMessage {
   @Column('text')
   message: string;
 
+  @Column({ nullable: true })
+  phone?: string;
+
+  @Column({ nullable: true })
+  serviceType?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 }

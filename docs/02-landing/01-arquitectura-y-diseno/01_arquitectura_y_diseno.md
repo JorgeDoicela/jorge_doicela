@@ -20,8 +20,11 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ## 2. Descripción y Aislamiento
 
-* **100% del Lado del Cliente (Next.js):** La Landing Page no posee base de datos ni endpoints dedicados en NestJS. Es un portal de bienvenida ultra-rápido y optimizado.
+* **100% del Lado del Cliente (Next.js):** La Landing Page es un portal de bienvenida y conversión ultra-rápido y optimizado.
 * **Aislamiento de Estilos:** Posee su propio archivo independiente `frontend/web/src/app/(landing)/globals.css` que configura la estructura **Bento Grid**, fuentes (Inter y Outfit) y tokens visuales de Tailwind CSS v4.
+* **Enrutamiento y Subpáginas:**
+  * `/`: Página principal de bienvenida y portal a los 3 proyectos con Bento Grid interactivo.
+  * `/consulta` (y alias `/contacto`): Landing page de captura de leads y consultas técnicas optimizada para campañas publicitarias (Google Ads), conectada con despacho en tiempo real a Telegram.
 * **Enrutamiento:** El middleware (`src/middleware.ts`) redirige automáticamente las peticiones sin subdominio hacia el grupo de rutas `(landing)`.
 
 ---

@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.8,
         },
+        {
+            url: 'https://jorgedoicela.com/llms.txt',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.7,
+        },
     ];
 
     // ─────────────────────────────────────────────────────────────
@@ -41,6 +47,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.9,
         },
+        {
+            url: 'https://portfolio.jorgedoicela.com/llms.txt',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.7,
+        },
     ];
 
     // ─────────────────────────────────────────────────────────────
@@ -54,6 +66,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.95,
+        },
+        {
+            url: 'https://software.jorgedoicela.com/llms.txt',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.7,
         },
         {
             url: 'https://software.jorgedoicela.com/software/news',
@@ -110,6 +128,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.95,
+        },
+        {
+            url: 'https://bible.jorgedoicela.com/llms.txt',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.7,
         },
         {
             url: 'https://bible.jorgedoicela.com/bible/study/standard',

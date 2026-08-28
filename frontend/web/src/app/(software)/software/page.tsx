@@ -549,6 +549,7 @@ export default function SoftwarePage() {
                   <li><a href="https://jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Portal Principal</a></li>
                   <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Portafolio SSH</a></li>
                   <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Biblia Exegética</a></li>
+                  <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
                 </ul>
               </div>
             </div>

@@ -4,8 +4,6 @@ import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./theme-provider";
-import ResourceErrorFallback from "../components/ResourceErrorFallback";
-import CancelFallback from "../components/CancelFallback";
 import PortfolioJsonLd from "./components/PortfolioJsonLd";
 
 const geistSans = Geist({
@@ -77,11 +75,10 @@ export default async function RootLayout({
             suppressHydrationWarning
         >
             <head>
-                <ResourceErrorFallback />
+                <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
                 <PortfolioJsonLd />
             </head>
             <body className="min-h-full flex flex-col">
-                <CancelFallback />
                 <NextIntlClientProvider messages={messages} locale={locale}>
                     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
                         {children}

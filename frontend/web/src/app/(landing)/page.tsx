@@ -241,10 +241,19 @@ export default function LandingPage() {
 
             {/* Footer minimalista */}
             <footer
-                className="animate-fade-in-up w-full max-w-5xl mt-16 border-t border-card-border/30 pt-8 px-2 md:px-0 flex justify-center text-xs text-text-subtitle font-normal tracking-tight"
+                className="animate-fade-in-up w-full max-w-5xl mt-16 border-t border-card-border/30 pt-8 pb-12 px-2 md:px-0 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-subtitle font-normal tracking-tight"
                 style={{ animationDelay: '800ms' }}
             >
                 <span>{t.footer.replace('{year}', new Date().getFullYear().toString())}</span>
+                <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-text-muted">
+                    <a href="https://portfolio.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Portafolio</a>
+                    <span>•</span>
+                    <a href="https://software.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Software</a>
+                    <span>•</span>
+                    <a href="https://bible.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Biblia</a>
+                    <span>•</span>
+                    <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors font-mono">llms.txt</a>
+                </div>
             </footer>
 
         </div>

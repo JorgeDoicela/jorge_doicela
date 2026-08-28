@@ -384,14 +384,14 @@ export default function BibleLandingPage() {
             <footer className="border-t border-accents-2 w-full py-8 bg-background">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
                     <div>Jorge Doicela &copy; {new Date().getFullYear()} • Estudio de la biblia</div>
-                    <div className="flex gap-4">
-                        <Link href={studyUrl} className="hover:text-foreground transition-colors">
-                            Estudio Bíblico
-                        </Link>
-                        <span className="text-accents-2">|</span>
-                        <span className="hover:text-foreground transition-colors cursor-default">
-                            Sagradas Escrituras
-                        </span>
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                        <a href="https://jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Inicio</a>
+                        <span className="text-accents-2">•</span>
+                        <a href="https://portfolio.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Portafolio</a>
+                        <span className="text-accents-2">•</span>
+                        <a href="https://software.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Software</a>
+                        <span className="text-accents-2">•</span>
+                        <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">llms.txt</a>
                     </div>
                 </div>
             </footer>

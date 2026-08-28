@@ -7,8 +7,6 @@ import { LanguageProvider } from "./context/LanguageContext";
 import { PerformanceProvider } from "./context/PerformanceContext";
 import PwaRegister from "./components/PwaRegister";
 import PersonJsonLd from "./components/PersonJsonLd";
-import ResourceErrorFallback from "../components/ResourceErrorFallback";
-import CancelFallback from "../components/CancelFallback";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -119,10 +117,9 @@ export default async function LandingLayout({
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
             <head>
-                <ResourceErrorFallback />
+                <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
             </head>
             <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500 selection:text-white">
-                <CancelFallback />
                 <PerformanceProvider>
                     <NextIntlClientProvider messages={messages} locale={locale}>
                         <LanguageProvider>

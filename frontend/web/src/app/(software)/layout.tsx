@@ -3,8 +3,6 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import ResourceErrorFallback from "../components/ResourceErrorFallback";
-import CancelFallback from "../components/CancelFallback";
 import SoftwareJsonLd from "./components/SoftwareJsonLd";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -67,11 +65,10 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
       <head>
-        <ResourceErrorFallback />
+        <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
         <SoftwareJsonLd />
       </head>
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
-        <CancelFallback />
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>

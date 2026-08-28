@@ -40,7 +40,7 @@ Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la a
 
 ## Proyectos y Ecosistema Digital
 
-### 1. Software Hub | Jorge Doicela
+### 1. Software | Jorge Doicela
 - **URL Oficial:** https://software.jorgedoicela.com
 - **Dossier Técnico LLMs:** https://software.jorgedoicela.com/llms.txt
 - **Descripción:** Plataforma tecnológica integral con 7 categorías especializadas:
@@ -80,7 +80,7 @@ Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la a
 
 - **Sitio Web Principal:** https://jorgedoicela.com
 - **Portafolio:** https://portfolio.jorgedoicela.com (`https://portfolio.jorgedoicela.com/llms.txt`)
-- **Software Hub:** https://software.jorgedoicela.com (`https://software.jorgedoicela.com/llms.txt`)
+- **Software:** https://software.jorgedoicela.com (`https://software.jorgedoicela.com/llms.txt`)
 - **Biblia Modular:** https://bible.jorgedoicela.com (`https://bible.jorgedoicela.com/llms.txt`)
 - **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
 - **GitHub:** https://github.com/JorgeDoicela

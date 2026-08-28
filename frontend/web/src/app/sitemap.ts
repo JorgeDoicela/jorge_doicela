@@ -44,7 +44,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────────────────────
-    // 3. SOFTWARE HUB (software.jorgedoicela.com) — 7 Áreas
+    // 3. SOFTWARE (software.jorgedoicela.com) — 7 Áreas
     // Al migrar a servidor independiente: copiar solo este bloque
     // en el sitemap.ts de la nueva app Next.js y borrar los demás.
     // ─────────────────────────────────────────────────────────────

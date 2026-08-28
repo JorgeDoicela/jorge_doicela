@@ -1,4 +1,4 @@
-# Software Hub | Jorge Doicela
+# Software | Jorge Doicela
 
 > Plataforma tecnológica y laboratorio digital de Jorge Doicela con 7 áreas de conocimiento: Noticias, Blog de Arquitectura, Foros de Discusión, Directorio de IA, Ciberseguridad, Tutoriales Interactivos y Proyectos Open Source.
 
@@ -11,7 +11,7 @@
 
 ---
 
-## Las 7 Áreas Especializadas de Software Hub
+## Las 7 Áreas Especializadas de Software
 
 ### 1. Noticias de Tecnología (`/software/news`)
 - **Descripción:** Actualidad y tendencias sobre desarrollo de software, Inteligencia Artificial, lenguajes de programación y herramientas DevOps.
@@ -44,7 +44,7 @@
 ---
 
 ## Enlaces Oficiales
-- **Software Hub:** https://software.jorgedoicela.com
+- **Software:** https://software.jorgedoicela.com
 - **Portal Maestro:** https://jorgedoicela.com
 - **Portafolio:** https://portfolio.jorgedoicela.com
 - **Biblia Modular:** https://bible.jorgedoicela.com

@@ -81,7 +81,7 @@ frontend/web/src/app/(software)/
 
 ### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
 * **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 7 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
-* **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software Hub, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
+* **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
 
 ---
 

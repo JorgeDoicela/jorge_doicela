@@ -6,7 +6,7 @@ export default function SoftwareJsonLd() {
         '@type': ['WebSite', 'SoftwareApplication'],
         '@id': 'https://software.jorgedoicela.com/#software-hub',
         'url': 'https://software.jorgedoicela.com',
-        'name': 'Software Hub | Jorge Doicela',
+        'name': 'Software | Jorge Doicela',
         'applicationCategory': 'DeveloperApplication, EducationalApplication',
         'operatingSystem': 'Web, Linux, Windows, macOS',
         'description': 'Plataforma tecnológica y centro de ingeniería con 7 áreas especializadas: Noticias de tecnología, Blog de arquitectura de software, Foros comunitarios, Directorio de IA y MCP Servers, Ciberseguridad y bastionado, Tutoriales interactivos y Proyectos open source.',

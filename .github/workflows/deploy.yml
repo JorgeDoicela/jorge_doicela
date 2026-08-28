@@ -72,7 +72,7 @@ jobs:
             # Instalar dependencias del backend de forma dedicada con filtro de monorepo pnpm en producción
             pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts
             
-            # Sincronización transaccional de bases de datos en producción (Biblia y Software Hub)
+            # Sincronización transaccional de bases de datos en producción (Biblia y Software)
             cd backend && node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && cd ..
             
             # Asegurar recursos estáticos en standalone de forma limpia e idempotente

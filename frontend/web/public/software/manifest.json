@@ -1,6 +1,6 @@
 {
-  "name": "Software Hub | Jorge Doicela",
-  "short_name": "Software Hub",
+  "name": "Software | Jorge Doicela",
+  "short_name": "Software",
   "description": "Plataforma de software, noticias, blog de arquitectura, foros, IA, ciberseguridad y tutoriales de Jorge Doicela.",
   "start_url": "/software",
   "display": "standalone",

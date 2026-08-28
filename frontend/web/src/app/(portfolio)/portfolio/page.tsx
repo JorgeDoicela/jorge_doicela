@@ -60,8 +60,8 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
             },
             {
                 id: 3,
-                slug: 'software-tech-hub',
-                title: 'Software & Tech Hub',
+                slug: 'software-platform',
+                title: 'Software',
                 description: 'Ecosistema de contenidos tecnológicos con 7 áreas temáticas, avisos de ciberseguridad, catálogo de modelos de IA, tutoriales interactivos y foros.',
                 role: 'Full Stack & DevSecOps Engineer',
                 technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
@@ -110,9 +110,9 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
             },
             {
                 id: 4,
-                slug: 'software-tech-hub-en',
-                title: 'Software & Tech Hub',
-                description: 'Technology hub featuring 7 categories: cybersecurity advisories, AI models showcase, step-by-step interactive tutorials, and technical forums.',
+                slug: 'software-platform-en',
+                title: 'Software',
+                description: 'Technology platform featuring 7 categories: cybersecurity advisories, AI models showcase, step-by-step interactive tutorials, and technical forums.',
                 role: 'Full Stack & DevSecOps Engineer',
                 technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
                 language: 'en',

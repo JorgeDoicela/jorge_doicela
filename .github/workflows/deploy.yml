@@ -81,7 +81,8 @@ jobs:
             cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/public
             cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/static
             
-            # Garantizar permisos de lectura del sistema operativo para el servidor web (Nginx)
+            # Garantizar permisos de lectura y ejecución para el servidor web (Nginx / www-data)
+            chmod o+x /home/admin ${{ secrets.TARGET_DIR }} 2>/dev/null || true
             chmod -R o+rX frontend/web/public frontend/web/.next
             
             # Actualizar y validar configuración de Nginx de forma automática

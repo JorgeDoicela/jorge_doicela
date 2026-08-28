@@ -1,0 +1,24 @@
+{
+  "name": "Portafolio Profesional | Jorge Doicela",
+  "short_name": "Portafolio SSH",
+  "description": "Portafolio interactivo de ingeniería de software, terminal SSH virtual sobre WebSockets y proyectos de Jorge Doicela.",
+  "start_url": "/portfolio",
+  "display": "standalone",
+  "background_color": "#08080a",
+  "theme_color": "#08080a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/portfolio/logo/logo_fondo_circular_color_.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/portfolio/logo/logo_fondo_circular_color_.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

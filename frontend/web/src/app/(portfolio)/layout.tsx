@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./theme-provider";
 import ResourceErrorFallback from "../components/ResourceErrorFallback";
 import CancelFallback from "../components/CancelFallback";
+import PortfolioJsonLd from "./components/PortfolioJsonLd";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -28,6 +29,28 @@ export async function generateMetadata(): Promise<Metadata> {
         description: t("description"),
         icons: {
             icon: "/portfolio/logo/logo_fondo_circular_color_.png",
+        },
+        openGraph: {
+            title: t("title"),
+            description: t("description"),
+            url: "https://portfolio.jorgedoicela.com",
+            siteName: "Portafolio Profesional | Jorge Doicela",
+            locale: locale === "es" ? "es_EC" : "en_US",
+            type: "profile",
+            images: [
+                {
+                    url: "/portfolio/logo/logo_fondo_circular_color_.png",
+                    width: 512,
+                    height: 512,
+                    alt: "Jorge Doicela - Portafolio Profesional",
+                },
+            ],
+        },
+        twitter: {
+            card: "summary",
+            title: t("title"),
+            description: t("description"),
+            images: ["/portfolio/logo/logo_fondo_circular_color_.png"],
         },
         alternates: {
             canonical: "https://portfolio.jorgedoicela.com",
@@ -55,6 +78,7 @@ export default async function RootLayout({
         >
             <head>
                 <ResourceErrorFallback />
+                <PortfolioJsonLd />
             </head>
             <body className="min-h-full flex flex-col">
                 <CancelFallback />

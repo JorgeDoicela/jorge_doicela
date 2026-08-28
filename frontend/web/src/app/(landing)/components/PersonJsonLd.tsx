@@ -5,18 +5,41 @@ export default function PersonJsonLd() {
       {
         '@type': 'Person',
         '@id': 'https://jorgedoicela.com/#person',
-        'name': 'Jorge Doicela',
-        'alternateName': 'Jorge Doicela M.',
+        'name': 'Jorge Ismael Doicela Molina',
+        'alternateName': ['Jorge Doicela', 'Jorge Doicela M.', 'Jorge Ismael Doicela'],
         'url': 'https://jorgedoicela.com',
         'image': 'https://jorgedoicela.com/landing/logo/logo_color.png',
-        'jobTitle': 'Software Developer & AI Engineering Student',
-        'description': 'Desarrollador de software y estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad en Quito, Ecuador.',
+        'jobTitle': 'Software Developer & DevOps Specialist',
+        'description': 'Desarrollador de software, administrador de sistemas Linux y especialista en DevOps, Inteligencia Artificial y Ciberseguridad en Quito, Ecuador.',
         'address': {
           '@type': 'PostalAddress',
           'addressLocality': 'Quito',
           'addressRegion': 'Pichincha',
           'addressCountry': 'EC'
         },
+        'alumniOf': {
+          '@type': 'EducationalOrganization',
+          'name': 'Instituto Tecnológico Superior Traversari',
+          'alternateName': 'ISTPET',
+          'address': {
+            '@type': 'PostalAddress',
+            'addressLocality': 'Quito',
+            'addressRegion': 'Pichincha',
+            'addressCountry': 'EC'
+          }
+        },
+        'knowsAbout': [
+          'Software Engineering',
+          'DevOps',
+          'System Administration',
+          'Linux Debian & Arch Linux',
+          'NestJS',
+          'Next.js & React',
+          'Artificial Intelligence & LLMs',
+          'Cybersecurity & Server Hardening',
+          'SQLite & Database Architecture',
+          'Cloudflare Edge & Nginx'
+        ],
         'sameAs': [
           'https://www.linkedin.com/in/jorgedoicela',
           'https://github.com/JorgeDoicela',
@@ -30,7 +53,7 @@ export default function PersonJsonLd() {
         '@type': 'WebSite',
         '@id': 'https://jorgedoicela.com/#website',
         'url': 'https://jorgedoicela.com',
-        'name': 'Jorge Doicela',
+        'name': 'Jorge Doicela | Portal Oficial',
         'publisher': {
           '@id': 'https://jorgedoicela.com/#person'
         },

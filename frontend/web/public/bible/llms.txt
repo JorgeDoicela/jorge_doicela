@@ -1,0 +1,52 @@
+# Biblia Modular | Jorge Doicela
+
+> Plataforma de investigación académica y estudio exegético de textos bíblicos con 9 motores especializados, fuentes en idiomas originales (Hebreo BHS / Griego NA28), léxicos Strong y app móvil nativa en Expo.
+
+## Información General
+- **URL Canónica:** https://bible.jorgedoicela.com
+- **Autor / Desarrollador:** Jorge Ismael Doicela Molina
+- **Arquitectura Web:** Next.js 16 con Feature-Sliced Design (FSD) y estética Geist (Vercel Style) monocromática de alta densidad.
+- **Arquitectura Móvil:** React Native / Expo (SDK 52+) con `@shopify/flash-list` y arquitectura 100% Offline-First.
+- **Arquitectura Backend:** NestJS 11 con TypeORM, SQLite (`bible.sqlite`) en modo WAL y seeder transaccional atómico determinista.
+- **Marco Legal:** Conexión autorizada vía API.Bible (American Bible Society / Digital Bible Library) y fuentes críticas de dominio público universal (Groves Center, Open Scriptures, MorphGNT).
+
+---
+
+## Los 9 Motores de Estudio Exegético
+
+### 1. Lector Continuo Editorial (`/bible/study/standard`)
+- Lectura bíblica fluida sin distracciones con controles responsivos de tipografía, tamaño de fuente y notas de atribución legal de copyright oficial al pie de cada capítulo.
+
+### 2. Comparador Multi-Versión Paralelo (`/bible/study/parallel`)
+- Comparación simultánea de 2 a 4 traducciones sincronizadas por capítulo (`RV1960`, `NVI`, `NBLA`, `BHS`, `LXX`).
+
+### 3. Comparador de Variantes Textuales & Diff (`/bible/study/parallel`)
+- Algoritmo de Diferencia de Texto (LCS) para resaltar automáticamente adiciones, omisiones y divergencias entre traducciones.
+
+### 4. Interlineal Inverso Morfológico (`/bible/study/interlinear`)
+- Desglose morfológico palabra por palabra del Texto Masorético Hebreo (**Westminster Leningrad Codex / BHS**) y Griego del Nuevo Testamento (**Nestle-Aland 28 / Nestle 1904**).
+- Glosas literales, lematización consonántica, códigos Strong y análisis gramatical completo con hover bidireccional.
+
+### 5. Léxicos y Diccionarios Académicos (`/bible/study/word-study`)
+- Diccionarios clásicos de dominio público integrados: *Brown-Driver-Briggs (BDB)*, *Gesenius*, *Thayer* y numeración universal de *James Strong*.
+
+### 6. Búsqueda Gramatical y Sintáctica (`/bible/study/word-study`)
+- Motor de concordancia y búsqueda de tokens morfológicos por raíz consonántica, código gramatical y partes de la oración.
+
+### 7. Análisis de Estructuras Literarias y Quiasmos (`/bible/study/literary`)
+- Diagramación estructural de paralelismos poéticos semíticos y macroestructuras quiásticas (Hexamerón de Génesis 1:1 - 2:3, discurso paulino de Romanos 8).
+
+### 8. Atlas Bíblico Georreferenciado WGS84 (`/bible/study/historical-context`)
+- Coordenadas espaciales satelitales proyectadas sobre canvas vectorial con filtro por épocas históricas, rutas del Éxodo y viajes paulinos.
+
+### 9. Cronología Sincrónica y Arqueología (`/bible/study/historical-context`)
+- Tabla temporal de monarcas de Israel/Judá vs imperios contemporáneos (Egipto, Asiria, Babilonia, Persia) y catálogo de evidencia material (Estela de Tel Dan, Cilindro de Ciro, Inscripción de Siloé).
+
+---
+
+## Enlaces Oficiales
+- **Biblia Modular:** https://bible.jorgedoicela.com
+- **Portal Maestro:** https://jorgedoicela.com
+- **Software Hub:** https://software.jorgedoicela.com
+- **Portafolio:** https://portfolio.jorgedoicela.com
+- **GitHub:** https://github.com/JorgeDoicela

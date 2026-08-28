@@ -5,6 +5,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import ResourceErrorFallback from "../components/ResourceErrorFallback";
 import CancelFallback from "../components/CancelFallback";
+import SoftwareJsonLd from "./components/SoftwareJsonLd";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -22,6 +23,28 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("description"),
     icons: {
       icon: "/software/logo/logo_fondo_circular_color_.png",
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url: "https://software.jorgedoicela.com",
+      siteName: "Software Hub | Jorge Doicela",
+      locale: locale === "es" ? "es_EC" : "en_US",
+      type: "website",
+      images: [
+        {
+          url: "/software/logo/logo_fondo_circular_color_.png",
+          width: 512,
+          height: 512,
+          alt: "Software Hub - Jorge Doicela",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary",
+      title: t("title"),
+      description: t("description"),
+      images: ["/software/logo/logo_fondo_circular_color_.png"],
     },
     alternates: {
       canonical: "https://software.jorgedoicela.com",
@@ -45,6 +68,7 @@ export default async function RootLayout({
     <html lang={locale} className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
       <head>
         <ResourceErrorFallback />
+        <SoftwareJsonLd />
       </head>
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
         <CancelFallback />

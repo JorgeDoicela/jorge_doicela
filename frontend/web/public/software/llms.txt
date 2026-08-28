@@ -1,0 +1,52 @@
+# Software Hub | Jorge Doicela
+
+> Plataforma tecnológica y laboratorio digital de Jorge Doicela con 7 áreas de conocimiento: Noticias, Blog de Arquitectura, Foros de Discusión, Directorio de IA, Ciberseguridad, Tutoriales Interactivos y Proyectos Open Source.
+
+## Información General
+- **URL Canónica:** https://software.jorgedoicela.com
+- **Autor / Creador:** Jorge Ismael Doicela Molina
+- **Arquitectura Frontend:** Next.js 16 (App Router, SSR, Server Components), TypeScript, Feature-Sliced Design (FSD) y estética Neumorphism UI + Glassmorphism.
+- **Arquitectura Backend:** NestJS 11 modular estructurado en 7 submódulos independientes con base de datos relacional SQLite (`software.sqlite`) y fuente de verdad en `corpus/*.json`.
+- **Internacionalización:** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` y filtrado en base de datos vía `?lang=`.
+
+---
+
+## Las 7 Áreas Especializadas de Software Hub
+
+### 1. Noticias de Tecnología (`/software/news`)
+- **Descripción:** Actualidad y tendencias sobre desarrollo de software, Inteligencia Artificial, lenguajes de programación y herramientas DevOps.
+- **Capacidades:** Alertas *Breaking News*, buscador en tiempo real, etiquetas semánticas y enlaces a fuentes oficiales verificadas.
+
+### 2. Blog de Arquitectura de Sistemas (`/software/blog`)
+- **Descripción:** Ensayos técnicos de nivel senior sobre diseño de software, patrones de arquitectura limpia, microservicios, optimización de APIs y gestión de memoria en hardware restringido.
+- **Capacidades:** Tabla de contenidos interactiva, estimación de tiempo de lectura y series editoriales continuas.
+
+### 3. Foros Técnicos Comunitarios (`/software/forum`)
+- **Descripción:** Espacio de debate y resolución de problemas técnicos de ingeniería.
+- **Capacidades:** Hilos de discusión con respuestas anidadas por árbol relacional (`forum_replies`), marcado de solución aceptada (`isAcceptedAnswer`) y filtros por estado.
+
+### 4. Directorio de Inteligencia Artificial y Agentes (`/software/ai`)
+- **Descripción:** Catálogo curado de modelos de lenguaje (LLMs), agentes autónomos, frameworks de desarrollo y servidores Model Context Protocol (MCP Servers).
+- **Capacidades:** Fichas técnicas detalladas con proveedor, licencia, enlaces a papers académicos y repositorios de código.
+
+### 5. Ciberseguridad y Bastionado (`/software/cybersecurity`)
+- **Descripción:** Matriz de avisos de seguridad, análisis de vulnerabilidades (CVEs) y guías prácticas de remediación y endurecimiento de servidores.
+- **Capacidades:** Clasificación por severidad (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`), sistemas afectados y recetas de bastionado para Linux Debian/Arch.
+
+### 6. Tutoriales Prácticos Paso a Paso (`/software/tutorials`)
+- **Descripción:** Manuales reproducibles de ingeniería de software y DevOps con código listo para producción.
+- **Capacidades:** Asistente interactivo `StepWizard` paso a paso, snippets con resaltado de sintaxis, dependencias previas y filtro por nivel de dificultad (`beginner`, `intermediate`, `advanced`).
+
+### 7. Catálogo de Proyectos Showcase (`/software/projects`)
+- **Descripción:** Muestra de sistemas, librerías y aplicaciones desarrolladas por Jorge Doicela.
+- **Capacidades:** Diagramas de arquitectura, demos en vivo, enlaces a repositorios GitHub y métricas de estado.
+
+---
+
+## Enlaces Oficiales
+- **Software Hub:** https://software.jorgedoicela.com
+- **Portal Maestro:** https://jorgedoicela.com
+- **Portafolio:** https://portfolio.jorgedoicela.com
+- **Biblia Modular:** https://bible.jorgedoicela.com
+- **GitHub:** https://github.com/JorgeDoicela
+- **LinkedIn:** https://www.linkedin.com/in/jorgedoicela

@@ -27,6 +27,8 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * **Cero Datos Hardcodeados en TypeScript:** Ningún archivo `.ts` o `.tsx` en el frontend contiene versículos, palabras, coordenadas geográficas ni artículos incrustados. Toda la data reside en archivos `.json` bajo `backend/src/bible/corpus/` y se consulta asíncronamente desde los endpoints de NestJS.
 * **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(bible)/globals.css` (estética **Geist / Vercel Style** monocromática de precisión, micro-interacciones de alta densidad, bordes ultra-delgados, tipografía Geist y legibilidad editorial para exégesis) y assets en `frontend/web/public/bible/`.
 * **Internacionalización y SEO (next-intl):** Diccionarios encapsulados en `(bible)/messages/es.json` y `en.json`. Layout raíz `(bible)/layout.tsx` integrado con `NextIntlClientProvider` y `generateMetadata()` dinámico con etiquetas `hreflang`. Soporte de base de datos bilingüe (`language: 'es' | 'en'`) en tablas explicativas (`archaeology_articles`, `timeline_events`, `historical_places`).
+* **Datos Estructurados Schema.org (`BibleJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus bíblico y los 9 motores exegéticos ante motores de búsqueda e IA.
+* **Sincronización con IA:** Cuando se agreguen nuevos motores de exégesis o traducciones oficiales, reflejarlos en `public/bible/llms.txt` y en `public/landing/llms.txt`.
 
 
 ---

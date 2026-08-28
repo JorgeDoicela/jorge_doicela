@@ -98,9 +98,12 @@ El catálogo oficial de traducciones opera bajo estricto cumplimiento de derecho
 
 ---
 
-## 5. Internacionalización y SEO Dinámico (next-intl)
+## 5. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
-* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Bible.Metadata` en `src/messages/es.json` y `src/messages/en.json`.
+* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Bible.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
+* **Datos Estructurados Schema.org (`BibleJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus bíblico y los 9 motores exegéticos en motores de búsqueda e IA.
+* **Dossier Especializado para IA (`public/bible/llms.txt`):** Desglose detallado de los 9 motores exegéticos, textos Masorético BHS / Griego NA28 y léxicos servido en `bible.jorgedoicela.com/llms.txt`.
+* **Manifiesto PWA Independiente (`public/bible/manifest.json`):** Configuración de aplicación web independiente con tema `#000000`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://bible.jorgedoicela.com`.
 * **Cero Parpadeos (SSR):** El layout raíz `(bible)/layout.tsx` resuelve el `locale` en el servidor con `getLocale()`, envolviendo a los hijos en `NextIntlClientProvider`.
 * **Navegación de Suites Bilingüe:** Textos de las 6 suites de estudio y menús de cabecera localizables vía diccionarios tipados.

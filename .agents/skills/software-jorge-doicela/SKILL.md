@@ -79,6 +79,10 @@ frontend/web/src/app/(software)/
 6. **Tutoriales (`tutorials`):** Guías prácticas paso a paso con código reproducible y StepWizard interactivo.
 7. **Proyectos (`projects`):** Galería showcase de herramientas y sistemas creados por Jorge.
 
+### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
+* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 7 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software Hub, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
+
 ---
 
 ## 3. Backend y Modelo de Datos (NestJS 11)

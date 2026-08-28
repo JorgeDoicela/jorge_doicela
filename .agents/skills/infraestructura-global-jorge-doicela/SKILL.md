@@ -64,7 +64,16 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * **SEO Internacional Dinámico:** Cada layout de subdominio implementa `generateMetadata()` y emite etiquetas `hreflang` (`es-EC` y `en-US`).
 * **Doble Nivel de i18n:** UI Chrome mediante `useTranslations()` y datos dinámicos en SQLite (`software.sqlite` y `bible.sqlite`) mediante columna `language: 'es' | 'en'` y filtros `?lang=`.
 
-
+### 4.4 Visibilidad en Inteligencia Artificial (GEO) y Arquitectura "Zero-RAM"
+* **Arquitectura Multicanal `public/<proyecto>/llms.txt`:** Cada uno de los 4 proyectos tiene su propio dossier especializado servido directamente por Nginx sin tocar Node.js:
+  * `public/landing/llms.txt` $\rightarrow$ `https://jorgedoicela.com/llms.txt` (Perfil general del creador)
+  * `public/portfolio/llms.txt` $\rightarrow$ `https://portfolio.jorgedoicela.com/llms.txt` (Terminal SSH, proyectos)
+  * `public/software/llms.txt` $\rightarrow$ `https://software.jorgedoicela.com/llms.txt` (7 categorías tecnológicas)
+  * `public/bible/llms.txt` $\rightarrow$ `https://bible.jorgedoicela.com/llms.txt` (9 motores exegéticos)
+* **Obligación de Sincronización:** Cuando se cree, modifique o elimine cualquier proyecto, submódulo o categoría principal en el ecosistema, es **obligatorio actualizar el `llms.txt` de su subcarpeta, su `manifest.json`, su componente `*JsonLd.tsx` y `sitemap.ts`**.
+* **Manifiestos PWA Independientes (`public/<proyecto>/manifest.json`):** Cada subdominio tiene su propia identidad de aplicación instalable (nombre, tema, ícono, ruta de inicio).
+* **Entrega Estática "Zero-RAM" en Nginx:** `llms.txt`, `manifest.json` y `favicon.ico` son resueltos por los mapas `$llms_file`, `$manifest_file` y `$favicon_file` según `$host`, entregando en < 1 ms con **0 MB de consumo de RAM en Node.js**.
+* **Protección Quirúrgica en `robots.ts`:** Permite explícitamente los User-Agents oficiales de IA sobre contenido público y bloquea rutas de backend (`/api/`, `/_next/`, `/socket.io/`) para evitar sobrecargas de CPU y memoria.
 
 ---
 
@@ -107,7 +116,21 @@ pnpm run build
 
 ---
 
-## 7. Anti-Patrones Prohibidos
+## 7. Archivos Compartidos del Frontend (Patrón "Migration-Ready")
+
+Los siguientes archivos son transversales al proceso Next.js consolidado pero están **estructurados para que la separación futura de cualquier proyecto sea instantánea y sin residuos**:
+
+| Archivo | Patrón de Aislamiento | Acción al Migrar |
+|---|---|---|
+| `src/app/sitemap.ts` | 4 constantes independientes por proyecto | Copiar solo la constante del proyecto al nuevo servidor |
+| `src/app/robots.ts` | Guía inline con la URL de sitemap a sustituir | Cambiar `sitemap` a la URL del nuevo servidor |
+| `src/middleware.ts` | Bloques etiquetados `// ── PORTFOLIO ──` etc. | Eliminar el bloque del proyecto migrado |
+
+> **Obligación de mantenimiento:** Al añadir rutas nuevas a un proyecto, actualizarlas en su bloque/constante correspondiente dentro de cada uno de estos 3 archivos.
+
+---
+
+## 8. Anti-Patrones Prohibidos
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|

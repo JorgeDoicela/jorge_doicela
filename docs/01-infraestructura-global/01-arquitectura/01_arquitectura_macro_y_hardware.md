@@ -53,6 +53,7 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 3. **Distribución Interna en Nginx:**
    * Rutas `/portfolio/*`, `/bible/*`, `/software/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`).
    * Rutas raíz y páginas de subdominios $\rightarrow$ Proxy inverso al frontend Next.js (`http://127.0.0.1:3001`).
+   * Recursos estáticos clave (`/llms.txt`, `/manifest.json`, `/_next/static/`) $\rightarrow$ Servidos directamente por Nginx desde disco en < 1 ms con caché, garantizando 0 MB de consumo de RAM en Node.js frente a crawlers de IA (GEO / Generative Engine Optimization).
 
 ---
 
@@ -99,3 +100,31 @@ El backend de NestJS estandariza el comportamiento transversal de todos los mód
 * **Logging Asíncrono con Pino (`nestjs-pino`):** JSON estructurado a `stdout` sin bloquear el Event Loop. En local utiliza `pino-pretty`.
 * **Compresión Gzip/Brotli:** Middleware `compression()` para reducir el tamaño de respuestas JSON en un 70%.
 * **Comunicación Desacoplada por Eventos:** Si dos módulos requieren interactuar internamente, lo hacen mediante `@nestjs/event-emitter`.
+
+---
+
+## 5. Archivos Compartidos del Frontend (Diseño "Migration-Ready")
+
+Aunque el frontend Next.js corre en un solo proceso consolidado, los 3 archivos que hoy son transversales han sido **estructurados para que la migración de cualquier proyecto sea una operación quirúrgica sin residuos**.
+
+### 5.1 `src/app/sitemap.ts` — Bloques Aislados por Proyecto
+
+Cada proyecto define sus propias rutas en una constante independiente (`landingRoutes`, `portfolioRoutes`, `softwareRoutes`, `bibleRoutes`). El `return` final las concatena. Al migrar un proyecto a servidor propio, **se copia solo su constante** al nuevo `sitemap.ts` y se borra del original.
+
+### 5.2 `src/app/robots.ts` — Guía de Migración Inline
+
+Las reglas de bots son universales y comparte configuración. El comentario inline documenta exactamente qué cambiar en la propiedad `sitemap` para apuntar al nuevo servidor (`https://software.jorgedoicela.com/sitemap.xml`).
+
+### 5.3 `src/middleware.ts` — Bloques Etiquetados por Subdominio
+
+Cada subdominio (`portfolio.`, `bible.`, `software.`) está en su propio bloque etiquetado. Al migrar un proyecto, se **elimina su bloque** de este archivo. La landing no necesita bloque porque es la ruta raíz por defecto.
+
+```
+// ── PORTFOLIO ── Al migrar: eliminar este bloque
+// ── BIBLE ────── Al migrar: eliminar este bloque
+// ── SOFTWARE ─── Al migrar: eliminar este bloque
+// ── LANDING ──── No tiene bloque; es la raíz por defecto
+```
+
+> [!TIP]
+> La estructura de **assets públicos** (`public/landing/`, `public/portfolio/`, etc.) y las **bases de datos SQLite** (`portfolio.sqlite`, `bible.sqlite`, `software.sqlite`) ya son 100% portables sin modificación alguna.

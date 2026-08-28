@@ -1,0 +1,55 @@
+# Portafolio Profesional | Jorge Ismael Doicela Molina
+
+> Portafolio interactivo de ingeniería de software, terminal SSH virtual sobre WebSockets, catálogo de proyectos y perfil técnico de Jorge Doicela.
+
+## Información General
+- **URL Canónica:** https://portfolio.jorgedoicela.com
+- **Autor / Desarrollador:** Jorge Ismael Doicela Molina
+- **Ubicación:** Quito, Pichincha, Ecuador
+- **Educación:** Desarrollo de Software en el Instituto Tecnológico Superior Traversari (ISTPET), Quito, Ecuador
+- **Especialidad:** Ingeniería de Software, DevOps, SysAdmin Linux (Debian 13 y Arch Linux), Arquitectura Backend (NestJS / C#), Frontend React/Next.js y Ciberseguridad
+- **Estética Visual:** Dark Luxury (fondos oscuros profundos `#08080a`, toques metálicos refinados, tipografía Geist y alto contraste)
+
+---
+
+## Características Principales del Portafolio
+
+### 1. Terminal Virtual SSH Interactiva (WebSockets)
+- **Protocolo:** Socket.io sobre WebSockets directos (`namespace: /terminal`).
+- **Capacidades:**
+  - Emulación de entorno Unix interactivo con prompt `jorge@vps-1gb-ram:~$`.
+  - Navegación de historial con flechas `↑` y `↓`.
+  - Autocompletado inteligente con tecla `Tab`.
+  - Parser ANSI para renderizado de colores e insignias en consola.
+  - Efecto interactivo `matrix` con lluvia digital en pantalla completa.
+- **Comandos Soportados:**
+  - `help`: Lista todos los comandos disponibles.
+  - `about`: Biografía profesional, formación en ISTPET y valores de fe cristiana.
+  - `skills`: Desglose exhaustivo del stack técnico (Backend, Frontend, DevOps, DBs).
+  - `projects`: Lista de proyectos destacados con enlaces a demos y repositorios.
+  - `contact`: Enlaces oficiales de contacto directo.
+  - `neofetch`: Diagnóstico y resumen visual del sistema en arte ASCII.
+  - `date`, `uptime`, `whoami`, `cat`, `ls`, `matrix`, `clear`, `exit`.
+
+### 2. Showcase y Catálogo de Proyectos
+- **Filtros Dinámicos:** Clasificación reactiva por categorías (Backend, Frontend, IA, DevOps, Mobile).
+- **Proyectos Clave:**
+  - *Software Hub:* Plataforma tecnológica de 7 categorías con arquitectura en capas.
+  - *Biblia Modular:* Suite exegética académica con 9 motores de estudio y app nativa Expo.
+  - *DIITRA:* Plataforma empresarial con frontend Next.js y backend ASP.NET Core en C#.
+  - *Portfolio SSH:* Terminal virtual en tiempo real sobre WebSockets y microservicios.
+
+### 3. Servicio de Contacto Seguro
+- **Endpoint:** `POST /portfolio/contact` con validación DTO estricta (`class-validator`) y protección contra rate limiting y spam.
+- **Persistencia:** Base de datos física independiente `portfolio.sqlite`.
+
+---
+
+## Enlaces Oficiales
+- **Portafolio:** https://portfolio.jorgedoicela.com
+- **Portal Maestro:** https://jorgedoicela.com
+- **Software Hub:** https://software.jorgedoicela.com
+- **Biblia Modular:** https://bible.jorgedoicela.com
+- **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
+- **GitHub:** https://github.com/JorgeDoicela
+- **TikTok:** https://www.tiktok.com/@jorge.doicela

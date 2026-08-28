@@ -1,0 +1,24 @@
+{
+  "name": "Biblia Modular | Jorge Doicela",
+  "short_name": "Biblia Modular",
+  "description": "Plataforma de exégesis bíblica académica con 9 motores de estudio, textos en idiomas originales y herramientas analíticas.",
+  "start_url": "/bible",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/bible/logo/logo_fondo_circular_color_.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/bible/logo/logo_fondo_circular_color_.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

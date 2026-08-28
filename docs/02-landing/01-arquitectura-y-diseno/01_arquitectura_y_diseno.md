@@ -58,9 +58,10 @@ Un script en React (`useEffect`) evalúa el host de navegación:
 ### 3.5 Metadatos SEO Internacionales y Datos Estructurados (Schema.org JSON-LD)
 * **`generateMetadata()` Dinámica:** Títulos, descripciones y Open Graph localizados por idioma.
 * **Etiquetas `hreflang` para Google:** Mapeo de `alternates.languages` (`es-EC` y `en-US`) para posicionamiento bilingüe en motores de búsqueda.
-* Componente `PersonJsonLd.tsx` con especificación de Schema.org para indexación de perfil en Google.
+* Componente `PersonJsonLd.tsx` con especificación de Schema.org (`Person`, `WebSite`, formación en `ISTPET`, áreas de conocimiento `knowsAbout` y enlaces `sameAs`).
+* Archivo estático `llms.txt` normalizado para descubrimiento y consumo ultrarrápido por modelos LLM (ChatGPT, Perplexity, Claude, Gemini).
 * Generador de previsualización para redes sociales en `opengraph-image.tsx` (tarjeta de 1200x630 px).
-* `sitemap.ts` y `robots.ts` nativos de Next.js.
+* `sitemap.ts` y `robots.ts` nativos de Next.js optimizados para rastreadores de IA sin sobrecargar la memoria RAM.
 
 
 ### 3.6 Accesibilidad (WCAG 2.1 AA / ARIA 1.2)

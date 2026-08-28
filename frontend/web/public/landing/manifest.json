@@ -1,7 +1,7 @@
 {
-  "name": "Jorge Doicela - Personal Webpage",
+  "name": "Jorge Doicela | Portal Oficial",
   "short_name": "Jorge Doicela",
-  "description": "Portal personal de Jorge Doicela: Portafolio, Biblia y Software.",
+  "description": "Portal principal de Jorge Doicela: Desarrollo de Software, Portafolio, Biblia y Software Hub.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#09090b",

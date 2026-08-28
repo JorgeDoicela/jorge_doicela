@@ -79,9 +79,13 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 
 ## 5. Servidor, Nginx, PM2 y Despliegue CI/CD
 
-### 5.1 Topología y Seguridad
-* **Cloudflare Edge (Proxy Naranja):** Modo Full (Strict), WAF y SSL de extremo a extremo.
+### 5.1 Topología, Seguridad y Rate Limiting (Zero-RAM)
+* **Cloudflare Edge (Proxy Naranja):** Modo Full (Strict), WAF y SSL de extremo a extremo con paso libre para bots de IA verificados.
 * **Nginx mTLS (`nginx/jorgedoicela.com.conf`):** Autenticación mutua con certificado CA de Cloudflare (`ssl_verify_client on`).
+* **Rate Limiting Perimetral por IP Real (`$http_cf_connecting_ip`):**
+  * `api_limit_zone` (15 req/s, burst 25 nodelay): Protege las consultas a SQLite y el backend NestJS contra scraping masivo (devuelve HTTP 429).
+  * `web_limit_zone` (35 req/s, burst 50 nodelay): Protege el SSR de Next.js de sobrecargas DoS.
+  * Consumo de memoria: ~10 MB en Nginx para gestionar >160.000 IPs sin gastar memoria RAM en Node.js.
 
 ### 5.2 PM2 Standalone
 * **`backend-nest`:** Puerto 3000, límite `300 MB`.

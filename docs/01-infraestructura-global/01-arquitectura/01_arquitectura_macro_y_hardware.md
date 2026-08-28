@@ -54,6 +54,10 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
    * Rutas `/portfolio/*`, `/bible/*`, `/software/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`).
    * Rutas raíz y páginas de subdominios $\rightarrow$ Proxy inverso al frontend Next.js (`http://127.0.0.1:3001`).
    * Recursos estáticos clave (`/llms.txt`, `/manifest.json`, `/_next/static/`) $\rightarrow$ Servidos directamente por Nginx desde disco en < 1 ms con caché, garantizando 0 MB de consumo de RAM en Node.js frente a crawlers de IA (GEO / Generative Engine Optimization).
+4. **Rate Limiting Perimetral y Protección Anti-Scraping (Zero-RAM):**
+   * **Detección por IP Real:** Nginx extrae `$http_cf_connecting_ip` para aplicar los límites al cliente real y no al proxy de Cloudflare.
+   * **Zona API (`limit_req_zone $real_client_ip zone=api_limit_zone rate=15r/s burst=25 nodelay`):** Protege las bases de datos SQLite (`bible.sqlite`, `software.sqlite`) y el backend NestJS contra scraping agresivo devolviendo `HTTP 429 Too Many Requests` en microsegundos.
+   * **Zona Web (`limit_req_zone $real_client_ip zone=web_limit_zone rate=35r/s burst=50 nodelay`):** Protege el SSR de Next.js de ataques de denegación de servicio sin penalizar a usuarios humanos navegando rápido.
 
 ---
 

@@ -83,7 +83,7 @@ jobs:
             
             # Garantizar permisos de lectura y ejecución para el servidor web (Nginx / www-data)
             chmod o+x /home/admin ${{ secrets.TARGET_DIR }} 2>/dev/null || true
-            chmod -R o+rX frontend/web/public frontend/web/.next
+            chmod -R o+rX frontend
             
             # Actualizar y validar configuración de Nginx de forma automática
             if [ -f "nginx/jorgedoicela.com.conf" ]; then

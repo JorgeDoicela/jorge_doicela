@@ -180,6 +180,16 @@ export default function LandingPage() {
                             </a>
 
                             <a
+                                href="https://www.linkedin.com/in/jorgedoicela"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-foreground/5 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer border border-transparent hover:border-card-border"
+                            >
+                                <span>linkedin.com/in/jorgedoicela</span>
+                                <span className="text-[11px] text-text-subtitle font-medium">LinkedIn</span>
+                            </a>
+
+                            <a
                                 href="https://github.com/JorgeDoicela"
                                 target="_blank"
                                 rel="noopener noreferrer"

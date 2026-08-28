@@ -221,7 +221,7 @@ export default async function PortfolioPage() {
                     <div className="flex flex-col gap-4 md:pl-6 md:border-l border-border/40">
                         <span className="text-[10px] font-mono text-gold-300 tracking-widest uppercase mb-2">{tAbout('connections')}</span>
                         <a
-                            href="https://linkedin.com/in/jorgedoicela"
+                            href="https://www.linkedin.com/in/jorgedoicela"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-between p-3 rounded-lg border border-border bg-background/30 hover:bg-surface-raised transition-all duration-300 text-xs text-foreground/80 hover:text-foreground font-mono"

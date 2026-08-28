@@ -18,6 +18,7 @@ export default function PersonJsonLd() {
           'addressCountry': 'EC'
         },
         'sameAs': [
+          'https://www.linkedin.com/in/jorgedoicela',
           'https://github.com/JorgeDoicela',
           'https://www.tiktok.com/@jorge.doicela',
           'https://portfolio.jorgedoicela.com',

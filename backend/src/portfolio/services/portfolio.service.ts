@@ -137,7 +137,7 @@ export class PortfolioService {
               content: [
                 'Canales de Contacto Directo:',
                 '  \x1b[33mEmail:\x1b[0m    jorge.doicela.m@gmail.com',
-                '  \x1b[34mLinkedIn:\x1b[0m https://linkedin.com/in/jorgedoicela',
+                '  \x1b[34mLinkedIn:\x1b[0m https://www.linkedin.com/in/jorgedoicela',
                 '  \x1b[35mGitHub:\x1b[0m   https://github.com/JorgeDoicela',
                 '  \x1b[36mTikTok:\x1b[0m   https://tiktok.com/@jorge.doicela',
                 '  \x1b[32mUbicación:\x1b[0m Quito, Ecuador (UTC-5)',
@@ -349,7 +349,7 @@ export class PortfolioService {
           output: [
             '\x1b[1;33mCanales Oficiales de Comunicación:\x1b[0m',
             '  \x1b[33m• Correo:\x1b[0m    jorge.doicela.m@gmail.com',
-            '  \x1b[34m• LinkedIn:\x1b[0m  https://linkedin.com/in/jorgedoicela',
+            '  \x1b[34m• LinkedIn:\x1b[0m  https://www.linkedin.com/in/jorgedoicela',
             '  \x1b[35m• GitHub:\x1b[0m    https://github.com/JorgeDoicela',
             '  \x1b[36m• TikTok:\x1b[0m    https://tiktok.com/@jorge.doicela',
             '  \x1b[32m• Ubicación:\x1b[0m Quito, Ecuador (UTC-5)',
@@ -440,7 +440,7 @@ export class PortfolioService {
         let url = '';
         if (target.includes('github')) url = 'https://github.com/JorgeDoicela';
         else if (target.includes('linkedin'))
-          url = 'https://linkedin.com/in/jorgedoicela';
+          url = 'https://www.linkedin.com/in/jorgedoicela';
         else if (target.includes('tiktok'))
           url = 'https://tiktok.com/@jorge.doicela';
         else if (target.includes('email') || target.includes('mail'))

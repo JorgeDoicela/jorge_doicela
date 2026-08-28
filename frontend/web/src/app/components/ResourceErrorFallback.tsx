@@ -6,12 +6,19 @@ import React from 'react';
  * Componente de infraestructura de nivel más bajo. Inyecta un script inline nativo
  * para capturar fallas de red catastróficas (404 de chunks de Next.js por deploys)
  * antes de que React se cargue, evitando pantallas en blanco o en negro.
+ * 
+ * NOTA DE SEGURIDAD Y GEO: El contenido visual de error está codificado en Base64
+ * para evitar que crawlers o bots de Inteligencia Artificial que extraen texto plano
+ * del HTML inicial confundan este modal de emergencia con el estado real de la aplicación.
  */
 export default function ResourceErrorFallback() {
   const inlineScript = `
     (function() {
       // Registrar el flag de inicialización global
       window.__APP_INITIALIZED__ = false;
+
+      // Plantilla de error visual codificada en Base64 para aislamiento de crawlers e IA
+      var _EB64 = "PHN0eWxlPiNyZXNvdXJjZS1lcnJvci1zY3JlZW46OmJlZm9yZSB7IGNvbnRlbnQ6ICIiOyBwb3NpdGlvbjogYWJzb2x1dGU7IHRvcDogMDsgbGVmdDogMDsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgYmFja2dyb3VuZC1pbWFnZTogcmFkaWFsLWdyYWRpZW50KDFweCAxcHggYXQgMzBweCA0MHB4LCAjZmZmLCByZ2JhKDAsMCwwLDApKSwgcmFkaWFsLWdyYWRpZW50KDEuNXB4IDEuNXB4IGF0IDkwcHggMTgwcHgsIHJnYmEoMjU1LDI1NSwyNTUsMC44NSksIHJnYmEoMCwwLDAsMCkpLCByYWRpYWwtZ3JhZGllbnQoMXB4IDFweCBhdCAyMjBweCAxMDBweCwgI2ZmZiwgcmdiYSgwLDAsMCwwKSksIHJhZGlhbC1ncmFkaWVudCgycHggMnB4IGF0IDE1MHB4IDMwMHB4LCByZ2JhKDI1NSwyNTUsMjU1LDAuNjUpLCByZ2JhKDAsMCwwLDApKSwgcmFkaWFsLWdyYWRpZW50KDEuNXB4IDEuNXB4IGF0IDI4MHB4IDIyMHB4LCAjZmZmLCByZ2JhKDAsMCwwLDApKSwgcmFkaWFsLWdyYWRpZW50KDFweCAxcHggYXQgODBweCAyOTBweCwgcmdiYSgyNTUsMjU1LDI1NSwwLjcpLCByZ2JhKDAsMCwwLDApKSwgcmFkaWFsLWdyYWRpZW50KDJweCAycHggYXQgMzEwcHggNTBweCwgI2ZmZiwgcmdiYSgwLDAsMCwwKSk7IGJhY2tncm91bmQtc2l6ZTogMzAwcHggMzAwcHg7IG9wYWNpdHk6IDAuNDU7IHBvaW50ZXItZXZlbnRzOiBub25lOyBhbmltYXRpb246IHN0YXJzUHVsc2UgMTVzIGluZmluaXRlIGFsdGVybmF0ZSBlYXNlLWluLW91dDsgfSBAa2V5ZnJhbWVzIHN0YXJzUHVsc2UgeyAwJTIwJTcgb3BhY2l0eTogMC4zOyB0cmFuc2Zvcm06IHNjYWxlKDAuOTcpOyB9IDEwMCUgeyBvcGFjaXR5OiAwLjY7IHRyYW5zZm9ybTogc2NhbGUoMS4wMyk7IH0gfTwvc3R5bGU+PGRpdiBzdHlsZT0icG9zaXRpb246IHJlbGF0aXZlOyB6LWluZGV4OiAxMDsgbWF4LXdpZHRoOiA0ODBweDsgYmFja2dyb3VuZDogcmdiYSgxMCwgMTAsIDE1LCAwLjQ4KTsgYm9yZGVyOiAxcHggc29saWQgcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1NSk7IHBhZGRpbmc6IDU2cHggNDhweDsgYm9yZGVyLXJhZGl1czogMjRweDsgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDE2cHgpOyBib3gtc2hhZG93OiAwIDMwcHggNjBweCAtMTVweCByZ2JhKDAsIDAsIDAsIDAuOSksIDAgMCA1MHB4IHJnYmEoOTksIDEwMiwgMjQxLCAwLjA4KTsgZGlzcGxheTogZmxleDsgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsgYWxpZ24taXRlbXM6IGNlbnRlcjsiPjxkaXYgc3R5bGU9IndpZHRoOiA2NHB4OyBoZWlnaHQ6IDY0cHg7IGJvcmRlci1yYWRpdXM6IDUwJTsgYmFja2dyb3VuZDogcmdiYSgyMzksIDY4LCA2OCwgMC4wOCk7IGJvcmRlZXI6IDFweCBzb2xpZCByZ2JhKDIzOSwgNjgsIDY4LCAwLjI1KTsgZGlzcGxheTogZmxleDsgYWxpZ24taXRlbXM6IGNlbnRlcjsganVzdGlmeS1jb250ZW50OiBjZW50ZXI7IG1hcmdpbi1ib3R0b206IDMycHg7IGJveC1zaGFkb3c6IDAgMCAyMHB4IHJnYmEoMjM5LCA2OCwgNjgsIDAuMTIpOyI+PHN2ZyBzdHlsZT0id2lkdGg6IDI4cHg7IGhlaWdodDogMjhweDsgY29sb3I6ICNmODcxNzE7IiBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBkPSJNMTIgOXYybTAgNGguMDFtLTYuOTM4IDRoMTMuODU2YzEuNTQgMCAyLjUwMi0xLjY2NyAxLjczMi0zTDEzLjczMiA0Yy0uNzctMS4zMzMtMi42OTQtMS4zMzMtMy40NjQgMEwzLjM0IDE2Yy0uNzcgMS4zMzMuMTkyIDMgMS43MzIgM3oiIC8+PC9zdmc+PC9kaXY+PGgyIHN0eWxlPSJmb250LXNpemU6IDIycHg7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFjaW5nOiAtMC4wMmVtOyBtYXJnaW46IDAgMCAxNnB4IDA7IGNvbG9yOiAjZmZmZmZmOyBmb250LWZhbWlseTogc3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmOyI+SW50ZXJydXBjacOzbiBUZW1wb3JhbCBkZWwgU2VydmljaW88L2gyPjxwIHN0eWxlPSJmb250LXNpemU6IDE0cHg7IGNvbG9yOiAjZDRkNGR4OyBsaW5lLWhlaWdodDogMS43OyBtYXJnaW46IDA7IGZvbnQtd2VpZ2h0OiAzMDA7IGZvbnQtZmFtaWx5OiBzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWY7Ij5IZW1vcyBkZXRlY3RhZG8gZGlmaWN1bHRhZGVzIHTDqWNuaWNhcyBhbCBpbmljaWFsaXphciBsYSBhcGxpY2FjacOzbi4gWWEgbm9zIGVuY29udHJhbW9zIHRyYWJhamFuZG8gZW4gbGEgc29sdWNpw7NuIGRlIGN1YWxxdWllciBpbmNvbnZlbmllbnRlIHTDqWNuaWNvIHBhcmEgcmVzdGFibGVjZXIgZWwgc2VydmljaW8gYSBsYSBicmV2ZWRhZCBwb3NpYmxlLiBBZ3JhZGVjZW1vcyB0dSBwYWNpZW5jaWEgeSBjb21wcmVuc2nDs24uPC9wPjwvZGl2Pg==";
 
       // Registrar e inicializar la pantalla de error visual
       function showVisualError(triggerSource) {
@@ -51,42 +58,11 @@ export default function ResourceErrorFallback() {
         div.style.textAlign = 'center';
         div.style.overflow = 'hidden';
 
-        div.innerHTML = [
-          '<style>',
-            '#resource-error-screen::before {',
-              'content: "";',
-              'position: absolute;',
-              'top: 0; left: 0; width: 100%; height: 100%;',
-              'background-image: ',
-                'radial-gradient(1px 1px at 30px 40px, #fff, rgba(0,0,0,0)),',
-                'radial-gradient(1.5px 1.5px at 90px 180px, rgba(255,255,255,0.85), rgba(0,0,0,0)),',
-                'radial-gradient(1px 1px at 220px 100px, #fff, rgba(0,0,0,0)),',
-                'radial-gradient(2px 2px at 150px 300px, rgba(255,255,255,0.65), rgba(0,0,0,0)),',
-                'radial-gradient(1.5px 1.5px at 280px 220px, #fff, rgba(0,0,0,0)),',
-                'radial-gradient(1px 1px at 80px 290px, rgba(255,255,255,0.7), rgba(0,0,0,0)),',
-                'radial-gradient(2px 2px at 310px 50px, #fff, rgba(0,0,0,0));',
-              'background-size: 300px 300px;',
-              'opacity: 0.45;',
-              'pointer-events: none;',
-              'animation: starsPulse 15s infinite alternate ease-in-out;',
-            '}',
-            '@keyframes starsPulse {',
-              '0% { opacity: 0.3; transform: scale(0.97); }',
-              '100% { opacity: 0.6; transform: scale(1.03); }',
-            '}',
-          '</style>',
-          '<div style="position: relative; z-index: 10; max-width: 480px; background: rgba(10, 10, 15, 0.48); border: 1px solid rgba(255, 255, 255, 0.055); padding: 56px 48px; border-radius: 24px; backdrop-filter: blur(16px); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(99, 102, 241, 0.08); display: flex; flex-direction: column; align-items: center;">',
-            '<div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); display: flex; align-items: center; justify-content: center; margin-bottom: 32px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.12);">',
-              '<svg style="width: 28px; height: 28px; color: #f87171;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">',
-                '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />',
-              '</svg>',
-            '</div>',
-            '<h2 style="font-size: 22px; font-weight: 400; letter-spacing: -0.02em; margin: 0 0 16px 0; color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">Interrupción Temporal del Servicio</h2>',
-            '<p style="font-size: 14px; color: #d4d4d8; line-height: 1.7; margin: 0; font-weight: 300; font-family: system-ui, -apple-system, sans-serif;">',
-              'Hemos detectado dificultades técnicas al inicializar la aplicación. Ya nos encontramos trabajando en la solución de cualquier inconveniente técnico para restablecer el servicio a la brevedad posible. Agradecemos tu paciencia y comprensión.',
-            '</p>',
-          '</div>'
-        ].join('');
+        try {
+          div.innerHTML = decodeURIComponent(escape(window.atob(_EB64)));
+        } catch (e) {
+          div.innerHTML = '<p style="color:#fff;font-family:sans-serif;">Error temporal de carga. Por favor recarga la página.</p>';
+        }
 
         if (document.body) {
           document.body.appendChild(div);

@@ -41,7 +41,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ## 3. Aislamiento de Tipos y Contratos (Cero `@shared`)
 
 * **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
-* **Persistencia Aislada:** Cada módulo del backend interactúa con su propia base de datos SQLite física (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`) bajo conexiones nombradas (`'bibleConnection'`, etc.).
+* **Persistencia Aislada:** Cada módulo del backend interactúa con su propia base de datos SQLite física encapsulada en `backend/data/` (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`) bajo conexiones nombradas (`'bibleConnection'`, `'softwareConnection'`, `'portfolioConnection'`).
 
 ---
 

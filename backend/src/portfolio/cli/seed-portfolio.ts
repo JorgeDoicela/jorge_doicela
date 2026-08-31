@@ -2,6 +2,8 @@ import Database from 'better-sqlite3';
 import * as path from 'path';
 import * as fs from 'fs';
 
+import { resolveDatabasePath } from '../../common/database/database-path.util';
+
 interface PortfolioProjectItem {
   id: number;
   slug: string;
@@ -16,7 +18,10 @@ interface PortfolioProjectItem {
 }
 
 export function seedPortfolio(
-  dbPath: string = process.env.DATABASE_PORTFOLIO_PATH || 'portfolio.sqlite',
+  dbPath: string = resolveDatabasePath(
+    'DATABASE_PORTFOLIO_PATH',
+    'portfolio.sqlite',
+  ),
 ): void {
   console.log(`[PortfolioSeeder] 🚀 Sembrando base de datos: ${dbPath}...`);
 

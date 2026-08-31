@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import * as fs from 'fs';
 import * as path from 'path';
+import { resolveDatabasePath } from '../../common/database/database-path.util';
 
 interface NewsSeedItem {
   slug: string;
@@ -137,7 +138,12 @@ interface ProjectSeedItem {
   architectureDiagramUrl?: string;
 }
 
-export function seedSoftware(dbPath: string = 'software.sqlite') {
+export function seedSoftware(
+  dbPath: string = resolveDatabasePath(
+    'DATABASE_SOFTWARE_PATH',
+    'software.sqlite',
+  ),
+) {
   const startTime = Date.now();
   console.log(`[SoftwareSeeder] Conectando a la base de datos: ${dbPath}...`);
 
@@ -475,6 +481,5 @@ export function seedSoftware(dbPath: string = 'software.sqlite') {
 }
 
 if (require.main === module) {
-  const dbFile = process.env.SOFTWARE_DB_PATH || 'software.sqlite';
-  seedSoftware(dbFile);
+  seedSoftware();
 }

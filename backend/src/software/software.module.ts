@@ -20,13 +20,17 @@ import { AiModule } from './ai/ai.module';
 import { CybersecurityModule } from './cybersecurity/cybersecurity.module';
 import { TutorialsModule } from './tutorials/tutorials.module';
 import { ProjectsModule } from './projects/projects.module';
+import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       name: 'softwareConnection',
       type: 'better-sqlite3',
-      database: process.env.DATABASE_SOFTWARE_PATH || 'software.sqlite',
+      database: resolveDatabasePath(
+        'DATABASE_SOFTWARE_PATH',
+        'software.sqlite',
+      ),
       entities: [
         NewsArticle,
         BlogPost,

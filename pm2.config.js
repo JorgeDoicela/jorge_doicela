@@ -8,8 +8,12 @@ module.exports = {
       exec_mode: 'fork',
       watch: false,
       max_memory_restart: '200M',
+      env_file: './backend/.env',
       env: {
         NODE_ENV: 'production',
+        DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
+        DATABASE_BIBLE_PATH: './data/bible.sqlite',
+        DATABASE_SOFTWARE_PATH: './data/software.sqlite',
       },
     },
     {

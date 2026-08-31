@@ -12,12 +12,17 @@ import { ContactController } from './controllers/contact.controller';
 import { PortfolioProjectsController } from './controllers/portfolio-projects.controller';
 import { PortfolioProjectsService } from './services/portfolio-projects.service';
 
+import { resolveDatabasePath } from '../common/database/database-path.util';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       name: 'portfolioConnection',
       type: 'better-sqlite3',
-      database: process.env.DATABASE_PORTFOLIO_PATH || 'portfolio.sqlite',
+      database: resolveDatabasePath(
+        'DATABASE_PORTFOLIO_PATH',
+        'portfolio.sqlite',
+      ),
       entities: [ContactMessage, PortfolioProject],
       synchronize: true,
     }),

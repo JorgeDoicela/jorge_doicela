@@ -270,7 +270,9 @@ graph TD
     F --> G[rsync bundle completo vía SSH a Lightsail]
     G --> H[SSH Script en Servidor]
     H --> I[pnpm install --prod en backend]
-    H --> J[node dist/bible/cli/seed-corpus.js & seed-software.js]
+    H --> I2[Limpieza de SQLite legadas en raíz y backend/]
+    I2 --> I3[mkdir -p backend/data]
+    I3 --> J[seed-corpus.js + seed-software.js + seed-portfolio.js en backend/data/]
     H --> K[Garantizar estructura de recursos estáticos en standalone]
     H --> L[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
     H --> M[pm2 reload con zero-downtime o start de resguardo]
@@ -283,7 +285,9 @@ graph TD
 4. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sincroniza los archivos vía rsync excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
 5. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
    * Instala dependencias de producción en `backend/` (`--prod --ignore-scripts`).
-   * Ejecuta la sincronización transaccional de bases de datos (`seed-corpus.js` y `seed-software.js`).
+   * **Limpieza de archivos legados:** Elimina cualquier `*.sqlite` que haya quedado en la raíz del monorepo o directamente en `backend/` (estructura anterior a la migración `backend/data/`).
+   * **Asegura el directorio canónico:** `mkdir -p backend/data` garantiza que el directorio exista incluso en clones limpios del servidor.
+   * **Siembra los 3 módulos:** Ejecuta `seed-corpus.js`, `seed-software.js` y `seed-portfolio.js`, que resolverán sus rutas deterministas a `backend/data/` mediante `resolveDatabasePath`.
    * Verifica la integridad de los recursos estáticos en `standalone/`.
    * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída (`sudo nginx -t && sudo systemctl reload nginx`).
    * Recarga los procesos sin caída del servicio usando `pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js`.

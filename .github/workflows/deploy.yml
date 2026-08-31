@@ -72,8 +72,14 @@ jobs:
             # Instalar dependencias del backend de forma dedicada con filtro de monorepo pnpm en producción
             pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts
             
-            # Sincronización transaccional de bases de datos en producción (Biblia y Software)
-            cd backend && node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && cd ..
+            # Limpieza de bases de datos legadas fuera de backend/data/ (migración a nueva estructura)
+            rm -f portfolio.sqlite *.sqlite-wal *.sqlite-shm 2>/dev/null || true
+            rm -f backend/portfolio.sqlite backend/bible.sqlite backend/software.sqlite 2>/dev/null || true
+            rm -f backend/*.sqlite-wal backend/*.sqlite-shm 2>/dev/null || true
+            mkdir -p backend/data
+            
+            # Sincronización transaccional de bases de datos en producción (todos los módulos)
+            cd backend && node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && node dist/portfolio/cli/seed-portfolio.js && cd ..
             
             # Asegurar recursos estáticos en standalone de forma limpia e idempotente
             rm -rf frontend/web/.next/standalone/frontend/web/public frontend/web/.next/standalone/frontend/web/.next/static

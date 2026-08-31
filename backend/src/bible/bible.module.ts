@@ -13,13 +13,14 @@ import { BooksModule } from './books/books.module';
 import { TranslationsModule } from './translations/translations.module';
 import { MorphologyModule } from './morphology/morphology.module';
 import { HistoricalModule } from './historical/historical.module';
+import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       name: 'bibleConnection',
       type: 'better-sqlite3',
-      database: process.env.DATABASE_BIBLE_PATH || 'bible.sqlite',
+      database: resolveDatabasePath('DATABASE_BIBLE_PATH', 'bible.sqlite'),
       entities: [
         Verse,
         Book,

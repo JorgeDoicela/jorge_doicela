@@ -30,7 +30,7 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 
 ## 4. Aislamiento de Tipos y Persistencia
 * **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
-* **Persistencia Aislada:** Cada módulo del backend se conecta a su propia base de datos SQLite física independiente (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`).
+* **Persistencia Aislada:** Cada módulo del backend se conecta a su propia base de datos SQLite física independiente encapsulada en `backend/data/` (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`).
 
 ---
 

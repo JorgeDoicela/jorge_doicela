@@ -9,7 +9,7 @@ Este documento detalla la arquitectura macro y micro, gateways de WebSockets, co
 > [!IMPORTANT]
 > **Arquitectura Macro:**
 > * **Monolito Modular:** El módulo vive en `backend/src/portfolio/` dentro del proceso único de NestJS 11 (puerto `3000`), optimizado para el VPS de **1 GB de RAM**.
-> * **Aislamiento de Persistencia:** Base de datos física independiente `portfolio.sqlite` registrada con la conexión de TypeORM `'portfolioConnection'`. Cero tablas compartidas.
+> * **Aislamiento de Persistencia:** Base de datos física independiente `backend/data/portfolio.sqlite` registrada con la conexión de TypeORM `'portfolioConnection'`. Cero tablas compartidas.
 > * **Aislamiento de Dominio:** Cero dependencias de `bible` o `software`.
 >
 > **Arquitectura Micro:**

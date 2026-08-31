@@ -9,7 +9,7 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 > [!IMPORTANT]
 > **Arquitectura Macro:**
 > * **Monolito Modular:** Módulo encapsulado en `backend/src/bible/` ejecutado en el servidor único de NestJS 11 (puerto `3000`, VPS 1 GB RAM).
-> * **Aislamiento de Persistencia:** Base de datos física independiente `bible.sqlite` registrada con la conexión TypeORM `'bibleConnection'`.
+> * **Aislamiento de Persistencia:** Base de datos física independiente `backend/data/bible.sqlite` registrada con la conexión TypeORM `'bibleConnection'`.
 > * **Aislamiento de Dominio:** Cero dependencias de otros módulos del monorepo.
 >
 > **Arquitectura Micro:**

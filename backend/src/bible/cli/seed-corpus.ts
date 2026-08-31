@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import Database from 'better-sqlite3';
+import { resolveDatabasePath } from '../../common/database/database-path.util';
 
 interface VerseItem {
   verse: number;
@@ -172,7 +173,9 @@ export const CANONICAL_BOOKS = [
   { id: 66, name: 'Apocalipsis', abbreviation: 'APO', testament: 'NT' },
 ];
 
-export function seedCorpus(dbPath: string = 'bible.sqlite') {
+export function seedCorpus(
+  dbPath: string = resolveDatabasePath('DATABASE_BIBLE_PATH', 'bible.sqlite'),
+) {
   const startTime = Date.now();
   console.log(
     `[CorpusSeeder] 🚀 Recreando base de datos desde cero: ${dbPath}...`,
@@ -685,6 +688,5 @@ export function seedCorpus(dbPath: string = 'bible.sqlite') {
 
 // Ejecución directa si se invoca por CLI
 if (require.main === module) {
-  const targetDb = process.env.DATABASE_BIBLE_PATH || 'bible.sqlite';
-  seedCorpus(targetDb);
+  seedCorpus();
 }

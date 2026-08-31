@@ -79,4 +79,7 @@ coverage/
 **/*.sqlite-wal
 *.sqlite-shm
 **/*.sqlite-shm
+backend/data/*
+!backend/data/.gitkeep
+**/data/*.sqlite*
 

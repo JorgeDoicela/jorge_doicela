@@ -9,7 +9,7 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 > [!IMPORTANT]
 > **Arquitectura Macro:**
 > * **Monolito Modular Orquestado:** Módulo orquestador en `backend/src/software/software.module.ts` dentro del proceso único NestJS (puerto `3000`, VPS 1 GB RAM).
-> * **Aislamiento de Persistencia:** Base de datos física independiente `software.sqlite` registrada con la conexión TypeORM `'softwareConnection'`.
+> * **Aislamiento de Persistencia:** Base de datos física independiente `backend/data/software.sqlite` registrada con la conexión TypeORM `'softwareConnection'`.
 > * **Aislamiento de Dominio:** 7 submódulos verticales con sus propios módulos, controladores, servicios y entidades.
 >
 > **Arquitectura Micro:**

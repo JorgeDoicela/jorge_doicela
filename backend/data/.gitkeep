@@ -1,0 +1,2 @@
+# Este archivo asegura que el directorio backend/data exista en el repositorio.
+# Las bases de datos *.sqlite creadas aquí son ignoradas por Git.

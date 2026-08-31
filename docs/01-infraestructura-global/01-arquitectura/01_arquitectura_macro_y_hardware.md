@@ -41,9 +41,9 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
                 v                                                     v
      [ Next.js SSR (Puerto 3001) ]                           [ NestJS (Puerto 3000) ]
      (Enrutador de Subdominios)                                (Monolito Modular)
-        ├── (landing)   -> jorgedoicela.com                       ├── /portfolio -> portfolio.sqlite
-        ├── (portfolio) -> portfolio.*                            ├── /bible     -> bible.sqlite
-        ├── (bible)     -> bible.*                                └── /software  -> software.sqlite
+        ├── (landing)   -> jorgedoicela.com                       ├── /portfolio -> data/portfolio.sqlite
+        ├── (portfolio) -> portfolio.*                            ├── /bible     -> data/bible.sqlite
+        ├── (bible)     -> bible.*                                └── /software  -> data/software.sqlite
         └── (software)  -> software.*
 ```
 

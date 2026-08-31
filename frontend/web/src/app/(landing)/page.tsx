@@ -172,14 +172,6 @@ export default function LandingPage() {
 
                         <div className="flex flex-col gap-1.5">
                             <a
-                                href="mailto:jorge.doicela.m@gmail.com"
-                                className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-foreground/5 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer border border-transparent hover:border-card-border"
-                            >
-                                <span>jorge.doicela.m@gmail.com</span>
-                                <span className="text-[11px] text-text-subtitle font-medium">Email</span>
-                            </a>
-
-                            <a
                                 href="https://www.linkedin.com/in/jorgedoicela"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -199,15 +191,13 @@ export default function LandingPage() {
                                 <span className="text-[11px] text-text-subtitle font-medium">GitHub</span>
                             </a>
 
-                            <a
-                                href="https://www.tiktok.com/@jorge.doicela"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                            <Link
+                                href="/links"
                                 className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-foreground/5 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer border border-transparent hover:border-card-border"
                             >
-                                <span>tiktok.com/@jorge.doicela</span>
-                                <span className="text-[11px] text-text-subtitle font-medium">TikTok</span>
-                            </a>
+                                <span>{language === 'es' ? 'Enlaces Oficiales & Proyectos' : 'Official Links & Projects'}</span>
+                                <span className="text-[11px] text-text-subtitle font-medium">Links</span>
+                            </Link>
 
                             <Link
                                 href="/consulta"
@@ -251,6 +241,8 @@ export default function LandingPage() {
                     <a href="https://software.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Software</a>
                     <span>•</span>
                     <a href="https://bible.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Biblia</a>
+                    <span>•</span>
+                    <Link href="/links" className="hover:text-foreground transition-colors">Links</Link>
                     <span>•</span>
                     <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors font-mono">llms.txt</a>
                 </div>

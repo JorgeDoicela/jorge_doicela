@@ -63,7 +63,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
+    <html lang={locale} data-scroll-behavior="smooth" className={`${plusJakartaSans.variable} dark h-full scroll-smooth theme-software`}>
       <head>
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
         <SoftwareJsonLd />

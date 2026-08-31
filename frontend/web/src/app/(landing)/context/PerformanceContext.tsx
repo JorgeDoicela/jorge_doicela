@@ -20,20 +20,22 @@ interface PerformanceContextType {
     isMobile: boolean;
 }
 
-const PerformanceContext = createContext<PerformanceContextType>({
+const DEFAULT_CAPABILITIES: PerformanceContextType = {
     tier: 'high',
     isBrave: false,
     isMobile: false,
-});
+};
+
+const PerformanceContext = createContext<PerformanceContextType>(DEFAULT_CAPABILITIES);
 
 export const usePerformanceTier = () => useContext(PerformanceContext);
 
 /**
- * Evaluación síncrona en Frame 0 para evitar picos de inicialización y contención en hilo principal.
+ * Evaluación de capacidades del navegador ejecutada tras la hidratación
  */
-function evaluateSyncCapabilities(): { tier: PerformanceTier; isBrave: boolean; isMobile: boolean } {
+function evaluateClientCapabilities(): { tier: PerformanceTier; isBrave: boolean; isMobile: boolean } {
     if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-        return { tier: 'high', isBrave: false, isMobile: false };
+        return DEFAULT_CAPABILITIES;
     }
 
     const nav = navigator as BraveNavigator;
@@ -56,12 +58,13 @@ function evaluateSyncCapabilities(): { tier: PerformanceTier; isBrave: boolean; 
 }
 
 export const PerformanceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [capabilities, setCapabilities] = useState<{ tier: PerformanceTier; isBrave: boolean; isMobile: boolean }>(() => evaluateSyncCapabilities());
+    // Inicialización idéntica entre servidor y cliente para evitar Hydration Mismatch
+    const [capabilities, setCapabilities] = useState<PerformanceContextType>(DEFAULT_CAPABILITIES);
 
     useEffect(() => {
-        const syncCap = evaluateSyncCapabilities();
-        setCapabilities(syncCap);
-        document.documentElement.setAttribute('data-tier', syncCap.tier);
+        const clientCap = evaluateClientCapabilities();
+        setCapabilities(clientCap);
+        document.documentElement.setAttribute('data-tier', clientCap.tier);
 
         // Verificación asíncrona oficial de la API de Brave Browser
         const nav = typeof navigator !== 'undefined' ? (navigator as BraveNavigator) : null;
@@ -102,4 +105,3 @@ export const PerformanceProvider: React.FC<{ children: ReactNode }> = ({ childre
         </PerformanceContext.Provider>
     );
 };
-

@@ -81,7 +81,7 @@ export const translations: Record<Language, Translations> = {
         
         cardBibleTag: 'Estudios & Recursos Bíblicos',
         cardBibleTitle: 'La Biblia',
-        cardBibleDescription: 'Un ecosistema completo concebido para el estudio teológico, la evangelización y el crecimiento espiritual. Explora estudios bíblicos, libros, noticias y guías de ayuda espiritual creados para la gloria de Dios.',
+        cardBibleDescription: 'Una plataforma completa concebida para el estudio teológico, la evangelización y el crecimiento espiritual. Explora estudios bíblicos, libros, noticias y guías de ayuda espiritual creados para la gloria de Dios.',
         cardBibleAction: 'Explorar recursos',
         cardBibleQuote: 'Lámpara es a mis pies tu palabra, y lumbrera a mi camino.',
         cardBibleVerseRef: 'Salmos 119:105',
@@ -144,7 +144,7 @@ export const translations: Record<Language, Translations> = {
         
         cardBibleTag: 'Bible Studies & Resources',
         cardBibleTitle: 'The Bible',
-        cardBibleDescription: 'A complete ecosystem designed for theological study, evangelism, and spiritual growth. Explore Bible studies, books, news, and spiritual guidance tools created for the glory of God.',
+        cardBibleDescription: 'A complete platform designed for theological study, evangelism, and spiritual growth. Explore Bible studies, books, news, and spiritual guidance tools created for the glory of God.',
         cardBibleAction: 'Explore resources',
         cardBibleQuote: 'Your word is a lamp to my feet and a light to my path.',
         cardBibleVerseRef: 'Psalms 119:105',

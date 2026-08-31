@@ -544,7 +544,7 @@ export default function SoftwarePage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Ecosistema</p>
+                <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Plataformas</p>
                 <ul className="space-y-1 text-xs text-zinc-500">
                   <li><a href="https://jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Portal Principal</a></li>
                   <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Portafolio SSH</a></li>

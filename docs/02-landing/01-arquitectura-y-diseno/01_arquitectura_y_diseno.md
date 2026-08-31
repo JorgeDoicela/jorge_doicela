@@ -25,6 +25,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Enrutamiento y Subpáginas:**
   * `/`: Página principal de bienvenida y portal a los 3 proyectos con Bento Grid interactivo.
   * `/consulta` (y alias `/contacto`): Landing page de captura de leads y consultas técnicas optimizada para campañas publicitarias (Google Ads), conectada con despacho en tiempo real a Telegram.
+  * `/links`: Centro oficial de enlaces y conexiones con header de disponibilidad, Bento de plataformas propias, botones de acción rápida y vitrina multimedia interactiva con lightbox accesible.
 * **Enrutamiento:** El middleware (`src/middleware.ts`) redirige automáticamente las peticiones sin subdominio hacia el grupo de rutas `(landing)`.
 
 ---

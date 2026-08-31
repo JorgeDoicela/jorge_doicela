@@ -62,7 +62,7 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 id: 3,
                 slug: 'software-platform',
                 title: 'Software',
-                description: 'Ecosistema de contenidos tecnológicos con 7 áreas temáticas, avisos de ciberseguridad, catálogo de modelos de IA, tutoriales interactivos y foros.',
+                description: 'Plataforma de contenidos tecnológicos con 7 áreas temáticas, avisos de ciberseguridad, catálogo de modelos de IA, tutoriales interactivos y foros.',
                 role: 'Full Stack & DevSecOps Engineer',
                 technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
                 language: 'es',

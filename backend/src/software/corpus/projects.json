@@ -1,7 +1,7 @@
 [
   {
     "slug": "portafolio-personal-dark-luxury",
-    "name": "Portafolio Profesional & Terminal SSH",
+    "name": "Portafolio",
     "description": "Sitio web personal interactivo con terminal virtual SSH integrada, estética Dark Luxury y formulario de contacto persistente.",
     "techStack": "Next.js 16, NestJS 11, Socket.io, SQLite, TailwindCSS",
     "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",
@@ -14,7 +14,7 @@
   },
   {
     "slug": "biblia-modular-estudio-exegetico",
-    "name": "Biblia Modular: 9 Motores Exegéticos",
+    "name": "La Biblia",
     "description": "Plataforma de estudio bíblico profundo con morfología hebrea/griega, códigos Strong, mapas WGS84 y modo Offline-First en Expo.",
     "techStack": "Next.js, Expo React Native, NestJS, SQLite WAL, FSD",
     "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",

@@ -14,7 +14,10 @@ Catálogo vivo de ideas, funcionalidades completadas y requerimientos pendientes
 ---
 
 ## 2. Contenido y Secciones
-- [ ] **Sección "Disponible para trabajo":** Chip verde/rojo de estado para proyectos freelance.
+- [x] **Sección "Disponible para trabajo":** Chip verde/rojo de estado para proyectos y consultorías en `/links`.
+- [x] **Portal Oficial de Enlaces & Conexiones (`/links`):** Centro de enlaces interactivo con Bento Grid de plataformas propias y vitrina de proyectos.
+- [x] **Vitrina de Proyectos & Lightbox:** Media Grid interactivo con navegación cíclica por teclado y vista previa.
+- [x] **Botones de contacto directo:** Accesos rápidos a WhatsApp, Telegram, Email, GitHub, LinkedIn.
 - [ ] **Contador de proyectos y experiencia:** Estadísticas animadas de hitos alcanzados.
 - [ ] **Ticker de actividad de GitHub:** Commits y actividad reciente desde la API pública de GitHub.
 - [ ] **Miniaturas del Blog:** Últimas publicaciones destacadas directamente en la landing.
@@ -28,11 +31,11 @@ Catálogo vivo de ideas, funcionalidades completadas y requerimientos pendientes
 ## 3. Funcionalidades Técnicas y Accesibilidad
 - [x] **Internacionalización Profesional (next-intl):** Server-Side Rendering (SSR) limpio, cero parpadeos (FOUC), cookies `NEXT_LOCALE` y cabeceras `Accept-Language`.
 - [x] **Metadatos SEO Internacionales Dinámicos:** Generación bilingüe con `generateMetadata()`, Open Graph, Twitter Cards, Schema.org JSON-LD y etiquetas `hreflang` (`es-EC` y `en-US`).
-- [x] **Sitemap dinámico (`sitemap.xml`):** Generación automática desde Next.js.
+- [x] **Sitemap dinámico (`sitemap.xml`):** Generación automática desde Next.js incluyendo `/links`.
 - [x] **Robots.txt personalizado:** Reglas de indexación para bots.
 - [x] **Accesibilidad WCAG 2.1 AA:** SkipToContent, ARIA labels y navegación completa por teclado.
 - [x] **Progressive Web App (PWA):** Instalable en móvil y escritorio con Service Worker.
 - [x] **Previsualización Open Graph:** Generador dinámico en servidor con `@vercel/og` (1200x630).
 - [x] **Verificación Google & Bing:** Meta tags de validación de propiedad.
+- [x] **Botones para compartir en redes & portapapeles:** Atajo nativo de `navigator.share` y copiado con toast interactivo.
 - [ ] **Analytics sin cookies:** Integración ligera autohospedada (Umami o Plausible).
-- [ ] **Botones para compartir en redes:** Atajos para compartir perfil en LinkedIn, X y WhatsApp.

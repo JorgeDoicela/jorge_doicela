@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
         authors: [{ name: "Jorge Doicela", url: "https://jorgedoicela.com" }],
         creator: "Jorge Doicela",
         publisher: "Jorge Doicela",
-        manifest: "/manifest.json",
+        manifest: "/landing/manifest.json",
         verification: {
             google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
             other: {
@@ -114,6 +114,7 @@ export default async function LandingLayout({
     return (
         <html
             lang={locale}
+            data-scroll-behavior="smooth"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
             <head>

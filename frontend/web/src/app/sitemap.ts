@@ -22,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.8,
         },
         {
+            url: 'https://jorgedoicela.com/links',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
             url: 'https://jorgedoicela.com/llms.txt',
             lastModified: now,
             changeFrequency: 'weekly',

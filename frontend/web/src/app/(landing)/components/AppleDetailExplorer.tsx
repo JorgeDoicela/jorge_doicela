@@ -13,9 +13,9 @@ export const AppleDetailExplorer: React.FC = () => {
 
     const details = [
         {
-            id: 'ecosystem',
-            navTitle: isEs ? 'Ecosistema de 3 plataformas' : '3-Platform ecosystem',
-            title: isEs ? 'Ecosistema de 3 plataformas' : '3-Platform ecosystem',
+            id: 'platforms',
+            navTitle: isEs ? '3 Plataformas de Software' : '3 Software Platforms',
+            title: isEs ? '3 Plataformas en Producción' : '3 Live Platforms',
             description: isEs
                 ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: estudio bíblico profundo, software con IA y servicios de ingeniería.'
                 : 'A master portal connecting three independent platforms designed for distinct needs: in-depth bible study, AI software, and professional engineering services.',
@@ -23,7 +23,7 @@ export const AppleDetailExplorer: React.FC = () => {
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Ecosistema Digital Unificado' : 'Unified Digital Ecosystem'}
+                            {isEs ? 'Plataformas de Software Propias' : 'Proprietary Software Platforms'}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
                             {isEs

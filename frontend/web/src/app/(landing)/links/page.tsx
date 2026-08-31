@@ -1,13 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Sparkles } from 'lucide-react';
 import { LinksTopBar } from '../components/links/LinksTopBar';
 import { LinksHeader } from '../components/links/LinksHeader';
 import { ActionLinksList } from '../components/links/ActionLinksList';
 import { ProjectsMediaGrid } from '../components/links/ProjectsMediaGrid';
+import { AiAssistantChatModal } from '../components/links/AiAssistantChatModal';
 import ParallaxBackground from '../components/ParallaxBackground';
 import InteractiveParticles from '../components/InteractiveParticles';
 import CinematicSpiralGalaxy from '../components/CinematicSpiralGalaxy';
@@ -15,6 +15,7 @@ import SkipToContent from '../components/SkipToContent';
 
 export default function LinksPage() {
   const tCommon = useTranslations('Common');
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden p-4 sm:p-8 md:p-12">
@@ -51,15 +52,23 @@ export default function LinksPage() {
         </footer>
       </main>
 
-      {/* Botón Flotante Circular de Contacto Directo */}
-      <Link
-        href="/consulta"
-        className="fixed bottom-6 right-6 z-50 p-3.5 sm:p-4 rounded-full bg-gradient-to-tr from-[#0d152e] via-[#1a174d] to-[#551b94] hover:from-[#141f45] hover:to-[#6b21a8] text-white shadow-2xl shadow-indigo-950/60 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer border border-white/15"
-        aria-label="Abrir consulta directa"
-        title="Solicitar Consulta / Contacto"
+      {/* Botón Flotante Circular del Asistente de IA */}
+      <button
+        type="button"
+        onClick={() => setIsAiModalOpen(true)}
+        className="fixed bottom-6 right-6 z-50 p-3.5 sm:p-4 rounded-full bg-gradient-to-tr from-[#0d152e] via-[#1a174d] to-[#551b94] hover:from-[#141f45] hover:to-[#6b21a8] text-white shadow-2xl shadow-indigo-950/60 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer border border-white/15 group flex items-center justify-center"
+        aria-label="Abrir asistente de IA interactivo"
+        title="Asistente de IA · Jorge Doicela"
       >
         <MessageCircle size={24} className="fill-current" />
-      </Link>
+        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-background animate-pulse" />
+      </button>
+
+      {/* Modal Interactivo del Asistente de IA con Gemini / Groq API */}
+      <AiAssistantChatModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+      />
     </div>
   );
 }

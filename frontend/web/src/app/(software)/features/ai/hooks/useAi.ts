@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { AiResource } from '../types';
 import { API_URL } from '../../../../config';
-import { safeFetchJson } from '../../../../utils/fetchJson';
+import { safeFetchJson } from '../../../utils/fetchJson';
 
 export function useAi(type?: string, search: string = '') {
   const locale = useLocale();

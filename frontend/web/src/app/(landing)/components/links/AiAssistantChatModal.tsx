@@ -1,19 +1,17 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
   X, 
   Send, 
-  Sparkles, 
   Bot, 
   User, 
   ArrowRight,
   RotateCcw
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import { useTranslations } from 'next-intl';
 
 interface Message {
   id: string;
@@ -29,68 +27,218 @@ interface AiAssistantChatModalProps {
   onClose: () => void;
 }
 
+// Función para parsear y renderizar Markdown con alto contraste garantizado en claro y oscuro
+function FormattedAiText({ text }: { text: string }) {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+
+  const parseInline = (str: string): React.ReactNode[] => {
+    // Regex para markdown links [texto](url), negritas (**texto**), código (`código`), /consulta, emails y URLs
+    const parts = str.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`|\/consulta|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|https?:\/\/[^\s)]+)/g);
+
+    return parts.map((part, idx) => {
+      // 1. Markdown link: [Texto](url)
+      const mdLinkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (mdLinkMatch) {
+        const linkText = mdLinkMatch[1];
+        const linkUrl = mdLinkMatch[2];
+        const isInternal = linkUrl.startsWith('/');
+        if (isInternal) {
+          return (
+            <Link key={idx} href={linkUrl} className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+              {linkText} ↗
+            </Link>
+          );
+        }
+        return (
+          <a key={idx} href={linkUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+            {linkText} ↗
+          </a>
+        );
+      }
+
+      // 2. Negritas
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={idx} className="ai-text-strong">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+
+      // 3. Código inline
+      if (part.startsWith('`') && part.endsWith('`')) {
+        return (
+          <code key={idx} className="px-1.5 py-0.5 rounded font-mono text-[11.5px] font-semibold ai-text-code">
+            {part.slice(1, -1)}
+          </code>
+        );
+      }
+
+      // 4. Mención de /consulta directa
+      if (part === '/consulta') {
+        return (
+          <Link key={idx} href="/consulta" className="inline-flex items-center gap-1 font-semibold ai-text-link hover:underline px-1 py-0.5 rounded bg-indigo-500/10 transition-colors">
+            Formulario de Consulta ↗
+          </Link>
+        );
+      }
+
+      // 5. Correo electrónico
+      if (part.includes('@') && part.includes('.') && !part.startsWith('http')) {
+        return (
+          <a key={idx} href={`mailto:${part}`} className="font-semibold ai-text-link hover:underline">
+            {part}
+          </a>
+        );
+      }
+
+      // 6. URLs directas (http/https)
+      if (part.startsWith('http://') || part.startsWith('https://')) {
+        return (
+          <a key={idx} href={part} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+            {part.replace(/^https?:\/\//, '')} ↗
+          </a>
+        );
+      }
+
+      return <span key={idx} className="ai-text-body">{part}</span>;
+    });
+  };
+
+  return (
+    <div className="space-y-2 text-[13px] sm:text-sm leading-relaxed ai-text-body">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return <div key={idx} className="h-1.5" />;
+        }
+
+        // Títulos Markdown (### o ##)
+        if (trimmed.startsWith('### ') || trimmed.startsWith('## ') || trimmed.startsWith('# ')) {
+          const titleText = trimmed.replace(/^#+\s+/, '');
+          return (
+            <h4 key={idx} className="ai-text-strong text-sm pt-1 pb-0.5">
+              {parseInline(titleText)}
+            </h4>
+          );
+        }
+
+        // Elemento de lista (- o •)
+        if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-1.5">
+              <span className="w-1.5 h-1.5 rounded-full ai-text-bullet shrink-0 mt-2" />
+              <div className="flex-1 ai-text-body">{parseInline(trimmed.slice(2))}</div>
+            </div>
+          );
+        }
+
+        // Elemento numerado (ej. "1. " o "1. **Título**")
+        const numberedMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
+        if (numberedMatch) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-1.5">
+              <span className="font-mono text-xs ai-text-number shrink-0 mt-0.5">
+                {numberedMatch[1]}.
+              </span>
+              <div className="flex-1 ai-text-body">{parseInline(numberedMatch[2])}</div>
+            </div>
+          );
+        }
+
+        // Párrafo estándar
+        return <p key={idx} className="ai-text-body">{parseInline(line)}</p>;
+      })}
+    </div>
+  );
+}
+
 export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalProps) {
   const { language } = useLanguage();
-  const t = useTranslations('Links');
   const isEs = language === 'es';
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sugerencias de preguntas rápidas
-  const quickQuestions = isEs
-    ? [
-        '¿En qué tecnologías se especializa Jorge?',
-        '¿Qué proyectos tiene en producción?',
-        '¿Cómo funciona la arquitectura en 1 GB de RAM?',
-        '¿Cómo puedo solicitar una cotización o propuesta?'
-      ]
-    : [
-        'What technologies does Jorge specialize in?',
-        'What projects are currently live in production?',
-        'How does the 1 GB RAM cloud architecture work?',
-        'How can I request a quote or technical proposal?'
-      ];
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const latestUserMessageRef = useRef<HTMLDivElement>(null);
 
-  // Mensaje inicial de bienvenida
-  useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      const welcomeMsg: Message = {
-        id: 'welcome',
-        sender: 'ai',
-        text: isEs
-          ? '¡Hola! 👋 Soy el Asistente de IA de Jorge Doicela. Puedo responder tus dudas sobre sus proyectos de software, experiencia técnica (Full Stack, IA, Cloud 1 GB RAM) o ayudarte a solicitar una propuesta personalizada. ¿En qué te puedo ayudar hoy?'
-          : "Hello! 👋 I am Jorge Doicela's AI Assistant. I can answer questions about his software projects, technical background (Full Stack, AI, 1 GB RAM Cloud), or help you request a custom proposal. How can I assist you today?",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages([welcomeMsg]);
+  // Anclar scroll al inicio del mensaje del usuario
+  const scrollToLatestInteraction = useCallback((smooth = true) => {
+    if (latestUserMessageRef.current) {
+      latestUserMessageRef.current.scrollIntoView({
+        behavior: smooth ? 'smooth' : 'auto',
+        block: 'start'
+      });
     }
-  }, [isOpen, messages.length, isEs]);
+  }, []);
 
-  // Auto-scroll al recibir o enviar mensaje
+  // Mensaje inicial de bienvenida sincronizado reactivamente con el idioma
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+    if (isOpen) {
+      setMessages((prev) => {
+        // Si no hay mensajes o solo está el mensaje de bienvenida, actualizarlo al idioma activo
+        if (prev.length === 0 || (prev.length === 1 && prev[0].id === 'welcome')) {
+          return [
+            {
+              id: 'welcome',
+              sender: 'ai',
+              text: isEs
+                ? 'Hola. Soy el Asistente de IA de Jorge Doicela. Puedo responder tus dudas sobre sus proyectos de software, experiencia técnica (Full Stack, IA, Cloud 1 GB RAM) o ayudarte a solicitar una propuesta personalizada. ¿En qué te puedo ayudar hoy?'
+                : "Hello. I am Jorge Doicela's AI Assistant. I can answer questions about his software projects, technical background (Full Stack, AI, 1 GB RAM Cloud), or help you request a custom proposal. How can I assist you today?",
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ];
+        }
+        return prev;
+      });
+    }
+  }, [isOpen, isEs]);
 
   // Enfocar input al abrir
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 150);
+      setTimeout(() => {
+        textareaRef.current?.focus();
+      }, 150);
     }
   }, [isOpen]);
 
-  // Motor de respuestas semánticas en tiempo real basado en el conocimiento de Jorge Doicela
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+    }
+  };
+
+  const resetTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  };
+
+  // Motor de respuestas semánticas locales de respaldo
   const generateAiResponse = (userQuery: string): { text: string; actionUrl?: string; actionText?: string } => {
     const q = userQuery.toLowerCase().trim();
+
+    if (['hola', 'buenas', 'buenos dias', 'buenas tardes', 'buenas noches', 'saludos', 'que tal', 'hi', 'hello', 'hey'].some(s => q === s || q.startsWith(s + ' '))) {
+      return {
+        text: isEs
+          ? 'Hola. Es un gusto saludarte. Soy el asistente de IA de Jorge Doicela. Puedo responder tus consultas sobre sus plataformas en producción (La Biblia, Software, Portafolio), su experiencia Full Stack / Cloud en 1 GB de RAM, o ayudarte a solicitar una propuesta técnica.'
+          : "Hello. Nice to meet you. I am Jorge Doicela's AI assistant. I can answer your questions about his live platforms (The Bible, Software, Portfolio), his Full Stack / 1 GB RAM Cloud experience, or help you request a technical proposal."
+      };
+    }
 
     if (q.includes('tecnolog') || q.includes('stack') || q.includes('lenguaje') || q.includes('experiencia') || q.includes('skill')) {
       return {
         text: isEs
-          ? 'Jorge es Desarrollador Full Stack & AI Engineer con dominio en:\n\n• **Frontend:** Next.js 16 (App Router), React 19, Tailwind CSS v4, Feature-Sliced Design (FSD).\n• **Backend:** NestJS 11, Node.js, C# / .NET Core, Laravel y arquitectura limpia de 3 capas.\n• **Móvil:** Expo SDK y React Native.\n• **Cloud & DevOps:** Linux Debian 13 en AWS Lightsail (1 GB de RAM), Nginx mTLS, Cloudflare Edge, PM2 y CI/CD con GitHub Actions.\n• **Bases de Datos:** SQLite WAL de alta velocidad, PostgreSQL y TypeORM.'
-          : "Jorge is a Full Stack & AI Engineer specialized in:\n\n• **Frontend:** Next.js 16 (App Router), React 19, Tailwind CSS v4, Feature-Sliced Design (FSD).\n• **Backend:** NestJS 11, Node.js, C# / .NET Core, Laravel, and Clean 3-Tier Architecture.\n• **Mobile:** Expo SDK and React Native.\n• **Cloud & DevOps:** Linux Debian 13 on AWS Lightsail (1 GB RAM), Nginx mTLS, Cloudflare Edge, PM2, and GitHub Actions CI/CD.\n• **Databases:** High-performance SQLite WAL, PostgreSQL, and TypeORM."
+          ? 'Jorge es Desarrollador Full Stack & AI Engineer con dominio en:\n\n- **Frontend:** Next.js 16 (App Router), React 19, Tailwind CSS v4, Feature-Sliced Design (FSD).\n- **Backend:** NestJS 11, Node.js, C# / .NET Core, Laravel y arquitectura limpia de 3 capas.\n- **Móvil:** Expo SDK y React Native.\n- **Cloud & DevOps:** Linux Debian 13 en AWS Lightsail (1 GB de RAM), Nginx mTLS, Cloudflare Edge, PM2 y CI/CD con GitHub Actions.\n- **Bases de Datos:** SQLite WAL de alta velocidad, PostgreSQL y TypeORM.'
+          : "Jorge is a Full Stack & AI Engineer specialized in:\n\n- **Frontend:** Next.js 16 (App Router), React 19, Tailwind CSS v4, Feature-Sliced Design (FSD).\n- **Backend:** NestJS 11, Node.js, C# / .NET Core, Laravel, and Clean 3-Tier Architecture.\n- **Mobile:** Expo SDK and React Native.\n- **Cloud & DevOps:** Linux Debian 13 on AWS Lightsail (1 GB RAM), Nginx mTLS, Cloudflare Edge, PM2, and GitHub Actions CI/CD.\n- **Databases:** High-performance SQLite WAL, PostgreSQL, and TypeORM."
       };
     }
 
@@ -98,7 +246,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
       return {
         text: isEs
           ? 'Jorge ha desarrollado 3 plataformas propias en producción:\n\n1. **La Biblia:** Sistema exegético con 9 motores de estudio bíblico, morfología hebrea/griega y códigos Strong (`bible.jorgedoicela.com`).\n2. **Software:** Plataforma con 7 áreas de contenido tecnológico, noticias, modelos de IA y avisos de ciberseguridad (`software.jorgedoicela.com`).\n3. **Portafolio:** Terminal interactiva SSH en tiempo real conectada con WebSockets (`portfolio.jorgedoicela.com`).'
-          : "Jorge has built 3 proprietary live platforms in production:\n\n1. **The Bible:** Biblical exegesis engine with 9 study modules, Hebrew/Greek morphology, and Strong codes (`bible.jorgedoicela.com`).\n2. **Software:** Tech outreach platform covering 7 categories, news, AI directory, and security CVEs (`software.jorgedoicela.com`).\n3. **Portfolio:** Real-time interactive SSH terminal built over WebSockets (`portfolio.jorgedoicela.com`)."
+          : "Jorge has built 3 proprietary live platforms in production:\n\n1. **The Bible:** Biblical exegesis engine with 9 study modules, Hebrew/Greek morphology, and Strong codes (`bible.jorgedoicela.com`).\n2. **Software:** Tech outreach platform covering 7 categories, news, AI directory, and security CVEs (`software.jorgedoicela.com`).\n3. **Portfolio:** Real-time interactive SSH terminal (`portfolio.jorgedoicela.com`)."
       };
     }
 
@@ -113,8 +261,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     if (q.includes('biblia') || q.includes('bible') || q.includes('exege') || q.includes('strong')) {
       return {
         text: isEs
-          ? '📖 **La Biblia** es un motor de estudio teológico con 9 motores exegéticos: morfología palabra por palabra en BHS (hebreo) y NA28 (griego), diccionarios Strong (BDB y Thayer), paralelismos literarios y mapas geoespaciales WGS84.'
-          : '📖 **The Bible** is an advanced theological exegesis engine featuring 9 modules: word-by-word morphology in BHS (Hebrew) and NA28 (Greek), Strong lexicons (BDB & Thayer), literary parallelisms, and WGS84 biblical mapping.'
+          ? 'La Biblia es un motor de estudio teológico con 9 motores exegéticos: morfología palabra por palabra en BHS (hebreo) y NA28 (griego), diccionarios Strong (BDB y Thayer), paralelismos literarios y mapas geoespaciales WGS84.'
+          : 'The Bible is an advanced theological exegesis engine featuring 9 modules: word-by-word morphology in BHS (Hebrew) and NA28 (Greek), Strong lexicons (BDB & Thayer), literary parallelisms, and WGS84 biblical mapping.'
       };
     }
 
@@ -139,8 +287,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     if (q.includes('fe') || q.includes('dios') || q.includes('colosenses') || q.includes('filosof')) {
       return {
         text: isEs
-          ? 'La filosofía de ingeniería de Jorge está inspirada en la devoción y honestidad cristiana: *"Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres"* (Colosenses 3:23).'
-          : 'Jorge\'s engineering philosophy is anchored in Christian devotion and integrity: *"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters"* (Colossians 3:23).'
+          ? 'La filosofía de ingeniería de Jorge está inspirada en la devoción y honestidad: *"Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres"* (Colosenses 3:23).'
+          : 'Jorge\'s engineering philosophy is anchored in devotion and integrity: *"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters"* (Colossians 3:23).'
       };
     }
 
@@ -168,12 +316,30 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     const nextHistory = [...messages, userMessage];
     setMessages(nextHistory);
     setInputText('');
+    resetTextareaHeight();
     setIsTyping(true);
 
+    const aiMessageId = (Date.now() + 1).toString();
+    const initialAiMessage: Message = {
+      id: aiMessageId,
+      sender: 'ai',
+      text: '',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages((prev) => [...prev, initialAiMessage]);
+
+    // Anclar la vista inmediatamente al nuevo mensaje para leer desde el principio
+    setTimeout(() => scrollToLatestInteraction(true), 40);
+
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 30000);
+
     try {
-      const res = await fetch('/api/landing/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: abortController.signal,
         body: JSON.stringify({
           message: text,
           language,
@@ -181,35 +347,69 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
         })
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        const replyText = data.reply || (isEs ? 'No pude procesar la respuesta en este momento.' : 'Could not process the response at this time.');
-        
-        const aiMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          sender: 'ai',
-          text: replyText,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          actionUrl: replyText.includes('/consulta') ? '/consulta' : undefined,
-          actionText: replyText.includes('/consulta') ? (isEs ? 'Solicitar Propuesta Técnica' : 'Request Technical Proposal') : undefined
-        };
-        setMessages((prev) => [...prev, aiMessage]);
-      } else {
-        throw new Error('Error en endpoint de chat');
+      clearTimeout(timeoutId);
+
+      if (!res.ok || !res.body) {
+        throw new Error(`Error en respuesta del servidor: ${res.status}`);
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        accumulatedText += chunk;
+
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMessageId
+              ? {
+                  ...msg,
+                  text: accumulatedText,
+                  actionUrl: accumulatedText.includes('/consulta') ? '/consulta' : undefined,
+                  actionText: accumulatedText.includes('/consulta') ? (isEs ? 'Solicitar Propuesta Técnica' : 'Request Technical Proposal') : undefined
+                }
+              : msg
+          )
+        );
+      }
+
+      // Si el stream terminó sin texto, aplicar respuesta de respaldo inmediata
+      if (!accumulatedText.trim()) {
+        const fallback = generateAiResponse(text);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMessageId
+              ? {
+                  ...msg,
+                  text: fallback.text,
+                  actionUrl: fallback.actionUrl,
+                  actionText: fallback.actionText
+                }
+              : msg
+          )
+        );
       }
     } catch (err) {
-      console.error('Error en llamada a asistente de IA:', err);
-      // Fallback local garantizado
+      clearTimeout(timeoutId);
+      console.error('Error en streaming de IA:', err);
       const fallback = generateAiResponse(text);
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        sender: 'ai',
-        text: fallback.text,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        actionUrl: fallback.actionUrl,
-        actionText: fallback.actionText
-      };
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === aiMessageId
+            ? {
+                ...msg,
+                text: fallback.text,
+                actionUrl: fallback.actionUrl,
+                actionText: fallback.actionText
+              }
+            : msg
+        )
+      );
     } finally {
       setIsTyping(false);
     }
@@ -218,96 +418,109 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
   const handleResetChat = () => {
     setMessages([]);
     setInputText('');
+    resetTextareaHeight();
   };
 
   if (!isOpen) return null;
 
   return (
     <div 
-      className="fixed bottom-20 right-3 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-[390px] max-h-[82vh] sm:max-h-[580px] flex flex-col rounded-2xl bg-card border border-card-border shadow-2xl backdrop-blur-2xl overflow-hidden transition-all duration-200"
+      className="fixed bottom-20 right-3 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-[400px] max-h-[82vh] sm:max-h-[580px] flex flex-col rounded-3xl ai-modal-window border overflow-hidden transition-all duration-200"
       role="dialog"
       aria-modal="false"
       aria-labelledby="ai-chat-title"
     >
-      {/* Cabecera Limpia y Sencilla */}
-      <header className="px-4 py-3 bg-card border-b border-card-border flex items-center justify-between">
+      {/* Cabecera Integrada y Minimalista */}
+      <header className="px-4.5 py-3.5 ai-modal-header flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="relative">
-            <Image
-              src="/landing/logo/logo_fondo_circular_color_.png"
-              alt="Jorge Doicela"
-              width={34}
-              height={34}
-              className="w-8 h-8 rounded-full object-cover shadow-sm"
-            />
-            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-card" />
-          </div>
+          <Image
+            src="/landing/logo/logo_fondo_circular_color_.png"
+            alt="Jorge Doicela"
+            width={32}
+            height={32}
+            className="w-7.5 h-7.5 rounded-full object-cover"
+          />
 
           <div className="flex flex-col text-left">
-            <div className="flex items-center gap-1">
-              <h3 id="ai-chat-title" className="text-xs sm:text-sm font-bold tracking-tight font-outfit text-foreground">
-                {isEs ? 'Asistente IA' : 'AI Assistant'}
-              </h3>
-              <Sparkles size={12} className="text-amber-500 fill-amber-500" />
-            </div>
-            <span className="text-[10px] text-text-subtitle font-mono">
-              {isEs ? 'Jorge Doicela' : 'Jorge Doicela'}
+            <h3 id="ai-chat-title" className="text-xs sm:text-sm font-semibold tracking-tight font-outfit">
+              {isEs ? 'Asistente IA' : 'AI Assistant'}
+            </h3>
+            <span className="text-[10px] opacity-60 font-mono">
+              Jorge Doicela
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
-          {/* Reiniciar Chat */}
-          <button
-            onClick={handleResetChat}
-            className="p-1.5 rounded-lg text-text-muted hover:text-foreground hover:bg-foreground/5 transition-colors cursor-pointer"
-            title={isEs ? 'Reiniciar' : 'Reset'}
-            aria-label={isEs ? 'Reiniciar' : 'Reset'}
-          >
-            <RotateCcw size={14} />
-          </button>
+        <div className="flex items-center gap-0.5">
+          {/* Reiniciar Chat - Solo visible tras haber interactuado */}
+          {messages.some((m) => m.sender === 'user') && (
+            <button
+              onClick={handleResetChat}
+              className="p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-foreground/5 transition-all cursor-pointer"
+              title={isEs ? 'Reiniciar conversación' : 'Reset conversation'}
+              aria-label={isEs ? 'Reiniciar conversación' : 'Reset conversation'}
+            >
+              <RotateCcw size={14} />
+            </button>
+          )}
 
           {/* Cerrar */}
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-text-muted hover:text-foreground hover:bg-foreground/5 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-foreground/5 transition-colors cursor-pointer"
             title={isEs ? 'Cerrar' : 'Close'}
             aria-label={isEs ? 'Cerrar' : 'Close'}
           >
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
       </header>
 
-      {/* Cuerpo de Mensajes */}
-      <div className="flex-1 p-3.5 overflow-y-auto space-y-3.5 max-h-[360px] sm:max-h-[400px]">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
+      {/* Cuerpo de Mensajes sobre Lienzo Continuo */}
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 p-4 overflow-y-auto space-y-3.5 max-h-[360px] sm:max-h-[400px] ai-modal-body [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        {messages.map((msg, index) => {
+          const isLatestUser = msg.sender === 'user' && index === messages.map((m) => m.sender).lastIndexOf('user');
+          return (
+            <div
+              key={msg.id}
+              ref={isLatestUser ? latestUserMessageRef : undefined}
+              className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
             {msg.sender === 'ai' && (
-              <div className="w-6 h-6 rounded-full bg-foreground/5 border border-card-border flex items-center justify-center text-foreground shrink-0 mt-0.5">
+              <div className="w-6 h-6 rounded-full ai-modal-bubble-ai border flex items-center justify-center shrink-0 mt-0.5 opacity-80">
                 <Bot size={13} />
               </div>
             )}
 
-            <div className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} max-w-[84%]`}>
+            <div className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} max-w-[86%]`}>
               <div
-                className={`p-3 rounded-xl text-xs sm:text-sm leading-relaxed whitespace-pre-line ${
+                className={`p-3.5 rounded-2xl break-words ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-r from-[#0d152e] via-[#1a174d] to-[#431475] text-white font-medium'
-                    : 'bg-background/80 border border-card-border text-foreground'
+                    ? 'rounded-tr-xs bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-medium shadow-xs text-[13px] sm:text-sm leading-relaxed whitespace-pre-line'
+                    : 'rounded-tl-xs ai-modal-bubble-ai border'
                 }`}
               >
-                {msg.text}
+                {msg.sender === 'user' ? (
+                  msg.text
+                ) : msg.text ? (
+                  <FormattedAiText text={msg.text} />
+                ) : (
+                  <span className="flex items-center gap-1.5 py-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                )}
 
                 {/* Enlace embebido a /consulta */}
                 {msg.actionUrl && (
-                  <div className="mt-2 pt-2 border-t border-card-border">
+                  <div className="mt-2.5 pt-2 border-t border-foreground/10">
                     <Link
                       href={msg.actionUrl}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-blue-500 hover:text-blue-400 transition-colors font-outfit"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors font-outfit"
                     >
                       <span>{msg.actionText}</span>
                       <ArrowRight size={12} />
@@ -316,58 +529,31 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
                 )}
               </div>
 
-              <span className="text-[9px] text-text-subtitle mt-0.5 px-1 font-mono">
-                {msg.timestamp}
-              </span>
+              {/* Pie de Mensaje solo con Hora */}
+              <div className="flex items-center mt-1 px-1">
+                <span className="text-[9px] opacity-50 font-mono">
+                  {msg.timestamp}
+                </span>
+              </div>
             </div>
 
             {msg.sender === 'user' && (
-              <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-foreground shrink-0 mt-0.5">
-                <User size={13} />
+              <div className="w-6 h-6 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-950 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                <User size={12} />
               </div>
             )}
           </div>
-        ))}
+        );
+      })}
+    </div>
 
-        {/* Indicador de tipeo */}
-        {isTyping && (
-          <div className="flex gap-2 justify-start">
-            <div className="w-6 h-6 rounded-full bg-foreground/5 border border-card-border flex items-center justify-center text-foreground shrink-0 mt-0.5">
-              <Bot size={13} />
-            </div>
-            <div className="p-3 rounded-xl bg-background/80 border border-card-border text-foreground flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Sugerencias Rápidas */}
-      {messages.length <= 2 && (
-        <div className="px-3 pb-2 flex flex-wrap gap-1.5">
-          {quickQuestions.map((q, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSendMessage(q)}
-              className="text-[11px] font-medium text-text-muted hover:text-foreground px-2.5 py-1 rounded-lg bg-foreground/5 hover:bg-foreground/10 border border-card-border transition-all active:scale-95 text-left cursor-pointer"
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Input de Mensaje */}
-      <footer className="p-2.5 bg-card border-t border-card-border flex items-center gap-2">
-        <input
-          ref={inputRef}
-          type="text"
+      {/* Barra de Entrada Integrada en el Mismo Lienzo */}
+      <footer className="p-3 ai-modal-footer flex items-end gap-2">
+        <textarea
+          ref={textareaRef}
+          rows={1}
           value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
@@ -375,19 +561,19 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
             }
           }}
           placeholder={isEs ? 'Escribe una pregunta...' : 'Ask a question...'}
-          maxLength={500}
-          className="flex-1 px-3 py-2 rounded-xl bg-background border border-card-border text-foreground placeholder:text-text-subtitle text-xs sm:text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+          maxLength={1000}
+          className="flex-1 px-3.5 py-2 rounded-2xl ai-modal-input border text-xs sm:text-sm focus:outline-none transition-all resize-none max-h-[120px] overflow-hidden leading-relaxed"
           aria-label={isEs ? 'Pregunta para el Asistente' : 'Question for the Assistant'}
         />
 
         <button
           onClick={() => handleSendMessage()}
           disabled={!inputText.trim() || isTyping}
-          className="p-2 rounded-xl bg-gradient-to-r from-[#0d152e] via-[#1a174d] to-[#431475] hover:from-[#141f45] hover:to-[#551b94] text-white shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 cursor-pointer flex items-center justify-center"
-          title={isEs ? 'Enviar' : 'Send'}
+          className="p-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 disabled:opacity-20 disabled:cursor-not-allowed active:scale-90 transition-all cursor-pointer flex items-center justify-center shrink-0 mb-0.5"
+          title={isEs ? 'Enviar (Enter)' : 'Send (Enter)'}
           aria-label={isEs ? 'Enviar' : 'Send'}
         >
-          <Send size={14} />
+          <Send size={18} />
         </button>
       </footer>
     </div>

@@ -29,6 +29,14 @@ function TiktokIcon({ size = 24, className = '' }: { size?: number; className?: 
   );
 }
 
+function YoutubeIcon({ size = 25, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
+
 export function LinksHeader() {
   const t = useTranslations('Links');
 
@@ -49,6 +57,11 @@ export function LinksHeader() {
       href: 'https://www.tiktok.com/@jorge.doicela',
     },
     {
+      name: 'YouTube',
+      icon: YoutubeIcon,
+      href: 'https://www.youtube.com/@jorge.doicela',
+    },
+    {
       name: 'Email',
       icon: Mail,
       href: 'mailto:jorge.doicela.m@gmail.com',
@@ -56,36 +69,36 @@ export function LinksHeader() {
   ];
 
   return (
-    <header className="w-full flex flex-col items-center text-center mb-10">
-      {/* Avatar Circular Único y Limpio (1 solo círculo) */}
-      <div className="relative mb-5 flex items-center justify-center">
+    <header className="w-full flex flex-col items-center text-center mb-7">
+      {/* Avatar Circular Único y Limpio */}
+      <div className="relative mb-4 flex items-center justify-center">
         <Image
-          src="/landing/logo/logo_fondo_circular_color_.png"
+          src="/landing/perfil/perfil.webp"
           alt="Jorge Doicela"
-          width={128}
-          height={128}
-          className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full object-cover shadow-xl hover:scale-105 transition-transform duration-300"
+          width={160}
+          height={160}
+          className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full object-cover object-top shadow-xl hover:scale-105 transition-transform duration-300"
           priority
         />
       </div>
 
       {/* Nombre */}
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-outfit text-foreground tracking-tight mb-2">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-outfit text-foreground tracking-tight mb-1.5">
         {t('title')}
       </h1>
 
       {/* Tagline / Subtítulo */}
-      <p className="text-sm sm:text-base md:text-lg text-text-muted font-normal max-w-xl leading-relaxed mb-1.5">
+      <p className="text-sm sm:text-base md:text-lg text-text-muted font-normal max-w-xl leading-relaxed mb-1">
         {t('role')}
       </p>
 
       {/* Ubicación */}
-      <p className="text-xs sm:text-sm text-text-subtitle font-mono flex items-center justify-center gap-1.5 mb-6 tracking-wide">
+      <p className="text-xs sm:text-sm text-text-subtitle font-mono flex items-center justify-center gap-1.5 mb-4 tracking-wide">
         <span>Quito, Ecuador</span>
       </p>
 
-      {/* Iconos Sociales en Fila */}
-      <div className="flex items-center justify-center gap-7 sm:gap-10 md:gap-14 text-text-muted mb-2">
+      {/* Iconos Sociales en Fila Equilibrada */}
+      <div className="flex items-center justify-center gap-2 sm:gap-3 text-text-muted">
         {socialLinks.map((social) => {
           const Icon = social.icon;
           return (
@@ -94,11 +107,11 @@ export function LinksHeader() {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-text-muted hover:text-foreground hover:scale-125 transition-all duration-200 p-1"
+              className="text-text-muted hover:text-foreground p-2 sm:p-2.5 rounded-xl hover:bg-foreground/5 active:scale-95 transition-all duration-200"
               aria-label={social.name}
               title={social.name}
             >
-              <Icon size={25} />
+              <Icon size={22} />
             </a>
           );
         })}

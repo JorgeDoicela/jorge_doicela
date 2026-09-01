@@ -16,11 +16,18 @@ export function LinksTopBar() {
 
   useEffect(() => {
     setMounted(true);
+    const isDocLight = document.documentElement.getAttribute('data-theme') === 'light' || document.documentElement.classList.contains('light');
     const savedTheme = localStorage.getItem('landing-theme') as 'dark' | 'light' | null;
-    const initialTheme =
-      savedTheme ||
-      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    const initialTheme = savedTheme || (isDocLight ? 'light' : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
     setTheme(initialTheme);
+
+    const isLight = initialTheme === 'light';
+    document.documentElement.classList.toggle('light', isLight);
+    if (isLight) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
   }, []);
 
   useEffect(() => {

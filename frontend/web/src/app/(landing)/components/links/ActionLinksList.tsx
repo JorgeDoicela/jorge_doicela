@@ -55,10 +55,10 @@ export function ActionLinksList() {
   ];
 
   return (
-    <section className="w-full space-y-3 md:space-y-4 mb-10">
+    <section className="w-full space-y-3 md:space-y-3.5 mb-8">
       {links.map((link) => {
         const buttonClass =
-          'block w-full py-4 px-6 md:py-5 md:px-8 rounded-xl text-center font-bold tracking-tight text-white bg-gradient-to-r from-[#0d152e] via-[#1a174d] to-[#431475] hover:from-[#141f45] hover:via-[#25216d] hover:to-[#551b94] shadow-lg shadow-indigo-950/40 border border-white/10 hover:border-violet-400/30 transition-all duration-200 hover:scale-[1.015] active:scale-[0.985] cursor-pointer text-sm md:text-lg font-outfit';
+          'block w-full py-4 px-6 md:py-4.5 md:px-8 rounded-2xl text-center font-bold tracking-tight text-foreground bg-card border border-card-border hover:border-card-hover-border hover:bg-foreground/[0.04] shadow-sm backdrop-blur-xl transition-all duration-200 hover:scale-[1.012] active:scale-[0.988] cursor-pointer text-sm md:text-base font-outfit';
 
         return link.isExternal ? (
           <a

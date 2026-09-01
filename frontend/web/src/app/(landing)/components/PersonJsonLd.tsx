@@ -43,6 +43,7 @@ export default function PersonJsonLd() {
         'sameAs': [
           'https://www.linkedin.com/in/jorgedoicela',
           'https://github.com/JorgeDoicela',
+          'https://www.youtube.com/@jorge.doicela',
           'https://www.tiktok.com/@jorge.doicela',
           'https://portfolio.jorgedoicela.com',
           'https://software.jorgedoicela.com',

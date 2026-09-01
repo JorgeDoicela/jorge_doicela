@@ -303,3 +303,195 @@ html, body, * {
     }
 }
 
+/* ==========================================================================
+   Modal de Asistente de IA: Lienzo Unificado Minimalista (Estilo Linear / Apple)
+   ========================================================================== */
+.ai-modal-window {
+    background-color: #0c0e17 !important;
+    color: #f8fafc !important;
+    border-color: rgba(255, 255, 255, 0.10) !important;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8) !important;
+}
+.ai-modal-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    color: #f8fafc !important;
+}
+.ai-modal-body {
+    background-color: transparent !important;
+}
+.ai-modal-bubble-ai {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(255, 255, 255, 0.07) !important;
+}
+.ai-modal-footer {
+    background-color: transparent !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+.ai-modal-input {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    color: #f8fafc !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    resize: none !important;
+}
+.ai-modal-input::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.ai-modal-input:focus {
+    background-color: rgba(255, 255, 255, 0.07) !important;
+    border-color: rgba(99, 102, 241, 0.4) !important;
+}
+.ai-modal-input::placeholder {
+    color: #64748b !important;
+}
+
+/* Modo Claro Forzado y Sincronizado */
+:root.light .ai-modal-window,
+html.light .ai-modal-window,
+.light .ai-modal-window,
+[data-theme='light'] .ai-modal-window {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+:root.light .ai-modal-header,
+html.light .ai-modal-header,
+.light .ai-modal-header,
+[data-theme='light'] .ai-modal-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    color: #0f172a !important;
+}
+:root.light .ai-modal-body,
+html.light .ai-modal-body,
+.light .ai-modal-body,
+[data-theme='light'] .ai-modal-body {
+    background-color: transparent !important;
+}
+:root.light .ai-modal-bubble-ai,
+html.light .ai-modal-bubble-ai,
+.light .ai-modal-bubble-ai,
+[data-theme='light'] .ai-modal-bubble-ai {
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+    border-color: #e2e8f0 !important;
+}
+:root.light .ai-modal-footer,
+html.light .ai-modal-footer,
+.light .ai-modal-footer,
+[data-theme='light'] .ai-modal-footer {
+    background-color: transparent !important;
+    border-top: 1px solid #f1f5f9 !important;
+}
+:root.light .ai-modal-input,
+html.light .ai-modal-input,
+.light .ai-modal-input,
+[data-theme='light'] .ai-modal-input {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    resize: none !important;
+}
+:root.light .ai-modal-input::-webkit-scrollbar,
+html.light .ai-modal-input::-webkit-scrollbar,
+.light .ai-modal-input::-webkit-scrollbar,
+[data-theme='light'] .ai-modal-input::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+:root.light .ai-modal-input:focus,
+html.light .ai-modal-input:focus,
+.light .ai-modal-input:focus,
+[data-theme='light'] .ai-modal-input:focus {
+    background-color: #ffffff !important;
+    border-color: #6366f1 !important;
+}
+:root.light .ai-modal-input::placeholder,
+html.light .ai-modal-input::placeholder,
+.light .ai-modal-input::placeholder,
+[data-theme='light'] .ai-modal-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   Formato Tipográfico del Asistente de IA (Alto Contraste Estricto)
+   ========================================================================== */
+.ai-text-body {
+    color: #f1f5f9 !important;
+}
+.ai-text-strong {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+.ai-text-bullet {
+    background-color: #818cf8 !important;
+}
+.ai-text-number {
+    color: #818cf8 !important;
+    font-weight: 700 !important;
+}
+.ai-text-code {
+    background-color: rgba(255, 255, 255, 0.10) !important;
+    color: #a5b4fc !important;
+}
+.ai-text-link {
+    color: #818cf8 !important;
+    font-weight: 600 !important;
+}
+
+/* Modo Claro Forzado */
+:root.light .ai-text-body,
+html.light .ai-text-body,
+.light .ai-text-body,
+[data-theme='light'] .ai-text-body {
+    color: #1e293b !important;
+}
+:root.light .ai-text-strong,
+html.light .ai-text-strong,
+.light .ai-text-strong,
+[data-theme='light'] .ai-text-strong {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+:root.light .ai-text-bullet,
+html.light .ai-text-bullet,
+.light .ai-text-bullet,
+[data-theme='light'] .ai-text-bullet {
+    background-color: #4f46e5 !important;
+}
+:root.light .ai-text-number,
+html.light .ai-text-number,
+.light .ai-text-number,
+[data-theme='light'] .ai-text-number {
+    color: #4f46e5 !important;
+    font-weight: 700 !important;
+}
+:root.light .ai-text-code,
+html.light .ai-text-code,
+.light .ai-text-code,
+[data-theme='light'] .ai-text-code {
+    background-color: #f1f5f9 !important;
+    color: #4338ca !important;
+}
+:root.light .ai-text-link,
+html.light .ai-text-link,
+.light .ai-text-link,
+[data-theme='light'] .ai-text-link {
+    color: #4f46e5 !important;
+    font-weight: 600 !important;
+}
+
+
+
+

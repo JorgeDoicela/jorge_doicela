@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { SecurityPost } from '../types';
 import { API_URL } from '../../../../config';
-import { safeFetchJson } from '../../../../utils/fetchJson';
+import { safeFetchJson } from '../../../utils/fetchJson';
 
 export function useCybersecurity(severity?: string, postType?: string, search: string = '') {
   const locale = useLocale();

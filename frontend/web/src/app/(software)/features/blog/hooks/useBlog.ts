@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { BlogPost } from '../types';
 import { API_URL } from '../../../../config';
-import { safeFetchJson } from '../../../../utils/fetchJson';
+import { safeFetchJson } from '../../../utils/fetchJson';
 
 export function useBlog(search: string = '', series?: string) {
   const locale = useLocale();

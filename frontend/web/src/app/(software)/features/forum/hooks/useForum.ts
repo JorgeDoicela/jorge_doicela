@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { ForumTopic } from '../types';
 import { API_URL } from '../../../../config';
-import { safeFetchJson } from '../../../../utils/fetchJson';
+import { safeFetchJson } from '../../../utils/fetchJson';
 
 export function useForum(category: string = 'all', search: string = '') {
   const locale = useLocale();

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { NewsArticle } from '../types';
 import { API_URL } from '../../../../config';
-import { safeFetchJson } from '../../../../utils/fetchJson';
+import { safeFetchJson } from '../../../utils/fetchJson';
 
 export function useNews(search: string = '', tag?: string) {
   const locale = useLocale();

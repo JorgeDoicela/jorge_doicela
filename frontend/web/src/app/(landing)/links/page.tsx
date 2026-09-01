@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { MessageCircle, Sparkles } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { LinksTopBar } from '../components/links/LinksTopBar';
 import { LinksHeader } from '../components/links/LinksHeader';
 import { ActionLinksList } from '../components/links/ActionLinksList';
@@ -16,6 +16,27 @@ import SkipToContent from '../components/SkipToContent';
 export default function LinksPage() {
   const tCommon = useTranslations('Common');
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+
+  // Atajos de teclado: Ctrl + K (Abrir/Cerrar) y Esc (Cerrar)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl + K o Cmd + K para alternar chat
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsAiModalOpen((prev) => !prev);
+        return;
+      }
+
+      // Esc para cerrar el chat si está abierto
+      if (e.key === 'Escape' && isAiModalOpen) {
+        e.preventDefault();
+        setIsAiModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAiModalOpen]);
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden p-4 sm:p-8 md:p-12">
@@ -44,27 +65,28 @@ export default function LinksPage() {
         {/* Cuadrícula 3x3 estilo Instagram de Proyectos con Modal */}
         <ProjectsMediaGrid />
 
-        {/* Footer Discreto */}
-        <footer className="w-full text-center mt-8 mb-4 text-text-muted">
-          <p className="text-xs font-mono text-text-subtitle/70 uppercase tracking-widest">
+        {/* Footer Discreto con Geist Sans */}
+        <footer className="w-full text-center mt-8 mb-4">
+          <p className="text-xs font-medium text-text-muted">
             {tCommon('footer', { year: new Date().getFullYear().toString() })}
           </p>
         </footer>
       </main>
 
       {/* Botón Flotante Circular del Asistente de IA */}
-      <button
-        type="button"
-        onClick={() => setIsAiModalOpen(true)}
-        className="fixed bottom-6 right-6 z-50 p-3.5 sm:p-4 rounded-full bg-gradient-to-tr from-[#0d152e] via-[#1a174d] to-[#551b94] hover:from-[#141f45] hover:to-[#6b21a8] text-white shadow-2xl shadow-indigo-950/60 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer border border-white/15 group flex items-center justify-center"
-        aria-label="Abrir asistente de IA interactivo"
-        title="Asistente de IA · Jorge Doicela"
-      >
-        <MessageCircle size={24} className="fill-current" />
-        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-background animate-pulse" />
-      </button>
+      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setIsAiModalOpen((prev) => !prev)}
+          className="relative p-3.5 sm:p-4 rounded-full bg-card border border-card-border hover:border-card-hover-border text-foreground shadow-2xl backdrop-blur-2xl hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center"
+          aria-label="Abrir o cerrar asistente de IA"
+          title="Asistente de IA · Jorge Doicela"
+        >
+          <MessageCircle size={22} className="text-indigo-600 dark:text-indigo-400" />
+        </button>
+      </div>
 
-      {/* Modal Interactivo del Asistente de IA con Gemini / Groq API */}
+      {/* Modal Interactivo del Asistente de IA */}
       <AiAssistantChatModal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}

@@ -1,8 +1,8 @@
 /**
  * safeFetchJson
- * Helper de infraestructura frontend para realizar peticiones HTTP defensivas y seguras.
- * Garantiza la inclusión de cabeceras JSON, valida el Content-Type y maneja respuestas
- * HTML inesperadas (como errores 502/404 de Nginx/Next.js) sin romper el motor de React.
+ * Helper de infraestructura frontend para el dominio Software.
+ * Realiza peticiones HTTP defensivas y seguras al backend NestJS (puerto 3000 / SQLite).
+ * Garantiza cabeceras JSON, valida Content-Type y maneja respuestas de error limpiamente.
  */
 export async function safeFetchJson<T>(
   url: string,

@@ -63,11 +63,11 @@ export function ProjectsMediaGrid() {
               target="_blank"
               rel="noopener noreferrer"
               className="group relative aspect-square bg-card border border-card-border p-3 flex flex-col items-center justify-center text-center overflow-hidden rounded-xl shadow-sm backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:border-card-hover-border cursor-pointer"
-              aria-label={`Visitar ${project.title}`}
+              aria-label={`${t('viewLiveProject')}: ${project.title}`}
             >
-              {/* Icono central */}
-              <div className={`p-3 rounded-2xl bg-foreground/5 text-foreground transition-all duration-200 mb-2 ${project.accentBg}`}>
-                <Icon size={26} />
+              {/* Icono central limpio sin fondo */}
+              <div className="text-foreground transition-all duration-200 mb-2 group-hover:scale-110">
+                <Icon size={28} />
               </div>
 
               {/* Título del proyecto */}

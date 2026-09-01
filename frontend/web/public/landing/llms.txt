@@ -1,0 +1,90 @@
+# Jorge Ismael Doicela Molina
+
+> Desarrollador de Software, Administrador de Sistemas Linux (SysAdmin) y Especialista en DevOps e Ingeniería de Inteligencia Artificial en Quito, Ecuador.
+
+## Biografía y Perfil Profesional
+Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la arquitectura de software de alto rendimiento, optimización de sistemas en entornos de recursos restringidos, desarrollo backend con NestJS/C#, aplicaciones web avanzadas con Next.js y React, y administración de servidores Linux (Debian 13 y Arch Linux).
+
+- **Ubicación:** Quito, Pichincha, Ecuador.
+- **Educación:** Egresado de la carrera de **Desarrollo de Software** en el **Instituto Tecnológico Superior Traversari (ISTPET)**, Quito, Ecuador.
+- **Valores y Filosofía:** Compromiso con la excelencia técnica, la disciplina rigurosa, la integridad profesional y la ética laboral guiada por principios cristianos.
+- **Idiomas:** Español (Nativo), Inglés (Técnico / Profesional).
+
+---
+
+## Áreas de Especialidad y Habilidades Técnicas
+
+### 1. Ingeniería de Software y Backend
+- **Frameworks & Lenguajes:** TypeScript, Node.js, NestJS 11, C# / ASP.NET Core, Python, SQL.
+- **Arquitectura:** Arquitectura en 3 capas, Domain-Driven Design (DDD), Clean Architecture, Inversión de Control (IoC), Microservicios y Monolitos Modulares desacoplados (Black-Box Modules).
+- **Bases de Datos & Persistencia:** SQLite (better-sqlite3 en modo WAL), PostgreSQL, MySQL, TypeORM, Entity Framework Core. Optimización de índices B-Tree y consultas sin bloqueos.
+- **APIs & Protocolos:** RESTful APIs, WebSockets en tiempo real con Socket.io, Server-Sent Events (SSE).
+
+### 2. Desarrollo Frontend Web y Móvil
+- **Web:** Next.js 16 (App Router, Server-Side Rendering SSR, Server Components RSC), React 19, TypeScript, Vanilla CSS, Tailwind CSS v4, Feature-Sliced Design (FSD), PWA (Progressive Web Apps).
+- **Internacionalización (i18n):** next-intl con SSR descentralizado y detección automática de idioma.
+- **Móvil:** React Native, Expo (SDK 52+), FlashList con renderizado virtualizado a 60 fps, arquitectura Offline-First.
+
+### 3. DevOps, SysAdmin y Cloud Infrastructure
+- **Sistemas Operativos:** Linux Debian 13 (Trixie), Arch Linux, Windows Server.
+- **Infraestructura en la Nube:** AWS Lightsail, VPS optimizados para 1 GB de RAM, Cloudflare (Edge WAF, mTLS Authenticated Origin Pulls, DNS Proxy).
+- **Servidores Web & Proxies:** Nginx con proxy inverso, balanceo de carga, HTTP/2, compresión Gzip/Brotli y terminación SSL mTLS.
+- **Gestión de Procesos:** PM2 (modo standalone con límites de memoria y reinicio en caliente zero-downtime), systemd.
+- **CI/CD & Seguridad:** GitHub Actions (compilación distribuida y despliegue por rsync SSH), Husky hooks pre-commit, auditoría de fuga de secretos (check-secrets), políticas de seguridad OWASP.
+
+### 4. Inteligencia Artificial y Ciberseguridad
+- **IA:** Integración de Modelos de Lenguaje (LLMs), Model Context Protocol (MCP Servers), agentes autónomos, embeddings, Generative Engine Optimization (GEO).
+- **Ciberseguridad:** Bastionado de servidores Linux (SSH hardening, firewall nftables/ufw), análisis de vulnerabilidades (CVEs), cabeceras de seguridad HTTP (HSTS, CSP, X-Frame-Options), protección contra ataques DDoS y bots maliciosos.
+
+---
+
+## Proyectos y Ecosistema Digital
+
+### 1. Software | Jorge Doicela
+- **URL Oficial:** https://software.jorgedoicela.com
+- **Dossier Técnico LLMs:** https://software.jorgedoicela.com/llms.txt
+- **Descripción:** Plataforma tecnológica integral con 7 categorías especializadas:
+  1. *Noticias (News):* Novedades, breaking alerts y tendencias del sector de software.
+  2. *Blog de Arquitectura:* Ensayos profundos sobre patrones de diseño, sistemas distribuidos y buenas prácticas.
+  3. *Foros Comunitarios:* Espacio de debate técnico con respuestas anidadas e hilos de discusión.
+  4. *Directorio de IA:* Modelos de razonamiento, agentes inteligentes, servidores MCP y herramientas.
+  5. *Ciberseguridad:* Avisos de seguridad con matriz de severidad (LOW a CRITICAL) y guías de remediación paso a paso.
+  6. *Tutoriales:* Guías prácticas interactivas paso a paso con asistente StepWizard y código reproducible.
+  7. *Proyectos Showcase:* Catálogo de proyectos y librerías de código abierto creadas por Jorge Doicela.
+- **Arquitectura:** Frontend Next.js 16 con Feature-Sliced Design y estética Neumorphism UI + Glassmorphism; Backend NestJS 11 con 7 submódulos modulares y persistencia relacional en SQLite.
+
+### 2. Biblia Modular | Jorge Doicela
+- **URL Oficial:** https://bible.jorgedoicela.com
+- **Dossier Técnico LLMs:** https://bible.jorgedoicela.com/llms.txt
+- **Descripción:** Plataforma de investigación exegética y estudio académico de textos bíblicos en idiomas originales y traducciones contemporáneas:
+  - *9 Motores de Exégesis:* Lector continuo, comparador multi-versión paralelo con diff textual (LCS), Interlineal Inverso Morfológico (Hebreo Masorético BHS / Griego NA28), Léxicos Strong BDB/Thayer/Gesenius, Búsqueda Gramatical sintáctica, Análisis de Estructuras Literarias y Quiasmos, Atlas Bíblico Georreferenciado WGS84, Cronología Sincrónica y Catálogo de Arqueología/Epigrafía.
+  - *App Móvil Nativa:* React Native / Expo con soporte 100% Offline-First.
+  - *Marco Legal:* Integración autorizada con API.Bible (Sociedades Bíblicas) y fuentes críticas de dominio público universal.
+- **Arquitectura:** Estética Geist (Vercel Style) monocromática de alta densidad, base de datos SQLite con más de 30,000 registros indexados y seeder atómico determinista.
+
+### 3. Portafolio Profesional | Jorge Doicela
+- **URL Oficial:** https://portfolio.jorgedoicela.com
+- **Dossier Técnico LLMs:** https://portfolio.jorgedoicela.com/llms.txt
+- **Descripción:** Portafolio interactivo de ingeniería con estética Dark Luxury:
+  - *Terminal Virtual SSH:* Consola interactiva en tiempo real sobre WebSockets (Socket.io) con emulación de comandos Unix (`neofetch`, `matrix`, `skills`, `about`, `cat`, `ls`), autocompletado Tab y renderizado ANSI.
+  - *Showcase de Proyectos:* Galería bilingüe filtrable por tecnologías con enlaces a repositorios y demos en vivo.
+  - *Servicio de Contacto:* Despacho asíncrono y seguro de mensajes.
+
+### 4. Portal Principal y Landing Page
+- **URL Oficial:** https://jorgedoicela.com
+- **Descripción:** Portal de bienvenida centralizado con maquetación Bento Grid interactiva, selector bilingüe (Español / Inglés), reloj sincronizado con el huso horario de Quito (`America/Guayaquil`), Progressive Web App (PWA) y optimización SEO internacional de vanguardia.
+
+---
+
+## Enlaces Oficiales y Redes Sociales
+
+- **Sitio Web Principal:** https://jorgedoicela.com
+- **Hub de Enlaces:** https://jorgedoicela.com/links
+- **Solicitud de Propuestas Técnicas:** https://jorgedoicela.com/consulta
+- **Portafolio:** https://portfolio.jorgedoicela.com (`https://portfolio.jorgedoicela.com/llms.txt`)
+- **Software:** https://software.jorgedoicela.com (`https://software.jorgedoicela.com/llms.txt`)
+- **Biblia Modular:** https://bible.jorgedoicela.com (`https://bible.jorgedoicela.com/llms.txt`)
+- **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
+- **GitHub:** https://github.com/JorgeDoicela
+- **YouTube:** https://www.youtube.com/@jorge.doicela
+- **TikTok:** https://www.tiktok.com/@jorge.doicela

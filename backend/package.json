@@ -23,7 +23,6 @@
     "seed:portfolio:prod": "node dist/portfolio/cli/seed-portfolio.js",
     "seed:all": "ts-node src/bible/cli/seed-corpus.ts && ts-node src/software/cli/seed-software.ts && ts-node src/portfolio/cli/seed-portfolio.ts",
     "seed:all:prod": "node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && node dist/portfolio/cli/seed-portfolio.js",
-
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -43,6 +42,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "compression": "^1.8.1",
+    "dockerode": "^5.0.1",
     "nestjs-pino": "^4.6.1",
     "pino": "^10.3.1",
     "reflect-metadata": "^0.2.2",
@@ -59,6 +59,7 @@
     "@nestjs/testing": "^11.0.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/compression": "^1.8.1",
+    "@types/dockerode": "^4.0.1",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",

@@ -6,11 +6,13 @@ import { TerminalHeader } from './TerminalHeader';
 import { MatrixRain } from './MatrixRain';
 import { MobileTerminalBanner } from './MobileTerminalBanner';
 import { parseAnsiToReact, stripAnsi } from '../utils/ansiParser';
-import { Copy, Check, Terminal as TerminalIcon } from 'lucide-react';
+import { Copy, Check, Terminal as TerminalIcon, Sparkles, Cloud, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { SandboxTerminal } from './SandboxTerminal';
 
 export const TerminalConsole: React.FC = () => {
   const t = useTranslations('Terminal');
+  const [terminalMode, setTerminalMode] = useState<'simulated' | 'vps' | 'tunnel'>('simulated');
   const {
 
     tabs,
@@ -176,28 +178,76 @@ export const TerminalConsole: React.FC = () => {
   };
 
   return (
-    <div className="w-full relative">
-      {/* Banner informativo para dispositivos móviles */}
-      <MobileTerminalBanner
-        isMobileExpanded={isMobileExpanded}
-        onToggleMobileExpand={() => setIsMobileExpanded(!isMobileExpanded)}
-      />
+    <div className="w-full relative flex flex-col gap-3">
+      {/* Selector de Modo de Terminal (Simulada vs Sandbox VPS vs Sandbox Túnel Casero) */}
+      <div className="flex items-center gap-2 px-1">
+        <div className="inline-flex p-1 rounded-lg bg-surface-raised/80 border border-border-gold/60 backdrop-blur-md">
+          {/* 1. Modo Simulado / Guiado */}
+          <button
+            onClick={() => setTerminalMode('simulated')}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+              terminalMode === 'simulated'
+                ? 'bg-surface border border-border-gold text-gold-200 shadow-sm'
+                : 'text-muted hover:text-foreground hover:bg-white/[0.04]'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-gold-300" />
+            <span>{t('modeSimulated')}</span>
+          </button>
 
-      {/* Contenedor principal de la Terminal */}
-      {isMobileExpanded && (
-        <div
-          ref={terminalBoxRef}
-          onClick={focusInput}
-          className={`w-full font-mono text-sm cursor-text relative overflow-hidden transition-all duration-300 ${
-            isFullscreen
-              ? 'fixed inset-0 z-50 rounded-none bg-surface/98 border-none p-6 md:p-10 flex flex-col backdrop-blur-xl shadow-2xl'
-              : 'w-full max-w-7xl mx-auto rounded-xl bg-surface/95 border border-border-gold shadow-2xl p-5 md:p-6 luxury-glow-hover'
-          }`}
-        >
-          {/* Capa de animación Matrix cuando está activa */}
-          {isMatrixActive && (
-            <MatrixRain onClose={() => setIsMatrixActive(false)} />
-          )}
+          {/* 2. Modo Sandbox VPS (AWS) */}
+          <button
+            onClick={() => setTerminalMode('vps')}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+              terminalMode === 'vps'
+                ? 'bg-gold-400 text-black font-semibold shadow-md shadow-gold-500/20'
+                : 'text-muted hover:text-gold-200 hover:bg-white/[0.04]'
+            }`}
+          >
+            <Cloud className="w-3.5 h-3.5" />
+            <span>{t('modeVps')}</span>
+          </button>
+
+          {/* 3. Modo Sandbox Servidor Casero (Túnel) */}
+          <button
+            onClick={() => setTerminalMode('tunnel')}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+              terminalMode === 'tunnel'
+                ? 'bg-gold-400 text-black font-semibold shadow-md shadow-gold-500/20'
+                : 'text-muted hover:text-gold-200 hover:bg-white/[0.04]'
+            }`}
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>{t('modeTunnel')}</span>
+          </button>
+        </div>
+      </div>
+
+      {terminalMode === 'vps' || terminalMode === 'tunnel' ? (
+        <SandboxTerminal isFullscreen={isFullscreen} targetMode={terminalMode} />
+      ) : (
+        <>
+          {/* Banner informativo para dispositivos móviles */}
+          <MobileTerminalBanner
+            isMobileExpanded={isMobileExpanded}
+            onToggleMobileExpand={() => setIsMobileExpanded(!isMobileExpanded)}
+          />
+
+          {/* Contenedor principal de la Terminal */}
+          {isMobileExpanded && (
+            <div
+              ref={terminalBoxRef}
+              onClick={focusInput}
+              className={`w-full font-mono text-sm cursor-text relative overflow-hidden transition-all duration-300 ${
+                isFullscreen
+                  ? 'fixed inset-0 z-50 rounded-none bg-surface/98 border-none p-6 md:p-10 flex flex-col backdrop-blur-xl shadow-2xl'
+                  : 'w-full max-w-7xl mx-auto rounded-xl bg-surface/95 border border-border-gold shadow-2xl p-5 md:p-6 luxury-glow-hover'
+              }`}
+            >
+              {/* Capa de animación Matrix cuando está activa */}
+              {isMatrixActive && (
+                <MatrixRain onClose={() => setIsMatrixActive(false)} />
+              )}
 
           {/* Cabecera con pestañas tmux y acciones */}
           <TerminalHeader
@@ -332,6 +382,8 @@ export const TerminalConsole: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+        </>
       )}
     </div>
   );

@@ -316,3 +316,17 @@ body::after {
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
+
+/* Ocultar badge flotante de desarrollo de Next.js para no tapar la terminal */
+nextjs-portal,
+[data-nextjs-toast-wrapper],
+[data-nextjs-dev-tools-button] {
+  opacity: 0.15 !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease !important;
+}
+nextjs-portal:hover,
+[data-nextjs-dev-tools-button]:hover {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}

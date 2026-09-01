@@ -126,29 +126,6 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
           </span>
         )}
 
-        {/* Semáforo de Conexión Luxury Badge */}
-        <div
-          className="luxury-badge flex items-center gap-1.5 px-2.5 py-0.5 select-none"
-          title={`Estado: ${connectionStatus}`}
-        >
-          <span
-            className={`w-1.5 h-1.5 rounded-full transition-all ${
-              connectionStatus === 'connected'
-                ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse'
-                : connectionStatus === 'reconnecting'
-                ? 'bg-gold-400 shadow-[0_0_6px_rgba(217,196,154,0.8)] animate-pulse'
-                : 'bg-red-400'
-            }`}
-          />
-          <span className="text-[10px] uppercase font-mono tracking-wider text-gold-300">
-            {connectionStatus === 'connected'
-              ? t('statusOnline')
-              : connectionStatus === 'reconnecting'
-              ? t('statusReconnecting')
-              : t('statusOffline')}
-          </span>
-        </div>
-
         {/* Botón Compartir Sesión */}
         {!isMirrorMode && (
           <button

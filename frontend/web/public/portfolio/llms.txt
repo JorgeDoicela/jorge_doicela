@@ -14,22 +14,16 @@
 
 ## Características Principales del Portafolio
 
-### 1. Terminal Virtual SSH Interactiva (WebSockets)
-- **Protocolo:** Socket.io sobre WebSockets directos (`namespace: /terminal`).
-- **Capacidades:**
-  - Emulación de entorno Unix interactivo con prompt `jorge@vps-1gb-ram:~$`.
-  - Navegación de historial con flechas `↑` y `↓`.
-  - Autocompletado inteligente con tecla `Tab`.
-  - Parser ANSI para renderizado de colores e insignias en consola.
-  - Efecto interactivo `matrix` con lluvia digital en pantalla completa.
-- **Comandos Soportados:**
-  - `help`: Lista todos los comandos disponibles.
-  - `about`: Biografía profesional, formación en ISTPET y valores de fe cristiana.
-  - `skills`: Desglose exhaustivo del stack técnico (Backend, Frontend, DevOps, DBs).
-  - `projects`: Lista de proyectos destacados con enlaces a demos y repositorios.
-  - `contact`: Enlaces oficiales de contacto directo.
-  - `neofetch`: Diagnóstico y resumen visual del sistema en arte ASCII.
-  - `date`, `uptime`, `whoami`, `cat`, `ls`, `matrix`, `clear`, `exit`.
+### 1. Sistema Dual de Terminal Interactiva (WebSockets)
+- **Modo 1: Terminal Guiada (Simulada):**
+  - **Protocolo:** Socket.io sobre WebSockets directos (`namespace: /terminal`).
+  - **Capacidades:** Emulación UNIX de latencia cero, pestañas tmux, historial, autocompletado Tab, renderizado ANSI, modo espejo en tiempo real (`?terminal_session=`) y comandos de portafolio (`help`, `about`, `skills`, `projects`, `contact`, `neofetch`, `matrix`).
+- **Modo 2: Live Linux Sandbox (Real en Contenedor):**
+  - **Protocolo:** Socket.io + `dockerode` (`namespace: /sandbox`) + `xterm.js`.
+  - **Topología Híbrida:** Soporta ejecución en el VPS de AWS Lightsail (64MB cgroups) o delegada a un Servidor Casero físico en Debian 13 mediante Cloudflare Tunnel (Zero Port Forwarding).
+  - **Entorno:** Alpine Linux 3.20 real efímero con usuario `guest` sin `sudo`, memoria limitada a 64 MB (cgroups), CPU al 25%, raíz de solo lectura (`--read-only`), tmpfs no-ejecutable y aislamiento total de red (`--network=none`).
+  - **Herramientas reales:** `bash`, `htop`, `nano`, `curl`, `jq`, `git`, `tree`, `file`, `util-linux`, `neofetch`.
+  - **Temporizador:** TTL de 5 minutos con auto-destrucción y limpieza garantizada de contenedores.
 
 ### 2. Showcase y Catálogo de Proyectos
 - **Filtros Dinámicos:** Clasificación reactiva por categorías (Backend, Frontend, IA, DevOps, Mobile).

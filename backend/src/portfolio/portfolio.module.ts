@@ -12,6 +12,9 @@ import { ContactController } from './controllers/contact.controller';
 import { PortfolioProjectsController } from './controllers/portfolio-projects.controller';
 import { PortfolioProjectsService } from './services/portfolio-projects.service';
 
+import { SandboxService } from './services/sandbox.service';
+import { SandboxGateway } from './gateways/sandbox.gateway';
+
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
@@ -40,12 +43,15 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     ContactThrottleGuard,
     PortfolioGateway,
     PortfolioProjectsService,
+    SandboxService,
+    SandboxGateway,
   ],
   exports: [
     PortfolioService,
     ContactMessagesService,
     TelegramNotificationService,
     PortfolioProjectsService,
+    SandboxService,
   ],
 })
 export class PortfolioModule {}

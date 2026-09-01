@@ -289,6 +289,8 @@ graph TD
    * **Asegura el directorio canónico:** `mkdir -p backend/data` garantiza que el directorio exista incluso en clones limpios del servidor.
    * **Siembra los 3 módulos:** Ejecuta `seed-corpus.js`, `seed-software.js` y `seed-portfolio.js`, que resolverán sus rutas deterministas a `backend/data/` mediante `resolveDatabasePath`.
    * Verifica la integridad de los recursos estáticos en `standalone/`.
+   * **Construcción del Docker Sandbox:** Construye `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` si existen cambios, aprovechando el caché de capas de Docker en el VPS (< 1s).
+   * **Permisos del Docker Socket:** Asegura que el usuario `admin` pertenezca al grupo `docker` y ajusta permisos a `0660 /var/run/docker.sock` para que el proceso NestJS en PM2 opere contenedores sin `sudo`.
    * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída (`sudo nginx -t && sudo systemctl reload nginx`).
    * Recarga los procesos sin caída del servicio usando `pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js`.
 

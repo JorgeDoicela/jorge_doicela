@@ -11,6 +11,8 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 ## Documentación Técnica Oficial
 * [01_frontend_y_terminal_ssh.md](../../../docs/03-portfolio/01-frontend/01_frontend_y_terminal_ssh.md)
 * [02_backend_y_persistencia.md](../../../docs/03-portfolio/02-backend/01_backend_y_persistencia.md)
+* [02_terminal_real_sandbox_linux.md](../../../docs/03-portfolio/03-roadmap/02_terminal_real_sandbox_linux.md)
+* [03_tunnel_cloudflare_setup.md](../../../docs/03-portfolio/03-roadmap/03_tunnel_cloudflare_setup.md)
 
 ---
 
@@ -19,6 +21,7 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 * **Subdominio:** `portfolio.jorgedoicela.com` (en desarrollo: `portfolio.localhost:3001`).
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(portfolio)/`.
 * **Backend:** Módulo modular aislado `backend/src/portfolio/`.
+* **Sandbox Docker Encapsulado:** `backend/src/portfolio/docker/` (`Dockerfile` Alpine 3.20 hardened, `sandbox_profile.sh` y `welcome.txt`).
 * **Persistencia:** Base de datos SQLite física independiente `portfolio.sqlite` conectada mediante `'portfolioConnection'` en TypeORM.
 * **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(portfolio)/globals.css` (estética **Dark Luxury** con fondos oscuros profundos, toques metálicos/dorados refinados, tipografía Geist/Mono de alta gama y contrastes de lujo).
 * **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/portfolio/`.

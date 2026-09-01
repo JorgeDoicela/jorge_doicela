@@ -29,8 +29,13 @@ backend/src/portfolio/
 │   └── projects.json              # Dataset JSON estructurado de proyectos (Fuente de Verdad)
 ├── cli/
 │   └── seed-portfolio.ts          # Sembrado atómico CLI con better-sqlite3 en modo WAL
+├── docker/
+│   ├── Dockerfile                 # Imagen base del Sandbox Alpine 3.20 hardened (< 45 MB)
+│   ├── sandbox_profile.sh         # Perfil de shell global con prompt ANSI Dark Luxury
+│   └── welcome.txt                # Banner MOTD de la Live Linux Sandbox
 ├── gateways/
-│   └── portfolio.gateway.ts       # Gateway WebSocket para la terminal SSH
+│   ├── portfolio.gateway.ts       # Gateway WebSocket para la terminal SSH simulada (/terminal)
+│   └── sandbox.gateway.ts         # Gateway WebSocket para el Live Linux Sandbox (/sandbox)
 ├── controllers/
 │   ├── contact.controller.ts      # Endpoint REST POST y GET para mensajes de contacto
 │   └── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects y /:slug
@@ -42,6 +47,7 @@ backend/src/portfolio/
 │   └── contact-throttle.guard.ts  # Guard de Rate Limiting en memoria para mitigar spam/DDoS
 ├── services/
 │   ├── portfolio.service.ts       # Intérprete y procesador de comandos Unix
+│   ├── sandbox.service.ts         # Orquestador y hardening de contenedores Docker efímeros (dockerode)
 │   ├── contact-messages.service.ts # Servicio de persistencia y emisión de eventos
 │   ├── telegram-notification.service.ts # Servicio de comunicación HTTP con la API de Telegram
 │   └── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos
@@ -54,9 +60,8 @@ backend/src/portfolio/
 
 ---
 
-## 3. Gateway WebSocket de la Terminal (`PortfolioGateway`)
-
-* **Namespace:** `terminal`
+### 3.1 Gateway de la Terminal Guiada (`PortfolioGateway`)
+* **Namespace:** `/terminal`
 * **Configuración CORS:** `origin: true`, `credentials: true` para aceptar conexiones cruzadas desde `localhost:3001` y dominios de producción.
 * **Manejo de Conexión (`handleConnection`):** Al conectarse un cliente web, el backend emite el banner SSH de bienvenida y el prompt interactivo inicial:
   ```text
@@ -66,12 +71,22 @@ backend/src/portfolio/
   jorge@vps-1gb-ram:~$ 
   ```
 * **Intérprete de Comandos (`PortfolioService`):**
-  * `help`: Muestra la lista de comandos disponibles.
-  * `about`: Imprime la biografía, formación en IA/Ciberseguridad y valores de Jorge.
-  * `skills`: Despliega el desglose del stack técnico (Frontend, Backend, DevOps, DBs).
-  * `contact`: Muestra canales de contacto (correo, GitHub, LinkedIn).
-  * `neofetch`: Muestra el resumen estilizado de sistema con arte ASCII.
-  * `date`, `uptime`, `echo`, `cat`, `ls`, `cd`, `whoami`, `matrix`, `clear`, `exit`.
+  * `help`, `about`, `skills`, `contact`, `neofetch`, `date`, `uptime`, `echo`, `cat`, `ls`, `cd`, `whoami`, `matrix`, `clear`, `exit`.
+
+### 3.2 Gateway y Orquestador del Live Linux Sandbox (`SandboxGateway` & `SandboxService`)
+* **Namespace:** `/sandbox` (independiente de `/terminal`).
+* **Tecnología:** `@nestjs/websockets` + `dockerode` sobre `/var/run/docker.sock` (JS puro sin compilaciones C++).
+* **Hardening Estricto de 5 Capas:**
+  * **cgroups:** Memoria acotada a 64 MB (sin swap) y cuota de CPU al 25% (`NanoCpus: 250000000`).
+  * **Anti-Forkbomb:** `pids-limit=50`.
+  * **Zero-Root:** Usuario no-privilegiado `guest` (UID `1000`, GID `1000`), sin `sudo` ni capacidades de kernel (`CapDrop: ['ALL']`).
+  * **Sistema de Archivos Inmutable:** `ReadonlyRootfs: true` + `--tmpfs /home/guest:size=10M,uid=1000,gid=1000,mode=700,noexec,nosuid`.
+  * **Aislamiento de Red:** `NetworkMode: 'none'`.
+* **Ciclo de Vida y Limpieza:**
+  * Concurrencia limitada a 3 sesiones en VPS (`SANDBOX_MAX_SESSIONS=3`) y hasta 5 en Servidor Casero (`SANDBOX_MAX_SESSIONS=5`).
+  * Temporizadores de advertencia (4m 30s) y TTL forzado (5m) destruyendo el contenedor con `kill()` y `remove()`.
+  * Hook `OnModuleDestroy` que garantiza que al reiniciar el proceso NestJS en PM2 se eliminen todos los contenedores huérfanos.
+* **Soporte Dual (VPS vs Servidor Casero):** Detecta `SANDBOX_MODE` (`'vps'` | `'tunnel'`) y emite el metadata en `session-ready` para que la UI muestre el badge de origen.
 
 ---
 

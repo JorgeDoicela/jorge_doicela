@@ -473,18 +473,15 @@ export default async function PortfolioPage() {
                 {/* Sección 9: Consola Interactiva Virtual SSH */}
                 <section className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-gold-300">
-                                <Terminal className="w-4 h-4" />
-                                <span className="text-[10px] font-mono tracking-widest uppercase">{tTerm('eyebrow')}</span>
-                            </div>
-                            <span className="luxury-badge">Terminal v1.0</span>
+                        <div className="flex items-center gap-2 text-gold-300">
+                            <Terminal className="w-4 h-4" />
+                            <span className="text-[10px] font-mono tracking-widest uppercase">{tTerm('eyebrow')}</span>
                         </div>
                         <h2 className="text-xl font-light text-foreground mt-1">
                             {tTerm('title')}
                         </h2>
-                        <p className="text-foreground/75 text-xs md:text-sm leading-relaxed font-light">
-                            {tTerm('subtitle', { commands: 'projects, skills, help' })}
+                        <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
+                            {tTerm('subtitle')}
                         </p>
                     </div>
                     <TerminalConsole />

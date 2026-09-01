@@ -108,9 +108,9 @@
     "errorMsg": "Ocurrió un error al enviar el mensaje. Por favor intenta de nuevo."
   },
   "Terminal": {
-    "eyebrow": "Módulo Interactivo",
-    "title": "Consola Virtual SSH",
-    "subtitle": "Si eres reclutador técnico o prefieres la interacción clásica por consola, puedes explorar mis proyectos y perfil ejecutando comandos de Unix (como {commands}) en esta sesión sobre WebSockets en tiempo real:",
+    "eyebrow": "CONSOLA INTERACTIVA",
+    "title": "Terminal Virtual SSH",
+    "subtitle": "Explora mis proyectos, arquitectura y comandos en una consola interactiva en tiempo real.",
     "connecting": "Conectando al servidor SSH...",
     "connected": "Conexión establecida con éxito.",
     "disconnected": "Desconectado del servidor.",
@@ -136,6 +136,35 @@
     "newTab": "Abrir nueva sesión de terminal (+)",
     "statusOnline": "SSH ONLINE",
     "statusReconnecting": "RECONECTANDO",
-    "statusOffline": "OFFLINE"
+    "statusOffline": "OFFLINE",
+    "modeSimulated": "Terminal Guiada",
+    "modeVps": "Sandbox VPS (AWS)",
+    "modeTunnel": "Sandbox Servidor Casero"
+  },
+  "SandboxTerminal": {
+    "statusConnected": "CONECTADO",
+    "statusConnecting": "INICIANDO ENTORNO...",
+    "statusWarning": "EXPIRA EN 30s",
+    "statusExpired": "SESIÓN EXPIRADA",
+    "statusError": "ERROR DE SESIÓN",
+    "statusIdle": "LISTO",
+    "startSession": "Iniciar Terminal",
+    "reconnect": "Reconectar Terminal",
+    "stopSession": "Cerrar sesión",
+    "stop": "Cerrar",
+    "readyTitleVps": "Sandbox Linux en VPS (AWS)",
+    "readyDescVps": "Sesión interactiva en contenedor Alpine Linux ejecutada directamente en mi servidor cloud AWS Lightsail.",
+    "launchButtonVps": "Abrir CloudShell en VPS",
+    "readyTitleTunnel": "Sandbox Linux en Servidor Casero",
+    "readyDescTunnel": "Sesión interactiva de alto rendimiento en contenedor Linux conectada mediante Cloudflare Tunnel a mi servidor local.",
+    "launchButtonTunnel": "Abrir CloudShell en Servidor Casero",
+    "badgeVps": "VPS AWS (1 GB RAM)",
+    "badgeTunnel": "Servidor Casero (Túnel)",
+    "badgeDefault": "Sesión Segura",
+    "openInNewWindow": "Abrir en nueva pestaña"
+  },
+  "SandboxStandalone": {
+    "backToPortfolio": "Volver al Portafolio",
+    "pageTitle": "Terminal Interactiva Linux"
   }
 }

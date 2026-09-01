@@ -98,6 +98,15 @@ jobs:
               sudo nginx -t && sudo systemctl reload nginx
             fi
 
+            # Construir/actualizar imagen del sandbox efímero si existen cambios (aprovecha Docker cache)
+            if [ -d "backend/src/portfolio/docker" ]; then
+              docker build -t portfolio-sandbox:latest backend/src/portfolio/docker/ 2>/dev/null || true
+            fi
+
+            # Garantizar acceso al socket de Docker para el proceso backend en PM2
+            id -nG admin 2>/dev/null | grep -q docker || sudo usermod -aG docker admin 2>/dev/null || true
+            sudo chmod 660 /var/run/docker.sock 2>/dev/null || true
+
             # Reiniciar aplicaciones en PM2 con recarga limpia o iniciar si no estaban activas
             pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js
             pm2 save

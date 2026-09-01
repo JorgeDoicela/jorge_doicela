@@ -94,9 +94,10 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ### 5.3 Pipeline CI/CD (`.github/workflows/deploy.yml`)
 1. Compilación y validación de tipos en GitHub Actions (`ubuntu-latest`).
 2. Transferencia segura por `rsync` excluyendo `.sqlite` y `node_modules`.
-3. Sincronización automática de bases de datos (`node dist/bible/cli/seed-corpus.js` y `node dist/software/cli/seed-software.js`).
-4. Sincronización de `nginx/jorgedoicela.com.conf` y recarga en caliente de Nginx.
-5. Reinicio de procesos en PM2.
+3. Sincronización automática de bases de datos (`node dist/bible/cli/seed-corpus.js`, `seed-software.js` y `seed-portfolio.js`).
+4. Construcción automatizada de la imagen `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` y permisos de socket Docker (`0660 /var/run/docker.sock`).
+5. Sincronización de `nginx/jorgedoicela.com.conf` y recarga en caliente de Nginx.
+6. Reinicio de procesos en PM2.
 
 ---
 
@@ -129,8 +130,9 @@ Los siguientes archivos son transversales al proceso Next.js consolidado pero es
 | `src/app/sitemap.ts` | 4 constantes independientes por proyecto | Copiar solo la constante del proyecto al nuevo servidor |
 | `src/app/robots.ts` | Guía inline con la URL de sitemap a sustituir | Cambiar `sitemap` a la URL del nuevo servidor |
 | `src/middleware.ts` | Bloques etiquetados `// ── PORTFOLIO ──` etc. | Eliminar el bloque del proyecto migrado |
+| `src/app/config.ts` | Resolvedor dinámico de `API_URL` (localhost vs prod) | Copiar archivo o definir `NEXT_PUBLIC_API_URL` local |
 
-> **Obligación de mantenimiento:** Al añadir rutas nuevas a un proyecto, actualizarlas en su bloque/constante correspondiente dentro de cada uno de estos 3 archivos.
+> **Obligación de mantenimiento:** Al añadir rutas nuevas a un proyecto, actualizarlas en su bloque/constante correspondiente dentro de cada uno de estos archivos.
 
 ---
 

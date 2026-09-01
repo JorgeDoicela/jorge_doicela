@@ -41,16 +41,18 @@ frontend/web/src/app/(portfolio)/
     │   │   └── ProjectShowcase.tsx   # Galería con filtros reactivos y badges dorados
     │   └── types.ts           # Interfaces de proyectos
     │
-    ├── terminal/              # FEATURE: TERMINAL VIRTUAL SSH
+    ├── terminal/              # FEATURE: SISTEMA DUAL DE TERMINAL
     │   ├── components/
-    │   │   ├── TerminalConsole.tsx   # Ventana interactiva y prompt
-    │   │   ├── TerminalHeader.tsx    # Barra superior y controles
-    │   │   ├── MatrixRain.tsx        # Animación de lluvia Matrix
-    │   │   └── MobileTerminalBanner.tsx # Banner adaptativo para móviles
+    │   │   ├── TerminalConsole.tsx       # Conmutador de modo y ventana interactiva
+    │   │   ├── SandboxTerminal.tsx       # Terminal Linux Real en Vivo (xterm.js + FitAddon)
+    │   │   ├── TerminalHeader.tsx        # Barra superior tmux y controles
+    │   │   ├── MatrixRain.tsx            # Animación de lluvia Matrix
+    │   │   └── MobileTerminalBanner.tsx  # Banner adaptativo para móviles
     │   ├── hooks/
-    │   │   └── useTerminalSocket.ts  # Conexión WebSocket persistente
+    │   │   ├── useTerminalSocket.ts      # WebSocket de la terminal guiada (/terminal)
+    │   │   └── useSandboxTerminal.ts     # WebSocket + xterm.js del Sandbox (/sandbox)
     │   ├── utils/
-    │   │   └── ansiParser.tsx        # Renderizado de colores y secuencias ANSI
+    │   │   └── ansiParser.tsx            # Renderizado de colores y secuencias ANSI
     │   └── types.ts
     │
     └── contact/               # FEATURE: FORMULARIO DE CONTACTO
@@ -63,22 +65,23 @@ frontend/web/src/app/(portfolio)/
 
 ---
 
-## 3. Terminal Virtual SSH (WebSockets)
+## 3. Sistema Tri-Modal de Terminal Interactiva (WebSockets)
 
-La terminal realiza una conexión bidireccional de baja latencia con el servidor backend mediante Socket.io:
+El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalConsole.tsx`:
 
-### 3.1 Hook del Cliente (`useTerminalSocket.ts`)
-* **Namespace:** Conecta a `${NEXT_PUBLIC_API_URL}/terminal` (puerto 3000).
-* **Transporte:** Exclusivamente WebSockets (`transports: ['websocket']`).
-* **Eventos:**
-  * Escucha `terminal-output`: Imprime texto devuelto por el servidor procesando secuencias ANSI.
-  * Emite `execute-command`: Envía la instrucción tipada por el usuario al presionar Enter.
+### 3.1 Modo 1: Terminal Guiada Virtual SSH (`useTerminalSocket.ts`)
+* **Namespace:** Conecta a `${API_URL}/terminal` (puerto 3000).
+* **Propósito:** Lectura rápida de proyectos, biografía y comandos preprogramados (`skills`, `about`, `neofetch`, `matrix`) con 0 ms de latencia y autocompletado Tab.
 
-### 3.2 Características de la Consola
-* Historial interactivo navegable con flechas arriba/abajo (`↑` / `↓`).
-* Autocompletado inteligente con tecla `Tab`.
-* Parser de secuencias ANSI (`ansiParser.tsx`) para colores de texto enriquecidos.
-* Comando secreto `matrix` que activa animación estilo lluvia digital en pantalla completa.
+### 3.2 Modo 2: Sandbox Linux VPS — AWS Lightsail (`useSandboxTerminal.ts?mode=vps`)
+* **Namespace:** Conecta a `${API_URL}/sandbox` con `targetMode: 'vps'`.
+* **Hardware y Aislamiento:** Corre directamente en el VPS con cuotas estrictas de 64 MB RAM y 0.25 vCPU protegidas por cgroups.
+* **Lanzamiento:** Botón `[ Abrir CloudShell en VPS ↗ ]` que inicia la sesión en `/sandbox?mode=vps`.
+
+### 3.3 Modo 3: Sandbox Linux Servidor Casero — Cloudflare Tunnel (`useSandboxTerminal.ts?mode=tunnel`)
+* **Namespace:** Conecta a `${API_URL}/sandbox` con `targetMode: 'tunnel'`.
+* **Hardware y Aislamiento:** Enrutado mediante Cloudflare Tunnel hacia el servidor local con hardware dedicado (256 MB RAM, 1.0 CPU y mayor concurrencia).
+* **Lanzamiento:** Botón `[ Abrir CloudShell en Servidor Casero ↗ ]` que inicia la sesión en `/sandbox?mode=tunnel`.
 
 ---
 

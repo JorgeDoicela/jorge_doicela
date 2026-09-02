@@ -14,7 +14,13 @@ import { SandboxService } from '../services/sandbox.service';
 @WebSocketGateway({
   namespace: '/sandbox',
   cors: {
-    origin: '*',
+    origin: [
+      'https://portfolio.jorgedoicela.com',
+      'https://jorgedoicela.com',
+      'http://portfolio.localhost:3001',
+      'http://localhost:3001',
+    ],
+    credentials: true,
   },
 })
 export class SandboxGateway

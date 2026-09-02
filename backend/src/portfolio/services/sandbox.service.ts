@@ -134,6 +134,21 @@ export class SandboxService implements OnModuleDestroy {
         SecurityOpt: ['no-new-privileges:true'],
         NetworkMode: 'none',
         AutoRemove: true,
+        // Enmascarar rutas /proc sensibles que exponen información del hardware real del host.
+        // MaskedPaths monta /dev/null sobre esas rutas a nivel de kernel (OCI spec),
+        // sin depender de aliases de shell que pueden eludirse con 'bash /proc/...' o cat_real.
+        MaskedPaths: [
+          '/proc/cpuinfo',
+          '/proc/version',
+          '/proc/scsi',
+          '/sys/firmware',
+          '/proc/kcore',
+          '/proc/sysrq-trigger',
+          '/proc/irq',
+          '/proc/bus',
+        ],
+        // ReadonlyPaths impide escritura en rutas /proc que de otro modo serían escribibles
+        ReadonlyPaths: ['/proc/asound', '/proc/timer_list'],
       },
     });
 

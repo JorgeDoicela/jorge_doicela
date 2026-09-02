@@ -123,13 +123,35 @@ backend/src/portfolio/
 |------|-----------|-----------|----------------------|
 | **cgroups — Memoria** | `Memory + MemorySwap` | 64 MB | 256 MB |
 | **cgroups — CPU** | `NanoCpus` | 0.25 vCPU | 1.0 vCPU |
-| **Anti-Forkbomb** | `PidsLimit` | 50 | 100 |
+| **Anti-Forkbomb (kernel)** | `PidsLimit` | 50 | 100 |
+| **Anti-Forkbomb (shell)** | `ulimit -u 50` | ✅ | ✅ |
+| **Virtual Memory (shell)** | `ulimit -v 131072` (VPS) / `ulimit -v 524288` (Tunnel) | 128 MB | 512 MB |
+| **CPU Time por proceso** | `ulimit -t 60` — 60 segundos máx/proceso | ✅ | ✅ |
+| **Tamaño de archivo** | `ulimit -f 40960` — 20 MB máx | ✅ | ✅ |
+| **File Descriptors** | `ulimit -n 256` — reduce desde 1048576 | ✅ | ✅ |
+| **Permisos de archivo** | `umask 077` — ningún archivo es world-readable | ✅ | ✅ |
 | **Zero-Root** | Usuario `guest` UID/GID 1000, `CapDrop: ['ALL']`, `no-new-privileges:true` | ✅ | ✅ |
 | **Filesystem Inmutable** | `ReadonlyRootfs: true` | ✅ | ✅ |
-| **Áreas Escribibles** | `/home/guest` tmpfs `noexec,nosuid` | 15 MB | 15 MB |
-| **Temp Aislado** | `/tmp` tmpfs `noexec,nosuid` | 10 MB | 10 MB |
+| **Áreas Escribibles** | `/home/guest` tmpfs `noexec,nosuid,size=15M` | ✅ | ✅ |
+| **Temp Aislado** | `/tmp` tmpfs `noexec,nosuid,size=10M` | ✅ | ✅ |
 | **Aislamiento de Red** | `NetworkMode: 'none'` | ✅ | ✅ |
 | **Auto-destrucción** | `AutoRemove: true` | ✅ | ✅ |
+| **Rutas /proc enmascaradas** | `MaskedPaths` — monta `/dev/null` sobre rutas sensibles (OCI spec) | ✅ | ✅ |
+
+**`MaskedPaths` — rutas bloqueadas a nivel de kernel:**
+```
+/proc/cpuinfo       → impide fingerprinting del hardware real del servidor
+/proc/version       → impide identificar versión exacta del kernel del host
+/proc/scsi          → impide enumerar dispositivos de almacenamiento
+/proc/kcore         → impide volcado de memoria del kernel
+/proc/sysrq-trigger → impide activar SysRq en el host
+/proc/irq           → impide mapear interrupciones del hardware
+/proc/bus           → impide enumerar bus PCI/USB
+/sys/firmware       → impide acceso a datos de firmware del host
+```
+
+> [!NOTE]
+> `MaskedPaths` es la solución correcta según la especificación OCI para containers. No depende de aliases de shell (que pueden eludirse con `bash script.sh` o `cat_real`) — actúa a nivel del kernel del host montando `/dev/null` sobre esas rutas en el namespace del contenedor.
 
 ### 4.2 Sanitización de Entradas
 
@@ -187,7 +209,7 @@ Esto impide que un visitante la sobreescriba desde la terminal con `SANDBOX_MODE
 > `curl` y `git` están presentes en la imagen para fines demostrativos (`neofetch`, `git log`). El acceso a red está bloqueado a nivel de runtime mediante `NetworkMode: 'none'`, por lo que no suponen un vector de exfiltración.
 
 ### 5.2 Perfil de Shell (`sandbox_profile.sh`)
-* **Terminadores de línea:** Archivo en **LF puro** (no CRLF). Alpine Linux / Bash rechaza scripts con CRLF con error de sintaxis. Verificar con `node -e "..." ` antes de reconstruir la imagen.
+* **Terminadores de línea:** Archivo en **LF puro** (no CRLF). Alpine Linux / Bash rechaza scripts con CRLF con error de sintaxis. Verificar con `node -e "..."` antes de reconstruir la imagen.
 * **Banner dinámico por modo** — Se ramifica según `$SANDBOX_MODE`:
 
 | Variable | Modo `vps` | Modo `tunnel` |
@@ -197,20 +219,84 @@ Esto impide que un visitante la sobreescriba desde la terminal con `SANDBOX_MODE
 | `PS1` | `guest@aws-cloud:~$` | `guest@servidor-local:~$` |
 | Mensaje de bienvenida | Contexto de AWS Lightsail y aislamiento seguro | Contexto de hardware físico y túnel cifrado |
 
+* **`ulimit` — Defensa en profundidad sobre cgroups:**
+  ```bash
+  ulimit -n 256        # file descriptors (por defecto: 1048576)
+  ulimit -v 131072     # virtual memory 128 MB VPS / 524288 = 512 MB Tunnel
+  ulimit -t 60         # cpu time 60s/proceso (bloquea loops infinitos de CPU)
+  ulimit -f 40960      # tamaño de archivo máximo 20 MB
+  ```
+  Los `ulimit` son una segunda barrera a nivel de shell, independiente de los cgroups del contenedor.
+
+* **`umask 077`** — Todos los archivos creados en la sesión son privados del usuario `guest` (permisos `600`). Sin archivos world-readable accidentales.
+
 * **Historial desactivado** — Privacidad entre sesiones de visitantes distintos:
   ```bash
   export HISTFILE=/dev/null
   export HISTSIZE=0
   export HISTFILESIZE=0
   ```
+
+* **`readonly SANDBOX_MODE`** — Impide que el visitante sobreescriba la variable desde la shell. Bash rechaza la asignación con exit code 1.
+
+* **Protección de `/proc` sensible:** Implementada mediante `MaskedPaths` en `HostConfig` de Docker (nivel kernel, OCI spec). **No** se usan aliases de shell para esto, ya que `bash script.sh` y otros métodos eluden los aliases. Ver Sección 4.1.
+
 * **Comandos nativos registrados en el perfil:**
   `about`, `projects`, `skills`, `architecture`, `benchmark`, `api-live`, `matrix`, `contact`, `help`.
 
 ---
 
-## 6. Endpoints REST y Modelo de Datos
+## 6. Seguridad Transversal (`main.ts`, Gateways y Servicios)
 
-### 6.1 Endpoints REST
+### 6.1 Headers HTTP de Seguridad (`helmet`)
+* **Paquete:** `helmet` instalado con `pnpm --filter backend add helmet`.
+* **Configuración:** `app.use(helmet())` activado antes de cualquier ruta — emite automáticamente:
+  `X-Frame-Options`, `X-Content-Type-Options`, `Strict-Transport-Security`, `X-XSS-Protection`, `Content-Security-Policy`, `Referrer-Policy`.
+
+### 6.2 CORS Global — Lista Blanca Explícita (`main.ts`)
+* **Orígenes permitidos** (hardcodeados + env override):
+  ```
+  https://jorgedoicela.com
+  https://portfolio.jorgedoicela.com
+  https://bible.jorgedoicela.com
+  https://software.jorgedoicela.com
+  + localhost:3000/3001/3002 solo si NODE_ENV !== 'production'
+  ```
+* **Variable de entorno:** `CORS_ORIGINS` (CSV) permite override en producción sin redeploy.
+* **`origin: true` eliminado** de main.ts, `portfolio.gateway.ts` y `sandbox.gateway.ts`.
+
+### 6.3 `ValidationPipe` Global
+```ts
+new ValidationPipe({
+  whitelist: true,             // Elimina props no declaradas en el DTO
+  forbidNonWhitelisted: true,  // Rechaza petición si hay props extra → 400
+  transform: true,
+})
+```
+* Cualquier campo no declarado en el DTO devuelve `HTTP 400` en lugar de ser ignorado silenciosamente.
+
+### 6.4 Privacidad en Logs de Gateways
+* **`execute-command` (`PortfolioGateway`):** bajado a `logger.debug` — solo loguea longitud en caracteres, no el contenido del comando. Inactive en producción a menos que se configure `LOG_LEVEL=debug`.
+* **`terminal-input` (`SandboxGateway`):** nunca loguea contenido — solo `logger.debug` con longitud en bytes.
+
+### 6.5 Sanitización de `echo` contra Inyección de Terminal
+* **Vector:** un visitante podía enviar `echo \x1b[2J` (clear screen), `\x1b]0;hacked\x07` (cambio de título de ventana), o secuencias de cursor repositioning.
+* **Solución:** dos regexes en `portfolio.service.ts`:
+  1. Elimina secuencias CSI arbitrarias (`\x1b[` + no-colores): `text.replace(/\x1b\[(?![0-9;]*m)[^a-zA-Z]*[a-zA-Z]/g, '')`.
+  2. Elimina caracteres de control `[\x00-\x08\x0b\x0c\x0e-\x1a\x1c-\x1f\x7f]`.
+
+### 6.6 Sanitización de `pty-resize` (`PortfolioGateway`)
+* El evento `pty-resize` sanitiza `cols` y `rows` con los mismos rangos que `SandboxService`:
+  ```ts
+  Math.max(40, Math.min(300, Math.floor(Number(cols) || 80)))
+  Math.max(10, Math.min(100, Math.floor(Number(rows) || 24)))
+  ```
+
+---
+
+## 7. Endpoints REST y Modelo de Datos
+
+### 7.1 Endpoints REST
 
 | Dominio | Método y Ruta | Parámetros Query | Descripción |
 |---|---|---|---|
@@ -219,14 +305,14 @@ Esto impide que un visitante la sobreescriba desde la terminal con `SANDBOX_MODE
 | **Contacto** | `POST /portfolio/contact` | - | Envío y validación de formulario (`CreateContactMessageDto`) |
 | | `GET /portfolio/contact` | - | Historial de mensajes para auditoría interna |
 
-### 6.2 `PortfolioProjectsService` — Deserialización Nativa
+### 7.2 `PortfolioProjectsService` — Deserialización Nativa
 
 > [!IMPORTANT]
 > Los campos `technologies`, `architectureHighlights` y `metrics` usan `@Column({ type: 'simple-json' })` en TypeORM. **TypeORM deserializa automáticamente** estos campos a sus tipos TypeScript correctos (`string[]` y `{ label: string; value: string }[]`).
 >
 > **No existe ni debe existir** lógica de parseo manual con `JSON.parse()` en el servicio. Cualquier intento de reimplementarlo introduciría asignaciones `any` que ESLint (`@typescript-eslint/no-unsafe-assignment`) rechaza en el pre-commit.
 
-### 6.3 Modelo Relacional Bilingüe (`portfolio.sqlite`)
+### 7.3 Modelo Relacional Bilingüe (`portfolio.sqlite`)
 
 * `portfolio_projects`:
   * `id`: PK autoincremental.

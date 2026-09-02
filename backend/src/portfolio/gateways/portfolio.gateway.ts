@@ -96,8 +96,9 @@ export class PortfolioGateway
     const paneId = typeof payload === 'object' ? payload?.paneId : undefined;
 
     const state = this.clientStates.get(client.id) || { cwd: '~' };
-    this.logger.log(
-      `[${client.id}] Executing: "${rawCommand}" at [${state.cwd}]`,
+    // Debug en vez de log: el comando puede contener texto sensible del visitante
+    this.logger.debug(
+      `[${client.id}] Executing command at [${state.cwd}] — ${rawCommand.length} chars`,
     );
 
     const result = this.portfolioService.executeCommand(rawCommand, state.cwd);
@@ -146,9 +147,16 @@ export class PortfolioGateway
     @ConnectedSocket() client: Socket,
   ) {
     const state = this.clientStates.get(client.id);
-    if (state) {
-      state.cols = payload.cols;
-      state.rows = payload.rows;
+    if (state && payload) {
+      // Sanitización idéntica a sandbox.service.ts para evitar valores extremos en el estado de sesión
+      state.cols = Math.max(
+        40,
+        Math.min(300, Math.floor(Number(payload.cols) || 80)),
+      );
+      state.rows = Math.max(
+        10,
+        Math.min(100, Math.floor(Number(payload.rows) || 24)),
+      );
       this.clientStates.set(client.id, state);
     }
   }

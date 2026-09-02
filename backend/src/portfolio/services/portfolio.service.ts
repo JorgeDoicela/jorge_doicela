@@ -438,12 +438,31 @@ export class PortfolioService {
 
       case 'echo': {
         let text = args.join(' ');
+        // Sustitución de variables conocidas y seguras
         text = text
           .replace(/\$USER/g, 'jorge')
           .replace(/\$HOST/g, 'debian')
           .replace(/\$SHELL/g, '/bin/zsh')
           .replace(/\$HOME/g, '/home/jorge')
           .replace(/\$PWD/g, currentCwd);
+        // Sanitizar secuencias de escape de control ANSI arbitrarias para evitar
+        // inyección de terminal (cursor repositioning, clear screen, change window title, etc.)
+        // Solo se permiten secuencias de color (\x1b[Nm) y texto plano.
+        const esc = String.fromCharCode(27);
+        const ansiPattern = esc + '\\[(?![0-9;]*m)[^a-zA-Z]*[a-zA-Z]';
+        text = text.replace(new RegExp(ansiPattern, 'g'), '');
+        // Eliminar caracteres de control excepto newline (10) y tab (9)
+        text = Array.from(text)
+          .filter((char) => {
+            const code = char.charCodeAt(0);
+            return (
+              code === 9 ||
+              code === 10 ||
+              code === 13 ||
+              (code >= 32 && code !== 127)
+            );
+          })
+          .join('');
         return { output: text };
       }
 

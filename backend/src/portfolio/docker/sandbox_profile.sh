@@ -36,10 +36,37 @@ export HISTFILE=/dev/null
 export HISTSIZE=0
 export HISTFILESIZE=0
 
+# ── LÍMITES DEL SHELL (defensa en profundidad sobre los cgroups del contenedor) ──
+# file descriptors: limitar a 256 (por defecto 1048576 — innecesariamente alto)
+ulimit -n 256
+# virtual memory: 128 MB para VPS / 512 MB para Tunnel (doble del límite de cgroups por holgura)
+if [ "$SANDBOX_MODE" = "tunnel" ]; then
+    ulimit -v 524288   # 512 MB en KB
+else
+    ulimit -v 131072   # 128 MB en KB
+fi
+# cpu time: 60 segundos máx por proceso (impide loops CPU infinitos sin CapSysTime)
+ulimit -t 60
+# tamaño de archivo creado: 20 MB máx (cubre el tmpfs de 15 MB con margen)
+ulimit -f 40960
+
+# Máscara de creación de archivos: 077 garantiza que ningún archivo sea world-readable
+umask 077
+
 # Proteger la variable de modo contra sobreescritura desde la shell del visitante
 readonly SANDBOX_MODE
 
-# ── COMANDOS DE PERFIL PROFESIONAL Y PROYECTOS ──────────────────────────────
+
+# ── ALIASES DE ALTA PRODUCTIVIDAD ───────────────────────────────────
+alias ll='ls -lah --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+alias ls='ls --color=auto'
+alias df='df -h'
+alias free='free -m'
+alias grep='grep --color=auto'
+
+# ── COMANDOS DE PERFIL PROFESIONAL Y PROYECTOS ─────────────────────────────
 about() {
     echo -e "\033[1;38;5;221mJorge Ismael Doicela Molina • Perfil Profesional\033[0m"
     echo -e "\033[38;5;242m────────────────────────────────────────────────────────────\033[0m"

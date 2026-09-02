@@ -336,6 +336,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
   const [input, setInput] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isFirstRender = useRef(true);
 
   // Auto-scroll al final cuando llega nuevo contenido a este panel
   useEffect(() => {
@@ -344,10 +345,14 @@ const SinglePane: React.FC<SinglePaneProps> = ({
     }
   }, [pane.history, completions]);
 
-  // Enfocar input si el panel se vuelve activo
+  // Enfocar input solo tras interacción del usuario (evita scroll automático en carga inicial)
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (isActive) {
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     }
   }, [isActive]);
 
@@ -406,7 +411,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
 
   const handlePaneClick = () => {
     onFocus();
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   };
 
   return (
@@ -539,7 +544,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
                       parts[parts.length - 1] = comp;
                       setInput(parts.join(' ') + ' ');
                     }
-                    inputRef.current?.focus();
+                    inputRef.current?.focus({ preventScroll: true });
                   }}
                   className="px-2 py-0.5 rounded bg-background/80 hover:bg-gold-400/20 text-foreground/90 hover:text-gold-200 border border-border/50 text-[10px] transition-colors cursor-pointer"
                 >

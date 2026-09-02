@@ -8,7 +8,6 @@ onlyBuiltDependencies:
   - '@swc/core'
   - better-sqlite3
   - sharp
-  - sqlite3
   - unrs-resolver
 
 overrides:
@@ -20,3 +19,5 @@ overrides:
   'next-intl-swc-plugin-extractor': '4.13.0'
   '@eloqnt/format-json': '0.0.2'
   '@eloqnt/format-po': '0.0.2'
+  'tar': '>=7.5.19'
+  'qs': '>=6.16.0'

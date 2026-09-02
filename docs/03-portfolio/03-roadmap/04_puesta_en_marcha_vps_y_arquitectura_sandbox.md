@@ -167,3 +167,58 @@ Estado verificado en el servidor de producción tras la puesta en marcha complet
 | Estado de la Terminal Interactiva | Operativo en `/sandbox?mode=vps` | Verificado |
 | CORS WebSocket Sandbox | Restringido a 4 dominios explícitos | Corregido |
 | Validación de parámetros cliente | cols [40-300], rows [10-100], mode enum | Corregido |
+
+---
+
+## 8. Evidencia y Pruebas Empíricas de Seguridad en Producción
+
+Para certificar el blindaje del Sandbox se ejecutaron pruebas de estrés y vectores de ataque simulados directamente en la terminal interactiva en producción:
+
+### 8.1 Prueba de Privilegios y Escalada (Zero-Root)
+* **Comandos ejecutados:** `sudo whoami` / `su root`
+* **Resultado del sistema:**
+  ```text
+  bash: sudo: command not found
+  su: must be suid to work properly
+  ```
+* **Conclusión técnica:** El usuario `guest` (UID 1000) carece de capacidades administrativas y el kernel bloquea cualquier intento de escalada debido a `SecurityOpt: ['no-new-privileges:true']` y `CapDrop: ['ALL']`.
+
+### 8.2 Prueba de Inmutabilidad del Sistema de Archivos
+* **Comandos ejecutados:** `touch /etc/archivo_malicioso.txt` / `rm -rf /bin`
+* **Resultado del sistema:**
+  ```text
+  touch: cannot touch '/etc/archivo_malicioso.txt': Read-only file system
+  rm: cannot remove '/bin/kill': Read-only file system
+  rm: cannot remove '/bin/bash': Read-only file system
+  ```
+* **Conclusión técnica:** `ReadonlyRootfs: true` protege el 100% de los binarios y configuraciones del contenedor contra alteraciones maliciosas.
+
+### 8.3 Prueba de Aislamiento de Red
+* **Comandos ejecutados:** `curl -I https://google.com`
+* **Resultado del sistema:**
+  ```text
+  curl: (6) Could not resolve host: google.com
+  ```
+* **Conclusión técnica:** `NetworkMode: 'none'` garantiza que el contenedor no disponga de interfaces de red ni resolución DNS, imposibilitando el uso del servidor como botnet o vector de exfiltración.
+
+### 8.4 Prueba de Denegación de Servicio por Bifurcación (Anti-Forkbomb)
+* **Comando ejecutado:** `:(){ :|:& };:`
+* **Resultado del sistema:**
+  ```text
+  bash: fork: retry: Resource temporarily unavailable
+  ```
+* **Conclusión técnica:** `PidsLimit: 50` interceptó la llamada al sistema `fork()` en el proceso 50, encapsulando la saturación dentro del contenedor efímero sin degradar el rendimiento del servidor anfitrión.
+
+### 8.5 Prueba de Límite de Memoria y Activación de OOM Killer
+* **Comando ejecutado:** `x="1234567890"; while true; do x="$x$x"; done`
+* **Salida en Terminal Web:**
+  ```text
+  [SESIÓN TERMINADA] El proceso del shell ha finalizado.
+  ```
+* **Registro oficial del kernel en el VPS (`sudo dmesg -T | grep -i "oom"`):**
+  ```text
+  oom-kill:constraint=CONSTRAINT_MEMCG,cpuset=docker-...,oom_memcg=/system.slice/docker-...
+  Memory cgroup out of memory: Killed process (bash) total-vm:74328kB, anon-rss:64980kB, UID:1000
+  ```
+* **Conclusión técnica:** La restricción `CONSTRAINT_MEMCG` liquidó el proceso de forma inmediata al alcanzar los 64 MB (`anon-rss: 64980kB`), aislando el evento al cgroup sin comprometer la memoria global del VPS.
+

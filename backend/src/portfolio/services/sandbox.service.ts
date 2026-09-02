@@ -192,8 +192,9 @@ export class SandboxService implements OnModuleDestroy {
   writeInput(socketId: string, data: string): void {
     const session = this.sessions.get(socketId);
     if (session && session.stream) {
-      this.logger.log(
-        `Escribiendo en Docker (${session.sessionId}): ${JSON.stringify(data)} (writable: ${session.stream.writable})`,
+      // No logear el contenido del input: puede contener credenciales o datos sensibles del usuario
+      this.logger.debug(
+        `writeInput → sesión ${session.sessionId} (writable: ${session.stream.writable}) [${data.length} bytes]`,
       );
       if (session.stream.writable) {
         session.stream.write(Buffer.from(data, 'utf-8'));
@@ -210,10 +211,19 @@ export class SandboxService implements OnModuleDestroy {
     cols: number,
     rows: number,
   ): Promise<void> {
+    // Sanitización idéntica a la de createSession para evitar valores fuera de rango
+    const safeCols = Math.max(
+      40,
+      Math.min(300, Math.floor(Number(cols) || 80)),
+    );
+    const safeRows = Math.max(
+      10,
+      Math.min(100, Math.floor(Number(rows) || 24)),
+    );
     const session = this.sessions.get(socketId);
     if (session && session.container) {
       try {
-        await session.container.resize({ w: cols, h: rows });
+        await session.container.resize({ w: safeCols, h: safeRows });
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
         this.logger.debug(

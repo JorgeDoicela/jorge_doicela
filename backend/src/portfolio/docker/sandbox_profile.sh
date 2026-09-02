@@ -31,10 +31,13 @@ alias df='df -h'
 alias free='free -m'
 alias grep='grep --color=auto'
 
-# Historial volátil en memoria
-export HISTFILE=/home/guest/.bash_history
-export HISTSIZE=200
-export HISTFILESIZE=200
+# Historial desactivado: privacidad entre sesiones de visitantes distintos
+export HISTFILE=/dev/null
+export HISTSIZE=0
+export HISTFILESIZE=0
+
+# Proteger la variable de modo contra sobreescritura desde la shell del visitante
+readonly SANDBOX_MODE
 
 # ── COMANDOS DE PERFIL PROFESIONAL Y PROYECTOS ──────────────────────────────
 about() {

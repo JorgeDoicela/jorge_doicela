@@ -99,8 +99,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
       if (inputData.startsWith('\x1b[<') || inputData.startsWith('\x1b[M')) {
         return;
       }
-
-      console.log('[Sandbox] Tecla presionada hacia Docker:', JSON.stringify(inputData));
+      // NOTA: no se loguea el inputData para preservar la privacidad del visitante
       if (socketRef.current && socketRef.current.connected) {
         socketRef.current.emit('terminal-input', inputData);
       }

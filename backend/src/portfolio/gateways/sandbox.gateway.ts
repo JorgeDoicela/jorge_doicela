@@ -17,8 +17,10 @@ import { SandboxService } from '../services/sandbox.service';
     origin: [
       'https://portfolio.jorgedoicela.com',
       'https://jorgedoicela.com',
-      'http://portfolio.localhost:3001',
-      'http://localhost:3001',
+      // Permitir localhost solo en desarrollo local
+      ...(process.env.NODE_ENV !== 'production'
+        ? ['http://localhost:3001', 'http://localhost:3000']
+        : []),
     ],
     credentials: true,
   },
@@ -50,7 +52,9 @@ export class SandboxGateway
   ) {
     const cols = payload?.cols || 80;
     const rows = payload?.rows || 24;
-    const targetMode = payload?.targetMode || 'vps';
+    // Validación estricta: solo valores del enum conocido; cualquier otro valor cae a 'vps'
+    const targetMode: 'vps' | 'tunnel' =
+      payload?.targetMode === 'tunnel' ? 'tunnel' : 'vps';
     this.logger.log(
       `Evento 'start-session' recibido de cliente ${client.id} (Cols: ${cols}, Rows: ${rows}, Mode: ${targetMode})`,
     );
@@ -127,9 +131,7 @@ export class SandboxGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() data: string,
   ) {
-    this.logger.log(
-      `Evento terminal-input recibido de ${client.id}: ${JSON.stringify(data)}`,
-    );
+    // No logear el contenido del input: puede contener datos privados del visitante
     this.sandboxService.writeInput(
       client.id,
       typeof data === 'string' ? data : String(data),

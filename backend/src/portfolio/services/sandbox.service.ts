@@ -80,10 +80,22 @@ export class SandboxService implements OnModuleDestroy {
       );
     }
 
-    const effectiveMode = targetMode;
+    // Validación estricta de targetMode: solo valores conocidos y explícitos del enum
+    const effectiveMode: 'vps' | 'tunnel' =
+      targetMode === 'tunnel' ? 'tunnel' : 'vps';
     const isTunnel = effectiveMode === 'tunnel';
 
-    const sessionId = `sandbox_${isTunnel ? 'tunnel_' : 'vps_'}${socketId.replace(/[^a-zA-Z0-9_-]/g, '')}_${Date.now()}`;
+    // Sanitización de dimensiones del terminal: rangos seguros para evitar inyección en variables de entorno
+    const safeCols = Math.max(
+      40,
+      Math.min(300, Math.floor(Number(cols) || 80)),
+    );
+    const safeRows = Math.max(
+      10,
+      Math.min(100, Math.floor(Number(rows) || 24)),
+    );
+
+    const sessionId = `sandbox_${isTunnel ? 'tunnel_' : 'vps_'}${socketId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20)}_${Date.now()}`;
     this.logger.log(
       `[1/4] Creando contenedor Docker [Modo: ${effectiveMode.toUpperCase()}] para sesión ${sessionId} con imagen ${this.imageName}...`,
     );
@@ -102,7 +114,7 @@ export class SandboxService implements OnModuleDestroy {
       AttachStdin: true,
       AttachStdout: true,
       AttachStderr: true,
-      Env: [`COLUMNS=${cols}`, `LINES=${rows}`, 'TERM=xterm-256color'],
+      Env: [`COLUMNS=${safeCols}`, `LINES=${safeRows}`, 'TERM=xterm-256color'],
       HostConfig: {
         Memory: memoryLimit,
         MemorySwap: memoryLimit,
@@ -137,7 +149,7 @@ export class SandboxService implements OnModuleDestroy {
 
     // Redimensionar al tamaño inicial reportado por el cliente
     try {
-      await container.resize({ w: cols, h: rows });
+      await container.resize({ w: safeCols, h: safeRows });
     } catch {
       // Ignorar si el contenedor recién iniciado tarda unos ms en ajustar el tty
     }

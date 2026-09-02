@@ -32,7 +32,7 @@ help() {
     echo -e "  \033[38;5;117mhtop\033[0m          - Monitor interactivo de procesos"
     echo -e "  \033[38;5;117mnano <file>\033[0m   - Editor de texto interactivo"
     echo -e "  \033[38;5;117mtree\033[0m          - Árbol de directorios"
-    echo -e "  \033[38;5;117mcurl / jq\033[0m     - Herramientas de red y parsing JSON"
+    echo -e "  \033[38;5;117mgit\033[0m           - Control de versiones (modo offline)"
     echo -e "  \033[38;5;117mls, cat, pwd\033[0m  - Navegación básica en Linux"
     echo -e "  \033[38;5;117mexit\033[0m          - Cerrar sesión y destruir contenedor"
     echo ""

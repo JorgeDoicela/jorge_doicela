@@ -6,11 +6,9 @@ import {
   Minimize2,
   Copy,
   Check,
-  Share2,
   Plus,
   X,
   Trash2,
-  Eye,
 } from 'lucide-react';
 import { TerminalTab, ConnectionStatus } from '../types';
 import { useTranslations } from 'next-intl';
@@ -26,8 +24,8 @@ interface TerminalHeaderProps {
   onToggleFullscreen: () => void;
   onCopyAll: () => void;
   onClear: () => void;
-  onShareSession: () => void;
-  isMirrorMode?: boolean;
+  isSplit?: boolean;
+  onToggleSplit?: () => void;
 }
 
 export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
@@ -41,23 +39,16 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
   onToggleFullscreen,
   onCopyAll,
   onClear,
-  onShareSession,
-  isMirrorMode = false,
+  isSplit = false,
+  onToggleSplit,
 }) => {
   const t = useTranslations('Terminal');
   const [copiedAll, setCopiedAll] = useState(false);
-  const [sharedToast, setSharedToast] = useState(false);
 
   const handleCopy = () => {
     onCopyAll();
     setCopiedAll(true);
     setTimeout(() => setCopiedAll(false), 2000);
-  };
-
-  const handleShare = () => {
-    onShareSession();
-    setSharedToast(true);
-    setTimeout(() => setSharedToast(false), 3000);
   };
 
   return (
@@ -88,7 +79,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
                 <span>
                   {idx}: {tab.title}
                 </span>
-                {tabs.length > 1 && !isMirrorMode && (
+                {tabs.length > 1 && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -104,7 +95,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
             );
           })}
 
-          {!isMirrorMode && tabs.length < 5 && (
+          {tabs.length < 5 && (
             <button
               onClick={onAddTab}
               className="p-1 rounded-md text-muted hover:text-gold-300 hover:bg-surface-raised border border-transparent hover:border-border-gold transition-all"
@@ -118,27 +109,18 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
 
       {/* Indicador de estado y botones de acción */}
       <div className="flex items-center gap-2 shrink-0">
-        {/* Modo Espejo Tag si aplica */}
-        {isMirrorMode && (
-          <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-raised text-gold-300 border border-border-gold text-[10px] font-mono animate-pulse">
-            <Eye className="w-3 h-3" />
-            <span>{t('mirrorMode')}</span>
-          </span>
-        )}
-
-        {/* Botón Compartir Sesión */}
-        {!isMirrorMode && (
+        {/* Botón Dividir / Unificar Panel (tmux) */}
+        {onToggleSplit && (
           <button
-            onClick={handleShare}
-            className="p-1.5 rounded-md hover:bg-surface-raised border border-border-gold text-muted hover:text-gold-200 transition-colors relative"
-            title={t('shareSession')}
+            onClick={onToggleSplit}
+            className={`px-2 py-1 rounded-md border text-[11px] font-mono transition-colors ${
+              isSplit
+                ? 'bg-surface-raised border-border-gold text-gold-200 font-medium'
+                : 'border-border-gold/60 text-muted hover:text-gold-200 hover:bg-surface-raised'
+            }`}
+            title={isSplit ? 'Unificar paneles (exit / unsplit)' : 'Dividir panel en 2 columnas (split / Ctrl+B %)'}
           >
-            <Share2 className="w-3.5 h-3.5" />
-            {sharedToast && (
-              <span className="absolute -top-7 right-0 bg-gold-400 text-black font-semibold text-[9px] font-mono px-2 py-0.5 rounded shadow-lg whitespace-nowrap animate-fade-in">
-                {t('copySuccess')}
-              </span>
-            )}
+            {isSplit ? 'unsplit' : 'split'}
           </button>
         )}
 

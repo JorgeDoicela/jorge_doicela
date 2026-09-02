@@ -333,7 +333,14 @@ export function seedSoftware(
 
   `);
 
-  const corpusDir = path.resolve(__dirname, '../corpus');
+  let corpusDir = path.resolve(__dirname, '../corpus');
+  if (!fs.existsSync(corpusDir)) {
+    const srcDir = path.resolve(__dirname, '../../../src/software/corpus');
+    if (fs.existsSync(srcDir)) {
+      corpusDir = srcDir;
+    }
+  }
+
   const readJson = <T>(filename: string): T => {
     const filePath = path.join(corpusDir, filename);
     const content = fs.readFileSync(filePath, 'utf-8');

@@ -10,17 +10,10 @@ import { PortfolioProject } from '../features/projects/types';
 import {
     Mail,
     MapPin,
-    Code,
-    Cpu,
-    Layers,
-    Terminal,
     ArrowUpRight,
-    GraduationCap,
-    Briefcase,
     Shield,
     Server,
-    RefreshCw,
-    MessageSquare
+    RefreshCw
 } from 'lucide-react';
 
 async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]> {
@@ -31,14 +24,16 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
         if (res.ok) {
             const data = await res.json();
             const rawProjects = Array.isArray(data) ? data : data.data || [];
-            return rawProjects.map((p: any) => ({
-                ...p,
-                technologies: Array.isArray(p.technologies)
-                    ? p.technologies
-                    : (typeof p.technologies === 'string' && p.technologies.trim().startsWith('[')
-                        ? JSON.parse(p.technologies)
-                        : (typeof p.technologies === 'string' ? p.technologies.split(',').map((s: string) => s.trim()) : [])),
-            }));
+            if (rawProjects.length > 0) {
+                return rawProjects.map((p: any) => ({
+                    ...p,
+                    technologies: Array.isArray(p.technologies)
+                        ? p.technologies
+                        : (typeof p.technologies === 'string' && p.technologies.trim().startsWith('[')
+                            ? JSON.parse(p.technologies)
+                            : (typeof p.technologies === 'string' ? p.technologies.split(',').map((s: string) => s.trim()) : [])),
+                }));
+            }
         }
     } catch {
         // Fallback resiliente al corpus estático
@@ -56,7 +51,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'es',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://bible.jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Plataforma integral de exégesis bíblica orientada a la investigación académica y estudio pastoral profundo, combinando la lectura textual continua con aparatos morfológicos masoréticos y griegos en tiempo real.',
+                challenge: 'Indexar y relacionar de forma determinista más de 31,000 versículos, tokens morfológicos BHS/NA28 y léxicos Strong BDB/Gesenius manteniendo tiempos de respuesta inferiores a 40 ms bajo una memoria RAM severamente restringida.',
+                architectureHighlights: [
+                    '9 motores de exégesis modulares (Interlineal Inverso, Quiasmos, Atlas WGS84, Cronología Sincrónica, etc.)',
+                    'Persistencia ultra-ligera en bible.sqlite con better-sqlite3 en modo WAL e índices compuestos B-Tree',
+                    'Integración oficial autorizada con API.Bible para versiones con derechos y fallback determinista local',
+                    'Cliente móvil nativo con Expo SDK 52, FlashList a 60 fps constantes y arquitectura Offline-First'
+                ],
+                metrics: [
+                    { label: 'Motores de Exégesis', value: '9' },
+                    { label: 'Tiempo de Ingestión', value: '< 80 ms' },
+                    { label: 'Consumo de RAM', value: '~45 MB' }
+                ]
             },
             {
                 id: 3,
@@ -68,7 +76,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'es',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://software.jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Hub tecnológico desacoplado que centraliza divulgación de software, avisos de vulnerabilidades con matrices de remediación, fichas técnicas de agentes de IA y tutoriales interactivos con ejecución guiada.',
+                challenge: 'Diseñar un monolito modular con 7 submódulos independientes sin acoplamiento, asegurando que cada dominio gestione sus propias entidades relacionales y soporte multiidioma con índices compuestos (slug, language).',
+                architectureHighlights: [
+                    'Arquitectura en 3 capas puras por submódulo: controladores REST, servicios de dominio y 9 entidades TypeORM',
+                    'Asistente StepWizard interactivo con resaltado de sintaxis para guías de código paso a paso',
+                    'Diseño Neumorphism UI + Glassmorphism con paneles táctiles cóncavos/convexos y desenfoque vítreo',
+                    'Sembrado transaccional atómico CLI (seed-software.ts) que procesa 8 tablas en menos de 25 ms'
+                ],
+                metrics: [
+                    { label: 'Áreas Verticales', value: '7' },
+                    { label: 'Entidades Relacionales', value: '9' },
+                    { label: 'Latencia Promedio', value: '< 20 ms' }
+                ]
             },
             {
                 id: 5,
@@ -80,7 +101,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'es',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Infraestructura de producción de alta resiliencia diseñada para ejecutar 4 plataformas web y backend simultáneamente en un servidor limitado físicamente a 1 GB de RAM.',
+                challenge: 'Evitar el colapso de memoria del sistema operativo y sobrecargas por scraping de bots de IA mediante consolidación de runtimes, proxy reverso inteligente y rate limiting perimetral.',
+                architectureHighlights: [
+                    'Consolidación física (NestJS en 3000 y Next.js Standalone en 3001) con aislamiento lógico absoluto de Cajas Negras',
+                    'Autenticación mutua TLS (mTLS) de Cloudflare bloqueando accesos directos por IP',
+                    'Entrega Zero-RAM en Nginx para dossiers llms.txt, manifest.json y favicons en < 1 ms',
+                    'Pipeline CI/CD en GitHub Actions con compilación offloaded y rsync seguro con zero-downtime'
+                ],
+                metrics: [
+                    { label: 'Límite Físico de RAM', value: '1 GB' },
+                    { label: 'Consumo Operativo Total', value: '~170 MB' },
+                    { label: 'Uptime en Producción', value: '99.9%' }
+                ]
             },
             {
                 id: 7,
@@ -92,7 +126,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'es',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://portfolio.jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Consola interactiva de baja latencia que ofrece navegación guiada de comandos Unix y acceso a un Live Linux Sandbox en contenedores efímeros aislados.',
+                challenge: 'Exponer una shell real interactiva a internet sin riesgo de fuga de datos, ataques de denegación de servicio por bifurcación (fork-bombs) ni escalada de privilegios.',
+                architectureHighlights: [
+                    'Hardening de 5 capas: cgroups (64 MB RAM, 0.25 CPU), pids-limit=50, CapDrop ALL y no-new-privileges',
+                    'Sistema de archivos inmutable con raíz Readonly y tmpfs volátil en RAM con banderas noexec,nosuid',
+                    'Aislamiento perimetral absoluto con NetworkMode: none (cero conectividad externa e interna)',
+                    'Transmisión full-duplex con Socket.io, emulación xterm.js y TTL forzado con limpieza automática de contenedores'
+                ],
+                metrics: [
+                    { label: 'Latencia WebSocket', value: '< 15 ms' },
+                    { label: 'Aislamiento cgroups', value: '64 MB' },
+                    { label: 'Inmunidad Fork-bomb', value: 'pids ≤ 50' }
+                ]
             }
         ],
         en: [
@@ -106,7 +153,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'en',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://bible.jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Comprehensive biblical exegesis platform tailored for academic research and deep pastoral study, combining continuous scripture reading with real-time Masoretic and Greek morphological apparatuses.',
+                challenge: 'Deterministically indexing and querying over 31,000 verses, BHS/NA28 morphology tokens, and Strong lexicons while sustaining under 40 ms query latencies under tight RAM constraints.',
+                architectureHighlights: [
+                    '9 modular exegesis suites (Reverse Interlinear, Chiasms, WGS84 Atlas, Synchronic Chronology, etc.)',
+                    'Ultra-lightweight SQLite WAL persistence with better-sqlite3 and B-Tree compound indices',
+                    'Official authorized API.Bible integration with resilient local deterministic caching',
+                    'Native mobile client with Expo SDK 52, FlashList 60 fps recycling, and Offline-First architecture'
+                ],
+                metrics: [
+                    { label: 'Exegesis Suites', value: '9' },
+                    { label: 'Ingestion Time', value: '< 80 ms' },
+                    { label: 'RAM Footprint', value: '~45 MB' }
+                ]
             },
             {
                 id: 4,
@@ -118,7 +178,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'en',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://software.jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Decoupled engineering portal uniting tech news, security advisories with remediation guides, AI reasoning models directory, and interactive code tutorials.',
+                challenge: 'Architecting a pure modular monolith composed of 7 independent submodules, guaranteeing domain isolation and compound unique index localized storage.',
+                architectureHighlights: [
+                    'Pure 3-tier architecture per submodule: REST controllers, domain services, and 9 TypeORM entities',
+                    'Interactive StepWizard code assistant featuring reproducible walkthroughs and syntax highlighting',
+                    'Neumorphism UI + Glassmorphism design tokens with concave/convex surfaces and frosted blurs',
+                    'Atomic transactional CLI seeder (seed-software.ts) digesting 8 relational tables in under 25 ms'
+                ],
+                metrics: [
+                    { label: 'Vertical Domains', value: '7' },
+                    { label: 'Database Entities', value: '9' },
+                    { label: 'Average Latency', value: '< 20 ms' }
+                ]
             },
             {
                 id: 6,
@@ -130,7 +203,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'en',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'High-resilience production cloud infrastructure engineered to execute 4 independent platforms and real-time WebSockets on a physically constrained 1 GB RAM server.',
+                challenge: 'Preventing kernel out-of-memory panics and crawler resource exhaustion through runtime consolidation, smart reverse proxying, and perimeter IP rate limiting.',
+                architectureHighlights: [
+                    'Physical runtime consolidation (NestJS port 3000, Next.js Standalone port 3001) under Black Box isolation',
+                    'Cloudflare Authenticated Origin Pulls (mTLS) completely rejecting unauthenticated IP requests',
+                    'Zero-RAM static delivery on Nginx for llms.txt dossiers, manifest.json, and assets in < 1 ms',
+                    'Offloaded GitHub Actions CI/CD pipeline building standalone bundles and deploying via zero-downtime rsync'
+                ],
+                metrics: [
+                    { label: 'Physical RAM Limit', value: '1 GB' },
+                    { label: 'Total Memory Footprint', value: '~170 MB' },
+                    { label: 'Production Uptime', value: '99.9%' }
+                ]
             },
             {
                 id: 8,
@@ -142,7 +228,20 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
                 language: 'en',
                 repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
                 demoUrl: 'https://portfolio.jorgedoicela.com',
-                featured: true
+                featured: true,
+                overview: 'Low-latency full-duplex interactive terminal supporting guided Unix navigation alongside an on-demand hardened Linux Sandbox executed in ephemeral Docker containers.',
+                challenge: 'Safely granting web visitors raw interactive bash shell access without risk of host container escape, fork-bomb denial-of-service, or network exfiltration.',
+                architectureHighlights: [
+                    '5-layer hardening: cgroups (64 MB RAM, 0.25 CPU), 50 max pids, CapDrop ALL, and no-new-privileges',
+                    'Immutable root filesystem with tmpfs volatile memory mounts enforcing noexec and nosuid flags',
+                    'Perimeter air-gap with NetworkMode none (zero external and local networking interfaces)',
+                    'Full-duplex Socket.io streaming, xterm.js terminal emulation, and automatic container reaping'
+                ],
+                metrics: [
+                    { label: 'WebSocket Latency', value: '< 15 ms' },
+                    { label: 'cgroups Boundary', value: '64 MB' },
+                    { label: 'Fork-bomb Immunity', value: 'pids ≤ 50' }
+                ]
             }
         ]
     };
@@ -189,7 +288,6 @@ export default async function PortfolioPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <span className="luxury-badge">
-                        <Shield className="w-3.5 h-3.5 text-gold-300" />
                         <span>{tHeader('aiBadge')}</span>
                     </span>
                     <span className="luxury-badge luxury-pulse">
@@ -205,7 +303,6 @@ export default async function PortfolioPage() {
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
                     <div className="md:col-span-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-gold-300">
-                            <Cpu className="w-4 h-4" />
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tAbout('title')}</span>
                         </div>
                         <h2 className="text-2xl md:text-3xl font-light text-foreground mb-2">
@@ -233,6 +330,21 @@ export default async function PortfolioPage() {
                                     <circle cx="4" cy="4" r="2" />
                                 </svg>
                                 <span>LinkedIn</span>
+                            </span>
+                            <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+                        </a>
+                        <a
+                            href="https://github.com/JorgeDoicela"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-3 rounded-lg border border-border bg-background/30 hover:bg-surface-raised transition-all duration-300 text-xs text-foreground/80 hover:text-foreground font-mono"
+                        >
+                            <span className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                                    <path d="M9 18c-4.51 2-5-2-7-2" />
+                                </svg>
+                                <span>GitHub</span>
                             </span>
                             <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                         </a>
@@ -268,7 +380,6 @@ export default async function PortfolioPage() {
                 {/* Sección 3: Tecnologías & Stack Principal */}
                 <section className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 text-gold-300">
-                        <Code className="w-4 h-4" />
                         <span className="text-[10px] font-mono tracking-widest uppercase">{tStack('eyebrow')}</span>
                     </div>
                     <h2 className="text-2xl font-light text-foreground">
@@ -315,7 +426,6 @@ export default async function PortfolioPage() {
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
                     <div className="md:col-span-2 flex flex-col gap-6">
                         <div className="flex items-center gap-2 text-gold-300">
-                            <Briefcase className="w-4 h-4" />
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eyebrow')}</span>
                         </div>
                         <h2 className="text-2xl font-light text-foreground mb-2">
@@ -351,7 +461,6 @@ export default async function PortfolioPage() {
                     <div className="flex flex-col gap-6 md:pl-6 md:border-l border-border/40 h-full justify-between">
                         <div className="flex flex-col gap-6">
                             <div className="flex items-center gap-2 text-gold-300">
-                                <GraduationCap className="w-4 h-4" />
                                 <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eduEyebrow')}</span>
                             </div>
                             <h2 className="text-2xl font-light text-foreground mb-2">
@@ -377,7 +486,6 @@ export default async function PortfolioPage() {
                 {/* Sección 5: Nube, CI/CD y Hardening */}
                 <section className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 text-gold-300">
-                        <Shield className="w-4 h-4" />
                         <span className="text-[10px] font-mono tracking-widest uppercase">{tCloud('eyebrow')}</span>
                     </div>
                     <h2 className="text-2xl font-light text-foreground">
@@ -421,7 +529,6 @@ export default async function PortfolioPage() {
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
                     <div className="md:col-span-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-gold-300">
-                            <Layers className="w-4 h-4" />
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tTools('eyebrow')}</span>
                         </div>
                         <h2 className="text-2xl font-light text-foreground mb-2">
@@ -459,22 +566,10 @@ export default async function PortfolioPage() {
 
                 <hr className="luxury-divider" />
 
-                {/* Sección 8: Centro de Contacto Interactivo */}
-                <section className="flex flex-col gap-6">
-                    <div className="flex items-center gap-2 text-gold-300">
-                        <MessageSquare className="w-4 h-4" />
-                        <span className="text-[10px] font-mono tracking-widest uppercase">{tContact('eyebrow')}</span>
-                    </div>
-                    <ContactForm />
-                </section>
-
-                <hr className="luxury-divider" />
-
-                {/* Sección 9: Consola Interactiva Virtual SSH */}
+                {/* Sección 8: Consola Interactiva Virtual SSH */}
                 <section className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
                         <div className="flex items-center gap-2 text-gold-300">
-                            <Terminal className="w-4 h-4" />
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tTerm('eyebrow')}</span>
                         </div>
                         <h2 className="text-xl font-light text-foreground mt-1">
@@ -485,6 +580,16 @@ export default async function PortfolioPage() {
                         </p>
                     </div>
                     <TerminalConsole />
+                </section>
+
+                <hr className="luxury-divider" />
+
+                {/* Sección 9: Centro de Contacto Interactivo */}
+                <section className="flex flex-col gap-6">
+                    <div className="flex items-center gap-2 text-gold-300">
+                        <span className="text-[10px] font-mono tracking-widest uppercase">{tContact('eyebrow')}</span>
+                    </div>
+                    <ContactForm />
                 </section>
 
             </main>

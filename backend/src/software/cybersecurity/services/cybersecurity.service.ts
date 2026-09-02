@@ -43,7 +43,13 @@ export class CybersecurityService {
     }
 
     qb.orderBy('sec.createdAt', 'DESC');
-    return qb.getMany();
+    const results = await qb.getMany();
+
+    if (results.length === 0 && lang && lang !== 'es') {
+      return this.findAll(severity, postType, search, 'es');
+    }
+
+    return results;
   }
 
   async findOne(idOrSlug: string, lang?: string): Promise<SecurityPost> {

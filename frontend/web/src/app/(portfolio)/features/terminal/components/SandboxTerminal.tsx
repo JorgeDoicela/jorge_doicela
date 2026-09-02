@@ -1,10 +1,23 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { Play, Square, RefreshCw, Clock, ShieldCheck, AlertTriangle, ExternalLink } from 'lucide-react';
+import {
+  Play,
+  Square,
+  RefreshCw,
+  Clock,
+  ShieldCheck,
+  AlertTriangle,
+  ExternalLink,
+  ArrowLeft,
+  X,
+} from 'lucide-react';
 import { useSandboxTerminal } from '../hooks/useSandboxTerminal';
 import { MobileTerminalBanner } from './MobileTerminalBanner';
+import { LanguageToggle } from '../../../components/LanguageToggle';
+import { ThemeToggle } from '../../../components/ThemeToggle';
 import '@xterm/xterm/css/xterm.css';
 
 interface SandboxTerminalProps {
@@ -17,6 +30,7 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
   targetMode = 'vps',
 }) => {
   const t = useTranslations('SandboxTerminal');
+  const tStandalone = useTranslations('SandboxStandalone');
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isMobileExpanded, setIsMobileExpanded] = useState<boolean>(false);
 
@@ -75,10 +89,10 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
     const title = targetMode === 'tunnel' ? t('readyTitleTunnel') : t('readyTitleVps');
     const description = targetMode === 'tunnel' ? t('readyDescTunnel') : t('readyDescVps');
     const buttonLabel = targetMode === 'tunnel' ? t('launchButtonTunnel') : t('launchButtonVps');
-    const badgeLabel = targetMode === 'tunnel' ? 'LIVE SANDBOX • CASERO' : 'LIVE SANDBOX • VPS';
+    const badgeLabel = targetMode === 'tunnel' ? t('badgeTunnel') : t('badgeVps');
 
     return (
-      <div className="relative w-full rounded-xl border border-border-gold bg-surface/90 backdrop-blur-md shadow-2xl min-h-[460px] h-[520px] overflow-hidden flex flex-col">
+      <div className="relative w-full rounded-xl border border-border-gold/60 bg-surface/90 backdrop-blur-md min-h-[460px] h-[520px] overflow-hidden flex flex-col">
         {/* Barra superior minimalista */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-gold bg-surface-raised text-xs select-none">
           <div className="flex items-center gap-3">
@@ -121,16 +135,27 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
   // ── 2. VISTA STANDALONE / FULLSCREEN (/sandbox): TERMINAL ACTIVA DIRECTA ───────
   const standaloneBadge =
     (sandboxMode || targetMode) === 'tunnel'
-      ? 'LIVE SANDBOX • CASERO (TÚNEL)'
-      : 'LIVE SANDBOX • VPS (AWS)';
+      ? t('badgeTunnel')
+      : t('badgeVps');
 
   return (
     <div className="relative w-full h-full flex-1 min-h-0 rounded-none border-none shadow-none bg-background overflow-hidden flex flex-col">
-      {/* Barra de Controles y Estado en /sandbox */}
-      <div className="flex items-center justify-between gap-2 px-4 py-2 border-b border-border-gold bg-surface-raised text-xs select-none shrink-0">
-        {/* Lado izquierdo: Luces y Título */}
+      {/* Barra de Controles y Estado en /sandbox (Consolidada en 1 sola barra) */}
+      <div className="flex items-center justify-between gap-3 px-4 py-2 border-b border-border-gold bg-surface-raised text-xs select-none shrink-0 h-12">
+        {/* Lado izquierdo: Retorno al Portafolio, Luces y Badge */}
         <div className="flex items-center gap-3">
-          <div className="flex gap-1.5 shrink-0 pr-1 items-center">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-xs font-mono text-muted hover:text-gold-200 transition-colors cursor-pointer group pr-1"
+            title={tStandalone('backToPortfolio')}
+          >
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span className="hidden sm:inline font-mono">{tStandalone('backToPortfolio')}</span>
+          </Link>
+
+          <div className="h-4 w-px bg-border-gold/60 hidden sm:block" />
+
+          <div className="flex gap-1.5 shrink-0 items-center">
             <span className="w-2.5 h-2.5 rounded-full bg-gold-400/70 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-gold-500/40 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-foreground/20 inline-block" />
@@ -141,41 +166,50 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
           </span>
         </div>
 
-        {/* Lado derecho: Temporizador y Botón Único de Control */}
-        <div className="flex items-center gap-2">
-          {/* Temporizador TTL de Sesión */}
+        {/* Lado derecho: Temporizador, Botón Cerrar/Reconectar y Toggles */}
+        <div className="flex items-center gap-2.5">
+          {/* Temporizador de Sesión */}
           {(status === 'connected' || status === 'warning') && (
             <div
-              className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded font-mono text-[11px] border ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-[11px] border transition-colors ${
                 status === 'warning'
-                  ? 'bg-red-950/40 border-red-500/60 text-red-300 animate-pulse'
-                  : 'bg-surface border-border-gold text-gold-200'
+                  ? 'bg-red-500/10 border-red-500/40 text-red-600 dark:text-red-300 animate-pulse'
+                  : 'bg-surface border-border-gold/60 text-foreground/80'
               }`}
+              title="Tiempo restante de la sesión"
             >
-              <Clock className="w-3 h-3" />
-              <span>TTL: {formatTime(remainingSeconds)}</span>
+              <Clock className="w-3 h-3 text-gold-500 dark:text-gold-300" />
+              <span className="tabular-nums font-medium">{formatTime(remainingSeconds)}</span>
             </div>
           )}
 
-          {/* Botón Detener (si está conectado) o Reconectar (si finalizó) */}
+          {/* Botón Finalizar Sesión con contraste nítido */}
           {status === 'connected' || status === 'connecting' ? (
             <button
               onClick={endSession}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 hover:bg-red-900/60 border border-red-500/40 text-red-300 text-xs font-mono transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-red-500/60 text-foreground/80 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/5 dark:hover:bg-red-500/10 text-xs font-mono font-medium transition-all cursor-pointer"
               title={t('stopSession')}
             >
-              <Square className="w-3 h-3 fill-current" />
+              <X className="w-3.5 h-3.5" />
               <span>{t('stop')}</span>
             </button>
           ) : (
             <button
               onClick={startSession}
-              className="flex items-center gap-1.5 px-3 py-1 rounded bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-colors shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-all shadow-sm cursor-pointer"
             >
               <Play className="w-3 h-3 fill-current" />
               <span>{t('reconnect')}</span>
             </button>
           )}
+
+          <div className="h-4 w-px bg-border-gold/60" />
+
+          {/* Toggles de Idioma y Tema */}
+          <div className="flex items-center gap-1.5">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 

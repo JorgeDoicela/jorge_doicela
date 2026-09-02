@@ -44,21 +44,30 @@ export class PortfolioGateway
       rows: 24,
     });
 
-    // Enviar banner inicial de bienvenida con formato ANSI Dark Luxury
+    // Enviar banner inicial de bienvenida profesional con formato ANSI
     const welcomeBanner = [
       '\x1b[90m┌────────────────────────────────────────────────────────────┐\x1b[0m',
-      '\x1b[90m│\x1b[0m  \x1b[1;33mTerminal SSH Interactiva • Jorge Doicela\x1b[0m                  \x1b[90m│\x1b[0m',
-      '\x1b[90m│\x1b[0m  \x1b[90mvps-1gb-ram (Debian 13 Trixie / Arch Hardened)             │\x1b[0m',
+      '\x1b[90m│\x1b[0m  \x1b[1;33mJorge Ismael Doicela Molina • Portfolio Shell\x1b[0m             \x1b[90m│\x1b[0m',
+      '\x1b[90m│\x1b[0m  \x1b[36mFull-Stack & DevSecOps Engineer • Debian GNU/Linux 13\x1b[0m     \x1b[90m│\x1b[0m',
       '\x1b[90m└────────────────────────────────────────────────────────────┘\x1b[0m',
-      'Escribe \x1b[1;33m"help"\x1b[0m para ver la lista de comandos disponibles.',
-      'Escribe \x1b[1;33m"neofetch"\x1b[0m para ver las especificaciones del sistema.',
+      '',
+      '¡Bienvenido/a! Esta consola interactiva te permite explorar mi',
+      'perfil profesional, proyectos destacados y habilidades técnicas.',
+      '',
+      '\x1b[1;33mComandos recomendados para comenzar:\x1b[0m',
+      '  • \x1b[1;33mabout\x1b[0m     \x1b[90m→\x1b[0m Perfil profesional, formación y valores',
+      '  • \x1b[1;33mprojects\x1b[0m  \x1b[90m→\x1b[0m Proyectos de ingeniería destacados',
+      '  • \x1b[1;33mskills\x1b[0m    \x1b[90m→\x1b[0m Stack tecnológico y especialidades',
+      '  • \x1b[1;33mcontact\x1b[0m   \x1b[90m→\x1b[0m Canales oficiales (LinkedIn, GitHub, Email)',
+      '  • \x1b[1;33mneofetch\x1b[0m  \x1b[90m→\x1b[0m Especificaciones del sistema y servidor',
+      '  • \x1b[1;33mhelp\x1b[0m      \x1b[90m→\x1b[0m Lista completa de comandos Unix disponibles',
       '',
     ].join('\n');
 
     client.emit('terminal-output', {
       output: welcomeBanner,
       cwd: '~',
-      prompt: 'jorge@vps-1gb-ram:~$ ',
+      prompt: 'jorge@debian:~$ ',
       isBanner: true,
     });
   }
@@ -70,12 +79,14 @@ export class PortfolioGateway
 
   @SubscribeMessage('execute-command')
   handleCommand(
-    @MessageBody() payload: { command: string; tabId?: string } | string,
+    @MessageBody()
+    payload: { command: string; tabId?: string; paneId?: string } | string,
     @ConnectedSocket() client: Socket,
   ) {
     const rawCommand =
       typeof payload === 'string' ? payload : payload?.command || '';
     const tabId = typeof payload === 'object' ? payload?.tabId : undefined;
+    const paneId = typeof payload === 'object' ? payload?.paneId : undefined;
 
     const state = this.clientStates.get(client.id) || { cwd: '~' };
     this.logger.log(
@@ -93,21 +104,15 @@ export class PortfolioGateway
       command: rawCommand,
       output: result.output,
       cwd: state.cwd,
-      prompt: `jorge@vps-1gb-ram:${state.cwd}$ `,
+      prompt: `jorge@debian:${state.cwd}$ `,
       action: result.action,
       actionPayload: result.actionPayload,
       tabId,
+      paneId,
     };
 
     // Emitir respuesta al cliente
     client.emit('terminal-output', responsePayload);
-
-    // Si el cliente está transmitiendo una sesión compartida, emitir a los espectadores de la sala
-    if (state.sharedSessionId) {
-      this.server
-        .to(`shared_${state.sharedSessionId}`)
-        .emit('mirror-output', responsePayload);
-    }
   }
 
   @SubscribeMessage('tab-complete')
@@ -139,46 +144,5 @@ export class PortfolioGateway
       state.rows = payload.rows;
       this.clientStates.set(client.id, state);
     }
-  }
-
-  @SubscribeMessage('create-shared-session')
-  async handleCreateSharedSession(@ConnectedSocket() client: Socket) {
-    const state = this.clientStates.get(client.id);
-    const sessionId = Math.random().toString(36).substring(2, 10);
-
-    if (state) {
-      state.sharedSessionId = sessionId;
-      this.clientStates.set(client.id, state);
-    }
-
-    await client.join(`shared_${sessionId}`);
-    this.logger.log(
-      `Created shared session: ${sessionId} for client ${client.id}`,
-    );
-
-    client.emit('shared-session-created', {
-      sessionId,
-      shareUrl: `?terminal_session=${sessionId}`,
-    });
-  }
-
-  @SubscribeMessage('join-shared-session')
-  async handleJoinSharedSession(
-    @MessageBody() payload: { sessionId: string },
-    @ConnectedSocket() client: Socket,
-  ) {
-    const sessionId = payload?.sessionId;
-    if (!sessionId) return;
-
-    await client.join(`shared_${sessionId}`);
-    this.logger.log(
-      `Client ${client.id} joined shared session as viewer: ${sessionId}`,
-    );
-
-    client.emit('mirror-connected', {
-      sessionId,
-      message:
-        '\x1b[1;36m[Modo Espejo]: Conectado a la sesión en vivo en modo solo lectura.\x1b[0m\n',
-    });
   }
 }

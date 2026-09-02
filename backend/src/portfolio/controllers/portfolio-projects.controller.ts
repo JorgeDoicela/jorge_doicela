@@ -5,10 +5,8 @@ import {
   Query,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  PortfolioProjectsService,
-  ParsedPortfolioProject,
-} from '../services/portfolio-projects.service';
+import { PortfolioProjectsService } from '../services/portfolio-projects.service';
+import { PortfolioProject } from '../entities/portfolio-project.entity';
 
 @Controller('portfolio/projects')
 export class PortfolioProjectsController {
@@ -17,7 +15,7 @@ export class PortfolioProjectsController {
   @Get()
   async getAllProjects(
     @Query('lang') lang?: string,
-  ): Promise<ParsedPortfolioProject[]> {
+  ): Promise<PortfolioProject[]> {
     return this.projectsService.findAll(lang);
   }
 
@@ -25,7 +23,7 @@ export class PortfolioProjectsController {
   async getProjectBySlug(
     @Param('slug') slug: string,
     @Query('lang') lang?: string,
-  ): Promise<ParsedPortfolioProject> {
+  ): Promise<PortfolioProject> {
     const project = await this.projectsService.findBySlug(slug, lang);
     if (!project) {
       throw new NotFoundException(`Proyecto con slug "${slug}" no encontrado.`);

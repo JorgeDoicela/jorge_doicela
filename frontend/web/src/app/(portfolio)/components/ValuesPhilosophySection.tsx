@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Compass } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 export const ValuesPhilosophySection: React.FC = () => {
@@ -13,7 +12,6 @@ export const ValuesPhilosophySection: React.FC = () => {
       {/* Filosofía & Valores (Columna izquierda y central - 2 cols) */}
       <div className="md:col-span-2 flex flex-col gap-4">
         <div className="flex items-center gap-2 text-gold-300">
-          <Compass className="w-4 h-4" />
           <span className="text-[10px] font-mono tracking-widest uppercase">
             {t('title')}
           </span>

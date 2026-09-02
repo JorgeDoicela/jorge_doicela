@@ -35,7 +35,13 @@ export class ProjectsService {
     }
 
     qb.orderBy('proj.featured', 'DESC').addOrderBy('proj.createdAt', 'DESC');
-    return qb.getMany();
+    const results = await qb.getMany();
+
+    if (results.length === 0 && lang && lang !== 'es') {
+      return this.findAll(status, search, 'es');
+    }
+
+    return results;
   }
 
   async findOne(idOrSlug: string, lang?: string): Promise<Project> {

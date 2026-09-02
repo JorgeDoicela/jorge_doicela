@@ -1,3 +1,9 @@
+export interface ProjectMedia {
+  type: 'image' | 'video';
+  url: string;
+  caption?: string;
+}
+
 export interface PortfolioProject {
   id: number;
   slug: string;
@@ -9,4 +15,9 @@ export interface PortfolioProject {
   repoUrl?: string;
   demoUrl?: string;
   featured: boolean;
+  overview?: string;
+  challenge?: string;
+  architectureHighlights?: string[];
+  metrics?: { label: string; value: string }[];
+  media?: ProjectMedia[];
 }

@@ -25,8 +25,8 @@ export class PortfolioProject {
   @Column()
   role: string;
 
-  @Column({ default: 'Full Stack,AI,DevSecOps' })
-  technologies: string;
+  @Column({ type: 'simple-json', default: '[]' })
+  technologies: string[];
 
   @Column({ default: 'es' })
   language: string; // 'es' | 'en'
@@ -39,6 +39,18 @@ export class PortfolioProject {
 
   @Column({ default: true })
   featured: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  overview?: string;
+
+  @Column({ type: 'text', nullable: true })
+  challenge?: string;
+
+  @Column({ type: 'simple-json', nullable: true })
+  architectureHighlights?: string[];
+
+  @Column({ type: 'simple-json', nullable: true })
+  metrics?: { label: string; value: string }[];
 
   @Column({ default: 0 })
   orderIndex: number;

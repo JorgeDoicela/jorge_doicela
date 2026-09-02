@@ -37,7 +37,13 @@ export class ForumService {
     }
 
     qb.orderBy('topic.isPinned', 'DESC').addOrderBy('topic.createdAt', 'DESC');
-    return qb.getMany();
+    const results = await qb.getMany();
+
+    if (results.length === 0 && lang && lang !== 'es') {
+      return this.findAllTopics(category, search, 'es');
+    }
+
+    return results;
   }
 
   async findTopic(idOrSlug: string, lang?: string): Promise<ForumTopic> {

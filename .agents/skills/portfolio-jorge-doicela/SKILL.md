@@ -38,8 +38,8 @@ frontend/web/src/app/(portfolio)/
 │   └── page.tsx            # Página principal del portafolio (9 secciones editoriales + SSR fallback)
 ├── features/
 │   ├── projects/           # Feature: Showcase y catálogo de proyectos
-│   │   ├── components/     # ProjectShowcase.tsx
-│   │   └── types.ts        # Tipos e interfaces de proyectos
+│   │   ├── components/     # ProjectShowcase.tsx, ProjectDetailModal.tsx
+│   │   └── types.ts        # Tipos e interfaces de proyectos y casos de estudio
 │   ├── terminal/           # Feature: Terminal virtual interactiva
 │   │   ├── components/     # TerminalConsole.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
 │   │   ├── hooks/          # useTerminalSocket.ts (Socket.io client)
@@ -65,7 +65,14 @@ frontend/web/src/app/(portfolio)/
 
 ### Secciones Principales y Adaptabilidad Móvil
 1. **Hero & Biografía:** Presentación profesional con valores de fe cristiana, visión de ingeniería en IA y ciberseguridad.
-2. **Showcase de Proyectos:** Galería con filtros reactivos por categoría, insignias de estado y soporte bilingüe (`ProjectShowcase.tsx`).
+2. **Showcase de Proyectos y Casos de Estudio (`ProjectShowcase.tsx` & `ProjectDetailModal.tsx`):**
+   * **Tarjetas:** Filtros dinámicos, botón primario en oro satinado (`Demostración ↗`), botón secundario con SVG GitHub (`Código`) y disparador de lectura técnica (`Caso de estudio`).
+   * **Modal In-Page (`createPortal(document.body)`):** Preserva la sesión SSH sin cortes y sigue la jerarquía editorial estricta:
+     1. *Visión General del Sistema:* Propósito y alcance del software.
+     2. *El Desafío Técnico & Restricciones:* Problemas de escala, memoria o concurrencia superados.
+     3. *Arquitectura & Decisiones de Ingeniería:* Justificaciones técnicas de diseño.
+     4. *Stack Tecnológico Empleado:* Herramientas y frameworks.
+     5. *Especificaciones & Telemetría (al final):* Ficha técnica editorial de precisión con líneas punteadas continuas (`border-dotted`).
 3. **Terminal Virtual SSH (Desktop):**
    * En pantallas móviles/táctiles, **no se inicializa el WebSocket ni se renderiza la consola interactiva** debido a la falta de teclas de flecha, Tab y secuencias ANSI en teclados móviles. En su lugar, se muestra un banner explicativo (`MobileTerminalBanner.tsx`).
 4. **Formulario de Contacto:** Envíos directos validados hacia `POST /portfolio/contact`.
@@ -74,9 +81,17 @@ frontend/web/src/app/(portfolio)/
 
 ## 3. Backend, Corpus y Persistencia (NestJS 11)
 
-### 3.1 Corpus Maestro y Sembrado Atómico
-* **Corpus:** `backend/src/portfolio/corpus/projects.json` (Fuente de verdad en Git con 8 proyectos bilingües).
+### 3.1 Corpus Maestro, Sembrado Atómico y Ciclo de Datos
+* **Corpus:** `backend/src/portfolio/corpus/projects.json` (Fuente de verdad en Git con 8 proyectos bilingües y casos de estudio).
 * **Seeder:** `backend/src/portfolio/cli/seed-portfolio.ts` (Sembrado atómico en `portfolio.sqlite` usando `better-sqlite3` en modo WAL y transacción con `INSERT OR REPLACE`).
+* **Ciclo Obligatorio de Extensión de Datos de Proyectos:**
+  Ante cualquier nuevo campo o cambio en los proyectos (ej. métricas, retos, arquitectura, enlaces):
+  1. Actualizar el dataset en `corpus/projects.json` (ES y EN).
+  2. Actualizar la entidad TypeORM `portfolio-project.entity.ts`.
+  3. Actualizar el esquema y sentencias en `seed-portfolio.ts`.
+  4. Actualizar el parseo en `portfolio-projects.service.ts`.
+  5. Ejecutar `pnpm --filter backend seed:portfolio` para reflejar en `portfolio.sqlite`.
+  6. Actualizar la interfaz TypeScript en `frontend/web/src/app/(portfolio)/features/projects/types.ts` y su fallback en `page.tsx`.
 
 ### 3.2 Terminal Virtual SSH (WebSockets sobre Socket.io)
 * **Gateway:** `PortfolioGateway` (`backend/src/portfolio/gateways/portfolio.gateway.ts`).
@@ -90,7 +105,7 @@ frontend/web/src/app/(portfolio)/
 
 ### 3.3 Endpoints REST y Entidades TypeORM
 * **Proyectos:**
-  * `GET /portfolio/projects?lang=es|en`: Listado bilingüe con tecnologías parseadas como arreglo.
+  * `GET /portfolio/projects?lang=es|en`: Listado bilingüe con tecnologías, métricas y puntos de arquitectura parseados.
   * `GET /portfolio/projects/:slug`: Detalle individual por slug.
   * **Entidad:** `PortfolioProject` (`portfolio-project.entity.ts`) con índice único compuesto `@Index(['slug', 'language'], { unique: true })`.
 * **Contacto:**
@@ -107,6 +122,9 @@ frontend/web/src/app/(portfolio)/
 pnpm --filter backend add <paquete>
 pnpm --filter web add <paquete>
 
+# Sembrado de datos en portfolio.sqlite
+pnpm --filter backend seed:portfolio
+
 # Chequeo de tipos
 pnpm -r typecheck
 ```
@@ -117,6 +135,7 @@ pnpm -r typecheck
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
+| Modificar tipos o datos en el frontend sin actualizar el corpus y seeder del backend | Desincroniza el contrato de datos; el backend SQLite responde con datos obsoletos ignorando el fallback del cliente. | Ejecutar siempre el ciclo completo de datos: `corpus/projects.json` -> `entity` -> `seed-portfolio.ts` -> `seed:portfolio`. |
 | Inyectar TypeOrmModule sin especificar 'portfolioConnection' | Conectaría a la base de datos por defecto en lugar de portfolio.sqlite. | Usar @InjectRepository(ContactMessage, 'portfolioConnection'). |
 | Poner bloques try/catch para devolver respuestas HTTP en el controlador | Duplica código y rompe el formateo estándar del filtro global. | Dejar que los errores sean capturados por GlobalExceptionFilter. |
 | Forzar la apertura de la terminal interactiva en pantallas móviles | En móviles no hay flechas, Tab ni secuencias ANSI; degrada la experiencia. | Mostrar vista adaptada de tarjetas en viewports móviles. |

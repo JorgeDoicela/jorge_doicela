@@ -34,7 +34,13 @@ export class BlogService {
     }
 
     qb.orderBy('blog.createdAt', 'DESC');
-    return qb.getMany();
+    const results = await qb.getMany();
+
+    if (results.length === 0 && lang && lang !== 'es') {
+      return this.findAll(search, series, 'es');
+    }
+
+    return results;
   }
 
   async findOne(idOrSlug: string, lang?: string): Promise<BlogPost> {

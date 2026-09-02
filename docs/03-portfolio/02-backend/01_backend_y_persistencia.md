@@ -114,6 +114,10 @@ backend/src/portfolio/
   * `repoUrl`: Enlace al repositorio GitHub (`string`, nullable).
   * `demoUrl`: Enlace a la demo en vivo (`string`, nullable).
   * `featured`: Indicador booleano de proyecto destacado (`integer` 0/1).
+  * `overview`: Visión general técnica del sistema (`text`, nullable).
+  * `challenge`: El desafío técnico y restricciones de ingeniería (`text`, nullable).
+  * `architectureHighlights`: Decisiones de diseño y microarquitectura serializadas (`JSON array` en `text`, nullable).
+  * `metrics`: Métricas de impacto y rendimiento serializadas (`JSON array` de objetos `{label, value}` en `text`, nullable).
   * **Índice Único Compuesto:** `CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_project_slug_lang ON portfolio_projects (slug, language)`.
 
 * `contact_messages`:

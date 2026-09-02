@@ -114,7 +114,12 @@ export class SandboxService implements OnModuleDestroy {
       AttachStdin: true,
       AttachStdout: true,
       AttachStderr: true,
-      Env: [`COLUMNS=${safeCols}`, `LINES=${safeRows}`, 'TERM=xterm-256color'],
+      Env: [
+        `COLUMNS=${safeCols}`,
+        `LINES=${safeRows}`,
+        'TERM=xterm-256color',
+        `SANDBOX_MODE=${effectiveMode}`,
+      ],
       HostConfig: {
         Memory: memoryLimit,
         MemorySwap: memoryLimit,

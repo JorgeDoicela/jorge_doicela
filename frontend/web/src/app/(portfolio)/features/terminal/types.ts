@@ -7,9 +7,22 @@ export interface TerminalHistoryItem {
   timestamp: number;
 }
 
+export interface TerminalPane {
+  id: string;
+  cwd: string;
+  history: TerminalHistoryItem[];
+  commandHistory: string[];
+  historyIndex: number;
+  inputDraft: string;
+}
+
 export interface TerminalTab {
   id: string;
   title: string;
+  layout: 'single' | 'split-vertical' | 'split-horizontal';
+  activePaneId: string;
+  panes: TerminalPane[];
+  // Campos de compatibilidad directa
   cwd: string;
   history: TerminalHistoryItem[];
   commandHistory: string[];
@@ -22,9 +35,10 @@ export interface TerminalOutputPayload {
   output: string;
   cwd?: string;
   prompt?: string;
-  action?: 'clear' | 'exit' | 'matrix' | 'open' | 'none';
+  action?: 'clear' | 'exit' | 'matrix' | 'open' | 'split-v' | 'split-h' | 'close-pane' | 'none';
   actionPayload?: string;
   tabId?: string;
+  paneId?: string;
   isBanner?: boolean;
 }
 

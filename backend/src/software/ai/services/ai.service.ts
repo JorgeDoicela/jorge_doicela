@@ -34,7 +34,13 @@ export class AiService {
     }
 
     qb.orderBy('ai.createdAt', 'DESC');
-    return qb.getMany();
+    const results = await qb.getMany();
+
+    if (results.length === 0 && lang && lang !== 'es') {
+      return this.findAll(type, search, 'es');
+    }
+
+    return results;
   }
 
   async findOne(idOrSlug: string, lang?: string): Promise<AiResource> {

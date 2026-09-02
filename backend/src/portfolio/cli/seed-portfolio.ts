@@ -15,6 +15,10 @@ interface PortfolioProjectItem {
   repoUrl: string;
   demoUrl: string;
   featured: boolean;
+  overview?: string;
+  challenge?: string;
+  architectureHighlights?: string[];
+  metrics?: { label: string; value: string }[];
 }
 
 export function seedPortfolio(
@@ -29,21 +33,31 @@ export function seedPortfolio(
   db.pragma('journal_mode = WAL');
 
   const corpusDir = path.resolve(__dirname, '../corpus');
-  const projectsPath = path.join(corpusDir, 'projects.json');
+  let projectsPath = path.join(corpusDir, 'projects.json');
 
   if (!fs.existsSync(projectsPath)) {
-    console.error(
-      `[PortfolioSeeder] ❌ Archivo de corpus no encontrado: ${projectsPath}`,
+    const srcPath = path.resolve(
+      __dirname,
+      '../../../src/portfolio/corpus/projects.json',
     );
-    return;
+    if (fs.existsSync(srcPath)) {
+      projectsPath = srcPath;
+    } else {
+      console.error(
+        `[PortfolioSeeder] ❌ Archivo de corpus no encontrado en dist ni en src: ${projectsPath}`,
+      );
+      return;
+    }
   }
 
   const rawProjects = fs.readFileSync(projectsPath, 'utf-8');
   const projects = JSON.parse(rawProjects) as PortfolioProjectItem[];
 
-  // Crear tablas si no existen
+  // Recrear tabla de proyectos (catálogo puro) y preservar tabla de mensajes
   db.exec(`
-    CREATE TABLE IF NOT EXISTS portfolio_projects (
+    DROP TABLE IF EXISTS portfolio_projects;
+
+    CREATE TABLE portfolio_projects (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       slug TEXT NOT NULL,
       title TEXT NOT NULL,
@@ -53,7 +67,14 @@ export function seedPortfolio(
       language TEXT NOT NULL DEFAULT 'es',
       repoUrl TEXT,
       demoUrl TEXT,
-      featured INTEGER NOT NULL DEFAULT 1
+      featured INTEGER NOT NULL DEFAULT 1,
+      overview TEXT,
+      challenge TEXT,
+      architectureHighlights TEXT,
+      metrics TEXT,
+      orderIndex INTEGER NOT NULL DEFAULT 0,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_project_slug_lang ON portfolio_projects (slug, language);
@@ -72,14 +93,17 @@ export function seedPortfolio(
   // Sembrar proyectos usando INSERT OR REPLACE
   const insertProject = db.prepare(`
     INSERT OR REPLACE INTO portfolio_projects (
-      id, slug, title, description, role, technologies, language, repoUrl, demoUrl, featured
+      id, slug, title, description, role, technologies, language, repoUrl, demoUrl, featured,
+      overview, challenge, architectureHighlights, metrics, orderIndex
     ) VALUES (
-      @id, @slug, @title, @description, @role, @technologies, @language, @repoUrl, @demoUrl, @featured
+      @id, @slug, @title, @description, @role, @technologies, @language, @repoUrl, @demoUrl, @featured,
+      @overview, @challenge, @architectureHighlights, @metrics, @orderIndex
     )
   `);
 
   const tx = db.transaction(() => {
-    for (const p of projects) {
+    for (let idx = 0; idx < projects.length; idx++) {
+      const p = projects[idx];
       insertProject.run({
         id: p.id,
         slug: p.slug,
@@ -91,6 +115,13 @@ export function seedPortfolio(
         repoUrl: p.repoUrl || null,
         demoUrl: p.demoUrl || null,
         featured: p.featured ? 1 : 0,
+        overview: p.overview || null,
+        challenge: p.challenge || null,
+        architectureHighlights: p.architectureHighlights
+          ? JSON.stringify(p.architectureHighlights)
+          : null,
+        metrics: p.metrics ? JSON.stringify(p.metrics) : null,
+        orderIndex: idx,
       });
     }
   });

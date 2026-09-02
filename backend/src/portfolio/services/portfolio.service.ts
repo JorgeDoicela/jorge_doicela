@@ -43,13 +43,12 @@ export class PortfolioService {
               updatedAt: 'Aug 14 12:05',
               content: [
                 '\x1b[1;33m# Jorge Ismael Doicela Molina\x1b[0m',
-                'Desarrollador de Software con enfoque en DevSecOps y Arquitectura Limpia.',
+                'Full-Stack & DevSecOps Engineer | Debian GNU/Linux 13',
                 '',
-                'Bienvenido a mi entorno de desarrollo interactivo. Esta terminal simula una',
-                'sesión SSH segura sobre un VPS optimizado de bajos recursos.',
+                'Bienvenido/a a mi entorno de desarrollo interactivo. Esta terminal te permite',
+                'explorar mis proyectos, habilidades técnicas y arquitectura de sistemas.',
                 '',
-                '\x1b[36mEscribe "help" para ver la lista de comandos disponibles.\x1b[0m',
-                '\x1b[36mEscribe "neofetch" para inspeccionar las especificaciones del sistema.\x1b[0m',
+                '\x1b[36mComandos recomendados: about, projects, skills, contact, neofetch, help\x1b[0m',
               ].join('\n'),
             },
             'skills.json': {
@@ -271,27 +270,72 @@ export class PortfolioService {
         return {
           output: [
             '\x1b[1;33mComandos Disponibles del Sistema:\x1b[0m',
-            '  \x1b[32mhelp\x1b[0m                   Muestra este menú de ayuda interactivo',
-            '  \x1b[32mabout\x1b[0m                  Información biográfica y perfil profesional',
-            '  \x1b[32mneofetch\x1b[0m               Especificaciones completas del sistema y servidor',
-            '  \x1b[32mskills\x1b[0m                 Stack de tecnologías y lenguajes',
-            '  \x1b[32mcontact\x1b[0m                Canales oficiales de contacto y redes',
-            '  \x1b[32mls [-la]\x1b[0m               Lista archivos y carpetas del directorio actual',
-            '  \x1b[32mcd <directorio>\x1b[0m        Cambia el directorio de trabajo actual',
-            '  \x1b[32mcat <archivo>\x1b[0m          Muestra el contenido de un archivo de texto',
-            '  \x1b[32mpwd\x1b[0m                    Imprime la ruta del directorio de trabajo actual',
-            '  \x1b[32mwhoami\x1b[0m                 Muestra el usuario y permisos de la sesión',
-            '  \x1b[32mdate\x1b[0m                   Muestra la hora y fecha en huso horario de Quito (UTC-5)',
-            '  \x1b[32muptime\x1b[0m                 Tiempo de actividad ininterrumpida del servidor',
-            '  \x1b[32mman <comando>\x1b[0m          Abre el manual detallado de un comando',
-            '  \x1b[32mecho <texto>\x1b[0m           Imprime texto o variables de entorno ($USER, $HOST)',
-            '  \x1b[32mcurl <url>\x1b[0m             Simula una petición HTTP REST',
-            '  \x1b[32mgit log\x1b[0m                Historial cronológico de commits e hitos de carrera',
-            '  \x1b[32msudo <comando>\x1b[0m         Ejecución de privilegios elevados (simulado)',
-            '  \x1b[32mopen <enlace>\x1b[0m          Abre enlaces web (github, linkedin, tiktok, email)',
-            '  \x1b[32mmatrix\x1b[0m                 Inicia la animación digital rain de Matrix',
-            '  \x1b[32mclear\x1b[0m                  Limpia la pantalla de la consola',
-            '  \x1b[32mexit\x1b[0m                   Cierra la sesión SSH simulada',
+            '  \x1b[1;33mabout\x1b[0m                  \x1b[90m→\x1b[0m Información biográfica, perfil y valores',
+            '  \x1b[1;33mprojects\x1b[0m               \x1b[90m→\x1b[0m Proyectos de ingeniería destacados',
+            '  \x1b[1;33mskills\x1b[0m                 \x1b[90m→\x1b[0m Stack de tecnologías y especialidades',
+            '  \x1b[1;33mcontact\x1b[0m                \x1b[90m→\x1b[0m Canales oficiales de contacto y redes',
+            '  \x1b[1;33mneofetch\x1b[0m               \x1b[90m→\x1b[0m Especificaciones completas del sistema y servidor',
+            '  \x1b[1;33mhelp\x1b[0m                   \x1b[90m→\x1b[0m Muestra este menú de ayuda interactivo',
+            '  \x1b[1;33mls [-la]\x1b[0m               \x1b[90m→\x1b[0m Lista archivos y carpetas del directorio actual',
+            '  \x1b[1;33mcd <directorio>\x1b[0m        \x1b[90m→\x1b[0m Cambia el directorio de trabajo actual',
+            '  \x1b[1;33mcat <archivo>\x1b[0m          \x1b[90m→\x1b[0m Muestra el contenido de un archivo de texto',
+            '  \x1b[1;33mpwd\x1b[0m                    \x1b[90m→\x1b[0m Imprime la ruta del directorio de trabajo actual',
+            '  \x1b[1;33mwhoami\x1b[0m                 \x1b[90m→\x1b[0m Muestra el usuario y permisos de la sesión',
+            '  \x1b[1;33mdate\x1b[0m                   \x1b[90m→\x1b[0m Muestra la hora y fecha en huso horario de Quito (UTC-5)',
+            '  \x1b[1;33muptime\x1b[0m                 \x1b[90m→\x1b[0m Tiempo de actividad ininterrumpida del servidor',
+            '  \x1b[1;33mman <comando>\x1b[0m          \x1b[90m→\x1b[0m Abre el manual detallado de un comando',
+            '  \x1b[1;33mecho <texto>\x1b[0m           \x1b[90m→\x1b[0m Imprime texto o variables de entorno ($USER, $HOST)',
+            '  \x1b[1;33mcurl <url>\x1b[0m             \x1b[90m→\x1b[0m Simula una petición HTTP REST',
+            '  \x1b[1;33mgit log\x1b[0m                \x1b[90m→\x1b[0m Historial cronológico de commits e hitos de carrera',
+            '  \x1b[1;33msudo <comando>\x1b[0m         \x1b[90m→\x1b[0m Ejecución de privilegios elevados (simulado)',
+            '  \x1b[1;33mtmux\x1b[0m                   \x1b[90m→\x1b[0m Multiplexor de terminal, división de paneles y atajos',
+            '  \x1b[1;33mmatrix\x1b[0m                 \x1b[90m→\x1b[0m Inicia la animación digital rain de Matrix',
+            '  \x1b[1;33mclear\x1b[0m                  \x1b[90m→\x1b[0m Limpia la pantalla de la consola',
+            '  \x1b[1;33mexit\x1b[0m                   \x1b[90m→\x1b[0m Cierra el panel o la sesión de consola',
+          ].join('\n'),
+        };
+
+      case 'tmux':
+        return {
+          output: [
+            '\x1b[1;33mTerminal Multiplexer (tmux) • Debian GNU/Linux 13\x1b[0m',
+            '\x1b[90m------------------------------------------------------------\x1b[0m',
+            '  \x1b[1;33msplit-v\x1b[0m (o \x1b[33mCtrl+B %\x1b[0m)    \x1b[90m→\x1b[0m Divide la consola en 2 columnas verticales',
+            '  \x1b[1;33msplit-h\x1b[0m (o \x1b[33mCtrl+B "\x1b[0m)    \x1b[90m→\x1b[0m Divide la consola en 2 filas horizontales',
+            '  \x1b[1;33munsplit\x1b[0m (o \x1b[33mexit\x1b[0m)        \x1b[90m→\x1b[0m Cierra el panel actual y vuelve a 1 columna',
+            '  \x1b[1;33mCtrl+B c\x1b[0m               \x1b[90m→\x1b[0m Abre una nueva ventana/pestaña',
+            '  \x1b[1;33mCtrl+B 0..4\x1b[0m            \x1b[90m→\x1b[0m Cambia directamente a la ventana número N',
+            '',
+            '\x1b[90m(También puedes usar el botón [split] en la cabecera superior)\x1b[0m',
+          ].join('\n'),
+        };
+
+      case 'projects':
+        return {
+          output: [
+            '\x1b[1;33mProyectos de Ingeniería Destacados:\x1b[0m',
+            '\x1b[90m------------------------------------------------------------\x1b[0m',
+            '  \x1b[1;33m1. La Biblia Modular\x1b[0m        \x1b[90m[bible.jorgedoicela.com]\x1b[0m',
+            '     \x1b[33m• Rol:\x1b[0m Lead Architect & Full Stack Developer',
+            '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite (WAL), Expo Mobile, TypeScript',
+            '     \x1b[90m• Resumen:\x1b[0m Plataforma de exégesis con 9 motores y morfología Strong.',
+            '',
+            '  \x1b[1;33m2. Software Platform\x1b[0m        \x1b[90m[software.jorgedoicela.com]\x1b[0m',
+            '     \x1b[33m• Rol:\x1b[0m Full Stack & DevSecOps Engineer',
+            '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite, Neumorphism UI, Glassmorphism',
+            '     \x1b[90m• Resumen:\x1b[0m Monolito modular con 7 áreas temáticas y 9 entidades TypeORM.',
+            '',
+            '  \x1b[1;33m3. Arquitectura Cloud VPS\x1b[0m   \x1b[90m[jorgedoicela.com]\x1b[0m',
+            '     \x1b[33m• Rol:\x1b[0m DevSecOps & Cloud Architect',
+            '     \x1b[33m• Stack:\x1b[0m AWS Lightsail, Debian 13, Nginx mTLS, PM2, GitHub Actions CI/CD',
+            '     \x1b[90m• Resumen:\x1b[0m Despliegue de alta disponibilidad y cero downtime en 1 GB RAM.',
+            '',
+            '  \x1b[1;33m4. Consola Web Interactiva\x1b[0m  \x1b[90m[portfolio.jorgedoicela.com]\x1b[0m',
+            '     \x1b[33m• Rol:\x1b[0m Backend & Frontend Engineer',
+            '     \x1b[33m• Stack:\x1b[0m NestJS WebSockets, Socket.io, TypeScript, ANSI Parser',
+            '     \x1b[90m• Resumen:\x1b[0m Emulador UNIX interactivo sobre WebSockets.',
+            '',
+            '\x1b[90m(Puedes usar "open software" o "open bible" para abrirlos directamente)\x1b[0m',
           ].join('\n'),
         };
 
@@ -300,8 +344,8 @@ export class PortfolioService {
           output: [
             '\x1b[1;33mJorge Ismael Doicela Molina\x1b[0m',
             '\x1b[90m------------------------------------------------------------\x1b[0m',
-            'Desarrollador de Software radicado en \x1b[36mQuito, Ecuador\x1b[0m, guiado por principios y valores cristianos.',
-            'Estudiante de \x1b[33mIngeniería en Inteligencia Artificial y Ciberseguridad\x1b[0m en la Universidad Bolivariana del Ecuador (UB).',
+            'Desarrollador de Software radicado en \x1b[33mQuito, Ecuador\x1b[0m, guiado por principios y valores cristianos.',
+            'Estudiante de \x1b[1;33mIngeniería en Inteligencia Artificial y Ciberseguridad\x1b[0m en la Universidad Bolivariana del Ecuador (UB).',
             '',
             'Especializado en arquitecturas limpias, desarrollo Full-Stack (Next.js, NestJS, .NET, Laravel),',
             'diseño de APIs REST de alto rendimiento y administración de infraestructura segura (DevSecOps, Docker, AWS).',
@@ -311,20 +355,20 @@ export class PortfolioService {
       case 'neofetch':
         return {
           output: [
-            '\x1b[1;33m         .---.          \x1b[1;36mdoicela\x1b[0m@\x1b[1;33mvps-1gb-ram\x1b[0m',
-            '\x1b[1;33m        /     \\         \x1b[90m-------------------------\x1b[0m',
-            '\x1b[1;33m       | () () |        \x1b[1;33mOS:\x1b[0m Arch Linux / Debian GNU/Linux 13 (Trixie)',
-            '\x1b[1;33m        \\  _  /         \x1b[1;33mHost:\x1b[0m AWS Lightsail VPS (Quito UTC-5)',
-            '\x1b[1;33m         |||||          \x1b[1;33mKernel:\x1b[0m Linux 6.6.15-zen-hardened x86_64',
-            '\x1b[1;33m        /     \\         \x1b[1;33mUptime:\x1b[0m ' +
+            '\x1b[1;33m         .---.          \x1b[1;33mdoicela\x1b[0m@\x1b[1;33mdebian\x1b[0m',
+            '\x1b[90m        /     \\         -------------------------\x1b[0m',
+            '\x1b[90m       | () () |        \x1b[1;33mOS:\x1b[0m Debian GNU/Linux 13 (Trixie) x86_64',
+            '\x1b[90m        \\  _  /         \x1b[1;33mHost:\x1b[0m AWS Lightsail (Quito UTC-5)',
+            '\x1b[90m         |||||          \x1b[1;33mKernel:\x1b[0m Linux 6.6.15-zen-hardened',
+            '\x1b[90m        /     \\         \x1b[1;33mUptime:\x1b[0m ' +
               this.getFormattedUptime(),
-            '\x1b[1;33m       / |   | \\        \x1b[1;33mShell:\x1b[0m zsh 5.9 / tmux 3.4',
-            '\x1b[1;33m      /  |   |  \\       \x1b[1;33mWM:\x1b[0m Hyprland (Wayland compositor)',
-            '\x1b[1;33m     /___|___|___\\      \x1b[1;33mEditor:\x1b[0m Neovim (LazyVim custom config)',
-            '\x1b[1;33m                        \x1b[1;33mCPU:\x1b[0m AMD EPYC Processor (1 vCPU)',
-            '                        \x1b[1;33mMemory:\x1b[0m 420MB / 1024MB (41% - Optimized)',
-            '                        \x1b[1;33mFaith:\x1b[0m \x1b[32mActive (Glory to God)\x1b[0m',
-            '                        \x1b[1;33mSecurity:\x1b[0m \x1b[36mDevSecOps & Hardening active\x1b[0m',
+            '\x1b[90m       / |   | \\        \x1b[1;33mShell:\x1b[0m zsh 5.9 / tmux 3.4',
+            '\x1b[90m      /  |   |  \\       \x1b[1;33mWM:\x1b[0m Hyprland (Wayland compositor)',
+            '\x1b[90m     /___|___|___\\      \x1b[1;33mEditor:\x1b[0m Neovim (LazyVim custom config)',
+            '\x1b[90m                        \x1b[1;33mCPU:\x1b[0m AMD EPYC Processor (1 vCPU)',
+            '\x1b[90m                        \x1b[1;33mMemory:\x1b[0m 420MB / 1024MB (41% - Optimized)',
+            '\x1b[90m                        \x1b[1;33mFaith:\x1b[0m \x1b[1;33mActive (Glory to God)\x1b[0m',
+            '\x1b[90m                        \x1b[1;33mSecurity:\x1b[0m \x1b[1;33mDevSecOps & Hardening active\x1b[0m',
             '',
             '\x1b[40m   \x1b[41m   \x1b[42m   \x1b[43m   \x1b[44m   \x1b[45m   \x1b[46m   \x1b[47m   \x1b[0m',
           ].join('\n'),
@@ -335,12 +379,12 @@ export class PortfolioService {
           output: [
             '\x1b[1;33mStack Tecnológico & Especialidades:\x1b[0m',
             '\x1b[90m------------------------------------------------------------\x1b[0m',
-            '  \x1b[34mFrontend:\x1b[0m       React 19, Next.js 16, TypeScript, TailwindCSS v4, Vite',
-            '  \x1b[32mBackend:\x1b[0m        NestJS, ASP.NET Core (.NET 9), C#, Laravel, Blade, PHP, Python',
-            '  \x1b[36mBases de Datos:\x1b[0m PostgreSQL, MySQL, MongoDB, Redis, SQLite (better-sqlite3)',
-            '  \x1b[35mDevSecOps:\x1b[0m      Docker, AWS Lightsail, GitHub Actions CI/CD, Nginx, Cloudflare',
-            '  \x1b[33mEntorno:\x1b[0m        Arch Linux, Debian, Neovim, tmux, Hyprland, Sioyek, Figma',
-            '  \x1b[31mSeguridad:\x1b[0m      Hardening de servidores, SSL Estricto, Validación de DTOs, OWASP Top 10',
+            '  \x1b[1;33mFrontend:\x1b[0m       React 19, Next.js 16, TypeScript, TailwindCSS v4, Vite',
+            '  \x1b[1;33mBackend:\x1b[0m        NestJS, ASP.NET Core (.NET 9), C#, Laravel, Blade, PHP, Python',
+            '  \x1b[1;33mBases de Datos:\x1b[0m PostgreSQL, MySQL, MongoDB, Redis, SQLite (better-sqlite3)',
+            '  \x1b[1;33mDevSecOps:\x1b[0m      Docker, AWS Lightsail, GitHub Actions CI/CD, Nginx, Cloudflare',
+            '  \x1b[1;33mEntorno:\x1b[0m        Arch Linux, Debian, Neovim, tmux, Hyprland, Sioyek, Figma',
+            '  \x1b[1;33mSeguridad:\x1b[0m      Hardening de servidores, SSL Estricto, Validación de DTOs, OWASP Top 10',
           ].join('\n'),
         };
 
@@ -389,14 +433,14 @@ export class PortfolioService {
 
       case 'uptime':
         return {
-          output: `up ${this.getFormattedUptime()}, 1 user, load average: 0.12, 0.08, 0.05 (VPS 1GB RAM)`,
+          output: `up ${this.getFormattedUptime()}, 1 user, load average: 0.12, 0.08, 0.05 (Debian 13)`,
         };
 
       case 'echo': {
         let text = args.join(' ');
         text = text
           .replace(/\$USER/g, 'jorge')
-          .replace(/\$HOST/g, 'vps-1gb-ram')
+          .replace(/\$HOST/g, 'debian')
           .replace(/\$SHELL/g, '/bin/zsh')
           .replace(/\$HOME/g, '/home/jorge')
           .replace(/\$PWD/g, currentCwd);
@@ -417,8 +461,7 @@ export class PortfolioService {
 
       case 'exit':
         return {
-          output:
-            '\x1b[33mConnection to vps-1gb-ram.jorgedoicela.com closed by remote host.\x1b[0m',
+          output: '\x1b[33mSesión de consola interactiva finalizada.\x1b[0m',
           action: 'exit',
         };
 

@@ -34,7 +34,13 @@ export class NewsService {
     }
 
     qb.orderBy('news.publishedAt', 'DESC');
-    return qb.getMany();
+    const results = await qb.getMany();
+
+    if (results.length === 0 && lang && lang !== 'es') {
+      return this.findAll(search, tag, 'es');
+    }
+
+    return results;
   }
 
   async findOne(idOrSlug: string, lang?: string): Promise<NewsArticle> {

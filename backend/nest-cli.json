@@ -12,6 +12,10 @@
       {
         "include": "software/corpus/**/*",
         "watchAssets": true
+      },
+      {
+        "include": "portfolio/corpus/**/*",
+        "watchAssets": true
       }
     ]
   }

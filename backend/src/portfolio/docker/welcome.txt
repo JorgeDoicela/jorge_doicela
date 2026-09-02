@@ -1,15 +1,29 @@
- [38;5;221m     _                                 _           _            _        
-    | |  ___   _ __  __ _   ___     __| |  ___   (_)  ___  ___ | |  __ _ 
- _  | | / _ \ | '__|/ _` | / _ \   / _` | / _ \  | | / __|/ _ \| | / _` |
-| |_| || (_) || |  | (_| ||  __/  | (_| || (_) | | || (__|  __/| || (_| |
- \___/  \___/ |_|   \__, | \___|   \__,_| \___/  |_| \___|\___||_| \__,_|
+ [38;5;221m     _                                 ____        _          _        
+    | |  ___   _ __  __ _   ___       |  _ \  ___ (_)  ___  ___ | |  __ _ 
+ _  | | / _ \ | '__|/ _` | / _ \      | | | |/ _ \| | / __|/ _ \| | / _` |
+| |_| || (_) || |  | (_| ||  __/      | |_| | (_) | | || (__|  __/| || (_| |
+ \___/  \___/ |_|   \__, | \___|      |____/ \___/|_| \___|\___||_| \__,_|
                     |___/                                                
  [0m
  [38;5;242m───────────────────────────────────────────────────────────────────────────── [0m
- [1m [38;5;221mJORGE DOICELA — INTERACTIVE LINUX CONSOLE [0m
+ [1m [38;5;221mJorge Ismael Doicela Molina • Full-Stack & DevSecOps Engineer [0m
+ [38;5;250mServidor Cloud en Vivo • Demostración de Alto Rendimiento [0m
  [38;5;242m───────────────────────────────────────────────────────────────────────────── [0m
- [38;5;250mBienvenido a mi entorno de demostración técnica interactiva. [0m
- [38;5;250mComandos disponibles:  [38;5;117mneofetch, htop, nano, git, curl, jq, tree, ls, whoami [0m
- [38;5;242mEscribe 'help' o 'neofetch' para comenzar a explorar. [0m
- [38;5;242m───────────────────────────────────────────────────────────────────────────── [0m
+ [38;5;250m¡Hola y bienvenido a mi servidor en vivo! Estás conectado a una máquina
+Linux interactiva de alto rendimiento con acceso a comandos y herramientas reales. [0m
 
+ [1;38;5;221mEXPERIENCIA Y PROYECTOS: [0m
+   [38;5;221m• about [0m        [38;5;242m→ [0m  [38;5;250mMi perfil profesional, educación y principios de ingeniería [0m
+   [38;5;221m• projects [0m     [38;5;242m→ [0m  [38;5;250mProyectos de producción, arquitectura y enlaces directos [0m
+   [38;5;221m• skills [0m       [38;5;242m→ [0m  [38;5;250mTecnologías dominadas (Next.js, NestJS, Cloud, Docker) [0m
+   [38;5;221m• architecture [0m [38;5;242m→ [0m  [38;5;250mCómo corre este ecosistema completo en solo 1 GB de RAM [0m
+
+ [1;38;5;221mRENDIMIENTO Y DEMOSTRACIONES EN DIRECTO: [0m
+   [38;5;221m• benchmark [0m    [38;5;242m→ [0m  [38;5;250mTest de velocidad y cálculo de CPU en vivo en este servidor [0m
+   [38;5;221m• api-live [0m     [38;5;242m→ [0m  [38;5;250mDemostración de consulta y respuesta JSON estructurada [0m
+   [38;5;221m• neofetch [0m     [38;5;242m→ [0m  [38;5;250mTelemetría, hardware y consumo de recursos del sistema [0m
+   [38;5;221m• htop [0m         [38;5;242m→ [0m  [38;5;250mMonitor interactivo de procesos y memoria en tiempo real [0m
+   [38;5;221m• matrix [0m       [38;5;242m→ [0m  [38;5;250mEfecto visual de lluvia digital de código (Ctrl+C para salir) [0m
+
+ [38;5;242mTip: Escribe "projects", "architecture" o "benchmark" y presiona Enter. [0m
+ [38;5;242m───────────────────────────────────────────────────────────────────────────── [0m

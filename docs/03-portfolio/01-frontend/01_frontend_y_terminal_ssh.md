@@ -134,11 +134,12 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Lanzamiento:** Botón `[ ▶ Iniciar Terminal en Servidor Propio ↗ ]` → `/sandbox?mode=tunnel`.
 * **Mismos comandos interactivos nativos que el Modo 2**, con la diferencia de identidad del host.
 
-### 4.4 Barra de Control Unificada de la Página Sandbox (`/portfolio/sandbox/page.tsx`)
-* Una sola barra de 48px — sin barras apiladas duplicadas.
-* Contiene: `← Volver al Portafolio`, `LanguageToggle` y `ThemeToggle`.
-* Temporizador: `⏱ 04:33` (números tabulares, tono dorado) — sin siglas crípticas como "TTL".
-* Botón de salida: `[ ✕ Finalizar ]` con contraste nítido en modo claro (`hover:text-red-600 hover:border-red-500/60`) y oscuro (`dark:hover:text-red-400`).
+### 4.4 Barra de Control Inferior (Footer Consolidado estilo AWS CloudShell)
+* **Apertura de Ventana Emergente Dedicada:** El botón de lanzamiento calcula el centro de la pantalla del usuario (`1080x680px`) y abre una ventana popup independiente con `toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,noopener,noreferrer`, aislando el proceso y evitando colisiones de atajos de teclado de Linux (`Ctrl+W`, `Ctrl+T`) con el navegador.
+* **Consola Superior Pura:** El canvas xterm.js inicia desde el pixel superior del viewport sin barras distractoras arriba.
+* **Barra de Herramientas Inferior (Footer):**
+  * Izquierda: Botón de retorno/cierre inteligente (`← Volver al Portafolio`), luces sutiles de estado, badge del modo (`EN VIVO • AWS CLOUD`) e identidad de host (`ip-172-26-6-236 / 44.192.40.200`).
+  * Derecha: Botón `[📋 Copiar selección]` (lee la selección activa de xterm al portapapeles con feedback `¡Copiado!`), botón `[📥 Pegar en terminal]` (inyecta el portapapeles del sistema al WebSocket), temporizador `⏱ 04:33`, botón de salida `[ ✕ Finalizar ]` / `[ ▶ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
 
 ### 4.5 Seguridad en el Hook `useSandboxTerminal.ts`
 * **Privacidad de input:** El evento `onData` de xterm.js **no loguea** el contenido de las pulsaciones del visitante (`console.log` eliminado) para proteger datos privados en la consola del navegador.

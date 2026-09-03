@@ -56,10 +56,13 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
   const initTerminal = useCallback((container: HTMLDivElement) => {
     if (xtermRef.current) return;
 
+    const isSmallScreen =
+      typeof window !== 'undefined' && window.innerWidth < 640;
+
     const term = new Terminal({
       cursorBlink: true,
       cursorStyle: 'block',
-      fontSize: 13,
+      fontSize: isSmallScreen ? 11 : 13,
       fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
       lineHeight: 1.25,
       scrollback: 1000,
@@ -265,6 +268,37 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     }
   }, [options?.autoStart, status, startSession]);
 
+  // Copiar selección activa de xterm al portapapeles del sistema
+  const copySelection = useCallback(() => {
+    if (!xtermRef.current) return false;
+    const selection = xtermRef.current.getSelection();
+    if (selection) {
+      navigator.clipboard.writeText(selection).catch(() => {});
+      return true;
+    }
+    return false;
+  }, []);
+
+  // Pegar texto en la sesión interactiva del terminal
+  const pasteToTerminal = useCallback(async (customText?: string) => {
+    try {
+      const text =
+        customText !== undefined
+          ? customText
+          : await navigator.clipboard.readText();
+      if (!text) return false;
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit('terminal-input', text);
+      } else if (xtermRef.current) {
+        xtermRef.current.paste(text);
+      }
+      return true;
+    } catch (err) {
+      console.warn('[Sandbox] Error al acceder al portapapeles:', err);
+      return false;
+    }
+  }, []);
+
   // Desconectar y matar sesión manualmente
   const endSession = useCallback(() => {
     if (socketRef.current) {
@@ -282,6 +316,12 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
   const handleResize = useCallback(() => {
     if (fitAddonRef.current && xtermRef.current && terminalRef.current) {
       try {
+        const isSmall = window.innerWidth < 640;
+        const targetFontSize = isSmall ? 11 : 13;
+        if (xtermRef.current.options.fontSize !== targetFontSize) {
+          xtermRef.current.options.fontSize = targetFontSize;
+        }
+
         fitAddonRef.current.fit();
         const cols = xtermRef.current.cols;
         const rows = Math.max(10, xtermRef.current.rows - 2);
@@ -336,5 +376,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     endSession,
     handleResize,
     focusTerminal,
+    copySelection,
+    pasteToTerminal,
   };
 };

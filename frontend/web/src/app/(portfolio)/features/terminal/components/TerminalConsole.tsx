@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom';
 import { useTerminalSocket } from '../hooks/useTerminalSocket';
 import { TerminalHeader } from './TerminalHeader';
 import { MatrixRain } from './MatrixRain';
-import { MobileTerminalBanner } from './MobileTerminalBanner';
 import { parseAnsiToReact, stripAnsi } from '../utils/ansiParser';
 import { Copy, Check, Terminal as TerminalIcon, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -43,7 +42,6 @@ export const TerminalConsole: React.FC = () => {
   } = useTerminalSocket();
 
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isMobileExpanded, setIsMobileExpanded] = useState(true);
   const [copiedItemIndex, setCopiedItemIndex] = useState<string | null>(null);
 
   const terminalBoxRef = useRef<HTMLDivElement>(null);
@@ -233,12 +231,12 @@ export const TerminalConsole: React.FC = () => {
     <div className="w-full relative flex flex-col gap-3">
       {/* Selector de Modo de Terminal (Simulada vs Sandbox VPS vs Sandbox Servidor Casero) */}
       {!isFullscreen && (
-        <div className="flex items-center gap-2 px-1">
-          <div className="inline-flex p-1 rounded-lg bg-surface-raised/80 border border-border-gold/60 backdrop-blur-md">
+        <div className="flex items-center gap-2 px-1 max-w-full overflow-x-auto scrollbar-none pb-1">
+          <div className="inline-flex p-1 rounded-lg bg-surface-raised/80 border border-border-gold/60 backdrop-blur-md shrink-0">
             {/* 1. Modo Simulado / Guiado */}
             <button
               onClick={() => setTerminalMode('simulated')}
-              className={`flex items-center px-3.5 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+              className={`flex items-center px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono font-medium transition-all duration-200 cursor-pointer shrink-0 ${
                 terminalMode === 'simulated'
                   ? 'bg-surface border border-border-gold text-gold-200 shadow-sm'
                   : 'text-muted hover:text-foreground hover:bg-white/[0.04]'
@@ -250,7 +248,7 @@ export const TerminalConsole: React.FC = () => {
             {/* 2. Modo Sandbox VPS (AWS) */}
             <button
               onClick={() => setTerminalMode('vps')}
-              className={`flex items-center px-3.5 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+              className={`flex items-center px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono font-medium transition-all duration-200 cursor-pointer shrink-0 ${
                 terminalMode === 'vps'
                   ? 'bg-gold-400 text-black font-semibold shadow-sm'
                   : 'text-muted hover:text-gold-200 hover:bg-white/[0.04]'
@@ -262,7 +260,7 @@ export const TerminalConsole: React.FC = () => {
             {/* 3. Modo Sandbox Servidor Casero (Túnel) */}
             <button
               onClick={() => setTerminalMode('tunnel')}
-              className={`flex items-center px-3.5 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+              className={`flex items-center px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono font-medium transition-all duration-200 cursor-pointer shrink-0 ${
                 terminalMode === 'tunnel'
                   ? 'bg-gold-400 text-black font-semibold shadow-sm'
                   : 'text-muted hover:text-gold-200 hover:bg-white/[0.04]'
@@ -277,22 +275,9 @@ export const TerminalConsole: React.FC = () => {
       {terminalMode === 'vps' || terminalMode === 'tunnel' ? (
         <SandboxTerminal isFullscreen={isFullscreen} targetMode={terminalMode} />
       ) : (
-        <>
-          {/* Banner informativo para dispositivos móviles */}
-          {!isFullscreen && (
-            <MobileTerminalBanner
-              isMobileExpanded={isMobileExpanded}
-              onToggleMobileExpand={() => setIsMobileExpanded(!isMobileExpanded)}
-            />
-          )}
-
-          {/* Contenedor principal de la Terminal (con portal cuando está en pantalla completa) */}
-          {isMobileExpanded && (
-            isFullscreen && isMounted
-              ? createPortal(terminalContent, document.body)
-              : terminalContent
-          )}
-        </>
+        isFullscreen && isMounted
+          ? createPortal(terminalContent, document.body)
+          : terminalContent
       )}
     </div>
   );

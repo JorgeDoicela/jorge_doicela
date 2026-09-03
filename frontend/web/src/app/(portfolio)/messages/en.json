@@ -158,10 +158,17 @@
     "badgeVps": "LIVE • AWS CLOUD",
     "badgeTunnel": "LIVE • LOCAL SERVER",
     "badgeDefault": "Secure Session",
-    "openInNewWindow": "Open in new tab"
+    "openInNewWindow": "Open in new tab",
+    "copyFromTerminal": "Copy selection",
+    "pasteIntoTerminal": "Paste into terminal",
+    "copied": "Copied!",
+    "noSelectionToCopy": "Select text first",
+    "pasted": "Pasted",
+    "instanceInfo": "VPS Instance: AWS Lightsail (Debian 13)"
   },
   "SandboxStandalone": {
     "backToPortfolio": "Back to Portfolio",
+    "closeWindow": "Close Console",
     "pageTitle": "Interactive Linux Terminal"
   }
 }

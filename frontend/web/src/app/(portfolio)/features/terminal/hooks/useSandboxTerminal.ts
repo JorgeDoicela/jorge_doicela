@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { API_URL } from '../../../../config';
+import { API_URL, SANDBOX_TUNNEL_URL } from '../../../../config';
 
 export type SandboxStatus =
   | 'idle'
@@ -136,16 +136,19 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     setErrorMessage(null);
     setRemainingSeconds(300);
 
-    console.log('[Sandbox] startSession invocado. xterm presente:', Boolean(xtermRef.current));
+    const targetMode = options?.targetMode || 'vps';
+    const isTunnel = targetMode === 'tunnel';
+    const socketBaseUrl = isTunnel ? SANDBOX_TUNNEL_URL : API_URL;
+    const socketUrl = `${socketBaseUrl}/sandbox`;
+
+    console.log('[Sandbox] startSession invocado. Modo:', targetMode, 'URL:', socketUrl);
 
     if (xtermRef.current) {
       xtermRef.current.clear();
       xtermRef.current.write(
-        '\x1b[33m[SANDBOX] Inicializando contenedor Linux efímero...\x1b[0m\r\n',
+        `\x1b[33m[SANDBOX] Conectando a ${isTunnel ? 'Servidor Físico On-Premises (Túnel)' : 'Cloud en AWS'}...\x1b[0m\r\n`,
       );
     }
-
-    const socketUrl = `${API_URL}/sandbox`;
 
     const socket = io(socketUrl, {
       transports: ['websocket', 'polling'],
@@ -161,7 +164,6 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
       const cols = xtermRef.current?.cols || 80;
       // Reservar 2 filas de holgura visual para que el prompt nunca toque el fondo
       const rows = Math.max(10, (xtermRef.current?.rows || 24) - 2);
-      const targetMode = options?.targetMode || 'vps';
       console.log('[Sandbox] Solicitando inicio de contenedor Docker (cols, rows, targetMode):', {
         cols,
         rows,
@@ -173,7 +175,9 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     socket.on('connect_error', (err) => {
       console.error('[Sandbox] Error de conexión WebSocket:', err);
       setStatus('error');
-      const msg = `Fallo al conectar con el servidor WebSocket: ${err.message}`;
+      const msg = isTunnel
+        ? `No se pudo conectar con el Servidor Físico On-Premises (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`
+        : `Fallo al conectar con el servidor Cloud en AWS: ${err.message}`;
       setErrorMessage(msg);
       if (xtermRef.current) {
         xtermRef.current.write(`\r\n\x1b[31m[ERROR DE CONEXIÓN]: ${msg}\x1b[0m\r\n`);

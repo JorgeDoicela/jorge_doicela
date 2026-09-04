@@ -117,7 +117,8 @@ backend/src/portfolio/
 ### 4.1 Hardening por Capas
 
 > [!IMPORTANT]
-> Todas las capas de seguridad se aplican en **ambos modos** (`vps` y `tunnel`). La única diferencia entre modos es la cuota de hardware.
+> Todas las capas de seguridad se aplican en **ambos modos** (`vps` y `tunnel`).
+> **Protección del Host AWS (1 GB RAM):** La asignación física de hardware (256 MB vs 64 MB) se rige estrictamente por la variable `SANDBOX_MODE` del entorno donde corre el backend (`this.mode`). Si la instancia corre en AWS (`this.mode === 'vps'`), siempre aplica la cuota de **64 MB / 0.25 vCPU** sin importar el `targetMode` del cliente, blindando el VPS de 1 GB. La cuota expandida de **256 MB / 1.0 vCPU** solo se activa en la instancia que corre en el Servidor Casero (`pm2.home.config.js`).
 
 | Capa | Mecanismo | VPS (AWS) | Tunnel (On-Premises) |
 |------|-----------|-----------|----------------------|

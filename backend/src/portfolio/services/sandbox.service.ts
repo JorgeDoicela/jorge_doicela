@@ -80,10 +80,15 @@ export class SandboxService implements OnModuleDestroy {
       );
     }
 
-    // Validación estricta de targetMode: solo valores conocidos y explícitos del enum
-    const effectiveMode: 'vps' | 'tunnel' =
-      targetMode === 'tunnel' ? 'tunnel' : 'vps';
-    const isTunnel = effectiveMode === 'tunnel';
+    // La capacidad real de hardware depende del servidor donde está corriendo esta instancia de NestJS:
+    // Si corre en AWS (this.mode === 'vps'), se fuerza 64MB/0.25CPU para blindar el VPS de 1 GB de RAM.
+    // Solo si esta instancia corre en el Servidor Casero (this.mode === 'tunnel') se asignan 256MB/1.0CPU.
+    const isHostTunnel = this.mode === 'tunnel';
+    const effectiveMode: 'vps' | 'tunnel' = isHostTunnel
+      ? 'tunnel'
+      : targetMode === 'tunnel'
+        ? 'tunnel'
+        : 'vps';
 
     // Sanitización de dimensiones del terminal: rangos seguros para evitar inyección en variables de entorno
     const safeCols = Math.max(
@@ -95,15 +100,15 @@ export class SandboxService implements OnModuleDestroy {
       Math.min(100, Math.floor(Number(rows) || 24)),
     );
 
-    const sessionId = `sandbox_${isTunnel ? 'tunnel_' : 'vps_'}${socketId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20)}_${Date.now()}`;
+    const sessionId = `sandbox_${isHostTunnel ? 'tunnel_' : 'vps_'}${socketId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20)}_${Date.now()}`;
     this.logger.log(
-      `[1/4] Creando contenedor Docker [Modo: ${effectiveMode.toUpperCase()}] para sesión ${sessionId} con imagen ${this.imageName}...`,
+      `[1/4] Creando contenedor Docker [Host: ${this.mode.toUpperCase()} | Modo: ${effectiveMode.toUpperCase()}] para sesión ${sessionId} con imagen ${this.imageName}...`,
     );
 
-    // Hardening dinámico: Cuota de hardware diferenciada según si corre en VPS (64MB) o Túnel Casero (256MB)
-    const memoryLimit = isTunnel ? 256 * 1024 * 1024 : 64 * 1024 * 1024;
-    const cpuLimit = isTunnel ? 1000000000 : 250000000; // 1.0 CPU en casa vs 0.25 en VPS
-    const pidsLimit = isTunnel ? 100 : 50;
+    // Hardening dinámico: Cuota de hardware diferenciada según si el host es VPS (64MB) o Servidor Casero (256MB)
+    const memoryLimit = isHostTunnel ? 256 * 1024 * 1024 : 64 * 1024 * 1024;
+    const cpuLimit = isHostTunnel ? 1000000000 : 250000000; // 1.0 CPU en casa vs 0.25 en VPS
+    const pidsLimit = isHostTunnel ? 100 : 50;
 
     const container = await this.docker.createContainer({
       Image: this.imageName,

@@ -10,6 +10,7 @@ import { ContactThrottleGuard } from './guards/contact-throttle.guard';
 import { PortfolioGateway } from './gateways/portfolio.gateway';
 import { ContactController } from './controllers/contact.controller';
 import { PortfolioProjectsController } from './controllers/portfolio-projects.controller';
+import { SandboxController } from './controllers/sandbox.controller';
 import { PortfolioProjectsService } from './services/portfolio-projects.service';
 
 import { SandboxService } from './services/sandbox.service';
@@ -34,7 +35,11 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
       'portfolioConnection',
     ),
   ],
-  controllers: [ContactController, PortfolioProjectsController],
+  controllers: [
+    ContactController,
+    PortfolioProjectsController,
+    SandboxController,
+  ],
   providers: [
     PortfolioService,
     ContactMessagesService,

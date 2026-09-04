@@ -10,9 +10,9 @@ GREEN="\[\033[38;5;120m\]"
 
 # Configuración dinámica de identidad según el entorno (AWS Cloud o Servidor Local)
 if [ "$SANDBOX_MODE" = "tunnel" ]; then
-    NODE_SUBTITLE="Servidor Físico On-Premises • Conexión Cifrada mediante Túnel"
+    NODE_SUBTITLE="Servidor Físico Propio • Conexión Cifrada mediante Túnel"
     HOST_PROMPT="servidor-local"
-    NODE_GREETING="¡Hola y bienvenido a mi hardware dedicado! Estás conectado directamente a mi servidor\nfísico On-Premises a través de un túnel cifrado punto a punto con mayor capacidad de cómputo."
+    NODE_GREETING="¡Hola y bienvenido a mi hardware dedicado! Estás conectado directamente a mi servidor\nfísico privado a través de un túnel cifrado punto a punto con mayor capacidad de cómputo."
 else
     NODE_SUBTITLE="Servidor Cloud en AWS (Amazon Web Services) • Entorno Aislado y Seguro"
     HOST_PROMPT="aws-cloud"

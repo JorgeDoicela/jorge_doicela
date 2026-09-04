@@ -9,6 +9,14 @@ export interface ContactNotificationPayload {
   serviceType?: string;
 }
 
+export interface WakeNotificationPayload {
+  name?: string;
+  contact?: string;
+  note?: string;
+  clientIp?: string;
+  createdAt?: Date;
+}
+
 @Injectable()
 export class TelegramNotificationService {
   private readonly logger = new Logger(TelegramNotificationService.name);
@@ -62,7 +70,71 @@ export class TelegramNotificationService {
     ];
 
     const text = lines.join('\n');
+    return this.dispatchTelegramMessage(
+      botToken,
+      chatId,
+      text,
+      `contacto de "${payload.name}"`,
+    );
+  }
 
+  async sendWakeRequestNotification(
+    payload: WakeNotificationPayload,
+  ): Promise<boolean> {
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      this.logger.debug(
+        'TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID no configurados. Se omite notificación de encendido.',
+      );
+      return false;
+    }
+
+    const timestamp = new Intl.DateTimeFormat('es-EC', {
+      timeZone: 'America/Guayaquil',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(payload.createdAt || new Date());
+
+    const visitorName = payload.name?.trim() || 'Visitante Anónimo';
+    const contactLine = payload.contact?.trim()
+      ? `📬 *Contacto del Visitante:* ${this.escapeMarkdown(payload.contact.trim())}`
+      : null;
+    const ipLine = payload.clientIp
+      ? `🌐 *IP Origen:* \`${this.escapeMarkdown(payload.clientIp)}\``
+      : null;
+    const noteLine = payload.note?.trim()
+      ? `💬 *Nota:* ${this.escapeMarkdown(payload.note.trim())}`
+      : null;
+
+    const lines = [
+      '⚡ *SOLICITUD DE ACTIVACIÓN: ESTACIÓN ON-DEMAND*',
+      '────────────────────────────',
+      'Un usuario en el portafolio ha solicitado activar la *Estación Física Dedicada (On-Demand)* para probar la Terminal Linux en hardware real.',
+      '────────────────────────────',
+      `👤 *Solicitante:* ${this.escapeMarkdown(visitorName)}`,
+      ...(contactLine ? [contactLine] : []),
+      ...(ipLine ? [ipLine] : []),
+      `⏰ *Fecha:* ${this.escapeMarkdown(timestamp)} (Quito UTC-5)`,
+      ...(noteLine ? ['────────────────────────────', noteLine] : []),
+    ];
+
+    const text = lines.join('\n');
+    return this.dispatchTelegramMessage(
+      botToken,
+      chatId,
+      text,
+      `solicitud de activación de "${visitorName}"`,
+    );
+  }
+
+  private async dispatchTelegramMessage(
+    botToken: string,
+    chatId: string,
+    text: string,
+    contextLabel: string,
+  ): Promise<boolean> {
     try {
       const response = await fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage`,
@@ -89,7 +161,7 @@ export class TelegramNotificationService {
       }
 
       this.logger.log(
-        `Notificación de contacto enviada a Telegram con éxito para "${payload.name}".`,
+        `Notificación de ${contextLabel} enviada a Telegram con éxito.`,
       );
       return true;
     } catch (error: unknown) {

@@ -16,6 +16,7 @@ import {
   Check,
 } from 'lucide-react';
 import { useSandboxTerminal } from '../hooks/useSandboxTerminal';
+import { ServerOfflineBanner } from './ServerOfflineBanner';
 import { LanguageToggle } from '../../../components/LanguageToggle';
 import { ThemeToggle } from '../../../components/ThemeToggle';
 import '@xterm/xterm/css/xterm.css';
@@ -144,24 +145,36 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
       ? t('badgeTunnel')
       : t('badgeVps');
 
+  const isTunnelOffline = status === 'error' && targetMode === 'tunnel';
+
   return (
     <div className="relative w-full h-full flex-1 min-h-0 rounded-none border-none shadow-none bg-[#080705] overflow-hidden flex flex-col">
-      {/* Mensaje de Error si ocurre */}
-      {status === 'error' && errorMessage && (
+      {/* Mensaje de Error en modo VPS */}
+      {status === 'error' && errorMessage && targetMode !== 'tunnel' && (
         <div className="px-4 py-2 bg-red-950/60 border-b border-red-500/40 flex items-center gap-2 text-red-300 text-xs font-mono shrink-0">
           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
           <span>{errorMessage}</span>
         </div>
       )}
 
-      {/* 1. Canvas Xterm.js que arranca limpio desde la parte superior */}
-      <div className="flex-1 w-full min-h-0 px-4 pt-3 pb-2 bg-[#080705] overflow-hidden flex flex-col">
-        <div
-          ref={terminalRef}
-          onClick={focusTerminal}
-          className="w-full h-full flex-1 cursor-text overflow-hidden"
-        />
-      </div>
+      {/* Si el servidor físico está apagado, mostrar el banner Dark Luxury interactivo */}
+      {isTunnelOffline ? (
+        <div className="flex-1 w-full min-h-0 p-4 sm:p-8 bg-[#080705] overflow-y-auto flex items-center justify-center">
+          <ServerOfflineBanner
+            isFullscreen={true}
+            onRetry={startSession}
+          />
+        </div>
+      ) : (
+        /* 1. Canvas Xterm.js que arranca limpio desde la parte superior */
+        <div className="flex-1 w-full min-h-0 px-4 pt-3 pb-2 bg-[#080705] overflow-hidden flex flex-col">
+          <div
+            ref={terminalRef}
+            onClick={focusTerminal}
+            className="w-full h-full flex-1 cursor-text overflow-hidden"
+          />
+        </div>
+      )}
 
       {/* 2. Barra de Herramientas y Estado Inferior (Footer Consolidado estilo AWS) */}
       <footer className="flex items-center justify-between gap-3 px-4 py-2 border-t border-border-gold bg-surface-raised text-xs select-none shrink-0 min-h-[48px] z-10">
@@ -183,13 +196,6 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
           </button>
 
           <div className="h-4 w-px bg-border-gold/60 hidden sm:block shrink-0" />
-
-          {/* Luces sutiles */}
-          <div className="flex gap-1.5 shrink-0 items-center">
-            <span className="w-2.5 h-2.5 rounded-full bg-gold-400/70 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-gold-500/40 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-foreground/20 inline-block" />
-          </div>
 
           {/* Badge del Modo */}
           <span className="px-2 py-0.5 rounded bg-surface border border-border-gold/60 text-gold-300 font-semibold font-mono text-[11px] flex items-center gap-1.5 shrink-0">

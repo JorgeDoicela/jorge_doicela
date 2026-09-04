@@ -46,6 +46,7 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── components/
 │   │   │   ├── TerminalConsole.tsx       # Conmutador de modo y ventana interactiva
 │   │   │   ├── SandboxTerminal.tsx       # Terminal Linux Real en Vivo (xterm.js + FitAddon)
+│   │   │   ├── ServerOfflineBanner.tsx   # Banner Dark Luxury de Servidor Offline y Solicitud Telegram
 │   │   │   ├── TerminalHeader.tsx        # Barra superior tmux y controles
 │   │   │   ├── MatrixRain.tsx            # Animación de lluvia Matrix
 │   │   │   └── MobileTerminalBanner.tsx  # Banner adaptativo para móviles
@@ -123,22 +124,22 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
   * `neofetch`, `htop`, `nano`, `tree`: Herramientas completas del sistema Linux.
   * `help`: Listado completo con descripción de todos los comandos disponibles.
 
-### 4.3 Modo 3: Terminal en Servidor Propio — On-Premises (`useSandboxTerminal.ts?mode=tunnel`)
-* **Namespace:** Conecta a `${API_URL}/sandbox` con `targetMode: 'tunnel'`.
+### 4.3 Modo 3: Terminal en Servidor Propio (`useSandboxTerminal.ts?mode=tunnel`)
+* **Namespace:** Conecta a `${SANDBOX_TUNNEL_URL}/sandbox` (`https://tunnel.jorgedoicela.com/sandbox` o variable `NEXT_PUBLIC_SANDBOX_TUNNEL_URL`) con `targetMode: 'tunnel'`.
 * **Badge e Identidad en terminal:** `EN VIVO • SERVIDOR LOCAL`.
 * **Banner de bienvenida dinámico en shell:**
-  * Subtítulo: `Servidor Físico On-Premises • Conexión Cifrada mediante Túnel`
+  * Subtítulo: `Servidor Físico Propio • Conexión Cifrada mediante Túnel`
   * Prompt: `guest@servidor-local:~$`
-  * Mensaje: Explica que el visitante está conectado a hardware físico privado a través de un túnel cifrado punto a punto.
+  * Mensaje: Explica que el visitante está conectado a hardware físico privado a través de un túnel cifrado punto a punto sin intermediarios en AWS.
 * **Hardware y Aislamiento:** 256 MB RAM, 1.0 CPU, `pids-limit=100`.
-* **Lanzamiento:** Botón `[ ▶ Iniciar Terminal en Servidor Propio ↗ ]` → `/sandbox?mode=tunnel`.
-* **Mismos comandos interactivos nativos que el Modo 2**, con la diferencia de identidad del host.
+* **Lanzamiento:** Botón `[ Iniciar Terminal en Servidor Propio ]` → `/sandbox?mode=tunnel`.
+* **Mismos comandos interactivos nativos que el Modo 2**, con la diferencia de identidad del host y recursos expandidos.
 
 ### 4.4 Barra de Control Inferior (Footer Consolidado estilo AWS CloudShell)
 * **Apertura de Ventana Emergente Dedicada:** El botón de lanzamiento calcula el centro de la pantalla del usuario (`1080x680px`) y abre una ventana popup independiente con `toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,noopener,noreferrer`, aislando el proceso y evitando colisiones de atajos de teclado de Linux (`Ctrl+W`, `Ctrl+T`) con el navegador.
 * **Consola Superior Pura:** El canvas xterm.js inicia desde el pixel superior del viewport sin barras distractoras arriba.
 * **Barra de Herramientas Inferior (Footer):**
-  * Izquierda: Botón de retorno/cierre inteligente (`← Volver al Portafolio`), luces sutiles de estado, badge del modo (`EN VIVO • AWS CLOUD`) e identidad de host (`ip-172-26-6-236 / 44.192.40.200`).
+  * Izquierda: Botón de retorno/cierre inteligente (`← Volver al Portafolio`), badge del modo (`EN VIVO • AWS CLOUD` / `EN VIVO • SERVIDOR LOCAL`).
   * Derecha: Botón `[📋 Copiar selección]` (lee la selección activa de xterm al portapapeles con feedback `¡Copiado!`), botón `[📥 Pegar en terminal]` (inyecta el portapapeles del sistema al WebSocket), temporizador `⏱ 04:33`, botón de salida `[ ✕ Finalizar ]` / `[ ▶ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
 
 ### 4.5 Seguridad en el Hook `useSandboxTerminal.ts`
@@ -146,6 +147,19 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Filtrado de secuencias de ratón:** Se ignoran secuencias `\x1b[<` y `\x1b[M` (SGR / X10 Mouse events) para evitar basura en el stream PTY al hacer clic en la terminal.
 * **Limpieza en desmontaje:** `socket.disconnect()` + `xterm.dispose()` garantizan cero fugas de memoria o conexiones zombie.
 * **Reconexión limitada:** `reconnectionAttempts: 5` para evitar tempestades de reconexión en sesiones caídas.
+
+### 4.6 Manejo de Servidor Físico Fuera de Línea (`ServerOfflineBanner.tsx`)
+* **Detección sin Fallback Forzado a AWS:** Cuando el visitante selecciona el Modo 3 (`targetMode === 'tunnel'`) y el servidor físico privado está apagado o inaccesible, el sistema **no** redirige silenciosamente a AWS. Se respeta la transparencia del hardware físico propio.
+* **Presentación Dark Luxury & Light Luxury Unificada:**
+  * Renderiza `ServerOfflineBanner.tsx` con contenedor translúcido `bg-surface-raised/80`, bordes de precisión `border-border-gold` y acentos dorados satinados.
+  * Cabecera editorial limpia con punto de estado dorado (`bg-gold-400`) y título directo `SERVIDOR PRIVADO` (sin badges encapsulados ni cajas verdes discordantes).
+  * Lenguaje directo y comprensible: Cero jerga técnica inaccesible para el público general (eliminados términos como *"on-premises"*, *"on-demand"*, *"bajo demanda"* o *"fuera de servicio"*).
+* **Solicitud de Aviso y Notificación Desacoplada:**
+  * El visitante puede enviar un aviso de interés con su nombre, correo/teléfono y nota opcional mediante el botón `[ Enviar Aviso de Conexión ]`.
+  * Despacha una petición HTTP `POST /portfolio/sandbox/wake-request` protegida por rate limiting (`ContactThrottleGuard`).
+* **Protección Anti-Bucle y Persistencia de Estado (`sessionStorage`):**
+  * Al completar el envío, el banner pasa al estado de confirmación (`AVISO ENTREGADO`) con mensaje cortés y educado, sin promesas falsas de encendido inmediato.
+  * Al hacer clic en `[ Entrar a la Terminal ]`, se almacena `sessionStorage.setItem('portfolio_wake_requested', 'true')`. Si el servidor aún no está encendido y el WebSocket falla (`connect_error`), el componente preserva el estado de confirmación evitando que el usuario caiga en un bucle repetitivo de rellenar el formulario.
 
 ---
 

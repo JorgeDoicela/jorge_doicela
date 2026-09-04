@@ -40,9 +40,9 @@ frontend/web/src/app/(portfolio)/
 │   ├── projects/           # Feature: Showcase y catálogo de proyectos
 │   │   ├── components/     # ProjectShowcase.tsx, ProjectDetailModal.tsx
 │   │   └── types.ts        # Tipos e interfaces de proyectos y casos de estudio
-│   ├── terminal/           # Feature: Terminal virtual interactiva
-│   │   ├── components/     # TerminalConsole.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
-│   │   ├── hooks/          # useTerminalSocket.ts (Socket.io client)
+│   ├── terminal/           # Feature: Terminal virtual interactiva y Live Sandbox
+│   │   ├── components/     # TerminalConsole.tsx, SandboxTerminal.tsx, ServerOfflineBanner.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
+│   │   ├── hooks/          # useTerminalSocket.ts, useSandboxTerminal.ts
 │   │   ├── utils/          # ansiParser.tsx
 │   │   └── types.ts        # Tipos de la terminal
 │   └── contact/            # Feature: Formulario de contacto
@@ -93,17 +93,11 @@ frontend/web/src/app/(portfolio)/
   5. Ejecutar `pnpm --filter backend seed:portfolio` para reflejar en `portfolio.sqlite`.
   6. Actualizar la interfaz TypeScript en `frontend/web/src/app/(portfolio)/features/projects/types.ts` y su fallback en `page.tsx`.
 
-### 3.2 Terminal Virtual SSH (WebSockets sobre Socket.io)
-* **Gateway:** `PortfolioGateway` (`backend/src/portfolio/gateways/portfolio.gateway.ts`).
-* **Namespace:** `terminal` (transporte WebSocket exclusivo sobre Socket.io).
-* **Flujo de Eventos:**
-  * Al conectar: Servidor emite `terminal-output` con banner SSH de bienvenida y prompt `jorge@vps-1gb-ram:~$ `.
-  * Cliente emite: `execute-command` enviando el texto del comando.
-  * Servidor emite: `terminal-output` con el resultado procesado.
-* **Comandos Soportados en `PortfolioService`:**
-  * `help`, `about`, `neofetch`, `contact`, `skills`, `clear`, `matrix`, `date`, `uptime`, `ls`, `cat`, `whoami`, `exit`.
+### 3.2 Gateways WebSockets (Socket.io)
+* **Terminal Guiada:** `PortfolioGateway` (`/terminal`) — simulación interactiva con comandos Unix preprogramados.
+* **Live Linux Sandbox:** `SandboxGateway` (`/sandbox`) — orquestación de contenedores Docker efímeros (`dockerode`) en VPS (AWS) o hardware físico propio con túnel cifrado.
 
-### 3.3 Endpoints REST y Entidades TypeORM
+### 3.3 Endpoints REST, Eventos y Entidades TypeORM
 * **Proyectos:**
   * `GET /portfolio/projects?lang=es|en`: Listado bilingüe con tecnologías, métricas y puntos de arquitectura parseados.
   * `GET /portfolio/projects/:slug`: Detalle individual por slug.
@@ -112,6 +106,8 @@ frontend/web/src/app/(portfolio)/
   * `POST /portfolio/contact`: Recibe y valida `CreateContactMessageDto` (`name`, `email`, `message`).
   * `GET /portfolio/contact`: Listado de mensajes para auditoría administrativa.
   * **Entidad:** `ContactMessage` (`contact-message.entity.ts`).
+* **Sandbox Wake Request (Aviso de Encendido):**
+  * `POST /portfolio/sandbox/wake-request`: Valida `CreateWakeRequestDto` (`name`, `contactInfo`, `notes`) protegido por `ContactThrottleGuard`. Emite `SandboxWakeRequestedEvent` para despacho asíncrono a Telegram.
 
 ---
 

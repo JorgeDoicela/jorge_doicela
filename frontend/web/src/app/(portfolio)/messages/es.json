@@ -170,5 +170,20 @@
     "backToPortfolio": "Volver al Portafolio",
     "closeWindow": "Cerrar Consola",
     "pageTitle": "Terminal Interactiva Linux"
+  },
+  "SandboxWakeRequest": {
+    "serverOfflineTitle": "Terminal en Servidor Físico",
+    "serverOfflineBadge": "SERVIDOR PRIVADO",
+    "serverOfflineDesc": "Esta consola corre en un equipo físico en mi laboratorio para desarrollo, investigación y pruebas avanzadas. Para optimizar el consumo de energía cuando no está en uso activo, permanece apagado. Puedes avisarme aquí y lo conecto enseguida.",
+    "requestWakePrompt": "Pulsa el botón para avisarme. Recibiré una notificación inmediata para encender el equipo y permitirte el acceso.",
+    "buttonRequestWake": "Avisar a Jorge para Conectar",
+    "buttonSending": "Enviando aviso...",
+    "buttonSent": "Aviso entregado",
+    "optionalName": "Tu nombre (opcional)",
+    "optionalContact": "Email o medio de contacto (opcional)",
+    "successTitle": "¡Muchas gracias por tu interés!",
+    "successDesc": "He recibido tu notificación con éxito. En cuanto me encuentre disponible encenderé el equipo para que puedas probar la consola. Puedes mantener esta ventana o volver más tarde para ingresar a la terminal.",
+    "close": "Cerrar",
+    "retryCheck": "Entrar a la Terminal"
   }
 }

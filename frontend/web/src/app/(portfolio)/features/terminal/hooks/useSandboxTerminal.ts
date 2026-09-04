@@ -146,7 +146,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     if (xtermRef.current) {
       xtermRef.current.clear();
       xtermRef.current.write(
-        `\x1b[33m[SANDBOX] Conectando a ${isTunnel ? 'Servidor Físico On-Premises (Túnel)' : 'Cloud en AWS'}...\x1b[0m\r\n`,
+        `\x1b[33m[SANDBOX] Conectando a ${isTunnel ? 'Servidor Físico Propio (Túnel)' : 'Cloud en AWS'}...\x1b[0m\r\n`,
       );
     }
 
@@ -176,7 +176,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
       console.error('[Sandbox] Error de conexión WebSocket:', err);
       setStatus('error');
       const msg = isTunnel
-        ? `No se pudo conectar con el Servidor Físico On-Premises (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`
+        ? `No se pudo conectar con el Servidor Físico Propio (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`
         : `Fallo al conectar con el servidor Cloud en AWS: ${err.message}`;
       setErrorMessage(msg);
       if (xtermRef.current) {

@@ -38,11 +38,13 @@ backend/src/portfolio/
 │   └── sandbox.gateway.ts         # Gateway WebSocket para el Live Linux Sandbox (/sandbox)
 ├── controllers/
 │   ├── contact.controller.ts      # Endpoint REST POST y GET para mensajes de contacto
-│   └── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects y /:slug
+│   ├── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects y /:slug
+│   └── sandbox.controller.ts      # Endpoint REST POST /portfolio/sandbox/wake-request
 ├── events/
-│   └── contact-message-created.event.ts # Evento de dominio desacoplado
+│   ├── contact-message-created.event.ts # Evento de dominio de contacto
+│   └── sandbox-wake-requested.event.ts  # Evento de dominio de solicitud de encendido
 ├── listeners/
-│   └── telegram-notification.listener.ts # Listener asíncrono que procesa el evento y despacha a Telegram
+│   └── telegram-notification.listener.ts # Listener asíncrono que procesa eventos y despacha a Telegram
 ├── guards/
 │   └── contact-throttle.guard.ts  # Guard de Rate Limiting en memoria para mitigar spam/DDoS
 ├── services/
@@ -55,7 +57,8 @@ backend/src/portfolio/
 │   ├── contact-message.entity.ts  # Entidad TypeORM para mensajes de contacto
 │   └── portfolio-project.entity.ts # Entidad TypeORM con índice compuesto (slug, language)
 └── dto/
-    └── create-contact-message.dto.ts # DTO blindado con @MaxLength y validaciones estrictas
+    ├── create-contact-message.dto.ts # DTO blindado con @MaxLength y validaciones estrictas
+    └── create-wake-request.dto.ts    # DTO validado para solicitudes de aviso de encendido del servidor físico propio
 ```
 
 ---
@@ -215,7 +218,7 @@ Esto impide que un visitante la sobreescriba desde la terminal con `SANDBOX_MODE
 
 | Variable | Modo `vps` | Modo `tunnel` |
 |----------|-----------|---------------|
-| `NODE_SUBTITLE` | `Servidor Cloud en AWS (Amazon Web Services) • Entorno Aislado y Seguro` | `Servidor Físico On-Premises • Conexión Cifrada mediante Túnel` |
+| `NODE_SUBTITLE` | `Servidor Cloud en AWS (Amazon Web Services) • Entorno Aislado y Seguro` | `Servidor Físico Propio • Conexión Cifrada mediante Túnel` |
 | `HOST_PROMPT` | `aws-cloud` | `servidor-local` |
 | `PS1` | `guest@aws-cloud:~$` | `guest@servidor-local:~$` |
 | Mensaje de bienvenida | Contexto de AWS Lightsail y aislamiento seguro | Contexto de hardware físico y túnel cifrado |
@@ -305,6 +308,7 @@ new ValidationPipe({
 | | `GET /portfolio/projects/:slug` | `lang` | Detalle del proyecto por slug con soporte bilingüe |
 | **Contacto** | `POST /portfolio/contact` | - | Envío y validación de formulario (`CreateContactMessageDto`) |
 | | `GET /portfolio/contact` | - | Historial de mensajes para auditoría interna |
+| **Sandbox** | `POST /portfolio/sandbox/wake-request` | - | Solicitud de aviso de encendido del servidor físico privado (`CreateWakeRequestDto`) con notificación a Telegram |
 
 ### 7.2 `PortfolioProjectsService` — Deserialización Nativa
 

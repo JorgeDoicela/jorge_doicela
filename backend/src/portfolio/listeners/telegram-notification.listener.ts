@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ContactMessageCreatedEvent } from '../events/contact-message-created.event';
+import { SandboxWakeRequestedEvent } from '../events/sandbox-wake-requested.event';
 import { TelegramNotificationService } from '../services/telegram-notification.service';
 
 @Injectable()
@@ -24,6 +25,23 @@ export class TelegramNotificationListener {
       message: event.message,
       phone: event.phone,
       serviceType: event.serviceType,
+    });
+  }
+
+  @OnEvent('sandbox.wake.requested', { async: true })
+  async handleSandboxWakeRequested(
+    event: SandboxWakeRequestedEvent,
+  ): Promise<void> {
+    this.logger.log(
+      `Evento [sandbox.wake.requested] recibido para solicitante "${event.name || 'Anónimo'}".`,
+    );
+
+    await this.telegramService.sendWakeRequestNotification({
+      name: event.name,
+      contact: event.contact,
+      note: event.note,
+      clientIp: event.clientIp,
+      createdAt: event.createdAt,
     });
   }
 }

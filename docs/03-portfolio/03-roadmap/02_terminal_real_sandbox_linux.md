@@ -280,7 +280,7 @@ tunnel: <TUNNEL_ID>
 credentials-file: /etc/cloudflared/<TUNNEL_ID>.json
 
 ingress:
-  - hostname: sandbox.jorgedoicela.com
+  - hostname: tunnel.jorgedoicela.com
     service: http://localhost:3000
   - service: http_status:404
 ```
@@ -288,13 +288,19 @@ ingress:
 ### Paso 4: Iniciar el Servicio del Túnel
 ```bash
 # Asociar subdominio en Cloudflare DNS
-cloudflared tunnel route dns sandbox-jorgedoicela sandbox.jorgedoicela.com
+cloudflared tunnel route dns sandbox-home tunnel.jorgedoicela.com
 
 # Instalar y arrancar como servicio del sistema
 sudo cloudflared service install
 sudo systemctl enable --now cloudflared
 ```
 * **Ventaja:** No necesitas abrir ningún puerto en el router de tu casa (NAT traversal automático de Cloudflare). La IP pública de tu hogar permanece 100% oculta.
+
+### Paso 5: Manejo de Estado Apagado y Solicitud de Encendido vía Telegram
+Cuando la máquina doméstica esté suspendida o apagada:
+* El frontend detecta la falta de enlace con el túnel (`connect_error` en modo `tunnel`).
+* **Cero Fallback Engañoso:** En lugar de redirigir silenciosamente a AWS, el sistema presenta la tarjeta Dark Luxury `ServerOfflineBanner.tsx` comunicando el estado de ahorro de energía.
+* **Flujo Asíncrono de Telegram:** El visitante pulsa "Solicitar Encendido a Jorge", lo que envía un `POST /portfolio/sandbox/wake-request` a NestJS, emite `SandboxWakeRequestedEvent` y notifica instantáneamente al canal de Telegram de Jorge para que encienda el equipo físico y habilite el túnel.
 
 ---
 

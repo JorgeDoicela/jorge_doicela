@@ -68,49 +68,6 @@ chmod 755 /home/admin
 La configuración del servidor web está versionada directamente en el repositorio bajo `nginx/jorgedoicela.com.conf`. El pipeline de CI/CD se encarga de sincronizarla automáticamente con el servidor en cada despliegue.
 
 ```nginx
-# Redirección HTTP -> HTTPS
-server {
-    listen 80;
-    listen [::]:80;
-    server_name jorgedoicela.com *.jorgedoicela.com;
-    return 301 https://$host$request_uri;
-}
-
-# Servidor HTTPS con Certificados de Cloudflare y mTLS
-server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
-    http2 on;
-    server_name jorgedoicela.com *.jorgedoicela.com;
-
-    # Certificados de Origen de Cloudflare
-    ssl_certificate /etc/ssl/certs/origin.pem;
-    ssl_certificate_key /etc/ssl/private/private.key;
-
-    # Authenticated Origin Pulls (Validación mutua TLS)
-    ssl_client_certificate /etc/ssl/certs/cloudflare.crt;
-    ssl_verify_client on;
-
-    error_page 496 =444 @cerrar_conexion;
-    location @cerrar_conexion { return 444; }
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_prefer_server_ciphers on;
-    server_tokens off;
-
-    # Cabeceras de Seguridad
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-    # Compresión Gzip
-    gzip on;
-    gzip_comp_level 6;
-    gzip_min_length 256;
-    gzip_proxied any;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
-
-```nginx
 # Mapa dinámico de enrutamiento: Peticiones de navegación de páginas web HTML van al frontend Next.js (3001),
 # mientras que peticiones de datos de la API REST (JSON) van al backend NestJS (3000).
 map $http_accept $backend_port {
@@ -118,7 +75,18 @@ map $http_accept $backend_port {
     ~*text/html             3001;
 }
 
-# Mapa de archivos llms.txt especializados por subdominio (Zero-RAM en Nginx)
+# Extracción de IP real del cliente detrás del proxy Cloudflare mTLS
+map $http_cf_connecting_ip $real_client_ip {
+    default                 $http_cf_connecting_ip;
+    ""                      $binary_remote_addr;
+}
+
+# Zonas de Rate Limiting en memoria compartida
+limit_req_zone $real_client_ip zone=api_limit_zone:10m rate=15r/s;
+limit_req_zone $real_client_ip zone=web_limit_zone:10m rate=35r/s;
+limit_req_status 429;
+
+# Mapa de archivos llms.txt especializados por subdominio
 map $host $llms_file {
     default                 /home/admin/jorge_doicela/frontend/web/public/landing/llms.txt;
     ~*portfolio\.           /home/admin/jorge_doicela/frontend/web/public/portfolio/llms.txt;
@@ -142,10 +110,48 @@ map $host $favicon_file {
     ~*bible\.               /home/admin/jorge_doicela/frontend/web/public/bible/logo/logo_fondo_circular_color_.png;
 }
 
+# Redirección HTTP -> HTTPS
 server {
-    ...
-    # 1. API REST Backend NestJS / Frontend Next.js - Desacoplamiento inteligente por Accept Header
-    location ~ ^/(bible/(verses|translations|morphology|books|historical)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials)|portfolio/contact) {
+    listen 80;
+    listen [::]:80;
+    server_name jorgedoicela.com *.jorgedoicela.com;
+    return 301 https://$host$request_uri;
+}
+
+# Servidor HTTPS con Certificados de Cloudflare y mTLS
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name jorgedoicela.com *.jorgedoicela.com;
+
+    ssl_certificate /etc/ssl/certs/origin.pem;
+    ssl_certificate_key /etc/ssl/private/private.key;
+
+    ssl_client_certificate /etc/ssl/certs/cloudflare.crt;
+    ssl_verify_client on;
+
+    error_page 496 =444 @cerrar_conexion;
+    location @cerrar_conexion { return 444; }
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    server_tokens off;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Cross-Origin-Opener-Policy "same-origin-allow-popups" always;
+
+    gzip on;
+    gzip_comp_level 6;
+    gzip_min_length 256;
+    gzip_proxied any;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+
+    # 1. API REST Backend NestJS / Frontend Next.js - Desacoplamiento por Accept Header + Rate Limiting
+    location ~ ^/(bible/(verses|translations|morphology|books|historical)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials)|portfolio/(contact|projects|sandbox)) {
+        limit_req zone=api_limit_zone burst=25 nodelay;
         proxy_pass http://127.0.0.1:$backend_port;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -154,6 +160,7 @@ server {
         proxy_cache_bypass $http_upgrade;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header CF-Connecting-IP $http_cf_connecting_ip;
     }
 
     # 2. WebSockets de la Terminal SSH (Socket.io)
@@ -165,9 +172,10 @@ server {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header CF-Connecting-IP $http_cf_connecting_ip;
     }
 
-    # 3. Next.js Static Assets servidos directamente por Nginx (Alto Rendimiento y Cero Errores MIME)
+    # 3. Next.js Static Assets servidos directamente por Nginx
     location ^~ /_next/static/ {
         alias /home/admin/jorge_doicela/frontend/web/.next/static/;
         expires 365d;
@@ -224,7 +232,7 @@ server {
         access_log off;
     }
 
-    # 5. Next.js Frontend Standalone (Puerto 3001) - Páginas, RSC y Rutas Dinámicas
+    # 5. Next.js Frontend Standalone (Puerto 3001)
     location / {
         proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
@@ -239,7 +247,6 @@ server {
 ```
 
 ---
-
 ## 4. Orquestación de Procesos con PM2 (`pm2.config.js`)
 
 Controla el ciclo de vida y los límites de memoria de los procesos unificados en el VPS:

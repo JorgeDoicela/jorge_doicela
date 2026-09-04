@@ -118,7 +118,7 @@ cd jorge_doicela
 docker build -t portfolio-sandbox:latest backend/src/portfolio/docker/
 
 # 3. Instalar dependencias del backend y compilar
-pnpm --filter backend install
+pnpm install --filter backend...
 pnpm --filter backend build
 ```
 

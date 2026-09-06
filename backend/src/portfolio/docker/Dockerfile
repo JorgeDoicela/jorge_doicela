@@ -14,7 +14,8 @@ RUN apk add --no-cache \
     file \
     neofetch \
     ncurses \
-    util-linux
+    util-linux \
+    dos2unix
 
 # Limpiar posible usuario 'guest' residual de Alpine y recrear con UID/GID 1000 explícito
 RUN deluser guest 2>/dev/null || true && \
@@ -40,8 +41,9 @@ COPY sandbox_profile.sh /etc/profile.d/sandbox.sh
 COPY sandbox_profile.sh /etc/bash.bashrc
 COPY welcome.txt /etc/motd
 
-# Permisos de lectura pública para la configuración global del sistema
-RUN chmod 644 /etc/profile.d/sandbox.sh /etc/bash.bashrc /etc/motd
+# Normalizar saltos de línea CRLF a LF (crucial para builds en Windows) y asignar permisos
+RUN dos2unix /etc/profile.d/sandbox.sh /etc/bash.bashrc /etc/motd && \
+    chmod 644 /etc/profile.d/sandbox.sh /etc/bash.bashrc /etc/motd
 
 WORKDIR /home/guest
 USER guest

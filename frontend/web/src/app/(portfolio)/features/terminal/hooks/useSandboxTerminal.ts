@@ -11,7 +11,19 @@ export type SandboxStatus =
   | 'warning'
   | 'expired'
   | 'error'
-  | 'disconnected';
+  | 'disconnected'
+  | 'concurrency_limit'
+  | 'cooldown'
+  | 'rate_limited'
+  | 'blocked'
+  | 'replaced';
+
+export interface RejectInfo {
+  code: string;
+  message: string;
+  remainingSeconds?: number;
+  existingSocketId?: string;
+}
 
 export interface UseSandboxTerminalOptions {
   onSessionEnded?: (reason?: string) => void;
@@ -24,12 +36,27 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
   const xtermRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const socketRef = useRef<Socket | null>(null);
+  const [status, _setStatus] = useState<SandboxStatus>('idle');
+  const statusRef = useRef<SandboxStatus>('idle');
 
-  const [status, setStatus] = useState<SandboxStatus>('idle');
+  const setStatus = useCallback((nextStatus: SandboxStatus) => {
+    statusRef.current = nextStatus;
+    _setStatus(nextStatus);
+  }, []);
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [remainingSeconds, setRemainingSeconds] = useState<number>(300);
+  const [cooldownSeconds, setCooldownSeconds] = useState<number>(0);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sandboxMode, setSandboxMode] = useState<'vps' | 'tunnel' | null>(null);
+  const [rejectInfo, setRejectInfo] = useState<RejectInfo | null>(null);
+
+  // Identificador de instancia única de pestaña/hook para no auto-invalidarse
+  const tabInstanceIdRef = useRef<string>(
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : Math.random().toString(36).substring(2),
+  );
 
   // Temporizador regresivo de sesión
   useEffect(() => {
@@ -49,6 +76,52 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
 
     return () => {
       if (interval) clearInterval(interval);
+    };
+  }, [status]);
+
+  // Temporizador regresivo para Cooldown
+  useEffect(() => {
+    if (status !== 'cooldown' || cooldownSeconds <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldownSeconds((prev) => {
+        if (prev <= 1) {
+          setStatus('idle');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [status, cooldownSeconds]);
+
+  // Sincronización entre pestañas locales con BroadcastChannel
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('BroadcastChannel' in window)) return;
+    const channel = new BroadcastChannel('portfolio_sandbox_multitab');
+
+    channel.onmessage = (event) => {
+      const data = event.data;
+      if (
+        data?.type === 'SESSION_STARTED' &&
+        data?.senderTabId !== tabInstanceIdRef.current
+      ) {
+        // Otra ventana o pestaña del mismo navegador acaba de iniciar una sesión
+        if (status === 'connected' || status === 'connecting') {
+          setStatus('replaced');
+          if (xtermRef.current) {
+            xtermRef.current.clear();
+          }
+          if (socketRef.current) {
+            socketRef.current.disconnect();
+          }
+        }
+      }
+    };
+
+    return () => {
+      channel.close();
     };
   }, [status]);
 
@@ -127,27 +200,27 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
   }, []);
 
   // Conectar y arrancar la sesión de contenedor Docker
-  const startSession = useCallback(() => {
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-    }
+  const startSession = useCallback(
+    (startOpts?: { forceReplace?: boolean }) => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
 
-    setStatus('connecting');
-    setErrorMessage(null);
-    setRemainingSeconds(300);
+      setStatus('connecting');
+      setErrorMessage(null);
+      setRejectInfo(null);
+      setRemainingSeconds(300);
 
-    const targetMode = options?.targetMode || 'vps';
-    const isTunnel = targetMode === 'tunnel';
-    const socketBaseUrl = isTunnel ? SANDBOX_TUNNEL_URL : API_URL;
-    const socketUrl = `${socketBaseUrl}/sandbox`;
+      const targetMode = options?.targetMode || 'vps';
+      const isTunnel = targetMode === 'tunnel';
+      const socketBaseUrl = isTunnel ? SANDBOX_TUNNEL_URL : API_URL;
+      const socketUrl = `${socketBaseUrl}/sandbox`;
+      const forceReplace = !!startOpts?.forceReplace;
 
     console.log('[Sandbox] startSession invocado. Modo:', targetMode, 'URL:', socketUrl);
 
     if (xtermRef.current) {
       xtermRef.current.clear();
-      xtermRef.current.write(
-        `\x1b[33m[SANDBOX] Conectando a ${isTunnel ? 'Servidor Físico Propio (Túnel)' : 'Cloud en AWS'}...\x1b[0m\r\n`,
-      );
     }
 
     const socket = io(socketUrl, {
@@ -168,8 +241,9 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
         cols,
         rows,
         targetMode,
+        forceReplace,
       });
-      socket.emit('start-session', { cols, rows, targetMode });
+      socket.emit('start-session', { cols, rows, targetMode, forceReplace });
     });
 
     socket.on('connect_error', (err) => {
@@ -192,11 +266,25 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
         mode?: 'vps' | 'tunnel';
       }) => {
         console.log('[Sandbox] Sesión Docker LISTA recibida del backend:', data);
+        if (forceReplace && xtermRef.current) {
+          xtermRef.current.clear();
+        }
         setStatus('connected');
         setSessionId(data.sessionId);
         setRemainingSeconds(data.maxTtlSeconds || 300);
         if (data.mode) {
           setSandboxMode(data.mode);
+        }
+
+        // Notificar a otras ventanas a través de BroadcastChannel
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+          const channel = new BroadcastChannel('portfolio_sandbox_multitab');
+          channel.postMessage({
+            type: 'SESSION_STARTED',
+            senderTabId: tabInstanceIdRef.current,
+            senderSessionId: data.sessionId,
+          });
+          channel.close();
         }
 
         // Sincronización de geometría y enfoque del canvas con holgura inferior
@@ -249,6 +337,61 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
       }
     });
 
+    // Manejo de rechazos de seguridad del backend (concurrencia, cooldown, límites)
+    socket.on(
+      'session-rejected',
+      (data: {
+        code: string;
+        message: string;
+        remainingSeconds?: number;
+        existingSocketId?: string;
+      }) => {
+        console.warn('[Sandbox] Solicitud rechazada por backend:', data);
+        setRejectInfo(data as RejectInfo);
+
+        if (data.code === 'ACTIVE_SESSION_EXISTS') {
+          setStatus('concurrency_limit');
+          if (xtermRef.current) {
+            xtermRef.current.clear();
+          }
+        } else if (data.code === 'COOLDOWN_ACTIVE') {
+          setStatus('cooldown');
+          setCooldownSeconds(data.remainingSeconds || 6);
+          if (xtermRef.current) {
+            xtermRef.current.clear();
+          }
+        } else if (data.code === 'HOURLY_LIMIT_REACHED') {
+          setStatus('rate_limited');
+          if (xtermRef.current) {
+            xtermRef.current.clear();
+          }
+        } else if (data.code === 'IP_BLOCKED') {
+          setStatus('blocked');
+          if (xtermRef.current) {
+            xtermRef.current.clear();
+          }
+        } else {
+          setStatus('error');
+          setErrorMessage(data.message);
+        }
+
+        if (socketRef.current) {
+          socketRef.current.disconnect();
+        }
+      },
+    );
+
+    // Notificación de que otra pestaña reclamó la sesión
+    socket.on('session-replaced', (data: { reason: string }) => {
+      setStatus('replaced');
+      if (xtermRef.current) {
+        xtermRef.current.clear();
+      }
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    });
+
     socket.on('session-error', (data: { message: string }) => {
       console.error('[Sandbox] Error devuelto por el contenedor:', data.message);
       setStatus('error');
@@ -259,11 +402,19 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     });
 
     socket.on('disconnect', () => {
-      if (status !== 'expired') {
+      const current = statusRef.current;
+      if (
+        current !== 'expired' &&
+        current !== 'replaced' &&
+        current !== 'concurrency_limit' &&
+        current !== 'cooldown' &&
+        current !== 'rate_limited' &&
+        current !== 'blocked'
+      ) {
         setStatus('disconnected');
       }
     });
-  }, [options, status]);
+  }, [options, setStatus]);
 
   // Auto-inicio de sesión si se especifica en las opciones
   useEffect(() => {
@@ -374,8 +525,10 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     status,
     errorMessage,
     remainingSeconds,
+    cooldownSeconds,
     sessionId,
     sandboxMode,
+    rejectInfo,
     startSession,
     endSession,
     handleResize,

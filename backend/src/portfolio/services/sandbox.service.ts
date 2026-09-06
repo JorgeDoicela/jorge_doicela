@@ -8,8 +8,11 @@ export interface SandboxSession {
   container: Docker.Container;
   stream: stream.Duplex;
   createdAt: number;
+  expiresAt: number;
   ttlTimer: NodeJS.Timeout;
   warningTimer: NodeJS.Timeout;
+  mode: 'vps' | 'tunnel';
+  scrollbackBuffer: string;
 }
 
 @Injectable()
@@ -58,17 +61,22 @@ export class SandboxService implements OnModuleDestroy {
     return this.sessions.size;
   }
 
+  getSession(socketId: string): SandboxSession | undefined {
+    return this.sessions.get(socketId);
+  }
+
   async createSession(
     socketId: string,
     cols = 80,
     rows = 24,
     targetMode: 'vps' | 'tunnel' = 'vps',
-    onWarning?: () => void,
-    onExpire?: () => void,
+    onWarning?: (currentSocketId: string) => void,
+    onExpire?: (currentSocketId: string) => void,
   ): Promise<{
     stream: stream.Duplex;
     sessionId: string;
     mode: 'vps' | 'tunnel';
+    session: SandboxSession;
   }> {
     if (this.sessions.has(socketId)) {
       await this.destroySession(socketId);
@@ -139,9 +147,6 @@ export class SandboxService implements OnModuleDestroy {
         SecurityOpt: ['no-new-privileges:true'],
         NetworkMode: 'none',
         AutoRemove: true,
-        // Enmascarar rutas /proc sensibles que exponen información del hardware real del host.
-        // MaskedPaths monta /dev/null sobre esas rutas a nivel de kernel (OCI spec),
-        // sin depender de aliases de shell que pueden eludirse con 'bash /proc/...' o cat_real.
         MaskedPaths: [
           '/proc/cpuinfo',
           '/proc/version',
@@ -152,7 +157,6 @@ export class SandboxService implements OnModuleDestroy {
           '/proc/irq',
           '/proc/bus',
         ],
-        // ReadonlyPaths impide escritura en rutas /proc que de otro modo serían escribibles
         ReadonlyPaths: ['/proc/asound', '/proc/timer_list'],
       },
     });
@@ -179,34 +183,92 @@ export class SandboxService implements OnModuleDestroy {
       // Ignorar si el contenedor recién iniciado tarda unos ms en ajustar el tty
     }
 
-    // Programar advertencia visual a los 4:30 minutos
-    const warningTimer = setTimeout(() => {
-      this.logger.warn(`Sesión ${sessionId} próxima a expirar (4m 30s).`);
-      if (onWarning) onWarning();
-    }, this.warningTtlMs);
-
-    // Programar expiración obligatoria a los 5 minutos
-    const ttlTimer = setTimeout(() => {
-      void (async () => {
-        this.logger.log(`Sesión ${sessionId} expirada por TTL (5m).`);
-        if (onExpire) onExpire();
-        await this.destroySession(socketId);
-      })();
-    }, this.sessionTtlMs);
+    const now = Date.now();
+    const expiresAt = now + this.sessionTtlMs;
 
     const session: SandboxSession = {
       sessionId,
       socketId,
       container,
       stream: streamObj,
-      createdAt: Date.now(),
-      ttlTimer,
-      warningTimer,
+      createdAt: now,
+      expiresAt,
+      ttlTimer: null as unknown as NodeJS.Timeout,
+      warningTimer: null as unknown as NodeJS.Timeout,
+      mode: effectiveMode,
+      scrollbackBuffer: '',
     };
+
+    // Programar advertencia visual a los 4:30 minutos
+    session.warningTimer = setTimeout(() => {
+      this.logger.warn(`Sesión ${sessionId} próxima a expirar (4m 30s).`);
+      if (onWarning) onWarning(session.socketId);
+    }, this.warningTtlMs);
+
+    // Programar expiración obligatoria a los 5 minutos
+    session.ttlTimer = setTimeout(() => {
+      void (async () => {
+        this.logger.log(`Sesión ${sessionId} expirada por TTL (5m).`);
+        if (onExpire) onExpire(session.socketId);
+        await this.destroySession(session.socketId);
+      })();
+    }, this.sessionTtlMs);
 
     this.sessions.set(socketId, session);
 
-    return { stream: streamObj, sessionId, mode: effectiveMode };
+    return {
+      stream: streamObj,
+      sessionId,
+      mode: effectiveMode,
+      session,
+    };
+  }
+
+  /**
+   * Reasigna en caliente una sesión viva a un nuevo socket sin reiniciar el contenedor Docker.
+   */
+  async transferSession(
+    oldSocketId: string,
+    newSocketId: string,
+    cols = 80,
+    rows = 24,
+  ): Promise<{
+    sessionId: string;
+    mode: 'vps' | 'tunnel';
+    scrollback: string;
+    remainingTtlSeconds: number;
+  } | null> {
+    const session = this.sessions.get(oldSocketId);
+    if (!session) {
+      this.logger.warn(
+        `transferSession: No se encontró sesión activa para socket anterior ${oldSocketId}`,
+      );
+      return null;
+    }
+
+    // Desvincular del socket anterior y vincular al nuevo
+    this.sessions.delete(oldSocketId);
+    session.socketId = newSocketId;
+    this.sessions.set(newSocketId, session);
+
+    // Redimensionar el PTY a las dimensiones de la nueva ventana/pestaña
+    await this.resizeTerminal(newSocketId, cols, rows);
+
+    const remainingTtlSeconds = Math.max(
+      1,
+      Math.ceil((session.expiresAt - Date.now()) / 1000),
+    );
+
+    this.logger.log(
+      `[Handover PTY] Sesión ${session.sessionId} transferida con éxito: ${oldSocketId} → ${newSocketId} (TTL restante: ${remainingTtlSeconds}s)`,
+    );
+
+    return {
+      sessionId: session.sessionId,
+      mode: session.mode,
+      scrollback: session.scrollbackBuffer,
+      remainingTtlSeconds,
+    };
   }
 
   writeInput(socketId: string, data: string): void {

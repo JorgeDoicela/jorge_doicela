@@ -50,6 +50,7 @@ backend/src/portfolio/
 ├── services/
 │   ├── portfolio.service.ts       # Intérprete y procesador de comandos Unix de la terminal guiada
 │   ├── sandbox.service.ts         # Orquestador y hardening de contenedores Docker efímeros (dockerode)
+│   ├── sandbox-security.service.ts # Gobernanza de acceso, concurrencia 1:1 por IP, cooldown y jail
 │   ├── contact-messages.service.ts # Servicio de persistencia y emisión de eventos
 │   ├── telegram-notification.service.ts # Servicio de comunicación HTTP con la API de Telegram
 │   └── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos (TypeORM simple-json)
@@ -84,12 +85,18 @@ backend/src/portfolio/
 
 ### 3.2 Gateway del Live Linux Sandbox (`SandboxGateway`)
 * **Namespace:** `/sandbox` (independiente de `/terminal`).
+* **Seguridad Perimetral Desacoplada (`SandboxSecurityService`):** Orquesta la gobernanza por IP antes de invocar a Docker:
+  * **Concurrencia estricta:** 1 sesión activa por IP.
+  * **Cooldown de Seguridad:** 6 segundos mínimos entre creaciones de nuevas sesiones por IP.
+  * **Rate Limit Horario:** Máximo 8 sesiones por hora por IP.
+  * **Jail Temporal:** Bloqueo de 15 minutos ante abusos reiterados.
+  * **Garantía Zero-RAM:** Estructuras en memoria con auto-purga periódica cada 10 minutos (< 1 MB de consumo en VPS).
 * **Configuración CORS:** Idéntica a `PortfolioGateway` — lista blanca explícita con condicional `NODE_ENV`.
 * **Eventos WebSocket recibidos:**
 
 | Evento | Payload | Descripción |
 |--------|---------|-------------|
-| `start-session` | `{ cols, rows, targetMode }` | Crea el contenedor Docker y emite `session-ready` |
+| `start-session` | `{ cols, rows, targetMode, forceReplace }` | Evalúa IP en `SandboxSecurityService`, crea contenedor Docker o transfiere sesión y emite `session-ready` |
 | `terminal-input` | `string` | Reenvía caracteres/teclas al PTY del contenedor |
 | `terminal-resize` | `{ cols, rows }` | Redimensiona el TTY del contenedor en ejecución |
 
@@ -98,6 +105,8 @@ backend/src/portfolio/
 | Evento | Payload | Descripción |
 |--------|---------|-------------|
 | `session-ready` | `{ sessionId, cols, rows, maxTtlSeconds: 300, mode }` | Notifica al cliente que el sandbox está listo |
+| `session-rejected` | `{ code, message, remainingSeconds, existingSocketId }` | Emite código de rechazo (`ACTIVE_SESSION_EXISTS`, `COOLDOWN_ACTIVE`, `HOURLY_LIMIT_REACHED`, `IP_BLOCKED`) |
+| `session-replaced` | `{ reason }` | Notifica a una pestaña antigua que su sesión fue asumida en otra ventana |
 | `terminal-output` | `string` | Stream de bytes del PTY hacia el cliente (xterm.js) |
 | `session-warning` | `{ message, secondsRemaining: 30 }` | Advertencia a 4m 30s |
 | `session-expired` | `{ reason }` | TTL de 5 minutos alcanzado |
@@ -173,13 +182,20 @@ backend/src/portfolio/
 
 * **Logging de inputs:** El método `writeInput` usa `logger.debug` con solo la longitud en bytes — **nunca el contenido** — para proteger datos privados de los visitantes en los logs de PM2.
 
-### 4.3 Ciclo de Vida y Limpieza
+### 4.3 Ciclo de Vida, Limpieza y Handover PTY en Caliente
 
-* Concurrencia limitada: `SANDBOX_MAX_SESSIONS=3` en VPS.
-* Temporizador de advertencia: 4m 30s → evento `session-warning` al cliente.
-* TTL forzado: 5m → `kill()` + `remove()` del contenedor, evento `session-expired` al cliente.
-* Hook `OnModuleDestroy`: destruye todos los contenedores activos al reiniciar el proceso NestJS en PM2 (cero contenedores huérfanos).
-* `destroySession`: elimina de `Map`, cancela timers, cierra el stream, ejecuta `kill()` y `remove()` con manejo de error seguro.
+* **Concurrencia limitada:** `SANDBOX_MAX_SESSIONS=3` en VPS.
+* **Handover PTY en Caliente (Zero-Docker destroy):**
+  - Cuando un visitante abre una segunda pestaña y pulsa *"Transferir aquí"*, el backend **no destruye el contenedor Docker**.
+  - `SandboxService.transferSession(oldSocketId, newSocketId, cols, rows)` reasigna la sesión en memoria, preservando el proceso de shell, archivos temporales creados y el temporizador TTL restante.
+  - El buffer de salida (`scrollbackBuffer`, máx 32 KB) se transmite de inmediato a la nueva pestaña para restaurar el prompt y comandos previos sin parpadeo.
+  - La transferencia actualiza `SandboxSecurityService.transferSession` **sin penalizar la cuota horaria** (`usage.count`), evitando falsos positivos de abuso o bloqueos accidentales en Jail.
+* **Preservación ante Desconexión de Pestaña Anterior:**
+  - Si la pestaña sustituida se cierra, `handleDisconnect` verifica que el socket desconectado no sea el dueño actual de la sesión, conservando el contenedor vivo para la pestaña activa.
+* **Temporizador de advertencia:** 4m 30s → evento `session-warning` al cliente activo actual.
+* **TTL forzado:** 5m → `kill()` + `remove()` del contenedor, evento `session-expired` al cliente activo.
+* **Hook `OnModuleDestroy`:** destruye todos los contenedores activos al reiniciar el proceso NestJS en PM2 (cero contenedores huérfanos).
+* **`destroySession`:** elimina de `Map`, cancela timers, cierra el stream, ejecuta `kill()` y `remove()` con manejo de error seguro.
 
 ### 4.4 Variable de Entorno `SANDBOX_MODE` en el Contenedor
 

@@ -164,7 +164,14 @@
     "copied": "¡Copiado!",
     "noSelectionToCopy": "Selecciona texto primero",
     "pasted": "Pegado",
-    "instanceInfo": "Instancia VPS: AWS Lightsail (Debian 13)"
+    "instanceInfo": "Instancia VPS: AWS Lightsail (Debian 13)",
+    "activeSessionNotice": "Sesión activa en otra ventana",
+    "transferSession": "Transferir terminal a esta ventana",
+    "cooldownNotice": "Preparando entorno: {seconds}s",
+    "hourlyLimitNotice": "Límite horario alcanzado",
+    "ipBlockedNotice": "Acceso restringido temporalmente",
+    "sessionReplacedNotice": "La terminal fue transferida a otra ventana",
+    "transferring": "Transfiriendo..."
   },
   "SandboxStandalone": {
     "backToPortfolio": "Volver al Portafolio",
@@ -185,5 +192,27 @@
     "successDesc": "He recibido tu notificación con éxito. En cuanto me encuentre disponible encenderé el equipo para que puedas probar la consola. Puedes mantener esta ventana o volver más tarde para ingresar a la terminal.",
     "close": "Cerrar",
     "retryCheck": "Entrar a la Terminal"
+  },
+  "SandboxSecurityModal": {
+    "concurrencyBadge": "SESIÓN EN CURSO",
+    "concurrencyTitle": "Ya tienes una terminal activa en otra ventana",
+    "concurrencyDesc": "Para garantizar un uso justo y mantener la integridad del entorno seguro (1 sesión activa por usuario), no es posible tener dos consolas abiertas al mismo tiempo.",
+    "concurrencyAction": "Transferir terminal a esta ventana",
+    "replacedBadge": "SESIÓN TRANSFERIDA",
+    "replacedTitle": "El control de la terminal ha cambiado de ventana",
+    "replacedDesc": "Se inició o transfirió la terminal a otra pestaña de tu navegador. Esta sesión se ha pausado para mantener el control exclusivo en la ventana activa.",
+    "replacedAction": "Retomar el control aquí",
+    "cooldownBadge": "ENTORNO SEGURO",
+    "cooldownTitle": "Sincronizando nueva sesión",
+    "cooldownDesc": "Por políticas de seguridad y aislamiento perimetral, aguarda un instante mientras se inicializa el entorno de la terminal.",
+    "cooldownAction": "Iniciando en {seconds}s...",
+    "cooldownReady": "Entrar a la terminal",
+    "rateLimitBadge": "LÍMITE DE USO ALCANZADO",
+    "rateLimitTitle": "Cuota de uso completada por esta hora",
+    "rateLimitDesc": "Has alcanzado el límite de 8 sesiones por hora para proteger el servidor contra sobrecarga. Podrás ingresar nuevamente en la próxima ventana horaria.",
+    "blockedBadge": "ACCESO RESTRINGIDO",
+    "blockedTitle": "Acceso restringido temporalmente",
+    "blockedDesc": "Se ha bloqueado temporalmente el acceso desde esta dirección debido a reiteradas solicitudes. Podrás reintentar en unos minutos.",
+    "backToPortfolio": "Volver al Portafolio"
   }
 }

@@ -138,14 +138,22 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 ### 4.4 Barra de Control Inferior (Footer Consolidado estilo AWS CloudShell)
 * **Apertura de Ventana Emergente Dedicada:** El botón de lanzamiento calcula el centro de la pantalla del usuario (`1080x680px`) y abre una ventana popup independiente con `toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,noopener,noreferrer`, aislando el proceso y evitando colisiones de atajos de teclado de Linux (`Ctrl+W`, `Ctrl+T`) con el navegador.
 * **Consola Superior Pura:** El canvas xterm.js inicia desde el pixel superior del viewport sin barras distractoras arriba.
-* **Barra de Herramientas Inferior (Footer):**
+* **Barra de Herramientas Inferior (Footer Adaptativo sin Saltos de Layout):**
   * Izquierda: Botón de retorno/cierre inteligente (`← Volver al Portafolio`), badge del modo (`EN VIVO • AWS CLOUD` / `EN VIVO • SERVIDOR LOCAL`).
-  * Derecha: Botón `[📋 Copiar selección]` (lee la selección activa de xterm al portapapeles con feedback `¡Copiado!`), botón `[📥 Pegar en terminal]` (inyecta el portapapeles del sistema al WebSocket), temporizador `⏱ 04:33`, botón de salida `[ ✕ Finalizar ]` / `[ ▶ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
+  * Derecha:
+    * Botón `[📋 Copiar selección]` y `[📥 Pegar en terminal]`.
+    * Temporizador dinámico de sesión activa (`⏱ 04:33`).
+    * **Contador de Cooldown Activo:** Indicador regresivo sutil (`⏱ Espera 20s`) si la IP debe aguardar antes de volver a instanciar.
+    * **Botón de Transferencia de Sesión (`[ Transferir terminal a esta ventana ]`):** Aparece cuando la IP ya tiene un contenedor abierto en otra pestaña (`concurrency_limit`), enviando `{ forceReplace: true }` para reclamar la sesión sin fricción.
+    * Botón de salida `[ ✕ Finalizar ]` / `[ ▶ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
 
-### 4.5 Seguridad en el Hook `useSandboxTerminal.ts`
+### 4.5 Seguridad y Sincronización en el Hook `useSandboxTerminal.ts`
+* **Sincronización Multiventana Local (`BroadcastChannel`):** Canal `portfolio_sandbox_multitab` que coordina pestañas locales en tiempo real con `senderTabId` inmutable. Cuando una pestaña inicia o transfiere la terminal, las demás pestañas abiertas lo detectan inmediatamente y pasan al estado `replaced` sin generar llamadas redundantes al servidor.
+* **Modal Dark Luxury de Seguridad y Concurrencia (`SandboxSecurityModal.tsx`):** Cuando la sesión entra en un estado de seguridad (`concurrency_limit`, `replaced`, `cooldown`, `rate_limited` o `blocked`), la interfaz renderiza una tarjeta centrada con estética Dark Luxury idéntica a `ServerOfflineBanner.tsx` (resplandor ambiental dorado, badge superior, título claro, reloj regresivo en cooldown y botón de acción de transferencia `[ Transferir terminal a esta ventana ]`).
+* **Handover PTY en Caliente y Replay de Scrollback:** Al confirmar la transferencia, el socket emite `{ forceReplace: true }`. El backend transfiere el stream interactivo del contenedor Docker sin destruirlo, y la nueva pestaña recibe el buffer de salida previo (`scrollback`), restaurando instantáneamente el prompt, comandos y texto sin parpadeos ni pérdidas de datos.
 * **Privacidad de input:** El evento `onData` de xterm.js **no loguea** el contenido de las pulsaciones del visitante (`console.log` eliminado) para proteger datos privados en la consola del navegador.
 * **Filtrado de secuencias de ratón:** Se ignoran secuencias `\x1b[<` y `\x1b[M` (SGR / X10 Mouse events) para evitar basura en el stream PTY al hacer clic en la terminal.
-* **Limpieza en desmontaje:** `socket.disconnect()` + `xterm.dispose()` garantizan cero fugas de memoria o conexiones zombie.
+* **Limpieza en desmontaje:** `socket.disconnect()` + `xterm.dispose()` + `channel.close()` garantizan cero fugas de memoria o listeners huérfanos.
 * **Reconexión limitada:** `reconnectionAttempts: 5` para evitar tempestades de reconexión en sesiones caídas.
 
 ### 4.6 Manejo de Servidor Físico Fuera de Línea (`ServerOfflineBanner.tsx`)

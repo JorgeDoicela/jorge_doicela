@@ -119,16 +119,19 @@ Cada proyecto define sus propias rutas en una constante independiente (`landingR
 
 Las reglas de bots son universales y comparte configuración. El comentario inline documenta exactamente qué cambiar en la propiedad `sitemap` para apuntar al nuevo servidor (`https://software.jorgedoicela.com/sitemap.xml`).
 
-### 5.3 `src/middleware.ts` — Bloques Etiquetados por Subdominio
+### 5.3 `src/middleware.ts` — Enrutamiento Declarativo por Subdominio
 
-Cada subdominio (`portfolio.`, `bible.`, `software.`) está en su propio bloque etiquetado. Al migrar un proyecto, se **elimina su bloque** de este archivo. La landing no necesita bloque porque es la ruta raíz por defecto.
+El middleware opera mediante una **tabla declarativa de rutas** (`SUBDOMAIN_TARGET_MAP`) y una función pura de **normalización determinista de rutas** (`resolveSubdomainPath` bajo RFC 3986), eliminando fragilidades de trailing slashes y código repetido:
 
+```ts
+const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
+    portfolio: '/portfolio',
+    bible: '/bible',
+    software: '/software',
+};
 ```
-// ── PORTFOLIO ── Al migrar: eliminar este bloque
-// ── BIBLE ────── Al migrar: eliminar este bloque
-// ── SOFTWARE ─── Al migrar: eliminar este bloque
-// ── LANDING ──── No tiene bloque; es la raíz por defecto
-```
+
+Al migrar un subproyecto a su propio servidor físico independiente, simplemente se **remueve su clave del diccionario** `SUBDOMAIN_TARGET_MAP`. La landing no requiere entrada porque opera como ruta raíz por defecto.
 
 > [!TIP]
 > La estructura de **assets públicos** (`public/landing/`, `public/portfolio/`, etc.) y las **bases de datos SQLite** (`portfolio.sqlite`, `bible.sqlite`, `software.sqlite`) ya son 100% portables sin modificación alguna.

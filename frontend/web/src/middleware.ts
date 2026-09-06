@@ -12,15 +12,41 @@ import type { NextRequest } from 'next/server';
 //
 // GUÍA DE MIGRACIÓN POR PROYECTO:
 //   Al mover un proyecto a su propio servidor Next.js independiente,
-//   ELIMINAR el bloque correspondiente de este middleware y en el nuevo
-//   servidor usar un middleware.ts mínimo o eliminarlo completamente.
-//
-//   ┌─────────────────────────────────────────────────────────────┐
-//   │  Al extraer PORTFOLIO: eliminar el bloque "PORTFOLIO" (L28) │
-//   │  Al extraer BIBLE:     eliminar el bloque "BIBLE"     (L36) │
-//   │  Al extraer SOFTWARE:  eliminar el bloque "SOFTWARE"  (L44) │
-//   └─────────────────────────────────────────────────────────────┘
+//   simplemente remover su clave de SUBDOMAIN_TARGET_MAP.
 // ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Tabla declarativa de enrutamiento por subdominio (Open/Closed Principle de SOLID).
+ * Subdominio -> Prefijo canónico de ruta interna
+ */
+const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
+    portfolio: '/portfolio',
+    bible: '/bible',
+    software: '/software',
+};
+
+/**
+ * Normaliza y resuelve la ruta canónica interna para un subdominio específico.
+ * Es inmune a trailing slashes, rutas vacías y prefijos duplicados (RFC 3986).
+ *
+ * Ejemplos con targetPrefix = '/portfolio':
+ *   '/'          -> '/portfolio'
+ *   '//'         -> '/portfolio'
+ *   '/sandbox'   -> '/portfolio/sandbox'
+ *   '/sandbox/'  -> '/portfolio/sandbox'
+ *   '/portfolio' -> '/portfolio'
+ */
+function resolveSubdomainPath(targetPrefix: string, pathname: string): string {
+    const cleanPath = pathname.replace(/^\/+|\/+$/g, '');
+    const prefixWithoutSlash = targetPrefix.replace(/^\/+/, '');
+
+    // Si la ruta ya incluye el prefijo del subdominio, no duplicarlo
+    if (cleanPath === prefixWithoutSlash || cleanPath.startsWith(`${prefixWithoutSlash}/`)) {
+        return `/${cleanPath}`;
+    }
+
+    return cleanPath.length > 0 ? `${targetPrefix}/${cleanPath}` : targetPrefix;
+}
 
 export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
@@ -42,38 +68,23 @@ export function middleware(request: NextRequest) {
     const langParam = url.searchParams.get('lang');
     let response: NextResponse | null = null;
 
-    // ── PORTFOLIO ─────────────────────────────────────────────────────────────
-    // Al migrar portfolio a servidor propio: eliminar este bloque completo.
-    // El nuevo servidor Next.js servirá directamente src/app/(portfolio)/.
-    if (hostname.startsWith('portfolio.')) {
-        if (!url.pathname.startsWith('/portfolio')) {
-            url.pathname = `/portfolio${url.pathname}`;
-            response = NextResponse.rewrite(url);
-        }
+    // ── RESOLUCIÓN DECLARATIVA DE SUBDOMINIO ──────────────────────────────────
+    const matchedSubdomain = Object.keys(SUBDOMAIN_TARGET_MAP).find((sub) =>
+        hostname.startsWith(`${sub}.`),
+    );
 
-    // ── BIBLE ─────────────────────────────────────────────────────────────────
-    // Al migrar bible a servidor propio: eliminar este bloque completo.
-    // El nuevo servidor Next.js servirá directamente src/app/(bible)/.
-    } else if (hostname.startsWith('bible.')) {
-        if (!url.pathname.startsWith('/bible')) {
-            url.pathname = `/bible${url.pathname}`;
-            response = NextResponse.rewrite(url);
-        }
+    if (matchedSubdomain) {
+        const targetPrefix = SUBDOMAIN_TARGET_MAP[matchedSubdomain];
+        const resolvedPath = resolveSubdomainPath(targetPrefix, url.pathname);
 
-    // ── SOFTWARE ──────────────────────────────────────────────────────────────
-    // Al migrar software a servidor propio: eliminar este bloque completo.
-    // El nuevo servidor Next.js servirá directamente src/app/(software)/.
-    } else if (hostname.startsWith('software.')) {
-        if (!url.pathname.startsWith('/software')) {
-            url.pathname = `/software${url.pathname}`;
+        if (url.pathname !== resolvedPath) {
+            url.pathname = resolvedPath;
             response = NextResponse.rewrite(url);
         }
     }
 
-    // ── LANDING ───────────────────────────────────────────────────────────────
+    // ── LANDING / FALLBACK ───────────────────────────────────────────────────
     // (jorgedoicela.com) — No requiere rewrite; es la ruta raíz por defecto.
-    // Al migrar el resto de proyectos, este queda como el único servidor.
-
     if (!response) {
         response = NextResponse.next();
     }

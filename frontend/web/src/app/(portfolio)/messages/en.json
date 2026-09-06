@@ -164,7 +164,14 @@
     "copied": "Copied!",
     "noSelectionToCopy": "Select text first",
     "pasted": "Pasted",
-    "instanceInfo": "VPS Instance: AWS Lightsail (Debian 13)"
+    "instanceInfo": "VPS Instance: AWS Lightsail (Debian 13)",
+    "activeSessionNotice": "Active session in another tab",
+    "transferSession": "Transfer terminal to this window",
+    "cooldownNotice": "Preparing environment: {seconds}s",
+    "hourlyLimitNotice": "Hourly limit reached",
+    "ipBlockedNotice": "Access temporarily restricted",
+    "sessionReplacedNotice": "Terminal was transferred to another window",
+    "transferring": "Transferring..."
   },
   "SandboxStandalone": {
     "backToPortfolio": "Back to Portfolio",
@@ -185,5 +192,27 @@
     "successDesc": "I have received your notification. As soon as I am available, I will power on the machine so you can explore the console. Feel free to keep this tab open or check back later to enter the terminal.",
     "close": "Close",
     "retryCheck": "Enter Terminal"
+  },
+  "SandboxSecurityModal": {
+    "concurrencyBadge": "ACTIVE SESSION",
+    "concurrencyTitle": "You already have an active terminal in another window",
+    "concurrencyDesc": "To ensure fair use and maintain secure environment integrity (1 active session per user), running concurrent sessions is restricted.",
+    "concurrencyAction": "Transfer terminal to this window",
+    "replacedBadge": "SESSION TRANSFERRED",
+    "replacedTitle": "Terminal control switched to another window",
+    "replacedDesc": "The terminal was transferred to another tab or window. This session was paused to maintain exclusive control in the active window.",
+    "replacedAction": "Resume control here",
+    "cooldownBadge": "SECURE ENVIRONMENT",
+    "cooldownTitle": "Synchronizing new session",
+    "cooldownDesc": "For security and perimeter isolation policies, please wait a moment while the terminal environment initializes.",
+    "cooldownAction": "Starting in {seconds}s...",
+    "cooldownReady": "Enter terminal",
+    "rateLimitBadge": "USAGE LIMIT REACHED",
+    "rateLimitTitle": "Hourly quota reached",
+    "rateLimitDesc": "You reached the limit of 8 sessions per hour to protect the server from overload. You can connect again in the next hour.",
+    "blockedBadge": "RESTRICTED ACCESS",
+    "blockedTitle": "Access temporarily restricted",
+    "blockedDesc": "Access from this address has been temporarily restricted due to repeated requests. You can retry in a few minutes.",
+    "backToPortfolio": "Back to Portfolio"
   }
 }

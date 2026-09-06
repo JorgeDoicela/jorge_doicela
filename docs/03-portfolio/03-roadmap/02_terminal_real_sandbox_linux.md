@@ -71,9 +71,13 @@ Para exponer una terminal interactiva real a internet sin riesgo de intrusión, 
 * **Modo Red Completamente Desconectada:** `--network=none` (sin ambigüedad, sin subred alternativa). El contenedor no tiene ninguna interfaz de red disponible excepto `lo` (loopback local interno al contenedor mismo).
 * El contenedor no puede alcanzar las APIs internas de NestJS (puerto `3000`), ni Next.js (puerto `3001`), ni las bases de datos `backend/data/*.sqlite`, ni Internet exterior, ni la red LAN del VPS.
 
-### Capa 5: Control de Concurrencia y Temporizador de Sesión
-* **Límite de Concurrencia:** Máximo 3 contenedores activos simultáneamente en todo el sistema (valor configurable por variable de entorno `SANDBOX_MAX_SESSIONS`).
-* **Tiempo de Vida de Sesión (TTL):** 5 minutos continuos de inactividad. Al llegar al minuto 4:30 se emite una advertencia visual en la terminal y al minuto 5:00 la sesión se destruye liberando la memoria.
+### Capa 5: Gobernanza por IP, Concurrencia y Temporizador de Sesión (`SandboxSecurityService`)
+* **Concurrencia Estricta por IP (1:1):** Cada IP real tiene derecho a como máximo 1 contenedor simultáneo. Intentos de abrir múltiples pestañas reciben `ACTIVE_SESSION_EXISTS`, protegiendo el cupo global de 3 sesiones contra ataques DoS o de inanición.
+* **Transferencia Limpia de Sesión (`forceReplace: true`):** Si el usuario cambia de ventana o pestaña, el cliente puede reclamar el control enviando `forceReplace: true`. El backend notifica al socket anterior (`session-replaced`), destruye el contenedor previo en Docker y aprovisiona el nuevo entorno sin duplicar recursos.
+* **Cooldown de Seguridad:** 6 segundos mínimos de espera entre creaciones para la misma IP, evitando sobrecarga y churn innecesario en el daemon de Docker.
+* **Rate Limit Horario & Jail en Memoria:** Máximo 8 sesiones por hora por IP. Si una IP insiste en saturar el sistema, ingresa a un Jail temporal de 15 minutos que rechaza solicitudes en el handshake con consumo de 0 ms y 0 MB en Docker.
+* **Garantía Zero-RAM (< 1 MB):** Mapas V8 protegidos con rutina de auto-purga cada 10 minutos y recolección de basura determinista en `OnModuleDestroy`.
+* **Tiempo de Vida de Sesión (TTL):** 5 minutos continuos. Advertencia visual a los 4:30 minutos y terminación forzada a los 5:00 minutos liberando memoria.
 
 ---
 

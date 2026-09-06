@@ -14,6 +14,7 @@ import { SandboxController } from './controllers/sandbox.controller';
 import { PortfolioProjectsService } from './services/portfolio-projects.service';
 
 import { SandboxService } from './services/sandbox.service';
+import { SandboxSecurityService } from './services/sandbox-security.service';
 import { SandboxGateway } from './gateways/sandbox.gateway';
 
 import { resolveDatabasePath } from '../common/database/database-path.util';
@@ -49,6 +50,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     PortfolioGateway,
     PortfolioProjectsService,
     SandboxService,
+    SandboxSecurityService,
     SandboxGateway,
   ],
   exports: [
@@ -57,6 +59,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     TelegramNotificationService,
     PortfolioProjectsService,
     SandboxService,
+    SandboxSecurityService,
   ],
 })
 export class PortfolioModule {}

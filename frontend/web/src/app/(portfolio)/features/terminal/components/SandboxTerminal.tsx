@@ -35,6 +35,7 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
   const tStandalone = useTranslations('SandboxStandalone');
   const [copiedFeedback, setCopiedFeedback] = useState<boolean>(false);
   const [pastedFeedback, setPastedFeedback] = useState<boolean>(false);
+  const [hasRetriedTunnel, setHasRetriedTunnel] = useState<boolean>(false);
 
   const {
     terminalRef,
@@ -51,6 +52,13 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
     copySelection,
     pasteToTerminal,
   } = useSandboxTerminal({ autoStart: isFullscreen, targetMode });
+
+  // Reset de intento cuando la sesión conecta exitosamente
+  useEffect(() => {
+    if (status === 'connected') {
+      setHasRetriedTunnel(false);
+    }
+  }, [status]);
 
   // Inicializar xterm en modo standalone / fullscreen
   useEffect(() => {
@@ -148,7 +156,9 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
       ? t('badgeTunnel')
       : t('badgeVps');
 
-  const isTunnelOffline = status === 'error' && targetMode === 'tunnel';
+  const isTunnelOffline =
+    targetMode === 'tunnel' &&
+    (status === 'error' || (status === 'connecting' && hasRetriedTunnel));
   const isSecurityState =
     status === 'concurrency_limit' ||
     status === 'replaced' ||
@@ -180,170 +190,144 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
         </div>
       )}
 
-      {/* Si el servidor físico está apagado, mostrar el banner Dark Luxury interactivo */}
-      {isTunnelOffline ? (
-        <div className="flex-1 w-full min-h-0 p-4 sm:p-8 bg-[#080705] overflow-y-auto flex items-center justify-center">
+      {/* Modal Dark Luxury overlay si el servidor físico está apagado */}
+      {isTunnelOffline && (
+        <div className="absolute inset-0 z-20 w-full h-full p-4 sm:p-8 bg-[#080705] overflow-y-auto flex items-center justify-center animate-fade-in">
           <ServerOfflineBanner
             isFullscreen={true}
-            onRetry={() => startSession()}
-          />
-        </div>
-      ) : (
-        /* 1. Canvas Xterm.js que NUNCA se desmonta para preservar el renderer y buffer */
-        <div className="flex-1 w-full min-h-0 px-4 pt-3 pb-2 bg-[#080705] overflow-hidden flex flex-col">
-          <div
-            ref={terminalRef}
-            onClick={focusTerminal}
-            className="w-full h-full flex-1 cursor-text overflow-hidden"
+            isConnecting={status === 'connecting' && hasRetriedTunnel}
+            retryFailed={status === 'error' && hasRetriedTunnel}
+            onRetry={() => {
+              setHasRetriedTunnel(true);
+              startSession();
+            }}
           />
         </div>
       )}
 
-      {/* 2. Barra de Herramientas y Estado Inferior (Footer Consolidado estilo AWS) */}
-      <footer className="flex items-center justify-between gap-3 px-4 py-2 border-t border-border-gold bg-surface-raised text-xs select-none shrink-0 min-h-[48px] z-10">
-        {/* Lado izquierdo: Botón Retorno, Luces de Estado, Badge e Identidad de Instancia */}
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-none">
-          <button
-            onClick={() => {
-              if (window.opener && !window.opener.closed) {
-                window.close();
-              } else {
-                window.location.href = '/';
-              }
-            }}
-            className="flex items-center gap-1.5 text-xs font-mono text-muted hover:text-gold-200 transition-colors cursor-pointer group pr-1 shrink-0"
-            title={tStandalone('backToPortfolio')}
-          >
-            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-            <span className="hidden sm:inline font-mono">{tStandalone('backToPortfolio')}</span>
-          </button>
+      {/* 1. Canvas Xterm.js que NUNCA se desmonta para preservar el renderer y buffer */}
+      <div className="flex-1 w-full min-h-0 px-4 pt-3 pb-2 bg-[#080705] overflow-hidden flex flex-col">
+        <div
+          ref={terminalRef}
+          onClick={focusTerminal}
+          className="w-full h-full flex-1 cursor-text overflow-hidden"
+        />
+      </div>
 
-          <div className="h-4 w-px bg-border-gold/60 hidden sm:block shrink-0" />
-
-          {/* Badge del Modo */}
-          <span className="px-2 py-0.5 rounded bg-surface border border-border-gold/60 text-gold-300 font-semibold font-mono text-[11px] flex items-center gap-1.5 shrink-0">
-            <ShieldCheck className="w-3 h-3 text-gold-400" />
-            <span>{standaloneBadge}</span>
-          </span>
-        </div>
-
-        {/* Lado derecho: Herramientas Copiar/Pegar, Temporizador, Botón Finalizar y Toggles */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Botón Copiar Selección */}
-          <button
-            onClick={handleCopySelection}
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-gold-400/60 text-foreground/85 hover:text-gold-200 text-[11px] font-mono font-medium transition-all cursor-pointer"
-            title={t('copyFromTerminal')}
-          >
-            {copiedFeedback ? (
-              <>
-                <Check className="w-3 h-3 text-emerald-400" />
-                <span className="text-emerald-400 font-mono">{t('copied')}</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-3 h-3 text-gold-400" />
-                <span>{t('copyFromTerminal')}</span>
-              </>
-            )}
-          </button>
-
-          {/* Botón Pegar en Terminal */}
-          <button
-            onClick={handlePaste}
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-gold-400/60 text-foreground/85 hover:text-gold-200 text-[11px] font-mono font-medium transition-all cursor-pointer"
-            title={t('pasteIntoTerminal')}
-          >
-            {pastedFeedback ? (
-              <>
-                <Check className="w-3 h-3 text-emerald-400" />
-                <span className="text-emerald-400 font-mono">{t('pasted')}</span>
-              </>
-            ) : (
-              <>
-                <ClipboardPaste className="w-3 h-3 text-gold-400" />
-                <span>{t('pasteIntoTerminal')}</span>
-              </>
-            )}
-          </button>
-
-          {/* Temporizador de Sesión Activa */}
-          {(status === 'connected' || status === 'warning') && (
-            <div
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-[11px] border transition-colors ${
-                status === 'warning'
-                  ? 'bg-red-500/10 border-red-500/40 text-red-600 dark:text-red-300 animate-pulse'
-                  : 'bg-surface border-border-gold/60 text-foreground/80'
-              }`}
-              title="Tiempo restante de la sesión"
-            >
-              <Clock className="w-3 h-3 text-gold-500 dark:text-gold-300" />
-              <span className="tabular-nums font-medium">{formatTime(remainingSeconds)}</span>
-            </div>
-          )}
-
-          {/* Indicador de Cooldown */}
-          {status === 'cooldown' && (
-            <div
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface border border-gold-400/40 text-gold-300 font-mono text-[11px]"
-              title={t('cooldownNotice', { seconds: cooldownSeconds })}
-            >
-              <Clock className="w-3 h-3 text-gold-400" />
-              <span className="tabular-nums font-medium">
-                {t('cooldownNotice', { seconds: cooldownSeconds })}
-              </span>
-            </div>
-          )}
-
-          {/* Botón de Transferencia si hay sesión en otra ventana */}
-          {(status === 'concurrency_limit' || status === 'replaced') && (
+      {/* 2. Barra de Herramientas y Estado Inferior (Oculta en modales y servidor offline) */}
+      {!isSecurityState && !isTunnelOffline && (
+        <footer className="flex items-center justify-between gap-3 px-4 py-2 border-t border-border-gold bg-surface-raised text-xs select-none shrink-0 min-h-[48px] z-10">
+          {/* Lado izquierdo: Botón Retorno, Luces de Estado, Badge e Identidad de Instancia */}
+          <div className="flex items-center gap-3 overflow-x-auto scrollbar-none">
             <button
-              onClick={() => startSession({ forceReplace: true })}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-all shadow-sm cursor-pointer"
-              title={t('transferSession')}
+              onClick={() => {
+                if (window.opener && !window.opener.closed) {
+                  window.close();
+                } else {
+                  window.location.href = '/';
+                }
+              }}
+              className="flex items-center gap-1.5 text-xs font-mono text-muted hover:text-gold-200 transition-colors cursor-pointer group pr-1 shrink-0"
+              title={tStandalone('backToPortfolio')}
             >
-              <Play className="w-3 h-3 fill-current" />
-              <span>{t('transferSession')}</span>
+              <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+              <span className="hidden sm:inline font-mono">{tStandalone('backToPortfolio')}</span>
             </button>
-          )}
 
-          {/* Mensajes de Límites Horarios o Bloqueo */}
-          {(status === 'rate_limited' || status === 'blocked') && (
-            <span className="text-[11px] font-mono text-red-400 px-2 py-1 bg-red-950/40 rounded border border-red-500/30">
-              {status === 'blocked' ? t('ipBlockedNotice') : t('hourlyLimitNotice')}
+            <div className="h-4 w-px bg-border-gold/60 hidden sm:block shrink-0" />
+
+            {/* Badge del Modo */}
+            <span className="px-2 py-0.5 rounded bg-surface border border-border-gold/60 text-gold-300 font-semibold font-mono text-[11px] flex items-center gap-1.5 shrink-0">
+              <ShieldCheck className="w-3 h-3 text-gold-400" />
+              <span>{standaloneBadge}</span>
             </span>
-          )}
-
-          {/* Botón Finalizar Sesión / Reconectar */}
-          {status === 'connected' || status === 'connecting' ? (
-            <button
-              onClick={endSession}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-red-500/60 text-foreground/80 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/5 dark:hover:bg-red-500/10 text-xs font-mono font-medium transition-all cursor-pointer"
-              title={t('stopSession')}
-            >
-              <X className="w-3.5 h-3.5" />
-              <span>{t('stop')}</span>
-            </button>
-          ) : status !== 'concurrency_limit' && status !== 'replaced' && status !== 'cooldown' && status !== 'rate_limited' && status !== 'blocked' ? (
-            <button
-              onClick={() => startSession()}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-all shadow-sm cursor-pointer"
-            >
-              <Play className="w-3 h-3 fill-current" />
-              <span>{t('reconnect')}</span>
-            </button>
-          ) : null}
-
-          <div className="h-4 w-px bg-border-gold/60" />
-
-          {/* Toggles de Idioma y Tema */}
-          <div className="flex items-center gap-1.5">
-            <LanguageToggle />
-            <ThemeToggle />
           </div>
-        </div>
-      </footer>
+
+          {/* Lado derecho: Herramientas Copiar/Pegar, Temporizador, Botón Finalizar y Toggles */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Botón Copiar Selección */}
+            <button
+              onClick={handleCopySelection}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-gold-400/60 text-foreground/85 hover:text-gold-200 text-[11px] font-mono font-medium transition-all cursor-pointer"
+              title={t('copyFromTerminal')}
+            >
+              {copiedFeedback ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-400 font-mono">{t('copied')}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3 text-gold-400" />
+                  <span>{t('copyFromTerminal')}</span>
+                </>
+              )}
+            </button>
+
+            {/* Botón Pegar en Terminal */}
+            <button
+              onClick={handlePaste}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-gold-400/60 text-foreground/85 hover:text-gold-200 text-[11px] font-mono font-medium transition-all cursor-pointer"
+              title={t('pasteIntoTerminal')}
+            >
+              {pastedFeedback ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-400 font-mono">{t('pasted')}</span>
+                </>
+              ) : (
+                <>
+                  <ClipboardPaste className="w-3 h-3 text-gold-400" />
+                  <span>{t('pasteIntoTerminal')}</span>
+                </>
+              )}
+            </button>
+
+            {/* Temporizador de Sesión Activa */}
+            {(status === 'connected' || status === 'warning') && (
+              <div
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-[11px] border transition-colors ${
+                  status === 'warning'
+                    ? 'bg-red-500/10 border-red-500/40 text-red-600 dark:text-red-300 animate-pulse'
+                    : 'bg-surface border-border-gold/60 text-foreground/80'
+                }`}
+                title="Tiempo restante de la sesión"
+              >
+                <Clock className="w-3 h-3 text-gold-500 dark:text-gold-300" />
+                <span className="tabular-nums font-medium">{formatTime(remainingSeconds)}</span>
+              </div>
+            )}
+
+            {/* Botón Finalizar Sesión / Reconectar */}
+            {status === 'connected' || status === 'connecting' ? (
+              <button
+                onClick={endSession}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-surface border border-border-gold/60 hover:border-red-500/60 text-foreground/80 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/5 dark:hover:bg-red-500/10 text-xs font-mono font-medium transition-all cursor-pointer"
+                title={t('stopSession')}
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>{t('stop')}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => startSession()}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-all shadow-sm cursor-pointer"
+              >
+                <Play className="w-3 h-3 fill-current" />
+                <span>{t('reconnect')}</span>
+              </button>
+            )}
+
+            <div className="h-4 w-px bg-border-gold/60" />
+
+            {/* Toggles de Idioma y Tema */}
+            <div className="flex items-center gap-1.5">
+              <LanguageToggle />
+              <ThemeToggle />
+            </div>
+          </div>
+        </footer>
+      )}
     </div>
   );
 };
-

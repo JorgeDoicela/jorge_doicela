@@ -132,8 +132,16 @@ Iniciar la aplicacion utilizando el archivo de configuracion dedicado para servi
 # 1. Arrancar el proceso de backend en modo tunel
 pm2 start pm2.home.config.js
 
-# 2. Guardar el estado para auto-arranque en reinicios del sistema
+# 2. Configurar hook de systemd para auto-arranque tras encendido físico
+pm2 startup systemd
+# (Ejecuta la linea sudo env PATH=... que PM2 imprima en pantalla)
+
+# 3. Guardar el estado para restaurar los procesos en cada reinicio
 pm2 save
+
+# 4. Habilitar auto-arranque de Docker y Cloudflare Tunnel en systemd
+sudo systemctl enable docker
+sudo systemctl enable cloudflared
 ```
 
 Revisar logs en tiempo real:

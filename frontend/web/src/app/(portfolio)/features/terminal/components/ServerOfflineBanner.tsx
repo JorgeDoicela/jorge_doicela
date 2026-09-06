@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import {
   Cpu,
@@ -10,17 +11,22 @@ import {
   Loader2,
   ChevronDown,
   ChevronUp,
+  ArrowLeft,
 } from 'lucide-react';
 import { API_URL } from '../../../../config';
 
 interface ServerOfflineBannerProps {
   onRetry?: () => void;
   isFullscreen?: boolean;
+  isConnecting?: boolean;
+  retryFailed?: boolean;
 }
 
 export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
   onRetry,
   isFullscreen = false,
+  isConnecting = false,
+  retryFailed = false,
 }) => {
   const t = useTranslations('SandboxWakeRequest');
 
@@ -131,17 +137,33 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
             </p>
           </div>
 
-          <div className="pt-3 border-t border-border-gold flex items-center justify-end">
+          {/* Aviso claro si el servidor aún no responde */}
+          {retryFailed && !isConnecting && !isRetrying && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-surface-raised border border-gold-400/30 text-gold-300 text-xs font-mono animate-fade-in">
+              <AlertCircle className="w-4 h-4 shrink-0 text-gold-400" />
+              <span>{t('retryFailedDesc')}</span>
+            </div>
+          )}
+
+          <div className="pt-3 border-t border-border-gold flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+            <Link
+              href="/portfolio"
+              className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface border border-border-gold/60 hover:border-gold-400/60 text-muted hover:text-foreground text-xs font-mono transition-all cursor-pointer text-center"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>{t('backToPortfolio')}</span>
+            </Link>
+
             {onRetry && (
               <button
                 onClick={handleRetry}
-                disabled={isRetrying}
+                disabled={isConnecting || isRetrying}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-all shadow-md hover:scale-105 disabled:opacity-75 cursor-pointer"
               >
-                {isRetrying ? (
+                {isConnecting || isRetrying ? (
                   <>
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Comprobando...</span>
+                    <span>{t('retryChecking')}</span>
                   </>
                 ) : (
                   <>
@@ -233,7 +255,15 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
             )}
 
             {/* Botón principal de solicitud alineado */}
-            <div className="pt-2 border-t border-border-gold flex items-center justify-end">
+            <div className="pt-3 border-t border-border-gold flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+              <Link
+                href="/portfolio"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface border border-border-gold/60 hover:border-gold-400/60 text-muted hover:text-foreground text-xs font-mono transition-all cursor-pointer text-center"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>{t('backToPortfolio')}</span>
+              </Link>
+
               <button
                 type="submit"
                 disabled={isSubmitting}

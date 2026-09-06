@@ -201,7 +201,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
 
   // Conectar y arrancar la sesión de contenedor Docker
   const startSession = useCallback(
-    (startOpts?: { forceReplace?: boolean }) => {
+    async (startOpts?: { forceReplace?: boolean }) => {
       if (socketRef.current) {
         socketRef.current.disconnect();
       }
@@ -217,18 +217,39 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
       const socketUrl = `${socketBaseUrl}/sandbox`;
       const forceReplace = !!startOpts?.forceReplace;
 
-    console.log('[Sandbox] startSession invocado. Modo:', targetMode, 'URL:', socketUrl);
+      console.log('[Sandbox] startSession invocado. Modo:', targetMode, 'URL:', socketUrl);
 
-    if (xtermRef.current) {
-      xtermRef.current.clear();
-    }
+      // Pre-flight health probe para el túnel: si el hardware o túnel están apagados, falla rápido y limpio sin colgar sockets
+      if (isTunnel) {
+        try {
+          const probe = await fetch(`${socketBaseUrl}/portfolio/sandbox/health`, {
+            method: 'GET',
+            signal: AbortSignal.timeout(3000),
+          });
+          if (!probe.ok) {
+            throw new Error(`HTTP ${probe.status}`);
+          }
+        } catch (probeErr) {
+          console.warn('[Sandbox] Sondeo de salud del túnel falló:', probeErr);
+          setStatus('error');
+          const msg = `No se pudo conectar con el Servidor Físico Propio (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`;
+          setErrorMessage(msg);
+          return;
+        }
+      }
 
-    const socket = io(socketUrl, {
-      transports: ['websocket', 'polling'],
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1500,
-      timeout: 10000,
-    });
+      if (xtermRef.current) {
+        xtermRef.current.clear();
+      }
+
+      const socket = io(socketUrl, {
+        transports: ['websocket', 'polling'],
+        forceNew: true,
+        multiplex: false,
+        reconnectionAttempts: 3,
+        reconnectionDelay: 1000,
+        timeout: 8000,
+      });
 
     socketRef.current = socket;
 
@@ -266,6 +287,11 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
         mode?: 'vps' | 'tunnel';
       }) => {
         console.log('[Sandbox] Sesión Docker LISTA recibida del backend:', data);
+        try {
+          sessionStorage.removeItem('portfolio_wake_requested');
+        } catch {
+          // Ignorar si storage no está disponible
+        }
         if (forceReplace && xtermRef.current) {
           xtermRef.current.clear();
         }

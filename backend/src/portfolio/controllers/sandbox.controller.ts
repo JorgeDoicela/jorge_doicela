@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   UseGuards,
@@ -13,12 +14,26 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateWakeRequestDto } from '../dto/create-wake-request.dto';
 import { SandboxWakeRequestedEvent } from '../events/sandbox-wake-requested.event';
 import { ContactThrottleGuard } from '../guards/contact-throttle.guard';
+import { SandboxService } from '../services/sandbox.service';
 
 @Controller('portfolio/sandbox')
 export class SandboxController {
   private readonly logger = new Logger(SandboxController.name);
 
-  constructor(private readonly eventEmitter: EventEmitter2) {}
+  constructor(
+    private readonly eventEmitter: EventEmitter2,
+    private readonly sandboxService: SandboxService,
+  ) {}
+
+  @Get('health')
+  @HttpCode(HttpStatus.OK)
+  health(): { status: string; mode: string; activeSessions: number } {
+    return {
+      status: 'ready',
+      mode: this.sandboxService.getMode(),
+      activeSessions: this.sandboxService.getActiveSessionsCount(),
+    };
+  }
 
   @Post('wake-request')
   @HttpCode(HttpStatus.OK)

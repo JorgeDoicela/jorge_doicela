@@ -191,7 +191,10 @@
     "successTitle": "¡Muchas gracias por tu interés!",
     "successDesc": "He recibido tu notificación con éxito. En cuanto me encuentre disponible encenderé el equipo para que puedas probar la consola. Puedes mantener esta ventana o volver más tarde para ingresar a la terminal.",
     "close": "Cerrar",
-    "retryCheck": "Entrar a la Terminal"
+    "retryCheck": "Entrar a la Terminal",
+    "retryChecking": "Comprobando conexión...",
+    "retryFailedDesc": "El servidor físico o el túnel aún no responden. Si acabas de encenderlo, espera unos segundos a que complete el arranque e intenta de nuevo.",
+    "backToPortfolio": "Volver al Portafolio"
   },
   "SandboxSecurityModal": {
     "concurrencyBadge": "SESIÓN EN CURSO",

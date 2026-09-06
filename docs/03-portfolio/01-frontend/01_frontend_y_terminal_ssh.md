@@ -133,23 +133,23 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
   * Mensaje: Explica que el visitante está conectado a hardware físico privado a través de un túnel cifrado punto a punto sin intermediarios en AWS.
 * **Hardware y Aislamiento:** 256 MB RAM, 1.0 CPU, `pids-limit=100`.
 * **Lanzamiento:** Botón `[ Iniciar Terminal en Servidor Propio ]` → `/sandbox?mode=tunnel`.
+* **Pre-flight Health Probe con AbortSignal:** Antes de inicializar el WebSocket en modo túnel, `startSession()` realiza una consulta previa ultraliviana `GET ${SANDBOX_TUNNEL_URL}/portfolio/sandbox/health` con timeout estricto de 3 segundos (`AbortSignal.timeout(3000)`). Si el túnel de Cloudflare está caído (Error 1033 o host apagado), la petición falla en menos de 400 ms sin colgar el cliente Socket.IO ni dejar conexiones zombis.
 * **Mismos comandos interactivos nativos que el Modo 2**, con la diferencia de identidad del host y recursos expandidos.
 
 ### 4.4 Barra de Control Inferior (Footer Consolidado estilo AWS CloudShell)
 * **Apertura de Ventana Emergente Dedicada:** El botón de lanzamiento calcula el centro de la pantalla del usuario (`1080x680px`) y abre una ventana popup independiente con `toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,noopener,noreferrer`, aislando el proceso y evitando colisiones de atajos de teclado de Linux (`Ctrl+W`, `Ctrl+T`) con el navegador.
 * **Consola Superior Pura:** El canvas xterm.js inicia desde el pixel superior del viewport sin barras distractoras arriba.
 * **Barra de Herramientas Inferior (Footer Adaptativo sin Saltos de Layout):**
+  * **Ocultamiento Condicional Inteligente:** El footer se oculta por completo (`{!isSecurityState && !isTunnelOffline && (<footer ... />)}`) cuando se despliega un modal de seguridad o el banner de servidor físico apagado, garantizando máxima pureza visual e impidiendo estados contradictorios (como indicadores de "EN VIVO" cuando la máquina no está disponible).
   * Izquierda: Botón de retorno/cierre inteligente (`← Volver al Portafolio`), badge del modo (`EN VIVO • AWS CLOUD` / `EN VIVO • SERVIDOR LOCAL`).
   * Derecha:
     * Botón `[📋 Copiar selección]` y `[📥 Pegar en terminal]`.
     * Temporizador dinámico de sesión activa (`⏱ 04:33`).
-    * **Contador de Cooldown Activo:** Indicador regresivo sutil (`⏱ Espera 20s`) si la IP debe aguardar antes de volver a instanciar.
-    * **Botón de Transferencia de Sesión (`[ Transferir terminal a esta ventana ]`):** Aparece cuando la IP ya tiene un contenedor abierto en otra pestaña (`concurrency_limit`), enviando `{ forceReplace: true }` para reclamar la sesión sin fricción.
     * Botón de salida `[ ✕ Finalizar ]` / `[ ▶ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
 
 ### 4.5 Seguridad y Sincronización en el Hook `useSandboxTerminal.ts`
 * **Sincronización Multiventana Local (`BroadcastChannel`):** Canal `portfolio_sandbox_multitab` que coordina pestañas locales en tiempo real con `senderTabId` inmutable. Cuando una pestaña inicia o transfiere la terminal, las demás pestañas abiertas lo detectan inmediatamente y pasan al estado `replaced` sin generar llamadas redundantes al servidor.
-* **Modal Dark Luxury de Seguridad y Concurrencia (`SandboxSecurityModal.tsx`):** Cuando la sesión entra en un estado de seguridad (`concurrency_limit`, `replaced`, `cooldown`, `rate_limited` o `blocked`), la interfaz renderiza una tarjeta centrada con estética Dark Luxury idéntica a `ServerOfflineBanner.tsx` (resplandor ambiental dorado, badge superior, título claro, reloj regresivo en cooldown y botón de acción de transferencia `[ Transferir terminal a esta ventana ]`).
+* **Modal Dark Luxury de Seguridad y Concurrencia (`SandboxSecurityModal.tsx`):** Cuando la sesión entra en un estado de seguridad (`concurrency_limit`, `replaced`, `cooldown`, `rate_limited` o `blocked`), la interfaz renderiza una tarjeta centrada con estética Dark Luxury idéntica a `ServerOfflineBanner.tsx` (resplandor ambiental dorado, badge superior, título claro, reloj regresivo en cooldown, botón de acción y enlace directo `[ ← Volver al Portafolio ]`).
 * **Handover PTY en Caliente y Replay de Scrollback:** Al confirmar la transferencia, el socket emite `{ forceReplace: true }`. El backend transfiere el stream interactivo del contenedor Docker sin destruirlo, y la nueva pestaña recibe el buffer de salida previo (`scrollback`), restaurando instantáneamente el prompt, comandos y texto sin parpadeos ni pérdidas de datos.
 * **Privacidad de input:** El evento `onData` de xterm.js **no loguea** el contenido de las pulsaciones del visitante (`console.log` eliminado) para proteger datos privados en la consola del navegador.
 * **Filtrado de secuencias de ratón:** Se ignoran secuencias `\x1b[<` y `\x1b[M` (SGR / X10 Mouse events) para evitar basura en el stream PTY al hacer clic en la terminal.
@@ -159,15 +159,18 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 ### 4.6 Manejo de Servidor Físico Fuera de Línea (`ServerOfflineBanner.tsx`)
 * **Detección sin Fallback Forzado a AWS:** Cuando el visitante selecciona el Modo 3 (`targetMode === 'tunnel'`) y el servidor físico privado está apagado o inaccesible, el sistema **no** redirige silenciosamente a AWS. Se respeta la transparencia del hardware físico propio.
 * **Presentación Dark Luxury & Light Luxury Unificada:**
-  * Renderiza `ServerOfflineBanner.tsx` con contenedor translúcido `bg-surface-raised/80`, bordes de precisión `border-border-gold` y acentos dorados satinados.
-  * Cabecera editorial limpia con punto de estado dorado (`bg-gold-400`) y título directo `SERVIDOR PRIVADO` (sin badges encapsulados ni cajas verdes discordantes).
+  * Renderiza `ServerOfflineBanner.tsx` como un modal overlay centrado sobre la terminal (`absolute inset-0 z-20`), manteniendo el canvas xterm montado debajo sin destruirlo.
+  * Oculta el footer inferior para evitar mostrar indicadores de "EN VIVO" o controles de sesión cuando el hardware está inactivo.
+  * Cabecera editorial limpia con punto de estado dorado (`bg-gold-400`) y título directo `SERVIDOR PRIVADO`.
+  * **Navegación Intuitiva de Retorno:** Incluye un botón secundario `[ ← Volver al Portafolio ]` ubicado estratégicamente al lado de la acción principal tanto en el formulario inicial como en el estado de aviso entregado.
   * Lenguaje directo y comprensible: Cero jerga técnica inaccesible para el público general (eliminados términos como *"on-premises"*, *"on-demand"*, *"bajo demanda"* o *"fuera de servicio"*).
 * **Solicitud de Aviso y Notificación Desacoplada:**
   * El visitante puede enviar un aviso de interés con su nombre, correo/teléfono y nota opcional mediante el botón `[ Enviar Aviso de Conexión ]`.
   * Despacha una petición HTTP `POST /portfolio/sandbox/wake-request` protegida por rate limiting (`ContactThrottleGuard`).
 * **Protección Anti-Bucle y Persistencia de Estado (`sessionStorage`):**
   * Al completar el envío, el banner pasa al estado de confirmación (`AVISO ENTREGADO`) con mensaje cortés y educado, sin promesas falsas de encendido inmediato.
-  * Al hacer clic en `[ Entrar a la Terminal ]`, se almacena `sessionStorage.setItem('portfolio_wake_requested', 'true')`. Si el servidor aún no está encendido y el WebSocket falla (`connect_error`), el componente preserva el estado de confirmación evitando que el usuario caiga en un bucle repetitivo de rellenar el formulario.
+  * **Ciclo de Reintento con Retroalimentación Visual Estable:** Al pulsar `[ Entrar a la Terminal ]`, el banner se mantiene visible mostrando el botón en estado de carga animada (`Comprobando conexión...` con `Loader2`) mientras Socket.IO fuerza un nuevo handshake limpio (`forceNew: true`, `multiplex: false`). Si el enlace falla porque el hardware o el túnel aún no responden, el banner no parpadea ni se desmonta: muestra una alerta informativa amigable (`retryFailedDesc`) invitando al usuario a aguardar o volver a pulsar cuando el arranque termine.
+  * **Transición y Limpieza Exitosa:** En cuanto el backend emite `session-ready`, el hook limpia la clave `portfolio_wake_requested` de `sessionStorage` y desmonta el banner para dar paso directo a la consola interactiva.
 
 ---
 

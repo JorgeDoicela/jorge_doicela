@@ -191,7 +191,10 @@
     "successTitle": "Thank you for your interest!",
     "successDesc": "I have received your notification. As soon as I am available, I will power on the machine so you can explore the console. Feel free to keep this tab open or check back later to enter the terminal.",
     "close": "Close",
-    "retryCheck": "Enter Terminal"
+    "retryCheck": "Enter Terminal",
+    "retryChecking": "Checking connection...",
+    "retryFailedDesc": "The physical server or tunnel is not responding yet. If you just turned it on, please wait a few seconds for startup to finish and try again.",
+    "backToPortfolio": "Back to Portfolio"
   },
   "SandboxSecurityModal": {
     "concurrencyBadge": "ACTIVE SESSION",

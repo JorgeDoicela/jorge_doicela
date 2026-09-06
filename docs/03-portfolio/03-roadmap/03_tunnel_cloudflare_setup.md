@@ -153,6 +153,20 @@ pm2 logs portfolio-sandbox-home
 
 ## 7. Paso 6: Verificacion Empirica del Sistema
 
+### 7.1 Comprobacion de Salud de Servicios y Red (CLI)
+Antes de ingresar por navegador, valida que el endpoint de salud responda tanto a nivel local como a traves del borde de Cloudflare:
+
+```bash
+# 1. Comprobacion del backend NestJS local (Loopback)
+curl -s http://localhost:3000/portfolio/sandbox/health
+# Debe responder: {"success":true,"data":{"status":"ready","mode":"tunnel","activeSessions":0}}
+
+# 2. Comprobacion del Tunel de Cloudflare desde el exterior
+curl -s https://tunnel.jorgedoicela.com/portfolio/sandbox/health
+# Debe responder exactamente con el mismo JSON anterior (sin codigos 530 ni error 1033)
+```
+
+### 7.2 Prueba Interactiva en Navegador
 1. Abre tu navegador web en `https://portfolio.jorgedoicela.com`.
 2. En la consola, haz clic en **Terminal en Servidor Propio**.
 3. Presiona el boton de lanzamiento para abrir la ventana emergente.
@@ -173,4 +187,26 @@ pm2 logs portfolio-sandbox-home
   - La interfaz de la terminal en modo Servidor Propio no realiza fallback a AWS; en su lugar, despliega la tarjeta Dark Luxury `ServerOfflineBanner.tsx` informando que el equipo esta en reposo para ahorro de energia.
   - El usuario puede enviar una solicitud con un clic (`POST /portfolio/sandbox/wake-request`), la cual emite `SandboxWakeRequestedEvent` y te notifica de forma instantanea a Telegram con la IP y datos del solicitante para que procedas a encenderlo.
 * **Aislamiento Total de Red:** Los contenedores corren con `NetworkMode: 'none'`, impidiendo cualquier acceso a tu red local domestica o dispositivos Wi-Fi.
+
+---
+
+## 9. Flujo de Actualizacion y Despliegue de Cambios (Update Workflow)
+
+Cada vez que se suban modificaciones al backend o cambios en la configuracion del sandbox en Git, ejecuta en tu servidor privado:
+
+```bash
+cd ~/jorge_doicela
+
+# 1. Descargar los ultimos cambios del repositorio
+git pull origin main
+
+# 2. Recompilar el backend
+pnpm --filter backend build
+
+# 3. Reiniciar el daemon en PM2
+pm2 restart portfolio-sandbox-home
+
+# 4. Guardar estado de procesos en PM2
+pm2 save
+```
 

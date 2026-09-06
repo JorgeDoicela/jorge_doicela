@@ -193,7 +193,7 @@
     "close": "Cerrar",
     "retryCheck": "Entrar a la Terminal",
     "retryChecking": "Comprobando conexión...",
-    "retryFailedDesc": "El servidor físico o el túnel aún no responden. Si acabas de encenderlo, espera unos segundos a que complete el arranque e intenta de nuevo.",
+    "retryFailedDesc": "El servidor aún no se encuentra disponible. Lo conectaré en cuanto me sea posible; puedes mantener esta ventana o volver más tarde.",
     "backToPortfolio": "Volver al Portafolio"
   },
   "SandboxSecurityModal": {

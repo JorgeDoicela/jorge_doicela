@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import {
   Cpu,
@@ -94,14 +93,32 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
   };
 
   const handleRetry = () => {
-    if (isRetrying) return;
+    if (isConnecting || isRetrying) return;
     setIsRetrying(true);
     if (onRetry) {
       onRetry();
     }
     setTimeout(() => {
       setIsRetrying(false);
-    }, 3500);
+    }, 4000);
+  };
+
+  const handleBackToPortfolio = () => {
+    if (typeof window !== 'undefined') {
+      if (window.opener && !window.opener.closed) {
+        try {
+          window.opener.focus();
+        } catch {
+          // Ignorar restricciones entre contextos
+        }
+        window.close();
+        return;
+      }
+      window.close();
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 150);
+    }
   };
 
   return (
@@ -146,13 +163,14 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
           )}
 
           <div className="pt-3 border-t border-border-gold flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
-            <Link
-              href="/portfolio"
+            <button
+              type="button"
+              onClick={handleBackToPortfolio}
               className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface border border-border-gold/60 hover:border-gold-400/60 text-muted hover:text-foreground text-xs font-mono transition-all cursor-pointer text-center"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>{t('backToPortfolio')}</span>
-            </Link>
+            </button>
 
             {onRetry && (
               <button
@@ -256,13 +274,14 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
 
             {/* Botón principal de solicitud alineado */}
             <div className="pt-3 border-t border-border-gold flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
-              <Link
-                href="/portfolio"
+              <button
+                type="button"
+                onClick={handleBackToPortfolio}
                 className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface border border-border-gold/60 hover:border-gold-400/60 text-muted hover:text-foreground text-xs font-mono transition-all cursor-pointer text-center"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>{t('backToPortfolio')}</span>
-              </Link>
+              </button>
 
               <button
                 type="submit"

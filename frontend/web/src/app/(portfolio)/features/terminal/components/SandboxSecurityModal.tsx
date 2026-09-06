@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import {
   ShieldCheck,
   ArrowRightLeft,
@@ -156,13 +155,30 @@ export const SandboxSecurityModal: React.FC<SandboxSecurityModalProps> = ({
 
         {/* Barra de Acciones */}
         <div className="pt-4 border-t border-border-gold flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
-          <Link
-            href="/portfolio"
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                if (window.opener && !window.opener.closed) {
+                  try {
+                    window.opener.focus();
+                  } catch {
+                    // Ignorar restricciones entre contextos
+                  }
+                  window.close();
+                  return;
+                }
+                window.close();
+                setTimeout(() => {
+                  window.location.href = '/';
+                }, 150);
+              }
+            }}
             className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-surface border border-border-gold/60 hover:border-gold-400/60 text-muted hover:text-foreground text-xs font-mono transition-all cursor-pointer text-center"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>{t('backToPortfolio')}</span>
-          </Link>
+          </button>
 
           {content.showAction && (
             <button

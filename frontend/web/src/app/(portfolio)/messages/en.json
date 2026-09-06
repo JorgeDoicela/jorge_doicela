@@ -193,7 +193,7 @@
     "close": "Close",
     "retryCheck": "Enter Terminal",
     "retryChecking": "Checking connection...",
-    "retryFailedDesc": "The physical server or tunnel is not responding yet. If you just turned it on, please wait a few seconds for startup to finish and try again.",
+    "retryFailedDesc": "The server is not available yet. I will connect it as soon as possible; feel free to keep this tab open or check back later.",
     "backToPortfolio": "Back to Portfolio"
   },
   "SandboxSecurityModal": {

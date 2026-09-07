@@ -777,5 +777,31 @@
       "RV1909": "Holy Bible, Reina-Valera (1909). Universal Public Domain.",
       "default": "Biblical text for study and exegetical analysis purposes."
     }
+  },
+  "Studio": {
+    "toggleSidebar": "Canonical Navigation",
+    "toggleInspector": "Exegetical Inspector",
+    "collapseSidebar": "Collapse navigation panel",
+    "expandSidebar": "Expand navigation panel",
+    "closeInspector": "Close inspector",
+    "searchBook": "Search book or abbreviation...",
+    "oldTestament": "Old Testament",
+    "newTestament": "New Testament",
+    "allBooks": "All",
+    "chapters": "Chapters",
+    "tabStrong": "Strong Morphology",
+    "tabVersions": "Parallel Versions",
+    "tabNotes": "Notes & Cross-References",
+    "inspectedVerseTitle": "Verse Analysis",
+    "inspectedWordTitle": "Lexicon & Morphology",
+    "noWordSelected": "Click any word in the text or interlinear to inspect its lexical data.",
+    "noVerseSelected": "Select a verse to compare versions in real time.",
+    "selectVerseToInspect": "Select verse",
+    "strongCode": "Strong Code",
+    "originalLemma": "Original Lemma",
+    "transliteration": "Transliteration",
+    "pronunciation": "Pronunciation",
+    "definition": "Lexical Definition",
+    "grammarCategory": "Grammatical Category"
   }
 }

@@ -54,6 +54,7 @@ export function BibleStudyWorkspace() {
     toggleVerseNumbers,
     nextChapter,
     prevChapter,
+    refetch,
   } = useVerses();
 
   const { books } = useBooks();
@@ -214,6 +215,7 @@ export function BibleStudyWorkspace() {
               verses={verses}
               loading={versesLoading}
               error={versesError}
+              onRetry={refetch}
               readerSettings={readerSettings}
               onLayoutModeChange={setLayoutMode}
               onFontSizeChange={setFontSize}

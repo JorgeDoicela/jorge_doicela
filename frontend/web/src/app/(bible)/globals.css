@@ -174,4 +174,45 @@ body {
   border-color: var(--foreground);
 }
 
+/* ==========================================================================
+   Modo Impresión y Exportación Limpia (Print / Pulpit Mode)
+   ========================================================================== */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  header,
+  footer,
+  aside,
+  nav,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .print-clean {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Evitar cortes abruptos en versículos y notas */
+  p,
+  .print-keep {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+
 

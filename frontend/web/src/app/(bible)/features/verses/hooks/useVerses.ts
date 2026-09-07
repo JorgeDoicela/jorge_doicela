@@ -140,8 +140,20 @@ export function useVerses(
         const serverVerses = (data.data as Verse[]) || [];
         setVerses(serverVerses);
       } catch (err: unknown) {
-        console.error('[Bible:useVerses] Error al conectar con el servidor:', err);
-        setError(err instanceof Error ? err.message : 'Error de conexión con el servidor');
+        const isNetworkError =
+          err instanceof TypeError && err.message.toLowerCase().includes('failed to fetch');
+
+        if (isNetworkError) {
+          console.warn(
+            '[Bible:useVerses] No se pudo conectar con el backend en localhost:3000. Asegúrese de que el servidor NestJS esté en ejecución.',
+          );
+          setError(
+            'No se pudo conectar con el servidor de datos (localhost:3000). Verifique que el servicio backend NestJS esté en ejecución.',
+          );
+        } else {
+          console.error('[Bible:useVerses] Error al cargar los versículos:', err);
+          setError(err instanceof Error ? err.message : 'Error de conexión con el servidor');
+        }
         setVerses([]);
       } finally {
         setLoading(false);
@@ -149,6 +161,10 @@ export function useVerses(
     },
     [],
   );
+
+  const refetch = useCallback(() => {
+    void fetchVerses(selectedBookId, selectedTranslationId, selectedChapter);
+  }, [fetchVerses, selectedBookId, selectedTranslationId, selectedChapter]);
 
   // Al cambiar de libro, seleccionar el capítulo 1 por defecto
   const handleSelectBook = useCallback((id: number | null) => {

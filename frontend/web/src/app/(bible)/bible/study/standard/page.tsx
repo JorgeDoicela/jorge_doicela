@@ -35,6 +35,7 @@ export default function StandardStudyPage() {
     setFontSize,
     setFontFamily,
     toggleVerseNumbers,
+    refetch,
   } = useVerses(selectedBookId, selectedChapter, selectedTranslationId);
 
   return (
@@ -43,6 +44,7 @@ export default function StandardStudyPage() {
         verses={verses}
         loading={versesLoading}
         error={versesError}
+        onRetry={refetch}
         readerSettings={readerSettings}
         onLayoutModeChange={setLayoutMode}
         onFontSizeChange={setFontSize}

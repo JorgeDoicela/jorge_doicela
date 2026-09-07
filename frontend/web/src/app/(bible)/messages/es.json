@@ -777,5 +777,31 @@
       "RV1909": "Santa Biblia, Versión Reina-Valera (1909). Dominio Público Universal.",
       "default": "Texto bíblico para propósitos de estudio y análisis exegético."
     }
+  },
+  "Studio": {
+    "toggleSidebar": "Navegación Canónica",
+    "toggleInspector": "Inspector Exegético",
+    "collapseSidebar": "Colapsar panel de navegación",
+    "expandSidebar": "Expandir panel de navegación",
+    "closeInspector": "Cerrar inspector",
+    "searchBook": "Buscar libro o abreviatura...",
+    "oldTestament": "Antiguo Testamento",
+    "newTestament": "Nuevo Testamento",
+    "allBooks": "Todos",
+    "chapters": "Capítulos",
+    "tabStrong": "Morfología Strong",
+    "tabVersions": "Versiones Paralelas",
+    "tabNotes": "Notas & Referencias",
+    "inspectedVerseTitle": "Análisis de Versículo",
+    "inspectedWordTitle": "Léxico & Morfología",
+    "noWordSelected": "Toca una palabra en el lector o interlineal para ver su ficha léxica.",
+    "noVerseSelected": "Selecciona un versículo para comparar sus versiones en tiempo real.",
+    "selectVerseToInspect": "Seleccionar versículo",
+    "strongCode": "Código Strong",
+    "originalLemma": "Lema Original",
+    "transliteration": "Transliteración",
+    "pronunciation": "Pronunciación",
+    "definition": "Definición Léxica",
+    "grammarCategory": "Categoría Gramatical"
   }
 }

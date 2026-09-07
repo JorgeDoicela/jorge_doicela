@@ -1,8 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+
+import { Sparkles } from 'lucide-react';
+
 import { Verse, ReaderFontSize, ReaderFontFamily } from '../../types';
+import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 
 interface ContinuousReadingViewProps {
   verses: Verse[];
@@ -29,8 +33,42 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 }) => {
   const t = useTranslations('ReadingView');
   const tBooks = useTranslations('Books');
+  const tStudio = useTranslations('Studio');
+  const passageContext = useBiblePassageSafe();
   const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
+
+
+  const rawAbbr =
+    bookAbbr ||
+    (typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+      ? verses[0]?.book.abbreviation
+      : undefined);
+
+  const localizedBookTitle = useMemo(() => {
+    if (rawAbbr) {
+      try {
+        const translated = tBooks(rawAbbr as any);
+        if (translated) return translated;
+      } catch {
+        // fallback
+      }
+    }
+    const firstVerseBook =
+      typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+        ? verses[0]?.book.name
+        : verses[0]?.book;
+    return bookName || firstVerseBook || 'Génesis';
+  }, [rawAbbr, tBooks, verses, bookName]);
+
+
 
   const getFontSizeClass = (size: ReaderFontSize) => {
     switch (size) {
@@ -66,14 +104,16 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 
     void navigator.clipboard.writeText(textToCopy);
     setToastMessage(withCitation ? t('citationCopied') : t('textCopied'));
-    setTimeout(() => setToastMessage(null), 2500);
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 2500);
   };
 
+
   return (
-    <div className="w-full max-w-5xl mx-auto bg-background rounded-2xl border border-accents-2 p-6 sm:p-10 shadow-xs relative">
+    <div className="w-full bg-white dark:bg-zinc-900/90 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-8 sm:p-12 lg:p-14 relative print:border-none print:shadow-none print:p-0 print:m-0 print:bg-transparent transition-all">
       {/* Toast flotante de confirmación */}
       {toastMessage && (
-        <div className="fixed bottom-8 right-8 z-50 bg-foreground text-background text-xs font-medium px-4 py-2 rounded-full shadow-lg border border-accents-2 animate-fade-in flex items-center gap-2">
+        <div className="fixed bottom-8 right-8 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-medium px-4 py-2 rounded-full shadow-lg border border-zinc-200/20 animate-fade-in flex items-center gap-2 print:hidden">
           <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
           </svg>
@@ -81,67 +121,54 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
         </div>
       )}
 
-      {/* Cabecera del Capítulo */}
-      {(() => {
-        const rawAbbr =
-          bookAbbr ||
-          (typeof verses[0]?.book === 'object' && verses[0]?.book !== null
-            ? verses[0]?.book.abbreviation
-            : undefined);
-
-        const localizedBookTitle = (() => {
-          if (rawAbbr) {
-            try {
-              const translated = tBooks(rawAbbr as any);
-              if (translated) return translated;
-            } catch {
-              // fallback
-            }
-          }
-          const firstVerseBook =
-            typeof verses[0]?.book === 'object' && verses[0]?.book !== null
-              ? verses[0]?.book.name
-              : verses[0]?.book;
-          return bookName || firstVerseBook || 'Génesis';
-        })();
-
-        return (
-          <div className="text-center pb-6 mb-6 border-b border-accents-2">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-accents-4 block mb-1">
-              {translationName || translationAbbr || 'Reina-Valera 1960'}
+      {/* Cabecera Editorial del Capítulo */}
+      <div className="text-center pb-8 mb-8 border-b border-zinc-100 dark:border-zinc-800/80">
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
+          {localizedBookTitle}
+        </h2>
+        <div className="flex items-center justify-center gap-2 mt-2">
+          {chapter !== null && (
+            <span className="text-xs font-mono font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              {t('chapter')} {chapter}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              {localizedBookTitle}{' '}
-              {chapter !== null && (
-                <span className="font-mono text-accents-5 font-normal">{t('chapter')} {chapter}</span>
-              )}
-            </h2>
-          </div>
-        );
-      })()}
+          )}
+          {(translationAbbr || translationName) && (
+            <>
+              <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
+              <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500 tracking-wider">
+                {translationAbbr || translationName}
+              </span>
+            </>
+          )}
+        </div>
+      </div>
 
-      {/* Prosa Continua */}
+      {/* Prosa Continua en Ancho Ergonómico de Lectura */}
       <div
-        className={`${getFontSizeClass(fontSize)} ${getFontFamilyClass(
+        className={`max-w-3xl mx-auto ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
           fontFamily,
-        )} text-foreground/90 select-text space-y-4`}
+        )} text-zinc-800 dark:text-zinc-200 select-text leading-relaxed sm:leading-loose`}
       >
-        <p className="indent-6">
+        <p className="space-x-1 text-justify sm:text-left">
           {verses.map((verse) => {
             const isSelected = selectedVerseId === verse.id;
             return (
               <span
                 key={verse.id}
                 onClick={() => setSelectedVerseId(isSelected ? null : verse.id)}
-                className={`inline transition-all duration-150 rounded px-1 py-0.5 relative group cursor-pointer ${
+                className={`inline rounded-md px-1 py-0.5 relative group cursor-pointer transition-colors ${
                   isSelected
-                    ? 'bg-foreground/10 ring-1 ring-foreground/20 text-foreground font-medium'
-                    : 'hover:bg-accents-1 hover:text-foreground'
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium'
+                    : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
                 }`}
               >
                 {showVerseNumbers && (
                   <sup
-                    className="text-[11px] font-mono font-bold text-accents-5 select-none mr-1.5 opacity-80 group-hover:opacity-100 group-hover:text-foreground align-super"
+                    className={`font-mono text-[10px] font-semibold select-none mr-1.5 ml-0.5 align-super transition-colors ${
+                      isSelected
+                        ? 'text-zinc-300 dark:text-zinc-700'
+                        : 'text-zinc-400/80 dark:text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100'
+                    }`}
                     title={t('verseTooltip', { number: verse.verseNumber })}
                   >
                     {verse.verseNumber}
@@ -156,33 +183,55 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 
       {/* Menú Contextual de Versículo Seleccionado */}
       {selectedVerseId && (
-        <div className="mt-8 pt-4 border-t border-accents-2 bg-accents-1/50 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 animate-fade-in">
+        <div className="mt-8 pt-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-800/50 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 animate-fade-in print:hidden">
           {(() => {
             const activeVerse = verses.find((v) => v.id === selectedVerseId);
             if (!activeVerse) return null;
             return (
               <>
                 <div className="flex items-center gap-2 text-xs">
-                  <span className="font-semibold text-foreground">
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-100">
                     {bookName} {activeVerse.chapter}:{activeVerse.verseNumber}
                   </span>
-                  <span className="text-accents-4 font-mono text-[10px]">
+                  <span className="text-zinc-400 dark:text-zinc-500 font-mono text-[10px]">
                     [{translationAbbr || 'Biblia'}]
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
+                  {passageContext && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const bId =
+                          typeof activeVerse.book === 'object' && activeVerse.book !== null
+                            ? activeVerse.book.id
+                            : passageContext.selectedBookId || 1;
+                        passageContext.openInspectorWithVerse({
+                          bookId: bId,
+                          bookName: localizedBookTitle,
+                          chapter: activeVerse.chapter,
+                          verseNumber: activeVerse.verseNumber,
+                          text: activeVerse.text,
+                        });
+                      }}
+                      className="px-2.5 py-1 text-xs rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary font-medium transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{tStudio('toggleInspector')}</span>
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => handleCopyVerse(activeVerse, false)}
-                    className="px-2.5 py-1 text-xs rounded-lg border border-accents-2 bg-background hover:border-foreground text-accents-6 hover:text-foreground transition-all cursor-pointer"
+                    className="px-2.5 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:border-zinc-400 text-zinc-600 dark:text-zinc-300 transition-all cursor-pointer"
                   >
                     {t('copyTextOnly')}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleCopyVerse(activeVerse, true)}
-                    className="px-2.5 py-1 text-xs rounded-lg bg-foreground text-background font-medium hover:opacity-90 transition-all cursor-pointer flex items-center gap-1"
+                    className="px-2.5 py-1 text-xs rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium hover:opacity-90 transition-all cursor-pointer flex items-center gap-1"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -197,8 +246,8 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       )}
 
       {/* Nota de Atribución Legal Oficial */}
-      <div className="pt-8 mt-8 border-t border-accents-2/60 text-center">
-        <p className="text-[11px] text-accents-4 font-mono leading-relaxed max-w-xl mx-auto">
+      <div className="pt-8 mt-8 border-t border-zinc-100 dark:border-zinc-800/80 text-center">
+        <p className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono leading-relaxed max-w-xl mx-auto">
           {translationAbbr === 'NBLA' && t('legalNotices.NBLA')}
           {translationAbbr === 'NTV' && t('legalNotices.NTV')}
           {translationAbbr === 'NIV' && t('legalNotices.NIV')}

@@ -65,16 +65,16 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-8 pt-6 border-t border-accents-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="w-full mt-10 pt-6 border-t border-zinc-200/80 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
       {/* Botón Anterior */}
       <button
         type="button"
         onClick={onPrevChapter}
         disabled={currentChapter <= 1}
-        className={`px-4 py-2 text-xs font-medium rounded-lg border transition-all flex items-center gap-2 cursor-pointer ${
+        className={`px-4 py-2 text-xs font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer ${
           currentChapter <= 1
-            ? 'opacity-40 cursor-not-allowed border-accents-2 text-accents-4'
-            : 'border-accents-2 bg-background hover:border-foreground text-foreground shadow-xs'
+            ? 'opacity-40 cursor-not-allowed border-zinc-200 dark:border-zinc-800 text-zinc-400'
+            : 'border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
         }`}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,10 +89,10 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
 
       {/* Referencia central activa */}
       <div className="text-center">
-        <div className="text-xs font-semibold text-foreground">
+        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
           {localizedBookName} {currentChapter}
         </div>
-        <div className="text-[10px] font-mono text-accents-4">
+        <div className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 mt-0.5">
           {translationAbbr ? `${translationAbbr} • ` : ''}
           {tToolbar('chapterOf', {
             current: currentChapter.toString(),
@@ -106,10 +106,10 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
         type="button"
         onClick={() => onNextChapter(maxChapters)}
         disabled={currentChapter >= maxChapters}
-        className={`px-4 py-2 text-xs font-medium rounded-lg border transition-all flex items-center gap-2 cursor-pointer ${
+        className={`px-4 py-2 text-xs font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer ${
           currentChapter >= maxChapters
-            ? 'opacity-40 cursor-not-allowed border-accents-2 text-accents-4'
-            : 'border-accents-2 bg-background hover:border-foreground text-foreground shadow-xs'
+            ? 'opacity-40 cursor-not-allowed border-zinc-200 dark:border-zinc-800 text-zinc-400'
+            : 'border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
         }`}
       >
         <span>

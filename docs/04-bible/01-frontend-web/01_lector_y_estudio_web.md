@@ -129,10 +129,56 @@ Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingres
 
 ---
 
-## 6. Estética Visual y Geist (Vercel Style)
+## 6. Estética Visual, Ergonomía Editorial y Estilo Geist (Vercel Style & DIITRA)
 
-* **Monocromía de Alta Precisión:** Fondos oscuros de escala de grises zinc/neutral (`#000000`, `#09090b`, `#18181b`) con bordes ultra-delgados de 1px.
-* **Tipografía Geist:** Familia tipográfica Geist Sans y Geist Mono para una legibilidad óptima en lectura densa de textos bíblicos, aparatos críticos y léxicos.
-* **Componentes de Alta Densidad:** Pestañas compactas, botones mínimos, chips de libro y capítulo optimizados para el flujo de estudio exegético.
-* **Modo Oscuro / Claro Nativo:** Transiciones de contraste limpias respetando la jerarquía tipográfica sin distracciones visuales.
+* **Jerarquía y Contraste de Superficies (Layering Tri-Capa):**
+  * **Capa 0 (Lienzo Global Base):** Fondo sutil `bg-zinc-50/60 dark:bg-black` que rompe el efecto de pared monocromática plana.
+  * **Capa 1 (Paneles de Utilidad):** Sidebar izquierdo e Inspector derecho con `bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md` y bordes de delimitación `border-zinc-200/80 dark:border-zinc-800`.
+  * **Capa 2 (Hoja Editorial Central):** El contenido de lectura bíblica (`ContinuousReadingView` y `LineByLineReadingView`) se eleva como un folio de lectura de alta gama (`bg-white dark:bg-zinc-900/90 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-8 sm:p-12 lg:p-14`).
+* **Tipografía y Prosa Editorial:**
+  * Eliminación de sangría tosca (`indent-6`) en prosa continua a favor de espaciado inter-palabra natural con alineación balanceada (`text-justify sm:text-left`).
+  * Números de versículos en tipografía mono de precisión (`font-mono text-[11px] font-bold text-zinc-400 dark:text-zinc-500`) integrados en línea para no deformar el ritmo de lectura.
+* **Progressive Disclosure en Barra de Control (`ReaderToolbar.tsx`):**
+  * Condensación de 11 controles ruidosos en 3 bloques equilibrados:
+    * **Izquierda:** Pasaje canónico (`UnifiedPassagePicker`) y selector de versión (`TranslationSelector`).
+    * **Centro / Derecha:** Segmented control Geist de modo (`Prosa` vs `Versículo`), Popover flotante Geist (`Aa`) que agrupa selección de familia tipográfica (`Serif` / `Sans`), escala de tamaño (`A-` a `A++`) y alternador de numeración (`123`).
+    * **Extremo Derecho:** Botones discretos de copiado de capítulo e impresión a PDF.
+* **Navegación Canónica y Chips Ergonómicos (`BibleNavigationSidebar.tsx`):**
+  * Integración visual continua: en desktop (`lg:`), se eliminó la cabecera redundante con título y botón de cierre para evitar el efecto de "doble barra horizontal rota". El panel arranca directamente con su buscador y selector de testamentos al ras.
+  * Segmented control Geist encapsulado para testamentos (`Todos | AT (39) | NT (27)`).
+  * Buscador rápido con bordes suaves `rounded-xl` y padding ergonómico.
+  * Cuadrícula de capítulos con chips circulares/redondeados suaves (`w-8 h-8 rounded-lg text-xs font-mono font-medium border border-zinc-200/80 dark:border-zinc-700/80`) inspirados en el diseño de componentes de DIITRA.
+  * En móviles (`< lg`), se proyecta como Drawer con cabecera dedicada, cortina oscura y auto-cierre al seleccionar capítulo.
+* **Inspector Exegético Desacoplado (`BibleExegesisInspector.tsx`):**
+  * En desktop (`lg:`), inicia de inmediato con sus pestañas en segmented control Geist (`Morfología Strong` y `Versiones Sinópticas`), eliminando barras de título duplicadas.
+  * Estados vacíos minimalistas sin cajas punteadas sobredimensionadas, con iconografía circular en reposo.
+  * Componentes internos puros y desacoplados (`StrongMorphologyInspector` y `ParallelVerseInspector`).
+* **Barra de Navegación de Suites Geist Pura (`BibleHeaderNav.tsx`):**
+  * Supresión definitiva de puntos circulares de colores en las pestañas de suites.
+  * Estilo tipográfico monocromático Geist idéntico a Vercel Dashboard, con cápsula activa sobria (`bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs`) y botones de panel unificados (`PanelLeft` y `PanelRight`).
+
+---
+
+## 7. Refinamientos de Alta Precisión Exegética
+
+### 7.1 Atajos de Teclado Profesionales (*Power-User Keybindings*)
+Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/src/app/(bible)/hooks/useBibleKeybindings.ts) y activo en todas las suites de estudio:
+* `[` $\rightarrow$ Alternar panel de navegación canónica izquierdo (`toggleLeftSidebar`).
+* `]` $\rightarrow$ Alternar inspector exegético derecho (`toggleRightInspector`).
+* `←` / `→` $\rightarrow$ Navegación rápida al capítulo anterior / siguiente (`prevChapter` / `nextChapter`).
+* `Escape` $\rightarrow$ Cerrar el inspector exegético o deseleccionar texto.
+* *Aislamiento de Inputs:* Los atajos de navegación y paneles se desactivan automáticamente cuando el foco está sobre elementos de texto (`input`, `textarea`, `select`, `isContentEditable`) para permitir escribir normalmente en los buscadores.
+
+### 7.2 Barra de Lectura Sticky Flotante (`ReaderToolbar.tsx`)
+* Anclaje permanente `sticky top-14 z-30` con fondo `bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md` y borde sutil.
+* Popover `Aa` desacoplado con cierre automático en click exterior (`useRef` y evento `mousedown`).
+
+### 7.3 Modo Impresión y Exportación Limpia (*Print / Pulpit Mode*)
+* Reglas dedicadas `@media print` en [`globals.css`](../../../frontend/web/src/app/(bible)/globals.css) y etiquetas `print:hidden`:
+  * Ocultamiento automático de barras de navegación superior, paneles laterales, toolbars, botones de interacción y footers.
+  * Supresión de bordes, sombras y márgenes innecesarios (`print-clean`).
+  * Protección contra saltos de página partidos en versículos (`page-break-inside: avoid`).
+  * Botón directo de **Imprimir / Exportar a PDF** en [`ReaderToolbar.tsx`](../../../frontend/web/src/app/(bible)/features/verses/components/reader-toolbar/ReaderToolbar.tsx).
+
+
 

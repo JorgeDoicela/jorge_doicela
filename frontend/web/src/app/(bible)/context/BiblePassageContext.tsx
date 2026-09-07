@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useBooks, Book } from '../features/books';
@@ -11,8 +11,30 @@ import {
   resolveInitialTranslationId,
   saveTranslationPreference,
   getDefaultTranslationId,
+  getSavedTranslationId,
   getTranslationLanguageGroup,
 } from '../features/translations';
+import { useBibleKeybindings } from '../hooks/useBibleKeybindings';
+
+
+export interface InspectedWordData {
+  strongNumber: string;
+  wordText: string;
+  transliteration?: string;
+  pronunciation?: string;
+  lemma?: string;
+  definition?: string;
+  grammar?: string;
+  language?: 'hebrew' | 'greek' | 'aramaic';
+}
+
+export interface InspectedVerseData {
+  bookId: number;
+  bookName: string;
+  chapter: number;
+  verseNumber: number;
+  text: string;
+}
 
 interface BiblePassageContextValue {
   books: Book[];
@@ -26,6 +48,23 @@ interface BiblePassageContextValue {
   setSelectedTranslationId: (id: number | null) => void;
   nextChapter: () => void;
   prevChapter: () => void;
+
+  // Control de Paneles Laterales del Workspace Studio
+  isLeftSidebarOpen: boolean;
+  toggleLeftSidebar: () => void;
+  setLeftSidebarOpen: (open: boolean) => void;
+
+  isRightInspectorOpen: boolean;
+  toggleRightInspector: () => void;
+  setRightInspectorOpen: (open: boolean) => void;
+  activeInspectorTab: 'strong' | 'versions' | 'notes';
+  setActiveInspectorTab: (tab: 'strong' | 'versions' | 'notes') => void;
+
+  inspectedWord: InspectedWordData | null;
+  inspectedVerse: InspectedVerseData | null;
+  openInspectorWithWord: (word: InspectedWordData) => void;
+  openInspectorWithVerse: (verse: InspectedVerseData) => void;
+  closeInspector: () => void;
 }
 
 const BiblePassageContext = createContext<BiblePassageContextValue | undefined>(undefined);
@@ -64,13 +103,97 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
     return 1;
   });
 
-  // Resolución profesional: 1) URL -> 2) localStorage -> 3) Locale (ES: NBLA [3], EN: NIV [5])
+  // Resolución profesional y determinista para SSR:
+  // 1) URL Param -> 2) Default Contextual del Locale (ES: NBLA [3], EN: NIV [5])
+  // La memoria secundaria de localStorage se sincroniza post-hidratación para evitar Hydration Mismatches
   const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(() => {
     return resolveInitialTranslationId({
       urlParam: initialTransParam,
       locale,
     });
   });
+
+  // Control del Panel Lateral Izquierdo (Navegación Canónica):
+  // Inicialización determinista en false para evitar Hydration Mismatch entre SSR y cliente
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
+
+  // Sincronización post-montaje con localStorage y viewport (cliente)
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem('bible_left_sidebar_open');
+      if (saved !== null) {
+        setIsLeftSidebarOpen(saved === 'true');
+      } else if (window.innerWidth >= 1280) {
+        setIsLeftSidebarOpen(true);
+      }
+
+      // Si no hubo ?trans= en la URL, verificar si el usuario tiene una traducción guardada
+      if (!initialTransParam) {
+        const savedTrans = getSavedTranslationId(locale);
+        if (savedTrans !== null) {
+          setSelectedTranslationId(savedTrans);
+        }
+      }
+    } catch {
+      // Fallback silencioso si localStorage está restringido
+    }
+  }, [initialTransParam, locale]);
+
+  const toggleLeftSidebar = useCallback(() => {
+    setIsLeftSidebarOpen((prev) => {
+      const next = !prev;
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem('bible_left_sidebar_open', String(next));
+        } catch {
+          // Ignorar si localStorage está restringido en el navegador
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const setLeftSidebarOpen = useCallback((open: boolean) => {
+    setIsLeftSidebarOpen(open);
+    if (typeof window !== 'undefined') {
+      try {
+        window.localStorage.setItem('bible_left_sidebar_open', String(open));
+      } catch {
+        // Ignorar si localStorage está restringido en el navegador
+      }
+    }
+  }, []);
+
+  // Control del Panel Lateral Derecho (Inspector Exegético de Versículos & Strong)
+  const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(false);
+  const [activeInspectorTab, setActiveInspectorTab] = useState<'strong' | 'versions' | 'notes'>('strong');
+  const [inspectedWord, setInspectedWord] = useState<InspectedWordData | null>(null);
+  const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(null);
+
+  const toggleRightInspector = useCallback(() => {
+    setIsRightInspectorOpen((prev) => !prev);
+  }, []);
+
+  const openInspectorWithWord = useCallback((word: InspectedWordData) => {
+    setInspectedWord(word);
+    setActiveInspectorTab('strong');
+    setIsRightInspectorOpen(true);
+  }, []);
+
+  const openInspectorWithVerse = useCallback((verse: InspectedVerseData) => {
+    setInspectedVerse(verse);
+    setActiveInspectorTab('versions');
+    setIsRightInspectorOpen(true);
+  }, []);
+
+  const setRightInspectorOpen = useCallback((open: boolean) => {
+    setIsRightInspectorOpen(open);
+  }, []);
+
+  const closeInspector = useCallback(() => {
+    setIsRightInspectorOpen(false);
+  }, []);
+
 
   // Reaccionar al cambio de idioma de la interfaz (ES <-> EN) de manera inmediata y fluida
   useEffect(() => {
@@ -173,8 +296,18 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
     }
   };
 
+  // Atajos de Teclado Profesionales para Navegación y Control de Paneles
+  useBibleKeybindings({
+    onToggleLeftSidebar: toggleLeftSidebar,
+    onToggleRightInspector: toggleRightInspector,
+    onPrevChapter: prevChapter,
+    onNextChapter: nextChapter,
+    onCloseInspector: closeInspector,
+  });
+
   return (
     <BiblePassageContext.Provider
+
       value={{
         books,
         translations,
@@ -187,6 +320,21 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
         setSelectedTranslationId: handleSetTranslation,
         nextChapter,
         prevChapter,
+
+        // Paneles laterales del Workspace Studio
+        isLeftSidebarOpen,
+        toggleLeftSidebar,
+        setLeftSidebarOpen,
+        isRightInspectorOpen,
+        toggleRightInspector,
+        setRightInspectorOpen,
+        activeInspectorTab,
+        setActiveInspectorTab,
+        inspectedWord,
+        inspectedVerse,
+        openInspectorWithWord,
+        openInspectorWithVerse,
+        closeInspector,
       }}
     >
       {children}
@@ -201,3 +349,8 @@ export const useBiblePassage = () => {
   }
   return context;
 };
+
+export const useBiblePassageSafe = () => {
+  return useContext(BiblePassageContext);
+};
+

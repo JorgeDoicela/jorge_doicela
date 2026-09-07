@@ -23,6 +23,7 @@ import { GreekMorphologyModal } from './GreekMorphologyModal';
 import { ReverseInterlinearReader } from './ReverseInterlinearReader';
 import { StrongLexiconDrawer } from './StrongLexiconDrawer';
 import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
+import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
 
 interface InterlinearViewProps {
   selectedBookAbbr?: string | null;
@@ -36,7 +37,9 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
   testament,
 }) => {
   const t = useTranslations('Interlinear');
+  const passageContext = useBiblePassageSafe();
   const [activeCanon, setActiveCanon] = useState<'OT' | 'NT'>('OT');
+
   const [hebrewVerses, setHebrewVerses] = useState<InterlinearVerse[]>([]);
   const [greekVerses, setGreekVerses] = useState<GreekInterlinearVerse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +76,20 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
     const entry = await fetchStrongLexiconEntry(strongCode);
     setSelectedStrongEntry(entry);
     setStrongDrawerOpen(true);
-  }, []);
+    if (passageContext) {
+      passageContext.openInspectorWithWord({
+        strongNumber: strongCode,
+        wordText: entry.lemma,
+        transliteration: entry.transliteration,
+        pronunciation: entry.pronunciationGuide,
+        lemma: entry.lemma,
+        definition: entry.shortDefinition,
+        grammar: entry.partOfSpeech,
+        language: strongCode.startsWith('H') ? 'hebrew' : 'greek',
+      });
+    }
+  }, [passageContext]);
+
 
   // Sincronizar automáticamente el canon según el libro o testamento seleccionado
   useEffect(() => {

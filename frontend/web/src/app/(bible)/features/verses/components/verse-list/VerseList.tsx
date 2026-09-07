@@ -38,6 +38,7 @@ interface VerseListProps {
   onSelectTranslation?: (id: number | null) => void;
   activeTranslationName?: string;
   activeTranslationAbbr?: string;
+  onRetry?: () => void;
 }
 
 export const VerseList: React.FC<VerseListProps> = ({
@@ -63,6 +64,7 @@ export const VerseList: React.FC<VerseListProps> = ({
   onSelectTranslation,
   activeTranslationName,
   activeTranslationAbbr,
+  onRetry,
 }) => {
   return (
     <div className="w-full space-y-4">
@@ -91,7 +93,7 @@ export const VerseList: React.FC<VerseListProps> = ({
 
       {/* Estado de carga con Skeleton editorial */}
       {loading && (
-        <div className="w-full max-w-5xl mx-auto bg-background rounded-2xl border border-accents-2 p-8 sm:p-12 space-y-4 animate-pulse">
+        <div className="w-full bg-background rounded-2xl border border-accents-2 p-8 sm:p-12 space-y-4 animate-pulse">
           <div className="h-6 w-48 bg-accents-1 rounded mx-auto mb-6" />
           <div className="space-y-3">
             <div className="h-4 bg-accents-1 rounded w-full" />
@@ -104,10 +106,19 @@ export const VerseList: React.FC<VerseListProps> = ({
         </div>
       )}
 
-      {/* Estado de Error */}
+      {/* Estado de Error con Reintento */}
       {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono text-center">
-          {error}
+        <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 text-xs font-mono text-center space-y-3">
+          <p className="leading-relaxed">{error}</p>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="px-4 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 dark:text-amber-200 font-semibold transition-colors cursor-pointer"
+            >
+              Reintentar conexión
+            </button>
+          )}
         </div>
       )}
 

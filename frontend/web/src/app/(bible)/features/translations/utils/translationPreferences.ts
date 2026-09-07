@@ -96,8 +96,9 @@ export function saveTranslationPreference(translationId: number, locale?: string
 export function resolveInitialTranslationId(options?: {
   urlParam?: string | null;
   locale?: string;
+  checkStorage?: boolean;
 }): number {
-  const { urlParam, locale } = options || {};
+  const { urlParam, locale, checkStorage = false } = options || {};
   const cleanLocale = locale && locale.toLowerCase().startsWith('en') ? 'en' : 'es';
 
   // 1. Prioridad URL (respetada si es coherente con el idioma activo o es texto fuente)
@@ -111,12 +112,14 @@ export function resolveInitialTranslationId(options?: {
     }
   }
 
-  // 2. Prioridad Memoria Local del usuario para este idioma
-  const saved = getSavedTranslationId(cleanLocale);
-  if (saved !== null) {
-    return saved;
+  // 2. Prioridad Memoria Local del usuario (solo post-hidratación con checkStorage: true)
+  if (checkStorage) {
+    const saved = getSavedTranslationId(cleanLocale);
+    if (saved !== null) {
+      return saved;
+    }
   }
 
-  // 3. Default Contextual por idioma
+  // 3. Default Contextual por idioma (100% determinista en SSR y cliente)
   return getDefaultTranslationId(cleanLocale);
 }

@@ -50,8 +50,8 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
 
   if (!word) {
     return (
-      <div className={`p-8 text-center space-y-3 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30 ${className}`}>
-        <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500">
+      <div className={`py-12 px-4 text-center space-y-3 ${className}`}>
+        <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-400">
           <Languages className="w-5 h-5" />
         </div>
         <div className="space-y-1">
@@ -59,7 +59,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
             {tStudio('inspectedWordTitle')}
           </p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-[220px] mx-auto">
-            {tStudio('noWordSelected')}
+            {tStudio('inspectedWordDesc')}
           </p>
         </div>
       </div>
@@ -69,9 +69,9 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Cabecera del Lema */}
-      <div className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-800/50 shadow-xs space-y-2.5">
+      <div className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] shadow-xs space-y-2.5">
         <div className="flex items-center justify-between">
-          <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 font-semibold">
+          <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 font-semibold">
             {word.strongNumber}
           </span>
           {word.language && (
@@ -98,7 +98,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
         </div>
 
         {/* Palabra en contexto */}
-        <div className="text-xs text-zinc-500 dark:text-zinc-400 text-center border-t border-zinc-100 dark:border-zinc-700/60 pt-2.5">
+        <div className="text-xs text-zinc-500 dark:text-zinc-400 text-center border-t border-zinc-100 dark:border-zinc-800/80 pt-2.5">
           <span className="text-zinc-400">En el texto: </span>
           <strong className="text-zinc-800 dark:text-zinc-200">«{word.wordText}»</strong>
         </div>
@@ -112,7 +112,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
             <h4 className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
               {tStudio('grammarCategory')}
             </h4>
-            <p className="mt-1 text-xs text-zinc-800 dark:text-zinc-200 bg-white dark:bg-zinc-800/60 px-3 py-2 rounded-xl border border-zinc-200/80 dark:border-zinc-700/80">
+            <p className="mt-1 text-xs text-zinc-800 dark:text-zinc-200 bg-white dark:bg-[#0a0a0a] px-3 py-2 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80">
               {word.grammar || lexiconDetails?.partOfSpeech}
             </p>
           </div>
@@ -124,7 +124,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
             <h4 className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
               {tStudio('pronunciation')}
             </h4>
-            <div className="mt-1 flex items-center justify-between text-xs text-zinc-800 dark:text-zinc-200 bg-white dark:bg-zinc-800/60 px-3 py-2 rounded-xl border border-zinc-200/80 dark:border-zinc-700/80">
+            <div className="mt-1 flex items-center justify-between text-xs text-zinc-800 dark:text-zinc-200 bg-white dark:bg-[#0a0a0a] px-3 py-2 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80">
               <span>{word.pronunciation || lexiconDetails?.pronunciationGuide}</span>
               <Volume2 className="w-3.5 h-3.5 text-zinc-400" />
             </div>
@@ -137,16 +137,16 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
             {tStudio('definition')}
           </h4>
           {loading ? (
-            <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-200/60 dark:border-zinc-700/60 text-xs text-zinc-400 animate-pulse">
+            <div className="p-4 bg-zinc-50 dark:bg-[#0a0a0a] rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 text-xs text-zinc-400 animate-pulse">
               Cargando léxico...
             </div>
           ) : (
-            <div className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-800/40 text-xs leading-relaxed space-y-2.5">
+            <div className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] text-xs leading-relaxed space-y-2.5">
               <p className="font-medium text-zinc-900 dark:text-zinc-100">
                 {lexiconDetails?.shortDefinition || word.definition || 'Sin definición directa disponible.'}
               </p>
               {lexiconDetails?.extendedDefinition && lexiconDetails.extendedDefinition.length > 0 && (
-                <div className="border-t border-zinc-100 dark:border-zinc-700/60 pt-2.5 space-y-1.5 text-zinc-600 dark:text-zinc-300">
+                <div className="border-t border-zinc-100 dark:border-zinc-800/80 pt-2.5 space-y-1.5 text-zinc-600 dark:text-zinc-300">
                   {lexiconDetails.extendedDefinition.map((def: string, idx: number) => (
                     <p key={idx} className="text-[11px] leading-normal">
                       {def}
@@ -156,7 +156,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
               )}
 
               {lexiconDetails?.occurrencesInBible !== undefined && (
-                <div className="text-[11px] text-zinc-400 dark:text-zinc-500 pt-1 border-t border-zinc-100 dark:border-zinc-700/60">
+                <div className="text-[11px] text-zinc-400 dark:text-zinc-500 pt-1 border-t border-zinc-100 dark:border-zinc-800/80">
                   Total de apariciones canónicas: <strong className="text-zinc-800 dark:text-zinc-200">{lexiconDetails.occurrencesInBible}</strong>
                 </div>
               )}

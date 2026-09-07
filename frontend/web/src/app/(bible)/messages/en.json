@@ -794,6 +794,7 @@
     "tabNotes": "Notes & Cross-References",
     "inspectedVerseTitle": "Verse Analysis",
     "inspectedWordTitle": "Lexicon & Morphology",
+    "inspectedWordDesc": "Click any word in the text or interlinear to inspect its lexical data.",
     "noWordSelected": "Click any word in the text or interlinear to inspect its lexical data.",
     "noVerseSelected": "Select a verse to compare versions in real time.",
     "selectVerseToInspect": "Select verse",

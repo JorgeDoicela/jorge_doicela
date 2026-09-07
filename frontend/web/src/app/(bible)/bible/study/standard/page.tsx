@@ -39,7 +39,7 @@ export default function StandardStudyPage() {
   } = useVerses(selectedBookId, selectedChapter, selectedTranslationId);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <VerseList
         verses={verses}
         loading={versesLoading}

@@ -67,7 +67,7 @@ export const VerseList: React.FC<VerseListProps> = ({
   onRetry,
 }) => {
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-2">
       {/* Barra de herramientas integrada del lector */}
       <ReaderToolbar
         readerSettings={readerSettings}

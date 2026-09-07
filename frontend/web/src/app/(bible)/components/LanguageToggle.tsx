@@ -23,10 +23,10 @@ export function LanguageToggle() {
     <button
       onClick={toggleLanguage}
       disabled={isPending}
-      className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono tracking-wider uppercase border border-accents-2 bg-background hover:bg-accents-1 text-accents-7 hover:text-foreground transition-all duration-200 cursor-pointer active:scale-95 disabled:opacity-50"
+      className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-mono tracking-wider uppercase text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors duration-150 cursor-pointer active:scale-95 disabled:opacity-50"
       aria-label={`Cambiar idioma (actual: ${locale})`}
     >
-      <Globe className="w-3.5 h-3.5 text-accents-5" />
+      <Globe className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 dark:group-hover:text-zinc-200" />
       <span>{locale.toUpperCase()}</span>
     </button>
   );

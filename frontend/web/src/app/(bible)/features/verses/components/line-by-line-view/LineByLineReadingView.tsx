@@ -46,13 +46,8 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
       : undefined);
 
   const localizedBookName = (() => {
-    if (rawAbbr) {
-      try {
-        const translated = tBooks(rawAbbr as any);
-        if (translated) return translated;
-      } catch {
-        // fallback
-      }
+    if (rawAbbr && tBooks.has(rawAbbr as any)) {
+      return tBooks(rawAbbr as any);
     }
     const firstVerseBook =
       typeof verses[0]?.book === 'object' && verses[0]?.book !== null
@@ -96,7 +91,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
 
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-3">
+    <div className="w-full space-y-3">
       {/* Cabecera compacta editorial */}
       <div className="flex justify-between items-center px-4 py-2 text-xs font-mono text-zinc-400 dark:text-zinc-500">
         <span className="font-medium text-zinc-600 dark:text-zinc-300">
@@ -106,11 +101,11 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
       </div>
 
       {/* Lista versículo a versículo en tarjeta elevada */}
-      <div className="divide-y divide-zinc-100 dark:divide-zinc-800/80 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900/90 overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="divide-y divide-zinc-100 dark:divide-zinc-800/80 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl bg-white dark:bg-[#0a0a0a] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         {verses.map((verse) => (
           <div
             key={verse.id}
-            className="p-4 sm:p-5 transition-colors duration-150 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 flex items-start gap-4 group"
+            className="p-4 sm:p-5 transition-colors duration-150 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 flex items-start gap-4 group"
           >
             {/* Columna con número de versículo */}
             <div className="shrink-0 w-10 text-right pt-0.5">
@@ -157,7 +152,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleCopyVerse(verse)}
-                className="p-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:border-zinc-400 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-all cursor-pointer"
+                className="p-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] hover:border-zinc-400 dark:hover:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-all cursor-pointer"
                 title={t('copyVerseTooltip')}
               >
                 {copiedId === verse.id ? (

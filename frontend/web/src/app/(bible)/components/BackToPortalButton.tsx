@@ -21,12 +21,12 @@ export function BackToPortalButton() {
   return (
     <a
       href={portalUrl}
-      className="group inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium text-accents-5 hover:text-foreground hover:bg-accents-1 border border-accents-2 transition-all duration-150 cursor-pointer select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-foreground"
+      className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors duration-150 cursor-pointer select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-foreground"
       title={t('portal')}
       aria-label={t('portal')}
       id="bible-back-to-portal"
     >
-      <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-150 group-hover:-translate-x-0.5 text-accents-4 group-hover:text-foreground" />
+      <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-150 group-hover:-translate-x-0.5 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />
       <span className="font-mono text-[11px] tracking-tight">{t('portalShort')}</span>
     </a>
   );

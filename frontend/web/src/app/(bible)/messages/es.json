@@ -794,6 +794,7 @@
     "tabNotes": "Notas & Referencias",
     "inspectedVerseTitle": "Análisis de Versículo",
     "inspectedWordTitle": "Léxico & Morfología",
+    "inspectedWordDesc": "Toca una palabra en el lector o interlineal para ver su ficha léxica.",
     "noWordSelected": "Toca una palabra en el lector o interlineal para ver su ficha léxica.",
     "noVerseSelected": "Selecciona un versículo para comparar sus versiones en tiempo real.",
     "selectVerseToInspect": "Seleccionar versículo",

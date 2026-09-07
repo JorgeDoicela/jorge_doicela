@@ -121,7 +121,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   }));
 
   return (
-    <div className="sticky top-14 z-30 border border-zinc-200/80 dark:border-zinc-800 rounded-xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-2 shadow-xs transition-all print:hidden">
+    <div className="border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl bg-white/95 dark:bg-black/90 backdrop-blur-md px-3 py-2 shadow-xs transition-all print:hidden">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         {/* Izquierda: Pasaje Principal y Versión */}
         <div className="flex items-center gap-2 min-w-0">
@@ -145,15 +145,15 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 
         {/* Derecha: Progressive Disclosure (Modo + Popover Apariencia + Acciones) */}
         <div className="flex items-center gap-1.5 justify-end">
-          {/* Segmented Control de Modo: Prosa vs Versículos */}
-          <div className="flex items-center bg-zinc-100 dark:bg-zinc-800/80 p-0.5 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50">
+          {/* Conmutador de Modo Geist Plano: Prosa vs Versículos (Vercel Style) */}
+          <div className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
             <button
               type="button"
               onClick={() => onLayoutModeChange('continuous')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
                 readerSettings.layoutMode === 'continuous'
-                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs font-semibold'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                  : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
               }`}
               title={t('continuousTooltip')}
             >
@@ -164,10 +164,10 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             <button
               type="button"
               onClick={() => onLayoutModeChange('verse-by-verse')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
                 readerSettings.layoutMode === 'verse-by-verse'
-                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs font-semibold'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                  : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
               }`}
               title={t('verseByVerseTooltip')}
             >
@@ -181,10 +181,10 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             <button
               type="button"
               onClick={() => setAppearanceOpen(!appearanceOpen)}
-              className={`px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
                 appearanceOpen
-                  ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
-                  : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
+                  ? 'bg-zinc-200/80 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                  : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
               }`}
               title="Ajustes de Tipografía y Lectura"
             >
@@ -194,20 +194,20 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 
             {/* Panel Popover Desplegable */}
             {appearanceOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-64 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
+              <div className="absolute right-0 top-full mt-1.5 w-64 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
                 {/* Familia Tipográfica */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
                     Familia Tipográfica
                   </span>
-                  <div className="grid grid-cols-2 gap-1 bg-zinc-100 dark:bg-zinc-800 p-0.5 rounded-lg">
+                  <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
                     <button
                       type="button"
                       onClick={() => onFontFamilyChange('serif')}
-                      className={`py-1 text-xs font-serif rounded-md transition-all cursor-pointer ${
+                      className={`py-1.5 text-xs font-serif transition-colors cursor-pointer text-center ${
                         readerSettings.fontFamily === 'serif'
-                          ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs font-semibold'
-                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                          ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                       }`}
                     >
                       {t('serif')}
@@ -215,10 +215,10 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     <button
                       type="button"
                       onClick={() => onFontFamilyChange('sans')}
-                      className={`py-1 text-xs font-sans rounded-md transition-all cursor-pointer ${
+                      className={`py-1.5 text-xs font-sans transition-colors cursor-pointer text-center ${
                         readerSettings.fontFamily === 'sans'
-                          ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs font-semibold'
-                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                          ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                       }`}
                     >
                       {t('sans')}
@@ -231,16 +231,16 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
                     Tamaño de Fuente
                   </span>
-                  <div className="grid grid-cols-4 gap-1 bg-zinc-100 dark:bg-zinc-800 p-0.5 rounded-lg">
+                  <div className="grid grid-cols-4 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
                     {fontSizes.map((f) => (
                       <button
                         key={f.value}
                         type="button"
                         onClick={() => onFontSizeChange(f.value)}
-                        className={`py-1 text-xs rounded-md transition-all cursor-pointer ${
+                        className={`py-1.5 text-xs transition-colors cursor-pointer text-center ${
                           readerSettings.fontSize === f.value
-                            ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs font-bold'
-                            : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                            ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-bold'
+                            : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                         }`}
                       >
                         {f.label}
@@ -260,7 +260,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     className={`px-2 py-0.5 text-xs font-mono rounded-md border transition-all cursor-pointer ${
                       readerSettings.showVerseNumbers
                         ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-transparent font-semibold shadow-xs'
-                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 border-zinc-200 dark:border-zinc-700'
+                        : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-400 border-zinc-200 dark:border-zinc-800'
                     }`}
                   >
                     123
@@ -277,7 +277,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             <button
               type="button"
               onClick={handleCopyChapter}
-              className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-all cursor-pointer"
+              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
               title={copied ? t('copied') : t('copyTooltip')}
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -290,7 +290,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             onClick={() => {
               if (typeof window !== 'undefined') window.print();
             }}
-            className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-all cursor-pointer"
+            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
             title="Imprimir o exportar pasaje a PDF"
           >
             <Printer className="w-3.5 h-3.5" />

@@ -27,13 +27,8 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   const currentChapter = selectedChapter || 1;
 
   const localizedBookName = (() => {
-    if (selectedBookAbbr) {
-      try {
-        const translated = tBooks(selectedBookAbbr as any);
-        if (translated) return translated;
-      } catch {
-        // fallback
-      }
+    if (selectedBookAbbr && tBooks.has(selectedBookAbbr as any)) {
+      return tBooks(selectedBookAbbr as any);
     }
     return selectedBookName || '';
   })();
@@ -74,7 +69,7 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
         className={`px-4 py-2 text-xs font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer ${
           currentChapter <= 1
             ? 'opacity-40 cursor-not-allowed border-zinc-200 dark:border-zinc-800 text-zinc-400'
-            : 'border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
+            : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
         }`}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +104,7 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
         className={`px-4 py-2 text-xs font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer ${
           currentChapter >= maxChapters
             ? 'opacity-40 cursor-not-allowed border-zinc-200 dark:border-zinc-800 text-zinc-400'
-            : 'border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
+            : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
         }`}
       >
         <span>

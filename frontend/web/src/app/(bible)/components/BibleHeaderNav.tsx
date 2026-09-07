@@ -7,9 +7,8 @@ import { BibleLogo } from './BibleLogo';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageToggle } from './LanguageToggle';
 import { BackToPortalButton } from './BackToPortalButton';
-import { ChevronDown, Check, PanelLeft, PanelRight } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useBiblePassageSafe } from '../context/BiblePassageContext';
 
 interface NavTabItem {
   path: string;
@@ -27,8 +26,6 @@ const NAV_TABS: NavTabItem[] = [
 
 export const BibleHeaderNav: React.FC = () => {
   const t = useTranslations('Nav');
-  const tStudio = useTranslations('Studio');
-  const passageContext = useBiblePassageSafe();
   const pathname = usePathname() || '';
 
   const searchParams = useSearchParams();
@@ -63,50 +60,28 @@ export const BibleHeaderNav: React.FC = () => {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md print:hidden">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black/90 backdrop-blur-md print:hidden">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
 
-        {/* Izquierda: Retorno al Portal + Logotipo e Identidad */}
+        {/* Izquierda: Retorno al Portal */}
         <div className="shrink-0 flex items-center gap-2 sm:gap-3">
           <BackToPortalButton />
-          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block select-none" />
+
+          {/* Logotipo en Móvil (< md) para mantener identidad cuando el segmented control central de desktop está oculto */}
           <Link
             href="/bible"
-            className="shrink-0 flex items-center gap-1.5 sm:gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
+            className="md:hidden shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity"
             title={t('landing')}
           >
-            <BibleLogo />
-            <span className="font-semibold text-xs sm:text-sm tracking-tight text-zinc-900 dark:text-zinc-100 hidden sm:inline-block">
-              {t('modularBible')}
-            </span>
+            <BibleLogo size={20} />
           </Link>
-
-          {/* Botón Toggle Panel Izquierdo (Navegación Canónica) */}
-          {passageContext && (
-            <>
-              <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
-              <button
-                type="button"
-                onClick={passageContext.toggleLeftSidebar}
-                title={tStudio('toggleSidebar')}
-                aria-label={tStudio('toggleSidebar')}
-                className={`p-1.5 rounded-lg border transition-all flex items-center justify-center cursor-pointer ${
-                  passageContext.isLeftSidebarOpen
-                    ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 shadow-xs'
-                    : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-                }`}
-              >
-                <PanelLeft className="w-4 h-4" />
-              </button>
-            </>
-          )}
         </div>
 
         {/* Móvil: Menú Desplegable Flotante Elegante (< md) */}
         <div className="relative md:hidden shrink min-w-0" ref={mobileMenuRef}>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/70 text-zinc-900 dark:text-zinc-100 text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
             aria-expanded={mobileMenuOpen}
             aria-label={t('selectSuite')}
           >
@@ -116,7 +91,7 @@ export const BibleHeaderNav: React.FC = () => {
 
           {/* Menú Flotante Móvil */}
           {mobileMenuOpen && (
-            <div className="absolute top-full left-0 mt-1.5 w-60 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute top-full left-0 mt-1.5 w-60 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 px-2 py-1">
                 {t('studySuites')}
               </div>
@@ -131,7 +106,7 @@ export const BibleHeaderNav: React.FC = () => {
                       className={`flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
                         active
                           ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium'
-                          : 'text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60'
+                          : 'text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                       }`}
                     >
                       <span>{t(tab.key as any)}</span>
@@ -144,43 +119,67 @@ export const BibleHeaderNav: React.FC = () => {
           )}
         </div>
 
-        {/* Desktop: Pestañas de Navegación Geist (Estilo Vercel puro) */}
-        <nav className="hidden md:flex min-w-0 flex-1 items-center gap-1 overflow-x-auto py-1 scrollbar-none select-none px-2">
-          {NAV_TABS.map((tab) => {
-            const active = isCurrentTab(tab.path);
-            return (
-              <Link
-                key={tab.path}
-                href={`${tab.path}${queryString}`}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0 ${
-                  active
-                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs'
-                    : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100/80 dark:hover:bg-zinc-800/60'
-                }`}
-              >
-                <span>{t(tab.key as any)}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Desktop: Pestañas de Navegación Geist Planas (Estilo Vercel Dashboard Puro) */}
+        <div className="hidden md:flex flex-1 justify-center items-center h-full min-w-0 px-2 select-none">
+          <nav className="flex items-center h-full gap-0.5 overflow-x-auto scrollbar-none">
+            {NAV_TABS.slice(0, 3).map((tab) => {
+              const active = isCurrentTab(tab.path);
+              return (
+                <Link
+                  key={tab.path}
+                  href={`${tab.path}${queryString}`}
+                  className={`relative flex items-center h-full px-3 text-xs font-medium whitespace-nowrap transition-colors duration-150 cursor-pointer shrink-0 ${
+                    active
+                      ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
+                      : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200'
+                  }`}
+                >
+                  <span>{t(tab.key as any)}</span>
+                  {active && (
+                    <span className="absolute -bottom-[1px] inset-x-1.5 h-[2px] bg-zinc-900 dark:bg-zinc-100 rounded-t-sm z-10" />
+                  )}
+                </Link>
+              );
+            })}
 
-        {/* Derecha: Toggle Inspector + Selector de Idioma y Tema */}
+            {/* Logotipo Central Divisor (Identidad en la superficie plana) */}
+            <div className="flex items-center gap-2 px-2 shrink-0">
+              <div className="h-3.5 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
+              <Link
+                href="/bible"
+                className="p-1 flex items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer group"
+                title={t('landing')}
+                aria-label={t('landing')}
+              >
+                <BibleLogo size={18} className="group-hover:scale-105 transition-transform" />
+              </Link>
+              <div className="h-3.5 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
+            </div>
+
+            {NAV_TABS.slice(3).map((tab) => {
+              const active = isCurrentTab(tab.path);
+              return (
+                <Link
+                  key={tab.path}
+                  href={`${tab.path}${queryString}`}
+                  className={`relative flex items-center h-full px-3 text-xs font-medium whitespace-nowrap transition-colors duration-150 cursor-pointer shrink-0 ${
+                    active
+                      ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
+                      : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200'
+                  }`}
+                >
+                  <span>{t(tab.key as any)}</span>
+                  {active && (
+                    <span className="absolute -bottom-[1px] inset-x-1.5 h-[2px] bg-zinc-900 dark:bg-zinc-100 rounded-t-sm z-10" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Derecha: Selector de Idioma y Tema */}
         <div className="shrink-0 flex items-center gap-2 pl-1">
-          {passageContext && (
-            <button
-              type="button"
-              onClick={passageContext.toggleRightInspector}
-              title={tStudio('toggleInspector')}
-              aria-label={tStudio('toggleInspector')}
-              className={`p-1.5 rounded-lg border transition-all flex items-center justify-center cursor-pointer ${
-                passageContext.isRightInspectorOpen
-                  ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 shadow-xs'
-                  : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-              }`}
-            >
-              <PanelRight className="w-4 h-4" />
-            </button>
-          )}
           <LanguageToggle />
           <ThemeToggle />
         </div>

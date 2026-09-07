@@ -180,5 +180,17 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   * Protección contra saltos de página partidos en versículos (`page-break-inside: avoid`).
   * Botón directo de **Imprimir / Exportar a PDF** en [`ReaderToolbar.tsx`](../../../frontend/web/src/app/(bible)/features/verses/components/reader-toolbar/ReaderToolbar.tsx).
 
+### 7.4 Botones Flotantes con Auto-Snap a Bordes estilo Messenger (`DraggableEdgeTab.tsx`)
+* **Auto-Snap Obligatorio al Borde:** Los botones emergen cuando los paneles están cerrados. Mientras se arrastran flotan libremente, pero al soltarlos (`pointerup`), se acoplan automáticamente contra el borde correspondiente (`left: 0` para el panel izquierdo, `right: 0` para el inspector derecho). Esto garantiza que nunca se queden flotando sobre los selectores de pasaje ni tapen el texto bíblico.
+* **Restricción de Desplazamiento (Máximo 25% de Pantalla):** El botón izquierdo no puede ser arrastrado más allá del 25% del ancho de la pantalla hacia el centro, y el botón derecho no puede sobrepasar el 75%, blindando el área central de lectura contra cualquier obstrucción.
+* **Geometría Adaptativa:** En reposo se presentan como pestañas acopladas al marco (`rounded-r-2xl` a la izquierda, `rounded-l-2xl` a la derecha, `w-11 h-12`), y durante el arrastre se transforman con fluidez en squircles flotantes (`rounded-2xl`, elevación `shadow-2xl` y micro-escala).
+* **Persistencia Vertical:** Memoriza la altura exacta (`top`) en `localStorage` (`bible_drag_tab_left_y` y `bible_drag_tab_right_y`).
 
+### 7.5 Aprovechamiento Integral del Ancho de Pantalla (*Full-Width Canvas*)
+* **Eliminación de Restricciones Artificiales:** Se retiraron las limitaciones rígidas (`max-w-4xl` y `max-w-3xl`) en `VerseList`, `ContinuousReadingView` y `LineByLineReadingView`.
+* **Equidad Visual con Suites Exegéticas:** El lector estándar ahora aprovecha el 100% del lienzo de trabajo en monitores anchos, comportándose con la misma amplitud y ergonomía fluida que las vistas de Estudio Paralelo, Interlineal y Estructura Literaria.
 
+### 7.6 Flujo Natural de la Barra y Visibilidad Editorial del Título
+* **Flujo Natural sin Colisiones:** Se removió la fijación `sticky` de `ReaderToolbar.tsx`, unificándolo con el patrón del resto de suites (`ParallelStudyPage`, `InterlinearStudyPage`). La barra de herramientas fluye armónicamente con el contenido, eliminando para siempre las colisiones donde la barra flotaba por encima del título del libro ("Génesis") al desplazarse.
+* **Alineación Superior al Ras (`pt-0`):** Se eliminó el padding superior del contenedor principal (`pt-0`) y se acortó el espaciado vertical (`space-y-2`), situando la barra de herramientas directamente debajo de la cabecera sin holguras vacías.
+* **Presencia Editorial del Capítulo:** Con `pt-8` y `pb-6 mb-6`, el título del libro y el capítulo destacan con elegancia editorial completa y nunca son ocluidos ni cortados.

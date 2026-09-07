@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { BookMarked, Copy, Check } from 'lucide-react';
 import { InspectedVerseData } from '../context/BiblePassageContext';
 import { API_URL } from '../../config';
-
 
 export interface ParallelVerseData {
   translationId: number;
@@ -16,19 +15,21 @@ export interface ParallelVerseData {
   text: string;
 }
 
+export interface TargetTranslationItem {
+  id: number;
+  name: string;
+  abbreviation: string;
+  language: string;
+}
+
 export interface ParallelVerseInspectorProps {
   verse: InspectedVerseData | null;
-  translations?: Array<{
-    id: number;
-    name: string;
-    abbreviation: string;
-    language: string;
-  }>;
+  translations?: TargetTranslationItem[];
   className?: string;
   onCopyVerse?: (text: string, translationAbbr: string) => void;
 }
 
-const DEFAULT_TARGET_TRANSLATIONS = [
+const DEFAULT_TARGET_TRANSLATIONS: TargetTranslationItem[] = [
   { id: 3, name: 'Nueva Biblia de las Américas', abbreviation: 'NBLA', language: 'es' },
   { id: 5, name: 'New International Version', abbreviation: 'NIV', language: 'en' },
   { id: 1, name: 'Reina Valera 1909', abbreviation: 'RV1909', language: 'es' },
@@ -46,13 +47,24 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const activeTranslations = translations && translations.length > 0
-    ? translations.slice(0, 4)
-    : DEFAULT_TARGET_TRANSLATIONS;
+  const bookId = verse?.bookId;
+  const chapter = verse?.chapter;
+  const verseNumber = verse?.verseNumber;
+
+  const activeTranslations = useMemo<TargetTranslationItem[]>(() => {
+    return translations && translations.length > 0
+      ? translations.slice(0, 4)
+      : DEFAULT_TARGET_TRANSLATIONS;
+  }, [translations]);
+
+  const translationIdsKey = useMemo(() => {
+    return activeTranslations.map((t: TargetTranslationItem) => t.id).join(',');
+  }, [activeTranslations]);
 
   useEffect(() => {
-    if (!verse) {
+    if (!bookId || !chapter || !verseNumber) {
       setParallelVerses([]);
+      setLoading(false);
       return;
     }
 
@@ -60,15 +72,15 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
     setLoading(true);
 
     Promise.all(
-      activeTranslations.map(async (trans) => {
+      activeTranslations.map(async (trans: TargetTranslationItem) => {
         try {
           const res = await fetch(
-            `${API_URL}/bible/verses?bookId=${verse.bookId}&chapter=${verse.chapter}&translationId=${trans.id}`,
+            `${API_URL}/bible/verses?bookId=${bookId}&chapter=${chapter}&translationId=${trans.id}`,
           );
           if (!res.ok) return null;
           const data = await res.json();
           const list = Array.isArray(data) ? data : data?.data || [];
-          const found = list.find((v: any) => v.verseNumber === verse.verseNumber);
+          const found = list.find((v: any) => v.verseNumber === verseNumber);
           return {
             translationId: trans.id,
             translationName: trans.name,
@@ -80,9 +92,9 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
           return null;
         }
       }),
-    ).then((results) => {
+    ).then((results: (ParallelVerseData | null)[]) => {
       if (isMounted) {
-        const filtered = results.filter((r): r is ParallelVerseData => r !== null && r.text.length > 0);
+        const filtered = results.filter((r: ParallelVerseData | null): r is ParallelVerseData => r !== null && r.text.length > 0);
         setParallelVerses(filtered);
         setLoading(false);
       }
@@ -91,7 +103,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [verse?.bookId, verse?.chapter, verse?.verseNumber, activeTranslations]);
+  }, [bookId, chapter, verseNumber, translationIdsKey]);
 
   const handleCopy = (text: string, id: string, abbr: string) => {
     navigator.clipboard.writeText(text);
@@ -102,8 +114,8 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
 
   if (!verse) {
     return (
-      <div className={`p-8 text-center space-y-3 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30 ${className}`}>
-        <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500">
+      <div className={`py-12 px-4 text-center space-y-3 ${className}`}>
+        <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-400">
           <BookMarked className="w-5 h-5" />
         </div>
         <div className="space-y-1">
@@ -119,18 +131,16 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
   }
 
   const localizedBookName = (() => {
-    try {
-      const trans = tBooks(verse.bookName as any);
-      return trans || verse.bookName;
-    } catch {
-      return verse.bookName;
+    if (verse.bookName && tBooks.has(verse.bookName as any)) {
+      return tBooks(verse.bookName as any);
     }
+    return verse.bookName || '';
   })();
 
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Cabecera del Versículo Inspeccionado */}
-      <div className="pb-3 border-b border-zinc-100 dark:border-zinc-800">
+      <div className="pb-3 border-b border-zinc-100 dark:border-zinc-800/80">
         <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
           {localizedBookName} {verse.chapter}:{verse.verseNumber}
         </span>
@@ -142,9 +152,9 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="p-4 rounded-2xl border border-zinc-200/60 dark:border-zinc-700/60 bg-white dark:bg-zinc-800/40 animate-pulse space-y-2">
-              <div className="h-3 w-16 bg-zinc-200 dark:bg-zinc-700 rounded" />
-              <div className="h-8 bg-zinc-100 dark:bg-zinc-800 rounded" />
+            <div key={n} className="p-4 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] animate-pulse space-y-2">
+              <div className="h-3 w-16 bg-zinc-200 dark:bg-zinc-800 rounded" />
+              <div className="h-8 bg-zinc-100 dark:bg-zinc-900 rounded" />
             </div>
           ))}
         </div>
@@ -153,11 +163,11 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
           {parallelVerses.map((pv) => (
             <div
               key={pv.translationId}
-              className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-800/40 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-2"
+              className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-2"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200">
+                  <span className="font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">
                     {pv.translationAbbr}
                   </span>
                   <span className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate max-w-[150px]" title={pv.translationName}>
@@ -167,7 +177,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
                 <button
                   type="button"
                   onClick={() => handleCopy(pv.text, `pv-${pv.translationId}`, pv.translationAbbr)}
-                  className="p-1 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                  className="p-1 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
                   title="Copiar texto"
                 >
                   {copiedId === `pv-${pv.translationId}` ? (
@@ -184,7 +194,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
           ))}
         </div>
       ) : (
-        <div className="p-8 text-center space-y-3 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30">
+        <div className="p-8 text-center space-y-3 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-[#0a0a0a]">
           <BookMarked className="w-5 h-5 text-zinc-400 mx-auto" />
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
             {tStudio('noVerseSelected')}

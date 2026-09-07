@@ -53,13 +53,8 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       : undefined);
 
   const localizedBookTitle = useMemo(() => {
-    if (rawAbbr) {
-      try {
-        const translated = tBooks(rawAbbr as any);
-        if (translated) return translated;
-      } catch {
-        // fallback
-      }
+    if (rawAbbr && tBooks.has(rawAbbr as any)) {
+      return tBooks(rawAbbr as any);
     }
     const firstVerseBook =
       typeof verses[0]?.book === 'object' && verses[0]?.book !== null
@@ -106,11 +101,8 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     setToastMessage(withCitation ? t('citationCopied') : t('textCopied'));
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 2500);
-  };
-
-
-  return (
-    <div className="w-full bg-white dark:bg-zinc-900/90 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-8 sm:p-12 lg:p-14 relative print:border-none print:shadow-none print:p-0 print:m-0 print:bg-transparent transition-all">
+  };  return (
+    <div className="w-full bg-white dark:bg-[#0a0a0a] rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] pt-8 pb-8 px-6 sm:px-10 lg:px-12 relative print:border-none print:shadow-none print:p-0 print:m-0 print:bg-transparent transition-all">
       {/* Toast flotante de confirmación */}
       {toastMessage && (
         <div className="fixed bottom-8 right-8 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-medium px-4 py-2 rounded-full shadow-lg border border-zinc-200/20 animate-fade-in flex items-center gap-2 print:hidden">
@@ -122,7 +114,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       )}
 
       {/* Cabecera Editorial del Capítulo */}
-      <div className="text-center pb-8 mb-8 border-b border-zinc-100 dark:border-zinc-800/80">
+      <div className="text-center pb-6 mb-6 border-b border-zinc-100 dark:border-zinc-800/80">
         <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
           {localizedBookTitle}
         </h2>
@@ -143,9 +135,9 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
         </div>
       </div>
 
-      {/* Prosa Continua en Ancho Ergonómico de Lectura */}
+      {/* Prosa Continua en Ancho Completo */}
       <div
-        className={`max-w-3xl mx-auto ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
+        className={`w-full ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
           fontFamily,
         )} text-zinc-800 dark:text-zinc-200 select-text leading-relaxed sm:leading-loose`}
       >
@@ -159,7 +151,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                 className={`inline rounded-md px-1 py-0.5 relative group cursor-pointer transition-colors ${
                   isSelected
                     ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium'
-                    : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/70'
+                    : 'hover:bg-zinc-100 dark:hover:bg-zinc-900/60'
                 }`}
               >
                 {showVerseNumbers && (
@@ -183,7 +175,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 
       {/* Menú Contextual de Versículo Seleccionado */}
       {selectedVerseId && (
-        <div className="mt-8 pt-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-800/50 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 animate-fade-in print:hidden">
+        <div className="mt-8 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-black rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 animate-fade-in print:hidden">
           {(() => {
             const activeVerse = verses.find((v) => v.id === selectedVerseId);
             if (!activeVerse) return null;
@@ -224,7 +216,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                   <button
                     type="button"
                     onClick={() => handleCopyVerse(activeVerse, false)}
-                    className="px-2.5 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:border-zinc-400 text-zinc-600 dark:text-zinc-300 transition-all cursor-pointer"
+                    className="px-2.5 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] hover:border-zinc-400 dark:hover:border-zinc-700 text-zinc-600 dark:text-zinc-300 transition-all cursor-pointer"
                   >
                     {t('copyTextOnly')}
                   </button>

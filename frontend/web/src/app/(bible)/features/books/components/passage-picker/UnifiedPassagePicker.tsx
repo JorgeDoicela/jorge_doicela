@@ -45,12 +45,10 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
 
   const getBookDisplayName = (book: Book | null | undefined): string => {
     if (!book) return '';
-    try {
-      const translated = tBooks(book.abbreviation as any);
-      return translated || book.name;
-    } catch {
-      return book.name;
+    if (book.abbreviation && tBooks.has(book.abbreviation as any)) {
+      return tBooks(book.abbreviation as any);
     }
+    return book.name;
   };
 
   const currentBook = useMemo(

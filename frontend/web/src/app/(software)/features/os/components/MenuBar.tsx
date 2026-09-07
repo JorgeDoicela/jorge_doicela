@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { LanguageToggle } from '../../navigation/components/LanguageToggle';
+import { BackToPortalButton } from '../../../components/BackToPortalButton';
 
 
 
@@ -53,26 +54,30 @@ export function MenuBar({
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--background)]/90 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-colors duration-400">
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 h-14 flex items-center justify-between gap-4">
-        {/* Izquierda: Logotipo y Marca */}
-        <Link
-          href="/software"
-          className="flex items-center gap-2.5 group shrink-0"
-          title="Software - Inicio"
-        >
-          <div className="w-7 h-7 rounded-xl glass-concave-panel flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
-            <Image
-              src="/software/logo/logo_fondo_circular_color_.png"
-              alt="Software"
-              width={24}
-              height={24}
-              className="object-contain"
-              unoptimized
-            />
-          </div>
-          <span className="font-extrabold text-sm md:text-base tracking-tight text-[var(--header-title)]">
-            Software
-          </span>
-        </Link>
+        {/* Izquierda: Retorno al Portal + Logotipo y Marca */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <BackToPortalButton />
+          <div className="h-4 w-px bg-black/10 dark:bg-white/10 hidden sm:block select-none" />
+          <Link
+            href="/software"
+            className="flex items-center gap-2.5 group shrink-0"
+            title="Software - Inicio"
+          >
+            <div className="w-7 h-7 rounded-xl glass-concave-panel flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
+              <Image
+                src="/software/logo/logo_fondo_circular_color_.png"
+                alt="Software"
+                width={24}
+                height={24}
+                className="object-contain"
+                unoptimized
+              />
+            </div>
+            <span className="font-extrabold text-sm md:text-base tracking-tight text-[var(--header-title)]">
+              Software
+            </span>
+          </Link>
+        </div>
 
         {/* Centro: Enlaces de Navegación de los 7 Dominios */}
         <nav aria-label="Navegación principal" className="hidden lg:flex items-center gap-1">

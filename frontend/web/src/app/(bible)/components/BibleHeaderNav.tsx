@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { BibleLogo } from './BibleLogo';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageToggle } from './LanguageToggle';
+import { BackToPortalButton } from './BackToPortalButton';
 import { ChevronDown, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -61,17 +62,21 @@ export const BibleHeaderNav: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-accents-2 bg-background/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Izquierda: Logotipo e Identidad (Link a Landing) */}
-        <Link
-          href="/bible"
-          className="shrink-0 flex items-center gap-1.5 sm:gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
-          title={t('landing')}
-        >
-          <BibleLogo />
-          <span className="font-semibold text-xs sm:text-sm tracking-tight hidden sm:inline-block">
-            Biblia Modular
-          </span>
-        </Link>
+        {/* Izquierda: Retorno al Portal + Logotipo e Identidad */}
+        <div className="shrink-0 flex items-center gap-2 sm:gap-3">
+          <BackToPortalButton />
+          <div className="h-4 w-px bg-accents-2 hidden sm:block select-none" />
+          <Link
+            href="/bible"
+            className="shrink-0 flex items-center gap-1.5 sm:gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
+            title={t('landing')}
+          >
+            <BibleLogo />
+            <span className="font-semibold text-xs sm:text-sm tracking-tight hidden sm:inline-block">
+              Biblia Modular
+            </span>
+          </Link>
+        </div>
 
         {/* Móvil: Menú Desplegable Flotante Elegante (< md) */}
         <div className="relative md:hidden shrink min-w-0" ref={mobileMenuRef}>

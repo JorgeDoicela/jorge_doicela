@@ -217,5 +217,9 @@
     "blockedTitle": "Acceso restringido temporalmente",
     "blockedDesc": "Se ha bloqueado temporalmente el acceso desde esta dirección debido a reiteradas solicitudes. Podrás reintentar en unos minutos.",
     "backToPortfolio": "Volver al Portafolio"
+  },
+  "Nav": {
+    "portal": "Volver a jorgedoicela.com",
+    "portalShort": "Portal"
   }
 }

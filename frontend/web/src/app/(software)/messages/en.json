@@ -12,7 +12,9 @@
     "cybersecurity": "Cybersecurity",
     "tutorials": "Tutorials",
     "projects": "Projects",
-    "backToSoftware": "← Back to Software"
+    "backToSoftware": "← Back to Software",
+    "portal": "Back to jorgedoicela.com",
+    "portalShort": "Portal"
   },
   "Search": {
     "placeholder": "Search news, articles, advisories or projects...",

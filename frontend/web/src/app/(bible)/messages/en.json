@@ -5,6 +5,8 @@
   },
   "Nav": {
     "landing": "Home",
+    "portal": "Back to jorgedoicela.com",
+    "portalShort": "Portal",
     "standard": "Standard",
     "parallel": "Parallel",
     "interlinear": "Interlinear",

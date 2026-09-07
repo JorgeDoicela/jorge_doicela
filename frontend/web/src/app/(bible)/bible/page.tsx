@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { BibleLogo } from '../components/BibleLogo';
+import { BackToPortalButton } from '../components/BackToPortalButton';
 
 export default function BibleLandingPage() {
     const studyUrl = '/bible/study';
@@ -27,7 +28,9 @@ export default function BibleLandingPage() {
             {/* Header Sticky de la Landing */}
             <header className="sticky top-0 z-50 w-full border-b border-accents-2 bg-background/90 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3">
+                        <BackToPortalButton />
+                        <div className="h-4 w-px bg-accents-2 hidden sm:block select-none" />
                         <BibleLogo size={20} />
                         <span className="text-accents-2 font-mono select-none">/</span>
                         <span className="text-xs font-bold tracking-wider uppercase text-foreground">

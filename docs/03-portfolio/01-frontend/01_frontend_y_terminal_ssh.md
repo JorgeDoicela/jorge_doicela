@@ -31,7 +31,9 @@ frontend/web/src/app/(portfolio)/
 │   └── page.tsx               # Contenedor principal de vistas
 │
 ├── components/                # COMPONENTES COMPARTIDOS DEL SUBDOMINIO
+│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (Dark Luxury, jorgedoicela.com / localhost)
 │   ├── ThemeToggle.tsx        # Conmutador de tema visual
+│   ├── LanguageToggle.tsx     # Selector de idioma (ES/EN)
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
 │   └── ValuesPhilosophySection.tsx # Sección de valores y ética
 │

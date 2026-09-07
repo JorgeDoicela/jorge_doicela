@@ -27,6 +27,8 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism)
 ├── layout.tsx                        # Layout raíz del subdominio
+├── components/                       # Componentes compartidos del subdominio
+│   └── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
 │   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)
 │   ├── news/

@@ -217,5 +217,9 @@
     "blockedTitle": "Access temporarily restricted",
     "blockedDesc": "Access from this address has been temporarily restricted due to repeated requests. You can retry in a few minutes.",
     "backToPortfolio": "Back to Portfolio"
+  },
+  "Nav": {
+    "portal": "Back to jorgedoicela.com",
+    "portalShort": "Portal"
   }
 }

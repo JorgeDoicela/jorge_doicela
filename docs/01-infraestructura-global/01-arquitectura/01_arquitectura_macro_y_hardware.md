@@ -131,6 +131,8 @@ const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
 };
 ```
 
+Adicionalmente, implementa una **resolución multi-tenant unificada de rutas y assets**. Siguiendo el principio Open/Closed (OCP), el middleware no utiliza listas estáticas de archivos; en su lugar, cualquier recurso solicitado dentro del contexto de un subdominio o del dominio raíz es mapeado automáticamente a su espacio de nombres (`public/<dominio>/`), preservando como excepciones únicamente los assets explícitamente globales (`GLOBAL_ROOT_ASSETS = new Set(['/sw.js', '/favicon.ico'])`). En producción, Nginx despacha estos archivos directamente desde disco con mapas de `$host` (Zero-RAM), mientras que en desarrollo local o ejecuciones standalone, Next.js garantiza paridad total sin depender de proxies externos.
+
 Al migrar un subproyecto a su propio servidor físico independiente, simplemente se **remueve su clave del diccionario** `SUBDOMAIN_TARGET_MAP`. La landing no requiere entrada porque opera como ruta raíz por defecto.
 
 > [!TIP]

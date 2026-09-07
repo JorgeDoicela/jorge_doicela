@@ -9,12 +9,12 @@ export function ContactForm() {
   const t = useTranslations('Contact');
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-surface border border-border-gold rounded-2xl p-6 sm:p-8 shadow-2xl luxury-glow-hover transition-all duration-300">
-      <div className="text-center mb-6">
-        <h2 className="text-xl sm:text-2xl font-light tracking-[0.2em] uppercase text-foreground mb-2">
+    <div className="w-full bg-surface border border-border-gold rounded-2xl p-6 sm:p-8 shadow-2xl luxury-glow-hover transition-all duration-300">
+      <div className="text-left mb-6">
+        <h3 className="text-lg sm:text-xl font-light tracking-[0.15em] uppercase text-foreground mb-1.5">
           {t('title')}
-        </h2>
-        <p className="text-xs text-muted font-light leading-relaxed max-w-md mx-auto">
+        </h3>
+        <p className="text-xs text-muted font-light leading-relaxed">
           {t('subtitle')}
         </p>
       </div>
@@ -45,38 +45,40 @@ export function ContactForm() {
 
       {!success && (
         <form onSubmit={submitForm} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-[11px] font-mono uppercase tracking-widest text-gold-400/90 mb-1.5 font-medium">
-              {t('nameLabel')} *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              maxLength={100}
-              required
-              className="w-full px-4 py-2.5 bg-background/80 border border-border-gold rounded-lg text-foreground placeholder-muted/50 focus:outline-none focus:border-gold-300 focus:ring-1 focus:ring-gold-300 transition-all duration-200 font-mono text-xs sm:text-sm"
-              placeholder={t('namePlaceholder')}
-            />
-          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="name" className="block text-[11px] font-mono uppercase tracking-widest text-gold-400/90 mb-1.5 font-medium">
+                {t('nameLabel')} *
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                maxLength={100}
+                required
+                className="w-full px-4 py-2.5 bg-background/80 border border-border-gold rounded-lg text-foreground placeholder-muted/50 focus:outline-none focus:border-gold-300 focus:ring-1 focus:ring-gold-300 transition-all duration-200 font-mono text-xs sm:text-sm"
+                placeholder={t('namePlaceholder')}
+              />
+            </div>
 
-          <div>
-            <label htmlFor="email" className="block text-[11px] font-mono uppercase tracking-widest text-gold-400/90 mb-1.5 font-medium">
-              {t('emailLabel')} *
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              maxLength={150}
-              required
-              className="w-full px-4 py-2.5 bg-background/80 border border-border-gold rounded-lg text-foreground placeholder-muted/50 focus:outline-none focus:border-gold-300 focus:ring-1 focus:ring-gold-300 transition-all duration-200 font-mono text-xs sm:text-sm"
-              placeholder={t('emailPlaceholder')}
-            />
+            <div>
+              <label htmlFor="email" className="block text-[11px] font-mono uppercase tracking-widest text-gold-400/90 mb-1.5 font-medium">
+                {t('emailLabel')} *
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                maxLength={150}
+                required
+                className="w-full px-4 py-2.5 bg-background/80 border border-border-gold rounded-lg text-foreground placeholder-muted/50 focus:outline-none focus:border-gold-300 focus:ring-1 focus:ring-gold-300 transition-all duration-200 font-mono text-xs sm:text-sm"
+                placeholder={t('emailPlaceholder')}
+              />
+            </div>
           </div>
 
           <div>

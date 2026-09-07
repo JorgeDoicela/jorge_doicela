@@ -17,237 +17,25 @@ import {
     RefreshCw
 } from 'lucide-react';
 
+import { API_URL } from '../../config';
+
 async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]> {
-    try {
-        const res = await fetch(`http://127.0.0.1:3000/portfolio/projects?lang=${locale}`, {
-            next: { revalidate: 60 },
-        });
-        if (res.ok) {
-            const data = await res.json();
-            const rawProjects = Array.isArray(data) ? data : data.data || [];
-            if (rawProjects.length > 0) {
-                return rawProjects.map((p: any) => ({
-                    ...p,
-                    technologies: Array.isArray(p.technologies)
-                        ? p.technologies
-                        : (typeof p.technologies === 'string' && p.technologies.trim().startsWith('[')
-                            ? JSON.parse(p.technologies)
-                            : (typeof p.technologies === 'string' ? p.technologies.split(',').map((s: string) => s.trim()) : [])),
-                }));
-            }
-        }
-    } catch {
-        // Fallback resiliente al corpus estático
+    const res = await fetch(`${API_URL}/portfolio/projects?lang=${locale}`, {
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) {
+        throw new Error(`Error al obtener proyectos del portafolio desde la API (status: ${res.status})`);
     }
-
-    const fallbackProjects: Record<string, PortfolioProject[]> = {
-        es: [
-            {
-                id: 1,
-                slug: 'la-biblia-modular',
-                title: 'La Biblia Modular',
-                description: 'Plataforma de estudio bíblico y exégesis con 9 motores teológicos, morfología Strong masorética y Septuaginta, y app móvil nativa en Expo.',
-                role: 'Lead Architect & Full Stack Developer',
-                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Expo', 'TypeScript', 'Tailwind CSS'],
-                language: 'es',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://bible.jorgedoicela.com',
-                featured: true,
-                overview: 'Plataforma integral de exégesis bíblica orientada a la investigación académica y estudio pastoral profundo, combinando la lectura textual continua con aparatos morfológicos masoréticos y griegos en tiempo real.',
-                challenge: 'Indexar y relacionar de forma determinista más de 31,000 versículos, tokens morfológicos BHS/NA28 y léxicos Strong BDB/Gesenius manteniendo tiempos de respuesta inferiores a 40 ms bajo una memoria RAM severamente restringida.',
-                architectureHighlights: [
-                    '9 motores de exégesis modulares (Interlineal Inverso, Quiasmos, Atlas WGS84, Cronología Sincrónica, etc.)',
-                    'Persistencia ultra-ligera en bible.sqlite con better-sqlite3 en modo WAL e índices compuestos B-Tree',
-                    'Integración oficial autorizada con API.Bible para versiones con derechos y fallback determinista local',
-                    'Cliente móvil nativo con Expo SDK 52, FlashList a 60 fps constantes y arquitectura Offline-First'
-                ],
-                metrics: [
-                    { label: 'Motores de Exégesis', value: '9' },
-                    { label: 'Tiempo de Ingestión', value: '< 80 ms' },
-                    { label: 'Consumo de RAM', value: '~45 MB' }
-                ]
-            },
-            {
-                id: 3,
-                slug: 'software-platform',
-                title: 'Software',
-                description: 'Plataforma de contenidos tecnológicos con 7 áreas temáticas, avisos de ciberseguridad, catálogo de modelos de IA, tutoriales interactivos y foros.',
-                role: 'Full Stack & DevSecOps Engineer',
-                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
-                language: 'es',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://software.jorgedoicela.com',
-                featured: true,
-                overview: 'Hub tecnológico desacoplado que centraliza divulgación de software, avisos de vulnerabilidades con matrices de remediación, fichas técnicas de agentes de IA y tutoriales interactivos con ejecución guiada.',
-                challenge: 'Diseñar un monolito modular con 7 submódulos independientes sin acoplamiento, asegurando que cada dominio gestione sus propias entidades relacionales y soporte multiidioma con índices compuestos (slug, language).',
-                architectureHighlights: [
-                    'Arquitectura en 3 capas puras por submódulo: controladores REST, servicios de dominio y 9 entidades TypeORM',
-                    'Asistente StepWizard interactivo con resaltado de sintaxis para guías de código paso a paso',
-                    'Diseño Neumorphism UI + Glassmorphism con paneles táctiles cóncavos/convexos y desenfoque vítreo',
-                    'Sembrado transaccional atómico CLI (seed-software.ts) que procesa 8 tablas en menos de 25 ms'
-                ],
-                metrics: [
-                    { label: 'Áreas Verticales', value: '7' },
-                    { label: 'Entidades Relacionales', value: '9' },
-                    { label: 'Latencia Promedio', value: '< 20 ms' }
-                ]
-            },
-            {
-                id: 5,
-                slug: 'infraestructura-lightsail-vps',
-                title: 'Arquitectura Cloud VPS (1 GB RAM)',
-                description: 'Despliegue de alta disponibilidad en AWS Lightsail (Debian 13) con Nginx mTLS, Cloudflare Edge, PM2 y pipeline CI/CD optimizado para 1 GB de RAM.',
-                role: 'DevSecOps & Cloud Architect',
-                technologies: ['AWS Lightsail', 'Debian 13', 'Nginx', 'Cloudflare mTLS', 'PM2', 'GitHub Actions'],
-                language: 'es',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://jorgedoicela.com',
-                featured: true,
-                overview: 'Infraestructura de producción de alta resiliencia diseñada para ejecutar 4 plataformas web y backend simultáneamente en un servidor limitado físicamente a 1 GB de RAM.',
-                challenge: 'Evitar el colapso de memoria del sistema operativo y sobrecargas por scraping de bots de IA mediante consolidación de runtimes, proxy reverso inteligente y rate limiting perimetral.',
-                architectureHighlights: [
-                    'Consolidación física (NestJS en 3000 y Next.js Standalone en 3001) con aislamiento lógico absoluto de Cajas Negras',
-                    'Autenticación mutua TLS (mTLS) de Cloudflare bloqueando accesos directos por IP',
-                    'Entrega Zero-RAM en Nginx para dossiers llms.txt, manifest.json y favicons en < 1 ms',
-                    'Pipeline CI/CD en GitHub Actions con compilación offloaded y rsync seguro con zero-downtime'
-                ],
-                metrics: [
-                    { label: 'Límite Físico de RAM', value: '1 GB' },
-                    { label: 'Consumo Operativo Total', value: '~170 MB' },
-                    { label: 'Uptime en Producción', value: '99.9%' }
-                ]
-            },
-            {
-                id: 7,
-                slug: 'terminal-ssh-websockets',
-                title: 'Terminal Virtual SSH en Tiempo Real',
-                description: 'Emulador de terminal UNIX interactiva sobre WebSockets (Socket.io) con sistema de archivos virtual, coloreado ANSI y ejecución segura de comandos.',
-                role: 'Backend & Frontend Engineer',
-                technologies: ['NestJS WebSockets', 'Socket.io', 'TypeScript', 'ANSI Parser'],
-                language: 'es',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://portfolio.jorgedoicela.com',
-                featured: true,
-                overview: 'Consola interactiva de baja latencia que ofrece navegación guiada de comandos Unix y acceso a un Live Linux Sandbox en contenedores efímeros aislados.',
-                challenge: 'Exponer una shell real interactiva a internet sin riesgo de fuga de datos, ataques de denegación de servicio por bifurcación (fork-bombs) ni escalada de privilegios.',
-                architectureHighlights: [
-                    'Hardening de 5 capas: cgroups (64 MB RAM, 0.25 CPU), pids-limit=50, CapDrop ALL y no-new-privileges',
-                    'Sistema de archivos inmutable con raíz Readonly y tmpfs volátil en RAM con banderas noexec,nosuid',
-                    'Aislamiento perimetral absoluto con NetworkMode: none (cero conectividad externa e interna)',
-                    'Transmisión full-duplex con Socket.io, emulación xterm.js y TTL forzado con limpieza automática de contenedores'
-                ],
-                metrics: [
-                    { label: 'Latencia WebSocket', value: '< 15 ms' },
-                    { label: 'Aislamiento cgroups', value: '64 MB' },
-                    { label: 'Inmunidad Fork-bomb', value: 'pids ≤ 50' }
-                ]
-            }
-        ],
-        en: [
-            {
-                id: 2,
-                slug: 'the-modular-bible',
-                title: 'The Modular Bible',
-                description: 'Exegesis and scripture study platform featuring 9 theological engines, Masoretic BHS / LXX morphology, Strong dictionaries, and Expo native mobile app.',
-                role: 'Lead Architect & Full Stack Developer',
-                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Expo', 'TypeScript', 'Tailwind CSS'],
-                language: 'en',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://bible.jorgedoicela.com',
-                featured: true,
-                overview: 'Comprehensive biblical exegesis platform tailored for academic research and deep pastoral study, combining continuous scripture reading with real-time Masoretic and Greek morphological apparatuses.',
-                challenge: 'Deterministically indexing and querying over 31,000 verses, BHS/NA28 morphology tokens, and Strong lexicons while sustaining under 40 ms query latencies under tight RAM constraints.',
-                architectureHighlights: [
-                    '9 modular exegesis suites (Reverse Interlinear, Chiasms, WGS84 Atlas, Synchronic Chronology, etc.)',
-                    'Ultra-lightweight SQLite WAL persistence with better-sqlite3 and B-Tree compound indices',
-                    'Official authorized API.Bible integration with resilient local deterministic caching',
-                    'Native mobile client with Expo SDK 52, FlashList 60 fps recycling, and Offline-First architecture'
-                ],
-                metrics: [
-                    { label: 'Exegesis Suites', value: '9' },
-                    { label: 'Ingestion Time', value: '< 80 ms' },
-                    { label: 'RAM Footprint', value: '~45 MB' }
-                ]
-            },
-            {
-                id: 4,
-                slug: 'software-platform-en',
-                title: 'Software',
-                description: 'Technology platform featuring 7 categories: cybersecurity advisories, AI models showcase, step-by-step interactive tutorials, and technical forums.',
-                role: 'Full Stack & DevSecOps Engineer',
-                technologies: ['Next.js 16', 'NestJS 11', 'SQLite', 'Neumorphism UI', 'Glassmorphism'],
-                language: 'en',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://software.jorgedoicela.com',
-                featured: true,
-                overview: 'Decoupled engineering portal uniting tech news, security advisories with remediation guides, AI reasoning models directory, and interactive code tutorials.',
-                challenge: 'Architecting a pure modular monolith composed of 7 independent submodules, guaranteeing domain isolation and compound unique index localized storage.',
-                architectureHighlights: [
-                    'Pure 3-tier architecture per submodule: REST controllers, domain services, and 9 TypeORM entities',
-                    'Interactive StepWizard code assistant featuring reproducible walkthroughs and syntax highlighting',
-                    'Neumorphism UI + Glassmorphism design tokens with concave/convex surfaces and frosted blurs',
-                    'Atomic transactional CLI seeder (seed-software.ts) digesting 8 relational tables in under 25 ms'
-                ],
-                metrics: [
-                    { label: 'Vertical Domains', value: '7' },
-                    { label: 'Database Entities', value: '9' },
-                    { label: 'Average Latency', value: '< 20 ms' }
-                ]
-            },
-            {
-                id: 6,
-                slug: 'cloud-infrastructure-lightsail',
-                title: 'Cloud VPS Architecture (1 GB RAM)',
-                description: 'High-availability deployment on AWS Lightsail (Debian 13) featuring Nginx mTLS, Cloudflare Edge, PM2, and GitHub Actions CI/CD optimized for 1 GB RAM.',
-                role: 'DevSecOps & Cloud Architect',
-                technologies: ['AWS Lightsail', 'Debian 13', 'Nginx', 'Cloudflare mTLS', 'PM2', 'GitHub Actions'],
-                language: 'en',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://jorgedoicela.com',
-                featured: true,
-                overview: 'High-resilience production cloud infrastructure engineered to execute 4 independent platforms and real-time WebSockets on a physically constrained 1 GB RAM server.',
-                challenge: 'Preventing kernel out-of-memory panics and crawler resource exhaustion through runtime consolidation, smart reverse proxying, and perimeter IP rate limiting.',
-                architectureHighlights: [
-                    'Physical runtime consolidation (NestJS port 3000, Next.js Standalone port 3001) under Black Box isolation',
-                    'Cloudflare Authenticated Origin Pulls (mTLS) completely rejecting unauthenticated IP requests',
-                    'Zero-RAM static delivery on Nginx for llms.txt dossiers, manifest.json, and assets in < 1 ms',
-                    'Offloaded GitHub Actions CI/CD pipeline building standalone bundles and deploying via zero-downtime rsync'
-                ],
-                metrics: [
-                    { label: 'Physical RAM Limit', value: '1 GB' },
-                    { label: 'Total Memory Footprint', value: '~170 MB' },
-                    { label: 'Production Uptime', value: '99.9%' }
-                ]
-            },
-            {
-                id: 8,
-                slug: 'terminal-ssh-websockets-en',
-                title: 'Real-time Virtual SSH Terminal',
-                description: 'Interactive UNIX terminal emulator over WebSockets (Socket.io) with virtual filesystem, ANSI color rendering, and secure command dispatching.',
-                role: 'Backend & Frontend Engineer',
-                technologies: ['NestJS WebSockets', 'Socket.io', 'TypeScript', 'ANSI Parser'],
-                language: 'en',
-                repoUrl: 'https://github.com/jorgedoicela/jorge_doicela',
-                demoUrl: 'https://portfolio.jorgedoicela.com',
-                featured: true,
-                overview: 'Low-latency full-duplex interactive terminal supporting guided Unix navigation alongside an on-demand hardened Linux Sandbox executed in ephemeral Docker containers.',
-                challenge: 'Safely granting web visitors raw interactive bash shell access without risk of host container escape, fork-bomb denial-of-service, or network exfiltration.',
-                architectureHighlights: [
-                    '5-layer hardening: cgroups (64 MB RAM, 0.25 CPU), 50 max pids, CapDrop ALL, and no-new-privileges',
-                    'Immutable root filesystem with tmpfs volatile memory mounts enforcing noexec and nosuid flags',
-                    'Perimeter air-gap with NetworkMode none (zero external and local networking interfaces)',
-                    'Full-duplex Socket.io streaming, xterm.js terminal emulation, and automatic container reaping'
-                ],
-                metrics: [
-                    { label: 'WebSocket Latency', value: '< 15 ms' },
-                    { label: 'cgroups Boundary', value: '64 MB' },
-                    { label: 'Fork-bomb Immunity', value: 'pids ≤ 50' }
-                ]
-            }
-        ]
-    };
-
-    return fallbackProjects[locale] || fallbackProjects.es;
+    const json = await res.json();
+    const rawProjects = Array.isArray(json) ? json : json.data || [];
+    return rawProjects.map((p: any) => ({
+        ...p,
+        technologies: Array.isArray(p.technologies)
+            ? p.technologies
+            : (typeof p.technologies === 'string' && p.technologies.trim().startsWith('[')
+                ? JSON.parse(p.technologies)
+                : (typeof p.technologies === 'string' ? p.technologies.split(',').map((s: string) => s.trim()) : [])),
+    }));
 }
 
 export default async function PortfolioPage() {
@@ -364,15 +152,19 @@ export default async function PortfolioPage() {
                             </span>
                             <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                         </a>
-                        <div
-                            className="flex items-center justify-between p-3 rounded-lg border border-border bg-background/30 text-xs text-foreground/80 font-mono cursor-default"
+                        <a
+                            href="https://www.google.com/maps/place/Quito,+Ecuador"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-3 rounded-lg border border-border bg-background/30 hover:bg-surface-raised transition-all duration-300 text-xs text-foreground/80 hover:text-foreground font-mono"
+                            title="Ver Quito, Ecuador en Google Maps"
                         >
                             <span className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4 text-gold-300" />
                                 <span>Quito, Ecuador</span>
                             </span>
-                            <span className="text-[10px] text-muted">UTC-5</span>
-                        </div>
+                            <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+                        </a>
                     </div>
                 </section>
 
@@ -591,11 +383,51 @@ export default async function PortfolioPage() {
                 <hr className="luxury-divider" />
 
                 {/* Sección 9: Centro de Contacto Interactivo */}
-                <section className="flex flex-col gap-6">
-                    <div className="flex items-center gap-2 text-gold-300">
-                        <span className="text-[10px] font-mono tracking-widest uppercase">{tContact('eyebrow')}</span>
+                <section className="flex flex-col gap-8">
+                    {/* Cabecera Editorial General */}
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-gold-300">
+                            <span className="text-[10px] font-mono tracking-widest uppercase">{tContact('eyebrow')}</span>
+                        </div>
+                        <h2 className="text-2xl md:text-3xl font-light text-foreground mb-1">
+                            {tContact('thesisTitle')}
+                        </h2>
+                        <p className="text-muted text-xs md:text-sm leading-relaxed font-light max-w-2xl">
+                            {tContact('thesisDesc')}
+                        </p>
                     </div>
-                    <ContactForm />
+
+                    {/* Cuadrícula Formulario + Fichas Alineadas */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14 items-stretch">
+                        {/* Columna Principal: Formulario Amplio (2 cols) */}
+                        <div className="md:col-span-2">
+                            <ContactForm />
+                        </div>
+
+                        {/* Columna Lateral: Áreas de Contacto & Compromiso (1 col) */}
+                        <div className="md:col-span-1 md:pl-8 md:border-l border-border/40 flex flex-col justify-between py-2">
+                            <div className="flex flex-col justify-center flex-1 pb-5 border-b border-border/40 gap-2">
+                                <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide">{tContact('area1Title')}</h3>
+                                <p className="text-muted text-[12px] leading-relaxed font-light">
+                                    {tContact('area1Desc')}
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col justify-center flex-1 py-5 border-b border-border/40 gap-2">
+                                <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide">{tContact('area2Title')}</h3>
+                                <p className="text-muted text-[12px] leading-relaxed font-light">
+                                    {tContact('area2Desc')}
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col justify-center flex-1 pt-5 gap-2">
+                                <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide">{tContact('area3Title')}</h3>
+                                <p className="text-muted text-[12px] leading-relaxed font-light">
+                                    {tContact('area3Desc')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
             </main>

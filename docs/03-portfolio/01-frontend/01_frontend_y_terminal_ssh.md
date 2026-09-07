@@ -88,6 +88,10 @@ frontend/web/src/app/(portfolio)/
   4. *Stack Tecnológico Empleado:* Badges de herramientas y frameworks.
   5. *Especificaciones & Telemetría:* Ficha técnica con líneas punteadas continuas que unen métrica con su valor verificado.
 
+### 3.3 Ingestión Dinámica desde NestJS REST API (`portfolio.sqlite`)
+* **Consumo Directo:** La página del portafolio consulta directamente el endpoint `GET ${API_URL}/portfolio/projects?lang=${locale}` servido por `PortfolioProjectsController` en NestJS con revalidación ISR (`next: { revalidate: 60 }`).
+* **Cero Hardcoding:** No existen proyectos ni textos técnicos duplicados en el frontend; toda la información de casos de estudio, métricas y tecnologías proviene de la base de datos `portfolio.sqlite` sembrada desde el corpus canónico `backend/src/portfolio/corpus/projects.json`.
+
 ---
 
 ## 4. Sistema Tri-Modal de Terminal Interactiva (WebSockets)
@@ -176,10 +180,19 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 
 ---
 
-## 5. Formulario de Contacto
+## 5. Centro de Comunicación
 
-* Formulario reactivo (`ContactForm.tsx`) conectado mediante el hook `useContact.ts`.
-* Envía un payload JSON con `name`, `email` y `message` a `POST /portfolio/contact`.
+La sección 9 del portafolio implementa una arquitectura editorial balanceada de 3 columnas (`gap-10 lg:gap-14 items-stretch`) diseñada bajo principios estrictos de UX/UI y estética Dark Luxury / Light Luxury:
+* **Cabecera Editorial General:**
+  * Eyebrow en monoespaciado (`Centro de Comunicación`), título de tesis cercano y reflexivo (`¿Tienes una idea, consulta o proyecto?`) y párrafo explicativo para el público general, unificando la entrada a toda la sección.
+* **Cuadrícula de Interacción Alineada (Formulario y Fichas al mismo nivel):**
+  * **Columna Principal (`md:col-span-2`):** Formulario de contacto amplio (`ContactForm.tsx`) con tarjeta de lujo (`p-6 sm:p-8`), campos de *Nombre completo* y *Correo electrónico* en 2 columnas (`grid grid-cols-1 sm:grid-cols-2 gap-4`), maximizando el espacio de captura y evitando formularios comprimidos.
+  * **Columna Lateral de Compromiso (`md:col-span-1` con `md:pl-8 md:border-l border-border/40`):**
+    * Inicia exactamente al mismo nivel superior que el formulario, distribuyéndose en tres tercios armónicos (`flex-1 flex flex-col justify-center`):
+      1. *01 / Proyectos & Desarrollo:* Aplicaciones web completas, diseño de APIs robustas y optimización de software de extremo a extremo.
+      2. *02 / Consultas Técnicas:* Espacio abierto y cercano para dudas sobre la terminal interactiva, motores bíblicos o el monorepo.
+      3. *03 / Tiempos de Respuesta:* Compromiso de respuesta personal habitual en menos de 24 horas (Quito, Ecuador).
+    * Estética tipográfica pura sin iconos SVG decorativos, con separadores sutiles de lujo (`border-b border-border/40`) a distancia proporcional y calibrada.
 
 ---
 

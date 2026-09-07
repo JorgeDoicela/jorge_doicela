@@ -259,10 +259,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                     }
                                 }}
                                 style={{ width: 'var(--card-w)', marginRight: 'var(--card-gap)' }}
-                                className={`shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[530px] sm:h-[500px] md:h-[520px] cursor-pointer group ${isActive
-                                    ? 'opacity-100 hover:border-card-hover-border'
-                                    : 'opacity-50 hover:opacity-80'
-                                    }`}
+                                className="shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[530px] sm:h-[500px] md:h-[520px] cursor-pointer group opacity-100 hover:border-card-hover-border"
                             >
                                 {/* Cabecera: Limpia, directa, alineada a la izquierda */}
                                 <div className="flex flex-col text-left max-w-2xl gap-1.5 mb-2">
@@ -301,9 +298,9 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             </div>
 
             {/* Barra de Control Apple Style Oficial: Cápsula de Progreso + Botón Play Circular Separado */}
-            <div className="flex items-center justify-center gap-3 pt-3">
+            <div className="flex items-center justify-center gap-3.5 pt-4">
                 {/* Cápsula de Puntos y Progreso */}
-                <div className="h-11 sm:h-12 px-5 sm:px-6 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center gap-3">
+                <div className="h-12 sm:h-14 px-5 sm:px-6 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center gap-1.5 sm:gap-2">
                     {slides.map((slide, idx) => {
                         const isActive = idx === activeIndex;
 
@@ -311,20 +308,26 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                             <button
                                 key={slide.id}
                                 onClick={() => goToSlide(idx)}
-                                className={`relative h-2 rounded-full transition-all duration-500 cursor-pointer overflow-hidden ${isActive ? 'w-10 sm:w-12 bg-foreground/20' : 'w-2 sm:w-2.5 bg-foreground/25 hover:bg-foreground/50'
-                                    }`}
+                                className="h-10 px-1.5 sm:px-2 flex items-center justify-center cursor-pointer group/dot focus:outline-none select-none"
                                 aria-label={`Slide ${idx + 1}`}
                             >
-                                {isActive && (
-                                    <div
-                                        key={`slide-prog-${activeIndex}-${isPlaying}-${isInView}`}
-                                        className="absolute top-0 left-0 bottom-0 bg-foreground rounded-full"
-                                        style={{
-                                            animation: isPlaying && isInView ? `progressFill ${SLIDE_DURATION}ms linear forwards` : 'none',
-                                            width: isPlaying && isInView ? '0%' : (isInView ? '100%' : '0%'),
-                                        }}
-                                    />
-                                )}
+                                <div
+                                    className={`relative h-2.5 sm:h-3 rounded-full transition-all duration-500 overflow-hidden ${isActive
+                                        ? 'w-12 sm:w-14 bg-foreground/20'
+                                        : 'w-2.5 sm:w-3 bg-foreground/30 group-hover/dot:bg-foreground/60 group-hover/dot:scale-110'
+                                        }`}
+                                >
+                                    {isActive && (
+                                        <div
+                                            key={`slide-prog-${activeIndex}-${isPlaying}-${isInView}`}
+                                            className="absolute top-0 left-0 bottom-0 bg-foreground rounded-full"
+                                            style={{
+                                                animation: isPlaying && isInView ? `progressFill ${SLIDE_DURATION}ms linear forwards` : 'none',
+                                                width: isPlaying && isInView ? '0%' : (isInView ? '100%' : '0%'),
+                                            }}
+                                        />
+                                    )}
+                                </div>
                             </button>
                         );
                     })}
@@ -333,13 +336,13 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 {/* Botón Circular Separado de Play / Pause */}
                 <button
                     onClick={() => setIsPlaying(!isPlaying)}
-                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer select-none"
                     aria-label={isPlaying ? (isEs ? 'Pausar' : 'Pause') : (isEs ? 'Reproducir' : 'Play')}
                 >
                     {isPlaying ? (
-                        <Pause className="w-4 h-4 fill-current" />
+                        <Pause className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" />
                     ) : (
-                        <Play className="w-4 h-4 fill-current ml-0.5" />
+                        <Play className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current ml-0.5" />
                     )}
                 </button>
             </div>

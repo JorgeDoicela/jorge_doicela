@@ -48,43 +48,56 @@ function resolveSubdomainPath(targetPrefix: string, pathname: string): string {
     return cleanPath.length > 0 ? `${targetPrefix}/${cleanPath}` : targetPrefix;
 }
 
+/**
+ * Assets estáticos explícitamente globales compartidos en la raíz de public/.
+ * Todo lo demás pertenece al espacio de nombres de cada subdominio/dominio.
+ */
+const GLOBAL_ROOT_ASSETS = new Set(['/sw.js', '/favicon.ico']);
+
 export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     const host = request.headers.get('host') || '';
+    const pathname = url.pathname;
 
-    // Excluir llamadas internas de Next.js, APIs y archivos con extensión (imágenes, fuentes, etc.)
-    if (
-        url.pathname.startsWith('/_next') ||
-        url.pathname.startsWith('/api') ||
-        url.pathname.includes('.')
-    ) {
+    // 1. Excluir infraestructura interna de Next.js y APIs
+    if (pathname.startsWith('/_next') || pathname.startsWith('/api')) {
+        return NextResponse.next();
+    }
+
+    // 2. Excluir assets estáticos verdaderamente globales de la raíz de public/
+    if (GLOBAL_ROOT_ASSETS.has(pathname)) {
         return NextResponse.next();
     }
 
     // Obtener el nombre del host en minúsculas y sin el puerto
     const hostname = host.split(':')[0].toLowerCase();
-
-    // Comprobar si viene el query param ?lang= para sincronizar cookie
     const langParam = url.searchParams.get('lang');
     let response: NextResponse | null = null;
 
-    // ── RESOLUCIÓN DECLARATIVA DE SUBDOMINIO ──────────────────────────────────
+    // ── RESOLUCIÓN DECLARATIVA MULTI-TENANT POR SUBDOMINIO ───────────────────
     const matchedSubdomain = Object.keys(SUBDOMAIN_TARGET_MAP).find((sub) =>
         hostname.startsWith(`${sub}.`),
     );
 
     if (matchedSubdomain) {
         const targetPrefix = SUBDOMAIN_TARGET_MAP[matchedSubdomain];
-        const resolvedPath = resolveSubdomainPath(targetPrefix, url.pathname);
+        const resolvedPath = resolveSubdomainPath(targetPrefix, pathname);
 
-        if (url.pathname !== resolvedPath) {
+        if (pathname !== resolvedPath) {
             url.pathname = resolvedPath;
+            response = NextResponse.rewrite(url);
+        }
+    } else {
+        // ── DOMINIO RAÍZ (LANDING) ───────────────────────────────────────────
+        // Si se solicita un asset con extensión en la raíz (ej. /llms.txt, /manifest.json),
+        // se resuelve deterministamente hacia el espacio de assets de la Landing (/landing/...).
+        if (pathname.includes('.') && !pathname.startsWith('/landing/')) {
+            url.pathname = `/landing${pathname}`;
             response = NextResponse.rewrite(url);
         }
     }
 
-    // ── LANDING / FALLBACK ───────────────────────────────────────────────────
-    // (jorgedoicela.com) — No requiere rewrite; es la ruta raíz por defecto.
+    // ── FALLBACK ─────────────────────────────────────────────────────────────
     if (!response) {
         response = NextResponse.next();
     }

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { ArticleCategory, GeographicRegion } from '../types';
 
 interface FeedFilterBarProps {
@@ -26,6 +27,15 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
   onChangeViewMode,
   totalArticlesCount,
 }) => {
+  const t = useTranslations('ArchaeologyFeed');
+
+  const categories = [
+    { id: 'all', label: t('categoryAll') },
+    { id: 'recent_discoveries', label: t('categoryRecent') },
+    { id: 'manuscripts_epigraphy', label: t('categoryManuscripts') },
+    { id: 'apologetics_reliability', label: t('categoryApologetics') },
+  ] as const;
+
   return (
     <div className="flex flex-col gap-3 p-3.5 rounded-xl border border-accents-2 bg-background/80 backdrop-blur-md">
       {/* Fila 1: Buscador y Toggle de Vista (Artículos vs. Catálogo de Manuscritos) */}
@@ -36,7 +46,7 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => onChangeSearchQuery(e.target.value)}
-            placeholder="Buscar por hallazgo, autor, manuscrito o pasaje..."
+            placeholder={t('searchPlaceholder')}
             className="w-full pl-8 pr-3 py-1.5 text-xs bg-background border border-accents-2 rounded-lg text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground transition-all"
           />
           <svg
@@ -60,7 +70,7 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Artículos & Noticias ({totalArticlesCount})
+            {t('articlesAndNews', { count: totalArticlesCount })}
           </button>
           <button
             type="button"
@@ -71,7 +81,7 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Catálogo de Manuscritos
+            {t('manuscriptsCatalog')}
           </button>
         </div>
       </div>
@@ -81,15 +91,8 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-accents-2/70 text-xs">
           {/* Filtro por Categoría */}
           <div className="flex flex-wrap items-center gap-1">
-            <span className="text-[11px] font-mono text-accents-4 mr-1">Sección:</span>
-            {(
-              [
-                { id: 'all', label: 'Todos' },
-                { id: 'recent_discoveries', label: 'Hallazgos en Tierra Santa' },
-                { id: 'manuscripts_epigraphy', label: 'Manuscritos & Epigrafía' },
-                { id: 'apologetics_reliability', label: 'Apologética & Historicidad' },
-              ] as const
-            ).map((cat) => (
+            <span className="text-[11px] font-mono text-accents-4 mr-1">{t('section')}</span>
+            {categories.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
@@ -107,18 +110,18 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
 
           {/* Filtro por Región */}
           <div className="flex items-center gap-1">
-            <span className="text-[11px] font-mono text-accents-4 mr-1">Región:</span>
+            <span className="text-[11px] font-mono text-accents-4 mr-1">{t('region')}</span>
             <select
               value={selectedRegion}
               onChange={(e) => onChangeRegion(e.target.value as GeographicRegion)}
               className="bg-background border border-accents-2 rounded-md px-2 py-0.5 text-[11px] text-foreground focus:outline-none focus:border-foreground"
             >
-              <option value="all">Todas las Regiones</option>
-              <option value="jerusalem_judea">Jerusalén & Judea</option>
-              <option value="galilee_samaria">Galilea & Samaria</option>
-              <option value="jordan_dead_sea">Jordania & Mar Muerto</option>
-              <option value="turkey_asia_minor">Turquía (Asia Menor)</option>
-              <option value="greece_rome">Grecia & Roma</option>
+              <option value="all">{t('regionAll')}</option>
+              <option value="jerusalem_judea">{t('regionJerusalem')}</option>
+              <option value="galilee_samaria">{t('regionGalilee')}</option>
+              <option value="jordan_dead_sea">{t('regionJordan')}</option>
+              <option value="turkey_asia_minor">{t('regionTurkey')}</option>
+              <option value="greece_rome">{t('regionGreece')}</option>
             </select>
           </div>
         </div>

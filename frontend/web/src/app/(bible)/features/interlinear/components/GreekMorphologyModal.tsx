@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { GreekToken } from '../types';
 
 interface GreekMorphologyModalProps {
@@ -14,6 +15,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
   onClose,
   token,
 }) => {
+  const t = useTranslations('Interlinear');
   if (!isOpen || !token) return null;
 
   return (
@@ -27,10 +29,10 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
             </span>
             <div>
               <h3 className="text-sm font-bold text-foreground">
-                Análisis Morfológico Griego Koiné
+                {t('greekMorphologyAnalysis')}
               </h3>
               <p className="text-xs text-accents-4">
-                Novum Testamentum Graece (NA28 / SBLGNT / Textus Receptus)
+                {t('greekCriticalBadge')}
               </p>
             </div>
           </div>
@@ -39,7 +41,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-2 transition-colors cursor-pointer"
-            aria-label="Cerrar modal"
+            aria-label={t('closeModal')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -68,57 +70,57 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
               «{token.gloss}»
             </div>
             <div className="text-xs font-mono text-accents-4 pt-1">
-              Lema: <strong className="text-foreground">{token.lemma}</strong>
+              {t('lemma')} <strong className="text-foreground">{token.lemma}</strong>
             </div>
           </div>
 
           {/* Ficha de parsing gramatical */}
           <div className="space-y-2">
             <h4 className="text-xs font-mono uppercase tracking-wider text-accents-4">
-              Desglose Gramatical (Robinson Tag: {token.morphologyCode})
+              {t('robinsonTag', { code: token.morphologyCode })}
             </h4>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2 col-span-2">
-                <span className="text-accents-4 block text-[10px] font-mono">Parsing Completo:</span>
+                <span className="text-accents-4 block text-[10px] font-mono">{t('fullParsing')}</span>
                 <span className="font-semibold text-foreground">{token.parsingSummary}</span>
               </div>
 
               <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                <span className="text-accents-4 block text-[10px] font-mono">Categoría:</span>
+                <span className="text-accents-4 block text-[10px] font-mono">{t('category')}</span>
                 <span className="font-semibold text-foreground">{token.partOfSpeech}</span>
               </div>
 
               {token.case && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                  <span className="text-accents-4 block text-[10px] font-mono">Caso Gramatical:</span>
+                  <span className="text-accents-4 block text-[10px] font-mono">{t('grammaticalCase')}</span>
                   <span className="font-semibold text-blue-500">{token.case}</span>
                 </div>
               )}
 
               {token.tense && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                  <span className="text-accents-4 block text-[10px] font-mono">Tiempo Verbal:</span>
+                  <span className="text-accents-4 block text-[10px] font-mono">{t('verbalTense')}</span>
                   <span className="font-semibold text-emerald-500">{token.tense}</span>
                 </div>
               )}
 
               {token.voice && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                  <span className="text-accents-4 block text-[10px] font-mono">Voz Verbal:</span>
+                  <span className="text-accents-4 block text-[10px] font-mono">{t('verbalVoice')}</span>
                   <span className="font-semibold text-foreground">{token.voice}</span>
                 </div>
               )}
 
               {token.mood && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                  <span className="text-accents-4 block text-[10px] font-mono">Modo Verbal:</span>
+                  <span className="text-accents-4 block text-[10px] font-mono">{t('verbalMood')}</span>
                   <span className="font-semibold text-purple-500">{token.mood}</span>
                 </div>
               )}
 
               {token.gender && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                  <span className="text-accents-4 block text-[10px] font-mono">Género y Número:</span>
+                  <span className="text-accents-4 block text-[10px] font-mono">{t('genderAndNumber')}</span>
                   <span className="font-semibold text-foreground">
                     {token.gender} {token.number || ''}
                   </span>
@@ -127,7 +129,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
 
               {token.person && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
-                  <span className="text-accents-4 block text-[10px] font-mono">Persona:</span>
+                  <span className="text-accents-4 block text-[10px] font-mono">{t('person')}</span>
                   <span className="font-semibold text-foreground">{token.person}</span>
                 </div>
               )}
@@ -138,7 +140,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
           {token.notes && (
             <div className="p-3.5 rounded-xl bg-accents-1 border border-accents-2 text-xs space-y-1">
               <span className="font-mono text-[10px] uppercase font-bold text-accents-5">
-                Nota Exegética & Teológica:
+                {t('exegeticalNote')}
               </span>
               <p className="text-accents-5 leading-relaxed">{token.notes}</p>
             </div>
@@ -152,7 +154,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
             onClick={onClose}
             className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors cursor-pointer"
           >
-            Cerrar
+            {t('close')}
           </button>
         </div>
       </div>

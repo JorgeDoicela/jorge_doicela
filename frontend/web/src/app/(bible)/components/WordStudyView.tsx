@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { LexiconView } from '../features/lexicons';
 import { GrammarSearchDashboard } from '../features/grammar-search';
 import { BookOpenCheck, GitFork } from 'lucide-react';
@@ -12,6 +13,7 @@ interface WordStudyViewProps {
 }
 
 export const WordStudyView: React.FC<WordStudyViewProps> = ({ initialSubTab = 'lexicon' }) => {
+  const t = useTranslations('WordStudy');
   const [subTab, setSubTab] = useState<WordStudySubTab>(initialSubTab);
 
   return (
@@ -20,7 +22,7 @@ export const WordStudyView: React.FC<WordStudyViewProps> = ({ initialSubTab = 'l
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-accents-2 bg-accents-1/40 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-accents-4 hidden sm:inline">
-            Herramienta:
+            {t('toolLabel')}
           </span>
           <div className="inline-flex rounded-lg border border-accents-2 bg-background p-1 text-xs">
             <button
@@ -33,7 +35,7 @@ export const WordStudyView: React.FC<WordStudyViewProps> = ({ initialSubTab = 'l
               }`}
             >
               <BookOpenCheck className="w-3.5 h-3.5" />
-              <span>Diccionarios Léxicos Strong (BDB / Thayer)</span>
+              <span>{t('lexiconTab')}</span>
             </button>
             <button
               type="button"
@@ -45,15 +47,15 @@ export const WordStudyView: React.FC<WordStudyViewProps> = ({ initialSubTab = 'l
               }`}
             >
               <GitFork className="w-3.5 h-3.5" />
-              <span>Sintaxis & Búsqueda Morfológica</span>
+              <span>{t('morphologyTab')}</span>
             </button>
           </div>
         </div>
 
         <div className="text-[11px] font-mono text-accents-4 hidden md:block">
           {subTab === 'lexicon'
-            ? 'Definiciones etimológicas, raíces hebreas y lemas griegos'
-            : 'Filtros gramaticales, densidad canónica y concordancia exhaustiva'}
+            ? t('lexiconSubtitle')
+            : t('morphologySubtitle')}
         </div>
       </div>
 

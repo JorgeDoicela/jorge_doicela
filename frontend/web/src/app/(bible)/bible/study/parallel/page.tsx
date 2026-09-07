@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   ParallelViewGrid,
   useParallelVerses,
@@ -11,6 +12,7 @@ import { useBiblePassage } from '../../../context/BiblePassageContext';
 import { BiblePassageToolbar } from '../../../components/BiblePassageToolbar';
 
 export default function ParallelStudyPage() {
+  const t = useTranslations('Parallel');
   const {
     translations,
     selectedBookId,
@@ -24,9 +26,10 @@ export default function ParallelStudyPage() {
     Record<number, { text: string; name: string; abbreviation: string }>
   >({});
 
+  const defaultSecondTrans = selectedTranslationId === 3 ? 5 : 3;
   const initialTranslations = selectedTranslationId
-    ? [selectedTranslationId, selectedTranslationId === 1 ? 2 : 1]
-    : [1, 2];
+    ? [selectedTranslationId, defaultSecondTrans]
+    : [3, 5];
 
   const {
     columns,
@@ -89,19 +92,21 @@ export default function ParallelStudyPage() {
         rightBadge={
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-mono text-accents-4 bg-accents-1 px-2.5 py-1 rounded-lg border border-accents-2">
-              {columns.length} {columns.length === 1 ? 'versión' : 'versiones'} en paralelo
+              {columns.length === 1
+                ? t('parallelCountSingle')
+                : t('parallelCountMulti', { count: columns.length })}
             </span>
             {columns.length < 4 && nextAvailableTranslation && (
               <button
                 type="button"
                 onClick={() => addColumn(nextAvailableTranslation.id)}
                 className="px-2.5 py-1 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:border-foreground text-foreground transition-all flex items-center gap-1 cursor-pointer shadow-xs"
-                title="Añadir otra columna para comparar"
+                title={t('addVersionTooltip')}
               >
                 <svg className="w-3.5 h-3.5 text-accents-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                 </svg>
-                <span>+ Versión</span>
+                <span>{t('addVersionBtn')}</span>
               </button>
             )}
           </div>

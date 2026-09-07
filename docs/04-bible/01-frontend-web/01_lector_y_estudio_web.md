@@ -97,11 +97,29 @@ El catálogo oficial de traducciones opera bajo estricto cumplimiento de derecho
 | **Biblia Hebraica Stuttgartensia** | `BHS` | Groves Center / Open Scriptures | Licencia Académica Abierta CC BY 4.0. |
 | **Septuaginta Griega** | `LXX` | Dominio Público | Dominio Público Académico (Swete / Rahlfs). |
 
+### 4.1 Jerarquía de Resolución Inteligente y Persistencia de Traducción
+
+Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingresos como en lectores frecuentes, la plataforma implementa una jerarquía de 3 niveles administrada en `BiblePassageContext` y `translationPreferences.ts`:
+
+1. **Prioridad 1 (Parámetro URL `?trans=...`):** Soporte total de deep-linking para compartir pasajes en versiones específicas.
+2. **Prioridad 2 (Persistencia `localStorage`):** Memoriza la última traducción utilizada por el usuario (`bible_last_translation_id` y por idioma `bible_last_translation_[es|en]`).
+3. **Prioridad 3 (Default Contextual por Idioma / `next-intl`):**
+   * Español (`es`): **Nueva Biblia de las Américas (`NBLA`, ID: 3)** por defecto.
+   * Inglés (`en`): **New International Version (`NIV`, ID: 5)** por defecto.
+   * Al alternar el idioma con el `LanguageToggle`, la plataforma conmuta dinámicamente a la versión correspondiente del nuevo idioma si la actual no pertenece a dicho idioma.
+
 ---
 
 ## 5. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
-* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Bible.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
+* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Metadata` en `(bible)/messages/es.json` y `(bible)/messages/en.json`, con tarjetas completas Open Graph y Twitter.
+* **Cobertura Integral i18n (Cero Textos Hardcodeados):** Se auditaron y refactorizaron todos los componentes TSX de `(bible)` eliminando cualquier cadena o tooltip quemado en español. Cobertura completa y simétrica en `es.json` y `en.json`:
+  * `ReadingView`: Avisos de copyright por versión, contadores analíticos, acciones de copiado y tooltips.
+  * `Timeline`: Monarquías sincronizadas, evaluaciones teológicas, profetas contemporáneos, imperios mundiales e hitos fechados.
+  * `Interlinear`: Tarjetas morfológicas Masoréticas y Koiné, badges lingüísticos (`hebrew`, `aramaic`, `greek`), tooltips de audio y parsing Robinson.
+  * `ArchaeologyFeed`: Fichas epigráficas, catálogo de manuscritos, filtros temáticos/geográficos y modal de lectura completa.
+  * `Atlas`: Itinerarios de peregrinación (Ruta del Éxodo, viajes paulinos), controles multimedia del reproductor, visor 3D arquitectónico (Tabernáculo, templos) y ficha arqueológica de lugares georreferenciados (`PlaceDetailsDrawer`).
+  * `PassagePicker` y `BookSelector`: Catálogo bilingüe de los 66 libros canónicos, 9 categorías canónicas y placeholders.
 * **Datos Estructurados Schema.org (`BibleJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus bíblico y los 9 motores exegéticos en motores de búsqueda e IA.
 * **Dossier Especializado para IA (`public/bible/llms.txt`):** Desglose detallado de los 9 motores exegéticos, textos Masorético BHS / Griego NA28 y léxicos servido en `bible.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/bible/manifest.json`):** Configuración de aplicación web independiente con tema `#000000`.

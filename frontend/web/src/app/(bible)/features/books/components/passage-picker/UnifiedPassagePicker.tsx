@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { Book } from '../../hooks/useBooks';
 import {
   CANONICAL_CATEGORIES,
@@ -31,6 +32,9 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   className = '',
   size = 'md',
 }) => {
+  const t = useTranslations('PassagePicker');
+  const tBooks = useTranslations('Books');
+
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TestamentTab>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +42,16 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const getBookDisplayName = (book: Book | null | undefined): string => {
+    if (!book) return '';
+    try {
+      const translated = tBooks(book.abbreviation as any);
+      return translated || book.name;
+    } catch {
+      return book.name;
+    }
+  };
 
   const currentBook = useMemo(
     () => books.find((b) => b.id === selectedBookId) || books[0],
@@ -74,7 +88,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     }
   }, [isOpen, selectedBookForChapters]);
 
-  // Filtro de libros y parseo inteligente de pasaje (ej. "Juan 3", "Sal 23")
+  // Filtro de libros y parseo inteligente de pasaje (ej. "Juan 3", "Sal 23", "John 3", "Ps 23")
   const parsedSearch = useMemo(() => {
     const raw = searchQuery.trim().toLowerCase();
     if (!raw) return { text: '', chapter: null as number | null };
@@ -96,13 +110,18 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
 
       if (!parsedSearch.text) return matchesTab;
 
+      const localizedName = getBookDisplayName(b).toLowerCase();
+      const originalName = b.name.toLowerCase();
+      const abbr = b.abbreviation.toLowerCase();
+
       const matchesText =
-        b.name.toLowerCase().includes(parsedSearch.text) ||
-        b.abbreviation.toLowerCase().includes(parsedSearch.text);
+        localizedName.includes(parsedSearch.text) ||
+        originalName.includes(parsedSearch.text) ||
+        abbr.includes(parsedSearch.text);
 
       return matchesTab && matchesText;
     });
-  }, [books, activeTab, parsedSearch.text]);
+  }, [books, activeTab, parsedSearch.text, tBooks]);
 
   const handleBookClick = (book: Book) => {
     if (parsedSearch.chapter) {
@@ -149,7 +168,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
               ? 'opacity-30 cursor-not-allowed text-accents-4'
               : 'hover:border-foreground text-accents-6 hover:text-foreground shadow-xs'
           }`}
-          title="Capítulo Anterior (←)"
+          title={t('prevChapterTooltip')}
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -175,7 +194,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
         </svg>
 
         <span className="font-bold tracking-tight">
-          {currentBook ? `${currentBook.name} ${selectedChapter || 1}` : 'Seleccionar Pasaje'}
+          {currentBook ? `${getBookDisplayName(currentBook)} ${selectedChapter || 1}` : t('selectPassage')}
         </span>
 
         <svg
@@ -201,7 +220,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
               ? 'opacity-30 cursor-not-allowed text-accents-4'
               : 'hover:border-foreground text-accents-6 hover:text-foreground shadow-xs'
           }`}
-          title="Capítulo Siguiente (→)"
+          title={t('nextChapterTooltip')}
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -220,7 +239,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Buscar libro o pasaje (ej. Juan 3, Sal 23)..."
+                  placeholder={t('searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDownSearch}
@@ -247,7 +266,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                       : 'text-accents-5 hover:text-foreground'
                   }`}
                 >
-                  Todos (66)
+                  {t('all')}
                 </button>
                 <button
                   type="button"
@@ -258,7 +277,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                       : 'text-accents-5 hover:text-foreground'
                   }`}
                 >
-                  Antiguo (39)
+                  {t('ot')}
                 </button>
                 <button
                   type="button"
@@ -269,7 +288,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                       : 'text-accents-5 hover:text-foreground'
                   }`}
                 >
-                  Nuevo (27)
+                  {t('nt')}
                 </button>
               </div>
 
@@ -279,7 +298,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                   <div className="grid grid-cols-2 gap-1.5">
                     {filteredBooks.length === 0 ? (
                       <div className="col-span-2 text-center py-6 text-xs text-accents-4">
-                        No se encontraron libros para &quot;{searchQuery}&quot;
+                        {t('noBooksFound', { query: searchQuery })}
                       </div>
                     ) : (
                       filteredBooks.map((book) => (
@@ -293,7 +312,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                               : 'border-transparent bg-accents-1/40 hover:bg-accents-1 hover:border-accents-2 text-foreground'
                           }`}
                         >
-                          <span className="truncate">{book.name}</span>
+                          <span className="truncate">{getBookDisplayName(book)}</span>
                           <span className="text-[10px] font-mono opacity-60 ml-1 shrink-0">
                             {book.abbreviation}
                           </span>
@@ -309,10 +328,17 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                   }).map((cat) => {
                     const catBooks = books.filter((b) => isBookInCategory(cat, b));
                     if (catBooks.length === 0) return null;
+                    let categoryLabel = cat.name;
+                    try {
+                      categoryLabel = t(`categories.${cat.id}` as any) || cat.name;
+                    } catch {
+                      categoryLabel = cat.name;
+                    }
+
                     return (
                       <div key={cat.id} className="space-y-1.5">
                         <div className="text-[10px] font-bold tracking-wider uppercase text-accents-4 px-1">
-                          {cat.name}
+                          {categoryLabel}
                         </div>
                         <div className="grid grid-cols-2 gap-1">
                           {catBooks.map((book) => (
@@ -326,7 +352,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                                   : 'border-transparent hover:bg-accents-1 hover:border-accents-2 text-foreground'
                               }`}
                             >
-                              <span className="truncate">{book.name}</span>
+                              <span className="truncate">{getBookDisplayName(book)}</span>
                               <span className="text-[10px] font-mono opacity-60 ml-1 shrink-0">
                                 {book.abbreviation}
                               </span>
@@ -351,15 +377,15 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
                   </svg>
-                  <span>Libros</span>
+                  <span>{t('backToBooks')}</span>
                 </button>
 
                 <div className="text-xs font-bold text-foreground">
-                  {selectedBookForChapters.name}
+                  {getBookDisplayName(selectedBookForChapters)}
                 </div>
 
                 <span className="text-[10px] font-mono text-accents-4">
-                  {totalChapters} Caps.
+                  {t('chaptersCount', { count: totalChapters })}
                 </span>
               </div>
 

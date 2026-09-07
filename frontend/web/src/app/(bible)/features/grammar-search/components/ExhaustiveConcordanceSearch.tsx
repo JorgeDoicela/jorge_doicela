@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { useConcordance } from '../hooks/useConcordance';
 
 export const ExhaustiveConcordanceSearch: React.FC = () => {
+  const t = useTranslations('GrammarSearch');
   const {
     query,
     setQuery,
@@ -15,7 +17,7 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
   } = useConcordance();
 
   const translationsList = [
-    { abbr: 'all', name: 'Todas las Versiones' },
+    { abbr: 'all', name: t('concordance.allVersions') },
     { abbr: 'BHS', name: 'Texto Hebreo Masorético (BHS)' },
     { abbr: 'NA28', name: 'Texto Crítico Griego (NA28)' },
     { abbr: 'NBLA', name: 'Nueva Biblia de las Américas' },
@@ -66,7 +68,7 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={"Escribe operadores FTS5 (ej. 'gracia AND fe', '\"el Verbo\"', 'amor* NOT temor')..."}
+              placeholder={t('concordance.placeholder')}
               className="w-full px-3.5 py-2.5 pl-9 rounded-lg text-xs bg-accents-1 border border-accents-2 text-foreground placeholder:text-accents-4 focus:outline-none focus:border-blue-500 transition-colors font-mono"
             />
             <svg
@@ -91,9 +93,9 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
               onChange={(e) => setSelectedTranslation(e.target.value)}
               className="w-full px-3 py-2.5 rounded-lg text-xs bg-accents-1 border border-accents-2 text-foreground focus:outline-none focus:border-blue-500 cursor-pointer font-medium"
             >
-              {translationsList.map((t) => (
-                <option key={t.abbr} value={t.abbr}>
-                  {t.name}
+              {translationsList.map((tr) => (
+                <option key={tr.abbr} value={tr.abbr}>
+                  {tr.name}
                 </option>
               ))}
             </select>
@@ -103,7 +105,7 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
         {/* Píldoras de Sintaxis FTS5 de Ayuda Rápida */}
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
           <span className="text-[10px] font-mono text-accents-4 uppercase font-semibold mr-1">
-            Insertar Operador FTS5:
+            {t('concordance.insertOperator')}
           </span>
           <button
             type="button"
@@ -131,14 +133,14 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
             onClick={() => insertOperatorSnippet('"frase exacta"')}
             className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/20 transition-all cursor-pointer font-bold"
           >
-            + &quot;Frase Exacta&quot;
+            + &quot;{t('concordance.exactPhrase')}&quot;
           </button>
           <button
             type="button"
             onClick={() => insertOperatorSnippet('patern*')}
             className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all cursor-pointer font-bold"
           >
-            + comodín*
+            + {t('concordance.wildcard')}
           </button>
           <button
             type="button"
@@ -155,20 +157,19 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 font-bold text-foreground">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            {stats.totalResults} {stats.totalResults === 1 ? 'resultado' : 'resultados'}
+            {stats.totalResults === 1
+              ? t('concordance.resultsCountSingle')
+              : t('concordance.resultsCountMulti', { count: stats.totalResults })}
           </span>
           <span className="text-accents-4">•</span>
           <span className="text-accents-5">
-            Tiempo de búsqueda:{' '}
-            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">
-              {stats.executionTimeMs} ms
-            </strong>
+            {t('concordance.searchTime', { time: stats.executionTimeMs })}
           </span>
         </div>
 
         {stats.operatorsUsed.length > 0 && (
           <div className="flex items-center gap-1.5 text-accents-4">
-            <span>Operadores activos:</span>
+            <span>{t('concordance.activeOperators')}</span>
             {stats.operatorsUsed.map((op) => (
               <span
                 key={op}
@@ -185,7 +186,7 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
       {results.length === 0 ? (
         <div className="p-12 text-center border border-dashed border-accents-2 rounded-xl bg-background">
           <p className="text-xs text-accents-4 font-mono">
-            No se encontraron versículos para la consulta indicada. Prueba modificando los operadores o la traducción.
+            {t('concordance.noResults')}
           </p>
         </div>
       ) : (

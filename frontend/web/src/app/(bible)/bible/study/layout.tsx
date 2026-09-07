@@ -2,6 +2,7 @@
 
 import React, { Suspense } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { BiblePassageProvider } from '../../context/BiblePassageContext';
 import { BibleHeaderNav } from '../../components/BibleHeaderNav';
 
@@ -10,6 +11,8 @@ export default function BibleStudyLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations('StudyLayout');
+
   return (
     <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <BiblePassageProvider>
@@ -25,14 +28,14 @@ export default function BibleStudyLayout({
           {/* Footer Persistente */}
           <footer className="border-t border-accents-2 w-full py-6 bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
-              <div>Jorge Doicela &copy; {new Date().getFullYear()} • Biblia Modular</div>
+              <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
               <div className="flex gap-4">
                 <Link href="/bible" className="hover:text-foreground transition-colors duration-150">
-                  Presentación
+                  {t('presentation')}
                 </Link>
                 <span className="text-accents-2">|</span>
                 <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-                  Sagradas Escrituras
+                  {t('holyScriptures')}
                 </span>
               </div>
             </div>

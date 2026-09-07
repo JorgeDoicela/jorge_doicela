@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { ArchaeologyArticle } from '../types';
 
 interface ArticleCardProps {
@@ -9,6 +10,8 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onReadArticle }) => {
+  const t = useTranslations('ArchaeologyFeed');
+
   const categoryBadgeClass =
     article.category === 'recent_discoveries'
       ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
@@ -18,10 +21,10 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onReadArticle
 
   const categoryLabel =
     article.category === 'recent_discoveries'
-      ? 'Hallazgo Reciente'
+      ? t('categoryRecentBadge')
       : article.category === 'manuscripts_epigraphy'
-      ? 'Manuscritos & Epigrafía'
-      : 'Apologética & Rigor Histórico';
+      ? t('categoryManuscripts')
+      : t('categoryApologeticsBadge');
 
   return (
     <div
@@ -43,7 +46,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onReadArticle
           </div>
 
           <span className="text-[10px] font-mono text-accents-4">
-            {article.readTimeMinutes} min de lectura
+            {t('readingTime', { minutes: article.readTimeMinutes })}
           </span>
         </div>
 
@@ -83,7 +86,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onReadArticle
           }}
           className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-foreground text-background group-hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-1.5"
         >
-          <span>Leer Artículo</span>
+          <span>{t('readArticle')}</span>
           <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
           </svg>

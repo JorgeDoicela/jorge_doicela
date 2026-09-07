@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { VerseComparisonData } from '../types';
 import { TextualDiffViewer } from './TextualDiffViewer';
 import { Translation } from '../../translations/hooks/useTranslations';
@@ -20,6 +21,7 @@ export const TextualDiffModal: React.FC<TextualDiffModalProps> = ({
   availableTranslations,
   allVersesByTranslation = {},
 }) => {
+  const t = useTranslations('TextualDiff');
   const [selectedIdA, setSelectedIdA] = useState<number | null>(null);
   const [selectedIdB, setSelectedIdB] = useState<number | null>(null);
 
@@ -66,10 +68,10 @@ export const TextualDiffModal: React.FC<TextualDiffModalProps> = ({
             </div>
             <div>
               <h3 className="text-sm font-bold text-foreground">
-                Comparador de Variantes Textuales
+                {t('modalTitle')}
               </h3>
               <p className="text-xs text-accents-4">
-                Análisis exegético y diferencial de redacción palabra por palabra
+                {t('modalSubtitle')}
               </p>
             </div>
           </div>
@@ -78,7 +80,7 @@ export const TextualDiffModal: React.FC<TextualDiffModalProps> = ({
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-2 transition-colors cursor-pointer"
-            aria-label="Cerrar modal"
+            aria-label={t('closeModal')}
           >
             <svg
               className="w-5 h-5"
@@ -94,30 +96,30 @@ export const TextualDiffModal: React.FC<TextualDiffModalProps> = ({
         {/* Controles de Selección de Traducciones */}
         <div className="p-4 border-b border-accents-2 bg-background grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-xs font-semibold text-accents-4">Versión Base (A):</label>
+            <label className="text-xs font-semibold text-accents-4">{t('baseVersionLabel')}</label>
             <select
               value={selectedIdA || ''}
               onChange={(e) => setSelectedIdA(parseInt(e.target.value, 10))}
               className="flex-1 bg-accents-1 border border-accents-2 rounded-md px-2.5 py-1 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-colors cursor-pointer"
             >
-              {availableTranslations.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.abbreviation} - {t.name}
+              {availableTranslations.map((tr) => (
+                <option key={tr.id} value={tr.id}>
+                  {tr.abbreviation} - {tr.name}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-xs font-semibold text-accents-4">Comparada con (B):</label>
+            <label className="text-xs font-semibold text-accents-4">{t('comparedVersionLabel')}</label>
             <select
               value={selectedIdB || ''}
               onChange={(e) => setSelectedIdB(parseInt(e.target.value, 10))}
               className="flex-1 bg-accents-1 border border-accents-2 rounded-md px-2.5 py-1 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-colors cursor-pointer"
             >
-              {availableTranslations.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.abbreviation} - {t.name}
+              {availableTranslations.map((tr) => (
+                <option key={tr.id} value={tr.id}>
+                  {tr.abbreviation} - {tr.name}
                 </option>
               ))}
             </select>
@@ -136,7 +138,7 @@ export const TextualDiffModal: React.FC<TextualDiffModalProps> = ({
             onClick={onClose}
             className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors cursor-pointer"
           >
-            Entendido
+            {t('understood')}
           </button>
         </div>
       </div>

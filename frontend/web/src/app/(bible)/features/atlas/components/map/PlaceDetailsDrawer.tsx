@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { AncientPlace } from '../../types';
 
 interface PlaceDetailsDrawerProps {
@@ -9,6 +10,8 @@ interface PlaceDetailsDrawerProps {
 }
 
 export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, onClose }) => {
+  const t = useTranslations('Atlas');
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -31,12 +34,12 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
         <div>
           <span className="text-[10px] font-mono uppercase tracking-widest text-blue-500 font-semibold">
             {place.category === 'city'
-              ? 'Ciudad Bíblica'
+              ? t('categoryCity')
               : place.category === 'mountain'
-              ? 'Monte Sagrado'
+              ? t('categoryMountain')
               : place.category === 'water'
-              ? 'Masa de Agua'
-              : 'Sitio Arqueológico'}
+              ? t('categoryWater')
+              : t('categoryArchaeological')}
           </span>
           <h3 className="text-lg font-bold text-foreground leading-tight">{place.name}</h3>
           <p className="text-xs text-accents-5 font-mono">
@@ -47,7 +50,7 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
           type="button"
           onClick={onClose}
           className="p-1 rounded-md text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer"
-          title="Cerrar detalles"
+          title={t('closeDetails')}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -58,24 +61,26 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
       {/* Datos lingüísticos y etimología */}
       <div className="p-3 rounded-lg bg-accents-1/60 border border-accents-2 space-y-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-accents-5 font-mono">Original:</span>
+          <span className="text-accents-5 font-mono">{t('original')}</span>
           <span className="font-serif text-sm font-bold text-amber-500">
             {place.originalName.hebrew || place.originalName.greek}
           </span>
         </div>
         <div className="flex items-center justify-between text-xs">
-          <span className="text-accents-5 font-mono">Transliteración:</span>
+          <span className="text-accents-5 font-mono">{t('transliteration')}</span>
           <span className="font-mono text-foreground">{place.originalName.transliteration}</span>
         </div>
         <div className="text-xs pt-1 border-t border-accents-2">
-          <span className="text-accents-4">Significado: </span>
+          <span className="text-accents-4">{t('meaning')} </span>
           <span className="text-foreground italic font-medium">"{place.originalName.meaning}"</span>
         </div>
         {place.elevationMeters !== undefined && (
           <div className="flex items-center justify-between text-xs pt-1 border-t border-accents-2">
-            <span className="text-accents-5 font-mono">Elevación:</span>
+            <span className="text-accents-5 font-mono">{t('elevation')}</span>
             <span className="font-mono text-foreground font-semibold">
-              {place.elevationMeters > 0 ? `+${place.elevationMeters} m` : `${place.elevationMeters} m b.n.m.`}
+              {place.elevationMeters > 0
+                ? t('elevationAboveSea', { elevation: place.elevationMeters })
+                : t('elevationBelowSea', { elevation: place.elevationMeters })}
             </span>
           </div>
         )}
@@ -84,7 +89,7 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
       {/* Descripción histórica */}
       <div className="space-y-1.5">
         <h4 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-          Significado Teológico & Histórico
+          {t('theologicalHistoricalSignificance')}
         </h4>
         <p className="text-xs text-foreground/90 leading-relaxed">{place.description}</p>
       </div>
@@ -92,7 +97,7 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
       {/* Referencias Bíblicas Clave */}
       <div className="space-y-2">
         <span className="text-[10px] font-mono uppercase text-accents-4 block mb-1">
-          Pasajes Bíblicos Clave:
+          {t('keyBiblicalPassages')}
         </span>
         <div className="space-y-1.5">
           {place.biblicalReferences.map((ref, i) => (
@@ -110,7 +115,7 @@ export const PlaceDetailsDrawer: React.FC<PlaceDetailsDrawerProps> = ({ place, o
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-emerald-500 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-              Evidencia Arqueológica
+              {t('archaeologicalEvidence')}
             </h4>
           </div>
           <p className="text-[11px] text-accents-4 font-mono">{place.archaeologicalNotes.excavationStatus}</p>

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { Translation } from '../../translations/hooks/useTranslations';
 
 interface ParallelColumnHeaderProps {
@@ -22,8 +23,9 @@ export const ParallelColumnHeader: React.FC<ParallelColumnHeaderProps> = ({
   onSelectTranslation,
   onRemoveColumn,
 }) => {
+  const t = useTranslations('Parallel');
   const currentTranslation = availableTranslations.find(
-    (t) => t.id === currentTranslationId,
+    (tr) => tr.id === currentTranslationId,
   );
 
   return (
@@ -40,11 +42,11 @@ export const ParallelColumnHeader: React.FC<ParallelColumnHeaderProps> = ({
             onSelectTranslation(columnId, parseInt(e.target.value, 10))
           }
           className="bg-accents-1 hover:bg-accents-2 border border-accents-2 rounded-md px-2.5 py-1 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-colors cursor-pointer truncate max-w-[180px]"
-          aria-label={`Seleccionar traducción para columna ${columnIndex + 1}`}
+          aria-label={t('selectTranslationAria', { index: columnIndex + 1 })}
         >
-          {availableTranslations.map((t) => (
-            <option key={t.id} value={t.id} className="bg-background text-foreground">
-              {t.abbreviation} - {t.name}
+          {availableTranslations.map((tr) => (
+            <option key={tr.id} value={tr.id} className="bg-background text-foreground">
+              {tr.abbreviation} - {tr.name}
             </option>
           ))}
         </select>
@@ -62,8 +64,8 @@ export const ParallelColumnHeader: React.FC<ParallelColumnHeaderProps> = ({
             type="button"
             onClick={() => onRemoveColumn(columnId)}
             className="p-1 rounded-md text-accents-4 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-            title="Cerrar esta columna"
-            aria-label="Cerrar columna"
+            title={t('closeColumnTooltip')}
+            aria-label={t('closeColumn')}
           >
             <svg
               className="w-3.5 h-3.5"

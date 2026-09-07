@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Verse, ReaderFontSize, ReaderFontFamily } from '../../types';
 
 interface LineByLineReadingViewProps {
@@ -8,6 +9,7 @@ interface LineByLineReadingViewProps {
   fontSize: ReaderFontSize;
   fontFamily: ReaderFontFamily;
   bookName?: string;
+  bookAbbr?: string;
   chapter?: number | null;
   translationAbbr?: string;
 }
@@ -17,10 +19,35 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
   fontSize,
   fontFamily,
   bookName,
+  bookAbbr,
   chapter,
   translationAbbr,
 }) => {
+  const t = useTranslations('ReadingView');
+  const tBooks = useTranslations('Books');
   const [copiedId, setCopiedId] = useState<number | null>(null);
+
+  const rawAbbr =
+    bookAbbr ||
+    (typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+      ? verses[0]?.book.abbreviation
+      : undefined);
+
+  const localizedBookName = (() => {
+    if (rawAbbr) {
+      try {
+        const translated = tBooks(rawAbbr as any);
+        if (translated) return translated;
+      } catch {
+        // fallback
+      }
+    }
+    const firstVerseBook =
+      typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+        ? verses[0]?.book.name
+        : verses[0]?.book;
+    return bookName || firstVerseBook || '';
+  })();
 
   const getFontSizeClass = (size: ReaderFontSize) => {
     switch (size) {
@@ -42,10 +69,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
   };
 
   const handleCopyVerse = (verse: Verse) => {
-    const bookTitle =
-      typeof verse.book === 'object' && verse.book !== null
-        ? verse.book.name
-        : verse.book || bookName || '';
+    const bookTitle = localizedBookName;
     const abbr = verse.translation?.abbreviation || translationAbbr || '';
 
     const textToCopy = `«${verse.text}» — ${bookTitle} ${verse.chapter}:${verse.verseNumber}${
@@ -62,9 +86,9 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
       {/* Cabecera compacta */}
       <div className="flex justify-between items-center px-4 py-2 border-b border-accents-2 text-xs font-mono text-accents-4">
         <span>
-          {bookName} {chapter !== null ? `• Capítulo ${chapter}` : ''}
+          {localizedBookName} {chapter !== null ? `• ${t('chapter')} ${chapter}` : ''}
         </span>
-        <span>{verses.length} versículos en vista analítica</span>
+        <span>{t('versesCountAnalytical', { count: verses.length })}</span>
       </div>
 
       {/* Lista versículo a versículo */}
@@ -98,10 +122,10 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
                 type="button"
                 onClick={() => handleCopyVerse(verse)}
                 className="p-1.5 text-xs rounded-md border border-accents-2 bg-background hover:border-foreground text-accents-5 hover:text-foreground transition-all cursor-pointer"
-                title="Copiar cita con referencia"
+                title={t('copyVerseTooltip')}
               >
                 {copiedId === verse.id ? (
-                  <span className="text-[10px] text-emerald-500 font-mono px-1">¡Copiado!</span>
+                  <span className="text-[10px] text-emerald-500 font-mono px-1">{t('copied')}</span>
                 ) : (
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path

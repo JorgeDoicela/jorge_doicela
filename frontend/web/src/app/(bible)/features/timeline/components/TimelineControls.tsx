@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { TimelineEraShortcut } from '../hooks/useBiblicalTimeline';
 
 interface TimelineControlsProps {
@@ -34,6 +35,8 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
   isFullscreen = false,
   onToggleFullscreen,
 }) => {
+  const t = useTranslations('Timeline');
+
   const isKingsProphetsOnly =
     visibleTracks.judah &&
     visibleTracks.israel &&
@@ -62,7 +65,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
         {/* Modos Predefinidos de Visualizacion */}
         {onSetPresetMode && (
           <div className="flex items-center gap-1 p-1 bg-accents-1 border border-accents-2 rounded-lg text-xs">
-            <span className="text-[10px] font-mono text-accents-4 uppercase px-1.5 hidden md:inline">Modo:</span>
+            <span className="text-[10px] font-mono text-accents-4 uppercase px-1.5 hidden md:inline">{t('mode')}</span>
             <button
               type="button"
               onClick={() => onSetPresetMode('kings_prophets')}
@@ -71,9 +74,9 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
                   ? 'bg-background text-foreground font-semibold shadow-xs'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Ver unicamente tronos y profetas biblicos"
+              title={t('kingsProphetsTooltip')}
             >
-              Reyes vs Profetas
+              {t('kingsProphets')}
             </button>
             <button
               type="button"
@@ -83,9 +86,9 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
                   ? 'bg-background text-foreground font-semibold shadow-xs'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Comparar Juda con potencias e hitos arqueologicos"
+              title={t('bibleArchaeologyTooltip')}
             >
-              Biblia y Arqueologia
+              {t('bibleArchaeology')}
             </button>
             <button
               type="button"
@@ -95,16 +98,16 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
                   ? 'bg-background text-foreground font-semibold shadow-xs'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Ver todas las 5 pistas sincronizadas"
+              title={t('allSyncedTooltip')}
             >
-              Todo Sincronizado
+              {t('allSynced')}
             </button>
           </div>
         )}
 
         {/* Atajos de Eras Bíblicas */}
         <div className="flex flex-wrap items-center gap-1">
-          <span className="text-[11px] font-mono text-accents-4 uppercase mr-1">Época:</span>
+          <span className="text-[11px] font-mono text-accents-4 uppercase mr-1">{t('eraLabel')}</span>
           {shortcuts.map((shortcut) => (
             <button
               key={shortcut.id}
@@ -125,7 +128,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
               type="button"
               onClick={onZoomOut}
               className="w-7 h-7 flex items-center justify-center rounded text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer"
-              title="Alejar escala temporal"
+              title={t('zoomOutTooltip')}
             >
               −
             </button>
@@ -136,7 +139,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
               type="button"
               onClick={onZoomIn}
               className="w-7 h-7 flex items-center justify-center rounded text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer"
-              title="Acercar escala temporal"
+              title={t('zoomInTooltip')}
             >
               +
             </button>
@@ -151,21 +154,21 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
                   ? 'bg-foreground text-background border-foreground shadow-sm hover:opacity-90'
                   : 'bg-background hover:bg-accents-1 text-accents-5 hover:text-foreground border-accents-2 shadow-2xs'
               }`}
-              title={isFullscreen ? 'Restaurar vista normal (Esc)' : 'Expandir vista en la ventana'}
+              title={isFullscreen ? t('restoreNormalView') : t('expandView')}
             >
               {isFullscreen ? (
                 <>
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  <span className="hidden sm:inline">Restaurar</span>
+                  <span className="hidden sm:inline">{t('restore')}</span>
                 </>
               ) : (
                 <>
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                   </svg>
-                  <span className="hidden sm:inline">Ampliar</span>
+                  <span className="hidden sm:inline">{t('expand')}</span>
                 </>
               )}
             </button>
@@ -176,7 +179,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
       {/* Fila 2: Toggles de Pistas Sincrónicas Individuales */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-accents-2 text-xs">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono text-accents-4 mr-1">Pistas:</span>
+          <span className="text-[11px] font-mono text-accents-4 mr-1">{t('tracksLabel')}</span>
 
           <button
             type="button"
@@ -188,7 +191,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-blue-500" />
-            <span>Reyes de Judá</span>
+            <span>{t('judahKings')}</span>
           </button>
 
           <button
@@ -201,7 +204,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-rose-500" />
-            <span>Reyes de Israel</span>
+            <span>{t('israelKings')}</span>
           </button>
 
           <button
@@ -214,7 +217,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span>Profetas Bíblicos</span>
+            <span>{t('biblicalProphets')}</span>
           </button>
 
           <button
@@ -227,7 +230,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-purple-500" />
-            <span>Imperios Mundiales</span>
+            <span>{t('worldEmpires')}</span>
           </button>
 
           <button
@@ -240,12 +243,12 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-amber-500" />
-            <span>Arqueología</span>
+            <span>{t('archaeology')}</span>
           </button>
         </div>
 
         <span className="text-[10px] font-mono text-accents-4 hidden md:inline">
-          Haz clic o arrastra sobre el lienzo para sincronizar el año
+          {t('canvasHelp')}
         </span>
       </div>
     </div>

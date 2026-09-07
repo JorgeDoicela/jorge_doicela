@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useBooks } from '../../hooks/useBooks';
 import { CANONICAL_CATEGORIES, isBookInCategory } from '../../data/canonicCategories';
 
@@ -12,6 +13,7 @@ interface BookSelectorProps {
 type TabType = 'ALL' | 'OT' | 'NT';
 
 export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps) {
+  const t = useTranslations('PassagePicker');
   const { books, loading, error } = useBooks();
   const [activeTab, setActiveTab] = useState<TabType>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,26 +60,34 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
         : 'border-transparent text-accents-5 hover:text-foreground'
     }`;
 
+  const getCategoryName = (catId: string, defaultName: string) => {
+    try {
+      return t(`categories.${catId}`);
+    } catch {
+      return defaultName;
+    }
+  };
+
   return (
     <div className="space-y-3">
       {/* Barra de control superior con tabs y búsqueda rápida */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-accents-2 pb-2">
         <div className="flex gap-4">
           <button type="button" onClick={() => setActiveTab('ALL')} className={tabClass('ALL')}>
-            Todos (66)
+            {t('all')}
           </button>
           <button type="button" onClick={() => setActiveTab('OT')} className={tabClass('OT')}>
-            Antiguo Testamento (39)
+            {t('ot')}
           </button>
           <button type="button" onClick={() => setActiveTab('NT')} className={tabClass('NT')}>
-            Nuevo Testamento (27)
+            {t('nt')}
           </button>
         </div>
 
         <div className="relative w-full sm:w-56">
           <input
             type="text"
-            placeholder="Filtrar libro..."
+            placeholder={t('filterPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-7 pr-2.5 py-1 text-xs rounded-lg border border-accents-2 bg-accents-1 text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground"
@@ -124,7 +134,7 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
             return (
               <div key={cat.id} className="space-y-1.5">
                 <div className="text-[10px] font-bold tracking-wider uppercase text-accents-4">
-                  {cat.name}
+                  {getCategoryName(cat.id, cat.name)}
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-1.5">
                   {catBooks.map((book) => (

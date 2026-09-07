@@ -2,10 +2,12 @@
 
 import React from 'react';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 import { useRoutePlayer } from '../../hooks/useRoutePlayer';
 import { projectGeoToCanvas } from '../../hooks/useAtlasMap';
 
 export const HistoricalRoutesPlayer: React.FC = () => {
+  const t = useTranslations('Atlas');
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
@@ -28,9 +30,9 @@ export const HistoricalRoutesPlayer: React.FC = () => {
   if (!activeRoute || !currentStop) {
     return (
       <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
-        <div className="text-sm font-semibold text-foreground">Rutas Históricas Trazadas</div>
+        <div className="text-sm font-semibold text-foreground">{t('routesTitle')}</div>
         <p className="text-xs text-accents-4 max-w-md mx-auto">
-          Módulo de trazado e itinerarios de peregrinación bíblica (Ruta del Éxodo, Conquista de Canaán, Ministerio de Jesús y Viajes Misioneros de Pablo).
+          {t('routesDesc')}
         </p>
       </div>
     );
@@ -204,7 +206,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
                 type="button"
                 onClick={handlePrevStop}
                 className="w-8 h-8 rounded-lg border border-accents-2 bg-accents-1 hover:bg-accents-2 text-foreground flex items-center justify-center transition-colors cursor-pointer"
-                title="Estación anterior"
+                title={t('prevStop')}
               >
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
@@ -225,14 +227,14 @@ export const HistoricalRoutesPlayer: React.FC = () => {
                     <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                     </svg>
-                    <span>Pausar</span>
+                    <span>{t('pause')}</span>
                   </>
                 ) : (
                   <>
                     <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg>
-                    <span>Reproducir Itinerario</span>
+                    <span>{t('playItinerary')}</span>
                   </>
                 )}
               </button>
@@ -241,7 +243,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
                 type="button"
                 onClick={handleNextStop}
                 className="w-8 h-8 rounded-lg border border-accents-2 bg-accents-1 hover:bg-accents-2 text-foreground flex items-center justify-center transition-colors cursor-pointer"
-                title="Siguiente estación"
+                title={t('nextStop')}
               >
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
@@ -252,8 +254,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
             {/* Progreso de Paradas */}
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono text-accents-4">
-                Estación <strong className="text-foreground">{currentStopIndex + 1}</strong> de{' '}
-                {activeRoute.stops.length}
+                {t('stopProgress', { current: currentStopIndex + 1, total: activeRoute.stops.length })}
               </span>
 
               {/* Selector de Velocidad */}
@@ -290,7 +291,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
                 className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-semibold text-white"
                 style={{ backgroundColor: activeRoute.color }}
               >
-                Estación {currentStop.stepNumber}
+                {t('stopBadge', { step: currentStop.stepNumber })}
               </span>
               {currentStop.durationOrYear && (
                 <span className="text-[10px] font-mono text-accents-4">
@@ -309,7 +310,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
             {/* Referencia Bíblica */}
             <div className="p-2.5 rounded-lg bg-accents-1/70 border border-accents-2 space-y-1">
               <span className="text-[10px] font-mono uppercase text-accents-4 block">
-                Cita de la Sagrada Escritura:
+                {t('scriptureQuote')}
               </span>
               <span className="text-xs font-semibold text-blue-500 font-mono block">
                 {currentStop.biblicalReference}
@@ -319,7 +320,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
             {/* Importancia Teológica / Histórica */}
             <div className="text-xs space-y-0.5">
               <span className="text-[10px] font-mono uppercase text-accents-4 block">
-                Trascendencia:
+                {t('significance')}
               </span>
               <p className="text-accents-5 italic text-[11px]">"{currentStop.significance}"</p>
             </div>
@@ -328,7 +329,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
           {/* Lista de Estaciones Cronológicas */}
           <div className="p-3 rounded-xl border border-accents-2 bg-background/50 flex-1 max-h-[180px] overflow-y-auto space-y-1">
             <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4 mb-2">
-              Itinerario Cronológico Completo ({activeRoute.totalDistanceKm} km aprox.)
+              {t('completeItinerary', { distance: activeRoute.totalDistanceKm })}
             </h4>
             {activeRoute.stops.map((s, idx) => (
               <button

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { GreekToken, InterlinearDisplaySettings } from '../types';
 import { biblicalAudioService } from '../services/biblicalAudioService';
 
@@ -23,6 +24,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
   onHover,
   onLeave,
 }) => {
+  const t = useTranslations('Interlinear');
   const [isPlaying, setIsPlaying] = useState(false);
 
   const getFontSizeClass = () => {
@@ -68,7 +70,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
           ? 'bg-amber-500/10 border-amber-500 shadow-lg ring-2 ring-amber-500/40 scale-105'
           : 'border-accents-2 bg-background hover:border-foreground hover:bg-accents-1/60 hover:shadow-md'
       }`}
-      title="Haz clic para ver el desglose morfológico del griego"
+      title={t('clickMorphologyGreekTooltip')}
     >
       {/* Orden de palabra y botón de audio */}
       <div className="w-full flex items-center justify-between text-[10px] font-mono text-accents-4 mb-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
@@ -78,7 +80,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
 
         <div className="flex items-center gap-1">
           <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-1 py-0.2 rounded border border-emerald-500/20">
-            Griego
+            {t('greekBadge')}
           </span>
 
           {/* Botón de Audio Rápido */}
@@ -88,8 +90,8 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
             className={`p-1 rounded hover:bg-accents-2 transition-colors ${
               isPlaying ? 'text-amber-500 animate-pulse' : 'text-accents-4 hover:text-foreground'
             }`}
-            title="Escuchar pronunciación bíblica auténtica"
-            aria-label="Reproducir audio griego"
+            title={t('listenPronunciation')}
+            aria-label={t('audioLabel')}
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -119,7 +121,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
       <div className="w-full space-y-1 mt-2 pt-2 border-t border-accents-1">
         {/* Lema */}
         <div className="text-[10px] font-serif text-accents-4 italic">
-          lema: {token.lemma}
+          {t('lemmaPrefix')} {token.lemma}
         </div>
 
         {/* Transliteración fonética */}
@@ -145,7 +147,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
               if (onOpenStrong) onOpenStrong(token.strong);
             }}
             className="text-[10px] font-mono text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 font-bold hover:underline cursor-pointer"
-            title="Abrir definición Strong exegética"
+            title={t('openStrongTooltip')}
           >
             {token.strong}
           </button>

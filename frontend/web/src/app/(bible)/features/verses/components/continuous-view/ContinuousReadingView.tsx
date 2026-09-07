@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Verse, ReaderFontSize, ReaderFontFamily } from '../../types';
 
 interface ContinuousReadingViewProps {
@@ -9,6 +10,7 @@ interface ContinuousReadingViewProps {
   fontFamily: ReaderFontFamily;
   showVerseNumbers: boolean;
   bookName?: string;
+  bookAbbr?: string;
   chapter?: number | null;
   translationName?: string;
   translationAbbr?: string;
@@ -20,10 +22,13 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   fontFamily,
   showVerseNumbers,
   bookName,
+  bookAbbr,
   chapter,
   translationName,
   translationAbbr,
 }) => {
+  const t = useTranslations('ReadingView');
+  const tBooks = useTranslations('Books');
   const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -60,7 +65,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       : verse.text;
 
     void navigator.clipboard.writeText(textToCopy);
-    setToastMessage(withCitation ? '¡Cita copiada con formato!' : '¡Texto copiado!');
+    setToastMessage(withCitation ? t('citationCopied') : t('textCopied'));
     setTimeout(() => setToastMessage(null), 2500);
   };
 
@@ -78,20 +83,37 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 
       {/* Cabecera del Capítulo */}
       {(() => {
-        const firstVerseBook =
-          typeof verses[0]?.book === 'object' && verses[0]?.book !== null
-            ? verses[0]?.book.name
-            : verses[0]?.book;
-        const displayBookTitle = bookName || firstVerseBook || 'Génesis';
+        const rawAbbr =
+          bookAbbr ||
+          (typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+            ? verses[0]?.book.abbreviation
+            : undefined);
+
+        const localizedBookTitle = (() => {
+          if (rawAbbr) {
+            try {
+              const translated = tBooks(rawAbbr as any);
+              if (translated) return translated;
+            } catch {
+              // fallback
+            }
+          }
+          const firstVerseBook =
+            typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+              ? verses[0]?.book.name
+              : verses[0]?.book;
+          return bookName || firstVerseBook || 'Génesis';
+        })();
+
         return (
           <div className="text-center pb-6 mb-6 border-b border-accents-2">
             <span className="text-[11px] font-mono uppercase tracking-widest text-accents-4 block mb-1">
               {translationName || translationAbbr || 'Reina-Valera 1960'}
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              {displayBookTitle}{' '}
+              {localizedBookTitle}{' '}
               {chapter !== null && (
-                <span className="font-mono text-accents-5 font-normal">Capítulo {chapter}</span>
+                <span className="font-mono text-accents-5 font-normal">{t('chapter')} {chapter}</span>
               )}
             </h2>
           </div>
@@ -120,7 +142,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                 {showVerseNumbers && (
                   <sup
                     className="text-[11px] font-mono font-bold text-accents-5 select-none mr-1.5 opacity-80 group-hover:opacity-100 group-hover:text-foreground align-super"
-                    title={`Versículo ${verse.verseNumber}`}
+                    title={t('verseTooltip', { number: verse.verseNumber })}
                   >
                     {verse.verseNumber}
                   </sup>
@@ -155,7 +177,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                     onClick={() => handleCopyVerse(activeVerse, false)}
                     className="px-2.5 py-1 text-xs rounded-lg border border-accents-2 bg-background hover:border-foreground text-accents-6 hover:text-foreground transition-all cursor-pointer"
                   >
-                    Copiar solo texto
+                    {t('copyTextOnly')}
                   </button>
                   <button
                     type="button"
@@ -165,7 +187,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    Copiar con Cita
+                    {t('copyWithCitation')}
                   </button>
                 </div>
               </>
@@ -177,13 +199,13 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       {/* Nota de Atribución Legal Oficial */}
       <div className="pt-8 mt-8 border-t border-accents-2/60 text-center">
         <p className="text-[11px] text-accents-4 font-mono leading-relaxed max-w-xl mx-auto">
-          {translationAbbr === 'NBLA' && 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.'}
-          {translationAbbr === 'NTV' && 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.'}
-          {translationAbbr === 'NIV' && 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.'}
-          {translationAbbr === 'BHS' && 'Texto Hebreo Masorético (Biblia Hebraica Stuttgartensia / WLC). Dominio Público / Licencia Académica Abierta.'}
-          {translationAbbr === 'NA28' && 'Texto Crítico Griego (Novum Testamentum Graece — NA28 / UBS 5). Dominio Público Académico.'}
-          {translationAbbr === 'RV1909' && 'Santa Biblia, Versión Reina-Valera (1909). Dominio Público Universal.'}
-          {!['NBLA', 'NTV', 'NIV', 'BHS', 'NA28', 'RV1909'].includes(translationAbbr || '') && 'Texto bíblico para propósitos de estudio y análisis exegético.'}
+          {translationAbbr === 'NBLA' && t('legalNotices.NBLA')}
+          {translationAbbr === 'NTV' && t('legalNotices.NTV')}
+          {translationAbbr === 'NIV' && t('legalNotices.NIV')}
+          {translationAbbr === 'BHS' && t('legalNotices.BHS')}
+          {translationAbbr === 'NA28' && t('legalNotices.NA28')}
+          {translationAbbr === 'RV1909' && t('legalNotices.RV1909')}
+          {!['NBLA', 'NTV', 'NIV', 'BHS', 'NA28', 'RV1909'].includes(translationAbbr || '') && t('legalNotices.default')}
         </p>
       </div>
     </div>

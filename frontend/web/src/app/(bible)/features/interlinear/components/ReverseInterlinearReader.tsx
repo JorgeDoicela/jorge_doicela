@@ -148,14 +148,14 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
                 type="button"
                 onClick={(e) => handlePlayAudio(e, activeToken)}
                 className="px-2.5 py-1.5 rounded-lg border border-accents-2 bg-background hover:bg-accents-1 text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors"
-                title="Escuchar pronunciación"
+                title={t('listenPronunciation')}
               >
                 {playingId === activeToken.id ? (
                   <span className="text-amber-500">...</span>
                 ) : (
                   <>
                     <Volume2 className="w-3.5 h-3.5 text-accents-5" />
-                    <span>Audio</span>
+                    <span>{t('audioLabel')}</span>
                   </>
                 )}
               </button>

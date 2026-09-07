@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations as useI18n } from 'next-intl';
 import { VerseList, useVerses } from '../features/verses';
 import { UnifiedPassagePicker, useBooks } from '../features/books';
 import { useTranslations } from '../features/translations';
@@ -23,6 +24,11 @@ import { HistoricalContextView } from './HistoricalContextView';
 import { BibleHeaderNav } from './BibleHeaderNav';
 
 export function BibleStudyWorkspace() {
+  const tStudy = useI18n('StudyLayout');
+  const tParallel = useI18n('Parallel');
+  const tInterlinear = useI18n('Interlinear');
+  const tNav = useI18n('Nav');
+
   const [studyMode, setStudyMode] = useState<BibleStudyMode>('standard');
   const [diffModalOpen, setDiffModalOpen] = useState(false);
   const [activeDiffData, setActiveDiffData] = useState<VerseComparisonData | null>(null);
@@ -68,7 +74,7 @@ export function BibleStudyWorkspace() {
   } = useParallelVerses(
     selectedBookId,
     selectedChapter,
-    selectedTranslationId ? [selectedTranslationId, selectedTranslationId === 1 ? 2 : 1] : [1, 2],
+    selectedTranslationId ? [selectedTranslationId, selectedTranslationId === 3 ? 5 : 3] : [3, 5],
   );
 
   const handleOpenDiffModal = (row: ParallelVerseRow) => {
@@ -148,22 +154,24 @@ export function BibleStudyWorkspace() {
             <div className="flex items-center gap-2">
               {studyMode === 'parallel' && (
                 <span className="text-[11px] font-mono text-accents-4 bg-accents-1 px-2.5 py-1 rounded-lg border border-accents-2">
-                  {columns.length} {columns.length === 1 ? 'versión' : 'versiones'} en paralelo
+                  {columns.length === 1
+                    ? tParallel('parallelCountSingle')
+                    : tParallel('parallelCountMulti', { count: columns.length })}
                 </span>
               )}
               {studyMode === 'interlinear' && (
                 <span className="text-[11px] font-mono text-amber-500/90 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
-                  {selectedBook?.testament === 'NT' ? 'Griego (NA28 / TR)' : 'Hebreo / Arameo (BHS)'}
+                  {selectedBook?.testament === 'NT' ? tInterlinear('activeOriginalBadgeNt') : tInterlinear('activeOriginalBadgeOt')}
                 </span>
               )}
               {studyMode === 'literary' && (
                 <span className="text-[11px] font-mono text-emerald-500/90 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                  Estructuras Quiásticas
+                  {tNav('literary')}
                 </span>
               )}
               {studyMode === 'grammar-search' && (
                 <span className="text-[11px] font-mono text-cyan-500/90 bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">
-                  Motor Morfológico
+                  {tNav('wordStudy')}
                 </span>
               )}
             </div>
@@ -213,6 +221,7 @@ export function BibleStudyWorkspace() {
               onToggleVerseNumbers={toggleVerseNumbers}
               books={books}
               selectedBookId={selectedBookId}
+              onSelectPassage={handlePassageSelect}
               onSelectBook={setSelectedBookId}
               selectedBookName={selectedBook?.name}
               selectedBookAbbr={selectedBook?.abbreviation}
@@ -241,14 +250,14 @@ export function BibleStudyWorkspace() {
       {/* Footer */}
       <footer className="border-t border-accents-2 w-full py-6 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
-          <div>Jorge Doicela &copy; {new Date().getFullYear()} • Biblia Modular</div>
+          <div>{tStudy('title', { year: new Date().getFullYear().toString() })}</div>
           <div className="flex gap-4">
             <a href="/bible" className="hover:text-foreground transition-colors duration-150">
-              Presentación
+              {tStudy('presentation')}
             </a>
             <span className="text-accents-2">|</span>
             <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-              Sagradas Escrituras
+              {tStudy('holyScriptures')}
             </span>
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { useSyncFilter } from '../hooks/useSyncFilter';
 import { TimelineSelectedItem } from '../types';
 
@@ -13,6 +14,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
   cursorYearBC,
   onSelectItem,
 }) => {
+  const t = useTranslations('Timeline');
   const { judahMonarchs, israelMonarchs, activeProphets, activeEmpires, nearbyMilestones } =
     useSyncFilter(cursorYearBC);
 
@@ -24,12 +26,11 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-rose-500" />
           <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            Sincronismo Bíblico e Histórico en el Año{' '}
-            <span className="text-rose-500 font-mono text-xs sm:text-sm">{cursorYearBC} a.C.</span>
+            {t('syncTitle', { year: cursorYearBC, era: t('bc') })}
           </h3>
         </div>
         <span className="text-[10px] font-mono text-accents-4 hidden sm:inline">
-          Haz clic en la línea de tiempo para fijar el año · Clic en entidad para ver su ficha
+          {t('syncHelp')}
         </span>
       </div>
 
@@ -39,12 +40,12 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
           <div className="flex items-center gap-1.5 shrink-0 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
             <span className="text-[11px] font-bold text-foreground truncate tracking-tight">
-              Trono de Judá (Sur)
+              {t('judahThrone')}
             </span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
             {judahMonarchs.length > 0 ? (
-              judahMonarchs.map((m) => (
+               judahMonarchs.map((m) => (
                 <button
                   key={m.id}
                   type="button"
@@ -58,7 +59,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
                 </button>
               ))
             ) : (
-              <p className="text-[10.5px] text-accents-4 italic pt-1.5">Sin monarca o en cautiverio</p>
+              <p className="text-[10.5px] text-accents-4 italic pt-1.5">{t('noMonarch')}</p>
             )}
           </div>
         </div>
@@ -68,7 +69,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
           <div className="flex items-center gap-1.5 shrink-0 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
             <span className="text-[11px] font-bold text-foreground truncate tracking-tight">
-              Trono de Israel (Norte)
+              {t('israelThrone')}
             </span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
@@ -88,7 +89,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
               ))
             ) : (
               <p className="text-[10.5px] text-accents-4 italic pt-1.5">
-                {cursorYearBC < 722 ? 'Reino disuelto tras Samaria' : 'Antes de la división'}
+                {cursorYearBC < 722 ? t('kingdomDissolved') : t('beforeDivision')}
               </p>
             )}
           </div>
@@ -99,7 +100,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
           <div className="flex items-center gap-1.5 shrink-0 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
             <span className="text-[11px] font-bold text-foreground truncate tracking-tight">
-              Profetas Contemporáneos
+              {t('contemporaryProphets')}
             </span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
@@ -118,7 +119,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
                 </button>
               ))
             ) : (
-              <p className="text-[10.5px] text-accents-4 italic pt-1.5">Silencio o profetas orales</p>
+              <p className="text-[10.5px] text-accents-4 italic pt-1.5">{t('silenceOrOral')}</p>
             )}
           </div>
         </div>
@@ -128,7 +129,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
           <div className="flex items-center gap-1.5 shrink-0 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" />
             <span className="text-[11px] font-bold text-foreground truncate tracking-tight">
-              Potencia Mundial
+              {t('worldPower')}
             </span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
@@ -147,7 +148,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
                 </button>
               ))
             ) : (
-              <p className="text-[10.5px] text-accents-4 italic pt-1.5">Poderes regionales locales</p>
+              <p className="text-[10.5px] text-accents-4 italic pt-1.5">{t('localPowers')}</p>
             )}
           </div>
         </div>
@@ -157,7 +158,7 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
           <div className="flex items-center gap-1.5 shrink-0 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
             <span className="text-[11px] font-bold text-foreground truncate tracking-tight">
-              Hito Arqueológico
+              {t('archaeologicalMilestone')}
             </span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
@@ -172,12 +173,12 @@ export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps>
                 >
                   <span className="truncate block">{m.title}</span>
                   <span className="text-[9.5px] font-mono text-amber-600 dark:text-amber-400 font-bold shrink-0 ml-1">
-                    {m.yearBC} {m.isAD ? 'd.C.' : 'a.C.'}
+                    {m.yearBC} {m.isAD ? t('ad') : t('bc')}
                   </span>
                 </button>
               ))
             ) : (
-              <p className="text-[10.5px] text-accents-4 italic pt-1.5">Sin inscripción exacta</p>
+              <p className="text-[10.5px] text-accents-4 italic pt-1.5">{t('noExactInscription')}</p>
             )}
           </div>
         </div>

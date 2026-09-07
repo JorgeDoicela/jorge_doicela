@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { TimelineSelectedItem } from '../types';
 
 interface TimelineDetailDrawerProps {
@@ -12,6 +13,8 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
   selectedItem,
   onClose,
 }) => {
+  const t = useTranslations('Timeline');
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -35,15 +38,15 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           <span className="text-[10px] font-mono uppercase tracking-widest font-semibold block mb-0.5 text-blue-500">
             {selectedItem.type === 'monarch'
               ? selectedItem.data.kingdom === 'united'
-                ? 'Monarquía Unida de Israel'
+                ? t('unitedMonarchy')
                 : selectedItem.data.kingdom === 'judah'
-                ? 'Reino de Judá (Sur)'
-                : 'Reino de Israel (Norte)'
+                ? t('judahKingdomTitle')
+                : t('israelKingdomTitle')
               : selectedItem.type === 'prophet'
-              ? 'Profeta de Yahvé'
+              ? t('prophetTitle')
               : selectedItem.type === 'empire'
-              ? 'Potencia / Imperio Contemporáneo'
-              : 'Hito Arqueológico Fechado'}
+              ? t('empireTitle')
+              : t('milestoneTitle')}
           </span>
           <h3 className="text-lg font-bold text-foreground leading-tight">
             {selectedItem.type === 'monarch'
@@ -56,19 +59,19 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           </h3>
           <p className="text-xs text-accents-5 font-mono">
             {selectedItem.type === 'monarch'
-              ? `${selectedItem.data.startYearBC} - ${selectedItem.data.endYearBC} a.C. (${selectedItem.data.reignDurationYears} años)`
+              ? `${selectedItem.data.startYearBC} - ${selectedItem.data.endYearBC} ${t('bc')} (${selectedItem.data.reignDurationYears} ${t('years')})`
               : selectedItem.type === 'prophet'
-              ? `${selectedItem.data.startYearBC} - ${selectedItem.data.endYearBC} a.C.`
+              ? `${selectedItem.data.startYearBC} - ${selectedItem.data.endYearBC} ${t('bc')}`
               : selectedItem.type === 'empire'
-              ? `${selectedItem.data.startYearBC} - ${selectedItem.data.endYearBC} a.C.`
-              : `${selectedItem.data.yearBC} ${selectedItem.data.isAD ? 'd.C.' : 'a.C.'}`}
+              ? `${selectedItem.data.startYearBC} - ${selectedItem.data.endYearBC} ${t('bc')}`
+              : `${selectedItem.data.yearBC} ${selectedItem.data.isAD ? t('ad') : t('bc')}`}
           </p>
         </div>
         <button
           type="button"
           onClick={onClose}
           className="p-1 rounded-md text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer"
-          title="Cerrar ficha"
+          title={t('closeDrawer')}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -82,17 +85,17 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           {/* Nombre Original y Evaluación Moral */}
           <div className="p-3 rounded-lg bg-accents-1/60 border border-accents-2 space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-accents-5 font-mono">Hebreo:</span>
+              <span className="text-accents-5 font-mono">{t('hebrew')}</span>
               <span className="font-serif text-sm font-bold text-amber-500">
                 {selectedItem.data.originalName.hebrew}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-accents-5 font-mono">Significado:</span>
+              <span className="text-accents-5 font-mono">{t('meaning')}</span>
               <span className="italic text-foreground">"{selectedItem.data.originalName.meaning}"</span>
             </div>
             <div className="flex items-center justify-between pt-1 border-t border-accents-2">
-              <span className="text-accents-5 font-mono">Evaluación Bíblica:</span>
+              <span className="text-accents-5 font-mono">{t('biblicalEvaluation')}</span>
               <span
                 className={`font-semibold px-2 py-0.5 rounded text-[10px] ${
                   selectedItem.data.evaluation === 'good'
@@ -103,10 +106,10 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
                 }`}
               >
                 {selectedItem.data.evaluation === 'good'
-                  ? 'Hizo lo recto ante Yahvé'
+                  ? t('evalGood')
                   : selectedItem.data.evaluation === 'bad'
-                  ? 'Hizo lo malo ante los ojos de Yahvé'
-                  : 'Reinado Mixto / Desvío final'}
+                  ? t('evalBad')
+                  : t('evalMixed')}
               </span>
             </div>
           </div>
@@ -114,7 +117,7 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           {/* Hechos Relevantes */}
           <div className="space-y-1.5">
             <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
-              Acontecimientos del Reinado
+              {t('reignEvents')}
             </h4>
             <ul className="space-y-1">
               {selectedItem.data.keyEvents.map((evt, i) => (
@@ -130,7 +133,7 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           {selectedItem.data.prophetsContemporary.length > 0 && (
             <div className="space-y-1.5">
               <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
-                Profetas Contemporáneos
+                {t('contemporaryProphets')}
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {selectedItem.data.prophetsContemporary.map((prof, i) => (
@@ -149,7 +152,7 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           {selectedItem.data.archaeologicalCorroboration && (
             <div className="p-3 rounded-xl bg-accents-1/60 border border-accents-2 space-y-1 shadow-2xs">
               <span className="text-[10px] font-mono uppercase text-amber-600 dark:text-amber-400 font-bold tracking-wider block">
-                Evidencia Epigráfica / Arqueológica:
+                {t('archaeologicalEvidence')}
               </span>
               <p className="text-foreground text-[11px] leading-relaxed">
                 {selectedItem.data.archaeologicalCorroboration}
@@ -160,7 +163,7 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
           {/* Citas Bíblicas */}
           <div className="space-y-1.5 pt-1 border-t border-accents-2">
             <span className="text-[10px] font-mono uppercase text-accents-4 block">
-              Registros en el Canon:
+              {t('canonRecords')}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {selectedItem.data.biblicalReferences.map((ref, i) => (
@@ -181,41 +184,41 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
         <div className="space-y-3 text-xs">
           <div className="p-3 rounded-xl bg-accents-1/60 border border-accents-2 space-y-1.5 shadow-2xs">
             <div className="flex items-center justify-between">
-              <span className="text-accents-5 font-mono">Hebreo:</span>
+              <span className="text-accents-5 font-mono">{t('hebrew')}</span>
               <span className="font-serif text-sm font-bold text-emerald-600 dark:text-emerald-400">
                 {selectedItem.data.originalName.hebrew}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-accents-5 font-mono">Significado:</span>
+              <span className="text-accents-5 font-mono">{t('meaning')}</span>
               <span className="italic text-foreground">"{selectedItem.data.originalName.meaning}"</span>
             </div>
             <div className="flex items-center justify-between pt-1 border-t border-accents-2">
-              <span className="text-accents-5 font-mono">Destinatario:</span>
+              <span className="text-accents-5 font-mono">{t('recipient')}</span>
               <span className="font-mono text-foreground uppercase font-semibold text-[10px]">
                 {selectedItem.data.audience === 'judah'
-                  ? 'Reino de Judá'
+                  ? t('audienceJudah')
                   : selectedItem.data.audience === 'israel'
-                  ? 'Reino de Israel'
+                  ? t('audienceIsrael')
                   : selectedItem.data.audience === 'nineveh'
-                  ? 'Imperio Asirio / Nínive'
+                  ? t('audienceNineveh')
                   : selectedItem.data.audience === 'babylon'
-                  ? 'Cautivos en Babilonia'
-                  : 'Comunidad del Retorno'}
+                  ? t('audienceBabylon')
+                  : t('audienceReturn')}
               </span>
             </div>
           </div>
 
           <div className="space-y-1">
             <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
-              Mensaje Central del Oráculo
+              {t('oracleKeyMessage')}
             </h4>
             <p className="text-foreground leading-relaxed">{selectedItem.data.keyMessage}</p>
           </div>
 
           <div className="space-y-1.5">
             <h4 className="text-[10.5px] font-mono uppercase tracking-wider text-accents-4">
-              Pasajes Bíblicos Clave
+              {t('keyPassages')}
             </h4>
             <div className="space-y-1">
               {selectedItem.data.keyPassages.map((p, i) => (
@@ -240,7 +243,7 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
 
           <div className="space-y-1">
             <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
-              Interacción con la Historia Bíblica
+              {t('interactionHistory')}
             </h4>
             <p className="text-foreground leading-relaxed">
               {selectedItem.data.interactionWithBiblicalHistory}
@@ -249,7 +252,7 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
 
           <div className="space-y-1.5">
             <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
-              Hallazgos Arqueológicos
+              {t('archaeologicalArtifacts')}
             </h4>
             <ul className="space-y-1">
               {selectedItem.data.archaeologicalArtifacts.map((art, i) => (
@@ -272,20 +275,20 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
             </span>
             <p className="text-foreground text-sm font-bold leading-snug">{selectedItem.data.artifactFound}</p>
             <p className="text-accents-5 text-[11px] font-mono">
-              Ubicación actual: {selectedItem.data.museumLocation}
+              {t('currentLocation')} {selectedItem.data.museumLocation}
             </p>
           </div>
 
           <div className="space-y-1">
             <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
-              Importancia para la Veracidad Bíblica
+              {t('biblicalVeracitySignificance')}
             </h4>
             <p className="text-foreground leading-relaxed">{selectedItem.data.significance}</p>
           </div>
 
           <div className="p-3 rounded-xl bg-accents-1/60 border border-accents-2 shadow-2xs">
             <span className="text-[10px] font-mono uppercase text-accents-4 block mb-0.5">
-              Cita Bíblica Vinculada:
+              {t('linkedBiblicalQuote')}
             </span>
             <span className="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">
               {selectedItem.data.biblicalReference}

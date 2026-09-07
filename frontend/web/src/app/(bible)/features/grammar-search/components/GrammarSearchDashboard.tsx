@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { GrammarSearchTab } from '../types';
 import { useGrammarSearch } from '../hooks/useGrammarSearch';
 import { MorphologyQuickPresets } from './MorphologyQuickPresets';
@@ -11,6 +12,7 @@ import { ExhaustiveConcordanceSearch } from './ExhaustiveConcordanceSearch';
 import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 
 export const GrammarSearchDashboard: React.FC = () => {
+  const t = useTranslations('GrammarSearch');
   const [activeTab, setActiveTab] = useState<GrammarSearchTab>('morphology');
 
   const {
@@ -39,7 +41,7 @@ export const GrammarSearchDashboard: React.FC = () => {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-blue-500" />
-            Filtro Morfológico (Grammar Search)
+            {t('tabs.morphology')}
           </button>
           <button
             type="button"
@@ -51,7 +53,7 @@ export const GrammarSearchDashboard: React.FC = () => {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-purple-500" />
-            Análisis de Raíz & Scatter Plot Canónico
+            {t('tabs.scatter')}
           </button>
           <button
             type="button"
@@ -63,12 +65,12 @@ export const GrammarSearchDashboard: React.FC = () => {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            Buscador Booleano & Concordancia
+            {t('tabs.concordance')}
           </button>
         </div>
 
         <div className="text-[11px] font-mono text-accents-4 hidden lg:block pr-2">
-          Análisis sintáctico y lematización de textos originales
+          {t('headerSubtitle')}
         </div>
       </div>
 
@@ -102,9 +104,9 @@ export const GrammarSearchDashboard: React.FC = () => {
       {/* Aviso de Expansión Continua de Tagging Morfológico */}
       <div className="pt-6">
         <OngoingExpansionNotice
-          contextTitle="Motor de Búsqueda Morfológica en Crecimiento"
-          contextDescription="Esta es una plataforma nueva que está en constante desarrollo. Me esfuerzo al máximo por realizar un trabajo minucioso y de excelencia, etiquetando cada raíz, binyan hebreo (Qal, Piel, Hifil), tiempo verbal griego y caso sintáctico en todo el corpus bíblico."
-          activeItemsSummary="Consultas sintácticas activas: Verbos Aoristos en Juan y Romanos, Participios Absolutos y Formas Cohortativas."
+          contextTitle={t('expansionTitle')}
+          contextDescription={t('expansionDesc')}
+          activeItemsSummary={t('expansionSummary')}
         />
       </div>
     </div>

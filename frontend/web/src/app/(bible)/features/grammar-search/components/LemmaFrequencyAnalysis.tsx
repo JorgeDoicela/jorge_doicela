@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { useLemmaFrequency } from '../hooks/useLemmaFrequency';
 import { CanonicalScatterPlot } from './CanonicalScatterPlot';
 
 export const LemmaFrequencyAnalysis: React.FC = () => {
+  const t = useTranslations('GrammarSearch');
   const {
     selectedLemmaId,
     setSelectedLemmaId,
@@ -24,10 +26,10 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
     return (
       <div className="p-8 text-center rounded-xl border border-accents-2 bg-background space-y-2">
         <h3 className="text-sm font-semibold text-foreground">
-          Análisis de Raíz & Scatter Plot Canónico
+          {t('lemmaAnalysis.emptyTitle')}
         </h3>
         <p className="text-xs text-accents-4 max-w-md mx-auto">
-          Utiliza el buscador morfológico o realiza consultas léxicas para visualizar la distribución cuantitativa de lemas a lo largo de los 66 libros de la Biblia.
+          {t('lemmaAnalysis.emptyDesc')}
         </p>
       </div>
     );
@@ -43,7 +45,7 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar Lema (ej. logos, bara, agapao, pistis, chesed, G3056, H1254)..."
+              placeholder={t('lemmaAnalysis.searchPlaceholder')}
               className="w-full px-3.5 py-2 pl-9 rounded-lg text-xs bg-accents-1 border border-accents-2 text-foreground placeholder:text-accents-4 focus:outline-none focus:border-blue-500 transition-colors"
             />
             <svg
@@ -62,7 +64,7 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
           </div>
 
           <div className="text-[11px] font-mono text-accents-4 shrink-0">
-            {availableLemmas.length} lemas disponibles
+            {t('lemmaAnalysis.availableLemmas', { count: availableLemmas.length })}
           </div>
         </div>
 
@@ -119,7 +121,7 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-accents-5 max-w-xl">
-              <span className="font-semibold text-foreground">Significado exegético:</span>{' '}
+              <span className="font-semibold text-foreground">{t('lemmaAnalysis.exegeticalMeaning')}</span>{' '}
               &quot;{activeLemmaData.primaryGloss}&quot;
             </p>
             {activeLemmaData.rootFamily && (
@@ -144,48 +146,48 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
           {/* 1. Total Ocurrencias */}
           <div className="p-3.5 rounded-lg bg-background border border-accents-2">
             <div className="text-[10px] font-mono uppercase tracking-wider text-accents-4 mb-1">
-              Ocurrencias Totales
+              {t('lemmaAnalysis.totalOccurrences')}
             </div>
             <div className="text-xl font-bold text-foreground">
               {activeLemmaData.totalOccurrences}
             </div>
             <div className="text-[10px] text-accents-5 font-mono">
-              en los 66 libros canónicos
+              {t('lemmaAnalysis.in66Books')}
             </div>
           </div>
 
           {/* 2. Distribución Testamental */}
           <div className="p-3.5 rounded-lg bg-background border border-accents-2">
             <div className="text-[10px] font-mono uppercase tracking-wider text-accents-4 mb-1">
-              Testamentos
+              {t('lemmaAnalysis.testaments')}
             </div>
             <div className="text-sm font-bold text-foreground">
               AT: {activeLemmaData.otOccurrences} • NT: {activeLemmaData.ntOccurrences}
             </div>
             <div className="text-[10px] text-accents-5 font-mono">
               {activeLemmaData.language === 'Griego'
-                ? 'Exclusivo del Nuevo Testamento'
-                : 'Exclusivo del Antiguo Testamento'}
+                ? t('lemmaAnalysis.exclusiveNt')
+                : t('lemmaAnalysis.exclusiveOt')}
             </div>
           </div>
 
           {/* 3. Libro de Mayor Concentración */}
           <div className="p-3.5 rounded-lg bg-background border border-accents-2">
             <div className="text-[10px] font-mono uppercase tracking-wider text-accents-4 mb-1">
-              Pico de Frecuencia
+              {t('lemmaAnalysis.frequencyPeak')}
             </div>
             <div className="text-sm font-bold text-foreground truncate">
               {activeLemmaData.peakBook.bookName} ({activeLemmaData.peakBook.bookAbbr})
             </div>
             <div className="text-[10px] text-blue-500 font-mono font-semibold">
-              {activeLemmaData.peakBook.count} veces ({activeLemmaData.peakBook.percentage}% del total)
+              {t('lemmaAnalysis.peakStat', { count: activeLemmaData.peakBook.count, percentage: activeLemmaData.peakBook.percentage })}
             </div>
           </div>
 
           {/* 4. Género Literario Predominante */}
           <div className="p-3.5 rounded-lg bg-background border border-accents-2">
             <div className="text-[10px] font-mono uppercase tracking-wider text-accents-4 mb-1">
-              Género Principal
+              {t('lemmaAnalysis.mainGenre')}
             </div>
             <div className="text-sm font-bold text-foreground">
               {Object.entries(activeLemmaData.distributionByGenre).reduce((a, b) =>
@@ -193,7 +195,7 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
               )[0]}
             </div>
             <div className="text-[10px] text-accents-5 font-mono">
-              Mayor densidad teológica
+              {t('lemmaAnalysis.highestTheologicalDensity')}
             </div>
           </div>
         </div>
@@ -209,7 +211,7 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
       {/* Versículos Clave de Muestra */}
       <div className="p-4 sm:p-5 rounded-xl border border-accents-2 bg-background space-y-3">
         <h4 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-          Pasajes Exegéticos Clave con &quot;{activeLemmaData.originalScript}&quot;
+          {t('lemmaAnalysis.keyPassagesWith', { lemma: activeLemmaData.originalScript })}
         </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -230,7 +232,7 @@ export const LemmaFrequencyAnalysis: React.FC = () => {
                 {verse.spanishText}
               </p>
               <div className="text-[11px] text-accents-4 italic font-mono">
-                Glosa contextual: &quot;{verse.gloss}&quot;
+                {t('lemmaAnalysis.contextualGloss')} &quot;{verse.gloss}&quot;
               </div>
             </div>
           ))}

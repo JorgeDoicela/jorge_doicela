@@ -73,7 +73,7 @@ export const BibleHeaderNav: React.FC = () => {
           >
             <BibleLogo />
             <span className="font-semibold text-xs sm:text-sm tracking-tight hidden sm:inline-block">
-              Biblia Modular
+              {t('modularBible')}
             </span>
           </Link>
         </div>
@@ -84,7 +84,7 @@ export const BibleHeaderNav: React.FC = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-accents-2 bg-accents-1 text-foreground text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
             aria-expanded={mobileMenuOpen}
-            aria-label="Seleccionar suite de estudio"
+            aria-label={t('selectSuite')}
           >
             {activeTab.dotColor && (
               <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${activeTab.dotColor}`} />
@@ -97,7 +97,7 @@ export const BibleHeaderNav: React.FC = () => {
           {mobileMenuOpen && (
             <div className="absolute top-full left-0 mt-1.5 w-60 rounded-xl border border-accents-2 bg-background/95 backdrop-blur-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="text-[10px] font-mono uppercase tracking-wider text-accents-4 px-2 py-1">
-                Suites de Estudio
+                {t('studySuites')}
               </div>
               <div className="flex flex-col gap-0.5">
                 {NAV_TABS.map((tab) => {

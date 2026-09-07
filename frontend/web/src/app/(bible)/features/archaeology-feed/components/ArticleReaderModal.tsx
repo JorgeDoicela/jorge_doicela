@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { ArchaeologyArticle } from '../types';
 import { EpigraphyViewer } from './EpigraphyViewer';
 
@@ -10,6 +11,8 @@ interface ArticleReaderModalProps {
 }
 
 export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article, onClose }) => {
+  const t = useTranslations('ArchaeologyFeed');
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -43,14 +46,14 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article,
               </span>
               <span className="text-[10px] font-mono text-accents-4">•</span>
               <span className="text-[10px] font-mono text-accents-4">
-                Publicado: {article.publishDate}
+                {t('published')} {article.publishDate}
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
               {article.title}
             </h2>
             <p className="text-xs text-accents-5 font-mono">
-              Institución: {article.institutionOrAuthor}
+              {t('institution')} {article.institutionOrAuthor}
             </p>
           </div>
 
@@ -58,7 +61,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article,
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer"
-            title="Cerrar artículo"
+            title={t('closeModal')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -70,13 +73,13 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article,
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-accents-1/60 border border-accents-2 text-xs">
           <div>
             <span className="text-[10px] font-mono uppercase text-accents-4 block">
-              Artefacto Principal:
+              {t('keyArtifact')}
             </span>
             <p className="font-semibold text-foreground">{article.keyArtifact}</p>
           </div>
           <div>
             <span className="text-[10px] font-mono uppercase text-accents-4 block">
-              Custodia Actual / Museo:
+              {t('currentCustody')}
             </span>
             <p className="font-semibold text-foreground">{article.museumOrLocation}</p>
           </div>
@@ -93,7 +96,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article,
         {/* Referencias Bíblicas Conectadas */}
         <div className="p-4 rounded-xl border border-accents-2 bg-background space-y-2 pt-4">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-accents-5">
-            Pasajes Bíblicos Vinculados al Hallazgo
+            {t('linkedBiblicalPassages')}
           </h4>
           <div className="space-y-2">
             {article.biblicalReferences.map((ref, idx) => (
@@ -110,9 +113,9 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article,
         {/* Footer del Modal */}
         <div className="flex items-center justify-between pt-4 border-t border-accents-2 text-xs">
           <div className="flex flex-wrap gap-1">
-            {article.tags.map((t, idx) => (
+            {article.tags.map((tag, idx) => (
               <span key={idx} className="px-2 py-0.5 rounded-md bg-accents-1 text-[10px] font-mono text-accents-4">
-                #{t}
+                #{tag}
               </span>
             ))}
           </div>
@@ -122,7 +125,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ article,
             onClick={onClose}
             className="px-4 py-2 rounded-lg bg-foreground text-background font-semibold text-xs hover:opacity-90 transition-opacity cursor-pointer"
           >
-            Cerrar Lectura
+            {t('closeReading')}
           </button>
         </div>
       </div>

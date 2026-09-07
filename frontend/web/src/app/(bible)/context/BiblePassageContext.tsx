@@ -2,9 +2,17 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { useBooks, Book } from '../features/books';
 import { getChaptersForBookId } from '../features/books/data/canonicCategories';
-import { useTranslations, Translation } from '../features/translations';
+import {
+  useTranslations,
+  Translation,
+  resolveInitialTranslationId,
+  saveTranslationPreference,
+  getDefaultTranslationId,
+  getTranslationLanguageGroup,
+} from '../features/translations';
 
 interface BiblePassageContextValue {
   books: Book[];
@@ -30,6 +38,7 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const locale = useLocale();
 
   const { books } = useBooks();
   const { translations } = useTranslations();
@@ -55,13 +64,33 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
     return 1;
   });
 
+  // Resolución profesional: 1) URL -> 2) localStorage -> 3) Locale (ES: NBLA [3], EN: NIV [5])
   const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(() => {
-    if (initialTransParam) {
-      const parsed = parseInt(initialTransParam, 10);
-      if (!isNaN(parsed) && parsed > 0) return parsed;
-    }
-    return 1; // Reina-Valera 1960 por defecto
+    return resolveInitialTranslationId({
+      urlParam: initialTransParam,
+      locale,
+    });
   });
+
+  // Reaccionar al cambio de idioma de la interfaz (ES <-> EN) de manera inmediata y fluida
+  useEffect(() => {
+    const cleanLocale = locale && locale.toLowerCase().startsWith('en') ? 'en' : 'es';
+    const currentGroup = selectedTranslationId
+      ? getTranslationLanguageGroup(selectedTranslationId)
+      : null;
+
+    // Si la traducción actual pertenece a un idioma distinto al nuevo locale de la app
+    if (currentGroup && currentGroup !== 'ancient' && currentGroup !== cleanLocale) {
+      const preferredId = resolveInitialTranslationId({ locale: cleanLocale });
+      setSelectedTranslationId(preferredId);
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('book', selectedBookId.toString());
+      params.set('chapter', selectedChapter.toString());
+      params.set('trans', preferredId.toString());
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [locale, selectedTranslationId, selectedBookId, selectedChapter, searchParams, pathname, router]);
 
   // Si los libros cargan y se especificó una abreviatura en la URL
   useEffect(() => {
@@ -106,8 +135,12 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   };
 
   const handleSetTranslation = (id: number | null) => {
-    setSelectedTranslationId(id);
-    updateUrlParams(selectedBookId, selectedChapter, id);
+    const targetId = id ?? getDefaultTranslationId(locale);
+    if (id !== null) {
+      saveTranslationPreference(id, locale);
+    }
+    setSelectedTranslationId(targetId);
+    updateUrlParams(selectedBookId, selectedChapter, targetId);
   };
 
   const nextChapter = () => {

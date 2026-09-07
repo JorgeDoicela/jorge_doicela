@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { UnifiedPassagePicker } from '../features/books';
 import { useBiblePassage } from '../context/BiblePassageContext';
 
@@ -9,6 +10,7 @@ interface BiblePassageToolbarProps {
 }
 
 export const BiblePassageToolbar: React.FC<BiblePassageToolbarProps> = ({ rightBadge }) => {
+  const t = useTranslations('Toolbar');
   const { books, selectedBookId, selectedChapter, setPassage, nextChapter, prevChapter } =
     useBiblePassage();
 
@@ -16,7 +18,7 @@ export const BiblePassageToolbar: React.FC<BiblePassageToolbarProps> = ({ rightB
     <section className="border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
       <div className="flex items-center gap-2">
         <span className="text-[11px] font-mono uppercase tracking-wider text-accents-5 hidden sm:inline">
-          Pasaje Activo:
+          {t('activePassage')}
         </span>
         <UnifiedPassagePicker
           books={books}

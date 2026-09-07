@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { MorphologicalTokenResult } from '../types';
 
 interface MorphologyResultsListProps {
@@ -8,6 +9,7 @@ interface MorphologyResultsListProps {
 }
 
 export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ results }) => {
+  const t = useTranslations('GrammarSearch');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopy = (token: MorphologicalTokenResult) => {
@@ -34,10 +36,10 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
           />
         </svg>
         <h3 className="text-sm font-semibold text-foreground mb-1">
-          No se encontraron tokens morfológicos
+          {t('noTokensTitle')}
         </h3>
         <p className="text-xs text-accents-5 max-w-md mx-auto">
-          Prueba ampliando los criterios de búsqueda (ej. seleccionar &quot;Cualquier Modo&quot; o &quot;Todo el Canon&quot;) o utilizando uno de los presets exegéticos superiores.
+          {t('noTokensDesc')}
         </p>
       </div>
     );
@@ -48,10 +50,12 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
       {/* Header de Resultados */}
       <div className="flex items-center justify-between px-1">
         <span className="text-xs font-semibold text-foreground">
-          {results.length} {results.length === 1 ? 'coincidencia morfológica' : 'coincidencias morfológicas'}
+          {results.length === 1
+            ? t('matchCountSingle')
+            : t('matchCountMulti', { count: results.length })}
         </span>
         <span className="text-[11px] font-mono text-accents-4">
-          Orden canónico de las Escrituras
+          {t('canonicalOrder')}
         </span>
       </div>
 
@@ -59,7 +63,6 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
       <div className="grid grid-cols-1 gap-3.5">
         {results.map((token) => {
           const isGreek = token.language === 'Griego';
-          const isHebrew = token.language === 'Hebreo' || token.language === 'Arameo';
 
           return (
             <div
@@ -94,10 +97,10 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
                     type="button"
                     onClick={() => handleCopy(token)}
                     className="p-1 rounded hover:bg-accents-1 text-accents-4 hover:text-foreground transition-colors cursor-pointer"
-                    title="Copiar referencia exegética"
+                    title={t('copyRefTooltip')}
                   >
                     {copiedId === token.id ? (
-                      <span className="text-[10px] text-emerald-500 font-mono font-bold">¡Copiado!</span>
+                      <span className="text-[10px] text-emerald-500 font-mono font-bold">{t('copied')}</span>
                     ) : (
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
@@ -118,9 +121,9 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
                 <div className="md:col-span-5 space-y-1">
                   <div className="flex items-baseline gap-2.5">
                     <span
-                      dir={isHebrew ? 'rtl' : 'ltr'}
+                      dir={token.language === 'Hebreo' || token.language === 'Arameo' ? 'rtl' : 'ltr'}
                       className={`text-2xl font-bold tracking-wide ${
-                        isHebrew
+                        token.language === 'Hebreo' || token.language === 'Arameo'
                           ? 'font-serif text-amber-600 dark:text-amber-400'
                           : 'font-serif text-blue-600 dark:text-blue-400'
                       }`}
@@ -132,7 +135,7 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
                     </span>
                   </div>
                   <div className="text-xs text-accents-5 flex items-center gap-1.5">
-                    <span className="font-semibold text-foreground">Lema:</span>
+                    <span className="font-semibold text-foreground">{t('lemmaLabel')}</span>
                     <span className="font-serif font-bold text-foreground">{token.lemma}</span>
                     <span className="text-accents-4">•</span>
                     <span className="italic text-foreground font-medium">&quot;{token.gloss}&quot;</span>
@@ -142,7 +145,7 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
                 {/* Desglose gramatical Robinson */}
                 <div className="md:col-span-7 p-2.5 rounded-lg bg-accents-1 border border-accents-2">
                   <div className="text-[10px] font-mono uppercase tracking-wider text-accents-4 mb-0.5">
-                    Desglose Morfológico Exegético
+                    {t('exegeticalParsing')}
                   </div>
                   <div className="text-xs font-semibold text-foreground">
                     {token.parsingSummary}
@@ -154,7 +157,7 @@ export const MorphologyResultsList: React.FC<MorphologyResultsListProps> = ({ re
               <div className="space-y-1.5 pt-1">
                 {/* Texto Original */}
                 <div
-                  dir={isHebrew ? 'rtl' : 'ltr'}
+                  dir={token.language === 'Hebreo' || token.language === 'Arameo' ? 'rtl' : 'ltr'}
                   className="text-xs font-serif text-accents-5 leading-relaxed bg-background/50 p-2 rounded border border-accents-1"
                 >
                   {token.fullVerseContext.originalText}

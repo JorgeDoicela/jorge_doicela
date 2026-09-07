@@ -71,7 +71,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
               ? 'bg-foreground text-background font-semibold border-foreground'
               : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
           }`}
-          title="Puntos vocálicos masoréticos y cantilación"
+          title={t('nikkudTooltip')}
         >
           {t('nikkud')}
         </button>
@@ -84,7 +84,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
               ? 'bg-foreground text-background font-semibold border-foreground'
               : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
           }`}
-          title="Transliteración fonética internacional"
+          title={t('transliterationTooltip')}
         >
           {t('transliteration')}
         </button>
@@ -97,7 +97,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
               ? 'bg-foreground text-background font-semibold border-foreground'
               : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
           }`}
-          title="Traducción literal"
+          title={t('glossTooltip')}
         >
           {t('gloss')}
         </button>
@@ -110,7 +110,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
               ? 'bg-foreground text-background font-semibold border-foreground'
               : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
           }`}
-          title="Códigos de concordancia Strong"
+          title={t('strongTooltip')}
         >
           {t('strong')}
         </button>
@@ -123,7 +123,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
               ? 'bg-foreground text-background font-semibold border-foreground'
               : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
           }`}
-          title="Etiqueta morfológica condensada"
+          title={t('morphologyTooltip')}
         >
           {t('morphology')}
         </button>
@@ -145,7 +145,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
                     ? 'bg-background text-foreground font-bold shadow-xs'
                     : 'text-accents-4 hover:text-foreground'
                 }`}
-                title={`Velocidad de pronunciación ${speed}x`}
+                title={t('speedTooltip', { speed })}
               >
                 {speed}x
               </button>

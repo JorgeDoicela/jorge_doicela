@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { ParallelColumn, ParallelVerseRow } from '../types';
 import { ParallelColumnHeader } from './ParallelColumnHeader';
 import { Translation } from '../../translations/hooks/useTranslations';
@@ -27,6 +28,8 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
   onRemoveColumn,
   onCompareRow,
 }) => {
+  const t = useTranslations('Parallel');
+
   if (error) {
     return (
       <div className="p-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono text-center">
@@ -84,8 +87,8 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
           {!loading && rows.length === 0 && (
             <div className="p-8 sm:p-12">
               <OngoingExpansionNotice
-                contextTitle="No hay versículos sincronizados para este capítulo"
-                contextDescription="Esta plataforma es nueva y estoy sincronizando versículo por versículo entre las diversas traducciones. Me esfuerzo día a día para brindarte una herramienta de comparación fiel y de gran calidad."
+                contextTitle={t('noVersesTitle')}
+                contextDescription={t('noVersesDesc')}
                 className="border-0 shadow-none bg-transparent"
               />
             </div>
@@ -110,10 +113,10 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                         type="button"
                         onClick={() => onCompareRow(row)}
                         className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-background hover:bg-accents-2 text-foreground border border-accents-2 shadow-xs transition-all flex items-center gap-1 cursor-pointer"
-                        title={`Analizar variantes textuales del versículo ${row.verseNumber}`}
+                        title={t('variantsTooltip', { verse: row.verseNumber })}
                       >
                         <span className="font-mono font-bold text-blue-500">±</span>
-                        <span>Variantes</span>
+                        <span>{t('variants')}</span>
                       </button>
                     )}
                   </div>
@@ -140,7 +143,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                                 onClick={() => onCompareRow(row)}
                                 className="text-[10px] font-medium px-2 py-0.5 rounded bg-accents-1 border border-accents-2 text-foreground"
                               >
-                                ± Variantes
+                                ± {t('variants')}
                               </button>
                             )}
                           </div>
@@ -161,7 +164,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                             </div>
                           ) : (
                             <div className="py-6 text-center text-accents-4 text-xs italic">
-                              Versículo no disponible en esta traducción
+                              {t('verseUnavailable')}
                             </div>
                           )}
                         </div>

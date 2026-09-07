@@ -26,6 +26,7 @@ interface VerseListProps {
   onToggleVerseNumbers: () => void;
   books?: (BookInfo | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
+  onSelectPassage?: (bookId: number, chapter: number) => void;
   onSelectBook?: (id: number | null) => void;
   selectedBookName?: string;
   selectedBookAbbr?: string;
@@ -50,6 +51,7 @@ export const VerseList: React.FC<VerseListProps> = ({
   onToggleVerseNumbers,
   books = [],
   selectedBookId,
+  onSelectPassage,
   onSelectBook,
   selectedBookName,
   selectedBookAbbr,
@@ -73,6 +75,7 @@ export const VerseList: React.FC<VerseListProps> = ({
         onToggleVerseNumbers={onToggleVerseNumbers}
         books={books}
         selectedBookId={selectedBookId}
+        onSelectPassage={onSelectPassage}
         onSelectBook={onSelectBook}
         selectedBookAbbr={selectedBookAbbr}
         selectedBookName={selectedBookName}
@@ -111,10 +114,7 @@ export const VerseList: React.FC<VerseListProps> = ({
       {/* Estado Vacío con Aviso de Plataforma Nueva y Crecimiento Continuo */}
       {!loading && !error && verses.length === 0 && (
         <OngoingExpansionNotice
-          contextTitle={`Capítulo ${selectedChapter || ''} de ${selectedBookName || 'este libro'} en proceso de compilación`}
-          contextDescription="Esta plataforma de estudio bíblico es nueva y por eso varios capítulos aún se encuentran en preparación. Me esfuerzo con dedicación por realizar un trabajo de máxima fidelidad y cuidado en cada libro."
           onExploreAvailable={() => onSelectChapter(1)}
-          availableChapterText="Ir a Génesis 1"
         />
       )}
 
@@ -128,6 +128,7 @@ export const VerseList: React.FC<VerseListProps> = ({
               fontFamily={readerSettings.fontFamily}
               showVerseNumbers={readerSettings.showVerseNumbers}
               bookName={selectedBookName}
+              bookAbbr={selectedBookAbbr}
               chapter={selectedChapter}
               translationName={activeTranslationName}
               translationAbbr={activeTranslationAbbr}
@@ -138,6 +139,7 @@ export const VerseList: React.FC<VerseListProps> = ({
               fontSize={readerSettings.fontSize}
               fontFamily={readerSettings.fontFamily}
               bookName={selectedBookName}
+              bookAbbr={selectedBookAbbr}
               chapter={selectedChapter}
               translationAbbr={activeTranslationAbbr}
             />

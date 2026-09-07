@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   ReaderLayoutMode,
   ReaderFontSize,
@@ -22,6 +23,7 @@ interface ReaderToolbarProps {
   onToggleVerseNumbers: () => void;
   books?: (BookInfo | Book | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
+  onSelectPassage?: (bookId: number, chapter: number) => void;
   onSelectBook?: (id: number | null) => void;
   selectedBookAbbr?: string;
   selectedBookName?: string;
@@ -43,6 +45,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   onToggleVerseNumbers,
   books = [],
   selectedBookId,
+  onSelectPassage,
   onSelectBook,
   selectedBookAbbr,
   selectedBookName,
@@ -55,15 +58,21 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   onSelectTranslation,
   activeTranslationName,
 }) => {
+  const t = useTranslations('Toolbar');
+  const tBooks = useTranslations('Books');
   const [copied, setCopied] = useState(false);
 
-  const totalChapters = getChaptersForBookId(selectedBookId);
+  const totalChapters = useMemo(() => {
+    if (!selectedBookId) return 50;
+    return getChaptersForBookId(selectedBookId) || 50;
+  }, [selectedBookId]);
 
   const handleCopyChapter = () => {
-    if (verses.length === 0) return;
-    const header = `${selectedBookName || 'Pasaje'} ${selectedChapter || ''} (${
-      activeTranslationName || 'Biblia'
-    })\n\n`;
+    if (!verses.length) return;
+    const localizedBookTitle = selectedBookAbbr
+      ? (tBooks.has(selectedBookAbbr as any) ? tBooks(selectedBookAbbr as any) : selectedBookName)
+      : selectedBookName;
+    const header = `${localizedBookTitle || ''} ${selectedChapter || ''} (${activeTranslationName || ''})\n\n`;
     const body = verses.map((v) => `${v.verseNumber}. ${v.text}`).join('\n');
     void navigator.clipboard.writeText(header + body);
     setCopied(true);
@@ -78,8 +87,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   ];
 
   const handlePassageSelect = (bookId: number, chapter: number) => {
-    onSelectBook?.(bookId);
-    onSelectChapter(chapter);
+    if (onSelectPassage) {
+      onSelectPassage(bookId, chapter);
+    } else {
+      onSelectBook?.(bookId);
+      onSelectChapter(chapter);
+    }
   };
 
   const normalizedBooks: Book[] = (books as any[]).map((b) => ({
@@ -125,12 +138,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-background text-foreground shadow-xs font-semibold'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Lectura en Párrafo Continuo"
+              title={t('continuousTooltip')}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h12" />
               </svg>
-              <span className="hidden sm:inline">Párrafo</span>
+              <span className="hidden sm:inline">{t('continuous')}</span>
             </button>
 
             <button
@@ -141,12 +154,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-background text-foreground shadow-xs font-semibold'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Lectura Versículo a Versículo"
+              title={t('verseByVerseTooltip')}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
-              <span className="hidden md:inline">Versículo</span>
+              <span className="hidden md:inline">{t('verseByVerse')}</span>
             </button>
           </div>
 
@@ -160,9 +173,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-background text-foreground shadow-xs font-semibold'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Tipografía Serif"
+              title={t('serifTooltip')}
             >
-              Serif
+              {t('serif')}
             </button>
             <button
               type="button"
@@ -172,9 +185,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-background text-foreground shadow-xs font-semibold'
                   : 'text-accents-5 hover:text-foreground'
               }`}
-              title="Tipografía Sans"
+              title={t('sansTooltip')}
             >
-              Sans
+              {t('sans')}
             </button>
           </div>
 
@@ -205,7 +218,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 ? 'bg-foreground text-background border-foreground font-semibold'
                 : 'bg-transparent text-accents-5 border-accents-2 hover:border-accents-4'
             }`}
-            title="Mostrar/Ocultar Números de Versículo"
+            title={t('verseNumbersTooltip')}
           >
             123
           </button>
@@ -216,12 +229,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
               type="button"
               onClick={handleCopyChapter}
               className="px-2 py-1 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:border-foreground text-accents-6 hover:text-foreground transition-all flex items-center gap-1 cursor-pointer"
-              title="Copiar texto del capítulo"
+              title={t('copyTooltip')}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
-              <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+              <span>{copied ? t('copied') : t('copy')}</span>
             </button>
           )}
         </div>

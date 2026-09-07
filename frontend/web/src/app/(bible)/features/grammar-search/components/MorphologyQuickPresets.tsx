@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { ExegeticalPreset } from '../types';
 
 interface MorphologyQuickPresetsProps {
@@ -14,6 +15,8 @@ export const MorphologyQuickPresets: React.FC<MorphologyQuickPresetsProps> = ({
   activePresetId,
   onSelectPreset,
 }) => {
+  const t = useTranslations('GrammarSearch');
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -21,10 +24,10 @@ export const MorphologyQuickPresets: React.FC<MorphologyQuickPresetsProps> = ({
           <svg className="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          Presets Exegéticos Rápidos (1-Click)
+          {t('presetsTitle')}
         </span>
         <span className="text-[10px] font-mono text-accents-4 hidden sm:inline">
-          Consultas gramaticales canónicas preconfiguradas
+          {t('presetsSubtitle')}
         </span>
       </div>
 

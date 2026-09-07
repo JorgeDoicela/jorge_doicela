@@ -7,6 +7,7 @@ import {
   ReaderSettings,
 } from '../types';
 import { API_URL } from '../../../../config';
+import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../translations';
 
 export function useVerses(
   externalBookId?: number | null,
@@ -17,13 +18,16 @@ export function useVerses(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Por defecto: Génesis (id: 1), Reina-Valera 1960 (id: 1), Capítulo 1
+  // Por defecto: Génesis (id: 1), NBLA o traducción persistida/contextual, Capítulo 1
   const [selectedBookId, setSelectedBookId] = useState<number | null>(
     externalBookId !== undefined ? externalBookId : 1,
   );
-  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(
-    externalTranslationId !== undefined ? externalTranslationId : 1,
-  );
+  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(() => {
+    if (externalTranslationId !== undefined && externalTranslationId !== null) {
+      return externalTranslationId;
+    }
+    return resolveInitialTranslationId();
+  });
   const [selectedChapter, setSelectedChapter] = useState<number | null>(
     externalChapter !== undefined ? externalChapter : 1,
   );

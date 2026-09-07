@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { StrongLexiconEntry } from '../types';
 import { biblicalAudioService } from '../services/biblicalAudioService';
 
@@ -17,6 +18,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
   entry,
   audioSpeed = 1.0,
 }) => {
+  const t = useTranslations('Interlinear');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   if (!isOpen || !entry) return null;
@@ -39,6 +41,12 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
   };
 
   const isHebrewSemitic = entry.language === 'Hebrew' || entry.language === 'Aramaic';
+  const languageText =
+    entry.language === 'Greek'
+      ? t('koineGreek')
+      : entry.language === 'Aramaic'
+      ? t('aramaic')
+      : t('hebrewBiblical');
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -59,10 +67,10 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
             </span>
             <div>
               <h3 className="text-sm font-bold text-foreground">
-                Léxico y Diccionario Strong Exegético
+                {t('lexiconDrawerTitle')}
               </h3>
               <p className="text-xs text-accents-4">
-                Lengua: <strong className="text-foreground">{entry.language === 'Greek' ? 'Griego Koiné' : entry.language === 'Aramaic' ? 'Arameo Imperial' : 'Hebreo Bíblico'}</strong>
+                {t('languageLabel')} <strong className="text-foreground">{languageText}</strong>
               </p>
             </div>
           </div>
@@ -71,7 +79,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-2 transition-colors cursor-pointer"
-            aria-label="Cerrar léxico"
+            aria-label={t('closeLexicon')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -102,7 +110,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
                 <span className="text-accents-5 font-mono">{entry.ipa}</span>
               </div>
               <div className="text-[11px] text-accents-4">
-                Guía fonética: <span className="font-semibold text-foreground">{entry.pronunciationGuide}</span>
+                {t('phoneticGuide')} <span className="font-semibold text-foreground">{entry.pronunciationGuide}</span>
               </div>
             </div>
 
@@ -122,7 +130,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
                   </span>
-                  <span>Reproduciendo...</span>
+                  <span>{t('playing')}</span>
                 </>
               ) : (
                 <>
@@ -134,7 +142,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
                       d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
                     />
                   </svg>
-                  <span>Escuchar Audio</span>
+                  <span>{t('listenAudio')}</span>
                 </>
               )}
             </button>
@@ -143,7 +151,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
           {/* Definición Concisa */}
           <div className="space-y-1.5">
             <h4 className="text-xs font-mono uppercase tracking-wider text-accents-4">
-              Definición Concisa
+              {t('conciseDefinition')}
             </h4>
             <p className="text-sm font-semibold text-foreground bg-accents-1 p-3.5 rounded-xl border border-accents-2">
               {entry.shortDefinition}
@@ -153,13 +161,13 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
           {/* Ficha Gramatical y Ocurrencias */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
             <div className="p-3 rounded-xl bg-accents-1 border border-accents-2">
-              <span className="text-[10px] font-mono text-accents-4 block">Categoría:</span>
+              <span className="text-[10px] font-mono text-accents-4 block">{t('category')}</span>
               <span className="font-semibold text-foreground">{entry.partOfSpeech}</span>
             </div>
 
             {entry.root && (
               <div className="p-3 rounded-xl bg-accents-1 border border-accents-2">
-                <span className="text-[10px] font-mono text-accents-4 block">Raíz Léxica:</span>
+                <span className="text-[10px] font-mono text-accents-4 block">{t('lexicalRoot')}</span>
                 <span className="font-serif font-bold text-foreground" dir={isHebrewSemitic ? 'rtl' : 'ltr'}>
                   {entry.root}
                 </span>
@@ -168,8 +176,8 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
 
             {entry.occurrencesInBible && (
               <div className="p-3 rounded-xl bg-accents-1 border border-accents-2">
-                <span className="text-[10px] font-mono text-accents-4 block">Apariciones en Canon:</span>
-                <span className="font-mono font-bold text-blue-500">{entry.occurrencesInBible} veces</span>
+                <span className="text-[10px] font-mono text-accents-4 block">{t('occurrencesInCanon')}</span>
+                <span className="font-mono font-bold text-blue-500">{t('occurrencesCount', { count: entry.occurrencesInBible })}</span>
               </div>
             )}
           </div>
@@ -178,7 +186,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
           {entry.extendedDefinition && entry.extendedDefinition.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-xs font-mono uppercase tracking-wider text-accents-4">
-                Acepciones y Desglose Exegético (Brown-Driver-Briggs / Thayer)
+                {t('extendedExegesisTitle')}
               </h4>
               <div className="space-y-2 bg-accents-1 p-4 rounded-xl border border-accents-2 text-xs leading-relaxed text-accents-5">
                 {entry.extendedDefinition.map((def, idx) => (
@@ -198,7 +206,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
-                Significado Teológico / Exegético
+                {t('theologicalSignificance')}
               </div>
               <p className="text-accents-5 leading-relaxed">
                 {entry.theologicalSignificance}
@@ -210,7 +218,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
           {entry.translationEquivalents && (
             <div className="space-y-1.5 text-xs">
               <span className="text-[10px] font-mono text-accents-4 uppercase block">
-                Traducciones frecuentes en Reina Valera 1960:
+                {t('frequentTranslations')}
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {entry.translationEquivalents.map((eq, i) => (
@@ -233,7 +241,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
             onClick={onClose}
             className="px-4 py-2 text-xs font-semibold rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors cursor-pointer"
           >
-            Cerrar Léxico
+            {t('closeLexicon')}
           </button>
         </div>
       </div>

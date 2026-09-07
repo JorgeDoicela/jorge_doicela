@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { getChapterCountForBook } from '../../data/bookChapters';
 
 interface ChapterNavigatorProps {
@@ -20,8 +21,22 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   onNextChapter,
   translationAbbr,
 }) => {
+  const tToolbar = useTranslations('Toolbar');
+  const tBooks = useTranslations('Books');
   const maxChapters = getChapterCountForBook(selectedBookAbbr);
   const currentChapter = selectedChapter || 1;
+
+  const localizedBookName = (() => {
+    if (selectedBookAbbr) {
+      try {
+        const translated = tBooks(selectedBookAbbr as any);
+        if (translated) return translated;
+      } catch {
+        // fallback
+      }
+    }
+    return selectedBookName || '';
+  })();
 
   // Atajos de teclado: Flecha izquierda / derecha para navegar capítulos
   useEffect(() => {
@@ -66,17 +81,23 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
         </svg>
         <span>
-          Capítulo {currentChapter > 1 ? currentChapter - 1 : 1}
+          {tToolbar('chapterNumber', {
+            chapter: (currentChapter > 1 ? currentChapter - 1 : 1).toString(),
+          })}
         </span>
       </button>
 
       {/* Referencia central activa */}
       <div className="text-center">
         <div className="text-xs font-semibold text-foreground">
-          {selectedBookName} {currentChapter}
+          {localizedBookName} {currentChapter}
         </div>
         <div className="text-[10px] font-mono text-accents-4">
-          {translationAbbr ? `${translationAbbr} • ` : ''}Capítulo {currentChapter} de {maxChapters}
+          {translationAbbr ? `${translationAbbr} • ` : ''}
+          {tToolbar('chapterOf', {
+            current: currentChapter.toString(),
+            total: maxChapters.toString(),
+          })}
         </div>
       </div>
 
@@ -92,7 +113,9 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
         }`}
       >
         <span>
-          Capítulo {currentChapter < maxChapters ? currentChapter + 1 : maxChapters}
+          {tToolbar('chapterNumber', {
+            chapter: (currentChapter < maxChapters ? currentChapter + 1 : maxChapters).toString(),
+          })}
         </span>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { useArchaeologyFeed } from '../hooks/useArchaeologyFeed';
 import { FeedFilterBar } from './FeedFilterBar';
 import { ArticleCard } from './ArticleCard';
@@ -23,6 +24,7 @@ export const ArchaeologyFeedDashboard: React.FC = () => {
     feedViewMode,
     setFeedViewMode,
   } = useArchaeologyFeed();
+  const t = useTranslations('ArchaeologyFeed');
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
@@ -54,8 +56,8 @@ export const ArchaeologyFeedDashboard: React.FC = () => {
             </div>
           ) : (
             <div className="p-12 text-center border border-dashed border-accents-2 rounded-xl text-accents-4 text-xs space-y-2">
-              <p className="font-semibold text-foreground">No se encontraron artículos</p>
-              <p>Intenta ajustar los filtros de región o los términos de búsqueda.</p>
+              <p className="font-semibold text-foreground">{t('noArticlesTitle')}</p>
+              <p>{t('noArticlesDesc')}</p>
             </div>
           )}
         </div>
@@ -84,15 +86,15 @@ export const ArchaeologyFeedDashboard: React.FC = () => {
 
                 <div className="p-2.5 rounded-lg bg-accents-1/60 border border-accents-2 text-xs space-y-1">
                   <span className="text-[10px] font-mono uppercase text-accents-4 block">
-                    Trascendencia:
+                    {t('significance')}
                   </span>
                   <p className="text-foreground/90 text-[11px] leading-snug">{ms.importance}</p>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-accents-2/70 text-[10px] font-mono text-accents-4 space-y-0.5">
-                <div>Idioma: <span className="text-foreground">{ms.language}</span></div>
-                <div>Custodia: <span className="text-foreground">{ms.currentLocation}</span></div>
+                <div>{t('language')} <span className="text-foreground">{ms.language}</span></div>
+                <div>{t('custody')} <span className="text-foreground">{ms.currentLocation}</span></div>
               </div>
             </div>
           ))}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { VerseComparisonData } from '../types';
 import { computeWordDiff, TRANSLATION_APPROACHES } from '../utils/diffEngine';
 
@@ -11,6 +12,7 @@ interface TextualDiffViewerProps {
 export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
   comparisonData,
 }) => {
+  const t = useTranslations('TextualDiff');
   const [viewMode, setViewMode] = useState<'sideBySide' | 'inline'>('sideBySide');
 
   const { translationA, translationB, bookName, chapter, verseNumber } =
@@ -21,13 +23,29 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
   const approachA = TRANSLATION_APPROACHES[translationA.abbreviation];
   const approachB = TRANSLATION_APPROACHES[translationB.abbreviation];
 
+  const getPhilosophyLabel = (philosophy?: string) => {
+    if (!philosophy) return '';
+    if (philosophy.toLowerCase().includes('hist')) return t('philosophies.historical');
+    if (philosophy.toLowerCase().includes('form')) return t('philosophies.formal');
+    if (philosophy.toLowerCase().includes('din') || philosophy.toLowerCase().includes('dyn')) return t('philosophies.dynamic');
+    return philosophy;
+  };
+
+  const getApproachDesc = (abbr: string, fallback?: string) => {
+    try {
+      return t(`approaches.${abbr}` as any);
+    } catch {
+      return fallback || '';
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Barra de métricas y controles */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-accents-1 border border-accents-2">
         <div>
           <div className="text-xs font-mono text-accents-4 uppercase tracking-wider">
-            Pasaje Analizado
+            {t('analyzedPassage')}
           </div>
           <div className="text-sm font-semibold text-foreground">
             {bookName} {chapter}:{verseNumber}
@@ -38,7 +56,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-[11px] font-mono text-accents-4">
-              Similitud Léxica
+              {t('lexicalSimilarity')}
             </div>
             <div className="text-sm font-bold text-foreground">
               {diffResult.similarityPercentage}%
@@ -63,24 +81,24 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
           <button
             type="button"
             onClick={() => setViewMode('sideBySide')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+            className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
               viewMode === 'sideBySide'
                 ? 'bg-accents-2 text-foreground font-semibold shadow-xs'
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
-            Lado a Lado
+            {t('sideBySide')}
           </button>
           <button
             type="button"
             onClick={() => setViewMode('inline')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+            className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
               viewMode === 'inline'
                 ? 'bg-accents-2 text-foreground font-semibold shadow-xs'
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
-            Unificado
+            {t('unified')}
           </button>
         </div>
       </div>
@@ -103,7 +121,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
                 <span
                   className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${approachA.badgeColor}`}
                 >
-                  {approachA.philosophy}
+                  {getPhilosophyLabel(approachA.philosophy)}
                 </span>
               )}
             </div>
@@ -125,7 +143,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
 
             {approachA && (
               <p className="text-[11px] text-accents-4 italic pt-1 border-t border-accents-1">
-                {approachA.description}
+                {getApproachDesc(translationA.abbreviation, approachA.description)}
               </p>
             )}
           </div>
@@ -145,7 +163,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
                 <span
                   className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${approachB.badgeColor}`}
                 >
-                  {approachB.philosophy}
+                  {getPhilosophyLabel(approachB.philosophy)}
                 </span>
               )}
             </div>
@@ -167,7 +185,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
 
             {approachB && (
               <p className="text-[11px] text-accents-4 italic pt-1 border-t border-accents-1">
-                {approachB.description}
+                {getApproachDesc(translationB.abbreviation, approachB.description)}
               </p>
             )}
           </div>
@@ -179,17 +197,18 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
         <div className="p-5 rounded-xl border border-accents-2 bg-background space-y-4">
           <div className="flex items-center justify-between text-xs text-accents-4 border-b border-accents-2 pb-2">
             <span>
-              Comparando <strong className="text-foreground">{translationA.abbreviation}</strong> vs{' '}
+              {t('comparing')}{' '}
+              <strong className="text-foreground">{translationA.abbreviation}</strong> vs{' '}
               <strong className="text-foreground">{translationB.abbreviation}</strong>
             </span>
             <div className="flex items-center gap-3 text-[11px]">
               <span className="flex items-center gap-1 text-amber-500">
                 <span className="w-2 h-2 rounded bg-amber-500/30 border border-amber-500" />
-                Variante {translationA.abbreviation}
+                {t('variantA', { abbr: translationA.abbreviation })}
               </span>
               <span className="flex items-center gap-1 text-emerald-500">
                 <span className="w-2 h-2 rounded bg-emerald-500/30 border border-emerald-500" />
-                Variante {translationB.abbreviation}
+                {t('variantB', { abbr: translationB.abbreviation })}
               </span>
             </div>
           </div>
@@ -208,7 +227,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
                   <span
                     key={idx}
                     className="bg-amber-500/15 text-amber-600 dark:text-amber-400 line-through px-1 py-0.5 rounded text-xs"
-                    title={`Presente solo en ${translationA.abbreviation}`}
+                    title={t('onlyInA', { abbr: translationA.abbreviation })}
                   >
                     {token.value}
                   </span>
@@ -218,7 +237,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
                 <span
                   key={idx}
                   className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 underline font-medium px-1 py-0.5 rounded text-xs"
-                  title={`Presente solo en ${translationB.abbreviation}`}
+                  title={t('onlyInB', { abbr: translationB.abbreviation })}
                 >
                   {token.value}
                 </span>

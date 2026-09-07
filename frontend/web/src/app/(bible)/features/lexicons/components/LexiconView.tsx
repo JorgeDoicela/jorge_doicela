@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   LexiconLanguageTab,
   HebrewLexiconEntry,
@@ -62,6 +63,7 @@ function mapApiToHebrewEntry(raw: any): HebrewLexiconEntry {
 }
 
 export const LexiconView: React.FC = () => {
+  const t = useTranslations('Lexicons');
   const [activeTab, setActiveTab] = useState<LexiconLanguageTab>('hebrew');
   const [searchQuery, setSearchQuery] = useState('');
   const [hebrewEntries, setHebrewEntries] = useState<HebrewLexiconEntry[]>([]);
@@ -95,7 +97,7 @@ export const LexiconView: React.FC = () => {
         {/* Selector de Lengua */}
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-accents-4 uppercase tracking-wider">
-            Lengua Bíblica:
+            {t('languageLabel')}
           </span>
           <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-1 text-xs">
             <button
@@ -110,7 +112,7 @@ export const LexiconView: React.FC = () => {
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
-              Hebreo / Arameo (BDB • Gesenius • DTAT)
+              {t('hebrewAramaic')}
             </button>
             <button
               type="button"
@@ -124,7 +126,7 @@ export const LexiconView: React.FC = () => {
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
-              Griego Koiné (Thayer • LSJ • Robertson • Vincent)
+              {t('greekKoine')}
             </button>
           </div>
         </div>
@@ -137,8 +139,8 @@ export const LexiconView: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
               activeTab === 'hebrew'
-                ? 'Buscar raíz hebrea (ej. shalom, bara, elohim)...'
-                : 'Buscar lema griego (ej. logos, agape, theos)...'
+                ? t('searchPlaceholderHebrew')
+                : t('searchPlaceholderGreek')
             }
             className="w-full px-3.5 py-2 rounded-lg bg-accents-1 border border-accents-2 text-xs text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground/40 transition-colors"
           />
@@ -148,7 +150,7 @@ export const LexiconView: React.FC = () => {
               onClick={() => setSearchQuery('')}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-accents-4 hover:text-foreground cursor-pointer"
             >
-              Limpiar
+              {t('clearSearch')}
             </button>
           )}
         </div>
@@ -187,9 +189,9 @@ export const LexiconView: React.FC = () => {
       {/* Aviso de Expansión Continua de Diccionarios y Raíces */}
       <div className="pt-6">
         <OngoingExpansionNotice
-          contextTitle="Léxicos e Índices Etimológicos en Crecimiento"
-          contextDescription="Esta plataforma es un proyecto nuevo que recién comienza. Me esfuerzo por entregarte un trabajo fiel y completo, integrando progresivamente las más de 8.600 entradas del BDB/Gesenius para el hebreo-arameo y las más de 5.600 raíces de Thayer/LSJ para el griego koiné."
-          activeItemsSummary="Raíces teológicas activas: B'reshit, Elohim, YHWH, Shalom, Chesed, Logos, Agape, Pneuma, Charis y más."
+          contextTitle={t('expansionTitle')}
+          contextDescription={t('expansionDesc')}
+          activeItemsSummary={t('expansionSummary')}
         />
       </div>
     </div>

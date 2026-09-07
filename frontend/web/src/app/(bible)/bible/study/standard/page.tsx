@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { VerseList, useVerses } from '../../../features/verses';
 import { useBiblePassage } from '../../../context/BiblePassageContext';
 
 export default function StandardStudyPage() {
+  const tBooks = useTranslations('Books');
   const {
     books,
     selectedBookId,
@@ -18,6 +20,12 @@ export default function StandardStudyPage() {
     prevChapter,
   } = useBiblePassage();
 
+  const localizedBookName = selectedBook
+    ? (tBooks.has(selectedBook.abbreviation as any)
+        ? tBooks(selectedBook.abbreviation as any)
+        : selectedBook.name)
+    : '';
+
   const {
     verses,
     loading: versesLoading,
@@ -27,7 +35,7 @@ export default function StandardStudyPage() {
     setFontSize,
     setFontFamily,
     toggleVerseNumbers,
-  } = useVerses(selectedBookId, selectedChapter, selectedTranslationId || 1);
+  } = useVerses(selectedBookId, selectedChapter, selectedTranslationId);
 
   return (
     <div className="space-y-4">
@@ -42,10 +50,13 @@ export default function StandardStudyPage() {
         onToggleVerseNumbers={toggleVerseNumbers}
         books={books}
         selectedBookId={selectedBookId}
+        onSelectPassage={(bookId, chap) => {
+          setPassage(bookId, chap);
+        }}
         onSelectBook={(bookId) => {
           if (bookId !== null) setPassage(bookId, 1);
         }}
-        selectedBookName={selectedBook?.name}
+        selectedBookName={localizedBookName}
         selectedBookAbbr={selectedBook?.abbreviation}
         selectedChapter={selectedChapter}
         onSelectChapter={(chap) => {

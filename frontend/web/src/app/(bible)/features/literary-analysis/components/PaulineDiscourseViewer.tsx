@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   PaulinePassageDiscourse,
   DiscourseClause,
@@ -9,6 +10,7 @@ import {
 import { PAULINE_DISCOURSE_DATABASE } from '../data/paulineDiscourseData';
 
 export const PaulineDiscourseViewer: React.FC = () => {
+  const t = useTranslations('LiteraryAnalysis');
   const [selectedPassageId, setSelectedPassageId] = useState<string>(
     PAULINE_DISCOURSE_DATABASE[0]?.id || '',
   );
@@ -26,10 +28,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
   if (!currentPassage) {
     return (
       <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
-        <div className="text-sm font-semibold text-foreground">Análisis de Discurso y Sintaxis Paulina</div>
-        <p className="text-xs text-accents-4 max-w-md mx-auto">
-          Módulo de segmentación proposicional y conectores lógicos del Corpus Paulino.
-        </p>
+        <div className="text-sm font-semibold text-foreground">{t('paulineTab')}</div>
       </div>
     );
   }
@@ -73,7 +72,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
         {/* Selector de Pasaje */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold text-accents-4 uppercase tracking-wider">
-            Epístola:
+            {t('epistleLabel')}
           </span>
           <div className="flex flex-wrap gap-1.5">
             {PAULINE_DISCOURSE_DATABASE.map((item) => (
@@ -99,7 +98,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
         {/* Filtro por Categoría de Conjunción Griega */}
         <div className="flex flex-wrap items-center gap-1.5 text-xs">
           <span className="text-[11px] font-mono text-accents-4 uppercase">
-            Filtro Conector:
+            {t('connectorFilter')}
           </span>
           <button
             type="button"
@@ -110,7 +109,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
                 : 'bg-accents-1 text-accents-4 hover:text-foreground border border-accents-2'
             }`}
           >
-            Todos
+            {t('allConnectors')}
           </button>
           <button
             type="button"
@@ -120,9 +119,9 @@ export const PaulineDiscourseViewer: React.FC = () => {
                 ? 'bg-blue-500 text-white font-bold'
                 : 'text-blue-500 hover:bg-blue-500/10 border border-blue-500/30'
             }`}
-            title="Causales (γάρ, ὅτι, διότι)"
+            title={t('causalTooltip')}
           >
-            Causales (γάρ)
+            {t('causal')}
           </button>
           <button
             type="button"
@@ -132,9 +131,9 @@ export const PaulineDiscourseViewer: React.FC = () => {
                 ? 'bg-emerald-500 text-black font-bold'
                 : 'text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/30'
             }`}
-            title="Propósito (ἵνα, ὥστε)"
+            title={t('purposeTooltip')}
           >
-            Propósito (ἵνα)
+            {t('purpose')}
           </button>
           <button
             type="button"
@@ -144,9 +143,9 @@ export const PaulineDiscourseViewer: React.FC = () => {
                 ? 'bg-purple-500 text-white font-bold'
                 : 'text-purple-400 hover:bg-purple-500/10 border border-purple-500/30'
             }`}
-            title="Inferenciales (ἄρα, οὖν, διό)"
+            title={t('inferentialTooltip')}
           >
-            Inferenciales (ἄρα)
+            {t('inferential')}
           </button>
           <button
             type="button"
@@ -156,9 +155,9 @@ export const PaulineDiscourseViewer: React.FC = () => {
                 ? 'bg-rose-500 text-white font-bold'
                 : 'text-rose-400 hover:bg-rose-500/10 border border-rose-500/30'
             }`}
-            title="Adversativas (ἀλλά, δέ)"
+            title={t('adversativeTooltip')}
           >
-            Adversativas (ἀλλά)
+            {t('adversative')}
           </button>
         </div>
       </div>
@@ -171,7 +170,8 @@ export const PaulineDiscourseViewer: React.FC = () => {
               {currentPassage.title}
             </h3>
             <p className="text-xs text-accents-4 font-mono">
-              Eje Teológico: <strong className="text-foreground">{currentPassage.theologicalTheme}</strong>
+              {t('theologicalTheme')}{' '}
+              <strong className="text-foreground">{currentPassage.theologicalTheme}</strong>
             </p>
           </div>
           <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-foreground text-background font-bold">
@@ -181,7 +181,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
 
         <div className="p-3.5 rounded-xl bg-background border border-accents-2 text-xs space-y-1">
           <span className="font-mono text-[10px] uppercase font-bold text-accents-4">
-            Tesis Principal del Discurso:
+            {t('discourseThesis')}
           </span>
           <p className="text-foreground font-semibold leading-relaxed">
             {currentPassage.centralProposition}
@@ -193,10 +193,10 @@ export const PaulineDiscourseViewer: React.FC = () => {
       <div className="p-5 sm:p-6 rounded-2xl border border-accents-2 bg-background space-y-4 shadow-xs">
         <div className="flex items-center justify-between border-b border-accents-2 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-accents-4">
-            Árbol de Proposiciones y Jerarquía Gramatical (Diagramación de Bloques):
+            {t('blockDiagramTitle')}
           </span>
           <span className="text-[11px] font-mono text-accents-4">
-            {currentPassage.clauses.length} proposiciones articuladas
+            {t('propositionsCount', { count: currentPassage.clauses.length })}
           </span>
         </div>
 
@@ -249,7 +249,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
                           : 'bg-accents-1 text-accents-4 border border-accents-2'
                       }`}
                     >
-                      {clause.clauseType === 'main' ? 'Proposición Principal' : 'Subordinada'}
+                      {clause.clauseType === 'main' ? t('mainClause') : t('subordinateClause')}
                     </span>
                   </div>
 
@@ -279,7 +279,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
                   <div className="pt-2 border-t border-accents-2/60 text-xs text-accents-4 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5">
                       <span className="font-mono text-[10px] uppercase font-bold text-accents-5">
-                        Flujo:
+                        {t('theologicalFlow')}
                       </span>
                       <span className="text-accents-5">{clause.theologicalFlow}</span>
                     </div>
@@ -300,17 +300,17 @@ export const PaulineDiscourseViewer: React.FC = () => {
         <div className="p-5 rounded-2xl bg-accents-1 border border-accents-2 space-y-3 animate-in fade-in duration-150">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-mono font-bold text-foreground uppercase">
-              Análisis Sintáctico y Teológico: {selectedClause.verseRef}
+              {t('syntacticAnalysis')} {selectedClause.verseRef}
             </h4>
             <span className="text-[11px] font-mono text-accents-4">
-              Nivel de Indentación: {selectedClause.indentationLevel}
+              {t('indentationLevel', { level: selectedClause.indentationLevel })}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div className="p-3 rounded-xl bg-background border border-accents-2 space-y-1">
               <span className="text-[10px] font-mono text-accents-4 uppercase block">
-                Función Gramatical:
+                {t('grammaticalFunction')}
               </span>
               <p className="font-semibold text-foreground">
                 {selectedClause.grammaticalAnalysis}
@@ -320,7 +320,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
             {selectedClause.conjunction && (
               <div className="p-3 rounded-xl bg-background border border-accents-2 space-y-1">
                 <span className="text-[10px] font-mono text-accents-4 uppercase block">
-                  Rol Sintáctico del Conector ({selectedClause.conjunction.greek}):
+                  {t('connectorRole', { greek: selectedClause.conjunction.greek })}
                 </span>
                 <p className="font-semibold text-foreground">
                   {selectedClause.conjunction.syntacticRole}

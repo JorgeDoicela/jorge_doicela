@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { LemmaCanonicalData, CanonicalGenre } from '../types';
 import { CANONICAL_BOOKS } from '../../books/hooks/useBooks';
 import { getChaptersForBookId } from '../../books/data/canonicCategories';
@@ -30,6 +31,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
   scale,
   onToggleScale,
 }) => {
+  const t = useTranslations('GrammarSearch');
   const [hoveredBookAbbr, setHoveredBookAbbr] = useState<string | null>(null);
 
   // Obtener el valor máximo para el escalado
@@ -92,16 +94,16 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            Gráfico de Dispersión Canónico (Canon Scatter Plot)
+            {t('scatterPlot.title')}
           </h3>
           <p className="text-[11px] text-accents-4 font-mono">
-            Distribución cuantitativa de &quot;{lemmaData.originalScript}&quot; ({lemmaData.transliteration}) a lo largo de los 66 libros
+            {t('scatterPlot.subtitle', { lemma: lemmaData.originalScript, translit: lemmaData.transliteration })}
           </p>
         </div>
 
         {/* Selector de Escala */}
         <div className="flex items-center gap-1.5 p-1 rounded-lg bg-accents-1 border border-accents-2">
-          <span className="text-[10px] font-mono text-accents-4 px-1.5">Escala:</span>
+          <span className="text-[10px] font-mono text-accents-4 px-1.5">{t('scatterPlot.scaleLabel')}</span>
           <button
             type="button"
             onClick={() => onToggleScale('linear')}
@@ -111,7 +113,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
-            Lineal
+            {t('scatterPlot.linear')}
           </button>
           <button
             type="button"
@@ -122,7 +124,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
-            Logarítmica (log)
+            {t('scatterPlot.logarithmic')}
           </button>
         </div>
       </div>
@@ -138,13 +140,12 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
             <line x1="30" y1="185" x2="745" y2="185" stroke="currentColor" strokeOpacity="0.15" />
 
             {/* Separador vertical AT / NT */}
-            {/* Posición del libro 39 (Malaquías) aprox X = 30 + (38/65)*715 = 448 */}
             <line x1="454" y1="10" x2="454" y2="195" stroke="#3b82f6" strokeOpacity="0.3" strokeDasharray="4 4" strokeWidth="1.5" />
             <text x="445" y="14" fill="#3b82f6" fontSize="9" fontWeight="bold" textAnchor="end" fontFamily="monospace">
-              ANTIGUO TESTAMENTO (39)
+              {t('scatterPlot.ot')}
             </text>
             <text x="462" y="14" fill="#3b82f6" fontSize="9" fontWeight="bold" textAnchor="start" fontFamily="monospace">
-              NUEVO TESTAMENTO (27)
+              {t('scatterPlot.nt')}
             </text>
 
             {/* Etiquetas de Eje Y */}
@@ -253,15 +254,16 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
                 <span
                   className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded text-white bg-blue-500"
                 >
-                  {hoveredBook.testament === 'OT' ? 'Antiguo Testamento' : 'Nuevo Testamento'}
+                  {hoveredBook.testament === 'OT' ? t('scatterPlot.ot') : t('scatterPlot.nt')}
                 </span>
               </div>
               <div className="text-[11px] text-accents-5 font-mono">
                 <span className="font-bold text-foreground text-xs">{hoveredCount}</span>{' '}
-                {hoveredCount === 1 ? 'aparición' : 'apariciones'} ({hoveredPercentage}% del canon)
+                {hoveredCount === 1 ? t('scatterPlot.occurrenceSingle') : t('scatterPlot.occurrenceMulti')}{' '}
+                {t('scatterPlot.canonShare', { pct: hoveredPercentage })}
               </div>
               <div className="text-[10px] text-accents-4 mt-1 font-mono">
-                Libro #{hoveredBook.id} canónico • {getChaptersForBookId(hoveredBook.id)} capítulos
+                {t('scatterPlot.bookIndex', { id: hoveredBook.id, chapters: getChaptersForBookId(hoveredBook.id) })}
               </div>
             </div>
           )}
@@ -270,7 +272,7 @@ export const CanonicalScatterPlot: React.FC<CanonicalScatterPlotProps> = ({
 
       {/* Leyenda de Familias y Géneros Literarios Canónicos */}
       <div className="pt-2 border-t border-accents-2 flex flex-wrap items-center gap-2 text-[10px] font-mono">
-        <span className="text-accents-4 uppercase font-semibold">Familias Literarias:</span>
+        <span className="text-accents-4 uppercase font-semibold">{t('scatterPlot.literaryFamilies')}</span>
         {genresList.map((genre) => {
           const countInGenre = lemmaData.distributionByGenre[genre] || 0;
           const style = GENRE_COLORS[genre];

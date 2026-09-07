@@ -2,10 +2,12 @@
 
 import React from 'react';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 import { use3DOrbitControls } from '../../hooks/use3DOrbitControls';
 import { AncientStructureId } from '../../types';
 
 export const Archaeological3DViewer: React.FC = () => {
+  const t = useTranslations('Atlas');
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
@@ -66,9 +68,9 @@ export const Archaeological3DViewer: React.FC = () => {
   if (!activeStructure) {
     return (
       <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-2">
-        <div className="text-sm font-semibold text-foreground">Visualizador 3D Arqueológico</div>
+        <div className="text-sm font-semibold text-foreground">{t('viewerTitle')}</div>
         <p className="text-xs text-accents-4 max-w-md mx-auto">
-          Modelos arquitectónicos tridimensionales del Tabernáculo en el Desierto, el Templo de Salomón y el Templo de Herodes.
+          {t('viewerDesc')}
         </p>
       </div>
     );
@@ -495,21 +497,21 @@ export const Archaeological3DViewer: React.FC = () => {
                 onClick={() => handleSetPresetView('isometric')}
                 className="px-2 py-1 rounded bg-accents-1 hover:bg-accents-2 text-accents-5 hover:text-foreground font-mono text-[11px] cursor-pointer"
               >
-                Isométrica
+                {t('isometric')}
               </button>
               <button
                 type="button"
                 onClick={() => handleSetPresetView('top')}
                 className="px-2 py-1 rounded bg-accents-1 hover:bg-accents-2 text-accents-5 hover:text-foreground font-mono text-[11px] cursor-pointer"
               >
-                Cenital
+                {t('top')}
               </button>
               <button
                 type="button"
                 onClick={() => handleSetPresetView('front')}
                 className="px-2 py-1 rounded bg-accents-1 hover:bg-accents-2 text-accents-5 hover:text-foreground font-mono text-[11px] cursor-pointer"
               >
-                Frontal
+                {t('front')}
               </button>
             </div>
 
@@ -524,7 +526,7 @@ export const Archaeological3DViewer: React.FC = () => {
                     : 'bg-accents-1 text-accents-5 hover:text-foreground'
                 }`}
               >
-                Corte Transversal
+                {t('crossSection')}
               </button>
 
               {/* Controles de Zoom y Reset */}
@@ -548,7 +550,7 @@ export const Archaeological3DViewer: React.FC = () => {
                   onClick={handleResetCamera}
                   className="px-1.5 h-6 flex items-center justify-center text-[10px] font-mono text-accents-4 hover:text-foreground cursor-pointer"
                 >
-                  Reset
+                  {t('resetCamera')}
                 </button>
               </div>
             </div>
@@ -575,7 +577,7 @@ export const Archaeological3DViewer: React.FC = () => {
 
             <div className="p-2.5 rounded-lg bg-accents-1/60 border border-accents-2 text-xs space-y-1">
               <span className="text-[10px] font-mono uppercase text-accents-4 block">
-                Dimensiones y Escala Bíblica:
+                {t('biblicalScale')}
               </span>
               <p className="text-foreground font-mono text-[11px]">
                 {activeStructure.dimensionsOverview}
@@ -584,7 +586,7 @@ export const Archaeological3DViewer: React.FC = () => {
 
             <div className="text-xs space-y-0.5">
               <span className="text-[10px] font-mono uppercase text-accents-4 block">
-                Significado Tipológico:
+                {t('typologicalSignificance')}
               </span>
               <p className="text-accents-5 italic text-[11px]">"{activeStructure.keySignificance}"</p>
             </div>
@@ -604,18 +606,19 @@ export const Archaeological3DViewer: React.FC = () => {
               <p className="text-xs text-foreground/90 leading-snug">{activeHotspot.description}</p>
               {activeHotspot.dimensionsCubits && (
                 <div className="text-[11px] font-mono text-accents-4">
-                  Medidas: <span className="text-foreground">{activeHotspot.dimensionsCubits}</span>
+                  {t('measurements')}{' '}
+                  <span className="text-foreground">{activeHotspot.dimensionsCubits}</span>
                 </div>
               )}
               {activeHotspot.materials && (
                 <div className="text-[11px] font-mono text-accents-4">
-                  Materiales:{' '}
+                  {t('materials')}{' '}
                   <span className="text-foreground">{activeHotspot.materials.join(', ')}</span>
                 </div>
               )}
               <div className="pt-1.5 border-t border-accents-2">
                 <span className="text-[10px] font-mono text-accents-4 block mb-0.5">
-                  Pasajes Bíblicos:
+                  {t('biblicalPassages')}
                 </span>
                 <div className="flex flex-wrap gap-1">
                   {activeHotspot.scriptureReferences.map((ref, idx) => (
@@ -631,8 +634,7 @@ export const Archaeological3DViewer: React.FC = () => {
             </div>
           ) : (
             <div className="p-4 rounded-xl border border-dashed border-accents-2 text-center text-xs text-accents-4">
-              Haz clic en cualquier punto de interés del modelo 3D para examinar su descripción
-              arquitectónica y base bíblica.
+              {t('emptyHotspotPrompt')}
             </div>
           )}
         </div>

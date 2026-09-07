@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { HebrewAramaicToken, InterlinearDisplaySettings } from '../types';
 import { biblicalAudioService } from '../services/biblicalAudioService';
 
@@ -23,6 +24,7 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
   onHover,
   onLeave,
 }) => {
+  const t = useTranslations('Interlinear');
   const [isPlaying, setIsPlaying] = useState(false);
 
   const getFontSizeClass = () => {
@@ -70,7 +72,7 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
           ? 'bg-amber-500/10 border-amber-500 shadow-lg ring-2 ring-amber-500/40 scale-105'
           : 'border-accents-2 bg-background hover:border-foreground hover:bg-accents-1/60 hover:shadow-md'
       }`}
-      title="Haz clic para ver el desglose morfológico completo"
+      title={t('clickMorphologyTooltip')}
     >
       {/* Idioma / Insignia de orden y botón de audio */}
       <div className="w-full flex items-center justify-between text-[10px] font-mono text-accents-4 mb-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
@@ -81,7 +83,7 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
         <div className="flex items-center gap-1">
           {token.language === 'Aramaic' && (
             <span className="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-1 py-0.2 rounded border border-amber-500/20">
-              Arameo
+              {t('aramaicBadge')}
             </span>
           )}
 
@@ -92,8 +94,8 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
             className={`p-1 rounded hover:bg-accents-2 transition-colors ${
               isPlaying ? 'text-amber-500 animate-pulse' : 'text-accents-4 hover:text-foreground'
             }`}
-            title="Escuchar pronunciación bíblica auténtica"
-            aria-label="Reproducir audio"
+            title={t('listenPronunciation')}
+            aria-label={t('audioLabel')}
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -145,7 +147,7 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
               if (onOpenStrong) onOpenStrong(token.strong);
             }}
             className="text-[10px] font-mono text-blue-500 hover:text-blue-600 dark:text-blue-400 font-bold hover:underline cursor-pointer"
-            title="Abrir definición Strong exegética"
+            title={t('openStrongTooltip')}
           >
             {token.strong}
           </button>

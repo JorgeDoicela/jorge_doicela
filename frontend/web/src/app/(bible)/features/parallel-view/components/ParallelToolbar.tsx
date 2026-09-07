@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { Translation } from '../../translations/hooks/useTranslations';
 
 export type BibleStudyMode =
@@ -34,9 +35,11 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
   activeTranslationIds,
   onAddColumn,
 }) => {
+  const t = useTranslations('Parallel');
+
   // Encontrar la primera traducción que no esté ya activa para sugerirla al añadir
   const nextAvailableTranslation = availableTranslations.find(
-    (t) => !activeTranslationIds.includes(t.id),
+    (tr) => !activeTranslationIds.includes(tr.id),
   ) || availableTranslations[0];
 
   return (
@@ -53,7 +56,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            Vista Estándar
+            {t('modes.standard')}
           </button>
           <button
             type="button"
@@ -65,7 +68,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            Vista Paralela
+            {t('modes.parallel')}
           </button>
           <button
             type="button"
@@ -77,7 +80,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            Interlineal Inverso
+            {t('modes.interlinear')}
           </button>
           <button
             type="button"
@@ -89,7 +92,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
-            Análisis de Palabra (Léxicos & Morfología)
+            {t('modes.wordStudy')}
           </button>
           <button
             type="button"
@@ -101,7 +104,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Estructura & Quiasmos
+            {t('modes.literary')}
           </button>
           <button
             type="button"
@@ -113,13 +116,13 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-            Contexto Histórico & Geográfico
+            {t('modes.historical')}
           </button>
         </div>
 
         {studyMode === 'parallel' && (
           <span className="hidden sm:inline-flex text-[11px] font-mono text-accents-4 px-2 py-0.5 rounded border border-accents-2">
-            {columnCount} / 4 columnas
+            {t('columnsCount', { count: columnCount })}
           </span>
         )}
       </div>
@@ -132,7 +135,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
               type="button"
               onClick={() => onAddColumn(nextAvailableTranslation.id)}
               className="px-3 py-1.5 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:bg-accents-1 text-foreground transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
-              title="Añadir otra versión para comparar"
+              title={t('addColumnTooltip')}
             >
               <svg
                 className="w-3.5 h-3.5 text-accents-5"
@@ -142,12 +145,12 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
               </svg>
-              <span>Añadir Columna</span>
+              <span>{t('addColumn')}</span>
             </button>
           )}
 
           <div className="text-[11px] text-accents-4 font-mono hidden md:block">
-            Alineación versículo por versículo
+            {t('verseByVerseAlignment')}
           </div>
         </div>
       )}
@@ -155,28 +158,28 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
       {/* Indicador para vista interlineal */}
       {studyMode === 'interlinear' && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Interlineal Inverso e Interactivo con Audio Bíblico
+          {t('indicators.interlinear')}
         </div>
       )}
 
       {/* Indicador para vista literaria */}
       {studyMode === 'literary' && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Estructuras Poéticas Semíticas y Gramática Paulina
+          {t('indicators.literary')}
         </div>
       )}
 
       {/* Indicador para vista de Análisis de Palabra */}
       {(studyMode === 'word-study' || studyMode === 'lexicon' || studyMode === 'grammar-search') && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Diccionarios Strong • BDB • Thayer • Parsing Gramatical • Densidad Canónica FTS5
+          {t('indicators.wordStudy')}
         </div>
       )}
 
       {/* Indicador para vista de Contexto Histórico */}
       {(studyMode === 'historical-context' || studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology') && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          Atlas Vectorial • Rutas Bíblicas • Línea Temporal Sincrónica • Hallazgos Arqueológicos
+          {t('indicators.historical')}
         </div>
       )}
     </div>

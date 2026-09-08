@@ -17,7 +17,13 @@
 
   --border: var(--accents-2);
   --card-bg: #ffffff;
+  --card-border: var(--accents-2);
+  --card-hover-border: var(--accents-4);
   --card-hover: var(--accents-1);
+  --inner-card-bg: #f7f7f8;
+  --inner-card-border: rgba(0, 0, 0, 0.08);
+  --btn-sec-bg: rgba(0, 0, 0, 0.05);
+  --btn-sec-hover-bg: rgba(0, 0, 0, 0.09);
   --button-primary-bg: #000000;
   --button-primary-fg: #ffffff;
   --button-secondary-bg: #ffffff;
@@ -40,7 +46,13 @@
 
     --border: var(--accents-2);
     --card-bg: #0a0a0a;
+    --card-border: rgba(255, 255, 255, 0.12);
+    --card-hover-border: rgba(255, 255, 255, 0.28);
     --card-hover: #111111;
+    --inner-card-bg: rgba(255, 255, 255, 0.04);
+    --inner-card-border: rgba(255, 255, 255, 0.08);
+    --btn-sec-bg: rgba(255, 255, 255, 0.08);
+    --btn-sec-hover-bg: rgba(255, 255, 255, 0.15);
     --button-primary-bg: #ededed;
     --button-primary-fg: #000000;
     --button-secondary-bg: #000000;
@@ -63,7 +75,13 @@
 
   --border: var(--accents-2);
   --card-bg: #0a0a0a;
+  --card-border: rgba(255, 255, 255, 0.12);
+  --card-hover-border: rgba(255, 255, 255, 0.28);
   --card-hover: #111111;
+  --inner-card-bg: rgba(255, 255, 255, 0.04);
+  --inner-card-border: rgba(255, 255, 255, 0.08);
+  --btn-sec-bg: rgba(255, 255, 255, 0.08);
+  --btn-sec-hover-bg: rgba(255, 255, 255, 0.15);
   --button-primary-bg: #ededed;
   --button-primary-fg: #000000;
   --button-secondary-bg: #000000;
@@ -83,8 +101,15 @@
   --color-accents-7: var(--accents-7);
   --color-accents-8: var(--accents-8);
   --color-border: var(--border);
+  --color-card: var(--card-bg);
   --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-card-hover-border: var(--card-hover-border);
   --color-card-hover: var(--card-hover);
+  --color-inner-card: var(--inner-card-bg);
+  --color-inner-card-border: var(--inner-card-border);
+  --color-btn-sec: var(--btn-sec-bg);
+  --color-btn-sec-hover: var(--btn-sec-hover-bg);
   --color-btn-p-bg: var(--button-primary-bg);
   --color-btn-p-fg: var(--button-primary-fg);
   --color-btn-s-bg: var(--button-secondary-bg);
@@ -214,5 +239,11 @@ body {
   }
 }
 
-
-
+@keyframes engineProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}

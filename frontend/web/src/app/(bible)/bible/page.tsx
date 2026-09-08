@@ -140,12 +140,92 @@ export default function BibleLandingPage() {
     ];
 
     const versions = [
-        { code: 'NBLA', name: 'Nueva Biblia de las Américas', lang: tLanding('corpusV1Lang') },
-        { code: 'NTV', name: 'Nueva Traducción Viviente', lang: tLanding('corpusV2Lang') },
-        { code: 'NIV', name: 'New International Version', lang: tLanding('corpusV3Lang') },
-        { code: 'BHS', name: 'Biblia Hebraica Stuttgartensia', lang: tLanding('corpusV4Lang') },
-        { code: 'LXX', name: 'Septuaginta Griega', lang: tLanding('corpusV5Lang') },
+        {
+            code: tLanding('corpusV1Code'),
+            name: tLanding('corpusV1Name'),
+            tag: tLanding('corpusV1Tag'),
+            lang: tLanding('corpusV1Lang'),
+            desc: tLanding('corpusV1Desc'),
+            sample: tLanding('corpusV1Sample'),
+            source: tLanding('corpusV1Source'),
+            href: '/bible/study/standard?trans=rv1960',
+            dir: 'ltr' as const,
+        },
+        {
+            code: tLanding('corpusV2Code'),
+            name: tLanding('corpusV2Name'),
+            tag: tLanding('corpusV2Tag'),
+            lang: tLanding('corpusV2Lang'),
+            desc: tLanding('corpusV2Desc'),
+            sample: tLanding('corpusV2Sample'),
+            source: tLanding('corpusV2Source'),
+            href: '/bible/study/standard?trans=nbla',
+            dir: 'ltr' as const,
+        },
+        {
+            code: tLanding('corpusV3Code'),
+            name: tLanding('corpusV3Name'),
+            tag: tLanding('corpusV3Tag'),
+            lang: tLanding('corpusV3Lang'),
+            desc: tLanding('corpusV3Desc'),
+            sample: tLanding('corpusV3Sample'),
+            source: tLanding('corpusV3Source'),
+            href: '/bible/study/standard?trans=nvi',
+            dir: 'ltr' as const,
+        },
+        {
+            code: tLanding('corpusV4Code'),
+            name: tLanding('corpusV4Name'),
+            tag: tLanding('corpusV4Tag'),
+            lang: tLanding('corpusV4Lang'),
+            desc: tLanding('corpusV4Desc'),
+            sample: tLanding('corpusV4Sample'),
+            source: tLanding('corpusV4Source'),
+            href: '/bible/study/standard?trans=ntv',
+            dir: 'ltr' as const,
+        },
+        {
+            code: tLanding('corpusV5Code'),
+            name: tLanding('corpusV5Name'),
+            tag: tLanding('corpusV5Tag'),
+            lang: tLanding('corpusV5Lang'),
+            desc: tLanding('corpusV5Desc'),
+            sample: tLanding('corpusV5Sample'),
+            source: tLanding('corpusV5Source'),
+            href: '/bible/study/interlinear',
+            dir: 'rtl' as const,
+        },
+        {
+            code: tLanding('corpusV6Code'),
+            name: tLanding('corpusV6Name'),
+            tag: tLanding('corpusV6Tag'),
+            lang: tLanding('corpusV6Lang'),
+            desc: tLanding('corpusV6Desc'),
+            sample: tLanding('corpusV6Sample'),
+            source: tLanding('corpusV6Source'),
+            href: '/bible/study/parallel',
+            dir: 'ltr' as const,
+        },
     ];
+
+    const getEngineTheme = (idx: number) => {
+        const engineImages = [
+            '/bible/images/hero_editorial_dark.jpg',
+            '/bible/images/parallel_versions_study.jpg',
+            '/bible/images/codex_interlinear_scroll.jpg',
+            '/bible/images/chiasm_poetry_manuscript.jpg',
+            '/bible/images/strong_lexicon_study.jpg',
+            '/bible/images/smart_search_scriptures.jpg',
+            '/bible/images/bible_atlas_topography.jpg',
+            '/bible/images/historical_timeline_chronology.jpg',
+            '/bible/images/manuscripts_heritage.jpg',
+        ];
+
+        return {
+            bg: 'bg-white dark:bg-[#0c0c0d] border-zinc-200/90 dark:border-zinc-800/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.7)]',
+            image: engineImages[idx] || engineImages[0],
+        };
+    };
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-foreground selection:text-background w-full overflow-x-clip">
@@ -295,6 +375,7 @@ export default function BibleLandingPage() {
                     >
                         {engines.map((engine, idx) => {
                             const isActive = currentEngineSlide === idx;
+                            const theme = getEngineTheme(idx);
 
                             return (
                                 <div
@@ -306,281 +387,272 @@ export default function BibleLandingPage() {
                                         }
                                     }}
                                     style={{ width: 'var(--card-w)', marginRight: 'var(--card-gap)' }}
-                                    className="shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[520px] sm:h-[490px] md:h-[510px] cursor-pointer group opacity-100"
+                                    className={`shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.6rem] ${theme.bg} border p-6 sm:p-8 md:p-10 transition-all duration-700 relative overflow-hidden flex flex-col justify-between min-h-[500px] sm:min-h-[460px] md:min-h-[440px] cursor-pointer group hover:border-zinc-300 dark:hover:border-zinc-700`}
                                 >
-                                    {/* Cabecera Interna: Limpia, directa, alineada a la izquierda sin iconos */}
-                                    <div className="flex flex-col text-left max-w-2xl gap-1.5 mb-2">
-                                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-snug">
-                                            {engine.title}
-                                        </h3>
-                                        <p className="text-xs sm:text-sm md:text-base text-accents-5 font-normal leading-relaxed">
-                                            {engine.desc}
-                                        </p>
-                                    </div>
+                                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center h-full w-full my-auto">
+                                        {/* Columna Izquierda (45%): Narrativa, badge y botón de acción */}
+                                        <div className="lg:col-span-5 flex flex-col justify-between h-full text-left gap-4 sm:gap-5">
+                                            <div className="space-y-3.5">
+                                                <h3 className="text-2xl sm:text-3xl lg:text-[32px] font-bold tracking-tight text-foreground leading-[1.2]">
+                                                    {engine.title}
+                                                </h3>
+                                                <p className="text-xs sm:text-sm lg:text-[15px] text-accents-5 font-normal leading-relaxed">
+                                                    {engine.desc}
+                                                </p>
+                                            </div>
 
-                                    {/* Contenido Visual con Separadores Sutiles y Espaciado Amplio Alineado Naturalmente */}
-                                    <div className="w-full flex-grow flex flex-col justify-center my-2">
-                                        {/* 1. LECTURA CLARA Y CONTINUA */}
-                                        {idx === 0 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="flex flex-col gap-1 border-b border-card-border pb-3">
-                                                    <p className="text-base sm:text-xl md:text-2xl font-serif italic text-foreground leading-relaxed">
+                                            <div className="pt-1">
+                                                <Link
+                                                    href={engine.href}
+                                                    onClick={(e) => {
+                                                        if (!isActive) {
+                                                            e.preventDefault();
+                                                            setCurrentEngineSlide(idx);
+                                                        }
+                                                    }}
+                                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background font-semibold text-xs sm:text-sm hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer select-none"
+                                                >
+                                                    <span>Explorar herramienta</span>
+                                                    <ArrowRight className="w-3.5 h-3.5" />
+                                                </Link>
+                                            </div>
+                                        </div>
+
+                                        {/* Columna Derecha (55%): Frame Relativo con Soporte de Elementos Sobresalidos (Saliditos) */}
+                                        <div className="lg:col-span-7 relative w-full h-[320px] sm:h-[350px] md:h-[370px]">
+                                            {/* Viewport de la Fotografía (Con overflow-hidden para recortar bordes redondeados de la foto) */}
+                                            <div className="absolute inset-0 rounded-[20px] sm:rounded-[24px] overflow-hidden border border-zinc-200/80 dark:border-zinc-800/90 bg-zinc-950 shadow-inner group/viewport">
+                                                <Image
+                                                    src={theme.image}
+                                                    alt={engine.title}
+                                                    fill
+                                                    className="object-cover filter brightness-[0.78] contrast-[1.10] group-hover:scale-105 transition-transform duration-700 select-none"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/15 pointer-events-none" />
+                                            </div>
+
+                                            {/* 1. LECTURA CLARA Y CONTINUA: Tarjeta "Salidita" en Esquina Inferior Izquierda (Estilo Google) */}
+                                            {idx === 0 && (
+                                                <div className="absolute -bottom-3 sm:-bottom-5 -left-2 sm:-left-6 w-[96%] sm:w-[88%] z-20 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left space-y-2.5">
+                                                    <div className="flex items-center justify-between text-[11px] font-mono text-accents-4 border-b border-border/70 pb-1.5">
+                                                        <span>Salmos 23:1-2</span>
+                                                        <span className="px-2 py-0.5 rounded-full bg-foreground/10 text-foreground font-semibold text-[10px]">Modo Prosa</span>
+                                                    </div>
+                                                    <p className="font-serif italic text-xs sm:text-sm text-foreground leading-relaxed">
                                                         &ldquo;El Señor es mi pastor, nada me faltará. En lugares de verdes pastos me hace descansar; junto a aguas de reposo me conduce.&rdquo;
                                                     </p>
-                                                    <span className="text-xs sm:text-sm text-accents-5 font-normal">
-                                                        Salmos 23:1-2 · Modo Lectura Continua en Prosa
-                                                    </span>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-0.5 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Tipografía Editorial</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Fuentes Serif & Sans adaptativas</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:px-6 py-2 sm:py-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Ajuste Visual</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Tamaño de 14px a 28px sin cortes</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Cero Distracciones</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Modo inmersivo de página limpia</span>
+                                                    <div className="flex flex-wrap gap-2 pt-1 text-[10px] font-mono text-accents-5">
+                                                        <span className="px-2 py-0.5 rounded bg-accents-1">Serif 18px</span>
+                                                        <span className="px-2 py-0.5 rounded bg-accents-1">Página limpia</span>
+                                                        <span className="px-2 py-0.5 rounded bg-accents-1">Cero cortes</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
 
-                                        {/* 2. COMPARADOR DE VERSIONES */}
-                                        {idx === 1 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-2">
-                                                    <div className="flex flex-col gap-1.5 sm:pr-8 pb-3 sm:pb-0">
-                                                        <span className="text-xs font-semibold text-blue-500 uppercase tracking-wider">
-                                                            NBLA (Nueva Biblia de las Américas)
-                                                        </span>
-                                                        <p className="text-xs sm:text-sm md:text-base font-serif text-foreground leading-relaxed">
-                                                            &ldquo;El Señor es mi pastor, nada me faltará.&rdquo;
-                                                        </p>
-                                                        <span className="text-[11px] text-accents-4">Traducción formal y equivalencia estricta</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-1.5 sm:pl-8 pt-3 sm:pt-0">
-                                                        <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                                            NTV (Nueva Traducción Viviente)
-                                                        </span>
-                                                        <p className="text-xs sm:text-sm md:text-base font-serif text-foreground leading-relaxed">
-                                                            &ldquo;El Señor es mi pastor; tengo todo lo que necesito.&rdquo;
-                                                        </p>
-                                                        <span className="text-[11px] text-accents-4">Claridad dinámica contemporánea</span>
-                                                    </div>
-                                                </div>
-                                                <div className="p-3 rounded-xl bg-accents-1 border border-border/60 text-xs font-mono text-accents-5 flex items-center justify-between">
-                                                    <span>Algoritmo LCS de Diferencia Textual:</span>
-                                                    <span className="font-semibold text-blue-500">«nada me faltará» vs «tengo todo lo que necesito»</span>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* 3. TEXTO EN IDIOMAS ORIGINALES (INTERLINEAL) */}
-                                        {idx === 2 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="flex items-center justify-between border-b border-card-border pb-3">
-                                                    <div className="text-2xl sm:text-3xl font-serif text-foreground font-bold" dir="rtl">
-                                                        יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃
-                                                    </div>
-                                                    <span className="text-xs font-mono text-amber-500 font-semibold uppercase px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/20">
-                                                        BHS Masorético
-                                                    </span>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-0.5 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Adonay (Strong H3068)</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Nombre propio divino · El Señor</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:px-6 py-2 sm:py-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Ro'í (Strong H7462)</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Verbo qal participio · Mi pastor</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Lo Ehsar (Strong H2637)</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Qal imperfecto · No careceré</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* 4. ESTRUCTURA Y POESÍA BÍBLICA */}
-                                        {idx === 3 && (
-                                            <div className="w-full flex flex-col justify-center gap-3 text-left py-1">
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-1.5 sm:pr-6 pb-3 sm:pb-0 font-mono text-xs">
-                                                        <span className="text-xs font-semibold text-emerald-500 uppercase tracking-wider">
-                                                            Estructura Quiástica Simétrica (A-B-C-B'-A')
-                                                        </span>
-                                                        <div className="space-y-1 text-accents-5 text-[11px]">
-                                                            <div>[A] Provisión divina integral (Sal 23:1)</div>
-                                                            <div className="pl-3">[B] Reposo y renovación del alma (v.2-3)</div>
-                                                            <div className="pl-6 font-semibold text-foreground bg-emerald-500/10 p-1 rounded border-l-2 border-emerald-500">[C] Clímax: «Tú estás conmigo» (v.4)</div>
-                                                            <div className="pl-3">[B'] Provisión de banquete ante adversarios (v.5)</div>
-                                                            <div>[A'] Comunión eterna en la casa del Señor (v.6)</div>
+                                            {/* 2. COMPARADOR DE VERSIONES: Ventana Flotante Centrada en el Medio */}
+                                            {idx === 1 && (
+                                                <div className="absolute inset-0 z-10 flex items-center justify-center p-3 sm:p-5">
+                                                    <div className="w-full max-w-[440px] rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2 text-xs">
+                                                        <div className="p-2 rounded-xl bg-accents-1/80 border border-border/70 space-y-0.5">
+                                                            <div className="font-mono text-[10px] text-foreground font-semibold flex items-center justify-between">
+                                                                <span>NBLA (Formal y Fiel)</span>
+                                                                <span className="text-[9px] text-accents-4 font-normal">Texto Base</span>
+                                                            </div>
+                                                            <p className="font-serif text-foreground text-xs leading-snug">&ldquo;El Señor es mi pastor, <span className="bg-blue-500/15 text-blue-600 dark:text-blue-300 px-1 py-0.5 rounded font-semibold">nada me faltará</span>.&rdquo;</p>
+                                                        </div>
+                                                        <div className="p-2 rounded-xl bg-accents-1/80 border border-border/70 space-y-0.5">
+                                                            <div className="font-mono text-[10px] text-accents-5 font-semibold flex items-center justify-between">
+                                                                <span>NTV (Lenguaje Actual)</span>
+                                                                <span className="text-[9px] text-accents-4 font-normal">Paralelo</span>
+                                                            </div>
+                                                            <p className="font-serif text-foreground text-xs leading-snug">&ldquo;El Señor es mi pastor; <span className="bg-amber-500/15 text-amber-600 dark:text-amber-300 px-1 py-0.5 rounded font-semibold">tengo todo lo que necesito</span>.&rdquo;</p>
+                                                        </div>
+                                                        <div className="text-[10px] font-mono text-accents-4 pt-1 flex items-center justify-between border-t border-border/60">
+                                                            <span>Algoritmo LCS de variantes:</span>
+                                                            <span className="text-emerald-500 font-semibold">2 matices detectados</span>
                                                         </div>
                                                     </div>
-                                                    <div className="flex flex-col gap-1.5 sm:pl-6 pt-3 sm:pt-0">
-                                                        <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                                            Paralelismo Poético Hebreo
+                                                </div>
+                                            )}
+
+                                            {/* 3. TEXTO EN IDIOMAS ORIGINALES: Barra Superior Anclada sobre el Códice */}
+                                            {idx === 2 && (
+                                                <div className="absolute top-3 sm:top-4 inset-x-3 sm:inset-x-4 z-10 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
+                                                    <div className="flex items-center justify-between border-b border-border pb-1.5">
+                                                        <div className="text-xl sm:text-2xl font-serif text-foreground font-bold tracking-wide" dir="rtl">
+                                                            יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃
+                                                        </div>
+                                                        <span className="text-[10px] font-mono text-foreground font-semibold uppercase px-2 py-0.5 rounded bg-accents-1 border border-border">
+                                                            BHS Masorético
                                                         </span>
-                                                        <p className="text-xs sm:text-sm text-accents-5 leading-relaxed">
-                                                            Identificación automática de paralelismo sinónimo, antitético y sintético para entender la cadencia y énfasis teológico del texto sagrado.
-                                                        </p>
+                                                    </div>
+                                                    <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
+                                                        <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
+                                                            <span className="font-bold text-foreground block">Adonay</span>
+                                                            <span className="text-accents-4 text-[9.5px]">H3068 · Señor</span>
+                                                        </div>
+                                                        <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
+                                                            <span className="font-bold text-foreground block">Ro'í</span>
+                                                            <span className="text-accents-4 text-[9.5px]">H7462 · Pastor</span>
+                                                        </div>
+                                                        <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
+                                                            <span className="font-bold text-foreground block">Lo Ehsar</span>
+                                                            <span className="text-accents-4 text-[9.5px]">H2637 · Provisión</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
 
-                                        {/* 5. DICCIONARIOS BÍBLICOS Y NÚMEROS STRONG */}
-                                        {idx === 4 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="flex items-center justify-between border-b border-card-border pb-3">
+                                            {/* 4. ESTRUCTURA Y POESÍA BÍBLICA: Cajón Lateral Derecho con Árbol Quiástico */}
+                                            {idx === 3 && (
+                                                <div className="absolute top-3.5 bottom-3.5 right-3.5 z-10 w-full sm:w-[320px] md:w-[335px] flex flex-col justify-center">
+                                                    <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-1.5 font-mono text-[10px]">
+                                                        <div className="flex items-center justify-between text-foreground font-semibold pb-1 border-b border-border text-[10.5px]">
+                                                            <span className="flex items-center gap-1.5">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                                                Quiasmo Simétrico
+                                                            </span>
+                                                            <span className="text-accents-4 text-[9.5px]">Salmos 23</span>
+                                                        </div>
+                                                        <div className="space-y-1 text-accents-5 pt-0.5">
+                                                            <div className="text-accents-4">[A] Provisión integral (v.1)</div>
+                                                            <div className="pl-2 border-l border-border/80">[B] Reposo y renovación (v.2-3)</div>
+                                                            <div className="pl-3 font-semibold text-foreground bg-accents-1 p-1 rounded border-l-2 border-foreground">[C] Clímax: «Tú estás conmigo» (v.4)</div>
+                                                            <div className="pl-2 border-l border-border/80">[B'] Banquete ante adversarios (v.5)</div>
+                                                            <div className="text-accents-4">[A'] Comunión eterna con Dios (v.6)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* 5. DICCIONARIOS BÍBLICOS Y STRONG: Ficha "Salidita" en Esquina Inferior Izquierda */}
+                                            {idx === 4 && (
+                                                <div className="absolute -bottom-3 sm:-bottom-5 -left-2 sm:-left-6 w-[92%] sm:w-[370px] z-20 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left space-y-2">
+                                                    <div className="flex items-center justify-between border-b border-border pb-1.5">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-[10px] font-mono font-bold text-foreground bg-accents-1 px-2 py-0.5 rounded border border-border">H7462</span>
+                                                            <span className="text-[10px] font-mono text-accents-4">Léxico BDB / Thayer</span>
+                                                        </div>
+                                                        <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1/80">173 usos AT</span>
+                                                    </div>
                                                     <div>
-                                                        <span className="text-xs font-mono font-bold text-purple-500">Strong H7462 · Léxico BDB / Gesenius</span>
-                                                        <p className="text-lg sm:text-2xl font-bold font-serif text-foreground mt-0.5">רָעָה (ra'ah) — Apacentar, pastorear</p>
+                                                        <p className="text-base font-bold font-serif text-foreground">רָעָה (ra'ah)</p>
+                                                        <p className="text-xs text-accents-5 font-sans">Apacentar, pastorear, guiar a las ovejas</p>
                                                     </div>
-                                                    <span className="text-xs font-mono text-accents-4 px-2.5 py-1 rounded bg-accents-1">
-                                                        173 apariciones en AT
-                                                    </span>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-0.5 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Significado Primario</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Cuidar rebaño, alimentar, guiar</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:px-6 py-2 sm:py-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Frecuencia Canónica</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Salmos (21), Isaías (24), Jeremías (25)</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Equivalente LXX Griego</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">ποιμαίνω (poimaino - G4165)</span>
+                                                    <div className="flex items-center justify-between text-[10px] font-mono text-accents-4 pt-1 border-t border-border/60">
+                                                        <span>LXX Griego: <strong className="text-foreground font-serif">ποιμαίνω (G4165)</strong></span>
+                                                        <span>Salmos, Isaías</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
 
-                                        {/* 6. BUSCADOR BÍBLICO INTELIGENTE */}
-                                        {idx === 5 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="p-3 rounded-xl bg-accents-1 border border-border/80 flex items-center justify-between text-xs font-mono">
-                                                    <div className="flex items-center gap-2">
-                                                        <Search className="w-4 h-4 text-cyan-500" />
-                                                        <span className="font-semibold text-foreground">«gracia y verdad» (Juan 1:14, 1:17)</span>
+                                            {/* 6. BUSCADOR BÍBLICO INTELIGENTE: Omnibar Spotlight Centrado Superior */}
+                                            {idx === 5 && (
+                                                <div className="absolute top-4 sm:top-6 inset-x-3 sm:inset-x-6 z-10 flex flex-col items-center">
+                                                    <div className="w-full max-w-[420px] rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
+                                                        <div className="p-2.5 rounded-xl bg-accents-1/80 border border-border/80 flex items-center justify-between text-xs font-mono">
+                                                            <div className="flex items-center gap-2">
+                                                                <Search className="w-3.5 h-3.5 text-foreground" />
+                                                                <span className="font-semibold text-foreground">«gracia y verdad»</span>
+                                                            </div>
+                                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-foreground text-background font-bold">14 hits</span>
+                                                        </div>
+                                                        <div className="space-y-1.5 text-[10.5px] font-mono text-accents-4 px-1">
+                                                            <div className="flex justify-between items-center py-0.5 border-b border-border/40">
+                                                                <span>AT: <strong className="text-foreground">Éxodo 34:6</strong></span>
+                                                                <span className="text-[9.5px]">Hebreo jésed ve'emet</span>
+                                                            </div>
+                                                            <div className="flex justify-between items-center py-0.5">
+                                                                <span>NT: <strong className="text-foreground">Juan 1:14, 17</strong></span>
+                                                                <span className="text-[9.5px]">Griego járis kai alétheia</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <span className="text-cyan-500 font-bold">14 resultados en 66 libros</span>
                                                 </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-1 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs font-mono font-semibold text-cyan-500">Antiguo Testamento (Hebreo jésed ve'emet)</span>
-                                                        <p className="text-xs sm:text-sm text-accents-5">Éxodo 34:6, Salmos 85:10 · Pacto eterno de misericordia y fidelidad</p>
-                                                    </div>
-                                                    <div className="flex flex-col gap-1 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs font-mono font-semibold text-cyan-500">Nuevo Testamento (Griego járis kai alétheia)</span>
-                                                        <p className="text-xs sm:text-sm text-accents-5">Evangelio de Juan 1 · Plenitud manifestada en la persona de Jesucristo</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
+                                            )}
 
-                                        {/* 7. MAPAS BÍBLICOS Y LUGARES SAGRADOS */}
-                                        {idx === 6 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="flex items-center justify-between border-b border-card-border pb-3">
-                                                    <div className="flex items-center gap-2 text-rose-500 font-semibold text-sm">
-                                                        <MapPin className="w-4 h-4" />
-                                                        <span>Atlas Bíblico Geo-Referenciado · Rutas Apostólicas Siglo I</span>
+                                            {/* 7. MAPAS BÍBLICOS Y RUTAS: Doble HUD (Ruta Superior + Telemetría Inferior "Salidita" a la Derecha) */}
+                                            {idx === 6 && (
+                                                <>
+                                                    <div className="absolute top-3.5 left-3.5 z-10 rounded-xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3 shadow-xl backdrop-blur-xl text-left max-w-[270px] space-y-1">
+                                                        <div className="flex items-center justify-between text-foreground font-semibold text-xs border-b border-border pb-1">
+                                                            <div className="flex items-center gap-1.5">
+                                                                <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                                                                <span>Atlas Geo-Referenciado</span>
+                                                            </div>
+                                                            <span className="text-[9.5px] font-mono text-accents-4">Siglo I</span>
+                                                        </div>
+                                                        <div className="text-[10.5px] font-mono text-foreground font-medium pt-0.5">
+                                                            Antioquía ➔ Chipre ➔ Perge ➔ Listra
+                                                        </div>
                                                     </div>
-                                                    <span className="text-xs font-mono text-accents-4">420+ Sitios Correlacionados</span>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-0.5 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">1er Viaje Paulino</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Antioquía, Chipre, Perge, Listra (2,250 km)</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:px-6 py-2 sm:py-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Topografía Bíblica</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Relieve montañoso, cuenca del Jordán y Galilea</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Ciudades Históricas</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Jerusalén, Éfeso, Corinto, Atenas y Roma</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
 
-                                        {/* 8. LÍNEA DE TIEMPO HISTÓRICA */}
-                                        {idx === 7 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="flex items-center justify-between border-b border-card-border pb-3">
-                                                    <span className="text-xs font-mono font-bold text-amber-500 uppercase">
-                                                        Cronología Sincrónica Bíblica & Arqueológica
-                                                    </span>
-                                                    <span className="text-xs font-mono text-accents-4">c. 2000 a.C. - 100 d.C.</span>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-0.5 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Monarquía & Templo</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Reyes David y Salomón (c. 1000 - 930 a.C.)</span>
+                                                    <div className="absolute -bottom-2.5 sm:-bottom-3.5 -right-2 sm:-right-4 z-20 rounded-xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 px-3.5 py-2 shadow-[0_15px_35px_rgba(0,0,0,0.18)] dark:shadow-[0_15px_35px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left flex items-center gap-3 text-[10.5px] font-mono">
+                                                        <div>
+                                                            <span className="text-accents-4 block text-[9px] uppercase">Distancia</span>
+                                                            <span className="text-foreground font-semibold">2,250 km</span>
+                                                        </div>
+                                                        <div className="h-6 w-px bg-border" />
+                                                        <div>
+                                                            <span className="text-accents-4 block text-[9px] uppercase">Base de Datos</span>
+                                                            <span className="text-emerald-500 font-semibold">420+ Sitios WGS84</span>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex flex-col gap-0.5 sm:px-6 py-2 sm:py-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Profetas & Exilio</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Imperios Asirio y Babilónico (c. 722 - 586 a.C.)</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Periodo Greco-Romano</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Segundo Templo e Iglesia Apostólica</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
+                                                </>
+                                            )}
 
-                                        {/* 9. ARQUEOLOGÍA Y MANUSCRITOS ANTIGUOS */}
-                                        {idx === 8 && (
-                                            <div className="w-full flex flex-col justify-center gap-4 text-left py-1">
-                                                <div className="flex items-center justify-between border-b border-card-border pb-3">
-                                                    <span className="text-xs font-mono font-bold text-teal-500 uppercase">
-                                                        Testimonio Textual e Historiografía
-                                                    </span>
-                                                    <span className="text-xs font-mono text-accents-4">Manuscritos del Mar Muerto</span>
+                                            {/* 8. LÍNEA DE TIEMPO HISTÓRICA: Cinta Cronológica Corrida a lo Ancho */}
+                                            {idx === 7 && (
+                                                <div className="absolute bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-4 z-10 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
+                                                    <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
+                                                        <span className="font-mono font-bold text-foreground uppercase text-[10.5px] flex items-center gap-2">
+                                                            <span className="w-2 h-2 rounded-full bg-amber-500" />
+                                                            Cronología Sincrónica
+                                                        </span>
+                                                        <span className="text-[10px] font-mono text-accents-4">2000 a.C. — 100 d.C.</span>
+                                                    </div>
+                                                    <div className="grid grid-cols-3 gap-2 text-center text-[10.5px] font-mono">
+                                                        <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
+                                                            <div className="font-bold text-foreground">Monarquía Unida</div>
+                                                            <div className="text-accents-4 text-[9.5px]">1000 a.C. (David)</div>
+                                                        </div>
+                                                        <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
+                                                            <div className="font-bold text-foreground">Exilio Babilonia</div>
+                                                            <div className="text-accents-4 text-[9.5px]">586 a.C. (Templo)</div>
+                                                        </div>
+                                                        <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
+                                                            <div className="font-bold text-foreground">Ocupación Romana</div>
+                                                            <div className="text-accents-4 text-[9.5px]">Siglo I (César)</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-1">
-                                                    <div className="flex flex-col gap-0.5 sm:pr-6 pb-2 sm:pb-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Gran Rollo de Isaías</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">1QIsaª (c. 125 a.C.) · 54 columnas íntegras</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:px-6 py-2 sm:py-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Códice de Leningrado</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">Año 1008 d.C. · Base masorética universal</span>
-                                                    </div>
-                                                    <div className="flex flex-col gap-0.5 sm:pl-6 pt-2 sm:pt-0">
-                                                        <span className="text-xs sm:text-sm font-semibold text-foreground">Papiros del NT</span>
-                                                        <span className="text-[11px] sm:text-xs text-accents-5">P52, Chester Beatty y Códice Sinaítico</span>
+                                            )}
+
+                                            {/* 9. ARQUEOLOGÍA Y MANUSCRITOS: Ficha de Registro de Museo Arqueológico a la Derecha */}
+                                            {idx === 8 && (
+                                                <div className="absolute bottom-3.5 sm:bottom-4 right-3.5 sm:right-4 left-3.5 sm:left-auto sm:w-[350px] z-10">
+                                                    <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2">
+                                                        <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
+                                                            <span className="font-mono font-bold text-foreground uppercase text-[10px] flex items-center gap-1.5">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                                                                Registro de Manuscrito
+                                                            </span>
+                                                            <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1">Qumrán Cueva 1</span>
+                                                        </div>
+                                                        <div className="space-y-1.5 text-[10.5px] font-mono">
+                                                            <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
+                                                                <span className="text-foreground font-semibold">Gran Rollo de Isaías (1QIsaª)</span>
+                                                                <span className="text-accents-4 text-[9.5px]">125 a.C.</span>
+                                                            </div>
+                                                            <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
+                                                                <span className="text-foreground font-semibold">Códice de Leningrado (BHS)</span>
+                                                                <span className="text-accents-4 text-[9.5px]">1008 d.C.</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )}
-
-                                    </div>
-
-                                    {/* Botón de Enlace Directo Simple Anclado Abajo a la Derecha */}
-                                    <div className="flex items-center justify-end pt-3 border-t border-card-border">
-                                        <Link
-                                            href={engine.href}
-                                            onClick={(e) => {
-                                                if (!isActive) {
-                                                    e.preventDefault();
-                                                    setCurrentEngineSlide(idx);
-                                                }
-                                            }}
-                                            className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-foreground text-background font-medium text-xs sm:text-sm tracking-tight group-hover:opacity-90 active:scale-95 transition-all cursor-pointer select-none shadow-xs"
-                                        >
-                                            <span>Explorar herramienta</span>
-                                        </Link>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             );
@@ -652,7 +724,7 @@ export default function BibleLandingPage() {
                 <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto text-center my-auto">
                     
                     {/* Selector de pestañas tipo pill (Geist Capsule Compacta: h-[48px] sm:h-[50px], p-1) */}
-                    <div className="h-[48px] sm:h-[50px] p-1 rounded-full bg-zinc-900/90 border border-zinc-800 gap-1 inline-flex items-center justify-center max-w-full shadow-sm mb-6 sm:mb-7">
+                    <div className="h-[48px] sm:h-[50px] p-1 rounded-full bg-zinc-900/90 border border-zinc-800 gap-1 inline-flex items-center justify-center max-w-full shadow-sm mb-7 sm:mb-8">
                         <button
                             onClick={() => setActivePurpose('daily')}
                             className={`h-full inline-flex items-center gap-2 px-4 sm:px-5.5 rounded-full text-xs sm:text-[13px] transition-all cursor-pointer ${
@@ -700,7 +772,7 @@ export default function BibleLandingPage() {
                     </div>
 
                     {/* Título contextual dinámico Geist (1 sola línea en Desktop, responsivo) */}
-                    <h2 className="text-3xl sm:text-4xl md:text-[42px] lg:text-[48px] xl:text-[52px] font-bold text-white tracking-tight leading-tight max-w-full mx-auto mb-4 whitespace-normal md:whitespace-nowrap">
+                    <h2 className="text-3xl sm:text-4xl md:text-[42px] lg:text-[48px] xl:text-[52px] font-bold text-white tracking-tight leading-tight max-w-full mx-auto mb-5 sm:mb-6 whitespace-normal md:whitespace-nowrap">
                         {activePurpose === 'daily' && tLanding('purposeDailyHeadline')}
                         {activePurpose === 'compare' && tLanding('purposeCompareHeadline')}
                         {activePurpose === 'originals' && tLanding('purposeOriginalsHeadline')}
@@ -708,7 +780,7 @@ export default function BibleLandingPage() {
                     </h2>
 
                     {/* Botón CTA central Vercel Style */}
-                    <div className="mb-7 sm:mb-9">
+                    <div className="mb-8 sm:mb-10">
                         <Link
                             href={
                                 activePurpose === 'daily'
@@ -751,20 +823,41 @@ export default function BibleLandingPage() {
                                         </p>
                                     </div>
 
-                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-5 shadow-inner mt-auto space-y-3.5">
-                                        <div className="flex items-center justify-between text-xs font-mono text-zinc-400 border-b border-zinc-800 pb-2.5">
-                                            <span className="px-2.5 py-1 rounded bg-white text-black text-[11px] font-semibold">Serif</span>
-                                            <span className="text-xs text-zinc-300">18px</span>
-                                            <span className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-zinc-300 text-[11px] font-semibold">Prosa</span>
+                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-5 shadow-inner mt-auto space-y-3">
+                                        <div className="flex items-center justify-between text-xs font-mono text-zinc-400 border-b border-zinc-800/80 pb-2.5">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="px-2.5 py-1 rounded bg-white text-black text-[11px] font-semibold">Serif</span>
+                                                <span className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] font-medium">Sans</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs">
+                                                <span className="text-zinc-300 font-mono text-[11px]">18px</span>
+                                                <span className="text-zinc-600">·</span>
+                                                <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300 text-[11px] font-semibold">Prosa</span>
+                                            </div>
                                         </div>
-                                        <div className="space-y-2 text-xs text-zinc-300">
+
+                                        <div className="p-3 sm:p-3.5 rounded-xl bg-zinc-950/90 border border-zinc-850 space-y-1">
+                                            <div className="text-[9.5px] font-mono text-zinc-500 uppercase tracking-wider flex items-center justify-between">
+                                                <span>Salmos 23:2-3 · RVR1960</span>
+                                                <span className="text-[9px] text-zinc-500 font-mono">Modo Lectura</span>
+                                            </div>
+                                            <p className="font-serif text-[12px] sm:text-[13px] text-zinc-200 leading-[1.7]">
+                                                {tLanding('purposeDailyCard1Sample')}
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-1.5 pt-1 text-xs text-zinc-300 border-t border-zinc-900">
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-3.5 h-3.5 text-white shrink-0" />
-                                                <span>{tLanding('purposeDailyCard1Feature1')}</span>
+                                                <span className="text-[11.5px]">{tLanding('purposeDailyCard1Feature1')}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-3.5 h-3.5 text-white shrink-0" />
-                                                <span>{tLanding('purposeDailyCard1Feature2')}</span>
+                                                <span className="text-[11.5px]">{tLanding('purposeDailyCard1Feature2')}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Check className="w-3.5 h-3.5 text-white shrink-0" />
+                                                <span className="text-[11.5px]">{tLanding('purposeDailyCard1Feature3')}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -772,14 +865,39 @@ export default function BibleLandingPage() {
 
                                 {/* Tarjeta 2: Notas y Reflexiones (Mockup arriba, Texto abajo) */}
                                 <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
-                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-5 shadow-inner mb-auto space-y-2.5">
-                                        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                                            <span className="font-semibold text-zinc-200 text-xs">{tLanding('purposeDailyCard2NoteTitle')}</span>
-                                            <span className="px-2 py-0.5 rounded text-[10px] bg-zinc-900 text-zinc-400 border border-zinc-800">Privado</span>
+                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-5 shadow-inner mb-auto space-y-2.5">
+                                        <div className="flex items-center justify-between text-[11px] font-mono border-b border-zinc-800/80 pb-2">
+                                            <div className="flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                                <span className="font-semibold text-zinc-200 text-xs">{tLanding('purposeDailyCard2NoteTitle')}</span>
+                                            </div>
+                                            <span className="px-2 py-0.5 rounded text-[10px] bg-zinc-900 text-zinc-300 border border-zinc-800 font-mono">
+                                                {tLanding('purposeDailyCard2Storage')}
+                                            </span>
                                         </div>
-                                        <p className="font-serif italic text-xs sm:text-[13.5px] text-zinc-300 leading-relaxed border-l-2 border-zinc-700 pl-3">
-                                            "{tLanding('purposeDailyCard2NoteText')}"
-                                        </p>
+
+                                        <div className="p-2.5 rounded-lg bg-zinc-950/90 border border-zinc-900 text-[11px] text-zinc-400 font-mono">
+                                            <span className="text-zinc-500">Cita anclada: </span>
+                                            <span className="text-zinc-300 font-serif italic">{tLanding('purposeDailyCard2VerseContext')}</span>
+                                        </div>
+
+                                        <div className="p-3 rounded-xl bg-zinc-950/70 border border-zinc-850">
+                                            <p className="font-serif italic text-[12px] sm:text-[12.5px] text-zinc-200 leading-[1.7] border-l-2 border-zinc-600 pl-2.5">
+                                                "{tLanding('purposeDailyCard2NoteText')}"
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-1 text-[10.5px] font-mono text-zinc-400 border-t border-zinc-900">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-zinc-300 text-[10px]">
+                                                    #{tLanding('purposeDailyCard2Tag1')}
+                                                </span>
+                                                <span className="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-zinc-300 text-[10px]">
+                                                    #{tLanding('purposeDailyCard2Tag2')}
+                                                </span>
+                                            </div>
+                                            <span className="text-[9.5px] text-zinc-500">Guardado local</span>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -811,14 +929,36 @@ export default function BibleLandingPage() {
                                         </p>
                                     </div>
 
-                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-5 shadow-inner mt-auto space-y-2.5">
-                                        <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 font-semibold flex items-center gap-1.5">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                                            <span>{tLanding('purposeDailyCard3Tag')}</span>
+                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-5 shadow-inner mt-auto space-y-2.5">
+                                        <div className="flex items-center justify-between text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 font-semibold border-b border-zinc-800/80 pb-2">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                                                <span>{tLanding('purposeDailyCard3Tag')}</span>
+                                            </div>
+                                            <span className="text-[9.5px] text-zinc-500 font-normal lowercase tracking-normal font-mono">
+                                                {tLanding('purposeDailyCard3Time')}
+                                            </span>
                                         </div>
-                                        <p className="font-serif text-xs sm:text-sm text-white font-medium leading-snug">
-                                            {tLanding('purposeDailyCard3Verse')}
-                                        </p>
+
+                                        <div className="p-3 rounded-xl bg-zinc-950/90 border border-zinc-850 space-y-1">
+                                            <div className="text-[9.5px] font-mono text-amber-400/90 font-medium">
+                                                Salmos 23:1 (NBLA)
+                                            </div>
+                                            <p className="font-serif text-xs sm:text-[13px] text-white font-medium leading-snug">
+                                                {tLanding('purposeDailyCard3Verse')}
+                                            </p>
+                                        </div>
+
+                                        <div className="p-2.5 rounded-xl bg-zinc-950/50 border border-zinc-900/90">
+                                            <p className="text-[11.5px] sm:text-xs font-serif text-zinc-300 leading-relaxed italic">
+                                                {tLanding('purposeDailyCard3Reflection')}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-zinc-400 border-t border-zinc-900">
+                                            <span className="text-zinc-400">{tLanding('purposeDailyCard3Action')}</span>
+                                            <span className="text-white font-semibold">✦ 08:00 AM</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1113,27 +1253,83 @@ export default function BibleLandingPage() {
                 </div>
             </section>
 
-            {/* Sección: Versiones y Lenguas Originales */}
-            <section id="versiones" className="py-24 sm:py-32 w-full">
-                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8">
-                    <div className="space-y-3 max-w-2xl mx-auto">
-                        <h2 className="text-xs font-mono uppercase tracking-widest text-[#3c4043] dark:text-zinc-400">
+            {/* Sección: Versiones y Lenguas Originales (Equilibrada con amplitud y aire) */}
+            <section id="versiones" className="py-14 sm:py-16 lg:py-20 w-full border-t border-border/40">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto text-center space-y-8 sm:space-y-10">
+                    <div className="space-y-2.5 max-w-3xl mx-auto">
+                        <h2 className="text-[11px] font-mono uppercase tracking-widest text-[#3c4043] dark:text-zinc-400 font-semibold">
                             {tLanding('corpusBadge')}
                         </h2>
-                        <p className="text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-[#202124] dark:text-zinc-100 leading-tight">
+                        <p className="text-3xl sm:text-4xl font-bold tracking-tight text-[#202124] dark:text-zinc-100 leading-tight">
                             {tLanding('corpusTitle')}
+                        </p>
+                        <p className="text-sm text-[#5f6368] dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed pt-0.5">
+                            {tLanding('corpusDesc')}
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 w-full text-left">
                         {versions.map((v) => (
                             <div
                                 key={v.code}
-                                className="px-4 py-3 rounded-xl border border-accents-2 bg-background shadow-xs text-left w-full"
+                                className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-[22px] sm:rounded-[26px] border border-border/80 bg-card hover:border-foreground/20 hover:shadow-lg transition-all duration-200 min-h-[255px] sm:min-h-[265px]"
                             >
-                                <div className="text-xs font-mono text-accents-4 uppercase">{v.code}</div>
-                                <div className="text-xs sm:text-sm font-semibold text-foreground">{v.name}</div>
-                                <div className="text-xs text-accents-5 font-mono">{v.lang}</div>
+                                <div className="space-y-3">
+                                    {/* Cabecera de la versión */}
+                                    <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2.5">
+                                        <div className="flex items-center gap-2.5">
+                                            <span className="text-xl sm:text-[22px] font-mono font-bold tracking-tight text-foreground">
+                                                {v.code}
+                                            </span>
+                                            <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-accents-1 border border-border text-accents-5 font-medium">
+                                                {v.tag}
+                                            </span>
+                                        </div>
+                                        <span className="text-[10.5px] font-mono text-accents-4">
+                                            {v.lang}
+                                        </span>
+                                    </div>
+
+                                    {/* Título y descripción */}
+                                    <div>
+                                        <h3 className="text-[15px] sm:text-base font-bold text-foreground leading-snug">
+                                            {v.name}
+                                        </h3>
+                                        <p className="text-xs sm:text-[12.5px] text-accents-5 leading-relaxed mt-1 line-clamp-2">
+                                            {v.desc}
+                                        </p>
+                                    </div>
+
+                                    {/* Muestra textual representativa */}
+                                    <div className="p-3 rounded-xl bg-accents-1/50 border border-border/70 space-y-1">
+                                        <div className="text-[9.5px] font-mono text-accents-4 uppercase tracking-wider flex items-center justify-between">
+                                            <span>Salmos 23:1</span>
+                                            <span className="text-[9px] text-accents-4">Texto Fuente</span>
+                                        </div>
+                                        <p
+                                            dir={v.dir}
+                                            className={`font-serif text-xs sm:text-[12.5px] text-foreground leading-relaxed ${
+                                                v.dir === 'rtl' ? 'text-right text-sm font-semibold' : ''
+                                            }`}
+                                        >
+                                            {v.sample}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Pie de la tarjeta con titular de derechos y enlace directo */}
+                                <div className="flex items-center justify-between pt-3 mt-3 border-t border-border/60 text-xs">
+                                    <span className="text-[10px] font-mono text-accents-4 truncate max-w-[60%]">
+                                        {v.source}
+                                    </span>
+                                    <Link
+                                        href={v.href}
+                                        className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-foreground hover:text-foreground/70 group-hover:translate-x-0.5 transition-all cursor-pointer"
+                                    >
+                                        <span>{tLanding('corpusOpenStudy')}</span>
+                                        <ArrowRight className="w-3.5 h-3.5" />
+                                    </Link>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -1142,13 +1338,13 @@ export default function BibleLandingPage() {
 
             {/* Sección Oscura Teatral: Manuscritos Antiguos y Lenguas Originales */}
             <section id="manuscritos" className="py-28 sm:py-36 bg-zinc-950 text-white w-full">
-                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
-                    <div className="space-y-6 max-w-xl">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+                    <div className="space-y-6 max-w-2xl flex-1">
                         <div className="space-y-2">
                             <span className="text-xs font-mono uppercase tracking-widest text-amber-400">
                                 {tLanding('manuscriptsBadge')}
                             </span>
-                            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-white leading-tight">
+                            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-white leading-tight">
                                 {tLanding('manuscriptsTitle')}
                             </h2>
                             <p className="text-base sm:text-[17px] text-zinc-300 leading-relaxed pt-1">
@@ -1194,7 +1390,7 @@ export default function BibleLandingPage() {
                         </div>
                     </div>
 
-                    <div className="w-full max-w-sm lg:max-w-md shrink-0 rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl relative aspect-[4/3]">
+                    <div className="w-full max-w-md lg:max-w-xl xl:max-w-2xl shrink-0 rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl relative aspect-[4/3]">
                         <Image
                             src="/bible/images/manuscripts_heritage.jpg"
                             alt="Facsímil de Manuscrito Bíblico Antiguo"
@@ -1208,17 +1404,17 @@ export default function BibleLandingPage() {
 
             {/* Sección: Comienza en 3 Pasos Sencillos */}
             <section className="py-24 sm:py-32 bg-accents-1/20 w-full">
-                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12 text-center">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto space-y-12 sm:space-y-16 text-center">
                     <div className="space-y-3 max-w-2xl mx-auto">
                         <div className="text-xs font-mono uppercase tracking-widest text-[#3c4043] dark:text-zinc-400">
                             {tLanding('stepsBadge')}
                         </div>
-                        <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-[#202124] dark:text-zinc-100 leading-tight">
+                        <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-[#202124] dark:text-zinc-100 leading-tight">
                             {tLanding('stepsTitle')}
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 text-left">
                         <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-3 shadow-xs">
                             <div className="w-9 h-9 rounded-full bg-foreground text-background font-mono text-xs font-bold flex items-center justify-center">
                                 {tLanding('step1Num')}
@@ -1251,14 +1447,14 @@ export default function BibleLandingPage() {
             </section>
 
             {/* Sección: App Móvil */}
-            <section id="movil" className="py-24 sm:py-32 w-full">
-                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-14">
-                    <div className="space-y-6 max-w-xl flex-1">
+            <section id="movil" className="py-24 sm:py-32 w-full border-t border-border/40">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-20">
+                    <div className="space-y-6 max-w-2xl flex-1">
                         <div className="space-y-3">
                             <div className="inline-flex items-center gap-2 text-xs font-mono text-[#3c4043] dark:text-zinc-400">
                                 <span>{tLanding('mobileBadge')}</span>
                             </div>
-                            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-[#202124] dark:text-zinc-100 leading-tight">
+                            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-[#202124] dark:text-zinc-100 leading-tight">
                                 {tLanding('mobileTitle')}
                             </h2>
                             <p className="text-base sm:text-[17px] text-[#3c4043] dark:text-zinc-300 leading-relaxed">

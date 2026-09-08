@@ -79,11 +79,20 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
 2. **Layering Cinematográfico en el Hero:**
    * **Fondo ambiental:** Fotografía editorial de alta definición con un espacio de estudio bíblico moderno en tonos grafito/carbón, biblia en cuero abierta con tipografía nítida y suite digital en tablet (`/bible/images/hero_editorial_dark.jpg`) montada en marco panorámico `max-w-[1380px]` y altura calibrada a primer pliegue (`max-h-[460px] sm:max-h-[480px]`).
    * **Tarjeta de lectura flotante:** Superpuesta con elevación translúcida (*glassmorphism* `backdrop-blur-2xl`, sombra difusa `shadow-[0_25px_60px_-15px_rgba(0,0,0,0.20)]`), controles Mac y versículos en español e hebreo masorético con interlineado `leading-[1.8]` de alta legibilidad editorial.
-3. **Recursos de Profundización (Carrusel Panorámico - Arquitectura Idéntica a AppleHighlightsCarousel y Escala Equilibrada):**
-   * **Cabecera Equilibrada en 2 Líneas Estilo Google:** Encabezado armónico y nítido en dos líneas estrictas (`text-3xl sm:text-5xl md:text-[52px] lg:text-[56px]`, `leading-[1.12]`) y subtítulo suave (`text-sm sm:text-base lg:text-[17px]`, `text-[#3c4043] dark:text-zinc-400`), respaldado por las claves bilingües `"enginesTitle"` y `"enginesSubtitle"` en `messages/es.json` y `messages/en.json`.
-   * **Fórmula de Centrado y Viewport de Gran Formato:** Usa la arquitectura CSS consolidada con sección `w-screen relative left-1/2 -translate-x-1/2`, padding vertical moderado (`py-12 sm:py-16 md:py-20`), variables de ancho (`[--card-w:82vw] sm:[--card-w:84vw] md:[--card-w:min(82vw,1040px)]`) y desplazamiento calibrado al centro exacto de la pantalla: `transform: translateX(calc(50vw - (var(--card-w) / 2) - index * (var(--card-w) + var(--card-gap))))`.
-   * **Proporciones y Ocupación del Espacio:** Tarjetas de `rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem]` con altura contenida (`h-[520px] sm:h-[490px] md:h-[510px]`), padding ergonómico (`p-6 sm:p-10 md:p-12`), fondo `bg-card` y desenfoque `backdrop-blur-2xl`.
-   * **Distribución Interior y Tipografía Equilibrada:** Cabecera limpia y directa sin iconos SVG ni recuadros de color (estilo editorial *Apple Highlights*), con título de motor destacado (`text-xl sm:text-2xl md:text-3xl font-bold`) y descripción alineada al margen izquierdo (`text-xs sm:text-sm md:text-base`); área central con grids de 3 columnas separadas por divisores sutiles (`divide-x divide-card-border`), y botón de acción simple (`"Explorar herramienta"`) anclado en la esquina inferior derecha.
+   * **Distribución Split Geist (45% Narrativa / 55% Viewport Editorial Integrado):**
+     * **Monocromía y Neutralidad:** Fondo de tarjeta neutro de alta gama (`bg-white dark:bg-[#0c0c0d] border border-zinc-200/90 dark:border-zinc-800/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)]`), eliminando tintes pasteles genéricos para alinearse con la sobriedad académica de Geist.
+     * **Jerarquía Tipográfica Limpia y Directa:** Se eliminaron badges y etiquetas redundantes de numeración para maximizar el minimalismo editorial Geist, dando todo el protagonismo al título principal de la herramienta (`text-2xl sm:text-3xl lg:text-[32px]`) y a su descripción.
+     * **9 Imágenes Editoriales Dedicadas de Alta Definición:** Cada herramienta cuenta con su propia fotografía cinematográfica de erudición (`hero_editorial_dark.jpg`, `parallel_versions_study.jpg`, `codex_interlinear_scroll.jpg`, `chiasm_poetry_manuscript.jpg`, `strong_lexicon_study.jpg`, `smart_search_scriptures.jpg`, `bible_atlas_topography.jpg`, `historical_timeline_chronology.jpg`, `manuscripts_heritage.jpg`).
+     * **Composiciones Espaciales y Layouts Dinámicos con Efecto Sobresalido ("Salidito" Estilo Google):** Se combinan ventanas contenidas con elementos flotantes que rompen sutilmente los bordes del marco fotográfico (`z-20` con sombra difusa `shadow-[0_20px_50px_rgba(0,0,0,0.18)]`), recreando el efecto de profundidad de Google Business Profile:
+        1. *Lectura Continua:* Tarjeta de lectura sobresalida en la esquina inferior izquierda (`-bottom-5 -left-6`), creando profundidad entre el escritorio y la narrativa.
+        2. *Comparador de Versiones:* Ventana flotante de diff textual centrada en la escena.
+        3. *Idiomas Originales:* Inspector anclado en la parte superior descubriendo el códice subyacente.
+        4. *Estructura Quiástica:* Cajón vertical derecho con árbol escalonado de simetría poética.
+        5. *Diccionarios Strong:* Ficha léxica sobresalida en la esquina inferior izquierda (`-bottom-5 -left-6`) sobre el libro y la lupa.
+        6. *Buscador Inteligente:* Omnibar Spotlight centrado superior estilo Cmd+K con coincidencias en tiempo real.
+        7. *Mapas Bíblicos:* Doble HUD cartográfico con telemetría sobresalida en la esquina inferior derecha (`-bottom-3.5 -right-4`).
+        8. *Línea de Tiempo:* Cinta horizontal sincronizada a lo ancho con rail de épocas históricas.
+        9. *Arqueología:* Ficha de registro de museo arqueológico anclada al cuadrante inferior derecho.
    * **Controles y Click-to-Slide:** Cápsula flotante translúcida centrada (`h-11 sm:h-12`) con 9 indicadores de píldora interactivos, botón circular independiente de Pausa / Reproducción, y desplazamiento reactivo inmediato al pulsar las tarjetas laterales que se muestran con nitidez total (`opacity-100`) y bordes uniformes (`hover:border-card-hover-border`).
 4. **Selector por Propósito del Lector (Estética Geist / Vercel OLED Black Puro con Métricas Calibradas):**
    * **Bloque de Contraste Teatral (`#proposito`):** Fondo negro puro `bg-black text-white` con padding vertical exacto `py-[60px] lg:py-[72px]`, contenedor expandido `max-w-[1440px]`, selector de pestañas en cápsula Geist con altura fija `h-[60px]` y padding de 4px (`p-1`), título dinámico en blanco nítido a escala completa (`text-3xl sm:text-5xl lg:text-[60px]` con `leading-[1.12]` y `max-w-[1170px]`) y botón primario Vercel (`px-8 py-3.5 rounded-full`) con separación de 60px hacia las tarjetas (`mb-[60px]`).
@@ -92,16 +101,17 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
      * **Tarjeta 2:** Mockup superior en tarjeta interior + texto inferior (`min-h-[615px]`).
      * **Tarjeta 3:** Texto superior + mockup inferior en tarjeta interior (`min-h-[615px]`).
    * **Mockups internos de alta precisión:**
-     * *Lectura y Devocional:* Controles editoriales de lectura (Serif/Sans, Prosa/Versículos), libreta de reflexiones privadas y meditación devocional del día.
+      * *Lectura y Devocional:* Controles tipográficos (Serif/Sans, 18px, Prosa), texto en vivo (Salmos 23:2-3), checks de interlineado óptico, libreta de reflexiones privadas con anclaje escritural y devocional matutino con versículo destacado (NBLA) y meditación pastoral.
      * *Comparar Versiones:* Cotejo paralelo a doble columna (NBLA vs NTV), motor de resaltado léxico LCS y cotejo de textos base (BHS vs LXX).
      * *Idiomas Originales:* Token interlineal morfológico (`יְהוָ֥ה רֹ֝עִ֗י`), ficha léxica Strong H7462 / BDB con conteo de ocurrencias, y diagrama de estructura quiástica (A-B-C-B'-A').
      * *Mapas e Historia:* Diagrama vectorial de ruta misionera mediterránea (Antioquía → Chipre → Perge → Listra/Derbe), cronología sincrónica tripartita (Monarquía/Profecía/Imperio) y ficha arqueológica del Gran Rollo de Isaías (1QIsaª).
-4. **Sección Oscura Teatral de Manuscritos Milenarios:**
-   * Bloque inmersivo en carbón (`bg-zinc-950`) con iluminación focal sobre facsímil antiguo (`/bible/images/manuscripts_heritage.jpg`), detallando el Códice de Leningrado, la Septuaginta LXX y los Rollos de Qumrán.
-5. **Comienza en 3 Pasos Sencillos:**
-   * Guía visual numerada con insignias circulares destacadas para orientar a cualquier perfil de lector.
-6. **Mockup de Teléfono Móvil Realista:**
-   * Smartphone minimalista con Dynamic Island y vista de lectura real sin emojis ni iconos SVG, balanceado junto a las características de lectura sin conexión en un contenedor armónico `max-w-5xl`.
+4. **Catálogo Exegético de Versiones y Manuscritos (`#versiones` en `max-w-[1400px]`):**
+   * **Vitrina de 6 Tarjetas Editoriales de Alta Presencia:** Grid de 3 columnas (`min-h-[300px]`, `rounded-[28px]`, `border-border/80 bg-card`) con acrónimo destacado en mono, metodología de traducción (*Tradición Masorética, Equivalencia Formal, Dinámica, Hebreo Masorético, Griego Alejandrino*), nombre oficial, valor exegético, versículo muestra en vivo (*Salmos 23:1* con soporte RTL masorético), titular de derechos de autor y enlace directo de apertura en el lector.
+   * Cubre las 6 versiones pilares: `RV1960` (SBU), `NBLA` (Lockman), `NVI` (Bíblica/Zondervan), `NTV` (Tyndale), `BHS` (Groves Center) y `LXX` (Rahlfs).
+5. **Sección Oscura Teatral de Manuscritos Milenarios (`#manuscritos` en `max-w-[1400px]`):**
+   * Bloque inmersivo en carbón (`bg-zinc-950`) de ancho generoso con iluminación focal sobre facsímil antiguo (`/bible/images/manuscripts_heritage.jpg`), detallando el Códice de Leningrado, la Septuaginta LXX y los Rollos de Qumrán.
+6. **Comienza en 3 Pasos Sencillos y Suite Móvil (`max-w-[1400px]`):**
+   * Guía visual numerada con insignias circulares y smartphone minimalista con Dynamic Island, armónicos a escala completa.
 
 ---
 

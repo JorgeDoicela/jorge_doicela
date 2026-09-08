@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jorge-doicela-pwa-v1';
+const CACHE_NAME = 'jorge-doicela-pwa-v2';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.json',
@@ -36,9 +36,21 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
+  // Ignorar esquemas no soportados por Cache Storage (extensiones de Chrome, chrome-extension://, etc.)
+  if (!url.protocol.startsWith('http')) return;
+
   // NUNCA interceptar chunks internos de Next.js (dejar que el navegador y Nginx gestionen el hashing)
   if (url.pathname.startsWith('/_next/')) return;
 
+  // NUNCA interceptar archivos de telemetría para LLMs, sitemaps ni robots (dejar pasar directo a Nginx)
+  if (
+    url.pathname === '/llms.txt' ||
+    url.pathname === '/robots.txt' ||
+    url.pathname.endsWith('.txt') ||
+    url.pathname.endsWith('.xml')
+  ) {
+    return;
+  }
 
   // Red primero para la navegación de páginas HTML
   if (event.request.mode === 'navigate') {
@@ -46,7 +58,7 @@ self.addEventListener('fetch', (event) => {
       fetch(event.request)
         .then((response) => {
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone)).catch(() => {});
           return response;
         })
         .catch(() => caches.match(event.request).then((res) => res || caches.match('/')))
@@ -68,7 +80,7 @@ self.addEventListener('fetch', (event) => {
           fetch(event.request)
             .then((networkResponse) => {
               if (networkResponse.status === 200) {
-                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse)).catch(() => {});
               }
             })
             .catch(() => {});
@@ -78,7 +90,7 @@ self.addEventListener('fetch', (event) => {
         return fetch(event.request).then((networkResponse) => {
           if (networkResponse.status === 200) {
             const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone)).catch(() => {});
           }
           return networkResponse;
         });

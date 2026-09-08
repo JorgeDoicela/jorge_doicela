@@ -221,6 +221,8 @@ server {
 
     location = /llms.txt {
         alias $llms_file;
+        charset utf-8;
+        default_type "text/plain; charset=utf-8";
         expires 7d;
         access_log off;
         add_header Cache-Control "public, max-age=604800, stale-while-revalidate=86400";

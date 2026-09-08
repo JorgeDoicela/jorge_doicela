@@ -33,7 +33,7 @@ frontend/web/src/app/(bible)/
 ├── layout.tsx                 # Layout raíz del subdominio
 │
 ├── bible/                     # ENRUTAMIENTO (App Router)
-│   ├── page.tsx               # Landing Page de presentación y Live Preview
+│   ├── page.tsx               # Landing Page de presentación y Live Preview interactivo
 │   └── study/
 │       ├── layout.tsx         # Layout compartido: BiblePassageProvider + BibleHeaderNav persistente
 │       ├── page.tsx           # Redirección por defecto a /study/standard
@@ -67,6 +67,26 @@ frontend/web/src/app/(bible)/
     ├── timeline/              # services/timelineApiService (API /bible/historical/timeline)
     └── archaeology-feed/      # services/archaeologyApiService (API /bible/historical/articles)
 ```
+
+### 2.1 Arquitectura Visual de la Landing Page (`bible/page.tsx`)
+Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de Negocio* (inspección DevTools):
+1. **Calibración Dimensional y Escala Tipográfica:**
+   * **Headline Principal (`h1`):** `text-4xl sm:text-5xl md:text-6xl lg:text-[68px]` con `leading-[1.12]` y color suave `#202124` (dark charcoal) para máxima legibilidad humana sin agresividad visual.
+   * **Cuerpo Introductorio (`p`):** `text-base sm:text-[18px]` con `leading-[1.6]` y color `#3C4043`, con contenedor de lectura amplio `max-w-[1200px]`.
+   * **Grid y Ritmo Vertical:** Contenedor de `1456px` (`max-w-[1456px]`), sin líneas divisorias horizontales entre secciones (`border-b`, `border-y` eliminados) y con espaciado vertical amplio y generoso (`py-24 sm:py-32` y `py-28 sm:py-36` en secciones oscuras y CTA) para un flujo editorial limpio y aireado.
+   * **Botones Principales:** Botones tipo píldora (`rounded-full`) con padding ergonómico `px-8 py-3.5 text-base font-semibold`.
+   * **Encabezados de Sección (`h2`):** Armonizados a `text-3xl sm:text-4xl lg:text-[42px]` en `#202124` con subtítulos descriptivos en `#3C4043` (`text-base sm:text-[17-18px]`).
+2. **Layering Cinematográfico en el Hero:**
+   * **Fondo ambiental:** Fotografía editorial de alta definición con un espacio de estudio bíblico moderno en tonos grafito/carbón, biblia en cuero abierta con tipografía nítida y suite digital en tablet (`/bible/images/hero_editorial_dark.jpg`) montada en marco panorámico `max-w-[1380px]` y altura calibrada a primer pliegue (`max-h-[460px] sm:max-h-[480px]`).
+   * **Tarjeta de lectura flotante:** Superpuesta con elevación translúcida (*glassmorphism* `backdrop-blur-2xl`, sombra difusa `shadow-[0_25px_60px_-15px_rgba(0,0,0,0.20)]`), controles Mac y versículos en español e hebreo masorético con interlineado `leading-[1.8]` de alta legibilidad editorial.
+3. **Selector por Propósito del Lector:**
+   * Control segmentado tipo pastilla con botones píldora que adaptan dinámicamente la propuesta de valor: *Lectura y Devocional*, *Comparar Versiones*, *Idiomas Originales* y *Mapas e Historia*.
+4. **Sección Oscura Teatral de Manuscritos Milenarios:**
+   * Bloque inmersivo en carbón (`bg-zinc-950`) con iluminación focal sobre facsímil antiguo (`/bible/images/manuscripts_heritage.jpg`), detallando el Códice de Leningrado, la Septuaginta LXX y los Rollos de Qumrán.
+5. **Comienza en 3 Pasos Sencillos:**
+   * Guía visual numerada con insignias circulares destacadas para orientar a cualquier perfil de lector.
+6. **Mockup de Teléfono Móvil Realista:**
+   * Smartphone minimalista con Dynamic Island y vista de lectura real sin emojis ni iconos SVG, balanceado junto a las características de lectura sin conexión en un contenedor armónico `max-w-5xl`.
 
 ---
 

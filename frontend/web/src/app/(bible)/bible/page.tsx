@@ -648,11 +648,11 @@ export default function BibleLandingPage() {
             </section>
 
             {/* Sección: Selector Interactivo por Propósito del Lector (Métricas y Proporciones Exactas de Google) */}
-            <section id="proposito" className="py-10 sm:py-12 lg:py-14 bg-black text-white w-full relative">
-                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto text-center">
+            <section id="proposito" className="min-h-screen flex flex-col justify-center py-16 sm:py-20 lg:py-24 bg-black text-white w-full relative">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto text-center my-auto">
                     
                     {/* Selector de pestañas tipo pill (Geist Capsule Compacta: h-[48px] sm:h-[50px], p-1) */}
-                    <div className="h-[48px] sm:h-[50px] p-1 rounded-full bg-zinc-900/90 border border-zinc-800 gap-1 inline-flex items-center justify-center max-w-full shadow-sm mb-5 sm:mb-6">
+                    <div className="h-[48px] sm:h-[50px] p-1 rounded-full bg-zinc-900/90 border border-zinc-800 gap-1 inline-flex items-center justify-center max-w-full shadow-sm mb-6 sm:mb-7">
                         <button
                             onClick={() => setActivePurpose('daily')}
                             className={`h-full inline-flex items-center gap-2 px-4 sm:px-5.5 rounded-full text-xs sm:text-[13px] transition-all cursor-pointer ${
@@ -708,7 +708,7 @@ export default function BibleLandingPage() {
                     </h2>
 
                     {/* Botón CTA central Vercel Style */}
-                    <div className="mb-6 sm:mb-8">
+                    <div className="mb-7 sm:mb-9">
                         <Link
                             href={
                                 activePurpose === 'daily'
@@ -737,7 +737,7 @@ export default function BibleLandingPage() {
                         {activePurpose === 'daily' && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 animate-in fade-in duration-300">
                                 {/* Tarjeta 1: Diseño Editorial (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-400" />
@@ -771,7 +771,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 2: Notas y Reflexiones (Mockup arriba, Texto abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div className="bg-black border border-zinc-800/80 rounded-[20px] p-5 shadow-inner mb-auto space-y-2.5">
                                         <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
                                             <span className="font-semibold text-zinc-200 text-xs">{tLanding('purposeDailyCard2NoteTitle')}</span>
@@ -797,7 +797,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 3: Devocional Diario (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
@@ -828,7 +828,7 @@ export default function BibleLandingPage() {
                         {activePurpose === 'compare' && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 animate-in fade-in duration-300">
                                 {/* Tarjeta 1: Vista Paralela (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <Columns2 className="w-3.5 h-3.5 text-zinc-400" />
@@ -855,20 +855,18 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 2: Diferencias Resaltadas (Mockup arriba, Texto abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
-                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-4.5 shadow-inner mb-auto space-y-2 font-serif text-xs leading-relaxed">
-                                        <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80">
-                                            <span className="font-mono text-[9px] text-zinc-500 block mb-0.5 font-sans">RVR1960</span>
-                                            <p className="text-zinc-300">
-                                                {tLanding('purposeCompareCard2T1')} <span className="bg-amber-950/60 text-amber-300 px-1 py-0.5 rounded border border-amber-800/50">{tLanding('purposeCompareCard2Diff1')}</span>
-                                            </p>
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
+                                    <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-4.5 shadow-inner mb-auto space-y-2.5">
+                                        <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-300 font-semibold">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                                            <span>{tLanding('purposeCompareCard2Added')}</span>
                                         </div>
-                                        <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80">
-                                            <span className="font-mono text-[9px] text-zinc-500 block mb-0.5 font-sans">NVI</span>
-                                            <p className="text-zinc-300">
-                                                {tLanding('purposeCompareCard2T2')} <span className="bg-blue-950/60 text-blue-300 px-1 py-0.5 rounded border border-blue-800/50">{tLanding('purposeCompareCard2Diff2')}</span>
-                                            </p>
+                                        <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80 text-xs font-serif text-zinc-200 leading-relaxed">
+                                            El Señor es mi pastor, <span className="bg-zinc-800 text-white px-1.5 py-0.5 rounded font-semibold underline decoration-zinc-500">nada me faltará</span>.
                                         </div>
+                                        <p className="text-[10px] font-mono text-zinc-500 pt-0.5">
+                                            {tLanding('purposeCompareCard2Note')}
+                                        </p>
                                     </div>
 
                                     <div>
@@ -886,7 +884,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 3: Texto Crítico y Lenguas (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <Languages className="w-3.5 h-3.5 text-zinc-400" />
@@ -918,7 +916,7 @@ export default function BibleLandingPage() {
                         {activePurpose === 'originals' && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 animate-in fade-in duration-300">
                                 {/* Tarjeta 1: Interlineal Morfológico (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <Languages className="w-3.5 h-3.5 text-zinc-400" />
@@ -948,7 +946,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 2: Diccionario Strong & BDB (Mockup arriba, Texto abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div className="bg-black border border-zinc-800/80 rounded-[20px] p-5 shadow-inner mb-auto space-y-2.5">
                                         <div className="text-xs font-mono font-semibold text-white">
                                             {tLanding('purposeOriginalsCard2Code')}
@@ -976,7 +974,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 3: Estructura Literaria (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <ScrollText className="w-3.5 h-3.5 text-zinc-400" />
@@ -1009,7 +1007,7 @@ export default function BibleLandingPage() {
                         {activePurpose === 'history' && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 animate-in fade-in duration-300">
                                 {/* Tarjeta 1: Geografía y Rutas (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <Navigation className="w-3.5 h-3.5 text-zinc-400" />
@@ -1049,7 +1047,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 2: Cronología Sincrónica (Mockup arriba, Texto abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-4.5 shadow-inner mb-auto space-y-2 text-[10.5px] font-mono">
                                         <div className="flex items-center justify-between p-2 rounded bg-zinc-950 border border-zinc-800/80">
                                             <span className="text-white font-semibold">{tLanding('purposeHistoryCard2Era1')}</span>
@@ -1083,7 +1081,7 @@ export default function BibleLandingPage() {
                                 </div>
 
                                 {/* Tarjeta 3: Arqueología Bíblica (Texto arriba, Mockup abajo) */}
-                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[480px] sm:min-h-[495px] shadow-xl hover:border-zinc-700 transition-all">
+                                <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                     <div>
                                         <div className="text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 mb-2.5 font-semibold flex items-center gap-1.5">
                                             <Landmark className="w-3.5 h-3.5 text-zinc-400" />

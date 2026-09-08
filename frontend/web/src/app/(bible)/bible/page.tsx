@@ -15,7 +15,7 @@ import {
     ArrowRight,
     ChevronDown,
 } from 'lucide-react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { LanguageToggle } from '../components/LanguageToggle';
 import { BibleLogo } from '../components/BibleLogo';
@@ -23,8 +23,6 @@ import { BackToPortalButton } from '../components/BackToPortalButton';
 
 export default function BibleLandingPage() {
     const tLanding = useTranslations('Landing');
-    const tNav = useTranslations('Nav');
-    const locale = useLocale();
     const studyUrl = '/bible/study';
 
     const engines = [
@@ -102,18 +100,14 @@ export default function BibleLandingPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-foreground selection:text-background">
-            {/* Header Sticky de la Landing */}
+        <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-foreground selection:text-background w-full">
+            {/* Header Sticky de la Landing (Alineado con el Workspace de Estudio) */}
             <header className="sticky top-0 z-50 w-full border-b border-accents-2 bg-background/90 backdrop-blur-md">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+                <div className="w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2.5 sm:gap-3">
                         <BackToPortalButton />
                         <div className="h-4 w-px bg-accents-2 hidden sm:block select-none" />
                         <BibleLogo size={20} />
-                        <span className="text-accents-2 font-mono select-none">/</span>
-                        <span className="text-xs font-bold tracking-wider uppercase text-foreground">
-                            {tNav('modularBible')}
-                        </span>
                     </div>
 
                     <nav className="hidden md:flex items-center gap-6 text-xs text-accents-5 font-medium">
@@ -142,17 +136,17 @@ export default function BibleLandingPage() {
                 </div>
             </header>
 
-            {/* Hero Section */}
-            <section className="relative pt-24 pb-20 sm:pt-32 md:pt-36 sm:pb-28 overflow-hidden border-b border-accents-2">
+            {/* Hero Section a Pantalla Completa */}
+            <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-24 overflow-hidden border-b border-accents-2 w-full">
                 {/* Glow de fondo suave */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-foreground/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-foreground/5 blur-[140px] rounded-full pointer-events-none -z-10" />
 
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
-                    <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
+                <div className="w-full px-4 sm:px-6 lg:px-8 text-center space-y-6">
+                    <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.1] max-w-5xl mx-auto">
                         {tLanding('heroTitle')}
                     </h1>
 
-                    <p className="text-accents-5 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-accents-5 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
                         {tLanding('heroSubtitle')}
                     </p>
 
@@ -174,9 +168,9 @@ export default function BibleLandingPage() {
                         </a>
                     </div>
 
-                    {/* Tarjeta de Vista Previa Interactiva del Workspace */}
-                    <div className="pt-8 max-w-4xl mx-auto">
-                        <div className="rounded-2xl border border-accents-2 bg-background p-4 sm:p-6 shadow-xl text-left space-y-4">
+                    {/* Tarjeta de Vista Previa Interactiva del Workspace a Ancho Completo */}
+                    <div className="pt-8 w-full max-w-[1700px] mx-auto">
+                        <div className="rounded-2xl border border-accents-2 bg-background p-4 sm:p-6 lg:p-8 shadow-xl text-left space-y-4 w-full">
                             <div className="flex items-center justify-between border-b border-accents-2 pb-3">
                                 <div className="flex items-center gap-2">
                                     <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
@@ -191,13 +185,13 @@ export default function BibleLandingPage() {
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
-                                <div className="p-4 rounded-xl border border-accents-2 bg-accents-1/30 space-y-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 text-xs leading-relaxed w-full">
+                                <div className="p-4 sm:p-6 rounded-xl border border-accents-2 bg-accents-1/30 space-y-3">
                                     <div className="flex justify-between font-mono text-[10px] text-accents-5">
                                         <span>{tLanding('previewVersion1Name')}</span>
                                         <span>{tLanding('previewVersion1Code')}</span>
                                     </div>
-                                    <p className="font-serif text-sm text-foreground/90 leading-relaxed">
+                                    <p className="font-serif text-sm sm:text-base text-foreground/90 leading-relaxed">
                                         <sup className="text-[10px] font-mono text-accents-4 mr-1">1</sup>
                                         {tLanding('previewVerse1')}{' '}
                                         <sup className="text-[10px] font-mono text-accents-4 mr-1">2</sup>
@@ -205,12 +199,12 @@ export default function BibleLandingPage() {
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-xl border border-accents-2 bg-accents-1/30 space-y-2" dir="rtl">
+                                <div className="p-4 sm:p-6 rounded-xl border border-accents-2 bg-accents-1/30 space-y-3" dir="rtl">
                                     <div className="flex justify-between font-mono text-[10px] text-accents-5" dir="ltr">
                                         <span>{tLanding('previewHebrewName')}</span>
                                         <span>{tLanding('previewHebrewCode')}</span>
                                     </div>
-                                    <p className="font-serif text-sm text-foreground/90 leading-relaxed">
+                                    <p className="font-serif text-sm sm:text-base text-foreground/90 leading-relaxed">
                                         <sup className="text-[10px] font-mono text-accents-4 mr-1">1</sup>
                                         מִזְמ֥וֹר לְדָוִ֑ד יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃{' '}
                                         <sup className="text-[10px] font-mono text-accents-4 mr-1">2</sup>
@@ -224,18 +218,18 @@ export default function BibleLandingPage() {
             </section>
 
             {/* Sección: Los 9 Motores de Estudio Bíblico */}
-            <section id="motores" className="py-20 border-b border-accents-2 bg-accents-1/20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
-                    <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <section id="motores" className="py-20 border-b border-accents-2 bg-accents-1/20 w-full">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1700px] mx-auto space-y-12">
+                    <div className="text-center space-y-2 max-w-3xl mx-auto">
                         <h2 className="text-xs font-mono uppercase tracking-widest text-accents-5">
                             {tLanding('enginesBadge')}
                         </h2>
-                        <p className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                        <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
                             {tLanding('enginesTitle')}
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                         {engines.map((engine, idx) => {
                             const Icon = engine.icon;
                             return (
@@ -259,22 +253,22 @@ export default function BibleLandingPage() {
             </section>
 
             {/* Sección: Versiones y Lenguas Originales */}
-            <section id="versiones" className="py-20 border-b border-accents-2">
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-8">
-                    <div className="space-y-2">
+            <section id="versiones" className="py-20 border-b border-accents-2 w-full">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1700px] mx-auto text-center space-y-8">
+                    <div className="space-y-2 max-w-3xl mx-auto">
                         <h2 className="text-xs font-mono uppercase tracking-widest text-accents-5">
                             {tLanding('corpusBadge')}
                         </h2>
-                        <p className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                        <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
                             {tLanding('corpusTitle')}
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full">
                         {versions.map((v) => (
                             <div
                                 key={v.code}
-                                className="px-4 py-3 rounded-xl border border-accents-2 bg-background shadow-xs text-left min-w-[200px]"
+                                className="px-4 py-3 rounded-xl border border-accents-2 bg-background shadow-xs text-left w-full"
                             >
                                 <div className="text-[10px] font-mono text-accents-4 uppercase">{v.code}</div>
                                 <div className="text-xs font-semibold text-foreground">{v.name}</div>
@@ -286,41 +280,120 @@ export default function BibleLandingPage() {
             </section>
 
             {/* Sección: App Móvil */}
-            <section id="movil" className="py-20 border-b border-accents-2 bg-accents-1/20">
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-10">
-                    <div className="space-y-4 max-w-lg">
-                        <div className="inline-flex items-center gap-2 text-xs font-mono text-accents-5">
-                            <span>{tLanding('mobileBadge')}</span>
+            <section id="movil" className="py-16 sm:py-20 border-b border-accents-2 bg-accents-1/20 w-full">
+                <div className="w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-14">
+                    <div className="space-y-6 max-w-xl flex-1">
+                        <div className="space-y-3">
+                            <div className="inline-flex items-center gap-2 text-xs font-mono text-accents-5">
+                                <span>{tLanding('mobileBadge')}</span>
+                            </div>
+                            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
+                                {tLanding('mobileTitle')}
+                            </h2>
+                            <p className="text-xs sm:text-sm text-accents-5 leading-relaxed">
+                                {tLanding('mobileDesc')}
+                            </p>
                         </div>
-                        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                            {tLanding('mobileTitle')}
-                        </h2>
-                        <p className="text-xs sm:text-sm text-accents-5 leading-relaxed">
-                            {tLanding('mobileDesc')}
-                        </p>
+
+                        {/* Cuadrícula limpia de las 4 características clave (sin emojis ni iconos SVG) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                            <div className="p-4 rounded-xl border border-accents-2 bg-background shadow-xs space-y-1">
+                                <div className="text-xs font-semibold text-foreground">
+                                    {tLanding('mobileSpecListEngine')}
+                                </div>
+                                <p className="text-xs text-accents-5 leading-relaxed">
+                                    {tLanding('mobileSpecListEngineVal')}
+                                </p>
+                            </div>
+
+                            <div className="p-4 rounded-xl border border-accents-2 bg-background shadow-xs space-y-1">
+                                <div className="text-xs font-semibold text-foreground">
+                                    {tLanding('mobileSpecStorage')}
+                                </div>
+                                <p className="text-xs text-accents-5 leading-relaxed">
+                                    {tLanding('mobileSpecStorageVal')}
+                                </p>
+                            </div>
+
+                            <div className="p-4 rounded-xl border border-accents-2 bg-background shadow-xs space-y-1">
+                                <div className="text-xs font-semibold text-foreground">
+                                    {tLanding('mobileSpecNotifications')}
+                                </div>
+                                <p className="text-xs text-accents-5 leading-relaxed">
+                                    {tLanding('mobileSpecNotificationsVal')}
+                                </p>
+                            </div>
+
+                            <div className="p-4 rounded-xl border border-accents-2 bg-background shadow-xs space-y-1">
+                                <div className="text-xs font-semibold text-foreground">
+                                    {tLanding('mobileSpecGestures')}
+                                </div>
+                                <p className="text-xs text-accents-5 leading-relaxed">
+                                    {tLanding('mobileSpecGesturesVal')}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="w-full max-w-sm p-6 rounded-2xl border border-accents-2 bg-background space-y-4 shadow-lg font-mono text-xs">
-                        <div className="flex justify-between items-center text-[10px] text-accents-4 border-b border-accents-2 pb-2">
-                            <span>{tLanding('mobileSpecsHeader')}</span>
-                            <span className="text-emerald-500">{tLanding('mobileOfflineReady')}</span>
-                        </div>
-                        <div className="space-y-2 text-accents-6">
-                            <div className="flex justify-between">
-                                <span>{tLanding('mobileSpecListEngine')}</span>
-                                <span className="text-foreground">{tLanding('mobileSpecListEngineVal')}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>{tLanding('mobileSpecStorage')}</span>
-                                <span className="text-foreground">{tLanding('mobileSpecStorageVal')}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>{tLanding('mobileSpecNotifications')}</span>
-                                <span className="text-foreground">{tLanding('mobileSpecNotificationsVal')}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>{tLanding('mobileSpecGestures')}</span>
-                                <span className="text-foreground">{tLanding('mobileSpecGesturesVal')}</span>
+                    {/* Mockup de Teléfono Móvil Realista */}
+                    <div className="relative mx-auto md:mx-0 shrink-0 w-full max-w-[280px] sm:max-w-[300px]">
+                        {/* Chasis exterior oscuro con borde biselado y sombra de dispositivo */}
+                        <div className="rounded-[44px] p-3 bg-zinc-950 border-[3px] border-zinc-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+                            {/* Pantalla interior del teléfono */}
+                            <div className="rounded-[34px] bg-background border border-accents-2 overflow-hidden flex flex-col justify-between h-[510px] select-none text-left">
+                                
+                                {/* Barra Superior con Dynamic Island y Estado */}
+                                <div className="pt-2 px-4 space-y-2 border-b border-accents-2/60 pb-2.5">
+                                    <div className="flex items-center justify-between text-[10px] font-mono text-accents-4">
+                                        <span>9:41</span>
+                                        <div className="w-16 h-3.5 bg-black rounded-full mx-auto" />
+                                        <span className="uppercase text-[9px] tracking-wider">
+                                            {tLanding('mobileOfflineReady')}
+                                        </span>
+                                    </div>
+
+                                    {/* Cabecera de la App dentro de la pantalla */}
+                                    <div className="flex items-center justify-between pt-1 text-xs">
+                                        <div className="font-semibold text-foreground">Salmos 23</div>
+                                        <div className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-accents-1 border border-accents-2 text-accents-5">
+                                            NBLA
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Vista de Lectura Editorial de la App */}
+                                <div className="px-4 py-3 space-y-2.5 font-serif text-xs leading-relaxed overflow-hidden my-auto">
+                                    <div className="text-[9px] font-mono text-accents-4 uppercase tracking-widest pb-1 border-b border-accents-2/40">
+                                        El Señor es mi Pastor
+                                    </div>
+                                    <p className="text-foreground/90">
+                                        <sup className="text-[9px] font-mono text-accents-4 mr-1">1</sup>
+                                        El Señor es mi pastor, nada me faltará.
+                                    </p>
+                                    <p className="text-foreground/90">
+                                        <sup className="text-[9px] font-mono text-accents-4 mr-1">2</sup>
+                                        En lugares de verdes pastos me hace descansar; junto a aguas de reposo me conduce.
+                                    </p>
+                                    <p className="text-foreground/90">
+                                        <sup className="text-[9px] font-mono text-accents-4 mr-1">3</sup>
+                                        Conforta mi alma; me guía por senderos de justicia por amor de Su nombre.
+                                    </p>
+                                    <p className="text-foreground/90">
+                                        <sup className="text-[9px] font-mono text-accents-4 mr-1">4</sup>
+                                        Aunque pase por el valle de sombra de muerte, no temeré mal alguno...
+                                    </p>
+                                </div>
+
+                                {/* Barra Inferior de Navegación de la App y Home Indicator */}
+                                <div className="pt-2 pb-1.5 border-t border-accents-2/60 bg-accents-1/20">
+                                    <div className="flex justify-around text-[10px] font-medium text-accents-4 px-2 pb-2">
+                                        <span className="text-foreground font-semibold">Lectura</span>
+                                        <span>Paralelo</span>
+                                        <span>Estudio</span>
+                                        <span>Notas</span>
+                                    </div>
+                                    <div className="w-24 h-1 bg-foreground/30 rounded-full mx-auto" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -328,12 +401,12 @@ export default function BibleLandingPage() {
             </section>
 
             {/* CTA Final */}
-            <section className="py-20 text-center space-y-6">
-                <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-4">
+            <section className="py-20 text-center space-y-6 w-full">
+                <div className="w-full px-4 sm:px-6 lg:px-8 space-y-4 max-w-4xl mx-auto">
                     <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
                         {tLanding('ctaTitle')}
                     </h2>
-                    <p className="text-xs sm:text-sm text-accents-5 max-w-lg mx-auto">
+                    <p className="text-xs sm:text-sm text-accents-5 max-w-xl mx-auto">
                         {tLanding('ctaSubtitle')}
                     </p>
                     <div className="pt-2">
@@ -348,9 +421,9 @@ export default function BibleLandingPage() {
                 </div>
             </section>
 
-            {/* Footer */}
+            {/* Footer a Pantalla Completa */}
             <footer className="border-t border-accents-2 w-full py-8 bg-background">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
+                <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
                     <div>{tLanding('footerCopyright', { year: new Date().getFullYear().toString() })}</div>
                     <div className="flex flex-wrap items-center justify-center gap-3">
                         <a href="https://jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerHome')}</a>

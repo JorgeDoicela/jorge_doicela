@@ -187,8 +187,8 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
 * **Persistencia Vertical:** Memoriza la altura exacta (`top`) en `localStorage` (`bible_drag_tab_left_y` y `bible_drag_tab_right_y`).
 
 ### 7.5 Aprovechamiento Integral del Ancho de Pantalla (*Full-Width Canvas*)
-* **Eliminación de Restricciones Artificiales:** Se retiraron las limitaciones rígidas (`max-w-4xl` y `max-w-3xl`) en `VerseList`, `ContinuousReadingView` y `LineByLineReadingView`.
-* **Equidad Visual con Suites Exegéticas:** El lector estándar ahora aprovecha el 100% del lienzo de trabajo en monitores anchos, comportándose con la misma amplitud y ergonomía fluida que las vistas de Estudio Paralelo, Interlineal y Estructura Literaria.
+* **Eliminación de Restricciones Artificiales:** Se retiraron las limitaciones rígidas (`max-w-4xl`, `max-w-5xl` y `max-w-7xl`) tanto en el Lector Estándar (`VerseList`, `ContinuousReadingView`, `LineByLineReadingView`) como en la Landing Page principal (`/bible` - `bible/page.tsx`).
+* **Equidad Visual con Suites Exegéticas:** Tanto la vitrina del Live Preview como las suites de estudio aprovechan el lienzo de trabajo en monitores anchos (`w-full px-4 sm:px-6 lg:px-8 max-w-[1700px]`), ofreciendo una experiencia editorial inmersiva sin sensación de caja encogida en pantallas ultra-amplias.
 
 ### 7.6 Flujo Natural de la Barra y Visibilidad Editorial del Título
 * **Flujo Natural sin Colisiones:** Se removió la fijación `sticky` de `ReaderToolbar.tsx`, unificándolo con el patrón del resto de suites (`ParallelStudyPage`, `InterlinearStudyPage`). La barra de herramientas fluye armónicamente con el contenido, eliminando para siempre las colisiones donde la barra flotaba por encima del título del libro ("Génesis") al desplazarse.

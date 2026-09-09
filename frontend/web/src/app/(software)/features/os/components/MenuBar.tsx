@@ -6,23 +6,11 @@ import Link from 'next/link';
 import { LanguageToggle } from '../../navigation/components/LanguageToggle';
 import { BackToPortalButton } from '../../../components/BackToPortalButton';
 
-
-
 interface MenuBarProps {
   theme?: 'light' | 'dark';
   onToggleTheme?: () => void;
   onOpenSpotlight: () => void;
 }
-
-const NAV_LINKS = [
-  { label: 'Noticias', href: '/software/news' },
-  { label: 'Blog', href: '/software/blog' },
-  { label: 'IA & Modelos', href: '/software/ai' },
-  { label: 'Ciberseguridad', href: '/software/cybersecurity' },
-  { label: 'Tutoriales', href: '/software/tutorials' },
-  { label: 'Foro', href: '/software/forum' },
-  { label: 'Proyectos', href: '/software/projects' },
-];
 
 export function MenuBar({
   theme = 'dark',
@@ -31,23 +19,30 @@ export function MenuBar({
 }: MenuBarProps) {
   const [time, setTime] = useState<string>('');
   const [mounted, setMounted] = useState(false);
+  const [homeUrl, setHomeUrl] = useState('/');
 
   useEffect(() => {
     setMounted(true);
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const isSoftwareSubdomain = hostname.startsWith('software.');
+      setHomeUrl(isSoftwareSubdomain ? '/' : '/software');
+    }
+
     const updateTime = () => {
       const now = new Date();
       setTime(
         now.toLocaleTimeString('es-EC', {
+          timeZone: 'America/Guayaquil',
           hour: '2-digit',
           minute: '2-digit',
-          second: '2-digit',
           hour12: false,
         })
       );
     };
 
     updateTime();
-    const interval = setInterval(updateTime, 1000);
+    const interval = setInterval(updateTime, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -59,7 +54,7 @@ export function MenuBar({
           <BackToPortalButton />
           <div className="h-4 w-px bg-black/10 dark:bg-white/10 hidden sm:block select-none" />
           <Link
-            href="/software"
+            href={homeUrl}
             className="flex items-center gap-2.5 group shrink-0"
             title="Software - Inicio"
           >
@@ -78,19 +73,6 @@ export function MenuBar({
             </span>
           </Link>
         </div>
-
-        {/* Centro: Enlaces de Navegación de los 7 Dominios */}
-        <nav aria-label="Navegación principal" className="hidden lg:flex items-center gap-1">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5 transition-all"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
 
         {/* Derecha: Spotlight Trigger, Reloj y Selector de Tema */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">

@@ -37,7 +37,7 @@ export function CategoryNav({
 
 
   return (
-    <nav aria-label={t('all')} className="w-full">
+    <nav aria-label={t('all')} className="w-fit max-w-full">
       <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-2xl glass-concave-panel scrollbar-none w-fit max-w-full">
         {SOFTWARE_CATEGORY_KEYS.map((cat) => {
           const isSelected = selectedCategory === cat.id;

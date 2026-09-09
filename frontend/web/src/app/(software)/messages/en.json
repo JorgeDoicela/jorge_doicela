@@ -6,9 +6,9 @@
   "Nav": {
     "all": "All Content",
     "news": "News",
-    "blog": "Architecture",
-    "forum": "Discussions & Forum",
-    "ai": "Artificial Intelligence",
+    "blog": "Blog",
+    "forum": "Forum",
+    "ai": "AI & Models",
     "cybersecurity": "Cybersecurity",
     "tutorials": "Tutorials",
     "projects": "Projects",

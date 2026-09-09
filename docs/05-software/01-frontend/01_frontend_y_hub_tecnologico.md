@@ -90,10 +90,21 @@ frontend/web/src/app/(software)/
 
 ---
 
-## 5. Componentes de Interfaz y Estética Neumorphism UI + Glassmorphism
+## 5. Componentes de Interfaz y Estética Editorial Tech (Referencia MalwareTech + Neumorphism Pro)
 
-* **Fusión Neumórfica y Vítrea:** Contenedores y tarjetas que combinan sombras cóncavas/convexas suaves con fondos de cristal esmerilado translúcido (`backdrop-blur-md`).
-* **Header Satinado Convexo:** Introducción visual con selector de tema claro/oscuro y chip de titanio grabado.
-* **Barra de Navegación Neumórfica (`CategoryNav`):** Filtros rápidos interactivos entre las 7 categorías temáticas con pulsación háptica visual.
-* **Buscador en Tiempo Real:** Entrada de texto con profundidad inset neumórfica y filtro instantáneo por etiquetas (`tags`), autor o texto.
+* **Fusión Neumórfica y Vítrea Calibrada:** Contenedores y tarjetas construidos sobre `.glass-convex-panel` y `.glass-concave-panel` que combinan sombras cóncavas (efecto hendido) y convexas (relieve extruido) con fondos de cristal esmerilado translúcido (`backdrop-filter: blur(16px)`), gradientes lumínicos diagonales y bordes perimetrales vítreos.
+* **Cabecera Editorial de Marca Centralizada:**
+  * Imagotipo compuesto de alta nitidez y escala calibrada: icono [`logo_blanco.png`](/software/logo/logo_blanco.png) a la izquierda (`h-20 sm:h-24 md:h-28 lg:h-32`) y bloque tipográfico [`nombre_rol.png`](/software/logo/nombre_rol.png) a la derecha (`h-12 sm:h-15 md:h-18 lg:h-20`), asegurando una proporción armónica y legibilidad impecable.
+  * Titular semántico accesible para SEO (`h1.sr-only`), eliminando el texto visual redundante para dar protagonismo absoluto al diseño del imagotipo.
+  * Fila limpia de iconos de redes sociales libres sin contenedores invasivos (`w-6 h-6`, 24px) en color blanco nítido: LinkedIn, GitHub, YouTube, TikTok y Email de contacto, situados a proximidad inmediata bajo el logotipo (`text-white hover:text-zinc-300`).
+  * **Barra de Navegación y Control Unificada:**
+    * **Flanco Izquierdo:** Botón de retorno al portal principal ([`BackToPortalButton`](/software/components/BackToPortalButton.tsx)).
+    * **Centro:** Menú en relieve cóncavo ([`CategoryNav`](/software/features/navigation/components/CategoryNav.tsx)) con las 7 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`) y filtrado en tiempo real.
+    * **Flanco Derecho:** Utilidades neumórficas integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/navigation/components/LanguageToggle.tsx) ES/EN).
+* **Portadas Visuales de Alta Precisión (`ArticleCover.tsx` en 16:9):**
+  * Soporta imágenes estáticas con `next/image` y fallback procedural limpio y elegante con texturas de ingeniería (`.tech-grid-bg`), gradientes temáticos según categoría, refracción vítrea y un icono SVG central libre y flotante (`w-12 h-12`) sin recuadros ni marcos perimetrales.
+* **Sección `Featured Posts` (3 Columnas):**
+  * Tres publicaciones destacadas en tarjetas simétricas con su banner visual `16:9`, metadatos discretos (`{readTime} min read — {categoría}`), títulos prominentes y extracto descriptivo de 2 líneas, con cabecera limpia y despejada.
+* **Sección `Latest Posts` (Grilla Editorial de 3 Columnas):**
+  * Cuadrícula equilibrada (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`) sin barras laterales redundantes, permitiendo que las publicaciones respiren con amplio espacio negativo y coherencia visual con la revista técnica de referencia.
 

@@ -129,40 +129,37 @@ docker rm -f $(docker ps -aq)
 
 ---
 
-### 3.5 Bind de Node.js a 127.0.0.1 (Defensa en profundidad)
+### 3.5 Bind de Node.js (Defensa en profundidad y comportamiento de Next.js)
 
-**Causa raíz:** `pm2.config.js` no especificaba `HOST`/`HOSTNAME` → Node.js usaba `0.0.0.0` por defecto.
+**Contexto y causa raíz:**
+- Para **NestJS (`backend-nest`)**, especificar `HOST: '127.0.0.1'` sella el socket TCP estrictamente a loopback sin efectos colaterales en la lógica de endpoints.
+- Para **Next.js Standalone (`frontend-next`)**, la variable de entorno `HOSTNAME: '127.0.0.1'` provoca que el enrutador interno fije `baseURL = https://127.0.0.1:3001`. En arquitecturas multi-tenant con reescritura de subdominios (`middleware.ts`), Next.js interpreta las rutas de los subdominios (`bible.*`, `portfolio.*`, `software.*`) como destinos remotos cross-origin y activa su enrutador proxy (`proxyRequest`), intentando negociar SSL contra su propio puerto HTTP plano (`EPROTO: WRONG_VERSION_NUMBER` ➔ Error 500).
 
-#### 3.5.1 Cambios en el repositorio (git commit)
+#### 3.5.1 Configuración canónica en el repositorio
 
 **`pm2.config.js`:**
 ```js
-// backend-nest:  env: { HOST: '127.0.0.1', ... }
-// frontend-next: env: { HOSTNAME: '127.0.0.1', PORT: 3001, ... }
+// backend-nest:  env: { HOST: '127.0.0.1', ... } -> Loopback sellado
+// frontend-next: env: { PORT: 3001, ... }         -> Enrutamiento local nativo
 ```
 
 **`backend/src/main.ts`:**
 ```ts
-// Antes: await app.listen(port);
-// Después:
 const host = process.env.HOST ?? '0.0.0.0';
 await app.listen(port, host);
 ```
 
-#### 3.5.2 Aplicación inmediata en el servidor
+#### 3.5.2 Seguridad Perimetral y de Red
 
-```bash
-# Editar pm2.config.js en el servidor con nano → agregar HOST y HOSTNAME
-nano ~/jorge_doicela/pm2.config.js
-
-# Recargar con la nueva configuración
-pm2 reload ~/jorge_doicela/pm2.config.js --update-env
-```
+Dado que `frontend-next` no fija `HOSTNAME: '127.0.0.1'`, la protección perimetral del puerto 3001 es asumida 100% por:
+1. **Firewall UFW del SO:** Política `default deny incoming` en `eth0`. Bloqueo directo a nivel de Kernel.
+2. **AWS Lightsail Firewall:** Solo puertos 22, 80 y 443 expuestos al tráfico de internet.
+3. **Nginx Reverse Proxy:** Único componente que se comunica con `http://127.0.0.1:3001` bajo mTLS de Cloudflare.
 
 **Verificación:**
 ```text
-LISTEN  127.0.0.1:3001  ← Next.js sellado ✅ (inmediato)
-LISTEN        *:3000    ← NestJS sellado en próximo deploy CI/CD ✅
+LISTEN  127.0.0.1:3000  ← NestJS sellado a loopback ✅
+LISTEN        *:3001    ← Next.js blindado por UFW perimetral ✅
 ```
 
 #### 3.5.3 CI/CD ejecutado inmediatamente
@@ -421,7 +418,7 @@ pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl st
 | PermitRootLogin | ⚠️ `without-password` (valor compilado) | ✅ `no` (directiva explícita) |
 | Contenedores Docker zombies | ❌ 5 containers / ~150 MB RAM | ✅ Eliminados |
 | mTLS Cloudflare en Nginx | ✅ Ya activo | ✅ Verificado (scanner Palo Alto bloqueado con 444) |
-| Node.js bind en 0.0.0.0 | ❌ Por defecto (sin HOST/HOSTNAME) | ✅ 127.0.0.1 vía pm2.config.js + main.ts |
+| Node.js bind en 0.0.0.0 | ❌ Por defecto (sin HOST/HOSTNAME) | ✅ NestJS en 127.0.0.1 (loopback) + Next.js blindado por UFW |
 | PM2 startup automático ante reinicios VPS | ❌ No configurado | ✅ pm2-admin.service habilitado y activo |
 | PM2 reinicios (inestabilidad) | ⚠️ ↑ 30-34 reinicios acumulados | ✅ ↑ 0 (estado limpio tras restart bajo systemd) |
 | Permisos de `backend/.env` | ❌ `664` (world-readable) | ✅ `600` (solo propietario) |
@@ -475,7 +472,7 @@ En AWS Lightsail > Networking:
 
 2. **`check-secrets.js` no cubre IPs de servidor** — solo detecta tokens/credenciales de autenticación. Brecha de cobertura identificada.
 
-3. **Node.js por defecto hace bind en `0.0.0.0`.** Siempre especificar `HOST`/`HOSTNAME` explícitamente en `pm2.config.js` y en `app.listen()`.
+3. **Comportamiento diferencial de loopback en NestJS vs Next.js.** Mientras NestJS admite `HOST: 127.0.0.1` sin problemas para sellar el socket TCP, Next.js Standalone sobrecarga `HOSTNAME` como origen canónico del router, rompiendo middlewares multi-dominio con errores `EPROTO`. En frameworks frontend multi-tenant, la seguridad de red debe ser delegada a UFW/Firewall y no a la variable `HOSTNAME`.
 
 4. **Un VPS sin firewall expone cualquier puerto que un proceso abra**, independientemente del proxy inverso. UFW es obligatorio desde el día 1.
 

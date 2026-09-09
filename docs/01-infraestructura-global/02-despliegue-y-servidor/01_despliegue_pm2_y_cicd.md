@@ -141,7 +141,7 @@ Aunque UFW bloquea el acceso externo a los puertos 3000 y 3001, la práctica cor
 env: { HOST: '127.0.0.1', ... }
 
 // frontend-next
-env: { HOSTNAME: '127.0.0.1', PORT: 3001, ... }
+env: { PORT: 3001, ... }
 ```
 
 **`backend/src/main.ts`:**
@@ -151,13 +151,15 @@ const host = process.env.HOST ?? '0.0.0.0'; // En prod: '127.0.0.1'
 await app.listen(port, host);
 ```
 
-> [!NOTE]
-> `HOSTNAME` es la variable nativa que lee el servidor standalone de Next.js.
-> `HOST` es la variable personalizada leída por NestJS en `main.ts`.
+> [!IMPORTANT]
+> **Aislamiento en Next.js Standalone vs NestJS:**
+> * `HOST: '127.0.0.1'` en NestJS aplica estrictamente al socket TCP sin efectos colaterales.
+> * En Next.js Standalone, definir `HOSTNAME: '127.0.0.1'` sobrecarga la variable y fuerza la URL base canónica (`baseURL = https://127.0.0.1:3001`). En arquitecturas multi-tenant con reescritura de subdominios (`middleware.ts`), esto provoca que Next.js detecte los subdominios como destinos externos y ejecute `proxyRequest` por HTTPS contra su propio puerto HTTP, causando un error fatal `EPROTO` (500).
+> * Por tanto, `frontend-next` solo define `PORT: 3001`. El aislamiento de red del frontend lo garantizan el Firewall de AWS Lightsail y el Firewall de Linux Kernel (UFW `default deny incoming`).
 
 **Verificación post-aplicación:**
 ```bash
-# Resultado esperado: 127.0.0.1:3000 y 127.0.0.1:3001
+# Resultado esperado: 127.0.0.1:3000 (NestJS) y *:3001 (Next.js blindado por UFW)
 ss -tlnp | grep -E "3001|3000"
 ```
 

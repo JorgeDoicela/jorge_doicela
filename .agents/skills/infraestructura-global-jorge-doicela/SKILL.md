@@ -11,7 +11,8 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ## Documentación Técnica Oficial
 * [01_arquitectura_macro_y_hardware.md](../../../docs/01-infraestructura-global/01-arquitectura/01_arquitectura_macro_y_hardware.md)
 * [02_patrones_microarquitectura_y_fsd.md](../../../docs/01-infraestructura-global/01-arquitectura/02_patrones_microarquitectura_y_fsd.md)
-* [01_despliegue_pm2_y_cicd.md](../../../docs/01-infraestructura-global/02-despliegue-y-servidor/01_despliegue_pm2_y_cicd.md)
+* [01_despliegue_pm2_y_cicd.md](../../../docs/01-infraestructura-global/02-despliegue-y-servidor/01_despliegue_pm2_y_cicd.md) ← incluye Sección 2.5: Hardening de Seguridad obligatorio
+* [02_auditoria_seguridad_sep2026.md](../../../docs/01-infraestructura-global/02-despliegue-y-servidor/02_auditoria_seguridad_sep2026.md) ← registro oficial de la auditoría Sep 2026
 
 ---
 
@@ -22,6 +23,10 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
   * El **frontend web** corre consolidado en un solo proceso Next.js (puerto `3001`) mediante `src/middleware.ts` para resolver subdominios.
 * **Principio de Cajas Negras:** Las 4 aplicaciones (`landing`, `portfolio`, `bible`, `software`) son **proyectos 100% aislados e independientes**. Nunca deben acoplarse ni depender entre sí.
 * **Diseño para la Extracción Inmediata:** Cualquier módulo o subproyecto debe poder extraerse a su propio repositorio o servidor en el futuro y funcionar sin refactorizaciones.
+
+> [!IMPORTANT]
+> **Seguridad Perimetral del Servidor (Obligatorio en todo servidor nuevo):**
+> El servidor debe tener siempre activos: **UFW** (política `deny incoming` con solo 22/80/443), **fail2ban** (ban automático tras 5 intentos SSH fallidos), **PermitRootLogin no** y **Node.js** solo escuchando en `127.0.0.1` (variables `HOST`/`HOSTNAME` en `pm2.config.js`). Ver procedimiento completo en `01_despliegue_pm2_y_cicd.md` §2.5.
 
 ---
 

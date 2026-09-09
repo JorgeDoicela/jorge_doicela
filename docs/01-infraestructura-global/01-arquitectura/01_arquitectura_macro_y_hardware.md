@@ -50,14 +50,17 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 ### 2.1 Flujo de Peticiones y Seguridad Perimetral
 1. **Cloudflare Edge (Proxy DNS):** Oculta la dirección IP pública real del VPS de AWS Lightsail. Administra la terminación SSL con modo *Full (Strict)* y mitiga ataques DDoS.
 2. **Authenticated Origin Pulls (mTLS):** Nginx en el VPS solo acepta peticiones HTTPS firmadas criptográficamente por la CA de Cloudflare (`cloudflare.crt`), bloqueando cualquier conexión directa a la IP del servidor.
-3. **Distribución Interna en Nginx:**
+3. **UFW Firewall (Perimetral del Servidor):** Política `deny incoming` por defecto. Solo los puertos 22 (SSH), 80 (HTTP→HTTPS) y 443 (HTTPS) están permitidos. Los puertos internos de Node.js (3000/3001) quedan bloqueados a nivel de kernel aunque el proceso los abra.
+4. **fail2ban (Anti-fuerza Bruta SSH):** Bloquea automáticamente IPs con más de 5 intentos fallidos de SSH en 10 minutos (ban de 1 hora).
+5. **Distribución Interna en Nginx:**
    * Rutas `/portfolio/*`, `/bible/*`, `/software/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`).
    * Rutas raíz y páginas de subdominios $\rightarrow$ Proxy inverso al frontend Next.js (`http://127.0.0.1:3001`).
    * Recursos estáticos clave (`/llms.txt`, `/manifest.json`, `/_next/static/`) $\rightarrow$ Servidos directamente por Nginx desde disco en < 1 ms con caché, garantizando 0 MB de consumo de RAM en Node.js frente a crawlers de IA (GEO / Generative Engine Optimization).
-4. **Rate Limiting Perimetral y Protección Anti-Scraping (Zero-RAM):**
+6. **Rate Limiting Perimetral y Protección Anti-Scraping (Zero-RAM):**
    * **Detección por IP Real:** Nginx extrae `$http_cf_connecting_ip` para aplicar los límites al cliente real y no al proxy de Cloudflare.
    * **Zona API (`limit_req_zone $real_client_ip zone=api_limit_zone rate=15r/s burst=25 nodelay`):** Protege las bases de datos SQLite (`bible.sqlite`, `software.sqlite`) y el backend NestJS contra scraping agresivo devolviendo `HTTP 429 Too Many Requests` en microsegundos.
    * **Zona Web (`limit_req_zone $real_client_ip zone=web_limit_zone rate=35r/s burst=50 nodelay`):** Protege el SSR de Next.js de ataques de denegación de servicio sin penalizar a usuarios humanos navegando rápido.
+
 
 ---
 

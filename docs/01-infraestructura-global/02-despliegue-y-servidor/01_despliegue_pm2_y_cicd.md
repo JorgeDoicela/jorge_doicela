@@ -2,6 +2,9 @@
 
 Este documento detalla la infraestructura de despliegue completa, la preparación del sistema operativo en **AWS Lightsail (Debian 13)**, la plantilla viva de **Nginx** (`nginx/`), la suite de seguridad pre-commit (**Husky** y `scripts/check-secrets.js`), la orquestación de procesos con **PM2** y el pipeline automatizado de **GitHub Actions** (`.github/workflows/deploy.yml`).
 
+> [!IMPORTANT]
+> **Auditoría de Seguridad Aplicada (Sep 2026):** Se detectó que los puertos 3000 y 3001 de Node.js estaban expuestos públicamente (`0.0.0.0`) y que el servidor carecía de firewall y protección anti-fuerza bruta. Se aplicó hardening completo descrito en la **Sección 2.5**.
+
 ---
 
 ## 1. Seguridad Local y Hooks de Pre-Commit (`.husky/` y `scripts/`)
@@ -31,6 +34,9 @@ Script en Node.js que inspecciona los archivos staged mediante expresiones regul
 
 ## 2. Preparación del Servidor (Debian 13 en AWS Lightsail)
 
+> [!IMPORTANT]
+> Los pasos **2.1 a 2.4** cubren la instalación base. La **Sección 2.5** documenta el hardening de seguridad obligatorio que debe aplicarse en todo servidor nuevo o existente.
+
 ### 2.1 Herramientas del Sistema y Compilación C++
 El driver de SQLite de alto rendimiento `better-sqlite3` compila extensiones nativas en C++:
 ```bash
@@ -59,6 +65,126 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 Para permitir que Nginx (`www-data`) acceda y sirva los archivos estáticos compilados ubicados en `/home/admin/jorge_doicela/`:
 ```bash
 chmod 755 /home/admin
+```
+
+### 2.5 Hardening de Seguridad del Servidor (Obligatorio)
+
+Este bloque documenta las medidas de seguridad perimetral que **deben aplicarse en todo servidor nuevo** o verificarse en servidores existentes mediante auditoría.
+
+#### 2.5.1 Firewall UFW — Política de Mínimo Privilegio
+
+El servidor solo debe aceptar tráfico en los puertos 22, 80 y 443. Todos los demás puertos (incluyendo 3000 y 3001 de Node.js) deben bloquearse perimetralmente:
+
+```bash
+sudo apt install -y ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp comment 'SSH'
+sudo ufw allow 80/tcp comment 'HTTP → Nginx redirect a HTTPS'
+sudo ufw allow 443/tcp comment 'HTTPS → Nginx con mTLS'
+sudo ufw enable
+sudo ufw status verbose
+```
+
+> [!WARNING]
+> **Orden crítico:** Añadir la regla del puerto 22 **antes** de activar UFW. Si se activa sin esa regla, la sesión SSH se corta y se pierde el acceso al servidor.
+
+#### 2.5.2 fail2ban — Protección Anti-Fuerza Bruta SSH
+
+Bloquea automáticamente IPs que superen 5 intentos fallidos de SSH en 10 minutos (ban de 1 hora):
+
+```bash
+sudo apt install -y fail2ban
+
+sudo tee /etc/fail2ban/jail.local << 'EOF'
+[DEFAULT]
+bantime  = 3600
+findtime = 600
+maxretry = 5
+
+[sshd]
+enabled  = true
+port     = ssh
+logpath  = %(sshd_log)s
+backend  = systemd
+EOF
+
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Banear IPs manualmente si ya hay un ataque activo:
+# sudo fail2ban-client set sshd banip <IP_ATACANTE>
+```
+
+#### 2.5.3 SSH Hardening — Deshabilitar Root Login
+
+El valor por defecto de Debian (`prohibit-password`) está comentado en sshd_config. Debe descomentarse y endurecerse a `no`:
+
+```bash
+# La directiva suele estar comentada con #, se descomenta y cambia en un solo comando:
+sudo sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
+
+# Verificar — debe mostrar: permitrootlogin no
+sudo sshd -T | grep permitrootlogin
+
+# Recargar sin cortar sesiones activas
+sudo systemctl reload ssh
+```
+
+#### 2.5.4 Bind de Node.js a 127.0.0.1 (Defensa en Profundidad)
+
+Aunque UFW bloquea el acceso externo a los puertos 3000 y 3001, la práctica correcta es que Node.js solo escuche en loopback. Esto se configura en **dos lugares**:
+
+**`pm2.config.js` (en la raíz del monorepo):**
+```js
+// backend-nest
+env: { HOST: '127.0.0.1', ... }
+
+// frontend-next
+env: { HOSTNAME: '127.0.0.1', PORT: 3001, ... }
+```
+
+**`backend/src/main.ts`:**
+```ts
+const port = process.env.PORT ?? 3000;
+const host = process.env.HOST ?? '0.0.0.0'; // En prod: '127.0.0.1'
+await app.listen(port, host);
+```
+
+> [!NOTE]
+> `HOSTNAME` es la variable nativa que lee el servidor standalone de Next.js.
+> `HOST` es la variable personalizada leída por NestJS en `main.ts`.
+
+**Verificación post-aplicación:**
+```bash
+# Resultado esperado: 127.0.0.1:3000 y 127.0.0.1:3001
+ss -tlnp | grep -E "3001|3000"
+```
+
+#### 2.5.5 Persistencia de PM2 ante Reinicios del VPS
+
+```bash
+pm2 save
+```
+
+#### 2.5.6 Checklist de Verificación Completa
+
+```bash
+# Puertos expuestos (solo deben aparecer 22, 80, 443 en 0.0.0.0)
+ss -tlnp
+
+# Firewall activo
+sudo ufw status verbose
+
+# fail2ban activo
+sudo systemctl status fail2ban
+sudo fail2ban-client status sshd
+
+# SSH — root deshabilitado, solo clave pública
+sudo sshd -T | grep -E "permitrootlogin|passwordauthentication|pubkeyauthentication"
+
+# Intentos de ataque recientes
+sudo journalctl -u ssh --since "24 hours ago" | grep "Failed\|Invalid" | tail -20
 ```
 
 ---

@@ -284,8 +284,8 @@ systemctl is-active pm2-admin
 backend-nest   online ↑ 0 (contador limpio desde cero)  pid=320236
 frontend-next  online ↑ 0 (contador limpio desde cero)  pid=320237
 
-LISTEN  127.0.0.1:3000  ← NestJS (loopback) ✅
-LISTEN  127.0.0.1:3001  ← Next.js (loopback) ✅
+LISTEN  127.0.0.1:3000  ← NestJS (IPv4 loopback) ✅
+LISTEN    [::1]:3001    ← Next.js (IPv6 loopback sellado vía HOSTNAME: localhost) ✅
 ```
 
 
@@ -302,8 +302,8 @@ Verificación completa de los 12 vectores ejecutada después de aplicar todos lo
 0.0.0.0:80     ← Nginx HTTP (correcto)
 0.0.0.0:22     ← SSH (protegido por fail2ban + clave pública)
 0.0.0.0:443    ← Nginx HTTPS (mTLS Cloudflare)
-127.0.0.1:3000 ← NestJS solo loopback ✅ (CI/CD compiló main.ts con HOST)
-127.0.0.1:3001 ← Next.js solo loopback ✅
+127.0.0.1:3000 ← NestJS solo IPv4 loopback ✅ (main.ts con HOST: 127.0.0.1)
+[::1]:3001     ← Next.js solo IPv6 loopback ✅ (pm2 con HOSTNAME: localhost)
 0.0.0.0:5355   ← mDNS/LLMNR (bloqueado por UFW desde exterior, inofensivo)
 ```
 
@@ -439,8 +439,8 @@ El CI/CD corrió automáticamente durante la sesión. Confirmado por:
 - `ss -tlnp` post-deploy muestra `127.0.0.1:3000` ← `main.ts` compilado con `app.listen(port, host)`.
 
 ```text
-LISTEN  127.0.0.1:3000  users:(("node /home/admi",pid=320236,fd=32))  ✅
-LISTEN  127.0.0.1:3001  users:(("next-server (v1",pid=320237,fd=23))  ✅
+LISTEN  127.0.0.1:3000  users:(("node /home/admi",pid=320236,fd=32))  ← NestJS (IPv4 loopback) ✅
+LISTEN    [::1]:3001    users:(("next-server (v1",pid=1649,fd=23))    ← Next.js (IPv6 loopback) ✅
 ```
 
 ### 5.2 Monitoreo periódico recomendado

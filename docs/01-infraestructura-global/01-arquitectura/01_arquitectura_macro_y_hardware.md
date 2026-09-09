@@ -53,8 +53,8 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 3. **UFW Firewall (Perimetral del Servidor):** Política `deny incoming` por defecto. Solo los puertos 22 (SSH), 80 (HTTP→HTTPS) y 443 (HTTPS) están permitidos. Los puertos internos de Node.js (3000/3001) quedan bloqueados a nivel de kernel aunque el proceso los abra.
 4. **fail2ban (Anti-fuerza Bruta SSH):** Bloquea automáticamente IPs con más de 5 intentos fallidos de SSH en 10 minutos (ban de 1 hora).
 5. **Distribución Interna en Nginx:**
-   * Rutas `/portfolio/*`, `/bible/*`, `/software/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`).
-   * Rutas raíz y páginas de subdominios $\rightarrow$ Proxy inverso al frontend Next.js (`http://127.0.0.1:3001`).
+   * Rutas `/portfolio/*`, `/bible/*`, `/software/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`, IPv4 loopback sellado).
+   * Rutas raíz y páginas de subdominios $\rightarrow$ Proxy inverso al frontend Next.js (`http://[::1]:3001`, IPv6 loopback sellado vía `HOSTNAME: 'localhost'`).
    * Recursos estáticos clave (`/llms.txt`, `/manifest.json`, `/_next/static/`) $\rightarrow$ Servidos directamente por Nginx desde disco en < 1 ms con caché, garantizando 0 MB de consumo de RAM en Node.js frente a crawlers de IA (GEO / Generative Engine Optimization).
 6. **Rate Limiting Perimetral y Protección Anti-Scraping (Zero-RAM):**
    * **Detección por IP Real:** Nginx extrae `$http_cf_connecting_ip` para aplicar los límites al cliente real y no al proxy de Cloudflare.

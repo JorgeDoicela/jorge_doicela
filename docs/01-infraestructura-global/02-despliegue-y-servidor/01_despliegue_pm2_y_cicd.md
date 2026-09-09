@@ -196,11 +196,11 @@ sudo journalctl -u ssh --since "24 hours ago" | grep "Failed\|Invalid" | tail -2
 La configuración del servidor web está versionada directamente en el repositorio bajo `nginx/jorgedoicela.com.conf`. El pipeline de CI/CD se encarga de sincronizarla automáticamente con el servidor en cada despliegue.
 
 ```nginx
-# Mapa dinámico de enrutamiento: Peticiones de navegación de páginas web HTML van al frontend Next.js (3001),
-# mientras que peticiones de datos de la API REST (JSON) van al backend NestJS (3000).
-map $http_accept $backend_port {
-    default                 3000;
-    ~*text/html             3001;
+# Mapa dinámico de enrutamiento: Peticiones de navegación de páginas web HTML van al frontend Next.js ([::1]:3001),
+# mientras que peticiones de datos de la API REST (JSON) van al backend NestJS (127.0.0.1:3000).
+map $http_accept $backend_upstream {
+    default                 http://127.0.0.1:3000;
+    ~*text/html             http://[::1]:3001;
 }
 
 # Extracción de IP real del cliente detrás del proxy Cloudflare mTLS
@@ -280,7 +280,7 @@ server {
     # 1. API REST Backend NestJS / Frontend Next.js - Desacoplamiento por Accept Header + Rate Limiting
     location ~ ^/(bible/(verses|translations|morphology|books|historical)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials)|portfolio/(contact|projects|sandbox)) {
         limit_req zone=api_limit_zone burst=25 nodelay;
-        proxy_pass http://127.0.0.1:$backend_port;
+        proxy_pass $backend_upstream;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -362,9 +362,9 @@ server {
         access_log off;
     }
 
-    # 5. Next.js Frontend Standalone (Puerto 3001)
+    # 5. Next.js Frontend Standalone (Puerto [::1]:3001)
     location / {
-        proxy_pass http://127.0.0.1:3001;
+        proxy_pass http://[::1]:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

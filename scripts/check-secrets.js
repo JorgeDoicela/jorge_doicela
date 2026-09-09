@@ -10,6 +10,11 @@ const FORBIDDEN_FILE_PATTERNS = [
 ];
 
 // Reglas de inspección de contenido para líneas agregadas (+) en archivos staged
+// TODO: Añadir detección de IPs públicas de producción (ej. AWS Lightsail) en contenido staged.
+//       Brecha identificada en Auditoría de Seguridad Sep 2026: la IP 44.192.40.200 se filtró en
+//       un archivo de documentación sin ser detectada por este script.
+//       Ver: docs/01-infraestructura-global/02-despliegue-y-servidor/02_auditoria_seguridad_sep2026.md §6
+
 const SECRET_RULES = [
   {
     name: 'Llave Privada (SSH / RSA / EC / PGP)',

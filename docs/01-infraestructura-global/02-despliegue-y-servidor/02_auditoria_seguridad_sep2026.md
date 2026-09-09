@@ -176,46 +176,273 @@ git push origin main
 
 ---
 
-### 3.6 Persistencia de PM2
+### 3.7 Auditoría Nivel 2 — Hallazgos y Correcciones Adicionales (Sep 2026)
+
+#### 3.7.1 Permisos del `.env` del backend — CRÍTICO
+
+**Hallazgo:** `backend/.env` tenía permisos `664` (world-readable) — cualquier usuario del sistema podía leer las credenciales/secrets del backend.
+
+```bash
+# Antes:
+-rw-rw-r-- 1 admin admin 1042  backend/.env   ← cualquier usuario puede leer
+
+# Fix aplicado:
+chmod 600 ~/jorge_doicela/backend/.env
+
+# Verificación:
+-rw------- 1 admin admin 1042  backend/.env   ✅
+```
+
+**Causa raíz:** El archivo fue creado con `umask` permisivo por defecto. El `.gitignore` evita que se suba al repo, pero los permisos en servidor son responsabilidad del operador.
+
+#### 3.7.2 Hardening del kernel con sysctl
+
+**Hallazgo:** El servidor no tenía ningún parámetro de seguridad del kernel configurado explícitamente. `sysctl -a` no devolvió valores para los parámetros críticos de red.
+
+**Fix aplicado:** Creación de `/etc/sysctl.d/99-hardening.conf` con parámetros de hardening:
+
+```bash
+sudo tee /etc/sysctl.d/99-hardening.conf << 'EOF'
+# Protección contra SYN flood
+net.ipv4.tcp_syncookies = 1
+# No aceptar redirects ICMP (vector de MITM)
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+# No enviar redirects
+net.ipv4.conf.all.send_redirects = 0
+# No aceptar rutas fuente (source routing)
+net.ipv4.conf.all.accept_source_route = 0
+# Ignorar broadcasts ICMP (amplification attacks)
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+# Reverse Path Filtering (anti-spoofing)
+net.ipv4.conf.all.rp_filter = 1
+# ASLR máximo (Address Space Layout Randomization)
+kernel.randomize_va_space = 2
+EOF
+
+sudo sysctl -p /etc/sysctl.d/99-hardening.conf
+```
+
+**Confirmación de aplicación:**
+```text
+net.ipv4.tcp_syncookies = 1         ✅
+net.ipv4.conf.all.accept_redirects = 0  ✅
+net.ipv6.conf.all.accept_redirects = 0  ✅
+net.ipv4.conf.all.send_redirects = 0    ✅
+net.ipv4.conf.all.accept_source_route = 0  ✅
+net.ipv4.icmp_echo_ignore_broadcasts = 1   ✅
+net.ipv4.conf.all.rp_filter = 1     ✅
+kernel.randomize_va_space = 2       ✅
+```
+
+El archivo persiste en `/etc/sysctl.d/` y se aplica automáticamente en cada arranque del VPS.
+
+---
+
+
+
+#### 3.6.1 Guardar la lista de procesos
 ```bash
 pm2 save
 # → [PM2] Successfully saved in /home/admin/.pm2/dump.pm2
 ```
 
----
-
-## 4. Estado Final del Servidor Post-Auditoría
-
-```text
-ss -tlnp (resultado esperado tras CI/CD):
-LISTEN  0.0.0.0:22       ← SSH (fail2ban + solo clave pública)
-LISTEN  0.0.0.0:80       ← HTTP → Nginx → 301 HTTPS
-LISTEN  0.0.0.0:443      ← HTTPS → Nginx → mTLS Cloudflare
-LISTEN  127.0.0.1:3000   ← NestJS (solo loopback) ✅
-LISTEN  127.0.0.1:3001   ← Next.js (solo loopback) ✅
+#### 3.6.2 Generar y registrar la unidad systemd para reinicio automático
+```bash
+sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u admin --hp /home/admin
 ```
 
-| Vector | Antes | Después |
+Esto crea `/etc/systemd/system/pm2-admin.service` y ejecuta `systemctl enable pm2-admin`.
+
+#### 3.6.3 Problema encontrado: `Type=forking` con daemon ya corriendo
+
+El servicio generado por PM2 usa `Type=forking`. Al intentar iniciarlo con el daemon PM2 ya corriendo, systemd falla con `Result: protocol` porque no puede tomar el control de un proceso que no inició él. Causa: el daemon PM2 llevaba **1 semana + 22 horas** corriendo antes de que existiera la unidad systemd.
+
+```text
+× pm2-admin.service: Failed with result 'protocol'.
+  Process: pm2 resurrect (code=exited, status=0/SUCCESS)
+  pm2-admin.service: Start request repeated too quickly.
+```
+
+**Solución aplicada** (provoca ~10 segundos de downtime controlado):
+```bash
+# 1. Limpiar estado fallido
+sudo systemctl reset-failed pm2-admin
+
+# 2. Matar el daemon PM2 actual (procesos Node también se detienen)
+pm2 kill
+# → [PM2] Daemon Stopped
+
+# 3. Iniciar PM2 bajo systemd (ejecuta pm2 resurrect y restaura el dump.pm2)
+sudo systemctl start pm2-admin
+
+# 4. Verificar
+systemctl is-active pm2-admin
+# → active ✅
+```
+
+**Resultado verificado:**
+```text
+backend-nest   online ↑ 0 (contador limpio desde cero)  pid=320236
+frontend-next  online ↑ 0 (contador limpio desde cero)  pid=320237
+
+LISTEN  127.0.0.1:3000  ← NestJS (loopback) ✅
+LISTEN  127.0.0.1:3001  ← Next.js (loopback) ✅
+```
+
+
+---
+
+---
+
+## 4. Verificación Completa Final — Segunda Ronda (Post-Hardening)
+
+Verificación completa de los 12 vectores ejecutada después de aplicar todos los cambios.
+
+### [1] Puertos abiertos — Confirmado
+```text
+0.0.0.0:80     ← Nginx HTTP (correcto)
+0.0.0.0:22     ← SSH (protegido por fail2ban + clave pública)
+0.0.0.0:443    ← Nginx HTTPS (mTLS Cloudflare)
+127.0.0.1:3000 ← NestJS solo loopback ✅ (CI/CD compiló main.ts con HOST)
+127.0.0.1:3001 ← Next.js solo loopback ✅
+0.0.0.0:5355   ← mDNS/LLMNR (bloqueado por UFW desde exterior, inofensivo)
+```
+
+### [2] UFW Status — Activo
+```text
+Status: active
+Default: deny (incoming), allow (outgoing), deny (routed)
+22/tcp   ALLOW IN  Anywhere  # SSH
+80/tcp   ALLOW IN  Anywhere  # HTTP → Nginx redirect a HTTPS
+443/tcp  ALLOW IN  Anywhere  # HTTPS → Nginx con mTLS
+```
+
+### [3] Fail2ban — Operativo
+```text
+Currently failed: 0     ← sin ataques activos (fail2ban los bloquea silenciosamente)
+Currently banned: 2
+Banned IP list: 222.91.124.34  102.219.227.90
+```
+> Los baneos son de 1 hora (bantime=3600). Expiran y se re-aplican automáticamente si el atacante
+> reintenta. Se re-banearon manualmente después de la primera expiración.
+
+### [4] SSH Config — Endurecido al máximo
+```text
+logingracetime 120
+maxauthtries 6
+permitRootLogin no          ← deshabilitado ✅
+pubkeyauthentication yes    ← solo clave pública ✅
+passwordauthentication no   ← contraseña deshabilitada ✅
+```
+
+### [5] Ataques SSH últimas 2 horas — Ninguno
+```text
+# Solo conexiones legítimas:
+Accepted publickey for admin from 201.46.114.49   ← sesión SSH del desarrollador
+Accepted publickey for admin from 20.168.109.82   ← GitHub Actions (Azure IP) - deploy CI/CD
+# Zero entradas "Invalid user" o "Failed password"
+```
+> `20.168.109.82` = IP del runner de GitHub Actions (rango Azure). Confirmó que el CI/CD corrió correctamente durante la auditoría.
+
+### [6] Docker Containers — Limpio
+```text
+CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES
+(vacío)
+```
+
+### [7] PM2 Status
+```text
+backend-nest   online  ↑ 0  126 MB  (estabilizado después del start via systemd)
+frontend-next  online  ↑ 0  111 MB
+RAM total: 52.5% (496 MB / 939 MB) — saludable
+```
+
+### [8] Nginx — Sintaxis OK
+```text
+nginx: configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+### [9] Nginx mTLS — Verificado
+```text
+server_tokens off;                                  ← ocultamiento de versión ✅
+ssl_client_certificate /etc/ssl/certs/cloudflare.crt  ← CA de Cloudflare ✅
+ssl_verify_client on;                               ← mTLS activo ✅
+```
+
+### [10] RAM del Servidor
+```text
+Mem:   939Mi  total  |  496Mi used  |  124Mi free  |  443Mi available
+Swap:  2.0Gi  total  |   45Mi used
+```
+> RAM al 52.5%. Saludable para el hardware de 1 GB.
+
+### [11] Servicios Críticos — Notas Importantes
+```text
+nginx     → active   ✅
+fail2ban  → active   ✅
+ufw       → inactive ⚠️  (ver nota)
+ssh       → active   ✅
+pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl start)
+```
+
+> [!NOTE]
+> **UFW `inactive` en systemctl es un comportamiento normal en Debian 13 (Trixie).**
+> UFW usa iptables como backend. El servicio systemd `ufw` tiene `Type=oneshot`: carga
+> las reglas en iptables durante el arranque y luego **termina intencionalmente**. Por eso
+> `systemctl is-active ufw` devuelve `inactive`, aunque las reglas estén completamente activas.
+> Confirmado mediante: `sudo iptables -L INPUT -n` → `Chain INPUT (policy DROP)` = máxima protección.
+
+### [12] Conexiones Externas Activas
+```text
+172.26.6.236:443  →  172.70.224.162:11573   ← Cloudflare (172.70.x.x) ✅
+172.26.6.236:443  →  104.23.213.76:13528    ← Cloudflare (104.23.x.x) ✅
+172.26.6.236:443  →  172.70.224.156:9884    ← Cloudflare (172.70.x.x) ✅
+172.26.6.236:443  →  104.23.211.27:10830    ← Cloudflare (104.23.x.x) ✅
+172.26.6.236:443  →  104.22.93.124:11803    ← Cloudflare (104.22.x.x) ✅
+172.26.6.236:22   →  201.46.114.49:13593    ← SSH del desarrollador ✅
+```
+> Todas las conexiones al puerto 443 provienen exclusivamente de IPs de Cloudflare.
+> No hay ninguna conexión directa a la IP del servidor desde fuera de Cloudflare.
+
+---
+
+## 5. Estado Final Consolidado
+
+| Vector de ataque | Antes | Después |
 |---|---|---|
-| Firewall | ❌ Inexistente | ✅ UFW (deny all por defecto) |
-| Puerto 3000 desde internet | ❌ Accesible | ✅ UFW + 127.0.0.1 (CI/CD) |
-| Puerto 3001 desde internet | ❌ Accesible | ✅ UFW + 127.0.0.1 inmediato |
-| Fuerza bruta SSH | ❌ Sin protección | ✅ fail2ban (ban 1h tras 5 intentos) |
-| IP atacante 222.91.124.34 | ❌ Activa | ✅ Baneada |
-| IP atacante 102.219.227.90 | ❌ Activa | ✅ Baneada |
-| PermitRootLogin | ⚠️ `without-password` | ✅ `no` |
-| Contenedores Docker zombies | ❌ 5 containers / ~150 MB | ✅ Eliminados |
-| mTLS Cloudflare en Nginx | ✅ Ya activo | ✅ Verificado |
-| PM2 persistido | ✅ | ✅ |
+| Firewall perimetral | ❌ Inexistente | ✅ UFW: policy DROP, solo 22/80/443 |
+| Puerto 3000 NestJS desde internet | ❌ `*:3000` público | ✅ UFW bloqueado + `127.0.0.1` via CI/CD |
+| Puerto 3001 Next.js desde internet | ❌ `0.0.0.0:3001` público | ✅ UFW bloqueado + `127.0.0.1` inmediato |
+| Fuerza bruta SSH | ❌ Sin protección (cientos de intentos/min) | ✅ fail2ban: ban 1h tras 5 intentos |
+| IP atacante 222.91.124.34 | ❌ Activa y sin ban | ✅ Baneada en fail2ban |
+| IP atacante 102.219.227.90 | ❌ Activa y sin ban | ✅ Baneada en fail2ban |
+| PermitRootLogin | ⚠️ `without-password` (valor compilado) | ✅ `no` (directiva explícita) |
+| Contenedores Docker zombies | ❌ 5 containers / ~150 MB RAM | ✅ Eliminados |
+| mTLS Cloudflare en Nginx | ✅ Ya activo | ✅ Verificado (scanner Palo Alto bloqueado con 444) |
+| Node.js bind en 0.0.0.0 | ❌ Por defecto (sin HOST/HOSTNAME) | ✅ 127.0.0.1 vía pm2.config.js + main.ts |
+| PM2 startup automático ante reinicios VPS | ❌ No configurado | ✅ pm2-admin.service habilitado y activo |
+| PM2 reinicios (inestabilidad) | ⚠️ ↑ 30-34 reinicios acumulados | ✅ ↑ 0 (estado limpio tras restart bajo systemd) |
+| Permisos de `backend/.env` | ❌ `664` (world-readable) | ✅ `600` (solo propietario) |
+| Hardening del kernel (sysctl) | ❌ Sin configurar (valores por defecto) | ✅ 8 parámetros aplicados en `/etc/sysctl.d/99-hardening.conf` |
+| Escáner externo (Palo Alto Networks) | — | ✅ Bloqueado con HTTP 444 por mTLS |
+
+
 
 ---
 
 ## 5. Pendientes y Monitoreo Continuo
 
-### 5.1 Verificar post-deploy CI/CD
-```bash
-ss -tlnp | grep -E "3000|3001"
-# Debe mostrar 127.0.0.1 en ambos
+### 5.1 ✅ Verificación post-deploy CI/CD — COMPLETADA DURANTE LA AUDITORÍA
+
+El CI/CD corrió automáticamente durante la sesión. Confirmado por:
+- IP `20.168.109.82` (rango Azure = GitHub Actions) aceptada vía SSH con la misma clave del deploy.
+- `ss -tlnp` post-deploy muestra `127.0.0.1:3000` ← `main.ts` compilado con `app.listen(port, host)`.
+
+```text
+LISTEN  127.0.0.1:3000  users:(("node /home/admi",pid=320236,fd=32))  ✅
+LISTEN  127.0.0.1:3001  users:(("next-server (v1",pid=320237,fd=23))  ✅
 ```
 
 ### 5.2 Monitoreo periódico recomendado

@@ -11,6 +11,7 @@ module.exports = {
       env_file: './backend/.env',
       env: {
         NODE_ENV: 'production',
+        HOST: '127.0.0.1',
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
         DATABASE_BIBLE_PATH: './data/bible.sqlite',
         DATABASE_SOFTWARE_PATH: './data/software.sqlite',
@@ -27,6 +28,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3001,
+        HOSTNAME: '127.0.0.1',
       },
     },
   ],

@@ -21,7 +21,7 @@ export function BackToPortalButton() {
   return (
     <a
       href={portalUrl}
-      className="group inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl glass-convex-panel glass-convex-panel-interactive text-xs font-semibold text-[var(--header-title)] hover:text-blue-500 transition-all select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 shrink-0"
+      className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-sans font-medium text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 shrink-0 cursor-pointer"
       title={t('portal')}
       aria-label={t('portal')}
       id="software-back-to-portal"

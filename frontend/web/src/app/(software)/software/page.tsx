@@ -168,17 +168,22 @@ export default function SoftwarePage() {
                 </a>
               </div>
 
-            {/* Barra de Navegación Píldora / Cápsula (Estilo MalwareTech) + Retorno al Portal + Búsqueda e Idioma */}
-            <div className="mt-5 w-full flex items-center justify-center gap-2.5 sm:gap-3 flex-wrap">
-              <BackToPortalButton />
-              <CategoryNav
-                selectedCategory={activeCategory}
-                onSelectCategory={(cat) => setActiveCategory(cat)}
-              />
-              <div className="flex items-center gap-2">
+            {/* Barra de Navegación Unificada en Cápsula Cóncava a Ancho Completo */}
+            <div className="mt-7 sm:mt-8 w-full p-1.5 rounded-2xl glass-concave-panel flex items-center justify-between gap-2.5 sm:gap-3">
+              <div className="shrink-0">
+                <BackToPortalButton />
+              </div>
+              <div className="flex-1 flex justify-center min-w-0 overflow-x-auto scrollbar-none">
+                <CategoryNav
+                  selectedCategory={activeCategory}
+                  onSelectCategory={(cat) => setActiveCategory(cat)}
+                  bare={true}
+                />
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   onClick={() => setIsSpotlightOpen(true)}
-                  className="w-8 h-8 rounded-xl glass-convex-panel glass-convex-panel-interactive flex items-center justify-center text-xs text-white hover:text-blue-400 transition-colors shrink-0"
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-xs text-zinc-400 hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer shrink-0"
                   title="Buscar (Ctrl + K)"
                   aria-label="Buscar"
                 >
@@ -191,139 +196,142 @@ export default function SoftwarePage() {
             </div>
           </header>
 
-          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS EN 3 COLUMNAS CON COVER 16:9) */}
-          <section className="space-y-5">
-            <div className="pb-3 border-b border-black/5 dark:border-white/5">
+          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS EN UN SOLO CONTENEDOR UNIFICADO ESTILO MALWARETECH) */}
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
               <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                 Featured Posts
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Destacado 1: Noticia */}
-              {featuredArticle1 ? (
-                <Link
-                  href={`/software/news/${featuredArticle1.slug}`}
-                  className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                >
-                  <div className="space-y-3.5">
-                    <ArticleCover
-                      title={featuredArticle1.title}
-                      category="news"
-                      coverImage={featuredArticle1.coverImage}
-                      tag="NextJS16"
-                    />
+            {/* Contenedor Único para las 3 Publicaciones Destacadas */}
+            <div className="p-4 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Destacado 1: Noticia */}
+                {featuredArticle1 ? (
+                  <Link
+                    href={`/software/news/${featuredArticle1.slug}`}
+                    className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                  >
+                    <div className="space-y-3.5">
+                      <ArticleCover
+                        title={featuredArticle1.title}
+                        category="news"
+                        coverImage={featuredArticle1.coverImage}
+                        tag="NextJS16"
+                      />
 
-                    <div>
-                      <p className="text-[11px] font-mono text-zinc-500">
-                        {featuredArticle1.readTimeMinutes} min read — Noticias, Frontend
-                      </p>
-                      <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2 mt-1.5">
-                        {featuredArticle1.title}
-                      </h3>
-                      <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
-                        {featuredArticle1.excerpt}
-                      </p>
+                      <div>
+                        <p className="text-[11px] font-mono text-zinc-400">
+                          {featuredArticle1.readTimeMinutes} min read — Noticias, Frontend
+                        </p>
+                        <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2 mt-1.5">
+                          {featuredArticle1.title}
+                        </h3>
+                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                          {featuredArticle1.excerpt}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                    <span className="text-zinc-500 text-[11px]">{featuredArticle1.author || 'Jorge Doicela'}</span>
-                    <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                      Leer artículo →
-                    </span>
-                  </div>
-                </Link>
-              ) : (
-                <div className="p-6 rounded-3xl glass-convex-panel animate-pulse text-xs font-mono text-zinc-500 min-h-[300px] flex items-center justify-center">
-                  Cargando...
-                </div>
-              )}
-
-              {/* Destacado 2: Ensayo de Arquitectura */}
-              {featuredArticle2 ? (
-                <Link
-                  href={`/software/blog/${featuredArticle2.slug}`}
-                  className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                >
-                  <div className="space-y-3.5">
-                    <ArticleCover
-                      title={featuredArticle2.title}
-                      category="blog"
-                      coverImage={featuredArticle2.coverImage}
-                      tag="NestJS"
-                    />
-
-                    <div>
-                      <p className="text-[11px] font-mono text-zinc-500">
-                        {featuredArticle2.readTimeMinutes} min read — Arquitectura, Backend
-                      </p>
-                      <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug line-clamp-2 mt-1.5">
-                        {featuredArticle2.title}
-                      </h3>
-                      <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
-                        {featuredArticle2.excerpt}
-                      </p>
+                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                      <span className="text-zinc-500 text-[11px]">{featuredArticle1.author || 'Jorge Doicela'}</span>
+                      <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                        Leer artículo →
+                      </span>
                     </div>
+                  </Link>
+                ) : (
+                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
+                    Cargando...
                   </div>
+                )}
 
-                  <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                    <span className="text-zinc-500 text-[11px]">{featuredArticle2.author || 'Jorge Doicela'}</span>
-                    <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                      Leer ensayo →
-                    </span>
-                  </div>
-                </Link>
-              ) : (
-                <div className="p-6 rounded-3xl glass-convex-panel animate-pulse text-xs font-mono text-zinc-500 min-h-[300px] flex items-center justify-center">
-                  Cargando...
-                </div>
-              )}
+                {/* Destacado 2: Ensayo de Arquitectura */}
+                {featuredArticle2 ? (
+                  <Link
+                    href={`/software/blog/${featuredArticle2.slug}`}
+                    className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                  >
+                    <div className="space-y-3.5">
+                      <ArticleCover
+                        title={featuredArticle2.title}
+                        category="blog"
+                        coverImage={featuredArticle2.coverImage}
+                        tag="NestJS"
+                      />
 
-              {/* Destacado 3: Ciberseguridad */}
-              {featuredArticle3 ? (
-                <Link
-                  href={`/software/cybersecurity/${featuredArticle3.slug}`}
-                  className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                >
-                  <div className="space-y-3.5">
-                    <ArticleCover
-                      title={featuredArticle3.title}
-                      category="cybersecurity"
-                      tag={featuredArticle3.cveId || 'CVE'}
-                    />
-
-                    <div>
-                      <p className="text-[11px] font-mono text-zinc-500">
-                        Aviso {featuredArticle3.severity} — Ciberseguridad, Linux
-                      </p>
-                      <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug line-clamp-2 mt-1.5">
-                        {featuredArticle3.title}
-                      </h3>
-                      <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
-                        {featuredArticle3.excerpt}
-                      </p>
+                      <div>
+                        <p className="text-[11px] font-mono text-zinc-400">
+                          {featuredArticle2.readTimeMinutes} min read — Arquitectura, Backend
+                        </p>
+                        <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug line-clamp-2 mt-1.5">
+                          {featuredArticle2.title}
+                        </h3>
+                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                          {featuredArticle2.excerpt}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                    <span className="text-zinc-500 text-[11px] truncate max-w-[150px]">{featuredArticle3.affectedSystems || 'Linux Kernel'}</span>
-                    <span className="text-rose-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                      Ver aviso →
-                    </span>
+                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                      <span className="text-zinc-500 text-[11px]">{featuredArticle2.author || 'Jorge Doicela'}</span>
+                      <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                        Leer ensayo →
+                      </span>
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
+                    Cargando...
                   </div>
-                </Link>
-              ) : (
-                <div className="p-6 rounded-3xl glass-convex-panel animate-pulse text-xs font-mono text-zinc-500 min-h-[300px] flex items-center justify-center">
-                  Cargando...
-                </div>
-              )}
+                )}
+
+                {/* Destacado 3: Ciberseguridad */}
+                {featuredArticle3 ? (
+                  <Link
+                    href={`/software/cybersecurity/${featuredArticle3.slug}`}
+                    className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                  >
+                    <div className="space-y-3.5">
+                      <ArticleCover
+                        title={featuredArticle3.title}
+                        category="cybersecurity"
+                        tag={featuredArticle3.cveId || 'CVE'}
+                      />
+
+                      <div>
+                        <p className="text-[11px] font-mono text-zinc-400">
+                          Aviso {featuredArticle3.severity} — Ciberseguridad, Linux
+                        </p>
+                        <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug line-clamp-2 mt-1.5">
+                          {featuredArticle3.title}
+                        </h3>
+                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                          {featuredArticle3.excerpt}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                      <span className="text-zinc-500 text-[11px] truncate max-w-[150px]">{featuredArticle3.affectedSystems || 'Linux Kernel'}</span>
+                      <span className="text-rose-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                        Ver aviso →
+                      </span>
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
+                    Cargando...
+                  </div>
+                )}
+              </div>
             </div>
           </section>
 
-          {/* SECCIÓN 2: LATEST POSTS (GRILLA DE 3 COLUMNAS CON COVER 16:9) */}
-          <section className="space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/5">
+          {/* SECCIÓN 2: LATEST POSTS (GRILLA EDITORIAL EN CONTENEDOR UNIFICADO ESTILO MALWARETECH) */}
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                 {activeCategory === 'all'
                   ? 'Latest Posts'
@@ -334,254 +342,256 @@ export default function SoftwarePage() {
               </span>
             </div>
 
-            {/* Grid Editorial de 3 Columnas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Noticias */}
-              {(activeCategory === 'all' || activeCategory === 'news') &&
-                displayNews.map((item) => (
-                  <Link
-                    key={`news-${item.id}`}
-                    href={`/software/news/${item.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={item.title}
-                        category="news"
-                        coverImage={item.coverImage}
-                        tag="Noticia"
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          {item.readTimeMinutes} min read — Noticias
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug mt-1 line-clamp-2">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {item.excerpt}
-                        </p>
+            {/* Contenedor Único para toda la Grilla de Publicaciones */}
+            <div className="p-4 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Noticias */}
+                {(activeCategory === 'all' || activeCategory === 'news') &&
+                  displayNews.map((item) => (
+                    <Link
+                      key={`news-${item.id}`}
+                      href={`/software/news/${item.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={item.title}
+                          category="news"
+                          coverImage={item.coverImage}
+                          tag="Noticia"
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {item.readTimeMinutes} min read — Noticias
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {item.excerpt}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{item.author || 'Jorge Doicela'}</span>
-                      <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Leer →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px]">{item.author || 'Jorge Doicela'}</span>
+                        <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Leer →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
 
-              {/* Ensayos de Arquitectura */}
-              {(activeCategory === 'all' || activeCategory === 'blog') &&
-                displayPosts.map((item) => (
-                  <Link
-                    key={`blog-${item.id}`}
-                    href={`/software/blog/${item.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={item.title}
-                        category="blog"
-                        coverImage={item.coverImage}
-                        tag="Arquitectura"
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          {item.readTimeMinutes} min read — Arquitectura
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1 line-clamp-2">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {item.excerpt}
-                        </p>
+                {/* Ensayos de Arquitectura */}
+                {(activeCategory === 'all' || activeCategory === 'blog') &&
+                  displayPosts.map((item) => (
+                    <Link
+                      key={`blog-${item.id}`}
+                      href={`/software/blog/${item.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={item.title}
+                          category="blog"
+                          coverImage={item.coverImage}
+                          tag="Arquitectura"
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {item.readTimeMinutes} min read — Arquitectura
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {item.excerpt}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{item.author || 'Jorge Doicela'}</span>
-                      <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Leer →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px]">{item.author || 'Jorge Doicela'}</span>
+                        <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Leer →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
 
-              {/* Modelos IA & Inferencia */}
-              {(activeCategory === 'all' || activeCategory === 'ai') &&
-                resources.map((res) => (
-                  <Link
-                    key={`ai-${res.id}`}
-                    href={`/software/ai/${res.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={res.name}
-                        category="ai"
-                        tag={res.type}
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          {res.provider} — {res.type.toUpperCase()}
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-indigo-300 transition-colors leading-snug mt-1 line-clamp-2">
-                          {res.name}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {res.description}
-                        </p>
+                {/* Modelos IA & Inferencia */}
+                {(activeCategory === 'all' || activeCategory === 'ai') &&
+                  resources.map((res) => (
+                    <Link
+                      key={`ai-${res.id}`}
+                      href={`/software/ai/${res.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={res.name}
+                          category="ai"
+                          tag={res.type}
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {res.provider} — {res.type.toUpperCase()}
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-indigo-300 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {res.name}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {res.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{res.license || 'Open Source'}</span>
-                      <span className="text-indigo-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Ficha →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px]">{res.license || 'Open Source'}</span>
+                        <span className="text-indigo-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Ficha →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
 
-              {/* Ciberseguridad & CVE */}
-              {(activeCategory === 'all' || activeCategory === 'cybersecurity') &&
-                displaySec.map((sec) => (
-                  <Link
-                    key={`sec-${sec.id}`}
-                    href={`/software/cybersecurity/${sec.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={sec.title}
-                        category="cybersecurity"
-                        tag={sec.cveId || 'CVE'}
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          Aviso {sec.severity} — Ciberseguridad
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug mt-1 line-clamp-2">
-                          {sec.title}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {sec.excerpt}
-                        </p>
+                {/* Ciberseguridad & CVE */}
+                {(activeCategory === 'all' || activeCategory === 'cybersecurity') &&
+                  displaySec.map((sec) => (
+                    <Link
+                      key={`sec-${sec.id}`}
+                      href={`/software/cybersecurity/${sec.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={sec.title}
+                          category="cybersecurity"
+                          tag={sec.cveId || 'CVE'}
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            Aviso {sec.severity} — Ciberseguridad
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {sec.title}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {sec.excerpt}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px] truncate max-w-[130px]">{sec.affectedSystems || 'Linux'}</span>
-                      <span className="text-rose-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Ver aviso →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px] truncate max-w-[130px]">{sec.affectedSystems || 'Linux'}</span>
+                        <span className="text-rose-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Ver aviso →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
 
-              {/* Tutoriales */}
-              {(activeCategory === 'all' || activeCategory === 'tutorials') &&
-                tutorials.map((item) => (
-                  <Link
-                    key={`tut-${item.id}`}
-                    href={`/software/tutorials/${item.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={item.title}
-                        category="tutorials"
-                        tag="Guía"
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          {item.estimatedMinutes} min read — Tutorial
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-slate-200 transition-colors leading-snug mt-1 line-clamp-2">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {item.excerpt}
-                        </p>
+                {/* Tutoriales */}
+                {(activeCategory === 'all' || activeCategory === 'tutorials') &&
+                  tutorials.map((item) => (
+                    <Link
+                      key={`tut-${item.id}`}
+                      href={`/software/tutorials/${item.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={item.title}
+                          category="tutorials"
+                          tag="Guía"
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {item.estimatedMinutes} min read — Tutorial
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-slate-200 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {item.excerpt}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{item.difficulty || 'Práctico'}</span>
-                      <span className="text-slate-300 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Guía →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px]">{item.difficulty || 'Práctico'}</span>
+                        <span className="text-slate-300 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Guía →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
 
-              {/* Debates de la Comunidad */}
-              {(activeCategory === 'all' || activeCategory === 'forum') &&
-                topics.map((item) => (
-                  <Link
-                    key={`topic-${item.id}`}
-                    href={`/software/forum/${item.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={item.title}
-                        category="forum"
-                        tag="Foro"
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          {item.repliesCount} respuestas — Debate
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1 line-clamp-2">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {item.content}
-                        </p>
+                {/* Debates de la Comunidad */}
+                {(activeCategory === 'all' || activeCategory === 'forum') &&
+                  topics.map((item) => (
+                    <Link
+                      key={`topic-${item.id}`}
+                      href={`/software/forum/${item.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={item.title}
+                          category="forum"
+                          tag="Foro"
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {item.repliesCount} respuestas — Debate
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {item.content}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{item.category || 'General'}</span>
-                      <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Ver debate →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px]">{item.category || 'General'}</span>
+                        <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Ver debate →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
 
-              {/* Proyectos Open Source */}
-              {(activeCategory === 'all' || activeCategory === 'projects') &&
-                projects.map((proj) => (
-                  <Link
-                    key={`proj-${proj.id}`}
-                    href={`/software/projects/${proj.slug}`}
-                    className="p-4 sm:p-5 rounded-3xl glass-convex-panel glass-convex-panel-interactive border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between group h-full"
-                  >
-                    <div className="space-y-3">
-                      <ArticleCover
-                        title={proj.name}
-                        category="projects"
-                        tag="Proyecto"
-                      />
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-500">
-                          ★ {proj.stars} estrellas — Open Source
-                        </p>
-                        <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1 line-clamp-2">
-                          {proj.name}
-                        </h4>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1">
-                          {proj.description}
-                        </p>
+                {/* Proyectos Open Source */}
+                {(activeCategory === 'all' || activeCategory === 'projects') &&
+                  projects.map((proj) => (
+                    <Link
+                      key={`proj-${proj.id}`}
+                      href={`/software/projects/${proj.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={proj.name}
+                          category="projects"
+                          tag="Proyecto"
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            ★ {proj.stars} estrellas — Open Source
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {proj.name}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {proj.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">GitHub Repo</span>
-                      <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Ver proyecto →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+                        <span className="text-zinc-500 text-[11px]">GitHub Repo</span>
+                        <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          Ver proyecto →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+              </div>
             </div>
           </section>
 

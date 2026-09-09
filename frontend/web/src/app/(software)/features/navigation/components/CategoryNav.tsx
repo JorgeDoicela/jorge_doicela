@@ -16,6 +16,7 @@ export type SoftwareSection =
 interface CategoryNavProps {
   selectedCategory: SoftwareSection;
   onSelectCategory: (cat: SoftwareSection) => void;
+  bare?: boolean;
 }
 
 export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
@@ -32,13 +33,19 @@ export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
 export function CategoryNav({
   selectedCategory,
   onSelectCategory,
+  bare = false,
 }: CategoryNavProps) {
   const t = useTranslations('Nav');
 
-
   return (
-    <nav aria-label={t('all')} className="w-fit max-w-full">
-      <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-2xl glass-concave-panel scrollbar-none w-fit max-w-full">
+    <nav aria-label={t('all')} className={bare ? 'w-full' : 'w-fit max-w-full'}>
+      <div
+        className={`flex items-center gap-1.5 overflow-x-auto scrollbar-none ${
+          bare
+            ? 'w-full justify-center py-0.5'
+            : 'p-1.5 rounded-2xl glass-concave-panel w-fit max-w-full'
+        }`}
+      >
         {SOFTWARE_CATEGORY_KEYS.map((cat) => {
           const isSelected = selectedCategory === cat.id;
           return (

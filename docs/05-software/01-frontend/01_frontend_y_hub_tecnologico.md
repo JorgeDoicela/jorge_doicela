@@ -97,14 +97,15 @@ frontend/web/src/app/(software)/
   * Imagotipo compuesto de alta nitidez y escala calibrada: icono [`logo_blanco.png`](/software/logo/logo_blanco.png) a la izquierda (`h-20 sm:h-24 md:h-28 lg:h-32`) y bloque tipográfico [`nombre_rol.png`](/software/logo/nombre_rol.png) a la derecha (`h-12 sm:h-15 md:h-18 lg:h-20`), asegurando una proporción armónica y legibilidad impecable.
   * Titular semántico accesible para SEO (`h1.sr-only`), eliminando el texto visual redundante para dar protagonismo absoluto al diseño del imagotipo.
   * Fila limpia de iconos de redes sociales libres sin contenedores invasivos (`w-6 h-6`, 24px) en color blanco nítido: LinkedIn, GitHub, YouTube, TikTok y Email de contacto, situados a proximidad inmediata bajo el logotipo (`text-white hover:text-zinc-300`).
-  * **Barra de Navegación y Control Unificada:**
-    * **Flanco Izquierdo:** Botón de retorno al portal principal ([`BackToPortalButton`](/software/components/BackToPortalButton.tsx)).
-    * **Centro:** Menú en relieve cóncavo ([`CategoryNav`](/software/features/navigation/components/CategoryNav.tsx)) con las 7 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`) y filtrado en tiempo real.
-    * **Flanco Derecho:** Utilidades neumórficas integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/navigation/components/LanguageToggle.tsx) ES/EN).
+  * **Barra de Navegación y Control Unificada a Ancho Completo (`w-full glass-concave-panel`):**
+    * Encapsulada dentro de un único contenedor cóncavo continuo (`glass-concave-panel`) que abarca el 100% del ancho del layout, alineándose exactamente con los márgenes exteriores de las tarjetas de la grilla de publicaciones:
+      * **Flanco Izquierdo:** Botón de retorno al portal principal ([`BackToPortalButton`](/software/components/BackToPortalButton.tsx)).
+      * **Centro:** Menú de categorías ([`CategoryNav`](/software/features/navigation/components/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 7 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`) con filtrado en tiempo real y soporte scrollable.
+      * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/navigation/components/LanguageToggle.tsx) ES/EN).
 * **Portadas Visuales de Alta Precisión (`ArticleCover.tsx` en 16:9):**
   * Soporta imágenes estáticas con `next/image` y fallback procedural limpio y elegante con texturas de ingeniería (`.tech-grid-bg`), gradientes temáticos según categoría, refracción vítrea y un icono SVG central libre y flotante (`w-12 h-12`) sin recuadros ni marcos perimetrales.
-* **Sección `Featured Posts` (3 Columnas):**
-  * Tres publicaciones destacadas en tarjetas simétricas con su banner visual `16:9`, metadatos discretos (`{readTime} min read — {categoría}`), títulos prominentes y extracto descriptivo de 2 líneas, con cabecera limpia y despejada.
-* **Sección `Latest Posts` (Grilla Editorial de 3 Columnas):**
-  * Cuadrícula equilibrada (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`) sin barras laterales redundantes, permitiendo que las publicaciones respiren con amplio espacio negativo y coherencia visual con la revista técnica de referencia.
+* **Sección `Featured Posts` (Bandeja Envolvente y Celdas Internas):**
+  * Las 3 publicaciones destacadas se organizan en un **panel envolvente amplio** (`glass-convex-panel` a ancho completo). Dentro de esta bandeja, cada artículo es una **celda interna definida** (`bg-black/20 dark:bg-[#16202c]/80 border border-black/5 dark:border-white/[0.07] rounded-2xl p-4 sm:p-5`) con banner 16:9 (`ArticleCover`), metadatos (`{readTime} min read — {categoría}`), titulares prominentes y extractos técnicos, emulando la jerarquía de tarjetas contenidas de MalwareTech.
+* **Sección `Latest Posts` (Bandeja Editorial y Celdas Internas):**
+  * Toda la cuadrícula de publicaciones generales y filtradas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`) reside dentro de su **panel envolvente amplio** (`glass-convex-panel` a ancho completo), alojando cada publicación como una **celda interna individualizada** con fondo distintivo y esquinas redondeadas, logrando coherencia visual absoluta en toda la revista técnica.
 

@@ -132,15 +132,15 @@ docker rm -f $(docker ps -aq)
 ### 3.5 Bind de Node.js (Defensa en profundidad y comportamiento de Next.js)
 
 **Contexto y causa raíz:**
-- Para **NestJS (`backend-nest`)**, especificar `HOST: '127.0.0.1'` sella el socket TCP estrictamente a loopback sin efectos colaterales en la lógica de endpoints.
-- Para **Next.js Standalone (`frontend-next`)**, la variable de entorno `HOSTNAME: '127.0.0.1'` provoca que el enrutador interno fije `baseURL = https://127.0.0.1:3001`. En arquitecturas multi-tenant con reescritura de subdominios (`middleware.ts`), Next.js interpreta las rutas de los subdominios (`bible.*`, `portfolio.*`, `software.*`) como destinos remotos cross-origin y activa su enrutador proxy (`proxyRequest`), intentando negociar SSL contra su propio puerto HTTP plano (`EPROTO: WRONG_VERSION_NUMBER` ➔ Error 500).
+- Para **NestJS (`backend-nest`)**, especificar `HOST: '127.0.0.1'` sella el socket TCP estrictamente a IPv4 loopback (`127.0.0.1:3000`).
+- Para **Next.js Standalone (`frontend-next`)**, `HOSTNAME: 'localhost'` sella el socket a IPv6 loopback (`[::1]:3001`). Además, alinea la URL base interna con `REGEX_LOCALHOST_HOSTNAME` de `NextURL`, permitiendo que `middleware.ts` resuelva los subdominios como rutas locales nativas (200 OK) sin disparar proxies externos erróneos.
 
 #### 3.5.1 Configuración canónica en el repositorio
 
 **`pm2.config.js`:**
 ```js
-// backend-nest:  env: { HOST: '127.0.0.1', ... } -> Loopback sellado
-// frontend-next: env: { PORT: 3001, ... }         -> Enrutamiento local nativo
+// backend-nest:  env: { HOST: '127.0.0.1', ... }          -> IPv4 loopback sellado
+// frontend-next: env: { PORT: 3001, HOSTNAME: 'localhost' } -> IPv6 loopback sellado
 ```
 
 **`backend/src/main.ts`:**
@@ -151,15 +151,16 @@ await app.listen(port, host);
 
 #### 3.5.2 Seguridad Perimetral y de Red
 
-Dado que `frontend-next` no fija `HOSTNAME: '127.0.0.1'`, la protección perimetral del puerto 3001 es asumida 100% por:
-1. **Firewall UFW del SO:** Política `default deny incoming` en `eth0`. Bloqueo directo a nivel de Kernel.
-2. **AWS Lightsail Firewall:** Solo puertos 22, 80 y 443 expuestos al tráfico de internet.
-3. **Nginx Reverse Proxy:** Único componente que se comunica con `http://127.0.0.1:3001` bajo mTLS de Cloudflare.
+Ambos servicios operan estrictamente en loopback sin exposición externa:
+1. **NestJS:** Escucha en `127.0.0.1:3000` (IPv4 loopback).
+2. **Next.js:** Escucha en `[::1]:3001` (IPv6 loopback).
+3. **Nginx Reverse Proxy:** Único componente público (80/443 con mTLS de Cloudflare), comunicándose localmente mediante `http://[::1]:3001` y `http://127.0.0.1:3000`.
+4. **Firewall UFW del SO + AWS Lightsail:** Bloqueo perimetral a nivel de kernel para cualquier puerto distinto de 22, 80 y 443.
 
 **Verificación:**
 ```text
-LISTEN  127.0.0.1:3000  ← NestJS sellado a loopback ✅
-LISTEN        *:3001    ← Next.js blindado por UFW perimetral ✅
+LISTEN  127.0.0.1:3000  ← NestJS sellado a loopback IPv4 ✅
+LISTEN    [::1]:3001    ← Next.js sellado a loopback IPv6 ✅
 ```
 
 #### 3.5.3 CI/CD ejecutado inmediatamente
@@ -418,7 +419,7 @@ pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl st
 | PermitRootLogin | ⚠️ `without-password` (valor compilado) | ✅ `no` (directiva explícita) |
 | Contenedores Docker zombies | ❌ 5 containers / ~150 MB RAM | ✅ Eliminados |
 | mTLS Cloudflare en Nginx | ✅ Ya activo | ✅ Verificado (scanner Palo Alto bloqueado con 444) |
-| Node.js bind en 0.0.0.0 | ❌ Por defecto (sin HOST/HOSTNAME) | ✅ NestJS en 127.0.0.1 (loopback) + Next.js blindado por UFW |
+| Node.js bind en 0.0.0.0 | ❌ Por defecto (sin HOST/HOSTNAME) | ✅ NestJS en 127.0.0.1 (IPv4) + Next.js en [::1] (IPv6 loopback) |
 | PM2 startup automático ante reinicios VPS | ❌ No configurado | ✅ pm2-admin.service habilitado y activo |
 | PM2 reinicios (inestabilidad) | ⚠️ ↑ 30-34 reinicios acumulados | ✅ ↑ 0 (estado limpio tras restart bajo systemd) |
 | Permisos de `backend/.env` | ❌ `664` (world-readable) | ✅ `600` (solo propietario) |

@@ -141,7 +141,7 @@ Aunque UFW bloquea el acceso externo a los puertos 3000 y 3001, la práctica cor
 env: { HOST: '127.0.0.1', ... }
 
 // frontend-next
-env: { PORT: 3001, ... }
+env: { PORT: 3001, HOSTNAME: 'localhost', ... }
 ```
 
 **`backend/src/main.ts`:**
@@ -153,13 +153,13 @@ await app.listen(port, host);
 
 > [!IMPORTANT]
 > **Aislamiento en Next.js Standalone vs NestJS:**
-> * `HOST: '127.0.0.1'` en NestJS aplica estrictamente al socket TCP sin efectos colaterales.
-> * En Next.js Standalone, definir `HOSTNAME: '127.0.0.1'` sobrecarga la variable y fuerza la URL base canónica (`baseURL = https://127.0.0.1:3001`). En arquitecturas multi-tenant con reescritura de subdominios (`middleware.ts`), esto provoca que Next.js detecte los subdominios como destinos externos y ejecute `proxyRequest` por HTTPS contra su propio puerto HTTP, causando un error fatal `EPROTO` (500).
-> * Por tanto, `frontend-next` solo define `PORT: 3001`. El aislamiento de red del frontend lo garantizan el Firewall de AWS Lightsail y el Firewall de Linux Kernel (UFW `default deny incoming`).
+> * `HOST: '127.0.0.1'` en NestJS sella el socket TCP estrictamente a IPv4 loopback (`127.0.0.1:3000`).
+> * En Next.js Standalone, `HOSTNAME: 'localhost'` enlaza el servidor al loopback IPv6 (`[::1]:3001`), sellando el puerto contra cualquier acceso externo. A nivel interno, Next.js normaliza cualquier dirección loopback a `'localhost'` mediante `REGEX_LOCALHOST_HOSTNAME` en `NextURL`. Al coincidir el hostname del proceso con el normalizado en el middleware (`localhost`), Next.js resuelve los rewrites multi-dominio como rutas locales internas (200 OK) sin disparar proxies externos erróneos.
+> * Nginx se conecta a Next.js mediante `proxy_pass http://[::1]:3001;` y al backend mediante `http://127.0.0.1:3000`.
 
 **Verificación post-aplicación:**
 ```bash
-# Resultado esperado: 127.0.0.1:3000 (NestJS) y *:3001 (Next.js blindado por UFW)
+# Resultado esperado: 127.0.0.1:3000 (NestJS IPv4 loopback) y [::1]:3001 (Next.js IPv6 loopback)
 ss -tlnp | grep -E "3001|3000"
 ```
 

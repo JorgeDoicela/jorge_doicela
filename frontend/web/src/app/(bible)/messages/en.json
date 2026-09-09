@@ -5,6 +5,8 @@
   },
   "Nav": {
     "landing": "Home",
+    "back": "Back",
+    "backToBible": "Back to Bible Home",
     "portal": "Back to jorgedoicela.com",
     "portalShort": "Portal",
     "modularBible": "Modular Bible",

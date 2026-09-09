@@ -5,6 +5,8 @@
   },
   "Nav": {
     "landing": "Inicio",
+    "back": "Atrás",
+    "backToBible": "Volver a Inicio de la Biblia",
     "portal": "Volver a jorgedoicela.com",
     "portalShort": "Portal",
     "modularBible": "Biblia Modular",

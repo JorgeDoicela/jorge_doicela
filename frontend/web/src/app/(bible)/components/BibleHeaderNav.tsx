@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { BibleLogo } from './BibleLogo';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageToggle } from './LanguageToggle';
-import { BackToPortalButton } from './BackToPortalButton';
+import { BackToBibleButton } from './BackToBibleButton';
 import { ChevronDown, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -33,6 +33,15 @@ export const BibleHeaderNav: React.FC = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [homeUrl, setHomeUrl] = useState('/');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const isBibleSubdomain = hostname.startsWith('bible.');
+      setHomeUrl(isBibleSubdomain ? '/' : '/bible');
+    }
+  }, []);
 
   const isCurrentTab = (tabPath: string) => {
     if (tabPath === '/bible/study/standard') {
@@ -63,13 +72,13 @@ export const BibleHeaderNav: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black/90 backdrop-blur-md print:hidden">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
 
-        {/* Izquierda: Retorno al Portal */}
+        {/* Izquierda: Retorno al Inicio de la Biblia */}
         <div className="shrink-0 flex items-center gap-2 sm:gap-3">
-          <BackToPortalButton />
+          <BackToBibleButton />
 
           {/* Logotipo en Móvil (< md) para mantener identidad cuando el segmented control central de desktop está oculto */}
           <Link
-            href="/bible"
+            href={homeUrl}
             className="md:hidden shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity"
             title={t('landing')}
           >
@@ -146,7 +155,7 @@ export const BibleHeaderNav: React.FC = () => {
             <div className="flex items-center gap-2 px-2 shrink-0">
               <div className="h-3.5 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
               <Link
-                href="/bible"
+                href={homeUrl}
                 className="p-1 flex items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer group"
                 title={t('landing')}
                 aria-label={t('landing')}

@@ -49,7 +49,8 @@ frontend/web/src/app/(bible)/
 │
 ├── components/                # COMPONENTES Y WIDGETS TRANSVERSALES
 │   ├── BibleHeaderNav.tsx     # Header con selector de suites móvil flotante y desktop
-│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (jorgedoicela.com / localhost)
+│   ├── BackToBibleButton.tsx  # Retorno directo al inicio de la Biblia (bible.localhost:3001 / bible.jorgedoicela.com o /bible)
+│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (jorgedoicela.com / localhost) desde la landing
 │   ├── WordStudyView.tsx      # Orquestador con subtabs de Léxicos y Morfología
 │   └── HistoricalContextView.tsx # Orquestador con subtabs de Atlas, Cronología y Arqueología
 │

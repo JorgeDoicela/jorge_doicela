@@ -74,7 +74,7 @@ frontend/web/src/app/(portfolio)/
 ### 3.1 Tarjetas de Catálogo (`ProjectShowcase.tsx`)
 * **Filtrado por Categorías:** Clasificación dinámica por etiquetas técnicas (`Full Stack`, `Cloud & DevSecOps`, `IA & Sistemas`).
 * **Botones Táctiles de Alta Gama:**
-  * **Demostración ↗ (Acción Principal):** Botón cápsula en oro satinado (`bg-gold-400/15 border border-gold-400/40 text-gold-300 hover:bg-gold-400 hover:text-black font-semibold`).
+  * **Demostración (Acción Principal):** Botón cápsula en oro satinado (`bg-gold-400/15 border border-gold-400/40 text-gold-300 hover:bg-gold-400 hover:text-black font-semibold`).
   * **Código (Acción Secundaria):** Botón estilizado con icono SVG de GitHub y superficie elevada.
   * **Caso de estudio (Disparador Inmersivo):** Enlace interactivo que abre el caso de estudio técnico al hacer clic.
 
@@ -120,7 +120,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
   * Prompt: `guest@aws-cloud:~$`
   * Mensaje: Explica al visitante que está en un servidor cloud en AWS Lightsail con aislamiento seguro.
 * **Hardware y Aislamiento:** 64 MB RAM, 0.25 vCPU, `pids-limit=50` (ver sección de seguridad en backend).
-* **Lanzamiento:** Botón `[ ▶ Iniciar Terminal en la Nube ↗ ]` → `/sandbox?mode=vps`.
+* **Lanzamiento:** Botón `[ Iniciar Terminal en la Nube ]` → `/sandbox?mode=vps`.
 * **Comandos Interactivos Nativos del Servidor:**
   * `about`, `projects`, `skills`, `contact`: Fichas del perfil profesional y proyectos destacados.
   * `architecture`: Demostración del reto de consolidación en 1 GB de RAM.
@@ -149,9 +149,9 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
   * **Ocultamiento Condicional Inteligente:** El footer se oculta por completo (`{!isSecurityState && !isTunnelOffline && (<footer ... />)}`) cuando se despliega un modal de seguridad o el banner de servidor físico apagado, garantizando máxima pureza visual e impidiendo estados contradictorios (como indicadores de "EN VIVO" cuando la máquina no está disponible).
   * Izquierda: Botón de retorno/cierre inteligente (`← Volver al Portafolio`), badge del modo (`EN VIVO • AWS CLOUD` / `EN VIVO • SERVIDOR LOCAL`).
   * Derecha:
-    * Botón `[📋 Copiar selección]` y `[📥 Pegar en terminal]`.
-    * Temporizador dinámico de sesión activa (`⏱ 04:33`).
-    * Botón de salida `[ ✕ Finalizar ]` / `[ ▶ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
+    * Botón `[Copiar selección]` y `[Pegar en terminal]`.
+    * Temporizador dinámico de sesión activa (`04:33`).
+    * Botón de salida `[ Finalizar ]` / `[ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
 
 ### 4.5 Seguridad y Sincronización en el Hook `useSandboxTerminal.ts`
 * **Sincronización Multiventana Local (`BroadcastChannel`):** Canal `portfolio_sandbox_multitab` que coordina pestañas locales en tiempo real con `senderTabId` inmutable. Cuando una pestaña inicia o transfiere la terminal, las demás pestañas abiertas lo detectan inmediatamente y pasan al estado `replaced` sin generar llamadas redundantes al servidor.

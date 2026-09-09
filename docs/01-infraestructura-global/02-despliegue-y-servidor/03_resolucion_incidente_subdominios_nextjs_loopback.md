@@ -134,9 +134,9 @@ Dado que `isRelative` es `false`:
 
 | Configuración en PM2 | `initUrl` en Router | `request.nextUrl` en Middleware | ¿Coinciden Orígenes? | Resultado |
 | :--- | :--- | :--- | :---: | :--- |
-| `HOSTNAME: '127.0.0.1'` | `https://127.0.0.1:3001` | `https://localhost:3001` | ❌ No | **500 Error** (`EPROTO` proxy) |
-| Sin `HOSTNAME` (`0.0.0.0`) | `https://0.0.0.0:3001` | `https://localhost:3001` | ❌ No | **500 Error** (`EPROTO` proxy) |
-| **`HOSTNAME: 'localhost'`** | **`https://localhost:3001`** | **`https://localhost:3001`** | **✅ Sí** | **200 OK** (Ruta local interna) |
+| `HOSTNAME: '127.0.0.1'` | `https://127.0.0.1:3001` | `https://localhost:3001` | No | **500 Error** (`EPROTO` proxy) |
+| Sin `HOSTNAME` (`0.0.0.0`) | `https://0.0.0.0:3001` | `https://localhost:3001` | No | **500 Error** (`EPROTO` proxy) |
+| **`HOSTNAME: 'localhost'`** | **`https://localhost:3001`** | **`https://localhost:3001`** | **Sí** | **200 OK** (Ruta local interna) |
 
 ---
 

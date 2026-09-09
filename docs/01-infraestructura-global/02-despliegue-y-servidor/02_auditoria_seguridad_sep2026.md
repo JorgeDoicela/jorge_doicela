@@ -20,12 +20,12 @@ Se detectó que la **IP pública del VPS (`44.192.40.200`)** estaba registrada e
 
 | Severidad | Hallazgo | Detalle |
 |---|---|---|
-| 🚨 Crítico | Puerto 3000 NestJS expuesto | `*:3000` accesible desde internet, bypassa Nginx y mTLS |
-| 🚨 Crítico | Puerto 3001 Next.js expuesto | `0.0.0.0:3001` accesible desde internet, bypassa Nginx y mTLS |
-| 🚨 Crítico | Sin firewall | `ufw` no instalado — cero bloqueo perimetral |
-| ⚠️ Alto | Ataque SSH activo | IP `222.91.124.34` (China): cientos de intentos/minuto automatizados |
-| ⚠️ Alto | PermitRootLogin permisivo | Directiva comentada en `sshd_config` — sshd usaba valor por defecto `without-password` |
-| ⚠️ Medio | 5 contenedores Docker zombies | 2–6 días corriendo (TTL de 5 min no los eliminó por reinicios abruptos de PM2) |
+| Crítico | Puerto 3000 NestJS expuesto | `*:3000` accesible desde internet, bypassa Nginx y mTLS |
+| Crítico | Puerto 3001 Next.js expuesto | `0.0.0.0:3001` accesible desde internet, bypassa Nginx y mTLS |
+| Crítico | Sin firewall | `ufw` no instalado — cero bloqueo perimetral |
+| Alto | Ataque SSH activo | IP `222.91.124.34` (China): cientos de intentos/minuto automatizados |
+| Alto | PermitRootLogin permisivo | Directiva comentada en `sshd_config` — sshd usaba valor por defecto `without-password` |
+| Medio | 5 contenedores Docker zombies | 2–6 días corriendo (TTL de 5 min no los eliminó por reinicios abruptos de PM2) |
 
 ### 2.1 Puertos al momento de la auditoría
 ```text
@@ -106,7 +106,7 @@ sudo fail2ban-client set sshd banip 102.219.227.90  # → 1 (éxito)
 ```bash
 # Corrección definitiva (descomenta y cambia al mismo tiempo):
 sudo sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
-sudo sshd -T | grep permitrootlogin   # → permitrootlogin no ✅
+sudo sshd -T | grep permitrootlogin   # → permitrootlogin no (confirmado)
 sudo systemctl reload ssh
 ```
 **Resultado:** `permitrootlogin no`. Root completamente deshabilitado.
@@ -159,8 +159,8 @@ Ambos servicios operan estrictamente en loopback sin exposición externa:
 
 **Verificación:**
 ```text
-LISTEN  127.0.0.1:3000  ← NestJS sellado a loopback IPv4 ✅
-LISTEN    [::1]:3001    ← Next.js sellado a loopback IPv6 ✅
+LISTEN  127.0.0.1:3000  ← NestJS sellado a loopback IPv4 (OK)
+LISTEN    [::1]:3001    ← Next.js sellado a loopback IPv6 (OK)
 ```
 
 #### 3.5.3 CI/CD ejecutado inmediatamente
@@ -188,7 +188,7 @@ git push origin main
 chmod 600 ~/jorge_doicela/backend/.env
 
 # Verificación:
--rw------- 1 admin admin 1042  backend/.env   ✅
+-rw------- 1 admin admin 1042  backend/.env   (confirmado)
 ```
 
 **Causa raíz:** El archivo fue creado con `umask` permisivo por defecto. El `.gitignore` evita que se suba al repo, pero los permisos en servidor son responsabilidad del operador.
@@ -223,14 +223,14 @@ sudo sysctl -p /etc/sysctl.d/99-hardening.conf
 
 **Confirmación de aplicación:**
 ```text
-net.ipv4.tcp_syncookies = 1         ✅
-net.ipv4.conf.all.accept_redirects = 0  ✅
-net.ipv6.conf.all.accept_redirects = 0  ✅
-net.ipv4.conf.all.send_redirects = 0    ✅
-net.ipv4.conf.all.accept_source_route = 0  ✅
-net.ipv4.icmp_echo_ignore_broadcasts = 1   ✅
-net.ipv4.conf.all.rp_filter = 1     ✅
-kernel.randomize_va_space = 2       ✅
+net.ipv4.tcp_syncookies = 1
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.conf.all.rp_filter = 1
+kernel.randomize_va_space = 2
 ```
 
 El archivo persiste en `/etc/sysctl.d/` y se aplica automáticamente en cada arranque del VPS.
@@ -276,7 +276,7 @@ sudo systemctl start pm2-admin
 
 # 4. Verificar
 systemctl is-active pm2-admin
-# → active ✅
+# → active
 ```
 
 **Resultado verificado:**
@@ -284,8 +284,8 @@ systemctl is-active pm2-admin
 backend-nest   online ↑ 0 (contador limpio desde cero)  pid=320236
 frontend-next  online ↑ 0 (contador limpio desde cero)  pid=320237
 
-LISTEN  127.0.0.1:3000  ← NestJS (IPv4 loopback) ✅
-LISTEN    [::1]:3001    ← Next.js (IPv6 loopback sellado vía HOSTNAME: localhost) ✅
+LISTEN  127.0.0.1:3000  ← NestJS (IPv4 loopback) (OK)
+LISTEN    [::1]:3001    ← Next.js (IPv6 loopback sellado vía HOSTNAME: localhost) (OK)
 ```
 
 
@@ -302,8 +302,8 @@ Verificación completa de los 12 vectores ejecutada después de aplicar todos lo
 0.0.0.0:80     ← Nginx HTTP (correcto)
 0.0.0.0:22     ← SSH (protegido por fail2ban + clave pública)
 0.0.0.0:443    ← Nginx HTTPS (mTLS Cloudflare)
-127.0.0.1:3000 ← NestJS solo IPv4 loopback ✅ (main.ts con HOST: 127.0.0.1)
-[::1]:3001     ← Next.js solo IPv6 loopback ✅ (pm2 con HOSTNAME: localhost)
+127.0.0.1:3000 ← NestJS solo IPv4 loopback (OK) (main.ts con HOST: 127.0.0.1)
+[::1]:3001     ← Next.js solo IPv6 loopback (OK) (pm2 con HOSTNAME: localhost)
 0.0.0.0:5355   ← mDNS/LLMNR (bloqueado por UFW desde exterior, inofensivo)
 ```
 
@@ -329,9 +329,9 @@ Banned IP list: 222.91.124.34  102.219.227.90
 ```text
 logingracetime 120
 maxauthtries 6
-permitRootLogin no          ← deshabilitado ✅
-pubkeyauthentication yes    ← solo clave pública ✅
-passwordauthentication no   ← contraseña deshabilitada ✅
+permitRootLogin no          ← deshabilitado (OK)
+pubkeyauthentication yes    ← solo clave pública (OK)
+passwordauthentication no   ← contraseña deshabilitada (OK)
 ```
 
 ### [5] Ataques SSH últimas 2 horas — Ninguno
@@ -364,9 +364,9 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 
 ### [9] Nginx mTLS — Verificado
 ```text
-server_tokens off;                                  ← ocultamiento de versión ✅
-ssl_client_certificate /etc/ssl/certs/cloudflare.crt  ← CA de Cloudflare ✅
-ssl_verify_client on;                               ← mTLS activo ✅
+server_tokens off;                                  ← ocultamiento de versión (OK)
+ssl_client_certificate /etc/ssl/certs/cloudflare.crt  ← CA de Cloudflare (OK)
+ssl_verify_client on;                               ← mTLS activo (OK)
 ```
 
 ### [10] RAM del Servidor
@@ -378,11 +378,11 @@ Swap:  2.0Gi  total  |   45Mi used
 
 ### [11] Servicios Críticos — Notas Importantes
 ```text
-nginx     → active   ✅
-fail2ban  → active   ✅
-ufw       → inactive ⚠️  (ver nota)
-ssh       → active   ✅
-pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl start)
+nginx     → active   (OK)
+fail2ban  → active   (OK)
+ufw       → inactive (ver nota)
+ssh       → active   (OK)
+pm2-admin → active   (OK) (tras fix con reset-failed + pm2 kill + systemctl start)
 ```
 
 > [!NOTE]
@@ -394,12 +394,12 @@ pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl st
 
 ### [12] Conexiones Externas Activas
 ```text
-172.26.6.236:443  →  172.70.224.162:11573   ← Cloudflare (172.70.x.x) ✅
-172.26.6.236:443  →  104.23.213.76:13528    ← Cloudflare (104.23.x.x) ✅
-172.26.6.236:443  →  172.70.224.156:9884    ← Cloudflare (172.70.x.x) ✅
-172.26.6.236:443  →  104.23.211.27:10830    ← Cloudflare (104.23.x.x) ✅
-172.26.6.236:443  →  104.22.93.124:11803    ← Cloudflare (104.22.x.x) ✅
-172.26.6.236:22   →  201.46.114.49:13593    ← SSH del desarrollador ✅
+172.26.6.236:443  →  172.70.224.162:11573   ← Cloudflare (172.70.x.x) (OK)
+172.26.6.236:443  →  104.23.213.76:13528    ← Cloudflare (104.23.x.x) (OK)
+172.26.6.236:443  →  172.70.224.156:9884    ← Cloudflare (172.70.x.x) (OK)
+172.26.6.236:443  →  104.23.211.27:10830    ← Cloudflare (104.23.x.x) (OK)
+172.26.6.236:443  →  104.22.93.124:11803    ← Cloudflare (104.22.x.x) (OK)
+172.26.6.236:22   →  201.46.114.49:13593    ← SSH del desarrollador (OK)
 ```
 > Todas las conexiones al puerto 443 provienen exclusivamente de IPs de Cloudflare.
 > No hay ninguna conexión directa a la IP del servidor desde fuera de Cloudflare.
@@ -410,21 +410,21 @@ pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl st
 
 | Vector de ataque | Antes | Después |
 |---|---|---|
-| Firewall perimetral | ❌ Inexistente | ✅ UFW: policy DROP, solo 22/80/443 |
-| Puerto 3000 NestJS desde internet | ❌ `*:3000` público | ✅ UFW bloqueado + `127.0.0.1` via CI/CD |
-| Puerto 3001 Next.js desde internet | ❌ `0.0.0.0:3001` público | ✅ UFW bloqueado + `127.0.0.1` inmediato |
-| Fuerza bruta SSH | ❌ Sin protección (cientos de intentos/min) | ✅ fail2ban: ban 1h tras 5 intentos |
-| IP atacante 222.91.124.34 | ❌ Activa y sin ban | ✅ Baneada en fail2ban |
-| IP atacante 102.219.227.90 | ❌ Activa y sin ban | ✅ Baneada en fail2ban |
-| PermitRootLogin | ⚠️ `without-password` (valor compilado) | ✅ `no` (directiva explícita) |
-| Contenedores Docker zombies | ❌ 5 containers / ~150 MB RAM | ✅ Eliminados |
-| mTLS Cloudflare en Nginx | ✅ Ya activo | ✅ Verificado (scanner Palo Alto bloqueado con 444) |
-| Node.js bind en 0.0.0.0 | ❌ Por defecto (sin HOST/HOSTNAME) | ✅ NestJS en 127.0.0.1 (IPv4) + Next.js en [::1] (IPv6 loopback) |
-| PM2 startup automático ante reinicios VPS | ❌ No configurado | ✅ pm2-admin.service habilitado y activo |
-| PM2 reinicios (inestabilidad) | ⚠️ ↑ 30-34 reinicios acumulados | ✅ ↑ 0 (estado limpio tras restart bajo systemd) |
-| Permisos de `backend/.env` | ❌ `664` (world-readable) | ✅ `600` (solo propietario) |
-| Hardening del kernel (sysctl) | ❌ Sin configurar (valores por defecto) | ✅ 8 parámetros aplicados en `/etc/sysctl.d/99-hardening.conf` |
-| Escáner externo (Palo Alto Networks) | — | ✅ Bloqueado con HTTP 444 por mTLS |
+| Firewall perimetral | Inexistente | UFW: policy DROP, solo 22/80/443 |
+| Puerto 3000 NestJS desde internet | `*:3000` público | UFW bloqueado + `127.0.0.1` via CI/CD |
+| Puerto 3001 Next.js desde internet | `0.0.0.0:3001` público | UFW bloqueado + `127.0.0.1` inmediato |
+| Fuerza bruta SSH | Sin protección (cientos de intentos/min) | fail2ban: ban 1h tras 5 intentos |
+| IP atacante 222.91.124.34 | Activa y sin ban | Baneada en fail2ban |
+| IP atacante 102.219.227.90 | Activa y sin ban | Baneada en fail2ban |
+| PermitRootLogin | `without-password` (valor compilado) | `no` (directiva explícita) |
+| Contenedores Docker zombies | 5 containers / ~150 MB RAM | Eliminados |
+| mTLS Cloudflare en Nginx | Ya activo | Verificado (scanner Palo Alto bloqueado con 444) |
+| Node.js bind en 0.0.0.0 | Por defecto (sin HOST/HOSTNAME) | NestJS en 127.0.0.1 (IPv4) + Next.js en [::1] (IPv6 loopback) |
+| PM2 startup automático ante reinicios VPS | No configurado | pm2-admin.service habilitado y activo |
+| PM2 reinicios (inestabilidad) | 30-34 reinicios acumulados | 0 reinicios (estado limpio tras restart bajo systemd) |
+| Permisos de `backend/.env` | `664` (world-readable) | `600` (solo propietario) |
+| Hardening del kernel (sysctl) | Sin configurar (valores por defecto) | 8 parámetros aplicados en `/etc/sysctl.d/99-hardening.conf` |
+| Escáner externo (Palo Alto Networks) | — | Bloqueado con HTTP 444 por mTLS |
 
 
 
@@ -432,15 +432,15 @@ pm2-admin → active   ✅  (tras fix con reset-failed + pm2 kill + systemctl st
 
 ## 5. Pendientes y Monitoreo Continuo
 
-### 5.1 ✅ Verificación post-deploy CI/CD — COMPLETADA DURANTE LA AUDITORÍA
+### 5.1 Verificación post-deploy CI/CD — COMPLETADA DURANTE LA AUDITORÍA
 
 El CI/CD corrió automáticamente durante la sesión. Confirmado por:
 - IP `20.168.109.82` (rango Azure = GitHub Actions) aceptada vía SSH con la misma clave del deploy.
 - `ss -tlnp` post-deploy muestra `127.0.0.1:3000` ← `main.ts` compilado con `app.listen(port, host)`.
 
 ```text
-LISTEN  127.0.0.1:3000  users:(("node /home/admi",pid=320236,fd=32))  ← NestJS (IPv4 loopback) ✅
-LISTEN    [::1]:3001    users:(("next-server (v1",pid=1649,fd=23))    ← Next.js (IPv6 loopback) ✅
+LISTEN  127.0.0.1:3000  users:(("node /home/admi",pid=320236,fd=32))  ← NestJS (IPv4 loopback) (OK)
+LISTEN    [::1]:3001    users:(("next-server (v1",pid=1649,fd=23))    ← Next.js (IPv6 loopback) (OK)
 ```
 
 ### 5.2 Monitoreo periódico recomendado

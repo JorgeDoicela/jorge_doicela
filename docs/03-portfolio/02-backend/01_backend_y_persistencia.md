@@ -137,19 +137,19 @@ backend/src/portfolio/
 | **cgroups — Memoria** | `Memory + MemorySwap` | 64 MB | 256 MB |
 | **cgroups — CPU** | `NanoCpus` | 0.25 vCPU | 1.0 vCPU |
 | **Anti-Forkbomb (kernel)** | `PidsLimit` | 50 | 100 |
-| **Anti-Forkbomb (shell)** | `ulimit -u 50` | ✅ | ✅ |
+| **Anti-Forkbomb (shell)** | `ulimit -u 50` | Sí | Sí |
 | **Virtual Memory (shell)** | `ulimit -v 131072` (VPS) / `ulimit -v 524288` (Tunnel) | 128 MB | 512 MB |
-| **CPU Time por proceso** | `ulimit -t 60` — 60 segundos máx/proceso | ✅ | ✅ |
-| **Tamaño de archivo** | `ulimit -f 40960` — 20 MB máx | ✅ | ✅ |
-| **File Descriptors** | `ulimit -n 256` — reduce desde 1048576 | ✅ | ✅ |
-| **Permisos de archivo** | `umask 077` — ningún archivo es world-readable | ✅ | ✅ |
-| **Zero-Root** | Usuario `guest` UID/GID 1000, `CapDrop: ['ALL']`, `no-new-privileges:true` | ✅ | ✅ |
-| **Filesystem Inmutable** | `ReadonlyRootfs: true` | ✅ | ✅ |
-| **Áreas Escribibles** | `/home/guest` tmpfs `noexec,nosuid,size=15M` | ✅ | ✅ |
-| **Temp Aislado** | `/tmp` tmpfs `noexec,nosuid,size=10M` | ✅ | ✅ |
-| **Aislamiento de Red** | `NetworkMode: 'none'` | ✅ | ✅ |
-| **Auto-destrucción** | `AutoRemove: true` | ✅ | ✅ |
-| **Rutas /proc enmascaradas** | `MaskedPaths` — monta `/dev/null` sobre rutas sensibles (OCI spec) | ✅ | ✅ |
+| **CPU Time por proceso** | `ulimit -t 60` — 60 segundos máx/proceso | Sí | Sí |
+| **Tamaño de archivo** | `ulimit -f 40960` — 20 MB máx | Sí | Sí |
+| **File Descriptors** | `ulimit -n 256` — reduce desde 1048576 | Sí | Sí |
+| **Permisos de archivo** | `umask 077` — ningún archivo es world-readable | Sí | Sí |
+| **Zero-Root** | Usuario `guest` UID/GID 1000, `CapDrop: ['ALL']`, `no-new-privileges:true` | Sí | Sí |
+| **Filesystem Inmutable** | `ReadonlyRootfs: true` | Sí | Sí |
+| **Áreas Escribibles** | `/home/guest` tmpfs `noexec,nosuid,size=15M` | Sí | Sí |
+| **Temp Aislado** | `/tmp` tmpfs `noexec,nosuid,size=10M` | Sí | Sí |
+| **Aislamiento de Red** | `NetworkMode: 'none'` | Sí | Sí |
+| **Auto-destrucción** | `AutoRemove: true` | Sí | Sí |
+| **Rutas /proc enmascaradas** | `MaskedPaths` — monta `/dev/null` sobre rutas sensibles (OCI spec) | Sí | Sí |
 
 **`MaskedPaths` — rutas bloqueadas a nivel de kernel:**
 ```

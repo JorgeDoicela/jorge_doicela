@@ -1,34 +1,4 @@
 import { NextRequest } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-function getApiKey(keyName: string): string | undefined {
-  if (process.env[keyName]) return process.env[keyName];
-
-  const possiblePaths = [
-    path.join(process.cwd(), 'frontend/web/.env'),
-    path.join(process.cwd(), '.env'),
-    path.join(process.cwd(), 'frontend/web/.env.local'),
-    path.join(process.cwd(), '.env.local'),
-  ];
-
-  for (const envPath of possiblePaths) {
-    if (fs.existsSync(envPath)) {
-      try {
-        const content = fs.readFileSync(envPath, 'utf8');
-        const match = content.match(new RegExp(`^${keyName}=+(.*)$`, 'm'));
-        if (match && match[1]) {
-          const val = match[1].trim().replace(/^=+/, '').trim().replace(/^["']|["']$/g, '');
-          if (val) return val;
-        }
-      } catch {
-        // Continuar
-      }
-    }
-  }
-
-  return undefined;
-}
 
 // ============================================================================
 // CAPA DE SEGURIDAD EQUILIBRADA (Protección contra Ataques + Fluidez para Usuarios)
@@ -177,7 +147,7 @@ export async function POST(req: NextRequest) {
       return createTextStreamResponse(cached.text);
     }
 
-    const groqKey = getApiKey('GROQ_API_KEY');
+    const groqKey = process.env.GROQ_API_KEY;
 
     // 5. STREAMING CON GROQ LPU (Configuración Equilibrada)
     if (groqKey) {

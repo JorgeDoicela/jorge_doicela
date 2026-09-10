@@ -32,13 +32,17 @@ export default getRequestConfig(async () => {
 
 
   // Resolver subdominio para cargar exclusivamente su diccionario local
-  let subdomain = 'landing';
-  if (host.includes('portfolio.') || host.startsWith('portfolio')) {
-    subdomain = 'portfolio';
-  } else if (host.includes('software.') || host.startsWith('software')) {
-    subdomain = 'software';
-  } else if (host.includes('bible.') || host.startsWith('bible')) {
-    subdomain = 'bible';
+  const projectHeader = headersList.get('x-project');
+  let subdomain = projectHeader || 'landing';
+
+  if (!projectHeader) {
+    if (host.includes('portfolio.') || host.startsWith('portfolio')) {
+      subdomain = 'portfolio';
+    } else if (host.includes('software.') || host.startsWith('software')) {
+      subdomain = 'software';
+    } else if (host.includes('bible.') || host.startsWith('bible')) {
+      subdomain = 'bible';
+    }
   }
 
   let messages: Record<string, any>;

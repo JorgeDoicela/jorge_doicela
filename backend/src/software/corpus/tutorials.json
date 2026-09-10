@@ -12,6 +12,24 @@
       "techStack": "React, NestJS, Socket.io, TypeScript",
       "author": "Jorge Doicela",
       "tags": "tutorial,react,websockets,typescript,frontend",
+      "language": "es",
+      "coverImage": "/software/images/tutorial-terminal.jpg",
+      "views": 510,
+      "likes": 140
+    },
+    {
+      "id": 2,
+      "slug": "tutorial-terminal-ssh-virtual-websockets-react",
+      "title": "Building a Virtual SSH Terminal with WebSockets in React and NestJS",
+      "excerpt": "Learn how to implement a real-time interactive console using Socket.io and custom React Hooks.",
+      "description": "Step-by-step practical guide to designing an interactive browser terminal with Unix command handling and styled output.",
+      "difficulty": "intermediate",
+      "estimatedMinutes": 20,
+      "prerequisites": "Basic proficiency in React, NestJS, and WebSockets",
+      "techStack": "React, NestJS, Socket.io, TypeScript",
+      "author": "Jorge Doicela",
+      "tags": "tutorial,react,websockets,typescript,frontend",
+      "language": "en",
       "coverImage": "/software/images/tutorial-terminal.jpg",
       "views": 510,
       "likes": 140
@@ -42,6 +60,33 @@
       "stepOrder": 3,
       "title": "Renderizar la Consola con Estilo Neumórfico",
       "contentMarkdown": "Diseñamos la caja de terminal con fondo oscuro profundo, cursor parpadeante y scroll automático al último mensaje.",
+      "codeSnippet": "<div className=\"terminal-container font-mono p-4 rounded-2xl bg-zinc-950 text-emerald-400\">\n  {output.map((line, i) => <div key={i}>{line}</div>)}\n  <input onKeyDown={handleKeyDown} className=\"bg-transparent outline-none w-full\" autoFocus />\n</div>",
+      "codeLanguage": "tsx"
+    },
+    {
+      "id": 4,
+      "tutorialId": 2,
+      "stepOrder": 1,
+      "title": "Configure the WebSockets Gateway in NestJS",
+      "contentMarkdown": "We instantiate a WebSocketGateway under the \"terminal\" namespace to listen for incoming client commands and stream stdout lines.",
+      "codeSnippet": "@WebSocketGateway({ namespace: \"terminal\", cors: { origin: \"*\" } })\nexport class TerminalGateway {\n  @SubscribeMessage(\"execute-command\")\n  handleCommand(@MessageBody() cmd: string) {\n    return { event: \"terminal-output\", data: `Executing: ${cmd}\\n` };\n  }\n}",
+      "codeLanguage": "typescript"
+    },
+    {
+      "id": 5,
+      "tutorialId": 2,
+      "stepOrder": 2,
+      "title": "Create the useTerminalSocket Hook in React",
+      "contentMarkdown": "We encapsulate the Socket.io lifecycle to cleanly manage terminal buffer queues and socket reconnectivity.",
+      "codeSnippet": "export function useTerminalSocket() {\n  const [output, setOutput] = useState<string[]>([]);\n  const socketRef = useRef<Socket | null>(null);\n\n  useEffect(() => {\n    socketRef.current = io(\"/terminal\");\n    socketRef.current.on(\"terminal-output\", (data) => {\n      setOutput((prev) => [...prev, data]);\n    });\n    return () => { socketRef.current?.disconnect(); };\n  }, []);\n\n  const sendCommand = (cmd: string) => {\n    socketRef.current?.emit(\"execute-command\", cmd);\n  };\n\n  return { output, sendCommand };\n}",
+      "codeLanguage": "typescript"
+    },
+    {
+      "id": 6,
+      "tutorialId": 2,
+      "stepOrder": 3,
+      "title": "Render the Neumorphic Console Interface",
+      "contentMarkdown": "We construct the terminal container with deep dark styling, blinking cursor caret, and automatic scroll anchoring to the newest stdout entry.",
       "codeSnippet": "<div className=\"terminal-container font-mono p-4 rounded-2xl bg-zinc-950 text-emerald-400\">\n  {output.map((line, i) => <div key={i}>{line}</div>)}\n  <input onKeyDown={handleKeyDown} className=\"bg-transparent outline-none w-full\" autoFocus />\n</div>",
       "codeLanguage": "tsx"
     }

@@ -3,39 +3,36 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface DockProps {
   onOpenSpotlight: () => void;
 }
 
-interface DockItemDef {
-  label: string;
-  shortLabel: string;
-  href: string;
-  badge?: string;
-}
-
-const DOCK_ITEMS: DockItemDef[] = [
-  { label: 'Inicio', shortLabel: 'HOME', href: '/software' },
-  { label: 'Noticias', shortLabel: 'NEWS', href: '/software/news', badge: '1' },
-  { label: 'Blog', shortLabel: 'BLOG', href: '/software/blog', badge: '2' },
-  { label: 'IA & Modelos', shortLabel: 'AI', href: '/software/ai', badge: '3' },
-  { label: 'Ciberseguridad', shortLabel: 'SEC', href: '/software/cybersecurity', badge: '4' },
-  { label: 'Tutoriales', shortLabel: 'TUTS', href: '/software/tutorials', badge: '5' },
-  { label: 'Foros', shortLabel: 'FORUM', href: '/software/forum', badge: '6' },
-  { label: 'Proyectos', shortLabel: 'PROJ', href: '/software/projects', badge: '7' },
-];
-
 export function Dock({ onOpenSpotlight }: DockProps) {
   const pathname = usePathname();
+  const tNav = useTranslations('Nav');
+  const tSearch = useTranslations('Search');
+  const tSpotlight = useTranslations('Spotlight');
+
+  const dockItems = [
+    { label: tNav('all'), shortLabel: 'HOME', href: '/software' },
+    { label: tNav('news'), shortLabel: 'NEWS', href: '/software/news' },
+    { label: tNav('blog'), shortLabel: 'BLOG', href: '/software/blog' },
+    { label: tNav('ai'), shortLabel: 'AI', href: '/software/ai' },
+    { label: tNav('cybersecurity'), shortLabel: 'SEC', href: '/software/cybersecurity' },
+    { label: tNav('tutorials'), shortLabel: 'TUTS', href: '/software/tutorials' },
+    { label: tNav('forum'), shortLabel: 'FORUM', href: '/software/forum' },
+    { label: tNav('projects'), shortLabel: 'PROJ', href: '/software/projects' },
+  ];
 
   return (
     <div className="fixed bottom-3 sm:bottom-5 inset-x-0 z-40 flex justify-center pointer-events-none px-3">
       <nav
-        aria-label="Dock de Navegación de Software"
+        aria-label="Software Navigation Dock"
         className="pointer-events-auto p-1.5 sm:p-2 rounded-3xl glass-convex-panel border border-white/15 shadow-2xl flex items-center gap-1 sm:gap-1.5 backdrop-blur-2xl max-w-full overflow-x-auto scrollbar-none"
       >
-        {DOCK_ITEMS.map((item) => {
+        {dockItems.map((item) => {
           const isActive =
             item.href === '/software'
               ? pathname === '/software'
@@ -77,14 +74,14 @@ export function Dock({ onOpenSpotlight }: DockProps) {
         <button
           onClick={onOpenSpotlight}
           className="group relative flex flex-col items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl glass-btn-neumorphic text-zinc-400 hover:text-indigo-400 hover:scale-110 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-          title="Buscador Spotlight (Cmd + K)"
-          aria-label="Buscador Spotlight"
+          title={tSearch('searchCatalog')}
+          aria-label={tSpotlight('searchAria')}
         >
           <span className="text-[10px] sm:text-xs font-mono font-bold">⌥K</span>
 
           {/* Tooltip */}
           <span className="absolute -top-9 px-2 py-0.5 rounded-lg glass-convex-panel text-[10px] font-bold text-zinc-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap hidden sm:block border border-white/10 shadow-lg">
-            Buscar (⌘K)
+            {tSpotlight('searchTitle')}
           </span>
         </button>
       </nav>

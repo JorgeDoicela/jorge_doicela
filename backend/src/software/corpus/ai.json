@@ -11,6 +11,7 @@
     "paperUrl": "https://arxiv.org/abs/2501.12948",
     "githubUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
     "tags": "ai,llm,deepseek,reasoning,open-source",
+    "language": "es",
     "views": 680,
     "likes": 195
   },
@@ -26,6 +27,39 @@
     "paperUrl": null,
     "githubUrl": "https://github.com/modelcontextprotocol",
     "tags": "ai,mcp,agents,tools,anthropic",
+    "language": "es",
+    "views": 520,
+    "likes": 142
+  },
+  {
+    "slug": "deepseek-r1-modelo-razonamiento-abierto",
+    "name": "DeepSeek-R1",
+    "type": "llm",
+    "provider": "DeepSeek AI",
+    "description": "Advanced open-weights reasoning model trained via large-scale reinforcement learning.",
+    "contentMarkdown": "DeepSeek-R1 achieves state-of-the-art mathematical, algorithmic, and code synthesis reasoning capabilities on par with top closed-source frontier models.\n\n### Highlights:\n- **Training Methodology:** Pure RL without massive reliance on supervised synthetic datasets.\n- **Transparency:** Fully open model weights under permissive MIT license.\n- **Distillation:** Efficient distilled checkpoints from 1.5B to 70B for localized execution.",
+    "license": "MIT",
+    "documentationUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
+    "paperUrl": "https://arxiv.org/abs/2501.12948",
+    "githubUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
+    "tags": "ai,llm,deepseek,reasoning,open-source",
+    "language": "en",
+    "views": 680,
+    "likes": 195
+  },
+  {
+    "slug": "mcp-model-context-protocol-anthropic",
+    "name": "Model Context Protocol (MCP)",
+    "type": "mcp_server",
+    "provider": "Anthropic",
+    "description": "Open standard connecting language models directly to data sources, tool servers, and developer ecosystems.",
+    "contentMarkdown": "MCP standardizes how artificial intelligence assistants securely interact with databases, REST APIs, and local or remote filesystems.\n\n### Architecture Components:\n1. **MCP Hosts:** Client applications that orchestrate models.\n2. **MCP Clients:** Connectors maintaining 1:1 stateful communication with servers.\n3. **MCP Servers:** Lightweight services exposing tools, prompts, and resources over JSON-RPC.",
+    "license": "MIT",
+    "documentationUrl": "https://modelcontextprotocol.io",
+    "paperUrl": null,
+    "githubUrl": "https://github.com/modelcontextprotocol",
+    "tags": "ai,mcp,agents,tools,anthropic",
+    "language": "en",
     "views": 520,
     "likes": 142
   }

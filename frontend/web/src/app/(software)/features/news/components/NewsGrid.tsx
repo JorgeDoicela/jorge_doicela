@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { NewsArticle } from '../types';
 import { NewsCard } from './NewsCard';
 
@@ -11,6 +12,8 @@ interface NewsGridProps {
 }
 
 export function NewsGrid({ news, loading, error }: NewsGridProps) {
+  const t = useTranslations('News');
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-pulse">
@@ -24,7 +27,7 @@ export function NewsGrid({ news, loading, error }: NewsGridProps) {
   if (error) {
     return (
       <div className="w-full p-8 rounded-3xl glass-concave-panel text-center text-rose-400">
-        <p className="text-sm font-medium">Error al cargar noticias: {error}</p>
+        <p className="text-sm font-medium">{t('loadError', { error })}</p>
       </div>
     );
   }
@@ -32,7 +35,7 @@ export function NewsGrid({ news, loading, error }: NewsGridProps) {
   if (!news || news.length === 0) {
     return (
       <div className="w-full p-12 rounded-3xl glass-concave-panel text-center text-zinc-500">
-        <p className="text-base font-medium">No se encontraron noticias en esta sección.</p>
+        <p className="text-base font-medium">{t('empty')}</p>
       </div>
     );
   }

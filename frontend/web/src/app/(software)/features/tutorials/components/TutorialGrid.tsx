@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { Tutorial } from '../types';
 import { TutorialCard } from './TutorialCard';
 
@@ -11,6 +12,8 @@ interface TutorialGridProps {
 }
 
 export function TutorialGrid({ tutorials, loading, error }: TutorialGridProps) {
+  const t = useTranslations('Tutorials');
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-pulse">
@@ -32,7 +35,7 @@ export function TutorialGrid({ tutorials, loading, error }: TutorialGridProps) {
   if (!tutorials || tutorials.length === 0) {
     return (
       <div className="w-full p-12 rounded-3xl glass-concave-panel text-center text-zinc-500">
-        <p className="text-base font-medium">No se encontraron tutoriales con este filtro.</p>
+        <p className="text-base font-medium">{t('empty')}</p>
       </div>
     );
   }

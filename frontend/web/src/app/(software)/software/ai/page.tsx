@@ -2,20 +2,24 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { AiGrid } from '../../features/ai/components/AiGrid';
 import { useAi } from '../../features/ai/hooks/useAi';
 
 export default function AiCategoryPage() {
+  const t = useTranslations('Ai');
+  const tNav = useTranslations('Nav');
+  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [type, setType] = useState('all');
   const { resources, loading, error } = useAi(type, search);
 
   const filterTypes = [
-    { id: 'all', label: 'Todos' },
-    { id: 'llm', label: 'Modelos LLM' },
-    { id: 'agent', label: 'Frameworks Agénticos' },
-    { id: 'mcp_server', label: 'Servidores MCP' },
-    { id: 'tool', label: 'Herramientas' },
+    { id: 'all', label: tFilters('allTypes') },
+    { id: 'llm', label: tFilters('llmModels') },
+    { id: 'agent', label: tFilters('agenticFrameworks') },
+    { id: 'mcp_server', label: tFilters('mcpServers') },
+    { id: 'tool', label: tFilters('tools') },
   ];
 
   return (
@@ -24,20 +28,20 @@ export default function AiCategoryPage() {
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver a Software
+        {tNav('backToSoftware')}
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase mb-4 text-[var(--chip-text)]">
-          IA Agentic & Reasoning
+          {t('badge')}
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--header-title)] mb-3">
-          Inteligencia Artificial & Modelos
+          {t('title')}
         </h1>
 
         <p className="text-sm md:text-base text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed mb-6">
-          Modelos de lenguaje abiertos, servidores MCP, agentes autónomos y herramientas para ingeniería asistida por IA.
+          {t('subtitle')}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -46,23 +50,23 @@ export default function AiCategoryPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar modelos o herramientas..."
+              placeholder={t('searchPlaceholder')}
               className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
             />
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
-            {filterTypes.map((t) => (
+            {filterTypes.map((item) => (
               <button
-                key={t.id}
-                onClick={() => setType(t.id)}
+                key={item.id}
+                onClick={() => setType(item.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                  type === t.id
+                  type === item.id
                     ? 'glass-btn-neumorphic text-purple-400 font-bold'
                     : 'text-zinc-500 hover:text-zinc-300'
                 }`}
               >
-                {t.label}
+                {item.label}
               </button>
             ))}
           </div>

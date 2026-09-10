@@ -151,3 +151,16 @@ La persistencia implementa soporte multiidioma nativo mediante la columna `langu
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`.
 * `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `repoUrl`, `liveUrl`, `status`, `featured`, `stars`, `views`, `architectureDiagramUrl`.  
   * **Índice Único:** `IDX_projects_slug_lang (slug, language)`.
+
+---
+
+## 5. Corpus JSON Bilingüe y Sembrador Atómico (`seed-software.ts`)
+
+Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`).
+
+* **Comando de Sembrado:**
+  ```bash
+  pnpm --filter backend seed:software
+  ```
+* **Garantía Transaccional:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, garantizando reconstrucción limpia e indexación sin pérdida de datos ni lecturas sucias.
+

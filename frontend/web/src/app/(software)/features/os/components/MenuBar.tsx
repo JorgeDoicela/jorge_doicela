@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { LanguageToggle } from '../../navigation/components/LanguageToggle';
 import { BackToPortalButton } from '../../../components/BackToPortalButton';
 
@@ -17,6 +18,8 @@ export function MenuBar({
   onToggleTheme,
   onOpenSpotlight,
 }: MenuBarProps) {
+  const tSearch = useTranslations('Search');
+  const tCommon = useTranslations('Common');
   const [time, setTime] = useState<string>('');
   const [mounted, setMounted] = useState(false);
   const [homeUrl, setHomeUrl] = useState('/');
@@ -56,7 +59,8 @@ export function MenuBar({
           <Link
             href={homeUrl}
             className="flex items-center gap-2.5 group shrink-0"
-            title="Software - Inicio"
+            title="Software"
+            aria-label="Software"
           >
             <div className="w-7 h-7 rounded-xl glass-concave-panel flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
               <Image
@@ -80,8 +84,8 @@ export function MenuBar({
           <button
             onClick={onOpenSpotlight}
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-concave-panel text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer text-xs font-medium"
-            title="Buscar en todo el catálogo (Cmd + K)"
-            aria-label="Abrir buscador"
+            title={tSearch('searchCatalog')}
+            aria-label={tSearch('searchCatalog')}
           >
             <svg
               className="w-3.5 h-3.5 text-zinc-400"
@@ -96,7 +100,7 @@ export function MenuBar({
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-            <span className="hidden sm:inline">Buscar...</span>
+            <span className="hidden sm:inline">{tSearch('search')}</span>
             <kbd className="px-1.5 py-0.5 rounded-md glass-btn-neumorphic text-[10px] font-mono text-zinc-400">
               ⌘K
             </kbd>
@@ -118,8 +122,8 @@ export function MenuBar({
             <button
               onClick={onToggleTheme}
               className="w-8 h-8 rounded-xl glass-btn-neumorphic flex items-center justify-center cursor-pointer focus:outline-none transition-all duration-300 active:scale-95 text-zinc-400 hover:text-[var(--foreground)]"
-              title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-              aria-label="Cambiar tema"
+              title={theme === 'dark' ? tCommon('toggleThemeDark') : tCommon('toggleThemeLight')}
+              aria-label={theme === 'dark' ? tCommon('toggleThemeDark') : tCommon('toggleThemeLight')}
             >
               {theme === 'dark' ? (
                 <svg

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import { BlogPost } from '../types';
 
 interface BlogCardProps {
@@ -9,11 +10,18 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post }: BlogCardProps) {
-  const formattedDate = new Date(post.createdAt).toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const locale = useLocale();
+  const tNav = useTranslations('Nav');
+  const tCard = useTranslations('CardActions');
+
+  const formattedDate = new Date(post.createdAt).toLocaleDateString(
+    locale === 'es' ? 'es-ES' : 'en-US',
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }
+  );
 
   return (
     <Link
@@ -24,7 +32,7 @@ export function BlogCard({ post }: BlogCardProps) {
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-mono font-bold tracking-wide text-blue-500 dark:text-blue-400">
-              {post.series || 'Arquitectura'}
+              {post.series || tNav('blog')}
             </span>
           </div>
           <span className="text-xs text-zinc-500 font-mono">{formattedDate}</span>
@@ -45,15 +53,13 @@ export function BlogCard({ post }: BlogCardProps) {
 
       <div className="pt-4 border-t border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
-          <span>{post.readTimeMinutes} min</span>
+          <span>{tCard('likesCount', { count: post.likes })}</span>
           <span>•</span>
-          <span>{post.likes} likes</span>
-          <span>•</span>
-          <span>{post.views} vistas</span>
+          <span>{tCard('viewsCount', { count: post.views })}</span>
         </div>
 
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:translate-x-1 transition-transform">
-          Leer ensayo →
+          {tCard('readEssay')}
         </span>
       </div>
     </Link>

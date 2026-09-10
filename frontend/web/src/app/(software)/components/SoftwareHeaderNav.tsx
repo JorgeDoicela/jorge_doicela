@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { BackToPortalButton } from './BackToPortalButton';
 import { CategoryNav, SoftwareSection } from '../features/navigation/components/CategoryNav';
 import { LanguageToggle } from '../features/navigation/components/LanguageToggle';
@@ -24,6 +25,7 @@ export function SoftwareHeaderNav({
   backHref,
   backLabel,
 }: SoftwareHeaderNavProps) {
+  const tSpotlight = useTranslations('Spotlight');
   return (
     <header className="flex flex-col items-center justify-center pt-2 pb-4 text-center w-full">
       {/* Título semántico accesible para SEO */}
@@ -190,8 +192,8 @@ export function SoftwareHeaderNav({
               }
             }}
             className="w-9 h-9 rounded-xl flex items-center justify-center text-xs text-zinc-400 hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer shrink-0"
-            title="Buscar (Ctrl + K)"
-            aria-label="Buscar"
+            title={tSpotlight('searchTitle')}
+            aria-label={tSpotlight('searchAria')}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

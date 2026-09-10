@@ -79,13 +79,25 @@ export function middleware(request: NextRequest) {
         hostname.startsWith(`${sub}.`),
     );
 
+    // Identificar el proyecto (subdominio o ruta canónica en localhost)
+    let project = matchedSubdomain;
+    if (!project) {
+        if (pathname.startsWith('/software')) project = 'software';
+        else if (pathname.startsWith('/portfolio')) project = 'portfolio';
+        else if (pathname.startsWith('/bible')) project = 'bible';
+        else project = 'landing';
+    }
+
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-project', project);
+
     if (matchedSubdomain) {
         const targetPrefix = SUBDOMAIN_TARGET_MAP[matchedSubdomain];
         const resolvedPath = resolveSubdomainPath(targetPrefix, pathname);
 
         if (pathname !== resolvedPath) {
             url.pathname = resolvedPath;
-            response = NextResponse.rewrite(url);
+            response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
         }
     } else {
         // ── DOMINIO RAÍZ (LANDING) ───────────────────────────────────────────
@@ -93,13 +105,13 @@ export function middleware(request: NextRequest) {
         // se resuelve deterministamente hacia el espacio de assets de la Landing (/landing/...).
         if (pathname.includes('.') && !pathname.startsWith('/landing/')) {
             url.pathname = `/landing${pathname}`;
-            response = NextResponse.rewrite(url);
+            response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
         }
     }
 
     // ── FALLBACK ─────────────────────────────────────────────────────────────
     if (!response) {
-        response = NextResponse.next();
+        response = NextResponse.next({ request: { headers: requestHeaders } });
     }
 
     // Sincronizar cookie de idioma si viene el param ?lang=

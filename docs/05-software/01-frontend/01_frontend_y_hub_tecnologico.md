@@ -105,7 +105,20 @@ frontend/web/src/app/(software)/
 * **Portadas Visuales de Alta Precisión (`ArticleCover.tsx` en 16:9):**
   * Soporta imágenes estáticas con `next/image` y fallback procedural limpio y elegante con texturas de ingeniería (`.tech-grid-bg`), gradientes temáticos según categoría, refracción vítrea y un icono SVG central libre y flotante (`w-12 h-12`) sin recuadros ni marcos perimetrales.
 * **Sección `Featured Posts` (Bandeja Envolvente y Celdas Internas):**
-  * Las 3 publicaciones destacadas se organizan en un **panel envolvente amplio** (`glass-convex-panel` a ancho completo). Dentro de esta bandeja, cada artículo es una **celda interna definida** (`bg-black/20 dark:bg-[#16202c]/80 border border-black/5 dark:border-white/[0.07] rounded-2xl p-4 sm:p-5`) con banner 16:9 (`ArticleCover`), metadatos (`{readTime} min read — {categoría}`), titulares prominentes y extractos técnicos, emulando la jerarquía de tarjetas contenidas de MalwareTech.
+  * Las 3 publicaciones destacadas se organizan en un **panel envolvente amplio** (`glass-convex-panel` a ancho completo). Dentro de esta bandeja, cada artículo es una **celda interna definida** (`bg-black/20 dark:bg-[#16202c]/80 border border-black/5 dark:border-white/[0.07] rounded-2xl p-4 sm:p-5`) con banner 16:9 (`ArticleCover`), metadatos de categoría temáticos limpios y minimalistas, titulares prominentes y extractos técnicos, emulando la jerarquía de tarjetas contenidas de MalwareTech.
 * **Sección `Latest Posts` (Bandeja Editorial y Celdas Internas):**
   * Toda la cuadrícula de publicaciones generales y filtradas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`) reside dentro de su **panel envolvente amplio** (`glass-convex-panel` a ancho completo), alojando cada publicación como una **celda interna individualizada** con fondo distintivo y esquinas redondeadas, logrando coherencia visual absoluta en toda la revista técnica.
+
+---
+
+## 6. Eliminación de Datos Hardcodeados y Erradicación de Tiempos de Lectura
+
+* **Cero Cadenas en Duro (100% i18n con `next-intl`):**
+  * Todo texto de interfaz de usuario (etiquetas, placeholders, accesibilidad `aria-label`, títulos de tooltips, mensajes de error, estados de carga y empty states) se resuelve a través de `messages/es.json` y `messages/en.json`.
+  * Namespaces dedicados y consistentes: `Nav`, `Search`, `Common`, `Home`, `AuthorCard`, `Newsletter`, `Footer`, `Spotlight`, `CardActions`, `Filters`, `Detail`, `News`, `Blog`, `Forum`, `Ai`, `Cybersecurity`, `Tutorials`, `Projects`.
+* **Erradicación Total de "Tiempos de Lectura":**
+  * Se eliminaron por completo las estimaciones de lectura ("5 min lectura", "readingTime") tanto en la base de datos `software.sqlite` (entidades TypeORM), en los esquemas y corpus JSON, como en todos los componentes de la interfaz (`NewsCard`, `BlogCard`, `TutorialCard`, etc.). La plataforma sigue una filosofía de ingeniería y referencia directa sin métricas artificiales.
+* **Slugs Canónicos Bilingües:**
+  * Cada recurso mantiene el mismo `slug` canónico para español e inglés en la base de datos (`IDX_<tabla>_slug_lang`), permitiendo alternar de idioma con `LanguageToggle` de manera instantánea sin redirecciones 404 ni roturas de navegación.
+
 

@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Tutorial } from '../../../features/tutorials/types';
 import { API_URL } from '../../../../config';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
@@ -15,6 +15,9 @@ export default function TutorialDetailPage({
 }) {
   const { slug } = use(params);
   const locale = useLocale();
+  const tNav = useTranslations('Nav');
+  const tTutorials = useTranslations('Tutorials');
+  const tDetail = useTranslations('Detail');
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -24,23 +27,23 @@ export default function TutorialDetailPage({
     const fetchTutorial = async () => {
       try {
         const res = await fetch(`${API_URL}/software/tutorials/${slug}?lang=${locale}`);
-        if (!res.ok) throw new Error('Tutorial no encontrado');
+        if (!res.ok) throw new Error(tDetail('tutorialNotFound'));
         const data = await res.json();
         setTutorial(data.data || data);
       } catch (err: any) {
-        setError(err.message || 'Error al cargar tutorial');
+        setError(err.message || tDetail('tutorialNotFound'));
       } finally {
         setLoading(false);
       }
     };
     fetchTutorial();
-  }, [slug, locale]);
+  }, [slug, locale, tDetail]);
 
   if (loading) {
     return (
       <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
         <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
-          Cargando tutorial interactivo...
+          {tDetail('loadingTutorial')}
         </div>
       </div>
     );
@@ -49,9 +52,9 @@ export default function TutorialDetailPage({
   if (error || !tutorial) {
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
-        <p className="text-rose-500 font-mono text-sm">{error || 'Tutorial no encontrado'}</p>
+        <p className="text-rose-500 font-mono text-sm">{error || tDetail('tutorialNotFound')}</p>
         <Link href="/software/tutorials" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-slate-300 hover:text-white transition-all">
-          ← Volver a Tutoriales
+          {tTutorials('back')}
         </Link>
       </div>
     );
@@ -63,16 +66,15 @@ export default function TutorialDetailPage({
   return (
     <SoftwareArticleLayout
       category="tutorials"
-      categoryLabel="Tutoriales"
+      categoryLabel={tNav('tutorials')}
       categoryHref="/software/tutorials"
       title={tutorial.title}
       subtitle={tutorial.description}
-      readTimeMinutes={tutorial.estimatedMinutes}
       author="Jorge Doicela"
       extraSidebarCard={
         <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
           <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
-            Índice de Pasos ({steps.length})
+            {tDetail('stepsIndex', { count: steps.length })}
           </h5>
           <div className="space-y-1.5 text-xs font-mono">
             {steps.map((st, idx) => (
@@ -98,10 +100,10 @@ export default function TutorialDetailPage({
         <div className="space-y-6">
           <div className="flex items-center justify-between pb-3 border-b border-white/5">
             <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-              Paso {activeStep + 1}: {currentStep.title}
+              {tDetail('stepLabel', { step: activeStep + 1, title: currentStep.title })}
             </h3>
             <span className="text-xs font-mono text-cyan-400 font-semibold">
-              {activeStep + 1} de {steps.length}
+              {tDetail('stepOf', { current: activeStep + 1, total: steps.length })}
             </span>
           </div>
 
@@ -125,19 +127,19 @@ export default function TutorialDetailPage({
               disabled={activeStep === 0}
               className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono text-zinc-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
             >
-              ← Paso Anterior
+              {tDetail('prevStep')}
             </button>
             <button
               onClick={() => setActiveStep((prev) => Math.min(steps.length - 1, prev + 1))}
               disabled={activeStep === steps.length - 1}
               className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs font-mono disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shadow-md hover:shadow-blue-500/25"
             >
-              Siguiente Paso →
+              {tDetail('nextStep')}
             </button>
           </div>
         </div>
       ) : (
-        <p className="text-xs text-zinc-500 font-mono">No hay pasos disponibles en este tutorial.</p>
+        <p className="text-xs text-zinc-500 font-mono">{tDetail('noSteps')}</p>
       )}
     </SoftwareArticleLayout>
   );

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import { NewsArticle } from '../types';
 
 interface NewsCardProps {
@@ -9,11 +10,18 @@ interface NewsCardProps {
 }
 
 export function NewsCard({ article }: NewsCardProps) {
-  const formattedDate = new Date(article.publishedAt || article.createdAt).toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const locale = useLocale();
+  const tNav = useTranslations('Nav');
+  const tCard = useTranslations('CardActions');
+
+  const formattedDate = new Date(article.publishedAt || article.createdAt).toLocaleDateString(
+    locale === 'es' ? 'es-ES' : 'en-US',
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }
+  );
 
   return (
     <Link
@@ -25,11 +33,11 @@ export function NewsCard({ article }: NewsCardProps) {
           <div className="flex items-center gap-2">
             {article.isBreaking && (
               <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-rose-500 dark:text-rose-400">
-                Breaking
+                BREAKING
               </span>
             )}
             <span className="text-[11px] font-mono font-bold tracking-wide text-cyan-500 dark:text-cyan-400">
-              Noticia
+              {tNav('news')}
             </span>
           </div>
           <span className="text-xs text-zinc-500 font-mono">{formattedDate}</span>
@@ -46,13 +54,11 @@ export function NewsCard({ article }: NewsCardProps) {
 
       <div className="pt-4 border-t border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
-          <span>{article.readTimeMinutes} min de lectura</span>
-          <span>•</span>
-          <span>{article.views} vistas</span>
+          <span>{tCard('viewsCount', { count: article.views })}</span>
         </div>
 
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:translate-x-1 transition-transform">
-          Leer nota →
+          {tCard('readNote')}
         </span>
       </div>
     </Link>

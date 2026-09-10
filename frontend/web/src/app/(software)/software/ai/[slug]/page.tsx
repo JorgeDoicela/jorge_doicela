@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { AiResource } from '../../../features/ai/types';
 import { API_URL } from '../../../../config';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
@@ -15,6 +15,11 @@ export default function AiDetailPage({
 }) {
   const { slug } = use(params);
   const locale = useLocale();
+  const tDetail = useTranslations('Detail');
+  const tNav = useTranslations('Nav');
+  const tCard = useTranslations('CardActions');
+  const tAi = useTranslations('Ai');
+  const tCommon = useTranslations('Common');
   const [resource, setResource] = useState<AiResource | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,23 +28,23 @@ export default function AiDetailPage({
     const fetchResource = async () => {
       try {
         const res = await fetch(`${API_URL}/software/ai/${slug}?lang=${locale}`);
-        if (!res.ok) throw new Error('Recurso no encontrado');
+        if (!res.ok) throw new Error(tAi('empty'));
         const data = await res.json();
         setResource(data.data || data);
       } catch (err: any) {
-        setError(err.message || 'Error al cargar recurso');
+        setError(err.message || tAi('empty'));
       } finally {
         setLoading(false);
       }
     };
     fetchResource();
-  }, [slug, locale]);
+  }, [slug, locale, tAi]);
 
   if (loading) {
     return (
       <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
         <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
-          Cargando ficha técnica de IA...
+          {tCommon('loading')}
         </div>
       </div>
     );
@@ -48,9 +53,9 @@ export default function AiDetailPage({
   if (error || !resource) {
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
-        <p className="text-rose-500 font-mono text-sm">{error || 'Recurso no encontrado'}</p>
-        <Link href="/software/ai" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-indigo-400 hover:text-white transition-all">
-          ← Volver a Directorio IA
+        <p className="text-rose-500 font-mono text-sm">{error || tAi('empty')}</p>
+        <Link href="/software/ai" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-purple-400 hover:text-white transition-all">
+          {tAi('back')}
         </Link>
       </div>
     );
@@ -59,7 +64,7 @@ export default function AiDetailPage({
   return (
     <SoftwareArticleLayout
       category="ai"
-      categoryLabel="IA & Modelos"
+      categoryLabel={tNav('ai')}
       categoryHref="/software/ai"
       title={resource.name}
       subtitle={resource.description}
@@ -67,19 +72,19 @@ export default function AiDetailPage({
       extraSidebarCard={
         <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
           <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
-            Ficha Técnica de IA
+            {tDetail('aiSpec')}
           </h5>
           <div className="space-y-2.5 text-xs font-mono">
             <div className="flex items-center justify-between">
-              <span className="text-zinc-500">Proveedor:</span>
+              <span className="text-zinc-500">{tDetail('provider')}</span>
               <span className="font-bold text-white">{resource.provider}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-zinc-500">Tipo:</span>
+              <span className="text-zinc-500">{tDetail('type')}</span>
               <span className="text-indigo-400 uppercase">{resource.type}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-zinc-500">Licencia:</span>
+              <span className="text-zinc-500">{tDetail('license')}</span>
               <span className="text-zinc-300">{resource.license}</span>
             </div>
           </div>
@@ -92,7 +97,7 @@ export default function AiDetailPage({
                 rel="noopener noreferrer"
                 className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-indigo-400 hover:text-white transition-all shadow-sm"
               >
-                Acceder al Modelo / API ↗
+                {tCard('accessModel')}
               </a>
             </div>
           )}

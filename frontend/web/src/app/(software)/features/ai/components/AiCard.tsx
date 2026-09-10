@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { AiResource } from '../types';
 
 interface AiCardProps {
@@ -9,6 +10,8 @@ interface AiCardProps {
 }
 
 export function AiCard({ resource }: AiCardProps) {
+  const tCard = useTranslations('CardActions');
+
   const typeLabels: Record<string, { label: string; color: string }> = {
     llm: { label: 'LLM Reasoning', color: 'text-purple-500 dark:text-purple-400' },
     agent: { label: 'Agentic Framework', color: 'text-cyan-500 dark:text-cyan-400' },
@@ -45,11 +48,11 @@ export function AiCard({ resource }: AiCardProps) {
         <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
           <span>{resource.license}</span>
           <span>•</span>
-          <span>{resource.views} vistas</span>
+          <span>{tCard('viewsCount', { count: resource.views })}</span>
         </div>
 
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 group-hover:translate-x-1 transition-transform">
-          Ficha técnica →
+          {tCard('viewSpecs')}
         </span>
       </div>
     </Link>

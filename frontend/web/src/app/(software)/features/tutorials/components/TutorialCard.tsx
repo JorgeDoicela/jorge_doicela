@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Tutorial } from '../types';
 
 interface TutorialCardProps {
@@ -9,6 +10,9 @@ interface TutorialCardProps {
 }
 
 export function TutorialCard({ tutorial }: TutorialCardProps) {
+  const tCard = useTranslations('CardActions');
+  const tFilters = useTranslations('Filters');
+
   const diffColors: Record<string, string> = {
     beginner: 'text-emerald-500 dark:text-emerald-400',
     intermediate: 'text-amber-500 dark:text-amber-400',
@@ -25,9 +29,8 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <span className={`text-[11px] font-mono font-bold tracking-wide uppercase ${badge}`}>
-            {tutorial.difficulty}
+            {tFilters(tutorial.difficulty as any) || tutorial.difficulty}
           </span>
-          <span className="text-xs text-zinc-500 font-mono">{tutorial.estimatedMinutes} min</span>
         </div>
 
         <h3 className="text-lg font-bold text-[var(--foreground)] group-hover:text-amber-400 transition-colors leading-snug mb-2">
@@ -45,7 +48,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
         </div>
 
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 group-hover:translate-x-1 transition-transform">
-          Iniciar guía →
+          {tCard('startGuide')}
         </span>
       </div>
     </Link>

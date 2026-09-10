@@ -1,28 +1,30 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useForum } from '../hooks/useForum';
 import { TopicCard } from './TopicCard';
 
 export function ForumSection() {
+  const tForum = useTranslations('Forum');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const { topics, loading, error } = useForum(filterCategory, search);
 
   const categories = [
-    { id: 'all', label: 'Todos' },
-    { id: 'frontend', label: 'Frontend' },
-    { id: 'devops', label: 'DevOps & VPS' },
-    { id: 'cybersecurity', label: 'Seguridad' },
-    { id: 'ai', label: 'IA & Agentes' },
+    { id: 'all', label: tForum('catAll') },
+    { id: 'frontend', label: tForum('catFrontend') },
+    { id: 'devops', label: tForum('catDevops') },
+    { id: 'cybersecurity', label: tForum('catSecurity') },
+    { id: 'ai', label: tForum('catAi') },
   ];
 
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-3xl glass-convex-panel">
         <div>
-          <h2 className="text-xl font-bold text-[var(--foreground)]">Debates y Comunidad</h2>
-          <p className="text-xs text-zinc-400 mt-1">Preguntas, arquitectura y discusiones de ingeniería</p>
+          <h2 className="text-xl font-bold text-[var(--foreground)]">{tForum('discussionsAndCommunity')}</h2>
+          <p className="text-xs text-zinc-400 mt-1">{tForum('discussionsDesc')}</p>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
@@ -54,7 +56,7 @@ export function ForumSection() {
         </div>
       ) : topics.length === 0 ? (
         <div className="p-12 rounded-3xl glass-concave-panel text-center text-zinc-500 text-sm">
-          No hay temas registrados en esta categoría aún.
+          {tForum('noTopics')}
         </div>
       ) : (
         <div className="space-y-4">

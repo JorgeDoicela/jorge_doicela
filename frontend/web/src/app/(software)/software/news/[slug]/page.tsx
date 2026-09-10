@@ -18,6 +18,7 @@ export default function NewsDetailPage({
   const t = useTranslations('News');
   const tCommon = useTranslations('Common');
   const tNav = useTranslations('Nav');
+  const tDetail = useTranslations('Detail');
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +43,7 @@ export default function NewsDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
         <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
-          Cargando noticia...
+          {tCommon('loading')}
         </div>
       </div>
     );
@@ -51,9 +52,9 @@ export default function NewsDetailPage({
   if (error || !article) {
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
-        <p className="text-rose-500 font-mono text-sm">{error || 'Noticia no encontrada'}</p>
+        <p className="text-rose-500 font-mono text-sm">{error || t('empty')}</p>
         <Link href="/software/news" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-cyan-400 hover:text-white transition-all">
-          ← Volver a Noticias
+          {t('back')}
         </Link>
       </div>
     );
@@ -73,21 +74,20 @@ export default function NewsDetailPage({
       title={article.title}
       subtitle={article.excerpt}
       date={formattedDate}
-      readTimeMinutes={article.readTimeMinutes}
       author={article.author || 'Jorge Doicela'}
       extraSidebarCard={
         <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-3">
           <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
-            Explorar Noticias
+            {tDetail('exploreNews')}
           </h5>
           <p className="text-xs text-zinc-500 font-light leading-relaxed">
-            Descubre las últimas tendencias en ingeniería web, arquitecturas modernas y herramientas de desarrollo.
+            {tDetail('exploreNewsDesc')}
           </p>
           <Link
             href="/software/news"
             className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-cyan-400 hover:text-white transition-all"
           >
-            ← {t('allNews')}
+            {t('allNews')}
           </Link>
         </div>
       }

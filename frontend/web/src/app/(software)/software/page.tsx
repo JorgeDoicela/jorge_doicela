@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useNews } from '../features/news/hooks/useNews';
 import { useBlog } from '../features/blog/hooks/useBlog';
 import { useForum } from '../features/forum/hooks/useForum';
@@ -19,6 +20,9 @@ import { SoftwareFooter } from '../components/SoftwareFooter';
 import { SoftwareHeaderNav } from '../components/SoftwareHeaderNav';
 
 export default function SoftwarePage() {
+  const tHome = useTranslations('Home');
+  const tNav = useTranslations('Nav');
+  const tCommon = useTranslations('Common');
   const [mounted, setMounted] = useState(false);
   const [activeCategory, setActiveCategory] = useState<SoftwareSection>('all');
   const [search, setSearch] = useState<string>('');
@@ -80,7 +84,7 @@ export default function SoftwarePage() {
             <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
-                  Featured Posts
+                  {tHome('featuredPosts')}
                 </h2>
               </div>
 
@@ -102,7 +106,7 @@ export default function SoftwarePage() {
 
                       <div>
                         <p className="text-[11px] font-mono text-zinc-400">
-                          {featuredArticle1.readTimeMinutes} min read — Noticias, Frontend
+                          {tHome('newsFrontend')}
                         </p>
                         <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2 mt-1.5">
                           {featuredArticle1.title}
@@ -115,7 +119,7 @@ export default function SoftwarePage() {
                   </Link>
                 ) : (
                   <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    Cargando...
+                    {tCommon('loading')}
                   </div>
                 )}
 
@@ -135,7 +139,7 @@ export default function SoftwarePage() {
 
                       <div>
                         <p className="text-[11px] font-mono text-zinc-400">
-                          {featuredArticle2.readTimeMinutes} min read — Arquitectura, Backend
+                          {tHome('architectureBackend')}
                         </p>
                         <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug line-clamp-2 mt-1.5">
                           {featuredArticle2.title}
@@ -148,7 +152,7 @@ export default function SoftwarePage() {
                   </Link>
                 ) : (
                   <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    Cargando...
+                    {tCommon('loading')}
                   </div>
                 )}
 
@@ -167,7 +171,7 @@ export default function SoftwarePage() {
 
                       <div>
                         <p className="text-[11px] font-mono text-zinc-400">
-                          Aviso {featuredArticle3.severity} — Ciberseguridad, Linux
+                          {tHome('cveLinux', { severity: featuredArticle3.severity })}
                         </p>
                         <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug line-clamp-2 mt-1.5">
                           {featuredArticle3.title}
@@ -180,7 +184,7 @@ export default function SoftwarePage() {
                   </Link>
                 ) : (
                   <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    Cargando...
+                    {tCommon('loading')}
                   </div>
                 )}
               </div>
@@ -194,8 +198,8 @@ export default function SoftwarePage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                   {activeCategory === 'all'
-                    ? 'Latest Posts'
-                    : `Posts: ${activeCategory.toUpperCase()}`}
+                    ? tHome('latestPosts')
+                    : tHome('postsByCategory', { category: tNav(activeCategory as any) })}
                 </h3>
               </div>
 
@@ -213,11 +217,11 @@ export default function SoftwarePage() {
                           title={item.title}
                           category="news"
                           coverImage={item.coverImage}
-                          tag="Noticia"
+                          tag={tHome('newsTag')}
                         />
                         <div>
                           <p className="text-[11px] font-mono text-zinc-400">
-                            {item.readTimeMinutes} min read — Noticias
+                            {tHome('newsTag')}
                           </p>
                           <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug mt-1.5 line-clamp-2">
                             {item.title}
@@ -243,11 +247,11 @@ export default function SoftwarePage() {
                           title={item.title}
                           category="blog"
                           coverImage={item.coverImage}
-                          tag="Arquitectura"
+                          tag={tHome('blogTag')}
                         />
                         <div>
                           <p className="text-[11px] font-mono text-zinc-400">
-                            {item.readTimeMinutes} min read — Arquitectura
+                            {tHome('blogTag')}
                           </p>
                           <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1.5 line-clamp-2">
                             {item.title}
@@ -305,7 +309,7 @@ export default function SoftwarePage() {
                         />
                         <div>
                           <p className="text-[11px] font-mono text-zinc-400">
-                            Aviso {sec.severity} — Ciberseguridad
+                            {tHome('advisorySecurity', { severity: sec.severity })}
                           </p>
                           <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug mt-1.5 line-clamp-2">
                             {sec.title}
@@ -330,11 +334,11 @@ export default function SoftwarePage() {
                         <ArticleCover
                           title={item.title}
                           category="tutorials"
-                          tag="Guía"
+                          tag={tHome('guideTag')}
                         />
                         <div>
                           <p className="text-[11px] font-mono text-zinc-400">
-                            {item.estimatedMinutes} min read — Tutorial
+                            {tHome('tutorialTag')}
                           </p>
                           <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-slate-200 transition-colors leading-snug mt-1.5 line-clamp-2">
                             {item.title}
@@ -359,11 +363,11 @@ export default function SoftwarePage() {
                         <ArticleCover
                           title={item.title}
                           category="forum"
-                          tag="Foro"
+                          tag={tHome('forumTag')}
                         />
                         <div>
                           <p className="text-[11px] font-mono text-zinc-400">
-                            {item.repliesCount} respuestas — Debate
+                            {tHome('forumMeta', { replies: item.repliesCount })}
                           </p>
                           <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1.5 line-clamp-2">
                             {item.title}
@@ -388,11 +392,11 @@ export default function SoftwarePage() {
                         <ArticleCover
                           title={proj.name}
                           category="projects"
-                          tag="Proyecto"
+                          tag={tHome('projectTag')}
                         />
                         <div>
                           <p className="text-[11px] font-mono text-zinc-400">
-                            ★ {proj.stars} estrellas — Open Source
+                            {tHome('projectMeta', { stars: proj.stars })}
                           </p>
                           <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug mt-1.5 line-clamp-2">
                             {proj.name}

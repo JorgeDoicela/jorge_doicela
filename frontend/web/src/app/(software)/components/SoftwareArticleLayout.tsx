@@ -20,7 +20,6 @@ interface SoftwareArticleLayoutProps {
   title: string;
   subtitle?: string;
   date?: string;
-  readTimeMinutes?: number;
   author?: string;
   badge?: React.ReactNode;
   callout?: React.ReactNode;
@@ -36,7 +35,6 @@ export function SoftwareArticleLayout({
   title,
   subtitle,
   date,
-  readTimeMinutes,
   author = 'Jorge Doicela',
   badge,
   callout,

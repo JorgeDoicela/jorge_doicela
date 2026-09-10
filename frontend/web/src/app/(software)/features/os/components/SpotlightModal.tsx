@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { SpotlightSearchResult } from '../types';
 import { NewsArticle } from '../../news/types';
 import { BlogPost } from '../../blog/types';
@@ -34,6 +35,10 @@ export function SpotlightModal({
   tutorials,
   projects,
 }: SpotlightModalProps) {
+  const t = useTranslations('Spotlight');
+  const tNav = useTranslations('Nav');
+  const tSearch = useTranslations('Search');
+  const tCard = useTranslations('CardActions');
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -74,7 +79,7 @@ export function SpotlightModal({
         id: `news-${n.id}`,
         title: n.title,
         category: 'news',
-        categoryLabel: 'Noticias',
+        categoryLabel: tNav('news'),
         snippet: n.excerpt,
         href: `/software/news/${n.slug}`,
         tag: n.isBreaking ? 'BREAKING' : undefined,
@@ -86,10 +91,9 @@ export function SpotlightModal({
         id: `blog-${p.id}`,
         title: p.title,
         category: 'blog',
-        categoryLabel: 'Blog',
+        categoryLabel: tNav('blog'),
         snippet: p.excerpt,
         href: `/software/blog/${p.slug}`,
-        tag: p.readTimeMinutes ? `${p.readTimeMinutes} min` : undefined,
       });
     });
 
@@ -98,7 +102,7 @@ export function SpotlightModal({
         id: `ai-${a.id}`,
         title: a.name,
         category: 'ai',
-        categoryLabel: 'IA & Modelos',
+        categoryLabel: tNav('ai'),
         snippet: a.description,
         href: `/software/ai/${a.slug}`,
         tag: a.type.toUpperCase(),
@@ -110,7 +114,7 @@ export function SpotlightModal({
         id: `sec-${s.id}`,
         title: s.title,
         category: 'cybersecurity',
-        categoryLabel: 'Ciberseguridad',
+        categoryLabel: tNav('cybersecurity'),
         snippet: s.excerpt,
         href: `/software/cybersecurity/${s.slug}`,
         tag: s.severity.toUpperCase(),
@@ -122,7 +126,7 @@ export function SpotlightModal({
         id: `tut-${t.id}`,
         title: t.title,
         category: 'tutorials',
-        categoryLabel: 'Tutoriales',
+        categoryLabel: tNav('tutorials'),
         snippet: t.description,
         href: `/software/tutorials/${t.slug}`,
         tag: t.difficulty.toUpperCase(),
@@ -134,10 +138,10 @@ export function SpotlightModal({
         id: `forum-${top.id}`,
         title: top.title,
         category: 'forum',
-        categoryLabel: 'Foros',
+        categoryLabel: tNav('forum'),
         snippet: top.content.slice(0, 100) + '...',
         href: `/software/forum/${top.slug}`,
-        tag: `${top.repliesCount} resp`,
+        tag: tCard('repliesCount', { count: top.repliesCount }),
       });
     });
 
@@ -146,7 +150,7 @@ export function SpotlightModal({
         id: `prj-${prj.id}`,
         title: prj.name,
         category: 'projects',
-        categoryLabel: 'Proyectos',
+        categoryLabel: tNav('projects'),
         snippet: prj.description,
         href: `/software/projects/${prj.slug}`,
         tag: prj.status.toUpperCase(),
@@ -191,15 +195,15 @@ export function SpotlightModal({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Escribe para buscar noticias, modelos IA, tutoriales, CVEs o código..."
-            className="w-full bg-transparent text-[var(--foreground)] placeholder-zinc-500 text-sm md:text-base outline-none font-medium"
+            placeholder={tSearch('placeholder')}
+            className="w-full bg-transparent text-sm md:text-base text-[var(--foreground)] placeholder-zinc-500 outline-none font-mono"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="text-xs text-zinc-400 hover:text-white px-2 py-1 rounded-lg glass-concave-panel cursor-pointer"
+              className="text-xs text-zinc-500 hover:text-zinc-300 font-mono px-2 py-1 rounded bg-white/5 cursor-pointer"
             >
-              Limpiar
+              {t('clear')}
             </button>
           )}
           <button
@@ -214,7 +218,7 @@ export function SpotlightModal({
         <div className="max-h-[60vh] overflow-y-auto p-3 space-y-1.5 scrollbar-thin">
           {filteredResults.length === 0 ? (
             <div className="py-12 text-center text-zinc-500 text-xs">
-              No se encontraron resultados para &ldquo;<span className="text-zinc-300">{query}</span>&rdquo;
+              {t('noResults', { query })}
             </div>
           ) : (
             filteredResults.map((item) => (
@@ -243,7 +247,7 @@ export function SpotlightModal({
                   </p>
                 </div>
                 <span className="text-xs font-mono text-zinc-500 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all shrink-0">
-                  Ir →
+                  {t('go')}
                 </span>
               </Link>
             ))
@@ -252,8 +256,8 @@ export function SpotlightModal({
 
         {/* Footer de Ayuda */}
         <div className="px-4 py-2.5 bg-black/20 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-500 font-mono">
-          <span>{filteredResults.length} resultados disponibles</span>
-          <span>Presiona <kbd className="text-zinc-400">ESC</kbd> para salir</span>
+          <span>{t('resultsAvailable', { count: filteredResults.length })}</span>
+          <span>{t('escHint')}</span>
         </div>
       </div>
     </div>

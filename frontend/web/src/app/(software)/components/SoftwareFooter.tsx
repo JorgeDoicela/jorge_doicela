@@ -2,8 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export function SoftwareFooter() {
+  const t = useTranslations('Footer');
+
   return (
     <footer className="w-full mt-auto border-t border-black/5 dark:border-white/[0.08] bg-black/20 dark:bg-[#070b12] backdrop-blur-md">
       <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 md:py-16">
@@ -11,35 +14,35 @@ export function SoftwareFooter() {
           <div className="md:col-span-1 space-y-2.5">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Software</p>
             <p className="text-xs text-zinc-500 leading-relaxed font-light">
-              Plataforma de software, arquitectura de sistemas y laboratorio de IA de Jorge Doicela.
+              {t('platformDesc')}
             </p>
           </div>
 
           <div className="space-y-2.5">
-            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Contenidos</p>
+            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('contents')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><Link href="/software/news" className="hover:text-cyan-400 transition-colors">Noticias de Tecnología</Link></li>
-              <li><Link href="/software/blog" className="hover:text-blue-400 transition-colors">Ensayos de Arquitectura</Link></li>
-              <li><Link href="/software/tutorials" className="hover:text-slate-300 transition-colors">Tutoriales Prácticos</Link></li>
+              <li><Link href="/software/news" className="hover:text-cyan-400 transition-colors">{t('techNews')}</Link></li>
+              <li><Link href="/software/blog" className="hover:text-blue-400 transition-colors">{t('archEssays')}</Link></li>
+              <li><Link href="/software/tutorials" className="hover:text-slate-300 transition-colors">{t('handsOnTutorials')}</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
-            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Especialidades</p>
+            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('specialties')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><Link href="/software/ai" className="hover:text-blue-400 transition-colors">Directorio de IA & Modelos</Link></li>
-              <li><Link href="/software/cybersecurity" className="hover:text-rose-400 transition-colors">Avisos de Ciberseguridad</Link></li>
-              <li><Link href="/software/forum" className="hover:text-blue-400 transition-colors">Foros Comunitarios</Link></li>
-              <li><Link href="/software/projects" className="hover:text-blue-400 transition-colors">Showcase de Proyectos</Link></li>
+              <li><Link href="/software/ai" className="hover:text-blue-400 transition-colors">{t('aiDirectory')}</Link></li>
+              <li><Link href="/software/cybersecurity" className="hover:text-rose-400 transition-colors">{t('secAdvisories')}</Link></li>
+              <li><Link href="/software/forum" className="hover:text-blue-400 transition-colors">{t('communityForums')}</Link></li>
+              <li><Link href="/software/projects" className="hover:text-blue-400 transition-colors">{t('projectsShowcase')}</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
-            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Plataformas</p>
+            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('platforms')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><a href="https://jorgedoicela.com" className="hover:text-zinc-300 transition-colors">Portal Principal</a></li>
-              <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-300 transition-colors">Portafolio SSH</a></li>
-              <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-300 transition-colors">Biblia Exegética</a></li>
+              <li><a href="https://jorgedoicela.com" className="hover:text-zinc-300 transition-colors">{t('mainPortal')}</a></li>
+              <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-300 transition-colors">{t('portfolioSSH')}</a></li>
+              <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-300 transition-colors">{t('exegesisBible')}</a></li>
               <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
             </ul>
           </div>
@@ -47,7 +50,7 @@ export function SoftwareFooter() {
 
         {/* Barra Inferior: Copyright + Redes Sociales (Idéntico a MalwareTech) */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
-          <p>Jorge Doicela &copy; {new Date().getFullYear()} — Plataforma de Software e Ingeniería.</p>
+          <p>{t('copyright', { year: new Date().getFullYear() })}</p>
           <div className="flex items-center gap-3 text-zinc-400">
             <a
               href="https://www.linkedin.com/in/jorgedoicela/"

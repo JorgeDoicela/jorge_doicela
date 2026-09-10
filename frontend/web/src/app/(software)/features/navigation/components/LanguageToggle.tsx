@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useTransition } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Globe } from 'lucide-react';
 
 export function LanguageToggle() {
   const locale = useLocale();
+  const t = useTranslations('Common');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -24,7 +25,7 @@ export function LanguageToggle() {
       onClick={toggleLanguage}
       disabled={isPending}
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-sans font-medium text-zinc-600 dark:text-zinc-400 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-150 cursor-pointer disabled:opacity-50"
-      aria-label={`Cambiar idioma (actual: ${locale})`}
+      aria-label={t('switchLang', { locale })}
     >
       <Globe className="w-3.5 h-3.5" />
       <span className="font-mono uppercase text-[11px]">{locale}</span>

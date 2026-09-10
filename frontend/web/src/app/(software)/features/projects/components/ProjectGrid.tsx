@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { useProjects } from '../hooks/useProjects';
 import { ProjectCard } from './ProjectCard';
 
@@ -10,6 +11,7 @@ interface ProjectGridProps {
 }
 
 export function ProjectGrid({ status, search }: ProjectGridProps) {
+  const t = useTranslations('Projects');
   const { projects, loading, error } = useProjects(status, search);
 
   if (loading) {
@@ -33,7 +35,7 @@ export function ProjectGrid({ status, search }: ProjectGridProps) {
   if (!projects || projects.length === 0) {
     return (
       <div className="w-full p-12 rounded-3xl glass-concave-panel text-center text-zinc-500">
-        <p className="text-base font-medium">No se encontraron proyectos disponibles.</p>
+        <p className="text-base font-medium">{t('empty')}</p>
       </div>
     );
   }

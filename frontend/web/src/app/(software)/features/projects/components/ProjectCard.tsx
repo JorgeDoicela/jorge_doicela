@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Project } from '../types';
 
 interface ProjectCardProps {
@@ -9,10 +10,13 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const tFilters = useTranslations('Filters');
+  const tCard = useTranslations('CardActions');
+
   const statusLabels: Record<string, { label: string; color: string }> = {
-    active: { label: 'Activo / Producción', color: 'text-emerald-500 dark:text-emerald-400 font-bold' },
-    wip: { label: 'En Desarrollo', color: 'text-amber-500 dark:text-amber-400 font-bold' },
-    archived: { label: 'Archivado', color: 'text-zinc-400 font-medium' },
+    active: { label: tFilters('inProduction'), color: 'text-emerald-500 dark:text-emerald-400 font-bold' },
+    wip: { label: tFilters('inDevelopment'), color: 'text-amber-500 dark:text-amber-400 font-bold' },
+    archived: { label: tFilters('archived'), color: 'text-zinc-400 font-medium' },
   };
 
   const statusBadge = statusLabels[project.status] || statusLabels.active;
@@ -28,7 +32,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {statusBadge.label}
           </span>
           <div className="flex items-center gap-1 text-xs text-zinc-400 font-mono">
-            <span>{project.stars} stars</span>
+            <span>{tCard('starsCount', { count: project.stars })}</span>
           </div>
         </div>
 
@@ -79,7 +83,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </div>
 
           <span className="text-xs font-semibold text-blue-400 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-            Arquitectura →
+            {tCard('viewProject')}
           </span>
         </div>
       </div>

@@ -2,16 +2,20 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { ProjectGrid } from '../../features/projects/components/ProjectGrid';
 
 export default function ProjectsCategoryPage() {
+  const tNav = useTranslations('Nav');
+  const tProjects = useTranslations('Projects');
+  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
 
   const statuses = [
-    { id: 'all', label: 'Todos los proyectos' },
-    { id: 'active', label: 'En Producción' },
-    { id: 'wip', label: 'En Desarrollo' },
+    { id: 'all', label: tFilters('allProjects') },
+    { id: 'active', label: tFilters('inProduction') },
+    { id: 'wip', label: tFilters('inDevelopment') },
   ];
 
   return (
@@ -20,20 +24,20 @@ export default function ProjectsCategoryPage() {
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver a Software
+        {tNav('backToSoftware')}
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase mb-4 text-[var(--chip-text)]">
-          Showcase & Open Source
+          {tProjects('badge')}
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--header-title)] mb-3">
-          Proyectos & Sistemas
+          {tProjects('title')}
         </h1>
 
         <p className="text-sm md:text-base text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed mb-6">
-          Sistemas completos, librerías y aplicaciones web desarrolladas por Jorge Doicela con casos de estudio y código fuente.
+          {tProjects('subtitle')}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -42,7 +46,7 @@ export default function ProjectsCategoryPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar proyectos o stack..."
+              placeholder={tProjects('searchPlaceholder')}
               className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
             />
           </div>

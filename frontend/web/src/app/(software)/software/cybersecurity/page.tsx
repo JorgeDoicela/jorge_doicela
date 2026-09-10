@@ -2,20 +2,24 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { SecurityGrid } from '../../features/cybersecurity/components/SecurityGrid';
 import { useCybersecurity } from '../../features/cybersecurity/hooks/useCybersecurity';
 
 export default function CybersecurityCategoryPage() {
+  const tNav = useTranslations('Nav');
+  const tSec = useTranslations('Cybersecurity');
+  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [severity, setSeverity] = useState('all');
   const { posts, loading, error } = useCybersecurity(severity, undefined, search);
 
   const severities = [
-    { id: 'all', label: 'Todas las severidades' },
-    { id: 'CRITICAL', label: 'Crítico' },
-    { id: 'HIGH', label: 'Alto' },
-    { id: 'MEDIUM', label: 'Medio' },
-    { id: 'LOW', label: 'Bajo' },
+    { id: 'all', label: tFilters('allSeverities') },
+    { id: 'CRITICAL', label: tFilters('critical') },
+    { id: 'HIGH', label: tFilters('high') },
+    { id: 'MEDIUM', label: tFilters('medium') },
+    { id: 'LOW', label: tFilters('low') },
   ];
 
   return (
@@ -24,20 +28,20 @@ export default function CybersecurityCategoryPage() {
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver a Software
+        {tNav('backToSoftware')}
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase mb-4 text-[var(--chip-text)]">
-          DevSecOps & Bastionado
+          {tSec('badge')}
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--header-title)] mb-3">
-          Ciberseguridad & Avisos
+          {tSec('title')}
         </h1>
 
         <p className="text-sm md:text-base text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed mb-6">
-          Avisos de seguridad, análisis de vulnerabilidades críticas, guías de bastionado Linux y remediación de código.
+          {tSec('subtitle')}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -46,7 +50,7 @@ export default function CybersecurityCategoryPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar avisos o CVE..."
+              placeholder={tSec('searchPlaceholder')}
               className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50"
             />
           </div>

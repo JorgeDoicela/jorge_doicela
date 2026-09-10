@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { BlogPost } from '../types';
 import { BlogCard } from './BlogCard';
 
@@ -11,6 +12,8 @@ interface BlogGridProps {
 }
 
 export function BlogGrid({ posts, loading, error }: BlogGridProps) {
+  const t = useTranslations('Blog');
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-pulse">
@@ -24,7 +27,7 @@ export function BlogGrid({ posts, loading, error }: BlogGridProps) {
   if (error) {
     return (
       <div className="w-full p-8 rounded-3xl glass-concave-panel text-center text-rose-400">
-        <p className="text-sm font-medium">Error al cargar artículos del blog: {error}</p>
+        <p className="text-sm font-medium">{t('loadError', { error })}</p>
       </div>
     );
   }
@@ -32,7 +35,7 @@ export function BlogGrid({ posts, loading, error }: BlogGridProps) {
   if (!posts || posts.length === 0) {
     return (
       <div className="w-full p-12 rounded-3xl glass-concave-panel text-center text-zinc-500">
-        <p className="text-base font-medium">No se encontraron artículos en el blog.</p>
+        <p className="text-base font-medium">{t('empty')}</p>
       </div>
     );
   }

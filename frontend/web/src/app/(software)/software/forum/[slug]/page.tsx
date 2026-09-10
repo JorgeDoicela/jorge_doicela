@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ForumTopic, ForumReply } from '../../../features/forum/types';
 import { API_URL } from '../../../../config';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
@@ -15,6 +15,10 @@ export default function ForumTopicDetailPage({
 }) {
   const { slug } = use(params);
   const locale = useLocale();
+  const tNav = useTranslations('Nav');
+  const tForum = useTranslations('Forum');
+  const tDetail = useTranslations('Detail');
+  const tCard = useTranslations('CardActions');
   const [topic, setTopic] = useState<ForumTopic | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -25,15 +29,15 @@ export default function ForumTopicDetailPage({
   const fetchTopic = useCallback(async () => {
     try {
       const res = await fetch(`${API_URL}/software/forum/${slug}?lang=${locale}`);
-      if (!res.ok) throw new Error('Tema no encontrado');
+      if (!res.ok) throw new Error(tDetail('topicNotFound'));
       const data = await res.json();
       setTopic(data.data || data);
     } catch (err: any) {
-      setError(err.message || 'Error al cargar tema');
+      setError(err.message || tDetail('topicNotFound'));
     } finally {
       setLoading(false);
     }
-  }, [slug, locale]);
+  }, [slug, locale, tDetail]);
 
   useEffect(() => {
     fetchTopic();
@@ -51,7 +55,7 @@ export default function ForumTopicDetailPage({
         body: JSON.stringify({
           topicId: topic.id,
           content: replyContent.trim(),
-          author: authorName.trim() || 'Desarrollador Anónimo',
+          author: authorName.trim() || (locale === 'es' ? 'Desarrollador Anónimo' : 'Anonymous Developer'),
         }),
       });
 
@@ -69,7 +73,7 @@ export default function ForumTopicDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
         <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
-          Cargando debate de la comunidad...
+          {tDetail('loadingDiscussion')}
         </div>
       </div>
     );
@@ -78,9 +82,9 @@ export default function ForumTopicDetailPage({
   if (error || !topic) {
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
-        <p className="text-rose-500 font-mono text-sm">{error || 'Tema no encontrado'}</p>
+        <p className="text-rose-500 font-mono text-sm">{error || tDetail('topicNotFound')}</p>
         <Link href="/software/forum" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-400 hover:text-white transition-all">
-          ← Volver al Foro
+          {tForum('back')}
         </Link>
       </div>
     );
@@ -95,7 +99,7 @@ export default function ForumTopicDetailPage({
   return (
     <SoftwareArticleLayout
       category="forum"
-      categoryLabel="Foro & Debates"
+      categoryLabel={tNav('forum')}
       categoryHref="/software/forum"
       title={topic.title}
       date={formattedDate}
@@ -103,20 +107,22 @@ export default function ForumTopicDetailPage({
       extraSidebarCard={
         <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
           <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
-            Estadísticas del Debate
+            {tDetail('forumStats')}
           </h5>
           <div className="space-y-2.5 text-xs font-mono">
             <div className="flex items-center justify-between">
-              <span className="text-zinc-500">Categoría:</span>
+              <span className="text-zinc-500">{tDetail('category')}</span>
               <span className="font-bold text-white">{topic.category}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-zinc-500">Respuestas:</span>
+              <span className="text-zinc-500">{tDetail('replies')}</span>
               <span className="font-bold text-cyan-400">{topic.replies?.length || 0}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-zinc-500">Estado:</span>
-              <span className="text-emerald-400">Abierto</span>
+              <span className="text-zinc-500">{tDetail('status')}</span>
+              <span className={topic.isSolved ? 'text-emerald-400 font-bold' : 'text-blue-400 font-bold'}>
+                {topic.isSolved ? tCard('solved') : tCard('open')}
+              </span>
             </div>
           </div>
           <div className="pt-2 border-t border-white/5">
@@ -124,7 +130,7 @@ export default function ForumTopicDetailPage({
               href="/software/forum"
               className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-400 hover:text-white transition-all"
             >
-              ← Todos los debates
+              {tDetail('allTopics')}
             </Link>
           </div>
         </div>
@@ -137,7 +143,7 @@ export default function ForumTopicDetailPage({
       <div className="mt-12 pt-8 border-t border-white/5 space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-bold text-white tracking-tight font-mono">
-            Respuestas de la Comunidad ({topic.replies?.length || 0})
+            {tDetail('communityReplies', { count: topic.replies?.length || 0 })}
           </h3>
         </div>
 
@@ -151,7 +157,7 @@ export default function ForumTopicDetailPage({
                 <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
                   <span className="font-bold text-cyan-400">{reply.author}</span>
                   <span className="text-[11px] text-zinc-500">
-                    {new Date(reply.createdAt).toLocaleDateString('es-ES')}
+                    {new Date(reply.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US')}
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed whitespace-pre-line">
@@ -162,28 +168,28 @@ export default function ForumTopicDetailPage({
           </div>
         ) : (
           <div className="p-6 rounded-2xl glass-concave-panel text-center text-xs font-mono text-zinc-500">
-            Aún no hay respuestas en este debate. Sé el primero en aportar.
+            {tDetail('noRepliesYet')}
           </div>
         )}
 
         {/* Formulario de Respuesta Rápida */}
         <form onSubmit={handlePostReply} className="mt-8 p-6 rounded-2xl glass-concave-panel border border-white/5 space-y-4">
           <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
-            Participar en el Debate
+            {tDetail('joinDiscussion')}
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
               type="text"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
-              placeholder="Tu nombre o alias (ej. DevSenior)"
+              placeholder={tDetail('namePlaceholder')}
               className="px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-xs font-mono text-white placeholder:text-zinc-500 outline-none focus:border-cyan-400"
             />
           </div>
           <textarea
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
-            placeholder="Escribe tu análisis técnico, solución o perspectiva..."
+            placeholder={tDetail('replyPlaceholder')}
             rows={4}
             required
             className="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs font-sans text-white placeholder:text-zinc-500 outline-none focus:border-cyan-400 resize-none leading-relaxed"
@@ -194,7 +200,7 @@ export default function ForumTopicDetailPage({
               disabled={submitting}
               className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs font-mono disabled:opacity-40 transition-all cursor-pointer shadow-md hover:shadow-blue-500/25"
             >
-              {submitting ? 'Publicando...' : 'Publicar Respuesta →'}
+              {submitting ? tDetail('publishing') : tDetail('postReplyBtn')}
             </button>
           </div>
         </form>

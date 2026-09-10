@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { SecurityPost } from '../types';
 
 interface SecurityCardProps {
@@ -9,6 +10,8 @@ interface SecurityCardProps {
 }
 
 export function SecurityCard({ post }: SecurityCardProps) {
+  const tCard = useTranslations('CardActions');
+
   const severityColors: Record<string, string> = {
     CRITICAL: 'text-rose-500 dark:text-rose-400 font-bold',
     HIGH: 'text-orange-500 dark:text-orange-400 font-bold',
@@ -51,7 +54,7 @@ export function SecurityCard({ post }: SecurityCardProps) {
         </div>
 
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-400 group-hover:translate-x-1 transition-transform">
-          Ver remediación →
+          {tCard('viewRemediation')}
         </span>
       </div>
     </Link>

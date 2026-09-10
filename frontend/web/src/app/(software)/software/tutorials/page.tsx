@@ -2,19 +2,23 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { TutorialGrid } from '../../features/tutorials/components/TutorialGrid';
 import { useTutorials } from '../../features/tutorials/hooks/useTutorials';
 
 export default function TutorialsCategoryPage() {
+  const tNav = useTranslations('Nav');
+  const tTutorials = useTranslations('Tutorials');
+  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState('all');
   const { tutorials, loading, error } = useTutorials(difficulty, search);
 
   const difficulties = [
-    { id: 'all', label: 'Todos los niveles' },
-    { id: 'beginner', label: 'Principiante' },
-    { id: 'intermediate', label: 'Intermedio' },
-    { id: 'advanced', label: 'Avanzado' },
+    { id: 'all', label: tFilters('allLevels') },
+    { id: 'beginner', label: tFilters('beginner') },
+    { id: 'intermediate', label: tFilters('intermediate') },
+    { id: 'advanced', label: tFilters('advanced') },
   ];
 
   return (
@@ -23,20 +27,20 @@ export default function TutorialsCategoryPage() {
         href="/software"
         className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
       >
-        ← Volver a Software
+        {tNav('backToSoftware')}
       </Link>
 
       <header className="p-8 md:p-12 rounded-3xl glass-convex-panel text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase mb-4 text-[var(--chip-text)]">
-          Paso a Paso & Código Reproducible
+          {tTutorials('badge')}
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--header-title)] mb-3">
-          Tutoriales & Guías Prácticas
+          {tTutorials('title')}
         </h1>
 
         <p className="text-sm md:text-base text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed mb-6">
-          Manuales de construcción paso a paso con código real, asistentes interactivos y explicaciones de arquitectura.
+          {tTutorials('subtitle')}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -45,7 +49,7 @@ export default function TutorialsCategoryPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar tutoriales o stack..."
+              placeholder={tTutorials('searchPlaceholder')}
               className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
             />
           </div>

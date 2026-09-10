@@ -292,11 +292,11 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
       };
     }
 
-    // Respuesta genérica inteligente
+    // Respuesta predeterminada restrictiva ante consultas fuera de dominio
     return {
       text: isEs
-        ? `Entiendo tu consulta sobre "${userQuery}". Jorge está disponible para proyectos de ingeniería de software, arquitectura cloud y aplicaciones web/móviles. Si deseas evaluar un proyecto específico, puedes enviar una solicitud formal directamente:`
-        : `I understand your question regarding "${userQuery}". Jorge is open for software engineering, cloud architecture, and web/mobile projects. If you would like to discuss a specific project, feel free to send a consultation request:`,
+        ? 'Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, plataformas en producción (La Biblia, Software, Portafolio), arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas evaluar un proyecto, puedes ingresar al Formulario de Consulta:'
+        : "As Jorge Doicela's official assistant, my role is strictly limited to providing information about his professional profile, production platforms (The Bible, Software, Portfolio), 1 GB RAM cloud architecture, and technical proposals. I do not answer general inquiries unrelated to Jorge's engineering work. If you wish to discuss a project, feel free to open the Consultation Form:",
       actionUrl: '/consulta',
       actionText: isEs ? 'Abrir Formulario de Consulta' : 'Open Consultation Form'
     };

@@ -38,12 +38,13 @@ module.exports = {
       watch: false,
       max_memory_restart: '200M',
       env: {
+        ...loadEnvFile(path.resolve(__dirname, 'backend/.env')),
         NODE_ENV: 'production',
+        PORT: 3000,
         HOST: '127.0.0.1',
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
         DATABASE_BIBLE_PATH: './data/bible.sqlite',
         DATABASE_SOFTWARE_PATH: './data/software.sqlite',
-        ...loadEnvFile(path.resolve(__dirname, 'backend/.env')),
       },
     },
     {
@@ -55,10 +56,10 @@ module.exports = {
       watch: false,
       max_memory_restart: '200M',
       env: {
+        ...loadEnvFile(path.resolve(__dirname, 'frontend/web/.env')),
         NODE_ENV: 'production',
         PORT: 3001,
         HOSTNAME: 'localhost',
-        ...loadEnvFile(path.resolve(__dirname, 'frontend/web/.env')),
       },
     },
   ],

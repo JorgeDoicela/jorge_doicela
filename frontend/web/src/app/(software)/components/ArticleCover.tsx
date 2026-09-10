@@ -8,9 +8,10 @@ interface ArticleCoverProps {
   category: 'news' | 'blog' | 'ai' | 'cybersecurity' | 'tutorials' | 'forum' | 'projects';
   coverImage?: string;
   tag?: string;
+  priority?: boolean;
 }
 
-export function ArticleCover({ title, category, coverImage }: ArticleCoverProps) {
+export function ArticleCover({ title, category, coverImage, priority = false }: ArticleCoverProps) {
   const [imageError, setImageError] = useState(false);
 
   // Paletas y gradientes temáticos para fallback procedural
@@ -102,6 +103,8 @@ export function ArticleCover({ title, category, coverImage }: ArticleCoverProps)
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           onError={() => setImageError(true)}
+          priority={priority}
+          loading={priority ? 'eager' : undefined}
           unoptimized
         />
       ) : (

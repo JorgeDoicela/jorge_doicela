@@ -154,7 +154,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   };
 
   return (
-    <div className={`relative inline-flex items-center gap-1 ${className}`} ref={containerRef}>
+    <div className={`relative inline-flex items-center gap-1 ${isOpen ? 'z-50' : ''} ${className}`} ref={containerRef}>
       {/* Botón de capítulo anterior si está disponible */}
       {onPrevChapter && (
         <button

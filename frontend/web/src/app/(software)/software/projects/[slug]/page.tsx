@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { Project } from '../../../features/projects/types';
 import { API_URL } from '../../../../config';
+import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
+import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
 
 export default function ProjectDetailPage({
   params,
@@ -35,8 +37,8 @@ export default function ProjectDetailPage({
 
   if (loading) {
     return (
-      <div className="min-h-screen py-16 px-4 flex justify-center items-center">
-        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-sm font-mono">
+      <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
+        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
           Cargando caso de estudio de arquitectura...
         </div>
       </div>
@@ -45,112 +47,100 @@ export default function ProjectDetailPage({
 
   if (error || !project) {
     return (
-      <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
-        <p className="text-rose-500 font-semibold">{error || 'Proyecto no encontrado'}</p>
-        <Link href="/software/projects" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono">
+      <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
+        <p className="text-rose-500 font-mono text-sm">{error || 'Proyecto no encontrado'}</p>
+        <Link href="/software/projects" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-400 hover:text-white transition-all">
           ← Volver a Proyectos
         </Link>
       </div>
     );
   }
 
+  const techList = project.techStack ? project.techStack.split(',').map((t) => t.trim()) : [];
+
   return (
-    <article className="min-h-screen py-10 md:py-14 px-4 sm:px-6 lg:px-8 2xl:px-12 max-w-7xl 2xl:max-w-[1500px] mx-auto space-y-8">
-      {/* Breadcrumb de navegación */}
-      <div className="flex items-center gap-3 text-xs font-mono text-zinc-500">
-        <Link href="/software" className="hover:text-[var(--foreground)] transition-colors">
-          Software
-        </Link>
-        <span>/</span>
-        <Link href="/software/projects" className="hover:text-[var(--foreground)] transition-colors">
-          Proyectos
-        </Link>
-        <span>/</span>
-        <span className="text-[var(--foreground)] truncate max-w-xs">{project.name}</span>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Columna Principal (8 cols) */}
-        <div className="lg:col-span-8 space-y-6">
-          <header className="p-8 md:p-12 rounded-3xl glass-convex-panel">
-            <div className="flex items-center justify-between gap-2 mb-4 text-xs font-mono">
-              <span className="font-bold uppercase text-blue-600 dark:text-blue-400">
-                Estado: {project.status === 'active' ? 'Producción Activa' : project.status}
+    <SoftwareArticleLayout
+      category="projects"
+      categoryLabel="Proyectos"
+      categoryHref="/software/projects"
+      title={project.name}
+      subtitle={project.description}
+      author="Jorge Doicela"
+      extraSidebarCard={
+        <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
+          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
+            Ficha del Proyecto
+          </h5>
+          <div className="space-y-2.5 text-xs font-mono">
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-500">Estado:</span>
+              <span className="font-bold text-emerald-400">
+                {project.status === 'active' ? 'Activo' : project.status}
               </span>
-              <span className="text-amber-500 font-bold">{project.stars} stars</span>
             </div>
-
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] mb-4 leading-[1.15]">
-              {project.name}
-            </h1>
-
-            <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-300 font-light leading-relaxed mb-6">
-              {project.description}
-            </p>
-
-            <div className="flex flex-wrap gap-2">
-              {project.techStack.split(',').map((tech, idx) => (
-                <span
-                  key={idx}
-                  className="px-3 py-1 rounded-xl glass-concave-panel text-zinc-700 dark:text-zinc-300 text-xs font-mono"
-                >
-                  {tech.trim()}
-                </span>
-              ))}
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-500">Estrellas:</span>
+              <span className="text-amber-400 font-bold">★ {project.stars}</span>
             </div>
-          </header>
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-500">Licencia:</span>
+              <span className="text-zinc-300">Open Source</span>
+            </div>
+          </div>
 
-          {/* Panel de Arquitectura */}
-          <div className="p-8 md:p-12 rounded-3xl glass-convex-panel space-y-4">
-            <h3 className="text-xl font-bold text-[var(--header-title)] font-mono">
-              Arquitectura y Principios de Diseño
-            </h3>
-            <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-300 font-light leading-relaxed">
-              Este sistema está construido bajo el principio de **cajas negras independientes** (desacoplamiento total de dependencias y tipos locales), optimizado para ejecutarse en entornos de memoria controlada con persistencia física SQLite y arquitectura basada en **Feature-Sliced Design (FSD)** en Next.js.
-            </p>
+          <div className="pt-2 border-t border-white/5 space-y-2">
+            {project.repoUrl && (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-400 hover:text-white transition-all shadow-sm"
+              >
+                Ver en GitHub ↗
+              </a>
+            )}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs text-center block transition-all shadow-md hover:shadow-blue-500/25"
+              >
+                Abrir Aplicación en Vivo ↗
+              </a>
+            )}
           </div>
         </div>
-
-        {/* Columna Lateral: Enlaces y Ficha (4 cols) */}
-        <aside className="lg:col-span-4 space-y-6">
-          <div className="p-6 rounded-3xl glass-convex-panel space-y-4 sticky top-20">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 pb-2 border-b border-black/5 dark:border-white/5">
-              Acciones & Repositorios
-            </h3>
-
-            <div className="space-y-3 pt-2">
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold text-center block shadow-lg shadow-blue-600/30 transition-all"
-                >
-                  Abrir Demo en Vivo ↗
-                </a>
-              )}
-
-              {project.repoUrl && (
-                <a
-                  href={project.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 rounded-2xl glass-concave-panel text-xs font-mono font-bold text-center block text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5 transition-all"
-                >
-                  Ver Repositorio GitHub ↗
-                </a>
-              )}
-
-              <Link
-                href="/software/projects"
-                className="w-full py-2.5 rounded-2xl glass-btn-neumorphic text-xs font-mono font-bold text-center block text-zinc-500 hover:text-[var(--foreground)] transition-all"
+      }
+    >
+      {/* Badges de Tecnologías */}
+      {techList.length > 0 && (
+        <div className="space-y-3 pb-6 border-b border-white/5">
+          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+            Stack Tecnológico Utilizado
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {techList.map((tech, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 rounded-xl glass-concave-panel text-zinc-300 text-xs font-mono border border-white/5"
               >
-                ← Ver Todos los Proyectos
-              </Link>
-            </div>
+                {tech}
+              </span>
+            ))}
           </div>
-        </aside>
+        </div>
+      )}
+
+      {/* Caso de Estudio y Arquitectura */}
+      <div className="space-y-4 pt-4">
+        <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight font-mono">
+          Arquitectura y Principios de Diseño
+        </h3>
+        <p className="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+          Este sistema está construido bajo el principio de <strong>cajas negras independientes</strong> (desacoplamiento total de dependencias y tipos locales), optimizado para ejecutarse en entornos de memoria controlada (1 GB de RAM) con persistencia física SQLite y arquitectura basada en <strong>Feature-Sliced Design (FSD)</strong> en Next.js.
+        </p>
       </div>
-    </article>
+    </SoftwareArticleLayout>
   );
 }

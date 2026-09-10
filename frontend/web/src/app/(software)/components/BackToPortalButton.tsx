@@ -1,10 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-export function BackToPortalButton() {
+interface BackToPortalButtonProps {
+  href?: string;
+  label?: string;
+}
+
+export function BackToPortalButton({ href, label }: BackToPortalButtonProps = {}) {
   const t = useTranslations('Nav');
   const [portalUrl, setPortalUrl] = useState('https://jorgedoicela.com');
 
@@ -18,10 +24,27 @@ export function BackToPortalButton() {
     }
   }, []);
 
+  // Si se proporciona un href relativo a Software, vuelve a la sección anterior dentro del subdominio
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="group inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-sans font-medium text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 shrink-0 cursor-pointer"
+        title={label || t('portal')}
+        aria-label={label || t('portal')}
+        id="software-back-to-section"
+      >
+        <ArrowLeft className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400 transition-transform duration-200 group-hover:-translate-x-0.5" />
+        <span className="tracking-tight font-medium">{label || t('portalShort')}</span>
+      </Link>
+    );
+  }
+
+  // Comportamiento por defecto en la raíz: volver al portal principal
   return (
     <a
       href={portalUrl}
-      className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-sans font-medium text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 shrink-0 cursor-pointer"
+      className="group inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-sans font-medium text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 shrink-0 cursor-pointer"
       title={t('portal')}
       aria-label={t('portal')}
       id="software-back-to-portal"

@@ -121,7 +121,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   }));
 
   return (
-    <div className="border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl bg-white/95 dark:bg-black/90 backdrop-blur-md px-3 py-2 shadow-xs transition-all print:hidden">
+    <div className="relative z-30 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl bg-white/95 dark:bg-black/90 backdrop-blur-md px-3 py-2 shadow-xs transition-all print:hidden">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         {/* Izquierda: Pasaje Principal y Versión */}
         <div className="flex items-center gap-2 min-w-0">
@@ -143,16 +143,16 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
           )}
         </div>
 
-        {/* Derecha: Progressive Disclosure (Modo + Popover Apariencia + Acciones) */}
-        <div className="flex items-center gap-1.5 justify-end">
-          {/* Conmutador de Modo Geist Plano: Prosa vs Versículos (Vercel Style) */}
-          <div className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+        {/* Derecha: Selector de Modo, Apariencia Tipográfica y Acciones */}
+        <div className="flex items-center gap-1.5 shrink-0 justify-end">
+          {/* Alternador de Modo de Lectura Geist Segmented Control */}
+          <div className="flex items-center rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
             <button
               type="button"
               onClick={() => onLayoutModeChange('continuous')}
-              className={`px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2.5 py-1 text-xs rounded-md transition-all cursor-pointer flex items-center gap-1.5 font-medium ${
                 readerSettings.layoutMode === 'continuous'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
               }`}
               title={t('continuousTooltip')}
@@ -164,9 +164,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             <button
               type="button"
               onClick={() => onLayoutModeChange('verse-by-verse')}
-              className={`px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2.5 py-1 text-xs rounded-md transition-all cursor-pointer flex items-center gap-1.5 font-medium ${
                 readerSettings.layoutMode === 'verse-by-verse'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
               }`}
               title={t('verseByVerseTooltip')}
@@ -177,7 +177,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
           </div>
 
           {/* Menú Flotante de Apariencia Tipográfica (Popover Geist Aa) */}
-          <div className="relative" ref={appearanceRef}>
+          <div className={`relative ${appearanceOpen ? 'z-50' : ''}`} ref={appearanceRef}>
             <button
               type="button"
               onClick={() => setAppearanceOpen(!appearanceOpen)}

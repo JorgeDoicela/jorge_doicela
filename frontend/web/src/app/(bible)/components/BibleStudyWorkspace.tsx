@@ -136,7 +136,7 @@ export function BibleStudyWorkspace() {
       <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 pb-20 space-y-4">
         {/* Barra de Pasaje Compacta para Modos de Estudio de Texto */}
         {isPassageBasedMode && (
-          <section className="border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
+          <section className="relative z-30 border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-mono uppercase tracking-wider text-accents-5 hidden sm:inline">
                 Pasaje Activo:

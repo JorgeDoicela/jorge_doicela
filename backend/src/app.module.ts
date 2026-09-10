@@ -30,6 +30,24 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { BibleModule } from './bible/bible.module';
 import { SoftwareModule } from './software/software.module';
 
+function getPinoTransport() {
+  if (process.env.NODE_ENV === 'production') {
+    return undefined;
+  }
+  try {
+    require.resolve('pino-pretty');
+    return {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        singleLine: true,
+      },
+    };
+  } catch {
+    return undefined;
+  }
+}
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -43,16 +61,7 @@ import { SoftwareModule } from './software/software.module';
     EventEmitterModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: {
-        transport:
-          process.env.NODE_ENV === 'development'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  colorize: true,
-                  singleLine: true,
-                },
-              }
-            : undefined,
+        transport: getPinoTransport(),
       },
     }),
     PortfolioModule,

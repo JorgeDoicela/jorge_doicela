@@ -15,6 +15,8 @@ import { CategoryNav, SoftwareSection } from '../features/navigation/components/
 import { ArticleCover } from '../components/ArticleCover';
 import { BackToPortalButton } from '../components/BackToPortalButton';
 import { LanguageToggle } from '../features/navigation/components/LanguageToggle';
+import { SoftwareFooter } from '../components/SoftwareFooter';
+import { SoftwareHeaderNav } from '../components/SoftwareHeaderNav';
 
 export default function SoftwarePage() {
   const [mounted, setMounted] = useState(false);
@@ -62,150 +64,26 @@ export default function SoftwarePage() {
       />
 
       {/* 2. CONTENIDO PRINCIPAL ESTILO EDITORIAL TECH */}
-      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 py-6 md:py-10">
-        <div className="w-full max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 space-y-12">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
+        <div className="w-full max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 space-y-12 flex-1 pb-16 md:pb-24">
           
+          {/* CABECERA EDITORIAL DE MARCA REUTILIZABLE (ESTILO MALWARETECH) */}
+          <SoftwareHeaderNav
+            activeCategory={activeCategory}
+            onSelectCategory={(cat: SoftwareSection) => setActiveCategory(cat)}
+            onOpenSpotlight={() => setIsSpotlightOpen(true)}
+          />
 
-          {/* CABECERA EDITORIAL DE MARCA (CENTRALIZADA + ESTILO MALWARETECH) */}
-          <header className="flex flex-col items-center justify-center pt-2 pb-4 text-center">
-            {/* Título semántico accesible para SEO */}
-            <h1 className="sr-only">Software | Jorge Doicela - Especialista en DevSecOps</h1>
-
-            {/* Logotipo Central Compuesto Ampliado (Icono a la izquierda + Nombre y Rol a la derecha) */}
-            <div className="flex items-center justify-center gap-3.5 sm:gap-5 select-none">
-              <div className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto flex items-center justify-center shrink-0">
-                <Image
-                  src="/software/logo/logo_blanco.png"
-                  alt="Logo Jorge Doicela"
-                  width={128}
-                  height={128}
-                  className="h-full w-auto object-contain"
-                  unoptimized
-                  priority
-                />
-              </div>
-              <div className="h-12 sm:h-15 md:h-18 lg:h-20 w-auto flex items-center justify-center">
-                <Image
-                  src="/software/logo/nombre_rol.png"
-                  alt="Jorge Doicela - Especialista en DevSecOps"
-                  width={340}
-                  height={80}
-                  className="h-full w-auto object-contain"
-                  unoptimized
-                  priority
-                />
-              </div>
-            </div>
-
-            {/* Fila de Redes Sociales Libres y Limpias en Blanco (Pegadas al imagotipo) */}
-            <div className="flex items-center justify-center gap-4 mt-0 sm:mt-0.5">
-                {/* LinkedIn */}
-                <a
-                  href="https://linkedin.com/in/jorgedoicela"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-115 p-0.5"
-                  title="LinkedIn"
-                  aria-label="LinkedIn"
-                >
-                  <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                  </svg>
-                </a>
-
-                {/* GitHub */}
-                <a
-                  href="https://github.com/JorgeDoicela"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-115 p-0.5"
-                  title="GitHub"
-                  aria-label="GitHub"
-                >
-                  <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
-                </a>
-
-                {/* YouTube */}
-                <a
-                  href="https://www.youtube.com/@jorge.doicela"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-115 p-0.5"
-                  title="YouTube"
-                  aria-label="YouTube"
-                >
-                  <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                  </svg>
-                </a>
-
-                {/* TikTok */}
-                <a
-                  href="https://www.tiktok.com/@jorge.doicela"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-115 p-0.5"
-                  title="TikTok"
-                  aria-label="TikTok"
-                >
-                  <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3 15.28 6.34 6.34 0 0 0 9.34 21.6c3.5 0 6.34-2.84 6.34-6.33V8.86c1.33.95 2.94 1.5 4.68 1.55v-3.48c-.26-.01-.52-.09-.77-.24z" />
-                  </svg>
-                </a>
-
-                {/* Email */}
-                <a
-                  href="mailto:jorge.doicela.m@gmail.com"
-                  className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-115 p-0.5"
-                  title="Email"
-                  aria-label="Email"
-                >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </a>
-              </div>
-
-            {/* Barra de Navegación Unificada en Cápsula Cóncava a Ancho Completo */}
-            <div className="mt-7 sm:mt-8 w-full p-1.5 rounded-2xl glass-concave-panel flex items-center justify-between gap-2.5 sm:gap-3">
-              <div className="shrink-0">
-                <BackToPortalButton />
-              </div>
-              <div className="flex-1 flex justify-center min-w-0 overflow-x-auto scrollbar-none">
-                <CategoryNav
-                  selectedCategory={activeCategory}
-                  onSelectCategory={(cat) => setActiveCategory(cat)}
-                  bare={true}
-                />
-              </div>
-              <div className="flex items-center gap-1.5 shrink-0">
-                <button
-                  onClick={() => setIsSpotlightOpen(true)}
-                  className="w-8 h-8 rounded-xl flex items-center justify-center text-xs text-zinc-400 hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer shrink-0"
-                  title="Buscar (Ctrl + K)"
-                  aria-label="Buscar"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                <LanguageToggle />
-              </div>
-            </div>
-          </header>
-
-          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS EN UN SOLO CONTENEDOR UNIFICADO ESTILO MALWARETECH) */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
-                Featured Posts
-              </h2>
-            </div>
-
+          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS EN UN SOLO CONTENEDOR UNIFICADO) */}
+          <section>
             {/* Contenedor Único para las 3 Publicaciones Destacadas */}
-            <div className="p-4 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl">
+            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
+                  Featured Posts
+                </h2>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Destacado 1: Noticia */}
                 {featuredArticle1 ? (
@@ -219,6 +97,7 @@ export default function SoftwarePage() {
                         category="news"
                         coverImage={featuredArticle1.coverImage}
                         tag="NextJS16"
+                        priority={true}
                       />
 
                       <div>
@@ -232,13 +111,6 @@ export default function SoftwarePage() {
                           {featuredArticle1.excerpt}
                         </p>
                       </div>
-                    </div>
-
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{featuredArticle1.author || 'Jorge Doicela'}</span>
-                      <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Leer artículo →
-                      </span>
                     </div>
                   </Link>
                 ) : (
@@ -273,13 +145,6 @@ export default function SoftwarePage() {
                         </p>
                       </div>
                     </div>
-
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px]">{featuredArticle2.author || 'Jorge Doicela'}</span>
-                      <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Leer ensayo →
-                      </span>
-                    </div>
                   </Link>
                 ) : (
                   <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
@@ -312,13 +177,6 @@ export default function SoftwarePage() {
                         </p>
                       </div>
                     </div>
-
-                    <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                      <span className="text-zinc-500 text-[11px] truncate max-w-[150px]">{featuredArticle3.affectedSystems || 'Linux Kernel'}</span>
-                      <span className="text-rose-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Ver aviso →
-                      </span>
-                    </div>
                   </Link>
                 ) : (
                   <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
@@ -329,21 +187,18 @@ export default function SoftwarePage() {
             </div>
           </section>
 
-          {/* SECCIÓN 2: LATEST POSTS (GRILLA EDITORIAL EN CONTENEDOR UNIFICADO ESTILO MALWARETECH) */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
-                {activeCategory === 'all'
-                  ? 'Latest Posts'
-                  : `Posts: ${activeCategory.toUpperCase()}`}
-              </h3>
-              <span className="text-xs font-mono text-zinc-500">
-                {activeCategory === 'all' ? 'Feed general' : 'Filtrado'}
-              </span>
-            </div>
-
+          {/* SECCIÓN 2: LATEST POSTS (GRILLA EDITORIAL EN CONTENEDOR UNIFICADO) */}
+          <section>
             {/* Contenedor Único para toda la Grilla de Publicaciones */}
-            <div className="p-4 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl">
+            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
+                  {activeCategory === 'all'
+                    ? 'Latest Posts'
+                    : `Posts: ${activeCategory.toUpperCase()}`}
+                </h3>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Noticias */}
                 {(activeCategory === 'all' || activeCategory === 'news') &&
@@ -371,12 +226,6 @@ export default function SoftwarePage() {
                             {item.excerpt}
                           </p>
                         </div>
-                      </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px]">{item.author || 'Jorge Doicela'}</span>
-                        <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Leer →
-                        </span>
                       </div>
                     </Link>
                   ))}
@@ -408,12 +257,6 @@ export default function SoftwarePage() {
                           </p>
                         </div>
                       </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px]">{item.author || 'Jorge Doicela'}</span>
-                        <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Leer →
-                        </span>
-                      </div>
                     </Link>
                   ))}
 
@@ -442,12 +285,6 @@ export default function SoftwarePage() {
                             {res.description}
                           </p>
                         </div>
-                      </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px]">{res.license || 'Open Source'}</span>
-                        <span className="text-indigo-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Ficha →
-                        </span>
                       </div>
                     </Link>
                   ))}
@@ -478,12 +315,6 @@ export default function SoftwarePage() {
                           </p>
                         </div>
                       </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px] truncate max-w-[130px]">{sec.affectedSystems || 'Linux'}</span>
-                        <span className="text-rose-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Ver aviso →
-                        </span>
-                      </div>
                     </Link>
                   ))}
 
@@ -512,12 +343,6 @@ export default function SoftwarePage() {
                             {item.excerpt}
                           </p>
                         </div>
-                      </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px]">{item.difficulty || 'Práctico'}</span>
-                        <span className="text-slate-300 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Guía →
-                        </span>
                       </div>
                     </Link>
                   ))}
@@ -548,12 +373,6 @@ export default function SoftwarePage() {
                           </p>
                         </div>
                       </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px]">{item.category || 'General'}</span>
-                        <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Ver debate →
-                        </span>
-                      </div>
                     </Link>
                   ))}
 
@@ -583,12 +402,6 @@ export default function SoftwarePage() {
                           </p>
                         </div>
                       </div>
-                      <div className="pt-3 mt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                        <span className="text-zinc-500 text-[11px]">GitHub Repo</span>
-                        <span className="text-blue-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                          Ver proyecto →
-                        </span>
-                      </div>
                     </Link>
                   ))}
               </div>
@@ -597,64 +410,8 @@ export default function SoftwarePage() {
 
         </div>
 
-        {/* FOOTER MULTICOLUMNA ELEGANTE */}
-        <footer className="w-full max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 mt-16">
-          <div className="p-8 md:p-10 rounded-3xl glass-convex-panel">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6 pb-6 border-b border-black/5 dark:border-white/5">
-              <div className="md:col-span-1 space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg glass-concave-panel flex items-center justify-center p-1">
-                    <Image
-                      src="/software/logo/logo_fondo_circular_color_.png"
-                      alt="Software"
-                      width={28}
-                      height={28}
-                      className="object-contain"
-                      unoptimized
-                    />
-                  </div>
-                  <span className="font-extrabold text-sm text-[var(--header-title)]">Software</span>
-                </div>
-                <p className="text-xs text-zinc-500 leading-relaxed font-light">
-                  Plataforma de software, arquitectura de sistemas y laboratorio de IA de Jorge Doicela.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Contenidos</p>
-                <ul className="space-y-1 text-xs text-zinc-500">
-                  <li><Link href="/software/news" className="hover:text-cyan-500 transition-colors">Noticias de Tecnología</Link></li>
-                  <li><Link href="/software/blog" className="hover:text-blue-500 transition-colors">Ensayos de Arquitectura</Link></li>
-                  <li><Link href="/software/tutorials" className="hover:text-slate-400 transition-colors">Tutoriales Prácticos</Link></li>
-                </ul>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Especialidades</p>
-                <ul className="space-y-1 text-xs text-zinc-500">
-                  <li><Link href="/software/ai" className="hover:text-blue-500 transition-colors">Directorio de IA & Modelos</Link></li>
-                  <li><Link href="/software/cybersecurity" className="hover:text-rose-500 transition-colors">Avisos de Ciberseguridad</Link></li>
-                  <li><Link href="/software/forum" className="hover:text-blue-500 transition-colors">Foros Comunitarios</Link></li>
-                  <li><Link href="/software/projects" className="hover:text-blue-500 transition-colors">Showcase de Proyectos</Link></li>
-                </ul>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Plataformas</p>
-                <ul className="space-y-1 text-xs text-zinc-500">
-                  <li><a href="https://jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Portal Principal</a></li>
-                  <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Portafolio SSH</a></li>
-                  <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Biblia Exegética</a></li>
-                  <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="text-center text-xs text-zinc-500 font-mono">
-              <p>Jorge Doicela &copy; {new Date().getFullYear()} — Plataforma de Software e Ingeniería.</p>
-            </div>
-          </div>
-        </footer>
+        {/* FOOTER MULTICOLUMNA ELEGANTE DE ANCHO COMPLETO (ESTILO MALWARETECH) */}
+        <SoftwareFooter />
       </main>
     </>
   );

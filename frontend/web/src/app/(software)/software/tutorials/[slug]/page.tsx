@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { Tutorial } from '../../../features/tutorials/types';
 import { API_URL } from '../../../../config';
+import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
+import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
 
 export default function TutorialDetailPage({
   params,
@@ -36,8 +38,8 @@ export default function TutorialDetailPage({
 
   if (loading) {
     return (
-      <div className="min-h-screen py-16 px-4 flex justify-center items-center">
-        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-sm font-mono">
+      <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
+        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
           Cargando tutorial interactivo...
         </div>
       </div>
@@ -46,9 +48,9 @@ export default function TutorialDetailPage({
 
   if (error || !tutorial) {
     return (
-      <div className="min-h-screen py-16 px-4 flex flex-col justify-center items-center gap-4">
-        <p className="text-rose-500 font-semibold">{error || 'Tutorial no encontrado'}</p>
-        <Link href="/software/tutorials" className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono">
+      <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
+        <p className="text-rose-500 font-mono text-sm">{error || 'Tutorial no encontrado'}</p>
+        <Link href="/software/tutorials" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-slate-300 hover:text-white transition-all">
           ← Volver a Tutoriales
         </Link>
       </div>
@@ -59,130 +61,84 @@ export default function TutorialDetailPage({
   const currentStep = steps[activeStep];
 
   return (
-    <article className="min-h-screen py-10 md:py-14 px-4 sm:px-6 lg:px-8 2xl:px-12 max-w-7xl 2xl:max-w-[1500px] mx-auto space-y-8">
-      {/* Breadcrumb de navegación */}
-      <div className="flex items-center gap-3 text-xs font-mono text-zinc-500">
-        <Link href="/software" className="hover:text-[var(--foreground)] transition-colors">
-          Software
-        </Link>
-        <span>/</span>
-        <Link href="/software/tutorials" className="hover:text-[var(--foreground)] transition-colors">
-          Tutoriales
-        </Link>
-        <span>/</span>
-        <span className="text-[var(--foreground)] truncate max-w-xs">{tutorial.title}</span>
-      </div>
+    <SoftwareArticleLayout
+      category="tutorials"
+      categoryLabel="Tutoriales"
+      categoryHref="/software/tutorials"
+      title={tutorial.title}
+      subtitle={tutorial.description}
+      readTimeMinutes={tutorial.estimatedMinutes}
+      author="Jorge Doicela"
+      extraSidebarCard={
+        <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
+          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
+            Índice de Pasos ({steps.length})
+          </h5>
+          <div className="space-y-1.5 text-xs font-mono">
+            {steps.map((st, idx) => (
+              <button
+                key={st.id || idx}
+                onClick={() => setActiveStep(idx)}
+                className={`w-full text-left px-3 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
+                  activeStep === idx
+                    ? 'glass-concave-panel text-cyan-400 font-bold border border-cyan-500/30'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="text-[10px] opacity-60">0{idx + 1}.</span>
+                <span className="truncate">{st.title}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      }
+    >
+      {/* Wizard por pasos interactivo dentro del contenedor editorial unificado */}
+      {currentStep ? (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between pb-3 border-b border-white/5">
+            <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              Paso {activeStep + 1}: {currentStep.title}
+            </h3>
+            <span className="text-xs font-mono text-cyan-400 font-semibold">
+              {activeStep + 1} de {steps.length}
+            </span>
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Columna Principal de Pasos (8 cols) */}
-        <div className="lg:col-span-8 space-y-6">
-          <header className="p-8 md:p-12 rounded-3xl glass-convex-panel">
-            <div className="flex items-center gap-3 mb-4 text-xs font-mono">
-              <span className="font-bold uppercase text-slate-600 dark:text-slate-300">
-                Nivel: {tutorial.difficulty}
-              </span>
-              <span className="text-zinc-500">• {tutorial.estimatedMinutes} min estimados</span>
-            </div>
+          <MarkdownRenderer content={currentStep.contentMarkdown} />
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] mb-4 leading-[1.15]">
-              {tutorial.title}
-            </h1>
-
-            <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-300 font-light leading-relaxed">
-              {tutorial.description}
-            </p>
-          </header>
-
-          {/* Wizard del Paso Activo */}
-          {currentStep && (
-            <div className="p-8 md:p-12 rounded-3xl glass-convex-panel space-y-6">
-              <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/5">
-                <h2 className="text-xl font-bold text-[var(--header-title)]">
-                  Paso {activeStep + 1}: {currentStep.title}
-                </h2>
-                <span className="text-xs font-mono text-zinc-500">
-                  {activeStep + 1} de {steps.length}
-                </span>
+          {currentStep.codeSnippet && (
+            <div className="my-5 rounded-2xl bg-[#090e17] border border-white/10 overflow-hidden shadow-inner font-mono text-xs">
+              <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5 text-[11px] text-zinc-400 uppercase tracking-wider">
+                <span>{currentStep.codeLanguage || 'bash'}</span>
               </div>
-
-              <div className="text-sm md:text-base text-zinc-700 dark:text-zinc-300 font-light leading-relaxed whitespace-pre-line">
-                {currentStep.contentMarkdown}
-              </div>
-
-              {currentStep.codeSnippet && (
-                <div className="rounded-2xl bg-zinc-950 p-5 font-mono text-xs text-cyan-400 overflow-x-auto border border-white/5 shadow-inner">
-                  <div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase pb-2 mb-2 border-b border-zinc-800">
-                    <span>{currentStep.codeLanguage}</span>
-                    <span>Snippet de código</span>
-                  </div>
-                  <pre className="whitespace-pre">{currentStep.codeSnippet}</pre>
-                </div>
-              )}
-
-              {/* Botones de Navegación del Paso */}
-              <div className="flex items-center justify-between pt-6 border-t border-black/5 dark:border-white/5">
-                <button
-                  disabled={activeStep === 0}
-                  onClick={() => setActiveStep((prev) => Math.max(0, prev - 1))}
-                  className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono font-semibold disabled:opacity-30 cursor-pointer"
-                >
-                  ← Paso Anterior
-                </button>
-
-                <button
-                  disabled={activeStep === steps.length - 1}
-                  onClick={() => setActiveStep((prev) => Math.min(steps.length - 1, prev + 1))}
-                  className="px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono font-bold text-blue-600 dark:text-blue-400 disabled:opacity-30 cursor-pointer"
-                >
-                  Siguiente Paso →
-                </button>
-              </div>
+              <pre className="p-4 overflow-x-auto text-cyan-300 leading-relaxed scrollbar-none">
+                <code>{currentStep.codeSnippet}</code>
+              </pre>
             </div>
           )}
-        </div>
 
-        {/* Columna Lateral / Ficha & Navegador de Pasos (4 cols) */}
-        <aside className="lg:col-span-4 space-y-6">
-          <div className="p-6 rounded-3xl glass-convex-panel space-y-4 sticky top-20">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 pb-2 border-b border-black/5 dark:border-white/5">
-              Navegador de Pasos
-            </h3>
-
-            <div className="space-y-2">
-              {steps.map((s, idx) => (
-                <button
-                  key={s.id}
-                  onClick={() => setActiveStep(idx)}
-                  className={`w-full p-3 rounded-2xl text-left text-xs font-mono transition-all cursor-pointer flex items-center justify-between ${
-                    activeStep === idx
-                      ? 'glass-concave-panel text-blue-600 dark:text-blue-400 font-bold border-blue-500/30'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)]'
-                  }`}
-                >
-                  <span className="truncate pr-2">Paso {idx + 1}: {s.title}</span>
-                  {activeStep === idx && <span>●</span>}
-                </button>
-              ))}
-            </div>
-
-            <div className="pt-4 border-t border-black/5 dark:border-white/5 space-y-2 text-xs font-mono">
-              <div className="text-zinc-500">Stack: <strong className="text-[var(--foreground)]">{tutorial.techStack}</strong></div>
-              {tutorial.prerequisites && (
-                <div className="text-zinc-500">Requisitos: <strong className="text-[var(--foreground)]">{tutorial.prerequisites}</strong></div>
-              )}
-            </div>
-
-            <div className="pt-2">
-              <Link
-                href="/software/tutorials"
-                className="w-full py-2.5 rounded-2xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
-              >
-                ← Ver Todos los Tutoriales
-              </Link>
-            </div>
+          {/* Botones de Navegación entre pasos */}
+          <div className="flex items-center justify-between pt-6 border-t border-white/5">
+            <button
+              onClick={() => setActiveStep((prev) => Math.max(0, prev - 1))}
+              disabled={activeStep === 0}
+              className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono text-zinc-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
+            >
+              ← Paso Anterior
+            </button>
+            <button
+              onClick={() => setActiveStep((prev) => Math.min(steps.length - 1, prev + 1))}
+              disabled={activeStep === steps.length - 1}
+              className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs font-mono disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shadow-md hover:shadow-blue-500/25"
+            >
+              Siguiente Paso →
+            </button>
           </div>
-        </aside>
-      </div>
-    </article>
+        </div>
+      ) : (
+        <p className="text-xs text-zinc-500 font-mono">No hay pasos disponibles en este tutorial.</p>
+      )}
+    </SoftwareArticleLayout>
   );
 }

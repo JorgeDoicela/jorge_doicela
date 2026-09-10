@@ -72,17 +72,17 @@ export const BibleHeaderNav: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black/90 backdrop-blur-md print:hidden">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
 
-        {/* Izquierda: Retorno al Inicio de la Biblia */}
+        {/* Izquierda: Retorno al Inicio de la Biblia y Logotipo */}
         <div className="shrink-0 flex items-center gap-2 sm:gap-3">
           <BackToBibleButton />
-
-          {/* Logotipo en Móvil (< md) para mantener identidad cuando el segmented control central de desktop está oculto */}
+          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
           <Link
             href={homeUrl}
-            className="md:hidden shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+            className="shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity p-0.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 group"
             title={t('landing')}
+            aria-label={t('landing')}
           >
-            <BibleLogo size={20} />
+            <BibleLogo size={20} className="group-hover:scale-105 transition-transform" />
           </Link>
         </div>
 
@@ -131,41 +131,7 @@ export const BibleHeaderNav: React.FC = () => {
         {/* Desktop: Pestañas de Navegación Geist Planas (Estilo Vercel Dashboard Puro) */}
         <div className="hidden md:flex flex-1 justify-center items-center h-full min-w-0 px-2 select-none">
           <nav className="flex items-center h-full gap-0.5 overflow-x-auto scrollbar-none">
-            {NAV_TABS.slice(0, 3).map((tab) => {
-              const active = isCurrentTab(tab.path);
-              return (
-                <Link
-                  key={tab.path}
-                  href={`${tab.path}${queryString}`}
-                  className={`relative flex items-center h-full px-3 text-xs font-medium whitespace-nowrap transition-colors duration-150 cursor-pointer shrink-0 ${
-                    active
-                      ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
-                      : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  <span>{t(tab.key as any)}</span>
-                  {active && (
-                    <span className="absolute -bottom-[1px] inset-x-1.5 h-[2px] bg-zinc-900 dark:bg-zinc-100 rounded-t-sm z-10" />
-                  )}
-                </Link>
-              );
-            })}
-
-            {/* Logotipo Central Divisor (Identidad en la superficie plana) */}
-            <div className="flex items-center gap-2 px-2 shrink-0">
-              <div className="h-3.5 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
-              <Link
-                href={homeUrl}
-                className="p-1 flex items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer group"
-                title={t('landing')}
-                aria-label={t('landing')}
-              >
-                <BibleLogo size={18} className="group-hover:scale-105 transition-transform" />
-              </Link>
-              <div className="h-3.5 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
-            </div>
-
-            {NAV_TABS.slice(3).map((tab) => {
+            {NAV_TABS.map((tab) => {
               const active = isCurrentTab(tab.path);
               return (
                 <Link

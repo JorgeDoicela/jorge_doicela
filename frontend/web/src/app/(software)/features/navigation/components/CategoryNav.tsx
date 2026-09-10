@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 export type SoftwareSection =
@@ -15,9 +16,20 @@ export type SoftwareSection =
 
 interface CategoryNavProps {
   selectedCategory: SoftwareSection;
-  onSelectCategory: (cat: SoftwareSection) => void;
+  onSelectCategory?: (cat: SoftwareSection) => void;
   bare?: boolean;
 }
+
+export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
+  all: '/software',
+  news: '/software/news',
+  blog: '/software/blog',
+  ai: '/software/ai',
+  cybersecurity: '/software/cybersecurity',
+  tutorials: '/software/tutorials',
+  forum: '/software/forum',
+  projects: '/software/projects',
+};
 
 export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
   { id: 'all', key: 'all' },
@@ -48,18 +60,26 @@ export function CategoryNav({
       >
         {SOFTWARE_CATEGORY_KEYS.map((cat) => {
           const isSelected = selectedCategory === cat.id;
+          const href = CATEGORY_ROUTES[cat.id];
+
           return (
-            <button
+            <Link
               key={cat.id}
-              onClick={() => onSelectCategory(cat.id)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
+              href={href}
+              onClick={(e) => {
+                if (onSelectCategory) {
+                  e.preventDefault();
+                  onSelectCategory(cat.id);
+                }
+              }}
+              className={`px-3.5 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
                 isSelected
                   ? 'glass-convex-panel text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
                   : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
               }`}
             >
               <span>{t(cat.key as any)}</span>
-            </button>
+            </Link>
           );
         })}
       </div>

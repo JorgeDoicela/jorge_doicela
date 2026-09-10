@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { BlogPost } from '../types';
+import { ArticleCover } from '../../../components/ArticleCover';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -26,39 +27,46 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <Link
       href={`/software/blog/${post.slug}`}
-      className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl block cursor-pointer"
+      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm cursor-pointer"
     >
-      <div>
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono font-bold tracking-wide text-blue-500 dark:text-blue-400">
+      <div className="space-y-3.5">
+        <ArticleCover
+          title={post.title}
+          category="blog"
+          coverImage={post.coverImage}
+          tag={post.series || tNav('blog')}
+        />
+
+        <div>
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <span className="text-[11px] font-mono font-bold tracking-wide text-blue-400">
               {post.series || tNav('blog')}
             </span>
+            <span className="text-[11px] text-zinc-500 font-mono">{formattedDate}</span>
           </div>
-          <span className="text-xs text-zinc-500 font-mono">{formattedDate}</span>
+
+          <h3 className="text-base font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug line-clamp-2">
+            {post.title}
+          </h3>
+
+          {post.subtitle && (
+            <p className="text-xs font-medium text-blue-400/80 mt-1 line-clamp-1">{post.subtitle}</p>
+          )}
+
+          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+            {post.excerpt}
+          </p>
         </div>
-
-        <h3 className="text-lg font-bold text-[var(--foreground)] group-hover:text-blue-400 transition-colors leading-snug mb-1">
-          {post.title}
-        </h3>
-
-        {post.subtitle && (
-          <p className="text-xs font-medium text-blue-400/80 mb-2">{post.subtitle}</p>
-        )}
-
-        <p className="text-sm text-zinc-400 line-clamp-3 mb-4 leading-relaxed font-light">
-          {post.excerpt}
-        </p>
       </div>
 
-      <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
+      <div className="pt-3 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono">
+        <div className="flex items-center gap-2 text-zinc-500">
           <span>{tCard('likesCount', { count: post.likes })}</span>
           <span>•</span>
           <span>{tCard('viewsCount', { count: post.views })}</span>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:translate-x-1 transition-transform">
+        <span className="inline-flex items-center gap-1 font-semibold text-blue-400 group-hover:translate-x-1 transition-transform">
           {tCard('readEssay')}
         </span>
       </div>

@@ -11,6 +11,7 @@ export interface AiResource {
   paperUrl?: string;
   githubUrl?: string;
   tags: string;
+  coverImage?: string;
   views: number;
   likes: number;
   createdAt: string;

@@ -13,12 +13,12 @@ export function AuthorSidebarCard() {
             <div className="w-20 h-20 mx-auto rounded-full p-1 glass-concave-panel border border-white/10 shadow-inner flex items-center justify-center relative group">
                 <div className="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center bg-black/40">
                     <Image
-                        src="/software/logo/logo_fondo_circular_color_.png"
+                        src="/software/logo/perfil.jpg"
                         alt="Jorge Doicela"
-                        width={72}
-                        height={72}
-                        className="object-contain transition-transform duration-300 group-hover:scale-105"
-                        unoptimized
+                        fill
+                        sizes="80px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        priority
                     />
                 </div>
             </div>

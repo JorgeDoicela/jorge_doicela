@@ -50,6 +50,12 @@ export default function SoftwarePage() {
   useEffect(() => {
     setMounted(true);
     document.documentElement.classList.add('dark');
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('spotlight') === 'true') {
+        setIsSpotlightOpen(true);
+      }
+    }
   }, []);
 
   return (

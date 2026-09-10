@@ -16,9 +16,9 @@ export function ProjectGrid({ status, search }: ProjectGridProps) {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-pulse">
-        {[1, 2, 3, 4].map((n) => (
-          <div key={n} className="h-56 rounded-3xl glass-convex-panel bg-zinc-900/30" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full animate-pulse">
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <div key={n} className="h-64 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 border border-white/5" />
         ))}
       </div>
     );
@@ -41,7 +41,7 @@ export function ProjectGrid({ status, search }: ProjectGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       {projects.map((proj) => (
         <ProjectCard key={proj.id} project={proj} />
       ))}

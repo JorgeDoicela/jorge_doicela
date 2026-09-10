@@ -10,6 +10,7 @@ export interface Project {
   featured: boolean;
   stars: number;
   views: number;
+  coverImage?: string;
   architectureDiagramUrl?: string;
   createdAt: string;
   updatedAt: string;

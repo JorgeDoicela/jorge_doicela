@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { Tutorial } from '../types';
+import { ArticleCover } from '../../../components/ArticleCover';
 
 interface TutorialCardProps {
   tutorial: Tutorial;
@@ -14,40 +15,53 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
   const tFilters = useTranslations('Filters');
 
   const diffColors: Record<string, string> = {
-    beginner: 'text-emerald-500 dark:text-emerald-400',
-    intermediate: 'text-amber-500 dark:text-amber-400',
-    advanced: 'text-rose-500 dark:text-rose-400',
+    beginner: 'text-emerald-400',
+    intermediate: 'text-amber-400',
+    advanced: 'text-rose-400',
   };
 
-  const badge = diffColors[tutorial.difficulty] || diffColors.intermediate;
+  const badgeColor = diffColors[tutorial.difficulty] || diffColors.intermediate;
+  const difficultyLabel = tFilters(tutorial.difficulty as any) || tutorial.difficulty;
 
   return (
     <Link
       href={`/software/tutorials/${tutorial.slug}`}
-      className="group relative flex flex-col justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl block cursor-pointer"
+      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm cursor-pointer"
     >
-      <div>
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={`text-[11px] font-mono font-bold tracking-wide uppercase ${badge}`}>
-            {tFilters(tutorial.difficulty as any) || tutorial.difficulty}
-          </span>
+      <div className="space-y-3.5">
+        <ArticleCover
+          title={tutorial.title}
+          category="tutorials"
+          coverImage={tutorial.coverImage}
+          tag={difficultyLabel}
+        />
+
+        <div>
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <span className={`text-[11px] font-mono font-bold tracking-wide uppercase ${badgeColor}`}>
+              {difficultyLabel}
+            </span>
+            <span className="text-[11px] text-zinc-500 font-mono">
+              {tutorial.estimatedMinutes} min
+            </span>
+          </div>
+
+          <h3 className="text-base font-bold text-[var(--header-title)] group-hover:text-amber-300 transition-colors leading-snug line-clamp-2">
+            {tutorial.title}
+          </h3>
+
+          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+            {tutorial.excerpt}
+          </p>
         </div>
-
-        <h3 className="text-lg font-bold text-[var(--foreground)] group-hover:text-amber-400 transition-colors leading-snug mb-2">
-          {tutorial.title}
-        </h3>
-
-        <p className="text-sm text-zinc-400 line-clamp-3 mb-4 leading-relaxed font-light">
-          {tutorial.excerpt}
-        </p>
       </div>
 
-      <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-        <div className="text-xs text-zinc-500 truncate max-w-[180px] font-mono">
+      <div className="pt-3 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono">
+        <div className="text-zinc-500 truncate max-w-[180px]">
           {tutorial.techStack}
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 group-hover:translate-x-1 transition-transform">
+        <span className="inline-flex items-center gap-1 font-semibold text-amber-400 group-hover:translate-x-1 transition-transform">
           {tCard('startGuide')}
         </span>
       </div>

@@ -380,9 +380,9 @@ server {
 
 ## 4. Orquestación de Procesos con PM2 (`pm2.config.js`)
 
-Controla el ciclo de vida, resolución determinista de rutas absolutas (`path.resolve`) y los límites de memoria de los procesos unificados en el VPS:
-* **`backend-nest`:** Inicia `./dist/main.js` desde `backend/` (puerto `3000`). Carga variables desde `backend/.env`. Límite de reinicio: `200 MB`.
-* **`frontend-next`:** Inicia `./server.js` en modo Next.js Standalone desde `frontend/web/.next/standalone/frontend/web` (puerto `3001`). Carga variables del servidor desde `frontend/web/.env`. Límite de reinicio: `200 MB`. Consumo real promedio: **~90 MB**.
+Controla el ciclo de vida, resolución determinista de rutas absolutas (`path.resolve`), inyección dinámica de variables de entorno mediante `loadEnvFile()` (debido a que PM2 no procesa la directiva `env_file` en archivos ecosystem) y los límites de memoria de los procesos unificados en el VPS:
+* **`backend-nest`:** Inicia `./dist/main.js` desde `backend/` (puerto `3000`). Inyecta variables dinámicamente desde `backend/.env`. Límite de reinicio: `200 MB`.
+* **`frontend-next`:** Inicia `./server.js` en modo Next.js Standalone desde `frontend/web/.next/standalone/frontend/web` (puerto `3001`). Inyecta variables del servidor (como `GROQ_API_KEY`) desde `frontend/web/.env`. Límite de reinicio: `200 MB`. Consumo real promedio: **~90 MB**.
 
 ```bash
 # Comandos de gestión PM2:

@@ -147,10 +147,12 @@ export async function POST(req: NextRequest) {
       return createTextStreamResponse(cached.text);
     }
 
-    const groqKey = process.env.GROQ_API_KEY;
+    const groqKey = process.env.GROQ_API_KEY?.trim();
 
     // 5. STREAMING CON GROQ LPU (Configuración Equilibrada)
-    if (groqKey) {
+    if (!groqKey) {
+      console.warn('[AI CHAT] GROQ_API_KEY no está configurada en process.env. Conmutando a Fallback local.');
+    } else {
       const groqModels = [
         'openai/gpt-oss-120b',
         'openai/gpt-oss-20b',
@@ -192,12 +194,24 @@ export async function POST(req: NextRequest) {
             signal: AbortSignal.timeout(6000),
           });
 
-          if (groqRes.status === 429) {
-            console.warn(`[AI CHAT - GROQ] Cuota de proveedor excedida (429). Conmutando a Fallback.`);
-            break;
+          if (!groqRes.ok) {
+            const errBody = await groqRes.text().catch(() => '');
+            console.error(`[AI CHAT - GROQ] Error HTTP ${groqRes.status} con modelo ${model}:`, errBody);
+
+            if (groqRes.status === 401) {
+              console.error('[AI CHAT - GROQ] Error de autenticación (401): la GROQ_API_KEY en process.env es inválida.');
+              break;
+            }
+
+            if (groqRes.status === 429) {
+              console.warn('[AI CHAT - GROQ] Cuota de proveedor excedida (429). Conmutando a Fallback.');
+              break;
+            }
+
+            continue;
           }
 
-          if (groqRes.ok && groqRes.body) {
+          if (groqRes.body) {
             const encoder = new TextEncoder();
             const decoder = new TextDecoder();
             let fullAccumulatedText = '';

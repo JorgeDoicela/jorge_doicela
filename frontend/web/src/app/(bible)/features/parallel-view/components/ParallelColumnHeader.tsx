@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Translation } from '../../translations/hooks/useTranslations';
+import { BibleSelect, BibleSelectOption } from '../../../components/BibleSelect';
 
 interface ParallelColumnHeaderProps {
   columnId: string;
@@ -28,28 +29,28 @@ export const ParallelColumnHeader: React.FC<ParallelColumnHeaderProps> = ({
     (tr) => tr.id === currentTranslationId,
   );
 
+  const options: BibleSelectOption<number>[] = availableTranslations.map((tr) => ({
+    value: tr.id,
+    label: tr.name,
+    badge: tr.abbreviation,
+  }));
+
   return (
-    <div className="sticky top-14 z-20 p-3 bg-background/95 backdrop-blur-md border-b border-accents-2 flex items-center justify-between gap-2">
+    <div className="p-3 bg-background/95 backdrop-blur-md border-r border-accents-2 last:border-r-0 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2 min-w-0">
         <span className="flex-shrink-0 w-5 h-5 rounded-full bg-accents-1 border border-accents-2 text-[10px] font-mono font-bold flex items-center justify-center text-accents-5">
           {columnIndex + 1}
         </span>
 
         {/* Selector de versión para esta columna */}
-        <select
+        <BibleSelect<number>
           value={currentTranslationId}
-          onChange={(e) =>
-            onSelectTranslation(columnId, parseInt(e.target.value, 10))
-          }
-          className="bg-accents-1 hover:bg-accents-2 border border-accents-2 rounded-md px-2.5 py-1 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-colors cursor-pointer truncate max-w-[180px]"
-          aria-label={t('selectTranslationAria', { index: columnIndex + 1 })}
-        >
-          {availableTranslations.map((tr) => (
-            <option key={tr.id} value={tr.id} className="bg-background text-foreground">
-              {tr.abbreviation} - {tr.name}
-            </option>
-          ))}
-        </select>
+          onChange={(newId) => onSelectTranslation(columnId, newId)}
+          options={options}
+          className="max-w-[150px] sm:max-w-[200px]"
+          size="xs"
+          ariaLabel={t('selectTranslationAria', { index: columnIndex + 1 })}
+        />
       </div>
 
       <div className="flex items-center gap-1.5 flex-shrink-0">

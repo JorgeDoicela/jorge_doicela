@@ -182,15 +182,15 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
       aria-label={computedTitle}
       className={`fixed z-40 flex items-center justify-center select-none group touch-none print:hidden ${
         isDragging
-          ? 'w-12 h-12 rounded-2xl border border-zinc-300 dark:border-zinc-700 ring-2 ring-primary/40 shadow-2xl scale-110 cursor-grabbing bg-white dark:bg-[#0a0a0a]'
+          ? 'w-12 h-12 rounded-2xl border border-zinc-300 dark:border-zinc-700 ring-2 ring-primary/40 shadow-2xl scale-105 cursor-grabbing bg-white dark:bg-[#0a0a0a]'
           : isLeft
-          ? 'w-10 sm:w-11 h-12 left-0 rounded-r-2xl border-y border-r border-l-0 border-zinc-200/90 dark:border-zinc-800 shadow-md hover:shadow-lg hover:w-12 cursor-grab active:cursor-grabbing bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md transition-[width,background-color,border-color,box-shadow]'
-          : 'w-10 sm:w-11 h-12 right-0 rounded-l-2xl border-y border-l border-r-0 border-zinc-200/90 dark:border-zinc-800 shadow-md hover:shadow-lg hover:w-12 cursor-grab active:cursor-grabbing bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md transition-[width,background-color,border-color,box-shadow]'
+          ? 'w-11 h-12 left-0 -translate-x-[30%] hover:translate-x-0 rounded-r-2xl border-y border-r border-l-0 border-zinc-200/90 dark:border-zinc-800/90 shadow-md hover:shadow-lg cursor-grab active:cursor-grabbing bg-white dark:bg-[#0a0a0a] transition-all'
+          : 'w-11 h-12 right-0 translate-x-[30%] hover:translate-x-0 rounded-l-2xl border-y border-l border-r-0 border-zinc-200/90 dark:border-zinc-800/90 shadow-md hover:shadow-lg cursor-grab active:cursor-grabbing bg-white dark:bg-[#0a0a0a] transition-all'
       } text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white ${
-        !isDragging ? 'transition-[left,right,top,border-radius,transform] duration-200 ease-out' : ''
+        !isDragging ? 'transition-[transform,top,border-radius,background-color,box-shadow] duration-200 ease-out' : ''
       }`}
     >
-      <Icon className="w-5 h-5 shrink-0 transition-transform group-hover:scale-110" />
+      <Icon className={`w-5 h-5 shrink-0 transition-transform ${isLeft ? 'translate-x-0.5 group-hover:translate-x-0' : '-translate-x-0.5 group-hover:translate-x-0'}`} />
     </button>
   );
 };

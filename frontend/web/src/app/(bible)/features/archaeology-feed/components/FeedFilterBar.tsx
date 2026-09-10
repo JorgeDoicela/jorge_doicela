@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { ArticleCategory, GeographicRegion } from '../types';
+import { BibleSelect } from '../../../components/BibleSelect';
 
 interface FeedFilterBarProps {
   selectedCategory: ArticleCategory | 'all';
@@ -111,18 +112,20 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
           {/* Filtro por Región */}
           <div className="flex items-center gap-1">
             <span className="text-[11px] font-mono text-accents-4 mr-1">{t('region')}</span>
-            <select
+            <BibleSelect<GeographicRegion>
               value={selectedRegion}
-              onChange={(e) => onChangeRegion(e.target.value as GeographicRegion)}
-              className="bg-background border border-accents-2 rounded-md px-2 py-0.5 text-[11px] text-foreground focus:outline-none focus:border-foreground"
-            >
-              <option value="all">{t('regionAll')}</option>
-              <option value="jerusalem_judea">{t('regionJerusalem')}</option>
-              <option value="galilee_samaria">{t('regionGalilee')}</option>
-              <option value="jordan_dead_sea">{t('regionJordan')}</option>
-              <option value="turkey_asia_minor">{t('regionTurkey')}</option>
-              <option value="greece_rome">{t('regionGreece')}</option>
-            </select>
+              onChange={(val) => onChangeRegion(val)}
+              options={[
+                { value: 'all', label: t('regionAll') },
+                { value: 'jerusalem_judea', label: t('regionJerusalem') },
+                { value: 'galilee_samaria', label: t('regionGalilee') },
+                { value: 'jordan_dead_sea', label: t('regionJordan') },
+                { value: 'turkey_asia_minor', label: t('regionTurkey') },
+                { value: 'greece_rome', label: t('regionGreece') },
+              ]}
+              size="xs"
+              ariaLabel={t('region')}
+            />
           </div>
         </div>
       )}

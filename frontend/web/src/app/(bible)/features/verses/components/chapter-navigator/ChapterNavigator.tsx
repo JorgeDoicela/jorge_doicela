@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { getChapterCountForBook } from '../../data/bookChapters';
+import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 
 interface ChapterNavigatorProps {
   selectedBookName?: string;
@@ -19,19 +20,14 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   selectedChapter,
   onPrevChapter,
   onNextChapter,
-  translationAbbr,
 }) => {
   const tToolbar = useTranslations('Toolbar');
-  const tBooks = useTranslations('Books');
   const maxChapters = getChapterCountForBook(selectedBookAbbr);
   const currentChapter = selectedChapter || 1;
 
-  const localizedBookName = (() => {
-    if (selectedBookAbbr && tBooks.has(selectedBookAbbr as any)) {
-      return tBooks(selectedBookAbbr as any);
-    }
-    return selectedBookName || '';
-  })();
+  const passageContext = useBiblePassageSafe();
+  const isLeftOpen = passageContext?.isLeftSidebarOpen ?? false;
+  const isRightOpen = passageContext?.isRightInspectorOpen ?? false;
 
   // Atajos de teclado: Flecha izquierda / derecha para navegar capítulos
   useEffect(() => {
@@ -60,62 +56,45 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   }
 
   return (
-    <div className="w-full mt-10 pt-6 border-t border-zinc-200/80 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-      {/* Botón Anterior */}
-      <button
-        type="button"
-        onClick={onPrevChapter}
-        disabled={currentChapter <= 1}
-        className={`px-4 py-2 text-xs font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer ${
-          currentChapter <= 1
-            ? 'opacity-40 cursor-not-allowed border-zinc-200 dark:border-zinc-800 text-zinc-400'
-            : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
-        }`}
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>
-          {tToolbar('chapterNumber', {
-            chapter: (currentChapter > 1 ? currentChapter - 1 : 1).toString(),
-          })}
-        </span>
-      </button>
+    <>
+      {/* Botones Flotantes Laterales Fijos y Adaptables al estado de los paneles laterales */}
+      {currentChapter > 1 && (
+        <button
+          type="button"
+          onClick={onPrevChapter}
+          title={tToolbar('chapterNumber', { chapter: (currentChapter - 1).toString() })}
+          aria-label={tToolbar('chapterNumber', { chapter: (currentChapter - 1).toString() })}
+          className={`fixed top-1/2 -translate-y-1/2 z-40 hidden md:flex items-center gap-1.5 h-9 px-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-[left,right,transform,background-color,border-color,box-shadow] duration-300 ease-in-out cursor-pointer print:hidden group select-none ${
+            isLeftOpen ? 'lg:left-[calc(20rem+1rem)] left-4' : 'left-4'
+          }`}
+        >
+          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-0.5 text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="text-xs font-mono font-semibold tracking-tight">
+            {currentChapter - 1}
+          </span>
+        </button>
+      )}
 
-      {/* Referencia central activa */}
-      <div className="text-center">
-        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-          {localizedBookName} {currentChapter}
-        </div>
-        <div className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 mt-0.5">
-          {translationAbbr ? `${translationAbbr} • ` : ''}
-          {tToolbar('chapterOf', {
-            current: currentChapter.toString(),
-            total: maxChapters.toString(),
-          })}
-        </div>
-      </div>
-
-      {/* Botón Siguiente */}
-      <button
-        type="button"
-        onClick={() => onNextChapter(maxChapters)}
-        disabled={currentChapter >= maxChapters}
-        className={`px-4 py-2 text-xs font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer ${
-          currentChapter >= maxChapters
-            ? 'opacity-40 cursor-not-allowed border-zinc-200 dark:border-zinc-800 text-zinc-400'
-            : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100 shadow-xs'
-        }`}
-      >
-        <span>
-          {tToolbar('chapterNumber', {
-            chapter: (currentChapter < maxChapters ? currentChapter + 1 : maxChapters).toString(),
-          })}
-        </span>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </div>
+      {currentChapter < maxChapters && (
+        <button
+          type="button"
+          onClick={() => onNextChapter(maxChapters)}
+          title={tToolbar('chapterNumber', { chapter: (currentChapter + 1).toString() })}
+          aria-label={tToolbar('chapterNumber', { chapter: (currentChapter + 1).toString() })}
+          className={`fixed top-1/2 -translate-y-1/2 z-40 hidden md:flex items-center gap-1.5 h-9 px-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-[left,right,transform,background-color,border-color,box-shadow] duration-300 ease-in-out cursor-pointer print:hidden group select-none ${
+            isRightOpen ? 'lg:right-[calc(22rem+1rem)] xl:right-[calc(24rem+1rem)] right-4' : 'right-4'
+          }`}
+        >
+          <span className="text-xs font-mono font-semibold tracking-tight">
+            {currentChapter + 1}
+          </span>
+          <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+    </>
   );
 };

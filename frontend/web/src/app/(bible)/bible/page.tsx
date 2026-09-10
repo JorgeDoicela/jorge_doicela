@@ -723,52 +723,54 @@ export default function BibleLandingPage() {
             <section id="proposito" className="min-h-screen flex flex-col justify-center py-16 sm:py-20 lg:py-24 bg-black text-white w-full relative">
                 <div className="w-full px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto text-center my-auto">
                     
-                    {/* Selector de pestañas tipo pill (Geist Capsule Compacta: h-[48px] sm:h-[50px], p-1) */}
-                    <div className="h-[48px] sm:h-[50px] p-1 rounded-full bg-zinc-900/90 border border-zinc-800 gap-1 inline-flex items-center justify-center max-w-full shadow-sm mb-7 sm:mb-8">
-                        <button
-                            onClick={() => setActivePurpose('daily')}
-                            className={`h-full inline-flex items-center gap-2 px-4 sm:px-5.5 rounded-full text-xs sm:text-[13px] transition-all cursor-pointer ${
-                                activePurpose === 'daily'
-                                    ? 'bg-white text-black font-semibold shadow-sm'
-                                    : 'text-zinc-400 hover:text-white font-medium'
-                            }`}
-                        >
-                            <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            <span>{tLanding('purposeDaily')}</span>
-                        </button>
-                        <button
-                            onClick={() => setActivePurpose('compare')}
-                            className={`h-full inline-flex items-center gap-2 px-4 sm:px-5.5 rounded-full text-xs sm:text-[13px] transition-all cursor-pointer ${
-                                activePurpose === 'compare'
-                                    ? 'bg-white text-black font-semibold shadow-sm'
-                                    : 'text-zinc-400 hover:text-white font-medium'
-                            }`}
-                        >
-                            <Columns2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            <span>{tLanding('purposeCompare')}</span>
-                        </button>
-                        <button
-                            onClick={() => setActivePurpose('originals')}
-                            className={`h-full inline-flex items-center gap-2 px-4 sm:px-5.5 rounded-full text-xs sm:text-[13px] transition-all cursor-pointer ${
-                                activePurpose === 'originals'
-                                    ? 'bg-white text-black font-semibold shadow-sm'
-                                    : 'text-zinc-400 hover:text-white font-medium'
-                            }`}
-                        >
-                            <Languages className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            <span>{tLanding('purposeOriginals')}</span>
-                        </button>
-                        <button
-                            onClick={() => setActivePurpose('history')}
-                            className={`h-full inline-flex items-center gap-2 px-4 sm:px-5.5 rounded-full text-xs sm:text-[13px] transition-all cursor-pointer ${
-                                activePurpose === 'history'
-                                    ? 'bg-white text-black font-semibold shadow-sm'
-                                    : 'text-zinc-400 hover:text-white font-medium'
-                            }`}
-                        >
-                            <Navigation className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            <span>{tLanding('purposeHistory')}</span>
-                        </button>
+                    {/* Selector de pestañas tipo pill (Geist Capsule Compacta responsiva con scroll horizontal en móvil) */}
+                    <div className="w-full flex justify-center mb-7 sm:mb-8">
+                        <div className="h-[46px] sm:h-[50px] p-1 rounded-full bg-zinc-900/90 border border-zinc-800 gap-1 inline-flex items-center max-w-full overflow-x-auto scrollbar-none shadow-sm">
+                            <button
+                                onClick={() => setActivePurpose('daily')}
+                                className={`h-full inline-flex items-center gap-2 px-3.5 sm:px-5.5 rounded-full text-xs sm:text-[13px] whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                                    activePurpose === 'daily'
+                                        ? 'bg-white text-black font-semibold shadow-sm'
+                                        : 'text-zinc-400 hover:text-white font-medium'
+                                }`}
+                            >
+                                <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                <span>{tLanding('purposeDaily')}</span>
+                            </button>
+                            <button
+                                onClick={() => setActivePurpose('compare')}
+                                className={`h-full inline-flex items-center gap-2 px-3.5 sm:px-5.5 rounded-full text-xs sm:text-[13px] whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                                    activePurpose === 'compare'
+                                        ? 'bg-white text-black font-semibold shadow-sm'
+                                        : 'text-zinc-400 hover:text-white font-medium'
+                                }`}
+                            >
+                                <Columns2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                <span>{tLanding('purposeCompare')}</span>
+                            </button>
+                            <button
+                                onClick={() => setActivePurpose('originals')}
+                                className={`h-full inline-flex items-center gap-2 px-3.5 sm:px-5.5 rounded-full text-xs sm:text-[13px] whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                                    activePurpose === 'originals'
+                                        ? 'bg-white text-black font-semibold shadow-sm'
+                                        : 'text-zinc-400 hover:text-white font-medium'
+                                }`}
+                            >
+                                <Languages className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                <span>{tLanding('purposeOriginals')}</span>
+                            </button>
+                            <button
+                                onClick={() => setActivePurpose('history')}
+                                className={`h-full inline-flex items-center gap-2 px-3.5 sm:px-5.5 rounded-full text-xs sm:text-[13px] whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                                    activePurpose === 'history'
+                                        ? 'bg-white text-black font-semibold shadow-sm'
+                                        : 'text-zinc-400 hover:text-white font-medium'
+                                }`}
+                            >
+                                <Navigation className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                <span>{tLanding('purposeHistory')}</span>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Título contextual dinámico Geist (1 sola línea en Desktop, responsivo) */}

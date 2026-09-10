@@ -24,7 +24,11 @@ const NAV_TABS: NavTabItem[] = [
   { path: '/bible/study/historical-context', key: 'historical' },
 ];
 
-export const BibleHeaderNav: React.FC = () => {
+interface BibleHeaderNavProps {
+  isVisible?: boolean;
+}
+
+export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true }) => {
   const t = useTranslations('Nav');
   const pathname = usePathname() || '';
 
@@ -69,7 +73,13 @@ export const BibleHeaderNav: React.FC = () => {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black/90 backdrop-blur-md print:hidden">
+    <header
+      className={`shrink-0 w-full border-b bg-white dark:bg-[#0a0a0a] z-40 transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden print:hidden ${
+        isVisible
+          ? 'h-14 opacity-100 border-zinc-200/80 dark:border-zinc-800/80 shadow-xs'
+          : 'h-0 opacity-0 pointer-events-none border-transparent shadow-none'
+      }`}
+    >
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
 
         {/* Izquierda: Retorno al Inicio de la Biblia y Logotipo */}
@@ -100,7 +110,7 @@ export const BibleHeaderNav: React.FC = () => {
 
           {/* Menú Flotante Móvil */}
           {mobileMenuOpen && (
-            <div className="absolute top-full left-0 mt-1.5 w-60 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute top-full left-0 mt-1.5 w-60 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 px-2 py-1">
                 {t('studySuites')}
               </div>

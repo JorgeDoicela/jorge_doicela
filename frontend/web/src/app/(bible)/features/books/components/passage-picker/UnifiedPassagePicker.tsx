@@ -154,7 +154,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   };
 
   return (
-    <div className={`relative inline-flex items-center gap-1 ${isOpen ? 'z-50' : ''} ${className}`} ref={containerRef}>
+    <div className={`relative inline-flex items-center gap-1 shrink-0 ${isOpen ? 'z-50' : ''} ${className}`} ref={containerRef}>
       {/* Botón de capítulo anterior si está disponible */}
       {onPrevChapter && (
         <button
@@ -187,10 +187,6 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
             : 'border-accents-2 bg-background hover:border-foreground text-foreground'
         } ${size === 'sm' ? 'text-xs' : 'text-xs sm:text-sm font-semibold'}`}
       >
-        <svg className="w-3.5 h-3.5 text-accents-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-
         <span className="font-bold tracking-tight">
           {currentBook ? `${getBookDisplayName(currentBook)} ${selectedChapter || 1}` : t('selectPassage')}
         </span>
@@ -228,7 +224,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
 
       {/* Modal Desplegable / Popover */}
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 z-50 w-[calc(100vw-2rem)] max-w-sm sm:w-96 p-3 rounded-2xl border border-accents-2 bg-background/95 backdrop-blur-md shadow-2xl space-y-3 animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute top-full left-0 mt-2 z-50 w-[calc(100vw-2rem)] max-w-sm sm:w-96 p-3 rounded-2xl border border-accents-2 bg-white dark:bg-[#0a0a0a] shadow-2xl space-y-3 animate-in fade-in zoom-in-95 duration-100">
           {/* Vista 1: Selector de Libros */}
           {!selectedBookForChapters ? (
             <>

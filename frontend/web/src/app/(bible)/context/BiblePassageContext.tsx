@@ -49,6 +49,10 @@ interface BiblePassageContextValue {
   nextChapter: () => void;
   prevChapter: () => void;
 
+  // Control de visibilidad del Header Superior sincronizado con el scroll
+  isHeaderVisible: boolean;
+  setIsHeaderVisible: (visible: boolean) => void;
+
   // Control de Paneles Laterales del Workspace Studio
   isLeftSidebarOpen: boolean;
   toggleLeftSidebar: () => void;
@@ -190,6 +194,9 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
     setIsRightInspectorOpen(open);
   }, []);
 
+  // Control de visibilidad del Header Superior sincronizado con el scroll
+  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
+
   const closeInspector = useCallback(() => {
     setIsRightInspectorOpen(false);
   }, []);
@@ -254,6 +261,7 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   const setPassage = (bookId: number, chapter: number) => {
     setSelectedBookId(bookId);
     setSelectedChapter(chapter);
+    setIsHeaderVisible(true);
     updateUrlParams(bookId, chapter, selectedTranslationId);
   };
 
@@ -320,6 +328,10 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
         setSelectedTranslationId: handleSetTranslation,
         nextChapter,
         prevChapter,
+
+        // Control de visibilidad del Header Superior sincronizado con el scroll
+        isHeaderVisible,
+        setIsHeaderVisible,
 
         // Paneles laterales del Workspace Studio
         isLeftSidebarOpen,

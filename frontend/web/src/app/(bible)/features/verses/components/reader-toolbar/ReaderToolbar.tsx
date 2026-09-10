@@ -15,6 +15,7 @@ import { getChaptersForBookId } from '../../../books/data/canonicCategories';
 import { TranslationSelector } from '../../../translations/components/translation-selector/TranslationSelector';
 import { Book } from '../../../books/hooks/useBooks';
 import { Printer, Copy, Check, SlidersHorizontal, Type, AlignLeft, ListOrdered } from 'lucide-react';
+import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;
@@ -61,6 +62,8 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 }) => {
   const t = useTranslations('Toolbar');
   const tBooks = useTranslations('Books');
+  const passageContext = useBiblePassageSafe();
+  const isLeftOpen = passageContext?.isLeftSidebarOpen ?? false;
   const [copied, setCopied] = useState(false);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const appearanceRef = useRef<HTMLDivElement>(null);
@@ -125,15 +128,18 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         {/* Izquierda: Pasaje Principal y Versión */}
         <div className="flex items-center gap-2 min-w-0">
-          <UnifiedPassagePicker
-            books={normalizedBooks}
-            selectedBookId={selectedBookId || null}
-            selectedChapter={selectedChapter}
-            onSelectPassage={handlePassageSelect}
-            onPrevChapter={onPrevChapter}
-            onNextChapter={() => onNextChapter?.(totalChapters)}
-            size="sm"
-          />
+          {/* Selector de pasaje: se oculta en desktop cuando el panel lateral está abierto para evitar duplicidad */}
+          <div className={isLeftOpen ? 'lg:hidden' : 'flex items-center animate-in fade-in duration-200'}>
+            <UnifiedPassagePicker
+              books={normalizedBooks}
+              selectedBookId={selectedBookId || null}
+              selectedChapter={selectedChapter}
+              onSelectPassage={handlePassageSelect}
+              onPrevChapter={onPrevChapter}
+              onNextChapter={() => onNextChapter?.(totalChapters)}
+              size="sm"
+            />
+          </div>
 
           {onSelectTranslation && (
             <TranslationSelector
@@ -194,7 +200,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 
             {/* Panel Popover Desplegable */}
             {appearanceOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-64 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
+              <div className="absolute right-0 top-full mt-1.5 w-64 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
                 {/* Familia Tipográfica */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">

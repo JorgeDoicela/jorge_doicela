@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useConcordance } from '../hooks/useConcordance';
+import { BibleSelect } from '../../../components/BibleSelect';
 
 export const ExhaustiveConcordanceSearch: React.FC = () => {
   const t = useTranslations('GrammarSearch');
@@ -88,17 +89,17 @@ export const ExhaustiveConcordanceSearch: React.FC = () => {
 
           {/* Selector de Traducción */}
           <div className="sm:w-56 shrink-0">
-            <select
+            <BibleSelect<string>
               value={selectedTranslation}
-              onChange={(e) => setSelectedTranslation(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-xs bg-accents-1 border border-accents-2 text-foreground focus:outline-none focus:border-blue-500 cursor-pointer font-medium"
-            >
-              {translationsList.map((tr) => (
-                <option key={tr.abbr} value={tr.abbr}>
-                  {tr.name}
-                </option>
-              ))}
-            </select>
+              onChange={(val) => setSelectedTranslation(val)}
+              options={translationsList.map((tr) => ({
+                value: tr.abbr,
+                label: tr.name,
+                badge: tr.abbr !== 'all' ? tr.abbr : undefined,
+              }))}
+              size="sm"
+              ariaLabel={t('concordance.allVersions')}
+            />
           </div>
         </div>
 

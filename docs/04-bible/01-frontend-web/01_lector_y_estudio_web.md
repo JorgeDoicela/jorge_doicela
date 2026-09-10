@@ -240,3 +240,40 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
 * **Flujo Natural sin Colisiones:** Se removió la fijación `sticky` de `ReaderToolbar.tsx`, unificándolo con el patrón del resto de suites (`ParallelStudyPage`, `InterlinearStudyPage`). La barra de herramientas fluye armónicamente con el contenido, eliminando para siempre las colisiones donde la barra flotaba por encima del título del libro ("Génesis") al desplazarse.
 * **Alineación Superior al Ras (`pt-0`):** Se eliminó el padding superior del contenedor principal (`pt-0`) y se acortó el espaciado vertical (`space-y-2`), situando la barra de herramientas directamente debajo de la cabecera sin holguras vacías.
 * **Presencia Editorial del Capítulo:** Con `pt-8` y `pb-6 mb-6`, el título del libro y el capítulo destacan con elegancia editorial completa y nunca son ocluidos ni cortados.
+
+### 7.7 Arquitectura Desacoplada App Shell y Auto-Hide Inteligente (`layout.tsx`, `BibleHeaderNav.tsx`)
+* **Patrón App Shell de Estudio Profesional (Cero Layout Shifts - CLS = 0):** El workspace de estudio adopta la arquitectura canónica de IDEs y suites profesionales (Geist, Linear, VS Code):
+  * **Marco Raíz Inamovible:** `h-screen flex flex-col overflow-hidden`. La ventana del navegador nunca produce scroll global ni desacomoda los paneles laterales.
+  * **Auto-Hide Inteligente de Cabecera (`BibleHeaderNav.tsx`):** La barra de 56px (`h-14`) cuenta con transición fluida de altura y opacidad (`transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden`).
+    * **Zona de Reposo Serena (`scrollTop <= 200px`):** Los primeros 200px permanecen fijos para que el lector examine el título, la barra de herramientas o el pasaje sin que nada desaparezca.
+    * **Ocultamiento por Intención Real (`>= 80px` continuos hacia abajo):** Solo al rebasar la zona de reposo y demostrar lectura continuada, la barra colapsa suavemente a `h-0 opacity-0`.
+    * **Reaparición Inmediata (`>= 25px` hacia arriba):** Cualquier retroceso o gesto ascendente restaura la cabecera al instante.
+  * **Expansión Automática del Workspace:** Al retraerse la cabecera, la fila del workspace (`flex-1 min-h-0 overflow-hidden`) se expande naturalmente a pantalla completa (`100vh`).
+  * **Blindaje Total de Paneles Laterales (`BibleNavigationSidebar.tsx` e `Inspector`):** En desktop (`lg:`), actúan como columnas fijas acopladas (`lg:static lg:h-full`). Sus cabeceras (`[Todos | AT | NT]` y `[Morfología Strong]`) son `shrink-0` y residen siempre al tope de la fila, por lo que **jamás se cortan ni se empujan fuera de pantalla**.
+  * **Canvas Central de Lectura (`<main>`):** Ocupa el espacio central (`flex-1 h-full overflow-y-auto`). La lectura de versículos se desplaza a 120 FPS sin colisiones y dispara los eventos de intención de forma nativa.
+  * **Footer Editorial Integrado:** El pie de página con información legal y enlaces canónicos se aloja al final del canvas de lectura (`<main>`).
+
+### 7.8 Botones Flotantes Laterales de Cambio de Capítulo Adaptables (`ChapterNavigator.tsx`)
+* **Visibilidad Continua sin Oclusión:** Los botones de navegación de capítulos flotan a media altura (`top-1/2 -translate-y-1/2`) en los flancos de la lectura. Se sincronizan reactivamente con el estado de apertura de los paneles (`isLeftSidebarOpen` e `isRightInspectorOpen` de `BiblePassageContext`), ajustando sus posiciones con `transition-[left,right] duration-300`:
+  * **Con panel izquierdo abierto:** Se desplaza automáticamente a `lg:left-[calc(20rem+1rem)]`, manteniéndose visible al ras del margen del sidebar sin quedar tapado.
+  * **Con inspector derecho abierto:** Se desplaza automáticamente a `lg:right-[calc(22rem+1rem)] xl:right-[calc(24rem+1rem)]`, manteniéndose visible al margen del inspector sin ocultarse.
+* **Indicación Numérica Exegética:** Los botones de formato squircle (`rounded-xl`, `h-9 px-2.5`) exhiben de forma limpia y estilizada el número del capítulo al que se transitará:
+  * **Izquierda:** Chevron `<` junto con el número del capítulo anterior (`currentChapter - 1`).
+  * **Derecha:** Número del capítulo siguiente (`currentChapter + 1`) junto con el chevron `>`.
+* **Estética Geist / Vercel:** Acabado rectangular con esquinas suavizadas (`rounded-xl` en lugar de óvalos completos `rounded-full`), fondo 100% sólido monocromático (`bg-white dark:bg-[#0a0a0a]`), tipografía mono (`font-mono font-semibold text-xs`), borde ultra-fino, elevación `shadow-md` y micro-escalado en hover.
+* **Eliminación del Bloque Inferior Redundante:** Se eliminó por completo el pie de navegación secuencial inferior (`< Capítulo anterior | Resumen | Capítulo siguiente >`) que se renderizaba al final de la lista de versículos, despejando el pie de lectura y delegando el cambio de capítulo exclusivamente en los botones flotantes laterales y los atajos de teclado (`←` / `→`).
+
+### 7.9 Visibilidad Inteligente del Selector Canónico (`UnifiedPassagePicker.tsx`)
+* **Aislamiento de Duplicidad en Desktop (`lg:hidden` reactivo):** Mientras el panel lateral de navegación canónica (`BibleNavigationSidebar`) está desplegado en pantalla grande (`isLeftSidebarOpen === true`), el selector central de pasaje (`UnifiedPassagePicker` — `< Génesis 1 >`) se oculta automáticamente (`lg:hidden`) en [ReaderToolbar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/features/verses/components/reader-toolbar/ReaderToolbar.tsx) y [BiblePassageToolbar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BiblePassageToolbar.tsx). Esto garantiza que no coexistan dos selectores de capítulos simultáneos en pantalla.
+* **Apertura Completa sin Restricciones de Overflow:** Cuando el panel lateral se cierra (mediante el tirador del borde `(←|→)`, la pestaña de borde o el atajo `[`), el selector de pasaje reaparece fluidamente (`animate-in fade-in duration-200`). Al carecer de cualquier envoltorio con `overflow-hidden`, el modal desplegable (con su buscador de libros, tabs de testamentos y cuadrícula de capítulos) se abre al 100% de su altura y anchura sin ser recortado ni atrapado.
+* **Garantía Móvil:** En pantallas pequeñas (`< lg`), el selector permanece siempre disponible para permitir la selección de pasajes sin depender del drawer lateral.
+
+### 7.10 Tiradores Interactivos en Líneas Divisorias de Paneles (`(←|→)`)
+* **Centrado Vertical y Horizontal Ergonómico:** Los tiradores de colapso en [BibleNavigationSidebar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BibleNavigationSidebar.tsx) y [BibleExegesisInspector.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BibleExegesisInspector.tsx) se sitúan exactamente en la mitad vertical de la pantalla (`items-center justify-center` sobre el riel `h-full`), eliminando la fijación superior previa (`items-start pt-3`).
+* **Cero Recortes de Borde:** Se resolvió el corte visual que seccionaba el botón en dos mitades al reemplazar la posición estática y el `overflow-hidden` del panel por `lg:relative lg:z-20` y `lg:overflow-visible` con un contenedor simétrico de 24px (`w-6`, `-right-3` / `-left-3`), permitiendo que el squircle completo (`w-6 h-7 rounded-md`) con el glifo dual `< | >` emerja con nitidez absoluta y sombra suave en el centro de la arista divisoria al pasar el cursor.
+
+
+
+
+
+

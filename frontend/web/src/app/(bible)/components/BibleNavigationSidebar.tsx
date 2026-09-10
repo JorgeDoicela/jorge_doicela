@@ -101,11 +101,11 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
       <aside
         id="bible-navigation-sidebar"
         aria-label={tStudio('toggleSidebar')}
-        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-[calc(100vh-3.5rem)] lg:sticky lg:top-14 w-72 sm:w-80 flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col transition-all duration-200 shadow-xl lg:shadow-none overflow-visible print:hidden ${className}`}
+        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-72 sm:w-80 flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden ${className}`}
       >
         {/* Handle de Colapso Interactivo en Borde Divisorio estilo DIITRA */}
         <div
-          className="hidden lg:flex absolute top-0 -right-2.5 w-5 h-full cursor-pointer z-30 group/border items-start justify-center pt-3 select-none"
+          className="hidden lg:flex absolute top-0 -right-3 w-6 h-full cursor-pointer z-30 group/border items-center justify-center select-none"
           onClick={handleClose}
           title={tStudio('collapseSidebar') || 'Ocultar panel'}
         >
@@ -114,7 +114,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
 
           {/* Botón Flotante con Símbolo DIITRA (←|→) */}
           <div
-            className="relative z-10 w-5 h-6 rounded bg-white dark:bg-[#0a0a0a] border border-zinc-300 dark:border-zinc-800 shadow-xs opacity-0 group-hover/border:opacity-100 hover:scale-110 hover:border-zinc-900 dark:hover:border-zinc-600 transition-all duration-150 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100"
+            className="relative z-10 w-6 h-7 rounded-md bg-white dark:bg-[#0a0a0a] border border-zinc-300 dark:border-zinc-700 shadow-sm opacity-0 group-hover/border:opacity-100 hover:scale-110 hover:border-zinc-500 dark:hover:border-zinc-400 transition-all duration-150 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100"
           >
             <svg
               className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-200"
@@ -222,10 +222,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
                     </span>
                     <span className="truncate font-medium">{localizedName}</span>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono">
-                      {totalChapters}c
-                    </span>
+                  <div className="flex items-center shrink-0">
                     {isExpanded ? (
                       <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
                     ) : (

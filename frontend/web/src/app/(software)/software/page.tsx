@@ -2,14 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { useNews } from '../features/news/hooks/useNews';
-import { useBlog } from '../features/blog/hooks/useBlog';
-import { useForum } from '../features/forum/hooks/useForum';
-import { useAi } from '../features/ai/hooks/useAi';
-import { useCybersecurity } from '../features/cybersecurity/hooks/useCybersecurity';
-import { useTutorials } from '../features/tutorials/hooks/useTutorials';
-import { useProjects } from '../features/projects/hooks/useProjects';
-import { useInfrastructure } from '../features/infrastructure/hooks/useInfrastructure';
+import { useSoftwareHub } from '../features/hub/hooks/useSoftwareHub';
 import { SpotlightModal } from '../features/os/components/SpotlightModal';
 import { SoftwareCard } from '../components/SoftwareCard';
 import { SoftwareFooter } from '../components/SoftwareFooter';
@@ -22,37 +15,13 @@ export default function SoftwarePage() {
   const [search, setSearch] = useState<string>('');
   const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
 
-  // Carga asíncrona de datos desde NestJS REST API
-  const { news, loading: loadingNews } = useNews(search);
-  const { posts, loading: loadingBlog } = useBlog(search);
-  const { resources, loading: loadingAi } = useAi(undefined, search);
-  const { posts: secPosts, loading: loadingSec } = useCybersecurity(undefined, undefined, search);
-  const { tutorials, loading: loadingTut } = useTutorials(undefined, search);
-  const { topics, loading: loadingForum } = useForum('all', search);
-  const { projects, loading: loadingProj } = useProjects(search);
-  const { posts: infraPosts, loading: loadingInfra } = useInfrastructure(undefined, undefined, undefined, search);
-
-  // Destacados (Top 3)
-  const featuredArticle1 = news[0];
-  const featuredArticle2 = posts[0];
-  const featuredArticle3 = secPosts[0];
-
-  // Desacoplar para no duplicar en el feed de portada general
-  const displayNews = news.slice(1);
-  const displayPosts = posts.slice(1);
-  const displaySec = secPosts.slice(1);
-
-  const isLoadingCurrent = loadingNews && loadingBlog && loadingSec && loadingInfra;
-
-  const currentCategoryCount =
-    displayNews.length +
-    displayPosts.length +
-    resources.length +
-    displaySec.length +
-    tutorials.length +
-    topics.length +
-    projects.length +
-    infraPosts.length;
+  // Consulta consolidada de alto rendimiento (1 única petición HTTP)
+  const {
+    featured: topFeatured,
+    feed: latestFeed,
+    spotlightData,
+    loading: isLoadingCurrent,
+  } = useSoftwareHub(search);
 
   useEffect(() => {
     setMounted(true);
@@ -71,14 +40,14 @@ export default function SoftwarePage() {
       <SpotlightModal
         isOpen={isSpotlightOpen}
         onClose={() => setIsSpotlightOpen(false)}
-        news={news}
-        posts={posts}
-        topics={topics}
-        aiResources={resources}
-        secPosts={secPosts}
-        tutorials={tutorials}
-        projects={projects}
-        infraPosts={infraPosts}
+        news={spotlightData.news}
+        posts={spotlightData.posts}
+        topics={spotlightData.topics}
+        aiResources={spotlightData.aiResources}
+        secPosts={spotlightData.secPosts}
+        tutorials={spotlightData.tutorials}
+        projects={spotlightData.projects}
+        infraPosts={spotlightData.infraPosts}
       />
 
       {/* 2. CONTENIDO PRINCIPAL ESTILO EDITORIAL TECH */}
@@ -91,7 +60,7 @@ export default function SoftwarePage() {
             onOpenSpotlight={() => setIsSpotlightOpen(true)}
           />
 
-          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS VISIBLES EN PORTADA GENERAL) */}
+          {/* SECCIÓN 1: FEATURED POSTS (PODIO GLOBAL TOP 3 POR SMARTSCORE) */}
           <section className="animate-in fade-in duration-300">
             {/* Contenedor Único para las 3 Publicaciones Destacadas */}
             <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
@@ -102,64 +71,37 @@ export default function SoftwarePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Destacado 1: Noticia */}
-                {featuredArticle1 ? (
-                  <SoftwareCard
-                    href={`/software/news/${featuredArticle1.slug}`}
-                    title={featuredArticle1.title}
-                    category="news"
-                    coverImage={featuredArticle1.coverImage}
-                    tag="NextJS16"
-                    categoryMeta={tHome('newsFrontend')}
-                    excerpt={featuredArticle1.excerpt}
-                    priority={true}
-                    accentHoverColor="group-hover:text-cyan-300"
-                  />
+                {isLoadingCurrent && topFeatured.length === 0 ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <div
+                      key={`feat-pulse-${i}`}
+                      className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center glass-concave-panel"
+                    >
+                      {tCommon('loading')}
+                    </div>
+                  ))
                 ) : (
-                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    {tCommon('loading')}
-                  </div>
-                )}
-
-                {/* Destacado 2: Ensayo de Arquitectura */}
-                {featuredArticle2 ? (
-                  <SoftwareCard
-                    href={`/software/blog/${featuredArticle2.slug}`}
-                    title={featuredArticle2.title}
-                    category="blog"
-                    coverImage={featuredArticle2.coverImage}
-                    tag="NestJS"
-                    categoryMeta={tHome('architectureBackend')}
-                    excerpt={featuredArticle2.excerpt}
-                    accentHoverColor="group-hover:text-blue-300"
-                  />
-                ) : (
-                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    {tCommon('loading')}
-                  </div>
-                )}
-
-                {/* Destacado 3: Ciberseguridad */}
-                {featuredArticle3 ? (
-                  <SoftwareCard
-                    href={`/software/cybersecurity/${featuredArticle3.slug}`}
-                    title={featuredArticle3.title}
-                    category="cybersecurity"
-                    tag={featuredArticle3.cveId || 'CVE'}
-                    categoryMeta={tHome('cveLinux', { severity: featuredArticle3.severity })}
-                    excerpt={featuredArticle3.excerpt}
-                    accentHoverColor="group-hover:text-rose-300"
-                  />
-                ) : (
-                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    {tCommon('loading')}
-                  </div>
+                  topFeatured.map((item) => (
+                    <SoftwareCard
+                      key={item.id}
+                      href={item.href}
+                      title={item.title}
+                      category={item.category}
+                      subCategory={item.subCategory}
+                      coverImage={item.coverImage}
+                      tag={item.tag}
+                      categoryMeta={item.categoryMeta}
+                      excerpt={item.excerpt}
+                      priority={true}
+                      accentHoverColor={item.accentHoverColor}
+                    />
+                  ))
                 )}
               </div>
             </div>
           </section>
 
-          {/* SECCIÓN 2: LATEST POSTS / FEED GLOBAL (GRILLA EDITORIAL EN CONTENEDOR UNIFICADO) */}
+          {/* SECCIÓN 2: LATEST POSTS / FEED CRONOLÓGICO UNIFICADO */}
           <section className="animate-in fade-in duration-300">
             {/* Contenedor Único para toda la Grilla de Publicaciones */}
             <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
@@ -170,131 +112,31 @@ export default function SoftwarePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {isLoadingCurrent && (
+                {isLoadingCurrent && latestFeed.length === 0 && (
                   <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-400">
                     <div className="w-7 h-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
                     <p className="text-xs font-mono tracking-wider uppercase text-zinc-500">{tCommon('loading')}</p>
                   </div>
                 )}
 
-                {!isLoadingCurrent && currentCategoryCount === 0 && (
+                {!isLoadingCurrent && latestFeed.length === 0 && (
                   <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-500 glass-concave-panel rounded-2xl border border-white/5">
                     <p className="text-sm font-medium text-zinc-400">{tCommon('notFound')}</p>
                   </div>
                 )}
 
-                {/* Noticias */}
-                {displayNews.map((item) => (
+                {latestFeed.map((item) => (
                   <SoftwareCard
-                    key={`news-${item.id}`}
-                    href={`/software/news/${item.slug}`}
+                    key={item.id}
+                    href={item.href}
                     title={item.title}
-                    category="news"
+                    category={item.category}
+                    subCategory={item.subCategory}
                     coverImage={item.coverImage}
-                    tag={tHome('newsTag')}
-                    categoryMeta={tHome('newsTag')}
+                    tag={item.tag}
+                    categoryMeta={item.categoryMeta}
                     excerpt={item.excerpt}
-                    accentHoverColor="group-hover:text-cyan-300"
-                  />
-                ))}
-
-                {/* Ensayos de Arquitectura */}
-                {displayPosts.map((item) => (
-                  <SoftwareCard
-                    key={`blog-${item.id}`}
-                    href={`/software/blog/${item.slug}`}
-                    title={item.title}
-                    category="blog"
-                    coverImage={item.coverImage}
-                    tag={tHome('blogTag')}
-                    categoryMeta={tHome('blogTag')}
-                    excerpt={item.excerpt}
-                    accentHoverColor="group-hover:text-blue-300"
-                  />
-                ))}
-
-                {/* Modelos IA & Inferencia */}
-                {resources.map((res) => (
-                  <SoftwareCard
-                    key={`ai-${res.id}`}
-                    href={`/software/ai/${res.slug}`}
-                    title={res.name}
-                    category="ai"
-                    tag={res.type}
-                    categoryMeta={`${res.provider} — ${res.type.toUpperCase()}`}
-                    excerpt={res.description}
-                    accentHoverColor="group-hover:text-indigo-300"
-                  />
-                ))}
-
-                {/* Ciberseguridad & CVE */}
-                {displaySec.map((sec) => (
-                  <SoftwareCard
-                    key={`sec-${sec.id}`}
-                    href={`/software/cybersecurity/${sec.slug}`}
-                    title={sec.title}
-                    category="cybersecurity"
-                    tag={sec.cveId || 'CVE'}
-                    categoryMeta={tHome('advisorySecurity', { severity: sec.severity })}
-                    excerpt={sec.excerpt}
-                    accentHoverColor="group-hover:text-rose-300"
-                  />
-                ))}
-
-                {/* Tutoriales */}
-                {tutorials.map((item) => (
-                  <SoftwareCard
-                    key={`tut-${item.id}`}
-                    href={`/software/tutorials/${item.slug}`}
-                    title={item.title}
-                    category="tutorials"
-                    tag={tHome('guideTag')}
-                    categoryMeta={tHome('tutorialTag')}
-                    excerpt={item.excerpt}
-                    accentHoverColor="group-hover:text-slate-200"
-                  />
-                ))}
-
-                {/* Debates de la Comunidad */}
-                {topics.map((item) => (
-                  <SoftwareCard
-                    key={`topic-${item.id}`}
-                    href={`/software/forum/${item.slug}`}
-                    title={item.title}
-                    category="forum"
-                    tag={tHome('forumTag')}
-                    categoryMeta={tHome('forumMeta', { replies: item.repliesCount })}
-                    excerpt={item.content}
-                    accentHoverColor="group-hover:text-blue-300"
-                  />
-                ))}
-
-                {/* Proyectos Open Source */}
-                {projects.map((proj) => (
-                  <SoftwareCard
-                    key={`proj-${proj.id}`}
-                    href={`/software/projects/${proj.slug}`}
-                    title={proj.name}
-                    category="projects"
-                    tag={tHome('projectTag')}
-                    categoryMeta={tHome('projectMeta', { stars: proj.stars })}
-                    excerpt={proj.description}
-                    accentHoverColor="group-hover:text-blue-300"
-                  />
-                ))}
-
-                {/* Infraestructura, Servidores y Cloud */}
-                {infraPosts.map((inf) => (
-                  <SoftwareCard
-                    key={`infra-${inf.id}`}
-                    href={`/software/infrastructure/${inf.slug}`}
-                    title={inf.title}
-                    category="infrastructure"
-                    subCategory={inf.category}
-                    tag={inf.environment.toUpperCase()}
-                    categoryMeta={`${inf.category}, ${inf.environment}`}
-                    excerpt={inf.subtitle || inf.architectureOverview}
-                    accentHoverColor="group-hover:text-emerald-300"
+                    accentHoverColor={item.accentHoverColor}
                   />
                 ))}
               </div>

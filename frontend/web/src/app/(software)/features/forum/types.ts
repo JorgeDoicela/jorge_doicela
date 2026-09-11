@@ -21,6 +21,7 @@ export interface ForumTopic {
   isPinned: boolean;
   repliesCount: number;
   views: number;
+  orderPriority?: number;
   replies?: ForumReply[];
   createdAt: string;
   updatedAt: string;

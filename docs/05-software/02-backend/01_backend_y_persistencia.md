@@ -89,12 +89,18 @@ backend/src/software/
 │   ├── entities/project.entity.ts
 │   └── dto/{create-project.dto.ts, update-project.dto.ts}
 │
-└── infrastructure/                    # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD
-    ├── infrastructure.module.ts
-    ├── controllers/infrastructure.controller.ts # /software/infrastructure
-    ├── services/infrastructure.service.ts
-    ├── entities/infrastructure-post.entity.ts
-    └── dto/{create-infrastructure-post.dto.ts}
+│
+├── infrastructure/                   # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD
+│   ├── infrastructure.module.ts
+│   ├── controllers/infrastructure.controller.ts # /software/infrastructure
+│   ├── services/infrastructure.service.ts
+│   ├── entities/infrastructure-post.entity.ts
+│   └── dto/{create-infrastructure-post.dto.ts}
+│
+└── hub/                              # 9. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
+    ├── hub.module.ts
+    ├── hub.controller.ts             # /software/hub
+    └── hub.service.ts                # Consulta consolidada de alto rendimiento (Top 3 por SmartScore + feed cronológico)
 ```
 
 ---
@@ -139,9 +145,10 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | **Infraestructura** | `GET /software/infrastructure` | `category`, `environment`, `difficulty`, `search`, `lang` | Guías de servidores y cloud filtrables |
 | | `GET /software/infrastructure/categories` | `lang` | Categorías disponibles con conteo de guías |
 | | `GET /software/infrastructure/:idOrSlug` | `lang` | Detalle de guía técnica con specs e incremento de vistas |
-| | `POST /software/infrastructure/:id/like` | - | Incremento atómico de likes en la guía |
-| | `POST /software/infrastructure` | - | Registrar nueva guía de infraestructura |
-| | `DELETE /software/infrastructure/:id` | - | Eliminar guía por ID |
+| | `GET /software/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
+| | `POST /software/infrastructure` | - | Crear nueva publicación de infraestructura |
+| | `DELETE /software/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
+| **Hub Global** | `GET /software/hub` | `search`, `lang` | Consulta consolidada única: Top 3 destacados globales por SmartScore, feed cronológico polimórfico unificado y datos para Spotlight |
 
 ---
 

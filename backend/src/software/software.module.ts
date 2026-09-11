@@ -22,6 +22,7 @@ import { CybersecurityModule } from './cybersecurity/cybersecurity.module';
 import { TutorialsModule } from './tutorials/tutorials.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
+import { HubModule } from './hub/hub.module';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
@@ -55,6 +56,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     TutorialsModule,
     ProjectsModule,
     InfrastructureModule,
+    HubModule,
   ],
 })
 export class SoftwareModule {}

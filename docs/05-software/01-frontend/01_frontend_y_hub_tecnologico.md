@@ -69,7 +69,8 @@ frontend/web/src/app/(software)/
     ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
     ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
     ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types
-    └── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
+    ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
+    └── hub/                          # useSoftwareHub (consumo consolidado del endpoint GET /software/hub)
 ```
 
 ---
@@ -126,6 +127,9 @@ frontend/web/src/app/(software)/
     $$\text{SmartScore} = (\text{featured} \times 1000) + (\text{orderPriority} \times 20) + (\text{likes} \times 4) + (\text{views} \times 1.5)$$
   * Esto garantiza que los artículos insignia (como el análisis forense del incidente P1 y la arquitectura en 1 GB de RAM) encabecen la experiencia del usuario, evitando el desplazamiento errático de nuevas publicaciones al fondo.
   * El usuario dispone de una barra de control interactiva multi-criterio: *★ Relevancia Arquitectónica*, *Más Recientes*, *Más Populares* y *Mayor Complejidad*.
+* **Portada General de Todo el Contenido: Podio Top 3 Global y Feed Cronológico Unificado:**
+  * **Podio de Destacados (Top 3):** No está restringido artificialmente a categorías fijas; evalúa el `smartScore` consolidado entre todas las áreas para seleccionar las 3 publicaciones insignia de mayor impacto global de la plataforma.
+  * **Feed de Últimas Publicaciones:** Unifica todas las publicaciones restantes en una lista polimórfica ordenada estrictamente por fecha de publicación descendente (`publishedAt DESC`), garantizando un flujo vivo, orgánico y fresco donde cada nueva publicación (sea tutorial, aviso de seguridad, servidor o noticia) aparece de inmediato en la parte superior.
 * **Normalización de Escala Tipográfica Universal (`SoftwareCard.tsx`):**
   * Para garantizar consistencia visual absoluta entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura, Foro) y la vista general (*Todo el Contenido / Publicaciones Destacadas*), se eliminaron las clases de escalado ad-hoc (como `sm:text-lg` o 18px en títulos destacados).
   * Toda tarjeta implementa la escala estándar calibrada de Noticias:

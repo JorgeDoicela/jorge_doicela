@@ -47,7 +47,7 @@ export function TopicCard({ topic }: TopicCardProps) {
           <span className="text-xs text-zinc-500 font-mono">• {formattedDate}</span>
         </div>
 
-        <h3 className="text-base md:text-lg font-bold text-[var(--foreground)] group-hover:text-blue-400 transition-colors leading-snug">
+        <h3 className="text-base font-bold text-[var(--foreground)] group-hover:text-blue-400 transition-colors leading-snug">
           {topic.title}
         </h3>
         <p className="text-xs text-zinc-400 line-clamp-2 mt-1 font-light">

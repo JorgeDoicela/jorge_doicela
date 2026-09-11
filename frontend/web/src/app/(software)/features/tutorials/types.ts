@@ -24,6 +24,9 @@ export interface Tutorial {
   coverImage?: string;
   views: number;
   likes: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
   steps?: TutorialStep[];
   createdAt: string;
   updatedAt: string;

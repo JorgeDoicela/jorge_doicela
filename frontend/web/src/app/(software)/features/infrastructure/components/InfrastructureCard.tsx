@@ -96,7 +96,7 @@ export function InfrastructureCard({ post }: InfrastructureCardProps) {
       <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
         <span className="truncate max-w-[150px]">{post.techStack}</span>
         <span className="text-cyan-400 group-hover:underline flex items-center gap-1 font-semibold">
-          {tCard('viewDetail')} →
+          {tCard('viewDetail')}
         </span>
       </div>
     </Link>

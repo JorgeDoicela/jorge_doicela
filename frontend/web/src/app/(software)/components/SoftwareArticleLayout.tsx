@@ -44,7 +44,7 @@ export function SoftwareArticleLayout({
 }: SoftwareArticleLayoutProps) {
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
-      <div className="w-full max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 flex-1 pb-16 md:pb-24 space-y-6 sm:space-y-8">
+      <div className="w-full max-w-7xl 2xl:max-w-[1600px] px-6 sm:px-6 lg:px-8 2xl:px-12 flex-1 pb-16 md:pb-24 space-y-6 sm:space-y-8">
         
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav

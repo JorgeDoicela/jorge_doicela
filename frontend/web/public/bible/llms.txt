@@ -42,6 +42,9 @@
 ### 9. Cronología Sincrónica y Arqueología (`/bible/study/historical-context`)
 - Tabla temporal de monarcas de Israel/Judá vs imperios contemporáneos (Egipto, Asiria, Babilonia, Persia) y catálogo de evidencia material (Estela de Tel Dan, Cilindro de Ciro, Inscripción de Siloé).
 
+### 10. Evangelización y Apologética Práctica (`/bible/study/evangelism`)
+- Rutas bíblicas estructuradas (El Camino de Romanos, El Puente hacia la Vida, Las Cuatro Verdades), banco interactivo de objeciones apologéticas con respuestas exegéticas y tratados/bosquejos homiléticos listos para predicar o compartir.
+
 ---
 
 ## Enlaces Oficiales

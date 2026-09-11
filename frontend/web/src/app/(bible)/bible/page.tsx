@@ -39,40 +39,7 @@ export default function BibleLandingPage() {
     // Propósito de estudio activo (Inspirado en los filtros de Google Perfil de Negocio)
     const [activePurpose, setActivePurpose] = useState<'daily' | 'compare' | 'originals' | 'history'>('daily');
 
-    // Carrusel interactivo para los 9 Motores de Estudio (Estilo Google Carousel con autoplay y controles)
-    const [currentEngineSlide, setCurrentEngineSlide] = useState(0);
-    const [isEngineAutoplay, setIsEngineAutoplay] = useState(true);
-    const totalEngineSlides = 9;
-    const enginesSectionRef = useRef<HTMLElement | null>(null);
-    const [isSectionInView, setIsSectionInView] = useState(false);
-
-    useEffect(() => {
-        const el = enginesSectionRef.current;
-        if (!el) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsSectionInView(entry.isIntersecting);
-            },
-            { threshold: 0.25 }
-        );
-
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, []);
-
-    const isCarouselActive = isEngineAutoplay && isSectionInView;
-
-    const handlePrevEngine = () => {
-        setIsEngineAutoplay(false);
-        setCurrentEngineSlide((prev) => (prev - 1 + totalEngineSlides) % totalEngineSlides);
-    };
-
-    const handleNextEngine = () => {
-        setIsEngineAutoplay(false);
-        setCurrentEngineSlide((prev) => (prev + 1) % totalEngineSlides);
-    };
-
+    // 10 Suites de Estudio Bíblico y Exegético
     const engines = [
         {
             href: '/bible/study/standard',
@@ -137,7 +104,48 @@ export default function BibleLandingPage() {
             title: tLanding('engine9Title'),
             desc: tLanding('engine9Desc'),
         },
+        {
+            href: '/bible/study/evangelism',
+            icon: Sparkles,
+            colorClass: 'bg-rose-500/10 border-rose-500/20 text-rose-500',
+            title: tLanding('engine10Title'),
+            desc: tLanding('engine10Desc'),
+        },
     ];
+
+    // Carrusel interactivo para las Suites de Estudio (Estilo Google Carousel con autoplay y controles)
+    const [currentEngineSlide, setCurrentEngineSlide] = useState(0);
+    const [isEngineAutoplay, setIsEngineAutoplay] = useState(true);
+    const totalEngineSlides = engines.length;
+    const enginesSectionRef = useRef<HTMLElement | null>(null);
+    const [isSectionInView, setIsSectionInView] = useState(false);
+
+    useEffect(() => {
+        const el = enginesSectionRef.current;
+        if (!el) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsSectionInView(entry.isIntersecting);
+            },
+            { threshold: 0.25 }
+        );
+
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    const isCarouselActive = isEngineAutoplay && isSectionInView;
+
+    const handlePrevEngine = () => {
+        setIsEngineAutoplay(false);
+        setCurrentEngineSlide((prev) => (prev - 1 + totalEngineSlides) % totalEngineSlides);
+    };
+
+    const handleNextEngine = () => {
+        setIsEngineAutoplay(false);
+        setCurrentEngineSlide((prev) => (prev + 1) % totalEngineSlides);
+    };
 
     const versions = [
         {
@@ -219,6 +227,7 @@ export default function BibleLandingPage() {
             '/bible/images/bible_atlas_topography.jpg',
             '/bible/images/historical_timeline_chronology.jpg',
             '/bible/images/manuscripts_heritage.jpg',
+            '/bible/images/evangelism_proclamation.jpg',
         ];
 
         return {
@@ -647,6 +656,31 @@ export default function BibleLandingPage() {
                                                             <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
                                                                 <span className="text-foreground font-semibold">Códice de Leningrado (BHS)</span>
                                                                 <span className="text-accents-4 text-[9.5px]">1008 d.C.</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* 10. EVANGELIZACIÓN Y APOLOGÉTICA: Tarjeta HUD de Gran Comisión y Soteriología */}
+                                            {idx === 9 && (
+                                                <div className="absolute bottom-3.5 sm:bottom-4 right-3.5 sm:right-4 left-3.5 sm:left-auto sm:w-[360px] z-10">
+                                                    <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2">
+                                                        <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
+                                                            <span className="font-mono font-bold text-foreground uppercase text-[10px] flex items-center gap-1.5">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                                                Rutas y Apologética Práctica
+                                                            </span>
+                                                            <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1">Kerygma & Missio Dei</span>
+                                                        </div>
+                                                        <div className="space-y-1.5 text-[10.5px] font-mono">
+                                                            <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
+                                                                <span className="text-foreground font-semibold">Camino de Romanos</span>
+                                                                <span className="text-rose-500 font-bold text-[9.5px]">5 Pasos Soteriológicos</span>
+                                                            </div>
+                                                            <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
+                                                                <span className="text-foreground font-semibold">Defensa & Tratados</span>
+                                                                <span className="text-accents-4 text-[9.5px]">Respuestas Bíblicas</span>
                                                             </div>
                                                         </div>
                                                     </div>

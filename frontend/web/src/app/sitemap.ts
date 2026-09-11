@@ -177,6 +177,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.85,
         },
+        {
+            url: 'https://bible.jorgedoicela.com/bible/study/evangelism',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
     ];
 
     // Servidor consolidado actual (1 GB RAM): todas las rutas juntas.

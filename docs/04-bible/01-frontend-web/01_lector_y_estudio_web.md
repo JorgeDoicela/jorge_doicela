@@ -127,6 +127,7 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
 7. **Estructuras Literarias y Quiasmos (`features/literary-analysis/`):** Diagramación concéntrica de pasajes simétricos (Hexamerón de Génesis 1:1 - 2:3, discurso paulino de Romanos 8).
 8. **Atlas Bíblico Georreferenciado (`features/atlas/`):** Consume `GET /bible/historical/atlas/places`. Coordenadas WGS84 proyectadas sobre canvas vectorial con filtro por épocas.
 9. **Cronología y Arqueología (`features/timeline/` y `features/archaeology-feed/`):** Conexión 100% reactiva y bilingüe con `GET /bible/historical/timeline` y `GET /bible/historical/articles`. `TimelineCanvas` y `SynchronousComparisonView` consumen los eventos históricos dinámicos tipados (`MonarchData`, `ProphetData`, `WorldEmpireData`, `ArchaeologicalMilestone`) transformados por `timelineApiService.ts` y orquestados por el hook `useBiblicalTimeline` según el idioma activo (`next-intl`), eliminando por completo cualquier dataset estático o mock local.
+10. **Evangelización y Apologética Práctica (`features/evangelism/`):** Conexión 100% reactiva y bilingüe con `GET /bible/evangelism/*`. Integra rutas bíblicas secuenciales (Camino de Romanos, Puente hacia la Vida, Cuatro Verdades), banco interactivo de objeciones apologéticas clasificadas y tratados/bosquejos listos para predicar o compartir (`EvangelismWorkspace`, `PathwayViewer`, `ObjectionsExplorer`, `TractsExplorer`), alimentados desde `bible.sqlite` y el corpus JSON.
 
 ---
 

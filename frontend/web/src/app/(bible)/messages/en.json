@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Modular Bible | Jorge Doicela",
-    "description": "Exegesis and Bible study platform featuring 9 study engines, Masoretic BHS / LXX morphology, Strong dictionaries, and historical context."
+    "description": "Exegesis and Bible study platform featuring 10 exegesis and evangelism suites, Masoretic BHS / LXX morphology, Strong dictionaries, soteriological pathways, and historical context."
   },
   "Nav": {
     "landing": "Home",
@@ -17,7 +17,8 @@
     "interlinear": "Interlinear",
     "wordStudy": "Word Study",
     "literary": "Structure & Chiasms",
-    "historical": "Historical Context"
+    "historical": "Historical Context",
+    "evangelism": "Evangelism"
   },
   "Toolbar": {
     "selectTranslation": "Select Bible translation",
@@ -172,6 +173,8 @@
     "engine8Desc": "Understand when biblical events took place: kings, prophets, and major world empires presented in chronological order.",
     "engine9Title": "Archaeology & Ancient Manuscripts",
     "engine9Desc": "Discover archaeological findings, ancient manuscripts like the Dead Sea Scrolls, and historical evidence confirming biblical accounts.",
+    "engine10Title": "Evangelism & Biblical Apologetics",
+    "engine10Desc": "Structured soteriological pathways (Romans Road, Bridge to Life), biblical answers to apologetic objections, and expository tracts for proclaiming the gospel.",
     "corpusBadge": "Translations & Manuscripts",
     "corpusTitle": "Original Languages and Modern Translations",
     "corpusDesc": "Explore landmark textual sources alongside authoritative modern versions, integrated seamlessly for parallel study and morphological analysis.",
@@ -974,5 +977,44 @@
     "pronunciation": "Pronunciation",
     "definition": "Lexical Definition",
     "grammarCategory": "Grammatical Category"
+  },
+  "Evangelism": {
+    "tabPathways": "Biblical Pathways",
+    "tabObjections": "Apologetic Answers",
+    "tabTracts": "Tracts & Outlines",
+    "suiteMotto": "Preach the Gospel to every creature (Mark 16:15)",
+    "noPathways": "No evangelistic pathways available.",
+    "noObjectionsFound": "No objections found matching your search criteria.",
+    "noTracts": "No tracts or sermon outlines available.",
+    "stepByStep": "Step by Step",
+    "fullView": "Full View",
+    "pathwayBadge": "Soteriology",
+    "stepsCount": "exegetical steps",
+    "step": "Step",
+    "of": "of",
+    "expositionTitle": "Theological Exposition",
+    "reflectionTitle": "Reflection Question",
+    "actionCallTitle": "Call to Decision",
+    "previous": "Previous",
+    "next": "Next",
+    "reset": "Reset",
+    "finished": "Completed",
+    "searchObjectionPlaceholder": "Search hard questions or objections...",
+    "catAll": "All",
+    "catTheodicy": "Theodicy & Evil",
+    "catPluralism": "Pluralism",
+    "catMoralism": "Moralism",
+    "catGrace": "Grace & Pardon",
+    "biblicalAnswerTitle": "Biblical Response",
+    "scriptureSupportTitle": "Scriptural Foundation",
+    "copyVerseTooltip": "Copy verse with reference",
+    "pastoralAdviceTitle": "Pastoral Advice for the Evangelist",
+    "copyOutlineBtn": "Copy Full Outline",
+    "copied": "Copied to clipboard!",
+    "generalAudience": "General Audience",
+    "prayerOfFaithTitle": "Model Prayer of Faith",
+    "prayerDisclaimer": "* Pastoral note: This prayer is neither a magical chant nor a ritual, but a heartfelt expression of repentance and faith in Jesus Christ.",
+    "nextStepsTitle": "First Steps of Christian Growth"
   }
 }
+

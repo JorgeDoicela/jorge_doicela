@@ -27,6 +27,7 @@ export default function BibleJsonLd() {
           'Atlas bíblico georreferenciado WGS84',
           'Cronología sincrónica de reyes, profetas e imperios',
           'Evidencia material y artículos arqueológicos',
+          'Evangelización bíblica, rutas soteriológicas y apologética práctica',
           'App móvil nativa React Native / Expo con soporte Offline-First'
         ]
       }

@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Biblia Modular | Jorge Doicela",
-    "description": "Plataforma de estudio bíblico con 9 motores exegéticos, análisis morfológico Masorético BHS / LXX, diccionarios Strong y contexto histórico."
+    "description": "Plataforma de estudio bíblico con 10 suites exegéticas y evangelísticas, análisis morfológico Masorético BHS / LXX, diccionarios Strong, rutas soteriológicas y contexto histórico."
   },
   "Nav": {
     "landing": "Inicio",
@@ -17,7 +17,8 @@
     "interlinear": "Interlineal",
     "wordStudy": "Análisis de Palabra",
     "literary": "Estructura & Quiasmos",
-    "historical": "Contexto Histórico"
+    "historical": "Contexto Histórico",
+    "evangelism": "Evangelización"
   },
   "Toolbar": {
     "selectTranslation": "Seleccionar traducción bíblica",
@@ -172,6 +173,8 @@
     "engine8Desc": "Comprende cuándo ocurrieron los hechos bíblicos: reyes, profetas y grandes imperios de la historia organizados cronológicamente.",
     "engine9Title": "Arqueología y Manuscritos Antiguos",
     "engine9Desc": "Conoce los grandes descubrimientos arqueológicos, manuscritos antiguos como los Rollos del Mar Muerto y testimonios que confirman el relato bíblico.",
+    "engine10Title": "Evangelización y Apologética Bíblica",
+    "engine10Desc": "Guías soteriológicas estructuradas (Camino de Romanos, Puente a la Vida), respuestas bíblicas a objeciones y tratados expositivos para la predicación del evangelio.",
     "corpusBadge": "Traducciones y Manuscritos",
     "corpusTitle": "Idiomas Originales y Versiones en Español",
     "corpusDesc": "Explora los textos fuente de mayor fidelidad histórica junto a las versiones contemporáneas de referencia exegética, integradas en paralelo y análisis morfológico.",
@@ -974,5 +977,44 @@
     "pronunciation": "Pronunciación",
     "definition": "Definición Léxica",
     "grammarCategory": "Categoría Gramatical"
+  },
+  "Evangelism": {
+    "tabPathways": "Rutas Bíblicas",
+    "tabObjections": "Respuestas Apologéticas",
+    "tabTracts": "Tratados & Bosquejos",
+    "suiteMotto": "Predicad el Evangelio a toda criatura (Marcos 16:15)",
+    "noPathways": "No se encontraron rutas evangelísticas disponibles.",
+    "noObjectionsFound": "No se encontraron objeciones que coincidan con los criterios de búsqueda.",
+    "noTracts": "No se encontraron tratados o bosquejos disponibles.",
+    "stepByStep": "Paso a Paso",
+    "fullView": "Vista Completa",
+    "pathwayBadge": "Soteriología",
+    "stepsCount": "pasos exegéticos",
+    "step": "Paso",
+    "of": "de",
+    "expositionTitle": "Exposición Teológica",
+    "reflectionTitle": "Pregunta de Reflexión",
+    "actionCallTitle": "Llamado a la Decisión",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "reset": "Reiniciar",
+    "finished": "Completado",
+    "searchObjectionPlaceholder": "Buscar objeción o pregunta difícil...",
+    "catAll": "Todas",
+    "catTheodicy": "Teodicea y Dolor",
+    "catPluralism": "Pluralismo",
+    "catMoralism": "Moralismo",
+    "catGrace": "Gracia y Perdón",
+    "biblicalAnswerTitle": "Respuesta Bíblica",
+    "scriptureSupportTitle": "Sustento Escritural",
+    "copyVerseTooltip": "Copiar versículo con referencia",
+    "pastoralAdviceTitle": "Consejo Pastoral para el Evangelizador",
+    "copyOutlineBtn": "Copiar Bosquejo Completo",
+    "copied": "¡Copiado al portapapeles!",
+    "generalAudience": "Público General",
+    "prayerOfFaithTitle": "Modelo de Oración de Fe",
+    "prayerDisclaimer": "* Nota pastoral: Esta oración no es un amuleto ni un ritual mágico, sino una guía para expresar arrepentimiento genuino y fe en Cristo.",
+    "nextStepsTitle": "Primeros Pasos de Discipulado"
   }
 }
+

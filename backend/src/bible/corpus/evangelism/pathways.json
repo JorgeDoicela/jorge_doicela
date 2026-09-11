@@ -1,0 +1,320 @@
+[
+  {
+    "id": "romans-road",
+    "language": "es",
+    "slug": "camino-de-romanos",
+    "title": "El Camino de Romanos",
+    "subtitle": "La secuencia teológica paulina hacia la justificación por fe",
+    "description": "Una de las rutas bíblicas más claras y contundentes de las Sagradas Escrituras. A través de la epístola a los Romanos, el apóstol Pablo expone la condición universal del pecado, la justicia de Dios, la gracia inmerecida y la seguridad de la vida eterna en Cristo Jesús.",
+    "theologicalFocus": "Soteriología Paulina (Justificación por sola fe)",
+    "steps": [
+      {
+        "order": 1,
+        "title": "El Problema Universal: Todos Pecaron",
+        "reference": "Romanos 3:23 (cf. Romanos 3:10-12)",
+        "verseText": "Por cuanto todos pecaron, y están destituidos de la gloria de Dios.",
+        "exposition": "Nadie puede presentarse ante Dios sobre la base de su propia bondad moral. El pecado no es simplemente cometer actos ilícitos; es una inclinación radical del corazón humano hacia la autonomía lejos del Creador. Todos hemos quedado cortos del estándar de santidad divina.",
+        "reflectionQuestion": "¿Alguna vez has pensado que tus buenas obras son suficientes para ganar el favor de un Dios infinitamente santo?",
+        "actionCall": "Reconoce con humildad tu incapacidad de salvarte a ti mismo."
+      },
+      {
+        "order": 2,
+        "title": "La Consecuencia Judicial: La Paga del Pecado",
+        "reference": "Romanos 6:23a",
+        "verseText": "Porque la paga del pecado es muerte...",
+        "exposition": "El pecado acarrea una deuda legal impagable. La palabra 'paga' (opsōnion) se refiere al salario ganado por un soldado. Lo que legalmente hemos merecido por nuestra rebelión cósmica es la muerte espiritual: la separación eterna de Dios y el juicio de Su justicia santa.",
+        "reflectionQuestion": "Si Dios fuera un juez humano que dejara libres a los criminales sin juicio, ¿sería considerado justo?",
+        "actionCall": "Comprende la gravedad del juicio de Dios para poder apreciar la inmensidad de Su gracia."
+      },
+      {
+        "order": 3,
+        "title": "La Provisión Divina: La Dádiva y el Amor Demostrado",
+        "reference": "Romanos 5:8 (cf. Romanos 6:23b)",
+        "verseText": "Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros... mas la dádiva de Dios es vida eterna en Cristo Jesús Señor nuestro.",
+        "exposition": "Dios no esperó a que nos reformáramos moralmente para amarnos. En la cruz del Calvario, Jesucristo actuó como nuestro sustituto penal: absorbió la ira justa que merecían nuestros pecados y nos ofreció la vida eterna como un regalo inmerecido (dádiva / charisma).",
+        "reflectionQuestion": "¿Por qué crees que Dios eligió el sacrificio de Su propio Hijo en lugar de exigirnos un pago personal?",
+        "actionCall": "Fija tu mirada en la cruz: allí se encontraron la justicia absoluta y el amor infinito."
+      },
+      {
+        "order": 4,
+        "title": "La Respuesta Humana: Fe y Confesión",
+        "reference": "Romanos 10:9-10",
+        "verseText": "Que si confesares con tu boca que Jesús es el Señor, y creyeres en tu corazón que Dios le levantó de los muertos, serás salvo. Porque con el corazón se cree para justicia, pero con la boca se confiesa para salvación.",
+        "exposition": "La salvación no se obtiene por rituales externos, sino depositando la confianza total del corazón en la obra consumada de Cristo resucitado y proclamando Su soberanía como Señor de nuestra vida.",
+        "reflectionQuestion": "¿Confías en tus propios méritos o descansas exclusivamente en la resurrección de Jesucristo?",
+        "actionCall": "Rinde el gobierno de tu vida a Jesús y confiesa Su señorío con fe sincera."
+      },
+      {
+        "order": 5,
+        "title": "La Seguridad Eterna: Ninguna Condenación y Paz",
+        "reference": "Romanos 8:1 (cf. Romanos 5:1)",
+        "verseText": "Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús... Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.",
+        "exposition": "Estar 'en Cristo' significa que el veredicto del juicio final ya ha sido dictado en el presente: eres declarado inocente y vestido con la justicia perfecta de Cristo. Nada en toda la creación puede separarte del amor de Dios.",
+        "reflectionQuestion": "¿Vives con el temor constante del rechazo de Dios, o descansas en Su paz irrevocable?",
+        "actionCall": "Camina en libertad, agradecimiento y comunión diaria con tu Salvador."
+      }
+    ]
+  },
+  {
+    "id": "romans-road",
+    "language": "en",
+    "slug": "the-romans-road",
+    "title": "The Romans Road",
+    "subtitle": "The Pauline theological progression toward justification by faith",
+    "description": "One of the most profound and direct biblical journeys through the Holy Scriptures. Through the Epistle to the Romans, the Apostle Paul reveals the universal human condition, the holiness of God, unmerited grace, and eternal assurance in Christ Jesus.",
+    "theologicalFocus": "Pauline Soteriology (Justification by faith alone)",
+    "steps": [
+      {
+        "order": 1,
+        "title": "The Universal Predicament: All Have Sinned",
+        "reference": "Romans 3:23 (cf. Romans 3:10-12)",
+        "verseText": "For all have sinned and fall short of the glory of God.",
+        "exposition": "No human being can stand before God based on personal moral merit. Sin is not merely breaking rules; it is a fundamental rebellion of the human heart seeking autonomy apart from the Creator.",
+        "reflectionQuestion": "Have you ever believed that personal goodness was enough to satisfy the infinite holiness of God?",
+        "actionCall": "Humbly acknowledge your inability to save yourself."
+      },
+      {
+        "order": 2,
+        "title": "The Judicial Consequence: The Wages of Sin",
+        "reference": "Romans 6:23a",
+        "verseText": "For the wages of sin is death...",
+        "exposition": "Sin incurs an inescapable legal debt. The word 'wages' denotes earnings. What we have rightfully earned through cosmic disobedience is spiritual death: eternal separation from God under His righteous judgment.",
+        "reflectionQuestion": "If an earthly judge let serious criminals walk free without penalty, would he be considered just?",
+        "actionCall": "Understand the weight of God's holy justice to cherish the greatness of His grace."
+      },
+      {
+        "order": 3,
+        "title": "The Divine Provision: Love Demonstrated and The Free Gift",
+        "reference": "Romans 5:8 (cf. Romans 6:23b)",
+        "verseText": "But God demonstrates His own love toward us, in that while we were still sinners, Christ died for us... but the free gift of God is eternal life in Christ Jesus our Lord.",
+        "exposition": "God did not wait for us to reform ourselves before loving us. At the Cross of Calvary, Jesus took our penalty upon Himself as our penal substitute, absorbing the righteous wrath we deserved.",
+        "reflectionQuestion": "Why did God choose to sacrifice His own Son rather than demand our eternal destruction?",
+        "actionCall": "Look upon the Cross where perfect justice and infinite love converge."
+      },
+      {
+        "order": 4,
+        "title": "The Human Response: Faith and Confession",
+        "reference": "Romans 10:9-10",
+        "verseText": "That if you confess with your mouth the Lord Jesus and believe in your heart that God has raised Him from the dead, you will be saved. For with the heart one believes unto righteousness, and with the mouth confession is made unto salvation.",
+        "exposition": "Salvation is not earned through rituals, but received by casting total trust upon the finished work of the risen Christ and surrendering to His sovereign lordship.",
+        "reflectionQuestion": "Are you resting in your own religious efforts, or completely in Christ's resurrection?",
+        "actionCall": "Surrender the throne of your life to Jesus and confess His lordship in faith."
+      },
+      {
+        "order": 5,
+        "title": "Eternal Assurance: No Condemnation and Peace",
+        "reference": "Romans 8:1 (cf. Romans 5:1)",
+        "verseText": "There is therefore now no condemnation to those who are in Christ Jesus... Therefore, having been justified by faith, we have peace with God through our Lord Jesus Christ.",
+        "exposition": "Being 'in Christ' means the final verdict has already been rendered in your favor: clothed in Christ's righteousness, no power in creation can ever separate you from His love.",
+        "reflectionQuestion": "Do you live in constant fear of God's rejection, or do you rest in His irrevocable peace?",
+        "actionCall": "Walk in joyful obedience, gratitude, and daily communion with your Savior."
+      }
+    ]
+  },
+  {
+    "id": "bridge-to-life",
+    "language": "es",
+    "slug": "puente-a-la-vida",
+    "title": "El Puente hacia la Vida",
+    "subtitle": "La ilustración clásica de la reconciliación entre el Creador y el ser humano",
+    "description": "Una presentación visual y sistemática del Evangelio que describe cómo el diseño perfecto de Dios fue fracturado por el pecado del hombre, cómo los esfuerzos humanos son incapaces de cruzar el abismo, y cómo la cruz de Cristo es el único puente hacia la comunión eterna.",
+    "theologicalFocus": "Reconciliación y Mediación Cristocéntrica",
+    "steps": [
+      {
+        "order": 1,
+        "title": "El Diseño Original de Dios: Vida Plena y Comunión",
+        "reference": "Génesis 1:27, 31 (cf. Juan 10:10)",
+        "verseText": "Y creó Dios al hombre a su imagen, a imagen de Dios lo creó; varón y hembra los creó... Yo he venido para que tengan vida, y para que la tengan en abundancia.",
+        "exposition": "Dios creó al ser humano con un propósito sublime: disfrutar de una relación íntima, armoniosa y eterna con Su Creador en un mundo de justicia y plenitud.",
+        "reflectionQuestion": "¿Has sentido alguna vez un anhelo profundo de propósito y paz que nada material logra satisfacer?",
+        "actionCall": "Reconoce que tu corazón fue hecho por Dios y para Dios."
+      },
+      {
+        "order": 2,
+        "title": "El Gran Abismo: El Pecado y la Separación",
+        "reference": "Isaías 59:2 (cf. Romanos 3:23)",
+        "verseText": "Pero vuestras iniquidades han hecho división entre vosotros y vuestro Dios, y vuestros pecados han hecho ocultar de vosotros su rostro para no oír.",
+        "exposition": "Al desobedecer a Dios, el ser humano cavó un abismo insalvable. El pecado no solo contamina nuestra naturaleza, sino que nos separa de la fuente misma de la vida, dejándonos en bancarrota espiritual.",
+        "reflectionQuestion": "¿De qué maneras experimentamos el quebranto de esta separación en nuestra vida cotidiana?",
+        "actionCall": "Acepta la realidad del abismo moral que nos aparta de Dios."
+      },
+      {
+        "order": 3,
+        "title": "La Insuficiencia Humana: El Fracaso de Nuestras Obras",
+        "reference": "Efesios 2:8-9 (cf. Proverbios 14:12, Tito 3:5)",
+        "verseText": "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.",
+        "exposition": "A lo largo de la historia, el hombre intenta construir puentes hacia Dios mediante religión, filosofía, moralismo o filantropía. Todos estos esfuerzos se desploman porque una criatura finita y pecadora jamás puede expiar su propia ofensa contra un Dios infinito.",
+        "reflectionQuestion": "¿Cuántas buenas obras serían suficientes para borrar una sola ofensa contra un Dios santo?",
+        "actionCall": "Abandona todo intento de autosuficiencia religiosa."
+      },
+      {
+        "order": 4,
+        "title": "El Único Puente: La Cruz de Cristo",
+        "reference": "1 Pedro 3:18 (cf. 1 Timoteo 2:5)",
+        "verseText": "Porque también Cristo padeció una sola vez por los pecados, el justo por los injustos, para llevarnos a Dios...",
+        "exposition": "Jesucristo, siendo 100% Dios y 100% hombre, es el único Mediador posible. En la cruz, Sus brazos extendidos unieron lo que el pecado había separado. Él pagó la deuda completa y tendió el único puente eterno.",
+        "reflectionQuestion": "¿Por qué crees que Jesús dijo enfáticamente: 'Nadie viene al Padre, sino por mí' (Juan 14:6)?",
+        "actionCall": "Mira a Cristo como la única solución provista por Dios."
+      },
+      {
+        "order": 5,
+        "title": "El Paso de Fe: Cruzar el Puente",
+        "reference": "Juan 5:24 (cf. Juan 1:12)",
+        "verseText": "De cierto, de cierto os digo: El que oye mi palabra, y cree al que me envió, tiene vida eterna; y no vendrá a condenación, mas ha pasado de muerte a vida.",
+        "exposition": "Conocer la existencia del puente no te pone a salvo; debes cruzarlo. Cruzar el puente es arrepentirte de tu rebelión y confiar exclusivamente en Jesucristo como tu Salvador y Rey.",
+        "reflectionQuestion": "¿En qué lado del puente te encuentras en este preciso instante de tu vida?",
+        "actionCall": "Da el paso de fe hoy mismo y pasa de muerte a vida eterna."
+      }
+    ]
+  },
+  {
+    "id": "bridge-to-life",
+    "language": "en",
+    "slug": "bridge-to-life",
+    "title": "The Bridge to Life",
+    "subtitle": "The classic illustration of reconciliation between the Creator and humanity",
+    "description": "A clear, systematic presentation of the Gospel illustrating how God's perfect design was broken by human sin, how self-righteous human efforts fail to bridge the chasm, and how Christ's Cross is the sole bridge to eternal fellowship.",
+    "theologicalFocus": "Christocentric Reconciliation and Mediation",
+    "steps": [
+      {
+        "order": 1,
+        "title": "God's Original Design: Abundant Fellowship",
+        "reference": "Genesis 1:27, 31 (cf. John 10:10)",
+        "verseText": "So God created mankind in his own image, in the image of God he created them; male and female he created them... I have come that they may have life, and that they may have it more abundantly.",
+        "exposition": "God created humanity with a sublime destiny: to enjoy an intimate, eternal, and joyful relationship with Him in a world of righteousness.",
+        "reflectionQuestion": "Have you ever sensed a deep inner void that earthly accomplishments fail to satisfy?",
+        "actionCall": "Recognize that your heart was designed by God and for God."
+      },
+      {
+        "order": 2,
+        "title": "The Great Chasm: Sin and Separation",
+        "reference": "Isaiah 59:2 (cf. Romans 3:23)",
+        "verseText": "But your iniquities have separated you from your God; your sins have hidden his face from you, so that he will not hear.",
+        "exposition": "Through disobedience, humanity opened an unbridgeable gulf. Sin separates us from the very fountain of life, leaving us spiritually destitute.",
+        "reflectionQuestion": "In what ways do we experience the painful reality of this separation in our daily lives?",
+        "actionCall": "Acknowledge the reality of the moral chasm separating us from God."
+      },
+      {
+        "order": 3,
+        "title": "Human Inadequacy: The Failure of Self-Effort",
+        "reference": "Ephesians 2:8-9 (cf. Proverbs 14:12, Titus 3:5)",
+        "verseText": "For by grace you have been saved through faith, and that not of yourselves; it is the gift of God, not of works, lest anyone should boast.",
+        "exposition": "Human beings construct bridges of philosophy, good deeds, and religious ritual. All collapse because a fallen creature cannot expiate an offense against an infinitely holy Creator.",
+        "reflectionQuestion": "How many good deeds could ever erase a single offense against an infinite God?",
+        "actionCall": "Abandon all reliance on personal religious achievements."
+      },
+      {
+        "order": 4,
+        "title": "The Only Bridge: The Cross of Christ",
+        "reference": "1 Peter 3:18 (cf. 1 Timothy 2:5)",
+        "verseText": "For Christ also suffered once for sins, the just for the unjust, that He might bring us to God...",
+        "exposition": "Jesus Christ, fully God and fully man, is the sole Mediator. On the Cross, He paid the full ransom and laid down the eternal bridge of reconciliation.",
+        "reflectionQuestion": "Why did Jesus boldly claim: 'No one comes to the Father except through Me' (John 14:6)?",
+        "actionCall": "Trust in Christ as God's singular and complete remedy."
+      },
+      {
+        "order": 5,
+        "title": "The Step of Faith: Crossing Over",
+        "reference": "John 5:24 (cf. John 1:12)",
+        "verseText": "Most assuredly, I say to you, he who hears My word and believes in Him who sent Me has everlasting life, and shall not come into judgment, but has passed from death into life.",
+        "exposition": "Merely admiring the bridge does not save; one must cross it. Crossing means repenting of sin and entrusting your soul entirely to Jesus as Lord and Savior.",
+        "reflectionQuestion": "Which side of the chasm do you stand on right now?",
+        "actionCall": "Step onto the bridge today and cross over from spiritual death to life eternal."
+      }
+    ]
+  },
+  {
+    "id": "four-spiritual-truths",
+    "language": "es",
+    "slug": "cuatro-verdades-espirituales",
+    "title": "Las Cuatro Verdades Bíblicas",
+    "subtitle": "Principios cardinales para descubrir el plan de salvación de Dios",
+    "description": "Una síntesis directa, profunda y memorable de las verdades fundamentales reveladas en el Evangelio de Jesucristo para guiar a una persona desde la ignorancia espiritual hasta la decisión de fe.",
+    "theologicalFocus": "Kerygma Apostólico Esencial",
+    "steps": [
+      {
+        "order": 1,
+        "title": "Verdad 1: Dios te Ama y Ofrece Vida Eterna",
+        "reference": "Juan 3:16",
+        "verseText": "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
+        "exposition": "El punto de partida del Evangelio es el amor soberano y sacrificado de Dios hacia una humanidad caída.",
+        "reflectionQuestion": "¿Concibes a Dios como un juez distante o como el Creador que dio a Su propio Hijo por ti?",
+        "actionCall": "Abre tu corazón a la realidad del amor incondicional de Dios."
+      },
+      {
+        "order": 2,
+        "title": "Verdad 2: El Hombre es Pecador y Está Separado",
+        "reference": "Romanos 3:23",
+        "verseText": "Por cuanto todos pecaron, y están destituidos de la gloria de Dios.",
+        "exposition": "Nuestra inclinación egoísta y rebelión moral nos aíslan de experimentar el amor y el propósito de Dios.",
+        "reflectionQuestion": "¿Estás dispuesto a admitir tu necesidad de un Salvador?",
+        "actionCall": "Deja de ocultar tu culpa y reconócela ante Dios."
+      },
+      {
+        "order": 3,
+        "title": "Verdad 3: Jesucristo es la Única Provisión",
+        "reference": "Romanos 5:8 (cf. Juan 14:6)",
+        "verseText": "Jesús le dijo: Yo soy el camino, y la verdad, y la vida; nadie viene al Padre, sino por mí.",
+        "exposition": "A través de Su vida impecable, muerte expiatoria y resurrección victoriosa sobre el sepulcro, Jesús canceló nuestra deuda.",
+        "reflectionQuestion": "¿Crees que la tumba vacía de Cristo garantiza la veracidad de Sus promesas?",
+        "actionCall": "Reconoce que solo Jesús venció la muerte y el pecado por ti."
+      },
+      {
+        "order": 4,
+        "title": "Verdad 4: Debemos Recibir a Cristo Personalmente",
+        "reference": "Juan 1:12 (cf. Apocalipsis 3:20)",
+        "verseText": "Mas a todos los que le recibieron, a los que creen en su nombre, les dio potestad de ser hechos hijos de Dios.",
+        "exposition": "No basta con un asentimiento intelectual; debemos invitar a Cristo a gobernar nuestra vida por fe y arrepentimiento.",
+        "reflectionQuestion": "¿Deseas recibir a Jesucristo hoy como tu Salvador y Señor?",
+        "actionCall": "Invita a Cristo a entrar en tu vida mediante una oración sincera."
+      }
+    ]
+  },
+  {
+    "id": "four-spiritual-truths",
+    "language": "en",
+    "slug": "four-spiritual-truths",
+    "title": "The Four Spiritual Truths",
+    "subtitle": "Cardinal biblical principles to discover God's purpose of salvation",
+    "description": "A direct, profound, and memorable synthesis of the essential truths revealed in the Gospel of Jesus Christ to guide anyone from spiritual seeking to personal faith.",
+    "theologicalFocus": "Essential Apostolic Kerygma",
+    "steps": [
+      {
+        "order": 1,
+        "title": "Truth 1: God Loves You and Offers Eternal Life",
+        "reference": "John 3:16",
+        "verseText": "For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.",
+        "exposition": "The starting point of the Gospel is God's sovereign, sacrificial love toward a broken humanity.",
+        "reflectionQuestion": "Do you view God as a harsh tyrant or as the loving Father who gave His Son for you?",
+        "actionCall": "Receive the truth of God's unconditional love."
+      },
+      {
+        "order": 2,
+        "title": "Truth 2: Humanity is Sinful and Separated",
+        "reference": "Romans 3:23",
+        "verseText": "For all have sinned and fall short of the glory of God.",
+        "exposition": "Our self-centeredness and moral rebellion isolate us from experiencing God's presence and peace.",
+        "reflectionQuestion": "Are you willing to acknowledge your desperate need for a Savior?",
+        "actionCall": "Confess your spiritual bankruptcy before a holy God."
+      },
+      {
+        "order": 3,
+        "title": "Truth 3: Jesus Christ is God's Only Remedy",
+        "reference": "John 14:6 (cf. Romans 5:8)",
+        "verseText": "Jesus said to him, 'I am the way, the truth, and the life. No one comes to the Father except through Me.'",
+        "exposition": "Through His sinless life, atoning sacrifice, and bodily resurrection, Christ conquered death and cleared our debt.",
+        "reflectionQuestion": "Do you believe Christ's empty tomb validates His supreme authority?",
+        "actionCall": "Trust in Jesus as the solitary conqueror of sin and death."
+      },
+      {
+        "order": 4,
+        "title": "Truth 4: We Must Receive Christ Personally",
+        "reference": "John 1:12 (cf. Revelation 3:20)",
+        "verseText": "But as many as received Him, to them He gave the right to become children of God, to those who believe in His name.",
+        "exposition": "Intellectual assent is insufficient; we must surrender our hearts and receive Him by personal faith.",
+        "reflectionQuestion": "Would you like to receive Jesus Christ today as your Lord and Savior?",
+        "actionCall": "Open the door of your heart in genuine prayer."
+      }
+    ]
+  }
+]

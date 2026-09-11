@@ -49,6 +49,7 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
    - **Suite 4: Análisis de Palabra (`/bible/study/word-study`):** Léxicos Strong BDB/Thayer y Búsqueda Gramatical.
    - **Suite 5: Análisis Literario (`/bible/study/literary`):** Quiasmos, paralelismos y discurso paulino.
    - **Suite 6: Contexto Histórico (`/bible/study/historical-context`):** Atlas Vectorial WGS84, Cronología Sincrónica y Arqueología.
+   - **Suite 7: Evangelización y Apologética (`/bible/study/evangelism`):** Rutas bíblicas estructuradas (Camino de Romanos, Puente a la Vida), banco de objeciones apologéticas y tratados/bosquejos homiléticos listos para predicar.
 
 ### 2.2 Catálogo de Features y Clientes API (`(bible)/features/`)
 * `verses` $\rightarrow$ `useVerses` (`GET /bible/verses`)
@@ -60,6 +61,7 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * `atlas` $\rightarrow$ `atlasApiService` (`GET /bible/historical/atlas/places`)
 * `timeline` $\rightarrow$ `timelineApiService` (`GET /bible/historical/timeline`)
 * `archaeology-feed` $\rightarrow$ `archaeologyApiService` (`GET /bible/historical/articles`)
+* `evangelism` $\rightarrow$ `evangelismApiService` (`GET /bible/evangelism/*`)
 
 ---
 
@@ -81,6 +83,10 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * `historical_places` (id, name, originalName, coordinates, category, era, modernName, country, elevationMeters, description, biblicalReferences, archaeologicalNotes)
 * `timeline_events` (id, name, type, originalName, startYearBC, endYearBC, kingdom, evaluation, dynastyOrOrigin, contemporaryEntities, biblicalReferences, keyEvents, details)
 * `archaeology_articles` (id, title, slug, category, region, regionLabel, publishDate, institutionOrAuthor, readTimeMinutes, summary, contentMarkdown, biblicalReferences, epigraphy, museumOrLocation, keyArtifact, tags)
+* `evangelism_pathways` (id, language, slug, title, subtitle, description, theologicalFocus, steps)
+* `evangelism_objections` (id, language, category, question, summary, biblicalAnswer, keyVerses, practicalAdvice)
+* `evangelism_tracts` (id, language, slug, title, targetAudience, summary, fullOutline, prayerOfFaith, nextSteps)
+
 
 ---
 

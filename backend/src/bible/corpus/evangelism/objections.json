@@ -1,0 +1,114 @@
+[
+  {
+    "id": "problem-of-evil",
+    "language": "es",
+    "category": "teodicea",
+    "question": "¿Por qué permite un Dios bueno y todopoderoso tanto sufrimiento, maldad e injusticia en el mundo?",
+    "summary": "El mal no proviene del diseño de Dios, sino de la caída moral del ser humano. Lejos de ser indiferente, Dios absorbió el dolor supremo en la Cruz para vencer el mal definitivamente sin destruir nuestra libertad.",
+    "biblicalAnswer": "La Biblia revela que el mundo actual está quebrantado por la entrada del pecado humano (Génesis 3, Romanos 8:20-22). Dios no creó el sufrimiento; creó criaturas con libertad moral genuina capaces de amar, lo cual conllevaba la posibilidad real de rebelarse. Si Dios eliminara todo el mal a las doce en punto de esta noche, ninguno de nosotros sobreviviría, pues todos hemos cometido injusticias. En lugar de destruirnos, Dios mismo entró en la historia en la persona de Jesucristo: soportó la tortura, la traición y la muerte en la Cruz, haciendo del sufrimiento el instrumento mismo de nuestra redención eterna. Finalmente, el cristianismo ofrece la promesa invencible de que un día Dios enjugará toda lágrima y el dolor no existirá más (Apocalipsis 21:4).",
+    "keyVerses": [
+      { "ref": "Génesis 50:20", "text": "Vosotros pensasteis mal contra mí, mas Dios lo encaminó a bien, para hacer lo que vemos hoy, para mantener en vida a mucho pueblo." },
+      { "ref": "Romanos 8:18", "text": "Pues tengo por cierto que las aflicciones del tiempo presente no son comparables con la gloria venidera que en nosotros ha de manifestarse." },
+      { "ref": "Apocalipsis 21:4", "text": "Enjugará Dios toda lágrima de los ojos de ellos; y ya no habrá muerte, ni habrá más llanto, ni clamor, ni dolor; porque las primeras cosas pasaron." }
+    ],
+    "practicalAdvice": "Nunca minimices el dolor de quien sufre con frases vacías. Escucha con compasión antes de argumentar. Muestra que el Dios del cristianismo no es un espectador cósmico lejano, sino el Salvador que sangró y lloró por nosotros."
+  },
+  {
+    "id": "problem-of-evil",
+    "language": "en",
+    "category": "theodicy",
+    "question": "Why does an all-powerful, loving God allow so much suffering, evil, and tragedy in our world?",
+    "summary": "Evil originated not in God's nature, but in humanity's moral rebellion. Rather than remaining distant, God absorbed supreme suffering at the Cross to eradicate evil forever without destroying our free will.",
+    "biblicalAnswer": "Scripture reveals that creation is groaning under the curse of human rebellion (Genesis 3, Romans 8:20-22). God did not author suffering; He created creatures with genuine moral agency. If God were to eradicate all evil at midnight tonight, none of us would wake up tomorrow, for we all harbor sin. Instead of wiping us out, God entered human agony in Jesus Christ: enduring betrayal, excruciating torture, and death to defeat evil from within. Christianity alone offers the assurance that one day He will wipe away every tear and establish everlasting renewal (Revelation 21:4).",
+    "keyVerses": [
+      { "ref": "Genesis 50:20", "text": "You intended to harm me, but God intended it for good to accomplish what is now being done, the saving of many lives." },
+      { "ref": "Romans 8:18", "text": "For I consider that the sufferings of this present time are not worthy to be compared with the glory which shall be revealed in us." },
+      { "ref": "Revelation 21:4", "text": "And God will wipe away every tear from their eyes; there shall be no more death, nor sorrow, nor crying. There shall be no more pain." }
+    ],
+    "practicalAdvice": "Never minimize real anguish with cold clichés. Weep with those who weep before offering philosophical defenses. Direct attention to the bleeding Savior on the Cross."
+  },
+  {
+    "id": "pluralism-religions",
+    "language": "es",
+    "category": "pluralismo",
+    "question": "¿Acaso todas las religiones sinceras no son caminos diferentes que llevan a la misma cima de la montaña?",
+    "summary": "Todas las religiones enseñan al hombre cómo intentar ascender hacia Dios por esfuerzo propio; el Evangelio es Dios descendiendo a rescatar a quien es incapaz de subir.",
+    "biblicalAnswer": "Aunque muchas religiones comparten valores morales comunes sobre la compasión, sus afirmaciones fundamentales sobre la naturaleza de Dios, la realidad del pecado y el destino del alma son diametralmente opuestas y lógicamente incompatibles (por ejemplo: el islam niega que Jesús murió en la cruz; el budismo no cree en un Dios creador personal; el hinduismo propone reencarnaciones interminables). Jesús no afirmó ser un guía más entre otros, sino el Salvador encarnado: 'Yo soy el camino, y la verdad, y la vida; nadie viene al Padre, sino por mí' (Juan 14:6). En las religiones del mundo, el hombre intenta justificarse mediante sus obras; solo en el Evangelio, Dios hace por nosotros lo que jamás podríamos hacer por nosotros mismos.",
+    "keyVerses": [
+      { "ref": "Juan 14:6", "text": "Jesús le dijo: Yo soy el camino, y la verdad, y la vida; nadie viene al Padre, sino por mí." },
+      { "ref": "Hechos 4:12", "text": "Y en ningún otro hay salvación; porque no hay otro nombre bajo el cielo, dado a los hombres, en que podamos ser salvos." },
+      { "ref": "1 Timoteo 2:5", "text": "Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre." }
+    ],
+    "practicalAdvice": "Muestra que la exclusividad de Jesús no nace de la intolerancia humana, sino de la singularidad incomparable de Su sacrificio en la Cruz y Su resurrección corporal."
+  },
+  {
+    "id": "pluralism-religions",
+    "language": "en",
+    "category": "pluralism",
+    "question": "Aren't all sincere religions just different paths climbing up the very same mountain to God?",
+    "summary": "All world religions describe humanity striving to reach God through moral effort; the Gospel is God descending to rescue those who can never climb up.",
+    "biblicalAnswer": "While religions often agree on basic moral decency, their foundational doctrines concerning God, sin, and eternity are mutually contradictory. Islam denies Christ died on the cross; Buddhism rejects a personal Creator; Hinduism teaches karmic reincarnation. Jesus did not present Himself as one guru among many, but declared: 'I am the way, the truth, and the life. No one comes to the Father except through Me' (John 14:6). Only the Gospel announces rescue based on God's grace rather than human self-righteousness.",
+    "keyVerses": [
+      { "ref": "John 14:6", "text": "Jesus said to him, 'I am the way, the truth, and the life. No one comes to the Father except through Me.'" },
+      { "ref": "Acts 4:12", "text": "Nor is there salvation in any other, for there is no other name under heaven given among men by which we must be saved." },
+      { "ref": "1 Timothy 2:5", "text": "For there is one God and one Mediator between God and men, the Man Christ Jesus." }
+    ],
+    "practicalAdvice": "Gently illustrate the law of non-contradiction without arrogance. Emphasize that Jesus offers grace, not just another impossible moral checklist."
+  },
+  {
+    "id": "moral-self-righteousness",
+    "language": "es",
+    "category": "moralismo",
+    "question": "Yo soy una buena persona, ayudo al prójimo y no le hago daño a nadie; ¿por qué necesitaría a Jesús?",
+    "summary": "Nos comparamos con los peores delincuentes en vez de compararnos con la santidad infinita de Dios. Ante la Ley Divina, hasta nuestros mejores pensamientos revelan egoísmo y necesidad de expiación.",
+    "biblicalAnswer": "El error común radica en evaluar la bondad por estándares humanos relativos. Ante un examen civil somos buenos ciudadanos, pero ante los Diez Mandamientos de Dios (amar a Dios con todo el corazón, no mentir jamás, no codiciar, no guardar rencor ni lujuria), todos resultamos culpables. Santiago 2:10 advierte que quien ofende en un solo punto se hace culpable de toda la Ley. Un vaso de agua pura con una sola gota de cianuro no se puede beber; del mismo modo, un Dios perfectamente santo no puede pasar por alto el pecado sin comprometer Su propia justicia.",
+    "keyVerses": [
+      { "ref": "Santiago 2:10", "text": "Porque cualquiera que guardare toda la ley, pero ofendiere en un punto, se hace culpable de todos." },
+      { "ref": "Isaías 64:6", "text": "Si bien todos nosotros somos como suciedad, y todas nuestras justicias como trapo de inmundicia..." },
+      { "ref": "Tito 3:5", "text": "Nos salvó, no por obras de justicia que nosotros hubiéramos hecho, sino por su misericordia, por el lavamiento de la regeneración y por la renovación en el Espíritu Santo." }
+    ],
+    "practicalAdvice": "Usa con ternura la Ley de Dios como un espejo (no como un garrote) para que la persona descubra por sí misma su necesidad del Gran Médico."
+  },
+  {
+    "id": "moral-self-righteousness",
+    "language": "en",
+    "category": "moralism",
+    "question": "I am a good, decent person; I don't hurt anyone and I pay my taxes. Why would I need a Savior?",
+    "summary": "We naturally compare ourselves to notorious criminals rather than to God's absolute holiness. In the light of God's moral law, our self-righteousness fails completely.",
+    "biblicalAnswer": "Human goodness is judged against a curve, but God's standard is moral perfection. When judged against the Ten Commandments (loving God supreme, total honesty, purity of thought, absence of greed), we all stand convicted. James 2:10 reminds us that stumbling at just one point makes us guilty of all. A parachute made 95% correctly will still fail; our incomplete righteousness cannot survive the scrutiny of infinite holiness.",
+    "keyVerses": [
+      { "ref": "James 2:10", "text": "For whoever keeps the whole law and yet stumbles in one point, he has become guilty of all." },
+      { "ref": "Isaiah 64:6", "text": "All of us have become like one who is unclean, and all our righteous acts are like filthy rags." },
+      { "ref": "Titus 3:5", "text": "He saved us, not because of righteous things we had done, but because of his mercy." }
+    ],
+    "practicalAdvice": "Use God's Law gently as a diagnostic mirror, allowing the conscience to discern the need for the Great Physician."
+  },
+  {
+    "id": "unpardonable-guilt",
+    "language": "es",
+    "category": "gracia",
+    "question": "¿Puede Dios perdonar a alguien como yo? He cometido pecados imperdonables y me siento indigno.",
+    "summary": "La sangre de Cristo es infinitamente más poderosa que cualquier pecado humano. La gracia de Dios no depende de cuán limpio seas, sino de cuán suficiente es el sacrificio de Su Hijo.",
+    "biblicalAnswer": "El apóstol Pablo se llamó a sí mismo 'el primero de los pecadores' (1 Timoteo 1:15) tras haber perseguido, encarcelado y consentido la muerte de cristianos. El rey David cometió adulterio y homicidio y halló perdón al quebrantar su corazón en arrepentimiento (Salmo 51). Jesús prometió en Juan 6:37: 'al que a mí viene, no le echo fuera'. Ningún abismo es más profundo que la gracia del Calvario. Sentirte indigno es precisamente la condición necesaria para recibir el regalo de la justificación; Cristo no vino a llamar a justos ficticios, sino a pecadores quebrantados.",
+    "keyVerses": [
+      { "ref": "1 Juan 1:9", "text": "Si confesamos nuestros pecados, él es fiel y justo para perdonar nuestros pecados, y limpiarnos de toda maldad." },
+      { "ref": "Isaías 1:18", "text": "Venid luego, dice Jehová, y estemos a cuenta: si vuestros pecados fueren como la grana, como la nieve serán emblanquecidos." },
+      { "ref": "Romanos 5:20", "text": "Mas cuando el pecado abundó, sobreabundó la gracia." }
+    ],
+    "practicalAdvice": "Comunica esperanza viva y acogimiento fraternal. Recuerda que Satanás acusa para desesperar, mientras que el Espíritu Santo convence para perdonar y restaurar."
+  },
+  {
+    "id": "unpardonable-guilt",
+    "language": "en",
+    "category": "grace",
+    "question": "Could God ever forgive someone like me? My past is ruined by grave sins and I feel beyond hope.",
+    "summary": "The blood of Christ is infinitely greater than your worst failures. God's grace does not measure your worthiness, but the infinite value of His Son's sacrifice.",
+    "biblicalAnswer": "The Apostle Paul described himself as the 'chief of sinners' (1 Timothy 1:15) after arresting and consenting to the execution of Christians. King David committed adultery and arranged murder, yet found lavish mercy through brokenhearted repentance (Psalm 51). Jesus promised in John 6:37: 'the one who comes to Me I will by no means cast out.' There is no pit of guilt deeper than the infinite well of Calvary's grace.",
+    "keyVerses": [
+      { "ref": "1 John 1:9", "text": "If we confess our sins, He is faithful and just to forgive us our sins and to cleanse us from all unrighteousness." },
+      { "ref": "Isaiah 1:18", "text": "'Come now, and let us reason together,' says the Lord: 'Though your sins are like scarlet, they shall be as white as snow.'" },
+      { "ref": "Romans 5:20", "text": "But where sin abounded, grace abounded much more." }
+    ],
+    "practicalAdvice": "Offer tender assurance. Remind the inquirer that conviction of sin is evidence of God's love pursuing them, not His abandonment."
+  }
+]

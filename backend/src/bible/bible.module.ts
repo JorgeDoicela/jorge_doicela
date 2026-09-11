@@ -10,12 +10,16 @@ import { TimelineEventEntity } from './historical/entities/timeline-event.entity
 import { ArchaeologyArticleEntity } from './historical/entities/archaeology-article.entity';
 import { ChiasmStructureEntity } from './literary/entities/chiasm-structure.entity';
 import { PaulineDiscourseEntity } from './literary/entities/pauline-discourse.entity';
+import { EvangelismPathwayEntity } from './evangelism/entities/evangelism-pathway.entity';
+import { EvangelismObjectionEntity } from './evangelism/entities/evangelism-objection.entity';
+import { EvangelismTractEntity } from './evangelism/entities/evangelism-tract.entity';
 import { VersesModule } from './verses/verses.module';
 import { BooksModule } from './books/books.module';
 import { TranslationsModule } from './translations/translations.module';
 import { MorphologyModule } from './morphology/morphology.module';
 import { HistoricalModule } from './historical/historical.module';
 import { LiteraryModule } from './literary/literary.module';
+import { EvangelismModule } from './evangelism/evangelism.module';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
@@ -35,6 +39,9 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         ArchaeologyArticleEntity,
         ChiasmStructureEntity,
         PaulineDiscourseEntity,
+        EvangelismPathwayEntity,
+        EvangelismObjectionEntity,
+        EvangelismTractEntity,
       ],
       synchronize: true,
     }),
@@ -44,6 +51,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     MorphologyModule,
     HistoricalModule,
     LiteraryModule,
+    EvangelismModule,
   ],
 })
 export class BibleModule {}

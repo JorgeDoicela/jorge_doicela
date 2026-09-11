@@ -22,6 +22,7 @@ const NAV_TABS: NavTabItem[] = [
   { path: '/bible/study/word-study', key: 'wordStudy' },
   { path: '/bible/study/literary', key: 'literary' },
   { path: '/bible/study/historical-context', key: 'historical' },
+  { path: '/bible/study/evangelism', key: 'evangelism' },
 ];
 
 interface BibleHeaderNavProps {
@@ -59,25 +60,32 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
 
   // Cerrar el menú móvil al hacer clic afuera
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: Event) => {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setMobileMenuOpen(false);
       }
     };
     if (mobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('pointerdown', handleClickOutside);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('pointerdown', handleClickOutside);
     };
   }, [mobileMenuOpen]);
 
+  // Si la cabecera se oculta por auto-hide, cerrar el menú flotante
+  useEffect(() => {
+    if (!isVisible) {
+      setMobileMenuOpen(false);
+    }
+  }, [isVisible]);
+
   return (
     <header
-      className={`shrink-0 w-full border-b bg-white dark:bg-[#0a0a0a] z-40 transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden print:hidden ${
+      className={`relative shrink-0 w-full border-b bg-white dark:bg-[#0a0a0a] z-50 transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] print:hidden ${
         isVisible
-          ? 'h-14 opacity-100 border-zinc-200/80 dark:border-zinc-800/80 shadow-xs'
-          : 'h-0 opacity-0 pointer-events-none border-transparent shadow-none'
+          ? 'h-14 opacity-100 border-zinc-200/80 dark:border-zinc-800/80 shadow-xs overflow-visible'
+          : 'h-0 opacity-0 pointer-events-none border-transparent shadow-none overflow-hidden'
       }`}
     >
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
@@ -97,7 +105,7 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
         </div>
 
         {/* Móvil: Menú Desplegable Flotante Elegante (< md) */}
-        <div className="relative md:hidden shrink min-w-0" ref={mobileMenuRef}>
+        <div className="relative md:hidden shrink min-w-0 z-50" ref={mobileMenuRef}>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
@@ -110,7 +118,7 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
 
           {/* Menú Flotante Móvil */}
           {mobileMenuOpen && (
-            <div className="absolute top-full left-0 mt-1.5 w-60 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute top-full left-0 mt-1.5 w-60 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 px-2 py-1">
                 {t('studySuites')}
               </div>

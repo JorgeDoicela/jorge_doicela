@@ -124,7 +124,41 @@ interface SeedPaulineDiscourse {
   title: string;
   theologicalTheme: string;
   centralProposition: string;
-  clauses: unknown;
+  clauses: unknown[];
+}
+
+interface SeedEvangelismPathway {
+  id: string;
+  language?: string;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  description: string;
+  theologicalFocus?: string;
+  steps: unknown[];
+}
+
+interface SeedEvangelismObjection {
+  id: string;
+  language?: string;
+  category: string;
+  question: string;
+  summary: string;
+  biblicalAnswer: string;
+  keyVerses: unknown[];
+  practicalAdvice: string;
+}
+
+interface SeedEvangelismTract {
+  id: string;
+  language?: string;
+  slug: string;
+  title: string;
+  targetAudience?: string;
+  summary: string;
+  fullOutline: unknown[];
+  prayerOfFaith: string;
+  nextSteps: unknown[];
 }
 
 export const CANONICAL_BOOKS = [
@@ -223,6 +257,10 @@ export function seedCorpus(
     DROP TABLE IF EXISTS archaeology_articles;
     DROP TABLE IF EXISTS chiasm_structures;
     DROP TABLE IF EXISTS pauline_discourses;
+    DROP TABLE IF EXISTS evangelism_pathways;
+    DROP TABLE IF EXISTS evangelism_objections;
+    DROP TABLE IF EXISTS evangelism_tracts;
+
 
     CREATE TABLE books (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -370,6 +408,46 @@ export function seedCorpus(
       PRIMARY KEY (id, language)
     );
     CREATE INDEX IF NOT EXISTS IDX_pauline_epistle ON pauline_discourses(bookAbbreviation);
+
+    CREATE TABLE evangelism_pathways (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      slug VARCHAR(64) NOT NULL,
+      title VARCHAR(256) NOT NULL,
+      subtitle VARCHAR(256),
+      description TEXT NOT NULL,
+      theologicalFocus VARCHAR(128),
+      steps TEXT NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_pathways_slug ON evangelism_pathways(slug);
+
+    CREATE TABLE evangelism_objections (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      category VARCHAR(64) NOT NULL,
+      question VARCHAR(256) NOT NULL,
+      summary TEXT NOT NULL,
+      biblicalAnswer TEXT NOT NULL,
+      keyVerses TEXT NOT NULL,
+      practicalAdvice TEXT NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_objections_cat ON evangelism_objections(category);
+
+    CREATE TABLE evangelism_tracts (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      slug VARCHAR(64) NOT NULL,
+      title VARCHAR(256) NOT NULL,
+      targetAudience VARCHAR(64),
+      summary TEXT NOT NULL,
+      fullOutline TEXT NOT NULL,
+      prayerOfFaith TEXT NOT NULL,
+      nextSteps TEXT NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_tracts_slug ON evangelism_tracts(slug);
   `);
 
   // Sembrar los 66 libros canónicos de forma segura
@@ -453,7 +531,8 @@ export function seedCorpus(
     if (
       transFolder === 'historical' ||
       transFolder === 'morphology' ||
-      transFolder === 'literary'
+      transFolder === 'literary' ||
+      transFolder === 'evangelism'
     )
       continue;
     const transPath = path.join(corpusDir, transFolder);
@@ -808,7 +887,107 @@ export function seedCorpus(
     }
   }
 
+  // 7. Sembrado del Módulo de Evangelización
+  const evangelismDir = path.join(corpusDir, 'evangelism');
+  if (fs.existsSync(evangelismDir)) {
+    console.log('[CorpusSeeder] Sembrando Corpus de Evangelización...');
+
+    // Pathways
+    const pathwaysPath = path.join(evangelismDir, 'pathways.json');
+    if (fs.existsSync(pathwaysPath)) {
+      const pathways = JSON.parse(
+        fs.readFileSync(pathwaysPath, 'utf8'),
+      ) as SeedEvangelismPathway[];
+      const insertPathway = db.prepare(`
+        INSERT INTO evangelism_pathways (id, language, slug, title, subtitle, description, theologicalFocus, steps)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txPathways = db.transaction((items: SeedEvangelismPathway[]) => {
+        for (const p of items) {
+          insertPathway.run(
+            p.id,
+            p.language || 'es',
+            p.slug,
+            p.title,
+            p.subtitle || null,
+            p.description,
+            p.theologicalFocus || null,
+            JSON.stringify(p.steps || []),
+          );
+        }
+      });
+      txPathways(pathways);
+      console.log(
+        `[EvangelismSeeder] -> ${pathways.length} rutas evangelísticas indexadas.`,
+      );
+    }
+
+    // Objections
+    const objectionsPath = path.join(evangelismDir, 'objections.json');
+    if (fs.existsSync(objectionsPath)) {
+      const objections = JSON.parse(
+        fs.readFileSync(objectionsPath, 'utf8'),
+      ) as SeedEvangelismObjection[];
+      const insertObjection = db.prepare(`
+        INSERT INTO evangelism_objections (id, language, category, question, summary, biblicalAnswer, keyVerses, practicalAdvice)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txObjections = db.transaction(
+        (items: SeedEvangelismObjection[]) => {
+          for (const o of items) {
+            insertObjection.run(
+              o.id,
+              o.language || 'es',
+              o.category,
+              o.question,
+              o.summary,
+              o.biblicalAnswer,
+              JSON.stringify(o.keyVerses || []),
+              o.practicalAdvice,
+            );
+          }
+        },
+      );
+      txObjections(objections);
+      console.log(
+        `[EvangelismSeeder] -> ${objections.length} objeciones apologéticas indexadas.`,
+      );
+    }
+
+    // Tracts
+    const tractsPath = path.join(evangelismDir, 'tracts.json');
+    if (fs.existsSync(tractsPath)) {
+      const tracts = JSON.parse(
+        fs.readFileSync(tractsPath, 'utf8'),
+      ) as SeedEvangelismTract[];
+      const insertTract = db.prepare(`
+        INSERT INTO evangelism_tracts (id, language, slug, title, targetAudience, summary, fullOutline, prayerOfFaith, nextSteps)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txTracts = db.transaction((items: SeedEvangelismTract[]) => {
+        for (const t of items) {
+          insertTract.run(
+            t.id,
+            t.language || 'es',
+            t.slug,
+            t.title,
+            t.targetAudience || null,
+            t.summary,
+            JSON.stringify(t.fullOutline || []),
+            t.prayerOfFaith,
+            JSON.stringify(t.nextSteps || []),
+          );
+        }
+      });
+      txTracts(tracts);
+      console.log(
+        `[EvangelismSeeder] -> ${tracts.length} tratados y bosquejos indexados.`,
+      );
+    }
+  }
+
   const elapsed = Date.now() - startTime;
+
   const memoryUsageMB = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
     2,
   );

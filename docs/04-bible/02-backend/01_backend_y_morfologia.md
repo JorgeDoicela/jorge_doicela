@@ -104,3 +104,11 @@ backend/src/bible/
 * **`GET /bible/literary/pauline`**: Árboles de proposiciones y análisis de discurso paulino (`?epistle=ROM&lang=es|en`).
 * **`GET /bible/literary/pauline/:id`**: Detalle de cláusulas y conectores griegos de un pasaje paulino (`?lang=es|en`).
 
+### 3.7 Evangelización y Apologética (`/bible/evangelism/*`)
+* **`GET /bible/evangelism/pathways`**: Rutas y secuencias bíblicas bilingües (Camino de Romanos, Puente a la Vida, Cuatro Verdades) (`?lang=es|en`).
+* **`GET /bible/evangelism/pathways/:slug`**: Detalle de una ruta evangelística con pasos, versículos y reflexiones (`?lang=es|en`).
+* **`GET /bible/evangelism/objections`**: Banco de objeciones comunes y respuestas apologéticas exegéticas con filtro por categoría y búsqueda textual (`?category=&q=&lang=es|en`).
+* **`GET /bible/evangelism/tracts`**: Tratados y bosquejos homiléticos para predicar o compartir (`?audience=&lang=es|en`).
+* **`GET /bible/evangelism/tracts/:slug`**: Detalle de un tratado con bosquejo por puntos, ilustración, oración de fe y pasos de discipulado (`?lang=es|en`).
+
+

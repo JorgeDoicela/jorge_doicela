@@ -72,7 +72,22 @@ La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rá
 │ focalMessage           │       │ clauses (JSON)         │
 │ cola (JSON)            │       └────────────────────────┘
 └────────────────────────┘
+
+┌────────────────────────┐       ┌────────────────────────┐       ┌────────────────────────┐
+│  evangelism_pathways   │       │ evangelism_objections  │       │   evangelism_tracts    │
+├────────────────────────┤       ├────────────────────────┤       ├────────────────────────┤
+│ id (PK)                │       │ id (PK)                │       │ id (PK)                │
+│ language (PK)          │       │ language (PK)          │       │ language (PK)          │
+│ slug (IDX)             │       │ category (IDX)         │       │ slug (IDX)             │
+│ title                  │       │ question               │       │ title                  │
+│ subtitle               │       │ summary                │       │ targetAudience         │
+│ description            │       │ biblicalAnswer         │       │ summary                │
+│ theologicalFocus       │       │ keyVerses (JSON)       │       │ fullOutline (JSON)     │
+│ steps (JSON)           │       │ practicalAdvice        │       │ prayerOfFaith          │
+└────────────────────────┘       └────────────────────────┘       │ nextSteps (JSON)       │
+                                                                  └────────────────────────┘
 ```
+
 
 ---
 
@@ -96,7 +111,12 @@ backend/src/bible/corpus/
 └── literary/                     # Fuentes de Análisis Literario y Quiasmos (ES / EN)
     ├── chiasms.json              # Estructuras simétricas concéntricas y Hexamerón
     └── pauline.json              # Proposiciones y conectores de discurso paulino
+└── evangelism/                   # Fuentes de Evangelización y Apologética (ES / EN)
+    ├── pathways.json             # Rutas y secuencias bíblicas (Camino de Romanos, Puente a la Vida)
+    ├── objections.json           # Objeciones escépticas y defensas exegéticas
+    └── tracts.json               # Tratados y bosquejos homiléticos para predicar
 ```
+
 
 ---
 
@@ -107,11 +127,13 @@ La persistencia del corpus bíblico e histórico sigue el principio de **Ingesti
 ### 3.1 Flujo de Recreación Limpia
 Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
 
-1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 10 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `chiasm_structures`, `pauline_discourses`).
-2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, etc.), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
+1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 13 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `chiasm_structures`, `pauline_discourses`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`).
+2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
 3. **Sembrado Canónico y Textual por Lotes:** Inserta los 66 libros canónicos, versiones y procesa los versículos por lotes transaccionales (`better-sqlite3`).
 4. **Sembrado de Contexto Histórico Bilingüe:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía en español e inglés.
 5. **Sembrado de Análisis Literario:** Inserta quiasmos concéntricos y diagramación de discurso paulino bilingüe.
+6. **Sembrado de Evangelización y Apologética:** Inserta rutas salvíficas estructuradas, banco de objeciones exegéticas y tratados listos para predicar.
+
 
 ### 3.2 Beneficios Arquitectónicos
 * **Cero Residuos ni Datos Huérfanos:** Si se renombran slugs, corrigen versículos o ajustan fechas en los JSON, no quedan registros obsoletos ni desalineados.

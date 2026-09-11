@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -26,14 +26,34 @@ export function SoftwareHeaderNav({
   backLabel,
 }: SoftwareHeaderNavProps) {
   const tSpotlight = useTranslations('Spotlight');
+  const [softwareUrl, setSoftwareUrl] = useState('/software');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const isLocal = hostname.includes('localhost') || hostname.includes('127.0.0.1');
+      const port = window.location.port ? `:${window.location.port}` : '';
+      const protocol = window.location.protocol;
+      if (isLocal) {
+        setSoftwareUrl(`${protocol}//software.localhost${port}/software`);
+      } else {
+        setSoftwareUrl('https://software.jorgedoicela.com');
+      }
+    }
+  }, []);
   return (
     <header className="flex flex-col items-center justify-center pt-6 sm:pt-2 pb-4 text-center w-full">
       {/* Título semántico accesible para SEO */}
       <h1 className="sr-only">Software | Jorge Doicela - Especialista en DevSecOps</h1>
 
-      {/* Logotipo Central Compuesto Ampliado (Linkeado a /software) */}
+      {/* Logotipo Central Compuesto Ampliado (Linkeado determinísticamente al subdominio de Software) */}
       <Link
-        href="/software"
+        href={softwareUrl}
+        onClick={() => {
+          if (onSelectCategory) {
+            onSelectCategory('all');
+          }
+        }}
         className="flex items-center justify-center gap-3 sm:gap-4.5 select-none hover:opacity-90 transition-opacity max-w-full px-2 sm:px-0"
       >
         <div className={`${compact ? 'h-15 sm:h-16' : 'h-23 sm:h-22 md:h-25 lg:h-28'} w-auto flex items-center justify-center shrink-0`}>

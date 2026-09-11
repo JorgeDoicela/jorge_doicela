@@ -49,6 +49,55 @@ export default function SoftwarePage() {
   const displayPosts = activeCategory === 'all' ? posts.slice(1) : posts;
   const displaySec = activeCategory === 'all' ? secPosts.slice(1) : secPosts;
 
+  const isLoadingCurrent =
+    activeCategory === 'all'
+      ? loadingNews && loadingBlog && loadingSec && loadingInfra
+      : activeCategory === 'news'
+      ? loadingNews
+      : activeCategory === 'blog'
+      ? loadingBlog
+      : activeCategory === 'ai'
+      ? loadingAi
+      : activeCategory === 'cybersecurity'
+      ? loadingSec
+      : activeCategory === 'tutorials'
+      ? loadingTut
+      : activeCategory === 'forum'
+      ? loadingForum
+      : activeCategory === 'projects'
+      ? loadingProj
+      : activeCategory === 'infrastructure'
+      ? loadingInfra
+      : false;
+
+  const currentCategoryCount =
+    activeCategory === 'all'
+      ? displayNews.length +
+        displayPosts.length +
+        resources.length +
+        displaySec.length +
+        tutorials.length +
+        topics.length +
+        projects.length +
+        infraPosts.length
+      : activeCategory === 'news'
+      ? displayNews.length
+      : activeCategory === 'blog'
+      ? displayPosts.length
+      : activeCategory === 'ai'
+      ? resources.length
+      : activeCategory === 'cybersecurity'
+      ? displaySec.length
+      : activeCategory === 'tutorials'
+      ? tutorials.length
+      : activeCategory === 'forum'
+      ? topics.length
+      : activeCategory === 'projects'
+      ? projects.length
+      : activeCategory === 'infrastructure'
+      ? infraPosts.length
+      : 0;
+
   useEffect(() => {
     setMounted(true);
     document.documentElement.classList.add('dark');
@@ -87,132 +136,147 @@ export default function SoftwarePage() {
             onOpenSpotlight={() => setIsSpotlightOpen(true)}
           />
 
-          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS EN UN SOLO CONTENEDOR UNIFICADO) */}
-          <section>
-            {/* Contenedor Único para las 3 Publicaciones Destacadas */}
-            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
-                  {tHome('featuredPosts')}
-                </h2>
+          {/* SECCIÓN 1: FEATURED POSTS (PUBLICACIONES DESTACADAS VISIBLES EXCLUSIVAMENTE EN PORTADA GENERAL) */}
+          {activeCategory === 'all' && (
+            <section className="animate-in fade-in duration-300">
+              {/* Contenedor Único para las 3 Publicaciones Destacadas */}
+              <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
+                    {tHome('featuredPosts')}
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Destacado 1: Noticia */}
+                  {featuredArticle1 ? (
+                    <Link
+                      href={`/software/news/${featuredArticle1.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={featuredArticle1.title}
+                          category="news"
+                          coverImage={featuredArticle1.coverImage}
+                          tag="NextJS16"
+                          priority={true}
+                        />
+
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {tHome('newsFrontend')}
+                          </p>
+                          <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2 mt-1.5">
+                            {featuredArticle1.title}
+                          </h3>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {featuredArticle1.excerpt}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
+                      {tCommon('loading')}
+                    </div>
+                  )}
+
+                  {/* Destacado 2: Ensayo de Arquitectura */}
+                  {featuredArticle2 ? (
+                    <Link
+                      href={`/software/blog/${featuredArticle2.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={featuredArticle2.title}
+                          category="blog"
+                          coverImage={featuredArticle2.coverImage}
+                          tag="NestJS"
+                        />
+
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {tHome('architectureBackend')}
+                          </p>
+                          <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug line-clamp-2 mt-1.5">
+                            {featuredArticle2.title}
+                          </h3>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {featuredArticle2.excerpt}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
+                      {tCommon('loading')}
+                    </div>
+                  )}
+
+                  {/* Destacado 3: Ciberseguridad */}
+                  {featuredArticle3 ? (
+                    <Link
+                      href={`/software/cybersecurity/${featuredArticle3.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={featuredArticle3.title}
+                          category="cybersecurity"
+                          tag={featuredArticle3.cveId || 'CVE'}
+                        />
+
+                        <div>
+                          <p className="text-[11px] font-mono text-zinc-400">
+                            {tHome('cveLinux', { severity: featuredArticle3.severity })}
+                          </p>
+                          <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug line-clamp-2 mt-1.5">
+                            {featuredArticle3.title}
+                          </h3>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {featuredArticle3.excerpt}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
+                      {tCommon('loading')}
+                    </div>
+                  )}
+                </div>
               </div>
+            </section>
+          )}
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Destacado 1: Noticia */}
-                {featuredArticle1 ? (
-                  <Link
-                    href={`/software/news/${featuredArticle1.slug}`}
-                    className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
-                  >
-                    <div className="space-y-3.5">
-                      <ArticleCover
-                        title={featuredArticle1.title}
-                        category="news"
-                        coverImage={featuredArticle1.coverImage}
-                        tag="NextJS16"
-                        priority={true}
-                      />
-
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-400">
-                          {tHome('newsFrontend')}
-                        </p>
-                        <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2 mt-1.5">
-                          {featuredArticle1.title}
-                        </h3>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
-                          {featuredArticle1.excerpt}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    {tCommon('loading')}
-                  </div>
-                )}
-
-                {/* Destacado 2: Ensayo de Arquitectura */}
-                {featuredArticle2 ? (
-                  <Link
-                    href={`/software/blog/${featuredArticle2.slug}`}
-                    className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
-                  >
-                    <div className="space-y-3.5">
-                      <ArticleCover
-                        title={featuredArticle2.title}
-                        category="blog"
-                        coverImage={featuredArticle2.coverImage}
-                        tag="NestJS"
-                      />
-
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-400">
-                          {tHome('architectureBackend')}
-                        </p>
-                        <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-blue-300 transition-colors leading-snug line-clamp-2 mt-1.5">
-                          {featuredArticle2.title}
-                        </h3>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
-                          {featuredArticle2.excerpt}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    {tCommon('loading')}
-                  </div>
-                )}
-
-                {/* Destacado 3: Ciberseguridad */}
-                {featuredArticle3 ? (
-                  <Link
-                    href={`/software/cybersecurity/${featuredArticle3.slug}`}
-                    className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm"
-                  >
-                    <div className="space-y-3.5">
-                      <ArticleCover
-                        title={featuredArticle3.title}
-                        category="cybersecurity"
-                        tag={featuredArticle3.cveId || 'CVE'}
-                      />
-
-                      <div>
-                        <p className="text-[11px] font-mono text-zinc-400">
-                          {tHome('cveLinux', { severity: featuredArticle3.severity })}
-                        </p>
-                        <h3 className="text-base sm:text-lg font-bold text-[var(--header-title)] group-hover:text-rose-300 transition-colors leading-snug line-clamp-2 mt-1.5">
-                          {featuredArticle3.title}
-                        </h3>
-                        <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
-                          {featuredArticle3.excerpt}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center">
-                    {tCommon('loading')}
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* SECCIÓN 2: LATEST POSTS (GRILLA EDITORIAL EN CONTENEDOR UNIFICADO) */}
-          <section>
+          {/* SECCIÓN 2: LATEST POSTS / CATEGORY FEED (GRILLA EDITORIAL EN CONTENEDOR UNIFICADO) */}
+          <section className="animate-in fade-in duration-300">
             {/* Contenedor Único para toda la Grilla de Publicaciones */}
             <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                   {activeCategory === 'all'
                     ? tHome('latestPosts')
                     : tHome('postsByCategory', { category: tNav(activeCategory as any) })}
-                </h3>
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {isLoadingCurrent && (
+                  <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-400">
+                    <div className="w-7 h-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
+                    <p className="text-xs font-mono tracking-wider uppercase text-zinc-500">{tCommon('loading')}</p>
+                  </div>
+                )}
+
+                {!isLoadingCurrent && currentCategoryCount === 0 && (
+                  <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-500 glass-concave-panel rounded-2xl border border-white/5">
+                    <p className="text-sm font-medium text-zinc-400">{tCommon('notFound')}</p>
+                  </div>
+                )}
+
                 {/* Noticias */}
                 {(activeCategory === 'all' || activeCategory === 'news') &&
                   displayNews.map((item) => (

@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { BackToPortalButton } from './BackToPortalButton';
 import { CategoryNav, SoftwareSection } from '../features/navigation/components/CategoryNav';
 import { LanguageToggle } from '../features/navigation/components/LanguageToggle';
+import { ThemeToggle } from '../features/navigation/components/ThemeToggle';
 
 interface SoftwareHeaderNavProps {
   activeCategory?: SoftwareSection;
@@ -57,12 +58,23 @@ export function SoftwareHeaderNav({
         className="flex items-center justify-center gap-3 sm:gap-4.5 select-none hover:opacity-90 transition-opacity max-w-full px-2 sm:px-0"
       >
         <div className={`${compact ? 'h-15 sm:h-16' : 'h-23 sm:h-22 md:h-25 lg:h-28'} w-auto flex items-center justify-center shrink-0`}>
+          {/* Logo Blanco (Modo Oscuro) */}
           <Image
             src="/software/logo/logo_blanco.png"
             alt="Logo Jorge Doicela"
             width={128}
             height={128}
-            className="h-full w-auto object-contain"
+            className="h-full w-auto object-contain hidden dark:block"
+            unoptimized
+            priority
+          />
+          {/* Logo Negro (Modo Claro) */}
+          <Image
+            src="/software/logo/logo_negro.png"
+            alt="Logo Jorge Doicela"
+            width={128}
+            height={128}
+            className="h-full w-auto object-contain block dark:hidden"
             unoptimized
             priority
           />
@@ -73,21 +85,21 @@ export function SoftwareHeaderNav({
             alt="Jorge Doicela - Especialista en DevSecOps"
             width={340}
             height={80}
-            className="h-full w-auto object-contain"
+            className="h-full w-auto object-contain filter invert dark:filter-none contrast-125 transition-all duration-300"
             unoptimized
             priority
           />
         </div>
       </Link>
 
-      {/* Fila de Redes Sociales Libres y Limpias en Blanco (Pegadas al imagotipo) */}
+      {/* Fila de Redes Sociales Libres y Limpias (Pegadas al imagotipo) */}
       <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 mb-3 sm:mt-1.5 sm:mb-0 flex-wrap px-2 sm:px-0">
         {/* LinkedIn */}
         <a
           href="https://linkedin.com/in/jorgedoicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="LinkedIn"
           aria-label="LinkedIn"
         >
@@ -101,7 +113,7 @@ export function SoftwareHeaderNav({
           href="https://github.com/JorgeDoicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="GitHub"
           aria-label="GitHub"
         >
@@ -114,7 +126,7 @@ export function SoftwareHeaderNav({
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="X (Twitter)"
           aria-label="X (Twitter)"
         >
@@ -127,7 +139,7 @@ export function SoftwareHeaderNav({
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="Instagram"
           aria-label="Instagram"
         >
@@ -140,7 +152,7 @@ export function SoftwareHeaderNav({
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="Facebook"
           aria-label="Facebook"
         >
@@ -154,7 +166,7 @@ export function SoftwareHeaderNav({
           href="https://www.youtube.com/@jorge.doicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="YouTube"
           aria-label="YouTube"
         >
@@ -168,7 +180,7 @@ export function SoftwareHeaderNav({
           href="https://www.tiktok.com/@jorge.doicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="TikTok"
           aria-label="TikTok"
         >
@@ -180,7 +192,7 @@ export function SoftwareHeaderNav({
         {/* Email */}
         <a
           href="mailto:jorge.doicela.m@gmail.com"
-          className="text-white hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-white/5"
+          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="Email"
           aria-label="Email"
         >
@@ -211,7 +223,7 @@ export function SoftwareHeaderNav({
                 window.location.href = '/software?spotlight=true';
               }
             }}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-xs text-zinc-400 hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer shrink-0"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer shrink-0"
             title={tSpotlight('searchTitle')}
             aria-label={tSpotlight('searchAria')}
           >
@@ -219,6 +231,7 @@ export function SoftwareHeaderNav({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </button>
+          <ThemeToggle />
           <LanguageToggle />
         </div>
       </div>

@@ -270,7 +270,7 @@ export function SpotlightModal({
         </div>
 
         {/* Footer de Ayuda */}
-        <div className="px-4 py-2.5 bg-black/20 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+        <div className="px-4 py-2.5 bg-slate-100/80 dark:bg-black/20 border-t border-slate-200/80 dark:border-white/5 flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-500 font-mono">
           <span>{t('resultsAvailable', { count: filteredResults.length })}</span>
           <span>{t('escHint')}</span>
         </div>

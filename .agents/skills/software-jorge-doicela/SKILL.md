@@ -32,8 +32,10 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 ```text
 frontend/web/src/app/(software)/
 ├── messages/                         # Diccionarios locales de software (es.json, en.json)
-├── globals.css                       # Estilos Neumorphism UI + Glassmorphism
-├── layout.tsx                        # Layout raíz del subdominio (NextIntlClientProvider + generateMetadata dinámica)
+├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
+├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
+├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider + generateMetadata)
+├── components/                       # Componentes compartidos (SoftwareHeaderNav con ThemeToggle, SoftwarePageLayout, SoftwareFooter, etc.)
 ├── software/                         # Subrutas individuales
 
 │   ├── page.tsx                      # Página principal: Bento Grid + selector de 7 categorías

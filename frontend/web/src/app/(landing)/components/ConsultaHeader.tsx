@@ -3,25 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTranslations } from 'next-intl';
+import { ThemeToggle } from './ThemeToggle';
 
 export function ConsultaHeader() {
   const { language, toggleLanguage } = useLanguage();
   const t = useTranslations('Consulta');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState('');
-
-  useEffect(() => {
-    setMounted(true);
-    const savedTheme = localStorage.getItem('landing-theme') as 'dark' | 'light' | null;
-    const initialTheme =
-      savedTheme ||
-      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    setTheme(initialTheme);
-  }, []);
 
   useEffect(() => {
     const updateQuitoTime = () => {
@@ -41,19 +30,6 @@ export function ConsultaHeader() {
     return () => clearInterval(timer);
   }, [language]);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('landing-theme', nextTheme);
-    const isLight = nextTheme === 'light';
-    document.documentElement.classList.toggle('light', isLight);
-    if (isLight) {
-      document.documentElement.setAttribute('data-theme', 'light');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  };
-
   return (
     <header
       className="animate-fade-in-up fixed top-5 left-5 right-5 sm:top-6 sm:left-8 sm:right-8 md:top-7 md:left-10 md:right-10 z-50 flex items-center justify-between pointer-events-none"
@@ -66,12 +42,22 @@ export function ConsultaHeader() {
           className="flex items-center gap-2 hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
           aria-label="Jorge Doicela - Inicio"
         >
+          {/* Logo Blanco (Modo Oscuro) */}
           <Image
-            src={theme === 'dark' ? '/landing/logo/logo_blanco.png' : '/landing/logo/logo_negro.png'}
+            src="/landing/logo/logo_blanco.png"
             alt="Jorge Doicela"
             width={28}
             height={28}
-            className="h-5 sm:h-6 w-auto object-contain"
+            className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
+            priority
+          />
+          {/* Logo Negro (Modo Claro) */}
+          <Image
+            src="/landing/logo/logo_negro.png"
+            alt="Jorge Doicela"
+            width={28}
+            height={28}
+            className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
             priority
           />
         </Link>
@@ -108,20 +94,8 @@ export function ConsultaHeader() {
           <span>{language.toUpperCase()}</span>
         </button>
 
-        {/* Selector de Tema */}
-        {mounted && (
-          <button
-            onClick={toggleTheme}
-            className="p-1.5 rounded-md text-text-muted hover:text-foreground hover:bg-foreground/5 active:scale-95 transition-colors duration-200 cursor-pointer flex items-center justify-center"
-            aria-label="Cambiar tema / Toggle theme"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-3.5 h-3.5 opacity-70 hover:opacity-100 hover:text-amber-400 transition-all duration-200" />
-            ) : (
-              <Moon className="w-3.5 h-3.5 opacity-70 hover:opacity-100 hover:text-foreground transition-all duration-200" />
-            )}
-          </button>
-        )}
+        {/* Selector de Tema Profesional */}
+        <ThemeToggle />
       </div>
     </header>
   );

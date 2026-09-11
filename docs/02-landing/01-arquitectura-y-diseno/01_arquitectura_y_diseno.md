@@ -83,4 +83,4 @@ Un script en React (`useEffect`) evalúa el host de navegación:
 * **Disposición Modular Bento Grid:** Cuadrícula asimétrica y responsiva con tarjetas de tamaños jerárquicos (`col-span-*`, `row-span-*`) que presentan de forma balanceada las diferentes facetas, enlaces a subdominios y proyectos.
 * **Static & Interactive Bento Cards:** Tarjetas modulares con micro-animaciones al hacer hover (elevación sutil, iluminación de bordes y desplazamiento interactivo de flechas).
 * **Fondo de Profundidad Sutil:** Elipses degradadas con desenfoque suave (`blur-[130px]`) que aportan tridimensionalidad moderna sin penalizar el rendimiento ni la GPU.
-* **Compatibilidad de Temas:** Soporte integral para modo oscuro (`dark`) y modo claro (`light`) mediante variables CSS.
+* **Compatibilidad de Temas (Dark & Light Mode):** Soporte integral y desacoplado para modo oscuro (`dark`, Apple Dark Slate & Deep Cosmos) y modo claro (`light`, Apple Impoluto #fafafc) mediante `ThemeProvider` local (`next-themes`) en `layout.tsx` y el componente reutilizable `ThemeToggle.tsx` en todos los encabezados (`page.tsx`, `ConsultaHeader.tsx`, `LinksTopBar.tsx`).

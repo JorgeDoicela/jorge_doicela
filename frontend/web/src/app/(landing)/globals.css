@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-:root {
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root,
+:root.dark,
+html.dark,
+.dark {
     /* Modo Oscuro (Apple Dark Slate & VisionOS Frosted Glass) */
     --background: #030304;
     --foreground: #f5f5f7;
@@ -165,40 +170,13 @@ main:focus-visible,
     border-color: var(--card-hover-border);
 }
 
-/* Personalización de la Barra de Desplazamiento (Scrollbar) */
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-*::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track,
-*::-webkit-scrollbar-track {
-    background: var(--background);
-}
-
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-thumb {
-    background: var(--text-subtitle);
-    border-radius: 9999px;
-    border: 3px solid var(--background);
-    transition: background 0.3s ease;
-}
-
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover,
-*::-webkit-scrollbar-thumb:hover {
-    background: var(--accent);
-}
-
-/* Para Firefox y Estándar Moderno */
-html, body, * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--text-subtitle) var(--background);
-}
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLLBAR — Ultra fino (Idéntico a Portfolio)
+   ═══════════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar        { width: 3px; height: 3px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(161, 161, 170, 0.35); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* Sistema de Fondo Aurora Mesh Eetérea Adaptativa (Claro / Oscuro) */
 .parallax-mesh-layer {

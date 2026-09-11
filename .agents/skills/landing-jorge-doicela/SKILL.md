@@ -33,17 +33,21 @@ frontend/web/
 │   ├── middleware.ts           # Enrutamiento de subdominios y query param ?lang=
 │   └── app/(landing)/
 │       ├── messages/           # Diccionarios locales de la Landing (es.json, en.json)
+│       ├── theme-provider.tsx  # Proveedor de tema local aislado (next-themes)
 │       ├── components/
-│       │   ├── Header.tsx              # Cabecera con selector i18n (ES/EN), theme toggle y reloj Quito
+│       │   ├── ThemeToggle.tsx         # Selector modular reutilizable de modo claro/oscuro
+│       │   ├── ConsultaHeader.tsx      # Cabecera de consulta con reloj, i18n y ThemeToggle
 │       │   ├── PwaRegister.tsx         # Registro del Service Worker de la PWA
 │       │   ├── PersonJsonLd.tsx        # Datos estructurados Schema.org (SEO)
 │       │   ├── SkipToContent.tsx       # Atajo de accesibilidad por teclado (WCAG AA)
 │       │   ├── TypewriterRole.tsx      # Animación de máquina de escribir accesible (aria-live)
-│       │   └── GlassCard.tsx           # Tarjetas interactivas con micro-animaciones
+│       │   ├── ParallaxBackground.tsx  # Fondo cósmico responsivo
+│       │   └── links/                  # LinksTopBar, ActionLinksList, etc.
 │       ├── context/
-│       │   └── LanguageContext.tsx     # Adaptador reactivo conectado a next-intl y router.refresh()
-│       ├── globals.css                 # Estilos específicos de la Landing Page
-│       ├── layout.tsx                  # NextIntlClientProvider + generateMetadata dinámica
+│       │   ├── LanguageContext.tsx     # Adaptador reactivo conectado a next-intl y router.refresh()
+│       │   └── PerformanceContext.tsx  # Detección de rendimiento y aceleración por GPU
+│       ├── globals.css                 # Estilos específicos de la Landing Page (Apple Dark Slate / Apple Impoluto)
+│       ├── layout.tsx                  # ThemeProvider + NextIntlClientProvider + generateMetadata dinámica
 │       └── page.tsx                    # Estructura principal y resolutor de subdominios
 ```
 
@@ -78,8 +82,9 @@ new Intl.DateTimeFormat('es-EC', {
   * `19:00` - `05:59` -> Buenas noches / Good evening
 
 ### 3.3 Modo Claro / Oscuro (Light & Dark)
-* Conmutador en el header que añade o quita la clase `.light` en `document.documentElement`.
-* Persistencia en `localStorage` bajo la clave `'landing-theme'`.
+* Soporte integral desacoplado (caja negra) con `theme-provider.tsx` (`next-themes`) en `layout.tsx`.
+* Componente modular reutilizable `ThemeToggle.tsx` en `components/` consumido en `page.tsx`, `ConsultaHeader.tsx` y `LinksTopBar.tsx`.
+* Cero dependencias cruzadas entre subdominios.
 
 ### 3.4 Internacionalización Profesional (next-intl + SSR & SEO Gold Standard)
 * **Server-Side Rendering (SSR):** El servidor entrega el HTML ya traducido desde la primera respuesta evitando parpadeos (*FOUC*).

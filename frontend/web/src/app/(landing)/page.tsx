@@ -10,12 +10,12 @@ import SkipToContent from './components/SkipToContent';
 import { AppleHeroIntro } from './components/AppleHeroShowcase';
 import { AppleHighlightsCarousel } from './components/AppleHighlightsCarousel';
 import { AppleDetailExplorer } from './components/AppleDetailExplorer';
+import { ThemeToggle } from './components/ThemeToggle';
 import { useLanguage } from './context/LanguageContext';
-import { Sun, Moon, ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Sparkles } from 'lucide-react';
 
 export default function LandingPage() {
     const { language, toggleLanguage, t } = useLanguage();
-    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
     const [mounted, setMounted] = useState(false);
     const [time, setTime] = useState('');
     const [links, setLinks] = useState({
@@ -26,17 +26,6 @@ export default function LandingPage() {
 
     useEffect(() => {
         setMounted(true);
-
-        const savedTheme = localStorage.getItem('landing-theme') as 'dark' | 'light' | null;
-        const initialTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        setTheme(initialTheme);
-        const isLight = initialTheme === 'light';
-        document.documentElement.classList.toggle('light', isLight);
-        if (isLight) {
-            document.documentElement.setAttribute('data-theme', 'light');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-        }
 
         if (typeof window !== 'undefined') {
             const hostname = window.location.hostname;
@@ -71,19 +60,6 @@ export default function LandingPage() {
         return () => clearInterval(timer);
     }, [language]);
 
-    const toggleTheme = () => {
-        const nextTheme = theme === 'dark' ? 'light' : 'dark';
-        setTheme(nextTheme);
-        localStorage.setItem('landing-theme', nextTheme);
-        const isLight = nextTheme === 'light';
-        document.documentElement.classList.toggle('light', isLight);
-        if (isLight) {
-            document.documentElement.setAttribute('data-theme', 'light');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-        }
-    };
-
     if (!mounted) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center" aria-label="Cargando página">
@@ -110,12 +86,22 @@ export default function LandingPage() {
                     className="pointer-events-auto flex items-center gap-2 outline-none focus:outline-none hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
                     aria-label="Jorge Doicela - Inicio"
                 >
+                    {/* Logo Blanco (Modo Oscuro) */}
                     <Image
-                        src={theme === 'dark' ? '/landing/logo/logo_blanco.png' : '/landing/logo/logo_negro.png'}
+                        src="/landing/logo/logo_blanco.png"
                         alt="Jorge Doicela"
                         width={28}
                         height={28}
-                        className="h-5 sm:h-6 w-auto object-contain"
+                        className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
+                        priority
+                    />
+                    {/* Logo Negro (Modo Claro) */}
+                    <Image
+                        src="/landing/logo/logo_negro.png"
+                        alt="Jorge Doicela"
+                        width={28}
+                        height={28}
+                        className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
                         priority
                     />
                 </a>
@@ -137,17 +123,7 @@ export default function LandingPage() {
                         <span>{language.toUpperCase()}</span>
                     </button>
 
-                    <button
-                        onClick={toggleTheme}
-                        className="p-1.5 rounded-md text-text-muted hover:text-foreground hover:bg-foreground/5 active:scale-95 transition-colors duration-200 cursor-pointer flex items-center justify-center outline-none focus:outline-none"
-                        aria-label={t.toggleTheme}
-                    >
-                        {theme === 'dark' ? (
-                            <Sun className="w-3.5 h-3.5 opacity-70 hover:opacity-100 hover:text-amber-400 transition-all duration-200" aria-hidden="true" />
-                        ) : (
-                            <Moon className="w-3.5 h-3.5 opacity-70 hover:opacity-100 hover:text-foreground transition-all duration-200" aria-hidden="true" />
-                        )}
-                    </button>
+                    <ThemeToggle />
                 </div>
             </header>
 

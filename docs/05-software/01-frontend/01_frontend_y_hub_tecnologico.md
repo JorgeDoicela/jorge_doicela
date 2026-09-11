@@ -25,13 +25,16 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 
 ```text
 frontend/web/src/app/(software)/
-├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism)
-├── layout.tsx                        # Layout raíz del subdominio
+├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
+├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
+├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider)
 ├── components/                       # Componentes compartidos del subdominio
 │   ├── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
 │   ├── SoftwareCard.tsx              # Tarjeta atómica universal normalizada (escala exacta y neumorphism)
 │   ├── ArticleCover.tsx              # Banner de portada 16:9 con soporte SVG procedural temático
-│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada
+│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (Spotlight + ThemeToggle + LanguageToggle)
+│   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
+│   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales
 │   └── SoftwareFooter.tsx            # Pie de página tecnológico institucional
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
 │   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)

@@ -18,7 +18,7 @@ export function ProjectGrid({ status, search }: ProjectGridProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full animate-pulse">
         {[1, 2, 3, 4, 5, 6].map((n) => (
-          <div key={n} className="h-64 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 border border-white/5" />
+          <div key={n} className="h-64 rounded-2xl bg-slate-200/70 dark:bg-[#16202c]/80 border border-slate-200/80 dark:border-white/5" />
         ))}
       </div>
     );

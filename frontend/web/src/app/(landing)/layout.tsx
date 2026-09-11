@@ -5,6 +5,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { LanguageProvider } from "./context/LanguageContext";
 import { PerformanceProvider } from "./context/PerformanceContext";
+import { ThemeProvider } from "./theme-provider";
 import PwaRegister from "./components/PwaRegister";
 import PersonJsonLd from "./components/PersonJsonLd";
 
@@ -116,18 +117,21 @@ export default async function LandingLayout({
             lang={locale}
             data-scroll-behavior="smooth"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+            suppressHydrationWarning
         >
             <head>
                 <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
             </head>
-            <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500 selection:text-white">
+            <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500 selection:text-white transition-colors duration-300">
                 <PerformanceProvider>
                     <NextIntlClientProvider messages={messages} locale={locale}>
-                        <LanguageProvider>
-                            <PwaRegister />
-                            <PersonJsonLd />
-                            {children}
-                        </LanguageProvider>
+                        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+                            <LanguageProvider>
+                                <PwaRegister />
+                                <PersonJsonLd />
+                                {children}
+                            </LanguageProvider>
+                        </ThemeProvider>
                     </NextIntlClientProvider>
                 </PerformanceProvider>
             </body>

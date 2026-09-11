@@ -9,11 +9,7 @@ export class HubController {
   async getHub(
     @Query('lang') lang?: string,
     @Query('search') search?: string,
-  ): Promise<{ success: boolean; data: HubResponseDto }> {
-    const data = await this.hubService.getHubData(lang || 'es', search);
-    return {
-      success: true,
-      data,
-    };
+  ): Promise<HubResponseDto> {
+    return this.hubService.getHubData(lang || 'es', search);
   }
 }

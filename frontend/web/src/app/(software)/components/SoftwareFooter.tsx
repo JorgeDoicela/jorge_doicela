@@ -8,7 +8,7 @@ export function SoftwareFooter() {
   const t = useTranslations('Footer');
 
   return (
-    <footer className="w-full mt-auto border-t border-black/5 dark:border-white/[0.08] bg-black/20 dark:bg-[#070b12] backdrop-blur-md">
+    <footer className="w-full mt-auto border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-100/80 dark:bg-[#070b12] backdrop-blur-md">
       <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 pb-10 border-b border-black/5 dark:border-white/5">
           <div className="md:col-span-1 space-y-2.5">

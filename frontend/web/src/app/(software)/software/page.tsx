@@ -25,7 +25,6 @@ export default function SoftwarePage() {
 
   useEffect(() => {
     setMounted(true);
-    document.documentElement.classList.add('dark');
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('spotlight') === 'true') {
@@ -63,7 +62,7 @@ export default function SoftwarePage() {
           {/* SECCIÓN 1: FEATURED POSTS (PODIO GLOBAL TOP 3 POR SMARTSCORE) */}
           <section className="animate-in fade-in duration-300">
             {/* Contenedor Único para las 3 Publicaciones Destacadas */}
-            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
+            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel space-y-5">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                   {tHome('featuredPosts')}
@@ -104,7 +103,7 @@ export default function SoftwarePage() {
           {/* SECCIÓN 2: LATEST POSTS / FEED CRONOLÓGICO UNIFICADO */}
           <section className="animate-in fade-in duration-300">
             {/* Contenedor Único para toda la Grilla de Publicaciones */}
-            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-5">
+            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel space-y-5">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
                   {tHome('latestPosts')}

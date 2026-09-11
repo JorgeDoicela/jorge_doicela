@@ -142,7 +142,7 @@ export default function ForumTopicDetailPage({
       {/* Sección de Respuestas */}
       <div className="mt-12 pt-8 border-t border-white/5 space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-white tracking-tight font-mono">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight font-mono">
             {tDetail('communityReplies', { count: topic.replies?.length || 0 })}
           </h3>
         </div>
@@ -152,15 +152,15 @@ export default function ForumTopicDetailPage({
             {topic.replies.map((reply: ForumReply) => (
               <div
                 key={reply.id}
-                className="p-5 rounded-2xl bg-black/20 border border-white/5 space-y-2.5 shadow-sm"
+                className="p-5 rounded-2xl bg-white/70 dark:bg-black/20 border border-slate-200/80 dark:border-white/5 space-y-2.5 shadow-sm"
               >
-                <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
-                  <span className="font-bold text-cyan-400">{reply.author}</span>
-                  <span className="text-[11px] text-zinc-500">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-zinc-400">
+                  <span className="font-bold text-cyan-600 dark:text-cyan-400">{reply.author}</span>
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-500">
                     {new Date(reply.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US')}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed whitespace-pre-line">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed whitespace-pre-line">
                   {reply.content}
                 </p>
               </div>

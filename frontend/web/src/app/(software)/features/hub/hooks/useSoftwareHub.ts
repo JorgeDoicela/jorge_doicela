@@ -40,9 +40,10 @@ export function useSoftwareHub(search: string = '') {
 
         if (!isMounted) return;
 
-        const data: HubResponseData = res?.data || res || { featured: [], feed: [] };
-        setFeatured(data.featured || []);
-        setFeed(data.feed || []);
+        const payload = res?.data?.data || res?.data || res;
+        const data: HubResponseData = payload || { featured: [], feed: [] };
+        setFeatured(Array.isArray(data.featured) ? data.featured : []);
+        setFeed(Array.isArray(data.feed) ? data.feed : []);
         if (data.spotlightData) {
           setSpotlightData(data.spotlightData);
         }

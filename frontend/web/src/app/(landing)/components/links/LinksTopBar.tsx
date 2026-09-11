@@ -3,32 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTranslations } from 'next-intl';
+import { ThemeToggle } from '../ThemeToggle';
 
 export function LinksTopBar() {
   const { language, toggleLanguage } = useLanguage();
   const t = useTranslations('Links');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState('');
-
-  useEffect(() => {
-    setMounted(true);
-    const isDocLight = document.documentElement.getAttribute('data-theme') === 'light' || document.documentElement.classList.contains('light');
-    const savedTheme = localStorage.getItem('landing-theme') as 'dark' | 'light' | null;
-    const initialTheme = savedTheme || (isDocLight ? 'light' : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
-    setTheme(initialTheme);
-
-    const isLight = initialTheme === 'light';
-    document.documentElement.classList.toggle('light', isLight);
-    if (isLight) {
-      document.documentElement.setAttribute('data-theme', 'light');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  }, []);
 
   useEffect(() => {
     const updateQuitoTime = () => {
@@ -48,19 +30,6 @@ export function LinksTopBar() {
     return () => clearInterval(timer);
   }, [language]);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('landing-theme', nextTheme);
-    const isLight = nextTheme === 'light';
-    document.documentElement.classList.toggle('light', isLight);
-    if (isLight) {
-      document.documentElement.setAttribute('data-theme', 'light');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  };
-
   return (
     <header
       className="animate-fade-in-up fixed top-5 left-5 right-5 sm:top-6 sm:left-8 sm:right-8 md:top-7 md:left-10 md:right-10 z-50 flex items-center justify-between pointer-events-none"
@@ -73,12 +42,22 @@ export function LinksTopBar() {
           className="flex items-center gap-2 hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
           aria-label="Jorge Doicela - Inicio"
         >
+          {/* Logo Blanco (Modo Oscuro) */}
           <Image
-            src={theme === 'dark' ? '/landing/logo/logo_blanco.png' : '/landing/logo/logo_negro.png'}
+            src="/landing/logo/logo_blanco.png"
             alt="Jorge Doicela"
             width={28}
             height={28}
-            className="h-5 sm:h-6 w-auto object-contain"
+            className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
+            priority
+          />
+          {/* Logo Negro (Modo Claro) */}
+          <Image
+            src="/landing/logo/logo_negro.png"
+            alt="Jorge Doicela"
+            width={28}
+            height={28}
+            className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
             priority
           />
         </Link>
@@ -115,18 +94,8 @@ export function LinksTopBar() {
           {language === 'es' ? 'EN' : 'ES'}
         </button>
 
-        {/* Alternador de Tema */}
-        <button
-          onClick={toggleTheme}
-          className="text-text-muted hover:text-foreground transition-colors p-1.5 rounded-md hover:bg-foreground/5 cursor-pointer active:scale-95 flex items-center justify-center"
-          aria-label="Alternar tema"
-        >
-          {mounted && theme === 'dark' ? (
-            <Sun size={15} className="text-text-muted hover:text-foreground" />
-          ) : (
-            <Moon size={15} className="text-text-muted hover:text-foreground" />
-          )}
-        </button>
+        {/* Alternador de Tema Profesional */}
+        <ThemeToggle />
       </div>
     </header>
   );

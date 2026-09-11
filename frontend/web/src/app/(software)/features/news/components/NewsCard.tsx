@@ -27,7 +27,7 @@ export function NewsCard({ article }: NewsCardProps) {
   return (
     <Link
       href={`/software/news/${article.slug}`}
-      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm cursor-pointer"
+      className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-cyan-500/30 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none cursor-pointer"
     >
       <div className="space-y-3.5">
         <ArticleCover
@@ -39,28 +39,28 @@ export function NewsCard({ article }: NewsCardProps) {
 
         <div>
           <div className="flex items-center justify-between gap-2 mb-1.5">
-            <span className="text-[11px] font-mono font-bold tracking-wide text-cyan-400">
+            <span className="text-[11px] font-mono font-bold tracking-wide text-cyan-600 dark:text-cyan-400">
               {article.isBreaking ? 'BREAKING — ' : ''}{tNav('news')}
             </span>
-            <span className="text-[11px] text-zinc-500 font-mono">{formattedDate}</span>
+            <span className="text-[11px] text-slate-500 dark:text-zinc-500 font-mono">{formattedDate}</span>
           </div>
 
-          <h3 className="text-base font-bold text-[var(--header-title)] group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2">
+          <h3 className="text-base font-bold text-slate-900 dark:text-[var(--header-title)] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors leading-snug line-clamp-2">
             {article.title}
           </h3>
 
-          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+          <p className="text-xs text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5">
             {article.excerpt}
           </p>
         </div>
       </div>
 
-      <div className="pt-3 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono">
-        <span className="text-zinc-500">
+      <div className="pt-3 mt-4 border-t border-slate-200/70 dark:border-white/5 flex items-center justify-between text-xs font-mono">
+        <span className="text-slate-500 dark:text-zinc-500">
           {tCard('viewsCount', { count: article.views })}
         </span>
 
-        <span className="inline-flex items-center gap-1 font-semibold text-cyan-400 group-hover:translate-x-1 transition-transform">
+        <span className="inline-flex items-center gap-1 font-semibold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
           {tCard('readNote')}
         </span>
       </div>

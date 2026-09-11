@@ -62,7 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────────────────────
-    // 3. SOFTWARE (software.jorgedoicela.com) — 7 Áreas
+    // 3. SOFTWARE (software.jorgedoicela.com) — 8 Áreas
     // Al migrar a servidor independiente: copiar solo este bloque
     // en el sitemap.ts de la nueva app Next.js y borrar los demás.
     // ─────────────────────────────────────────────────────────────
@@ -120,6 +120,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.85,
+        },
+        {
+            url: 'https://software.jorgedoicela.com/software/infrastructure',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.9,
         },
     ];
 

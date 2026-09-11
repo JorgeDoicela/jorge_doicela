@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 interface ArticleCoverProps {
   title: string;
-  category: 'news' | 'blog' | 'ai' | 'cybersecurity' | 'tutorials' | 'forum' | 'projects';
+  category: 'news' | 'blog' | 'ai' | 'cybersecurity' | 'tutorials' | 'forum' | 'projects' | 'infrastructure';
   coverImage?: string;
   tag?: string;
   priority?: boolean;
@@ -17,6 +17,16 @@ export function ArticleCover({ title, category, coverImage, priority = false }: 
   // Paletas y gradientes temáticos para fallback procedural
   const getThemeDetails = () => {
     switch (category) {
+      case 'infrastructure':
+        return {
+          gradient: 'from-emerald-950/60 via-slate-900/80 to-teal-950/70',
+          accentBorder: 'border-emerald-500/20',
+          iconSvg: (
+            <svg className="w-12 h-12 text-emerald-400/90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+            </svg>
+          ),
+        };
       case 'news':
         return {
           gradient: 'from-cyan-950/60 via-slate-900/80 to-blue-950/70',

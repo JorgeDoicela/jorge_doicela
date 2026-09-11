@@ -10,13 +10,13 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 > **Arquitectura Macro:**
 > * **Monolito Modular Orquestado:** Módulo orquestador en `backend/src/software/software.module.ts` dentro del proceso único NestJS (puerto `3000`, VPS 1 GB RAM).
 > * **Aislamiento de Persistencia:** Base de datos física independiente `backend/data/software.sqlite` registrada con la conexión TypeORM `'softwareConnection'`.
-> * **Aislamiento de Dominio:** 7 submódulos verticales con sus propios módulos, controladores, servicios y entidades.
+> * **Aislamiento de Dominio:** 8 submódulos verticales con sus propios módulos, controladores, servicios y entidades.
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en 3 Capas por Submódulo:**
->   1. *Presentación:* Controladores REST (`NewsController`, `BlogController`, `ForumController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`).
->   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas (`NewsService`, `BlogService`, etc.).
->   3. *Acceso a Datos:* 9 entidades TypeORM en `better-sqlite3` (`NewsArticle`, `BlogPost`, `ForumTopic`, `ForumReply`, `AiResource`, `SecurityPost`, `Tutorial`, `TutorialStep`, `Project`).
+>   1. *Presentación:* Controladores REST (`NewsController`, `BlogController`, `ForumController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`, `InfrastructureController`).
+>   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas (`NewsService`, `BlogService`, `InfrastructureService`, etc.).
+>   3. *Acceso a Datos:* 10 entidades TypeORM en `better-sqlite3` (`NewsArticle`, `BlogPost`, `ForumTopic`, `ForumReply`, `AiResource`, `SecurityPost`, `Tutorial`, `TutorialStep`, `Project`, `InfrastructurePost`).
 
 ---
 
@@ -24,9 +24,9 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 
 ```text
 backend/src/software/
-├── software.module.ts                 # Orquestador puro de los 7 submódulos (registra 9 entidades)
+├── software.module.ts                 # Orquestador puro de los 8 submódulos (registra 10 entidades)
 ├── cli/
-│   └── seed-software.ts               # Sembrado transaccional atómico CLI (8 tablas desde corpus/*.json)
+│   └── seed-software.ts               # Sembrado transaccional atómico CLI (9 tablas desde corpus/*.json)
 │
 ├── corpus/                            # DATASETS JSON ESTRUCTURADOS (FUENTE DE VERDAD)
 │   ├── news.json                      # Noticias iniciales de tecnología
@@ -35,7 +35,8 @@ backend/src/software/
 │   ├── ai.json                        # Modelos LLM, agentes y servidores MCP
 │   ├── security.json                  # Avisos de ciberseguridad y guías de bastionado
 │   ├── tutorials.json                 # Tutoriales con pasos y snippets de código
-│   └── projects.json                  # Proyectos showcase de Jorge Doicela
+│   ├── projects.json                  # Proyectos showcase de Jorge Doicela
+│   └── infrastructure.json            # Guías de infraestructura, servidores y cloud
 │
 ├── news/                              # 1. NOTICIAS Y TENDENCIAS
 │   ├── news.module.ts
@@ -81,12 +82,19 @@ backend/src/software/
 │   ├── entities/tutorial-step.entity.ts
 │   └── dto/{create-tutorial.dto.ts, create-tutorial-step.dto.ts}
 │
-└── projects/                          # 7. PROYECTOS SHOWCASE
-    ├── projects.module.ts
-    ├── controllers/projects.controller.ts # /software/projects
-    ├── services/projects.service.ts
-    ├── entities/project.entity.ts
-    └── dto/{create-project.dto.ts, update-project.dto.ts}
+├── projects/                          # 7. PROYECTOS SHOWCASE
+│   ├── projects.module.ts
+│   ├── controllers/projects.controller.ts # /software/projects
+│   ├── services/projects.service.ts
+│   ├── entities/project.entity.ts
+│   └── dto/{create-project.dto.ts, update-project.dto.ts}
+│
+└── infrastructure/                    # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD
+    ├── infrastructure.module.ts
+    ├── controllers/infrastructure.controller.ts # /software/infrastructure
+    ├── services/infrastructure.service.ts
+    ├── entities/infrastructure-post.entity.ts
+    └── dto/{create-infrastructure-post.dto.ts}
 ```
 
 ---
@@ -128,6 +136,12 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `POST /software/projects` | - | Registrar nuevo proyecto showcase |
 | | `PATCH /software/projects/:id` | - | Actualizar campos o estado de un proyecto |
 | | `DELETE /software/projects/:id` | - | Eliminar proyecto por ID |
+| **Infraestructura** | `GET /software/infrastructure` | `category`, `environment`, `difficulty`, `search`, `lang` | Guías de servidores y cloud filtrables |
+| | `GET /software/infrastructure/categories` | `lang` | Categorías disponibles con conteo de guías |
+| | `GET /software/infrastructure/:idOrSlug` | `lang` | Detalle de guía técnica con specs e incremento de vistas |
+| | `POST /software/infrastructure/:id/like` | - | Incremento atómico de likes en la guía |
+| | `POST /software/infrastructure` | - | Registrar nueva guía de infraestructura |
+| | `DELETE /software/infrastructure/:id` | - | Eliminar guía por ID |
 
 ---
 
@@ -151,6 +165,9 @@ La persistencia implementa soporte multiidioma nativo mediante la columna `langu
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`.
 * `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `repoUrl`, `liveUrl`, `status`, `featured`, `stars`, `views`, `architectureDiagramUrl`.  
   * **Índice Único:** `IDX_projects_slug_lang (slug, language)`.
+* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`, `createdAt`, `updatedAt`.  
+  * **Índice Único:** `IDX_infrastructure_posts_slug_lang (slug, language)`.
+  * **Índices Secundarios:** `IDX_infrastructure_posts_cat (category)`, `IDX_infrastructure_posts_env (environment)`.
 
 ---
 

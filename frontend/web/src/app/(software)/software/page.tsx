@@ -11,6 +11,7 @@ import { useAi } from '../features/ai/hooks/useAi';
 import { useCybersecurity } from '../features/cybersecurity/hooks/useCybersecurity';
 import { useTutorials } from '../features/tutorials/hooks/useTutorials';
 import { useProjects } from '../features/projects/hooks/useProjects';
+import { useInfrastructure } from '../features/infrastructure/hooks/useInfrastructure';
 import { SpotlightModal } from '../features/os/components/SpotlightModal';
 import { CategoryNav, SoftwareSection } from '../features/navigation/components/CategoryNav';
 import { ArticleCover } from '../components/ArticleCover';
@@ -36,6 +37,7 @@ export default function SoftwarePage() {
   const { tutorials, loading: loadingTut } = useTutorials(undefined, search);
   const { topics, loading: loadingForum } = useForum('all', search);
   const { projects, loading: loadingProj } = useProjects(search);
+  const { posts: infraPosts, loading: loadingInfra } = useInfrastructure(undefined, undefined, undefined, search);
 
   // Destacados (Top 3)
   const featuredArticle1 = news[0];
@@ -71,6 +73,7 @@ export default function SoftwarePage() {
         secPosts={secPosts}
         tutorials={tutorials}
         projects={projects}
+        infraPosts={infraPosts}
       />
 
       {/* 2. CONTENIDO PRINCIPAL ESTILO EDITORIAL TECH */}
@@ -409,6 +412,35 @@ export default function SoftwarePage() {
                           </h4>
                           <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
                             {proj.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+
+                {/* Infraestructura, Servidores y Cloud */}
+                {(activeCategory === 'all' || activeCategory === 'infrastructure') &&
+                  infraPosts.map((inf) => (
+                    <Link
+                      key={`infra-${inf.id}`}
+                      href={`/software/infrastructure/${inf.slug}`}
+                      className="p-4 sm:p-5 rounded-2xl bg-black/20 dark:bg-[#16202c]/80 hover:bg-black/30 dark:hover:bg-[#1c2938] border border-black/5 dark:border-white/[0.07] hover:border-black/10 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-sm cursor-pointer"
+                    >
+                      <div className="space-y-3.5">
+                        <ArticleCover
+                          title={inf.title}
+                          category="infrastructure"
+                          tag={inf.environment.toUpperCase()}
+                        />
+                        <div>
+                          <p className="text-[11px] font-mono text-emerald-400 font-semibold uppercase">
+                            {inf.category} · {inf.difficulty}
+                          </p>
+                          <h4 className="text-base font-bold text-[var(--header-title)] group-hover:text-emerald-400 transition-colors leading-snug mt-1.5 line-clamp-2">
+                            {inf.title}
+                          </h4>
+                          <p className="text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5">
+                            {inf.subtitle || inf.architectureOverview}
                           </p>
                         </div>
                       </div>

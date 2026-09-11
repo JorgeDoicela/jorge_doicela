@@ -138,6 +138,24 @@ interface ProjectSeedItem {
   architectureDiagramUrl?: string;
 }
 
+interface InfrastructureSeedItem {
+  slug: string;
+  title: string;
+  subtitle?: string;
+  category: string;
+  environment: string;
+  difficulty: string;
+  techStack: string;
+  architectureOverview?: string;
+  specs?: string;
+  contentMarkdown: string;
+  author?: string;
+  tags?: string;
+  language?: string;
+  views?: number;
+  likes?: number;
+}
+
 export function seedSoftware(
   dbPath: string = resolveDatabasePath(
     'DATABASE_SOFTWARE_PATH',
@@ -153,6 +171,7 @@ export function seedSoftware(
   // Asegurar estructura de tablas relacionales limpias
   db.exec(`
     DROP TABLE IF EXISTS articles;
+    DROP TABLE IF EXISTS infrastructure_posts;
     DROP TABLE IF EXISTS tutorial_steps;
     DROP TABLE IF EXISTS tutorials;
     DROP TABLE IF EXISTS security_posts;
@@ -331,6 +350,30 @@ export function seedSoftware(
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_projects_slug_lang ON projects (slug, language);
 
+    CREATE TABLE IF NOT EXISTS infrastructure_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL,
+      title TEXT NOT NULL,
+      subtitle TEXT,
+      category TEXT NOT NULL DEFAULT 'servers',
+      environment TEXT NOT NULL DEFAULT 'production',
+      difficulty TEXT NOT NULL DEFAULT 'intermediate',
+      techStack TEXT NOT NULL DEFAULT 'Debian, Linux, Nginx',
+      architectureOverview TEXT,
+      specs TEXT,
+      contentMarkdown TEXT NOT NULL,
+      author TEXT NOT NULL DEFAULT 'Jorge Doicela',
+      tags TEXT NOT NULL DEFAULT 'infrastructure,cloud,sysadmin',
+      language TEXT NOT NULL DEFAULT 'es',
+      views INTEGER NOT NULL DEFAULT 0,
+      likes INTEGER NOT NULL DEFAULT 0,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_infrastructure_posts_slug_lang ON infrastructure_posts (slug, language);
+    CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_cat ON infrastructure_posts (category);
+    CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_env ON infrastructure_posts (environment);
+
   `);
 
   let corpusDir = path.resolve(__dirname, '../corpus');
@@ -475,6 +518,28 @@ export function seedSoftware(
         ...item,
         featured: item.featured ? 1 : 0,
         language: item.language || 'es',
+      });
+    }
+
+    // 8. Infraestructura (infrastructure_posts)
+    const insertInfra = db.prepare(`
+      INSERT OR REPLACE INTO infrastructure_posts
+        (slug, title, subtitle, category, environment, difficulty, techStack, architectureOverview, specs, contentMarkdown, author, tags, language, views, likes)
+      VALUES
+        (@slug, @title, @subtitle, @category, @environment, @difficulty, @techStack, @architectureOverview, @specs, @contentMarkdown, @author, @tags, @language, @views, @likes)
+    `);
+    const infraData = readJson<InfrastructureSeedItem[]>('infrastructure.json');
+    for (const item of infraData) {
+      insertInfra.run({
+        ...item,
+        subtitle: item.subtitle || null,
+        architectureOverview: item.architectureOverview || null,
+        specs: item.specs || null,
+        author: item.author || 'Jorge Doicela',
+        tags: item.tags || 'infrastructure,cloud,sysadmin',
+        language: item.language || 'es',
+        views: item.views || 0,
+        likes: item.likes || 0,
       });
     }
   });

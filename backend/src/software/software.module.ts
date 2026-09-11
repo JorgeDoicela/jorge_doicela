@@ -11,8 +11,9 @@ import { SecurityPost } from './cybersecurity/entities/security-post.entity';
 import { Tutorial } from './tutorials/entities/tutorial.entity';
 import { TutorialStep } from './tutorials/entities/tutorial-step.entity';
 import { Project } from './projects/entities/project.entity';
+import { InfrastructurePost } from './infrastructure/entities/infrastructure-post.entity';
 
-// 7 Submódulos Verticales Desacoplados
+// 8 Submódulos Verticales Desacoplados
 import { NewsModule } from './news/news.module';
 import { BlogModule } from './blog/blog.module';
 import { ForumModule } from './forum/forum.module';
@@ -20,6 +21,7 @@ import { AiModule } from './ai/ai.module';
 import { CybersecurityModule } from './cybersecurity/cybersecurity.module';
 import { TutorialsModule } from './tutorials/tutorials.module';
 import { ProjectsModule } from './projects/projects.module';
+import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
@@ -41,6 +43,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         Tutorial,
         TutorialStep,
         Project,
+        InfrastructurePost,
       ],
       synchronize: true,
     }),
@@ -51,6 +54,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     CybersecurityModule,
     TutorialsModule,
     ProjectsModule,
+    InfrastructureModule,
   ],
 })
 export class SoftwareModule {}

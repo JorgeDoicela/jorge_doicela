@@ -1,17 +1,17 @@
 # Software | Jorge Doicela
 
-> Plataforma tecnológica y laboratorio digital de Jorge Doicela con 7 áreas de conocimiento: Noticias, Blog de Arquitectura, Foros de Discusión, Directorio de IA, Ciberseguridad, Tutoriales Interactivos y Proyectos Open Source.
+> Plataforma tecnológica y laboratorio digital de Jorge Doicela con 8 áreas de conocimiento: Noticias, Blog de Arquitectura, Foros de Discusión, Directorio de IA, Ciberseguridad, Tutoriales Interactivos, Proyectos Open Source e Infraestructura, Servidores y Cloud.
 
 ## Información General
 - **URL Canónica:** https://software.jorgedoicela.com
 - **Autor / Creador:** Jorge Ismael Doicela Molina
 - **Arquitectura Frontend:** Next.js 16 (App Router, SSR, Server Components), TypeScript, Feature-Sliced Design (FSD) y estética Neumorphism UI + Glassmorphism.
-- **Arquitectura Backend:** NestJS 11 modular estructurado en 7 submódulos independientes con base de datos relacional SQLite (`software.sqlite`) y fuente de verdad en `corpus/*.json`.
+- **Arquitectura Backend:** NestJS 11 modular estructurado en 8 submódulos independientes con base de datos relacional SQLite (`software.sqlite`) y fuente de verdad en `corpus/*.json`.
 - **Internacionalización:** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` y filtrado en base de datos vía `?lang=`.
 
 ---
 
-## Las 7 Áreas Especializadas de Software
+## Las 8 Áreas Especializadas de Software
 
 ### 1. Noticias de Tecnología (`/software/news`)
 - **Descripción:** Actualidad y tendencias sobre desarrollo de software, Inteligencia Artificial, lenguajes de programación y herramientas DevOps.
@@ -40,6 +40,10 @@
 ### 7. Catálogo de Proyectos Showcase (`/software/projects`)
 - **Descripción:** Muestra de sistemas, librerías y aplicaciones desarrolladas por Jorge Doicela.
 - **Capacidades:** Diagramas de arquitectura, demos en vivo, enlaces a repositorios GitHub y métricas de estado.
+
+### 8. Infraestructura, Servidores y Cloud (`/software/infrastructure`)
+- **Descripción:** Guías de arquitectura e ingeniería de sistemas sobre servidores Linux Debian 13, despliegue cloud en AWS Lightsail, topologías en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y pipelines CI/CD.
+- **Capacidades:** Fichas de telemetría de servidor (`specs`: RAM, CPU, OS, puertos), comandos terminal interactivos y recetas de bastionado y automatización con Systemd.
 
 ---
 

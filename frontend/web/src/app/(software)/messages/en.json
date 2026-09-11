@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Software | Jorge Doicela",
-    "description": "Technology platform featuring 7 categories: News, Architecture Blog, Technical Forums, Artificial Intelligence, Cybersecurity, Tutorials, and Projects Showcase."
+    "description": "Technology platform featuring 8 categories: News, Architecture Blog, Technical Forums, Artificial Intelligence, Cybersecurity, Tutorials, Projects Showcase, and Infrastructure, Servers & Cloud."
   },
   "Nav": {
     "all": "All Content",
@@ -12,6 +12,7 @@
     "cybersecurity": "Cybersecurity",
     "tutorials": "Tutorials",
     "projects": "Projects",
+    "infrastructure": "Infrastructure",
     "backToSoftware": "← Back to Software",
     "portal": "Back to jorgedoicela.com",
     "portalShort": "Portal"
@@ -118,6 +119,7 @@
     "starsCount": "{count} stars"
   },
   "Filters": {
+    "allCategories": "All Categories",
     "allSeverities": "All severities",
     "critical": "Critical",
     "high": "High",
@@ -190,7 +192,14 @@
     "techStackUsed": "Technology Stack Used",
     "architecturePrinciples": "Architecture & Design Principles",
     "architecturePrinciplesDesc": "This system is built upon the black-box principle (complete decoupling of dependencies and local types), optimized to run in memory-constrained environments (1 GB RAM) with physical SQLite persistence and Feature-Sliced Design (FSD) in Next.js.",
-    "openSourceLicense": "Open Source"
+    "openSourceLicense": "Open Source",
+    "loadingInfrastructure": "Loading infrastructure guide...",
+    "allInfrastructure": "← All Guides",
+    "serverSpecs": "Node Telemetry & Specifications",
+    "environment": "Environment:",
+    "difficulty": "Difficulty:",
+    "postNotFound": "Publication not found",
+    "architectureOverview": "Solution Architecture"
   },
   "News": {
     "badge": "Latest & Tech News",
@@ -266,5 +275,19 @@
     "searchPlaceholder": "Search projects or stack...",
     "back": "← Back to Projects",
     "empty": "No software projects currently available."
+  },
+  "Infrastructure": {
+    "badge": "Servers, Cloud & Sysadmin",
+    "title": "Infrastructure & Cloud",
+    "subtitle": "Architecture guides for production servers, cloud topologies, Linux hardening, containers, and low-resource hardware optimization.",
+    "searchPlaceholder": "Search infrastructure guides, servers, docker...",
+    "back": "← Back to Infrastructure",
+    "catServers": "Linux Servers",
+    "catCloud": "Cloud & VPS",
+    "catContainers": "Containers",
+    "catNetworking": "Networking & Edge",
+    "catCiCd": "CI/CD & DevOps",
+    "catHardening": "Hardening & Bastion",
+    "empty": "No infrastructure guides found in this section."
   }
 }

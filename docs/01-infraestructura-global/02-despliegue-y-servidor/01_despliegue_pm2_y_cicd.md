@@ -278,7 +278,7 @@ server {
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
 
     # 1. API REST Backend NestJS / Frontend Next.js - Desacoplamiento por Accept Header + Rate Limiting
-    location ~ ^/(bible/(verses|translations|morphology|books|historical)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials)|portfolio/(contact|projects|sandbox)) {
+    location ~ ^/(bible/(verses|translations|morphology|books|historical|literary|evangelism)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials|infrastructure)|portfolio/(contact|projects|sandbox)) {
         limit_req zone=api_limit_zone burst=25 nodelay;
         proxy_pass $backend_upstream;
         proxy_http_version 1.1;

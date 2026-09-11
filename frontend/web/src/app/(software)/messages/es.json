@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Software | Jorge Doicela",
-    "description": "Plataforma tecnológica con 7 categorías: Noticias, Blog de Arquitectura, Foros, Inteligencia Artificial, Ciberseguridad, Tutoriales y Proyectos Showcase."
+    "description": "Plataforma tecnológica con 8 categorías: Noticias, Blog de Arquitectura, Foros, Inteligencia Artificial, Ciberseguridad, Tutoriales, Proyectos Showcase e Infraestructura, Servidores y Cloud."
   },
   "Nav": {
     "all": "Todo el Contenido",
@@ -12,6 +12,7 @@
     "cybersecurity": "Ciberseguridad",
     "tutorials": "Tutoriales",
     "projects": "Proyectos",
+    "infrastructure": "Infraestructura",
     "backToSoftware": "← Volver a Software",
     "portal": "Volver a jorgedoicela.com",
     "portalShort": "Portal"
@@ -118,6 +119,7 @@
     "starsCount": "{count} stars"
   },
   "Filters": {
+    "allCategories": "Todas las categorías",
     "allSeverities": "Todas las severidades",
     "critical": "Crítico",
     "high": "Alto",
@@ -190,7 +192,14 @@
     "techStackUsed": "Stack Tecnológico Utilizado",
     "architecturePrinciples": "Arquitectura y Principios de Diseño",
     "architecturePrinciplesDesc": "Este sistema está construido bajo el principio de cajas negras independientes (desacoplamiento total de dependencias y tipos locales), optimizado para ejecutarse en entornos de memoria controlada (1 GB de RAM) con persistencia física SQLite y arquitectura basada en Feature-Sliced Design (FSD) en Next.js.",
-    "openSourceLicense": "Open Source"
+    "openSourceLicense": "Open Source",
+    "loadingInfrastructure": "Cargando guía de infraestructura...",
+    "allInfrastructure": "← Todas las guías",
+    "serverSpecs": "Telemetría & Especificaciones del Nodo",
+    "environment": "Entorno:",
+    "difficulty": "Dificultad:",
+    "postNotFound": "Publicación no encontrada",
+    "architectureOverview": "Arquitectura de la Solución"
   },
   "News": {
     "badge": "Actualidad & Novedades",
@@ -266,5 +275,19 @@
     "searchPlaceholder": "Buscar proyectos o stack...",
     "back": "← Volver a Proyectos",
     "empty": "No se encontraron proyectos disponibles."
+  },
+  "Infrastructure": {
+    "badge": "Servidores, Cloud & Sysadmin",
+    "title": "Infraestructura & Cloud",
+    "subtitle": "Guías de arquitectura para servidores, topologías en la nube, hardening de Linux, contenedores y optimización para hardware restringido.",
+    "searchPlaceholder": "Buscar guías de infraestructura, servidores, docker...",
+    "back": "← Volver a Infraestructura",
+    "catServers": "Servidores Linux",
+    "catCloud": "Cloud & VPS",
+    "catContainers": "Contenedores",
+    "catNetworking": "Redes & Edge",
+    "catCiCd": "CI/CD & DevOps",
+    "catHardening": "Hardening & Bastionado",
+    "empty": "No se encontraron guías de infraestructura en esta sección."
   }
 }

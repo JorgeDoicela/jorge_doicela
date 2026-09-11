@@ -24,6 +24,7 @@ export function Dock({ onOpenSpotlight }: DockProps) {
     { label: tNav('tutorials'), shortLabel: 'TUTS', href: '/software/tutorials' },
     { label: tNav('forum'), shortLabel: 'FORUM', href: '/software/forum' },
     { label: tNav('projects'), shortLabel: 'PROJ', href: '/software/projects' },
+    { label: tNav('infrastructure'), shortLabel: 'INFRA', href: '/software/infrastructure' },
   ];
 
   return (

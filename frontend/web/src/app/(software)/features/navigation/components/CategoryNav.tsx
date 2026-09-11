@@ -12,7 +12,8 @@ export type SoftwareSection =
     | 'ai'
     | 'cybersecurity'
     | 'tutorials'
-    | 'projects';
+    | 'projects'
+    | 'infrastructure';
 
 interface CategoryNavProps {
     selectedCategory: SoftwareSection;
@@ -29,6 +30,7 @@ export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
     tutorials: '/software/tutorials',
     forum: '/software/forum',
     projects: '/software/projects',
+    infrastructure: '/software/infrastructure',
 };
 
 export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
@@ -40,6 +42,7 @@ export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
     { id: 'tutorials', key: 'tutorials' },
     { id: 'forum', key: 'forum' },
     { id: 'projects', key: 'projects' },
+    { id: 'infrastructure', key: 'infrastructure' },
 ];
 
 export function CategoryNav({

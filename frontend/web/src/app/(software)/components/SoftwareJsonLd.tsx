@@ -9,7 +9,7 @@ export default function SoftwareJsonLd() {
         'name': 'Software | Jorge Doicela',
         'applicationCategory': 'DeveloperApplication, EducationalApplication',
         'operatingSystem': 'Web, Linux, Windows, macOS',
-        'description': 'Plataforma tecnológica y centro de ingeniería con 7 áreas especializadas: Noticias de tecnología, Blog de arquitectura de software, Foros comunitarios, Directorio de IA y MCP Servers, Ciberseguridad y bastionado, Tutoriales interactivos y Proyectos open source.',
+        'description': 'Plataforma tecnológica y centro de ingeniería con 8 áreas especializadas: Noticias de tecnología, Blog de arquitectura de software, Foros comunitarios, Directorio de IA y MCP Servers, Ciberseguridad y bastionado, Tutoriales interactivos, Proyectos open source e Infraestructura, Servidores y Cloud.',
         'inLanguage': ['es', 'en'],
         'author': {
           '@type': 'Person',
@@ -52,6 +52,11 @@ export default function SoftwareJsonLd() {
             '@type': 'WebPage',
             'name': 'Catálogo de Proyectos Showcase',
             'url': 'https://software.jorgedoicela.com/software/projects'
+          },
+          {
+            '@type': 'WebPage',
+            'name': 'Infraestructura, Servidores & Cloud',
+            'url': 'https://software.jorgedoicela.com/software/infrastructure'
           }
         ]
       }

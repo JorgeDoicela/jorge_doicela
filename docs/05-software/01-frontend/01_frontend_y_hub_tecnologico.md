@@ -14,8 +14,8 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > * **Aislamiento de Dominio:** Estilos independientes en `(software)/globals.css`. Cero importaciones de otros subdominios.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** `features/news/`, `features/blog/`, `features/forum/`, `features/ai/`, `features/cybersecurity/`, `features/tutorials/`, `features/projects/`, `features/navigation/`.
-> * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 7 categorías, barras de navegación (`MenuBar`, `Dock`), badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
+> * **Feature-Sliced Design (FSD):** `features/news/`, `features/blog/`, `features/forum/`, `features/ai/`, `features/cybersecurity/`, `features/tutorials/`, `features/projects/`, `features/infrastructure/`, `features/navigation/`.
+> * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, barras de navegación (`MenuBar`, `Dock`), badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
 > * **Estética Neumorphism UI + Glassmorphism:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas.
 
@@ -49,24 +49,28 @@ frontend/web/src/app/(software)/
 │   ├── tutorials/
 │   │   ├── page.tsx                  # Malla de tutoriales con filtro por dificultad
 │   │   └── [slug]/page.tsx           # Tutorial interactivo paso a paso (StepWizard)
-│   └── projects/
-│       ├── page.tsx                  # Galería showcase con filtro por estado (activo / en desarrollo)
-│       └── [slug]/page.tsx           # Caso de estudio y arquitectura de proyecto
+│   ├── projects/
+│   │   ├── page.tsx                  # Galería showcase con filtro por estado (activo / en desarrollo)
+│   │   └── [slug]/page.tsx           # Caso de estudio y arquitectura de proyecto
+│   └── infrastructure/
+│       ├── page.tsx                  # Catálogo de infraestructura con selector de categorías y buscador
+│       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del servidor
 │
 └── features/                         # FEATURE-SLICED DESIGN (FSD)
-    ├── navigation/                   # CategoryNav (filtro de las 7 categorías)
+    ├── navigation/                   # CategoryNav (filtro de las 8 categorías)
     ├── news/                         # NewsCard, NewsGrid, useNews, types
     ├── blog/                         # BlogCard, BlogGrid, useBlog, types
     ├── forum/                        # TopicCard, ForumSection, useForum, types
     ├── ai/                           # AiCard, AiGrid, useAi, types
     ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
     ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
-    └── projects/                     # ProjectCard, ProjectGrid, useProjects, types
+    ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types
+    └── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
 ```
 
 ---
 
-## 3. Las 7 Categorías de Software
+## 3. Las 8 Categorías de Software
 
 1. **Noticias (`news`):** Novedades y actualidad del desarrollo de software y tecnología con alertas breaking.
 2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software, patrones de diseño y buenas prácticas.
@@ -75,14 +79,15 @@ frontend/web/src/app/(software)/
 5. **Ciberseguridad (`cybersecurity`):** Avisos con matriz de severidad (LOW a CRITICAL), guías de bastionado y remediación.
 6. **Tutoriales y Guías (`tutorials`):** Manuales paso a paso con código reproducible y asistente StepWizard.
 7. **Proyectos (`projects`):** Catálogo de sistemas, librerías y herramientas desarrolladas por Jorge con enlaces demo/repo.
+8. **Infraestructura (`infrastructure`):** Servidores Linux, topologías cloud (AWS Lightsail), arquitectura en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y CI/CD.
 
 ---
 
 ## 4. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
 * **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Software.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
-* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 7 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
-* **Dossier Especializado para IA (`public/software/llms.txt`):** Desglose detallado de las 7 áreas de conocimiento, tutoriales StepWizard y proyectos servido en `software.jorgedoicela.com/llms.txt`.
+* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Dossier Especializado para IA (`public/software/llms.txt`):** Desglose detallado de las 8 áreas de conocimiento, tutoriales StepWizard y proyectos servido en `software.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/software/manifest.json`):** Configuración de aplicación web independiente con tema `#0b0f19`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://software.jorgedoicela.com`.
 * **Cero Parpadeos (SSR):** El layout raíz `(software)/layout.tsx` resuelve el `locale` en el servidor con `getLocale()`, envolviendo a los hijos en `NextIntlClientProvider`.

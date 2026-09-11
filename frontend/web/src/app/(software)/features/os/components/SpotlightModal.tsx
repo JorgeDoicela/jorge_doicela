@@ -11,6 +11,7 @@ import { AiResource } from '../../ai/types';
 import { SecurityPost } from '../../cybersecurity/types';
 import { Tutorial } from '../../tutorials/types';
 import { Project } from '../../projects/types';
+import { InfrastructurePost } from '../../infrastructure/types';
 
 interface SpotlightModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface SpotlightModalProps {
   secPosts: SecurityPost[];
   tutorials: Tutorial[];
   projects: Project[];
+  infraPosts?: InfrastructurePost[];
 }
 
 export function SpotlightModal({
@@ -34,6 +36,7 @@ export function SpotlightModal({
   secPosts,
   tutorials,
   projects,
+  infraPosts = [],
 }: SpotlightModalProps) {
   const t = useTranslations('Spotlight');
   const tNav = useTranslations('Nav');
@@ -157,8 +160,20 @@ export function SpotlightModal({
       });
     });
 
+    infraPosts.forEach((inf) => {
+      items.push({
+        id: `infra-${inf.id}`,
+        title: inf.title,
+        category: 'infrastructure',
+        categoryLabel: tNav('infrastructure'),
+        snippet: inf.subtitle || inf.architectureOverview || inf.contentMarkdown.slice(0, 100),
+        href: `/software/infrastructure/${inf.slug}`,
+        tag: inf.environment.toUpperCase(),
+      });
+    });
+
     return items;
-  }, [news, posts, topics, aiResources, secPosts, tutorials, projects]);
+  }, [news, posts, topics, aiResources, secPosts, tutorials, projects, infraPosts]);
 
   const filteredResults = useMemo(() => {
     if (!query.trim()) {

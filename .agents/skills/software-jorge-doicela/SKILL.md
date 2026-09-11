@@ -1,6 +1,6 @@
 ---
 name: software-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de Software (software.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 7 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (7 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos software.sqlite (9 tablas relacionales).
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de Software (software.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (8 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos software.sqlite (10 tablas relacionales).
 ---
 # Directrices de Desarrollo: Plataforma de Software (software.jorgedoicela.com)
 
@@ -55,22 +55,27 @@ frontend/web/src/app/(software)/
 │   ├── tutorials/
 │   │   ├── page.tsx                  # Malla de tutoriales con filtro por dificultad
 │   │   └── [slug]/page.tsx           # Tutorial interactivo paso a paso (StepWizard)
-│   └── projects/
-│       ├── page.tsx                  # Galería showcase con filtro por estado
-│       └── [slug]/page.tsx           # Caso de estudio y arquitectura
+│   ├── projects/
+│   │   ├── page.tsx                  # Galería showcase con filtro por estado
+│   │   └── [slug]/page.tsx           # Caso de estudio y arquitectura
+│   └── infrastructure/
+│       ├── page.tsx                  # Catálogo de infraestructura y guías de servidor
+│       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del nodo
 │
 └── features/                         # Features FSD
-    ├── navigation/                   # CategoryNav (selector de las 7 categorías)
+    ├── navigation/                   # CategoryNav (selector de las 8 categorías)
     ├── news/                         # NewsCard, NewsGrid, useNews, types
     ├── blog/                         # BlogCard, BlogGrid, useBlog, types
     ├── forum/                        # TopicCard, ForumSection, useForum, types
     ├── ai/                           # AiCard, AiGrid, useAi, types
     ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
     ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
-    └── projects/                     # ProjectCard, ProjectGrid, useProjects, types
+    ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types
+    ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
+    └── os/                           # Dock, MenuBar, SpotlightModal (Cmd+K)
 ```
 
-### 2.2 Las 7 Áreas Temáticas de Software
+### 2.2 Las 8 Áreas Temáticas de Software
 1. **Noticias (`news`):** Novedades y tendencias del sector de software con alertas breaking.
 2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software y buenas prácticas.
 3. **Foros (`forum`):** Espacio de discusión y debates técnicos comunitarios con respuestas anidadas.
@@ -78,9 +83,10 @@ frontend/web/src/app/(software)/
 5. **Ciberseguridad (`cybersecurity`):** Avisos de vulnerabilidades (LOW a CRITICAL), guías de bastionado y remediación.
 6. **Tutoriales (`tutorials`):** Guías prácticas paso a paso con código reproducible y StepWizard interactivo.
 7. **Proyectos (`projects`):** Galería showcase de herramientas y sistemas creados por Jorge.
+8. **Infraestructura (`infrastructure`):** Servidores Linux, topologías cloud (AWS Lightsail), arquitectura en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y CI/CD.
 
 ### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
-* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 7 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
 * **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
 
 ---
@@ -90,9 +96,9 @@ frontend/web/src/app/(software)/
 ### 3.1 Estructura de Directorios Backend
 ```text
 backend/src/software/
-├── software.module.ts                 # Orquestador puro (importa 7 submódulos, registra 9 entidades)
+├── software.module.ts                 # Orquestador puro (importa 8 submódulos, registra 10 entidades)
 ├── cli/
-│   └── seed-software.ts               # Sembrado transaccional atómico CLI (8 tablas desde corpus/*.json)
+│   └── seed-software.ts               # Sembrado transaccional atómico CLI (9 tablas desde corpus/*.json)
 │
 ├── corpus/                            # DATASETS JSON ESTRUCTURADOS (FUENTE DE VERDAD)
 │   ├── news.json
@@ -101,7 +107,8 @@ backend/src/software/
 │   ├── ai.json
 │   ├── security.json
 │   ├── tutorials.json
-│   └── projects.json
+│   ├── projects.json
+│   └── infrastructure.json
 │
 ├── news/                              # NewsArticle (GET|POST /software/news)
 ├── blog/                              # BlogPost (GET|POST /software/blog)
@@ -109,10 +116,11 @@ backend/src/software/
 ├── ai/                                # AiResource (GET|POST /software/ai)
 ├── cybersecurity/                     # SecurityPost (GET|POST /software/cybersecurity)
 ├── tutorials/                         # Tutorial + TutorialStep (GET|POST /software/tutorials)
-└── projects/                          # Project (GET|POST|PATCH|DELETE /software/projects)
+├── projects/                          # Project (GET|POST|PATCH|DELETE /software/projects)
+└── infrastructure/                    # InfrastructurePost (GET|POST /software/infrastructure)
 ```
 
-### 3.2 9 Entidades TypeORM en `software.sqlite`
+### 3.2 10 Entidades TypeORM en `software.sqlite`
 
 | Tabla | Propósito |
 |---|---|
@@ -125,6 +133,7 @@ backend/src/software/
 | `tutorials` | Guías con `difficulty` (`beginner`/`intermediate`/`advanced`), `estimatedMinutes` |
 | `tutorial_steps` | Pasos con FK `tutorialId`, `stepOrder`, `codeSnippet`, `codeLanguage` |
 | `projects` | Showcase con `status`, `featured`, `stars`, `repoUrl`, `liveUrl` |
+| `infrastructure_posts` | Guías de infraestructura con `category`, `environment`, `specs`, `techStack`, `views`, `likes` |
 
 ---
 

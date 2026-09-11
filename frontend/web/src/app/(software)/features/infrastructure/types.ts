@@ -61,13 +61,19 @@ export interface InfrastructurePost {
   language: string;
   views: number;
   likes: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
   createdAt: string;
   updatedAt: string;
 }
+
+export type InfrastructureSortBy = 'smart' | 'recent' | 'views' | 'likes' | 'difficulty';
 
 export interface InfrastructureFilter {
   category?: InfrastructureCategory | 'all';
   environment?: InfrastructureEnvironment | 'all';
   difficulty?: InfrastructureDifficulty | 'all';
   search?: string;
+  sortBy?: InfrastructureSortBy;
 }

@@ -34,7 +34,14 @@ export class ProjectsService {
       );
     }
 
-    qb.orderBy('proj.featured', 'DESC').addOrderBy('proj.createdAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore con ponderación Stars)
+    qb.addSelect(
+      '((proj.featured * 1000) + (proj.orderPriority * 20) + (proj.stars * 10) + (proj.views * 1.5))',
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('proj.createdAt', 'DESC');
+    qb.addOrderBy('proj.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

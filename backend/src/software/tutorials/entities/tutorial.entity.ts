@@ -59,6 +59,15 @@ export class Tutorial {
   @Column({ default: 0 })
   likes: number;
 
+  @Column({ default: false })
+  featured: boolean;
+
+  @Column({ default: 0 })
+  orderPriority: number;
+
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  publishedAt: Date;
+
   @OneToMany(() => TutorialStep, (step) => step.tutorial, { cascade: true })
   steps: TutorialStep[];
 

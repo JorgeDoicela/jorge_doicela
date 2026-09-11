@@ -12,6 +12,8 @@
     "author": "Jorge Doicela",
     "tags": "cybersecurity,linux,ssh,devsecops,security",
     "language": "es",
+    "featured": true,
+    "orderPriority": 100,
     "views": 380,
     "likes": 88
   },
@@ -28,6 +30,8 @@
     "author": "Jorge Doicela",
     "tags": "cybersecurity,jwt,auth,backend,security",
     "language": "es",
+    "featured": false,
+    "orderPriority": 40,
     "views": 460,
     "likes": 110
   },
@@ -44,6 +48,8 @@
     "author": "Jorge Doicela",
     "tags": "cybersecurity,linux,ssh,devsecops,security",
     "language": "en",
+    "featured": true,
+    "orderPriority": 100,
     "views": 380,
     "likes": 88
   },

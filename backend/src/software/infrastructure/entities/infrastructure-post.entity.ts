@@ -82,6 +82,16 @@ export class InfrastructurePost {
   @Column({ default: 0 })
   likes: number;
 
+  @Column({ default: false })
+  @Index()
+  featured: boolean;
+
+  @Column({ default: 0 })
+  orderPriority: number;
+
+  @Column({ type: 'datetime', nullable: true })
+  publishedAt?: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 

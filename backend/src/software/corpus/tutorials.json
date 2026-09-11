@@ -13,6 +13,8 @@
       "author": "Jorge Doicela",
       "tags": "tutorial,react,websockets,typescript,frontend",
       "language": "es",
+      "featured": true,
+      "orderPriority": 100,
       "coverImage": "/software/images/tutorial-terminal.jpg",
       "views": 510,
       "likes": 140
@@ -30,6 +32,8 @@
       "author": "Jorge Doicela",
       "tags": "tutorial,react,websockets,typescript,frontend",
       "language": "en",
+      "featured": true,
+      "orderPriority": 100,
       "coverImage": "/software/images/tutorial-terminal.jpg",
       "views": 510,
       "likes": 140

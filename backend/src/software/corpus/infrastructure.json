@@ -14,7 +14,10 @@
     "tags": "debian,linux,nginx,pm2,lightsail,cloudflare,devsecops",
     "language": "es",
     "views": 412,
-    "likes": 38
+    "likes": 38,
+    "featured": true,
+    "orderPriority": 95,
+    "publishedAt": "2026-09-10T10:00:00.000Z"
   },
   {
     "slug": "vps-1gb-debian-nginx-pm2",
@@ -31,7 +34,10 @@
     "tags": "debian,linux,nginx,pm2,lightsail,cloudflare,devops",
     "language": "en",
     "views": 215,
-    "likes": 24
+    "likes": 24,
+    "featured": true,
+    "orderPriority": 95,
+    "publishedAt": "2026-09-10T10:00:00.000Z"
   },
   {
     "slug": "perimeter-security-zero-ram-edge",
@@ -184,7 +190,10 @@
     "tags": "nextjs,debian,nginx,pm2,loopback,networking,incident-response,devsecops",
     "language": "es",
     "views": 520,
-    "likes": 64
+    "likes": 64,
+    "featured": true,
+    "orderPriority": 100,
+    "publishedAt": "2026-09-11T08:00:00.000Z"
   },
   {
     "slug": "nextjs-multitenant-loopback-incident-resolution",
@@ -201,6 +210,9 @@
     "tags": "nextjs,debian,nginx,pm2,loopback,networking,incident-response,devsecops",
     "language": "en",
     "views": 290,
-    "likes": 39
+    "likes": 39,
+    "featured": true,
+    "orderPriority": 100,
+    "publishedAt": "2026-09-11T08:00:00.000Z"
   }
 ]

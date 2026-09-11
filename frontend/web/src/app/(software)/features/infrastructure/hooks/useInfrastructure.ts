@@ -11,6 +11,7 @@ export function useInfrastructure(
   environment?: string,
   difficulty?: string,
   search: string = '',
+  sortBy?: string,
 ) {
   const locale = useLocale();
   const [posts, setPosts] = useState<InfrastructurePost[]>([]);
@@ -27,6 +28,7 @@ export function useInfrastructure(
       if (environment && environment !== 'all') params.append('environment', environment);
       if (difficulty && difficulty !== 'all') params.append('difficulty', difficulty);
       if (search.trim()) params.append('search', search.trim());
+      if (sortBy) params.append('sortBy', sortBy);
       if (locale) params.append('lang', locale);
 
       const url = `${API_URL}/software/infrastructure${params.toString() ? `?${params.toString()}` : ''}`;
@@ -41,7 +43,7 @@ export function useInfrastructure(
     } finally {
       setLoading(false);
     }
-  }, [category, environment, difficulty, search, locale]);
+  }, [category, environment, difficulty, search, sortBy, locale]);
 
   useEffect(() => {
     fetchInfrastructure();

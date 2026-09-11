@@ -33,7 +33,14 @@ export class AiService {
       );
     }
 
-    qb.orderBy('ai.createdAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore)
+    qb.addSelect(
+      '((ai.featured * 1000) + (ai.orderPriority * 20) + (ai.likes * 4) + (ai.views * 1.5))',
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('COALESCE(ai.publishedAt, ai.createdAt)', 'DESC');
+    qb.addOrderBy('ai.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

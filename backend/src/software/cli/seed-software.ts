@@ -17,6 +17,9 @@ interface NewsSeedItem {
   readTimeMinutes: number;
   views: number;
   likes: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
 }
 
 interface BlogSeedItem {
@@ -33,6 +36,9 @@ interface BlogSeedItem {
   readTimeMinutes: number;
   views: number;
   likes: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
 }
 
 interface ForumSeedData {
@@ -46,6 +52,7 @@ interface ForumSeedData {
     language?: string;
     isSolved: boolean;
     isPinned: boolean;
+    orderPriority?: number;
     repliesCount: number;
     views: number;
   }[];
@@ -75,6 +82,9 @@ interface AiSeedItem {
   language?: string;
   views: number;
   likes: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
 }
 
 interface SecuritySeedItem {
@@ -92,6 +102,9 @@ interface SecuritySeedItem {
   language?: string;
   views: number;
   likes: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
 }
 
 interface TutorialsSeedData {
@@ -111,6 +124,9 @@ interface TutorialsSeedData {
     coverImage?: string;
     views: number;
     likes: number;
+    featured?: boolean;
+    orderPriority?: number;
+    publishedAt?: string;
   }[];
   steps: {
     id: number;
@@ -133,6 +149,7 @@ interface ProjectSeedItem {
   liveUrl?: string;
   status: string;
   featured: boolean;
+  orderPriority?: number;
   stars: number;
   views: number;
   architectureDiagramUrl?: string;
@@ -154,6 +171,9 @@ interface InfrastructureSeedItem {
   language?: string;
   views?: number;
   likes?: number;
+  featured?: boolean;
+  orderPriority?: number;
+  publishedAt?: string;
 }
 
 export function seedSoftware(
@@ -190,6 +210,8 @@ export function seedSoftware(
       contentMarkdown TEXT NOT NULL,
       sourceUrl TEXT,
       isBreaking INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
       author TEXT NOT NULL DEFAULT 'Jorge Doicela',
       tags TEXT NOT NULL DEFAULT 'news,tech',
       language TEXT NOT NULL DEFAULT 'es',
@@ -219,6 +241,9 @@ export function seedSoftware(
       readTimeMinutes INTEGER NOT NULL DEFAULT 8,
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
+      publishedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -234,6 +259,7 @@ export function seedSoftware(
       language TEXT NOT NULL DEFAULT 'es',
       isSolved INTEGER NOT NULL DEFAULT 0,
       isPinned INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
       repliesCount INTEGER NOT NULL DEFAULT 0,
       views INTEGER NOT NULL DEFAULT 0,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -270,6 +296,9 @@ export function seedSoftware(
       language TEXT NOT NULL DEFAULT 'es',
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
+      publishedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -291,6 +320,9 @@ export function seedSoftware(
       language TEXT NOT NULL DEFAULT 'es',
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
+      publishedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -312,6 +344,9 @@ export function seedSoftware(
       coverImage TEXT,
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
+      publishedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -342,6 +377,7 @@ export function seedSoftware(
       liveUrl TEXT,
       status TEXT NOT NULL DEFAULT 'active',
       featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
       stars INTEGER NOT NULL DEFAULT 0,
       views INTEGER NOT NULL DEFAULT 0,
       architectureDiagramUrl TEXT,
@@ -367,12 +403,17 @@ export function seedSoftware(
       language TEXT NOT NULL DEFAULT 'es',
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0,
+      orderPriority INTEGER NOT NULL DEFAULT 0,
+      publishedAt DATETIME,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_infrastructure_posts_slug_lang ON infrastructure_posts (slug, language);
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_cat ON infrastructure_posts (category);
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_env ON infrastructure_posts (environment);
+    CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_feat ON infrastructure_posts (featured);
+    CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_prio ON infrastructure_posts (orderPriority);
 
   `);
 
@@ -394,40 +435,46 @@ export function seedSoftware(
     // 1. Noticias (news_articles)
     const insertNews = db.prepare(`
       INSERT OR REPLACE INTO news_articles 
-        (slug, title, excerpt, contentMarkdown, sourceUrl, isBreaking, author, tags, language, coverImage, readTimeMinutes, views, likes)
+        (slug, title, excerpt, contentMarkdown, sourceUrl, isBreaking, featured, orderPriority, author, tags, language, coverImage, readTimeMinutes, views, likes, publishedAt)
       VALUES 
-        (@slug, @title, @excerpt, @contentMarkdown, @sourceUrl, @isBreaking, @author, @tags, @language, @coverImage, @readTimeMinutes, @views, @likes)
+        (@slug, @title, @excerpt, @contentMarkdown, @sourceUrl, @isBreaking, @featured, @orderPriority, @author, @tags, @language, @coverImage, @readTimeMinutes, @views, @likes, @publishedAt)
     `);
     const newsData = readJson<NewsSeedItem[]>('news.json');
     for (const item of newsData) {
       insertNews.run({
         ...item,
         isBreaking: item.isBreaking ? 1 : 0,
+        featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        publishedAt: item.publishedAt || new Date().toISOString(),
       });
     }
 
     // 2. Blog Posts (blog_posts)
     const insertBlog = db.prepare(`
       INSERT OR REPLACE INTO blog_posts 
-        (slug, title, subtitle, excerpt, contentMarkdown, author, tags, language, series, tableOfContents, readTimeMinutes, views, likes)
+        (slug, title, subtitle, excerpt, contentMarkdown, author, tags, language, series, tableOfContents, readTimeMinutes, views, likes, featured, orderPriority, publishedAt)
       VALUES 
-        (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @tags, @language, @series, @tableOfContents, @readTimeMinutes, @views, @likes)
+        (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @tags, @language, @series, @tableOfContents, @readTimeMinutes, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const blogData = readJson<BlogSeedItem[]>('blog.json');
     for (const item of blogData) {
       insertBlog.run({
         ...item,
+        featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        publishedAt: item.publishedAt || new Date().toISOString(),
       });
     }
 
     // 3. Foros (forum_topics y forum_replies)
     const insertTopic = db.prepare(`
       INSERT OR REPLACE INTO forum_topics 
-        (id, slug, title, content, author, category, language, isSolved, isPinned, repliesCount, views)
+        (id, slug, title, content, author, category, language, isSolved, isPinned, orderPriority, repliesCount, views)
       VALUES 
-        (@id, @slug, @title, @content, @author, @category, @language, @isSolved, @isPinned, @repliesCount, @views)
+        (@id, @slug, @title, @content, @author, @category, @language, @isSolved, @isPinned, @orderPriority, @repliesCount, @views)
     `);
     const insertReply = db.prepare(`
       INSERT OR REPLACE INTO forum_replies
@@ -441,6 +488,7 @@ export function seedSoftware(
         ...topic,
         isSolved: topic.isSolved ? 1 : 0,
         isPinned: topic.isPinned ? 1 : 0,
+        orderPriority: topic.orderPriority || 0,
         language: topic.language || 'es',
       });
     }
@@ -454,39 +502,45 @@ export function seedSoftware(
     // 4. Inteligencia Artificial (ai_resources)
     const insertAi = db.prepare(`
       INSERT OR REPLACE INTO ai_resources
-        (slug, name, type, provider, description, contentMarkdown, license, documentationUrl, paperUrl, githubUrl, tags, language, views, likes)
+        (slug, name, type, provider, description, contentMarkdown, license, documentationUrl, paperUrl, githubUrl, tags, language, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @name, @type, @provider, @description, @contentMarkdown, @license, @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @views, @likes)
+        (@slug, @name, @type, @provider, @description, @contentMarkdown, @license, @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const aiData = readJson<AiSeedItem[]>('ai.json');
     for (const item of aiData) {
       insertAi.run({
         ...item,
+        featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        publishedAt: item.publishedAt || new Date().toISOString(),
       });
     }
 
     // 5. Ciberseguridad (security_posts)
     const insertSec = db.prepare(`
       INSERT OR REPLACE INTO security_posts
-        (slug, title, severity, postType, cveId, affectedSystems, remediation, excerpt, contentMarkdown, author, tags, language, views, likes)
+        (slug, title, severity, postType, cveId, affectedSystems, remediation, excerpt, contentMarkdown, author, tags, language, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @title, @severity, @postType, @cveId, @affectedSystems, @remediation, @excerpt, @contentMarkdown, @author, @tags, @language, @views, @likes)
+        (@slug, @title, @severity, @postType, @cveId, @affectedSystems, @remediation, @excerpt, @contentMarkdown, @author, @tags, @language, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const secData = readJson<SecuritySeedItem[]>('security.json');
     for (const item of secData) {
       insertSec.run({
         ...item,
+        featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        publishedAt: item.publishedAt || new Date().toISOString(),
       });
     }
 
     // 6. Tutoriales y Pasos (tutorials y tutorial_steps)
     const insertTutorial = db.prepare(`
       INSERT OR REPLACE INTO tutorials
-        (id, slug, title, excerpt, description, difficulty, estimatedMinutes, prerequisites, techStack, author, tags, language, coverImage, views, likes)
+        (id, slug, title, excerpt, description, difficulty, estimatedMinutes, prerequisites, techStack, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@id, @slug, @title, @excerpt, @description, @difficulty, @estimatedMinutes, @prerequisites, @techStack, @author, @tags, @language, @coverImage, @views, @likes)
+        (@id, @slug, @title, @excerpt, @description, @difficulty, @estimatedMinutes, @prerequisites, @techStack, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const insertStep = db.prepare(`
       INSERT OR REPLACE INTO tutorial_steps
@@ -498,7 +552,10 @@ export function seedSoftware(
     for (const item of tutorialsData.tutorials) {
       insertTutorial.run({
         ...item,
+        featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        publishedAt: item.publishedAt || new Date().toISOString(),
       });
     }
     for (const step of tutorialsData.steps) {
@@ -508,15 +565,16 @@ export function seedSoftware(
     // 7. Proyectos (projects)
     const insertProj = db.prepare(`
       INSERT OR REPLACE INTO projects
-        (slug, name, description, techStack, language, repoUrl, liveUrl, status, featured, stars, views, architectureDiagramUrl)
+        (slug, name, description, techStack, language, repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl)
       VALUES
-        (@slug, @name, @description, @techStack, @language, @repoUrl, @liveUrl, @status, @featured, @stars, @views, @architectureDiagramUrl)
+        (@slug, @name, @description, @techStack, @language, @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl)
     `);
     const projectsData = readJson<ProjectSeedItem[]>('projects.json');
     for (const item of projectsData) {
       insertProj.run({
         ...item,
         featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
       });
     }
@@ -524,9 +582,9 @@ export function seedSoftware(
     // 8. Infraestructura (infrastructure_posts)
     const insertInfra = db.prepare(`
       INSERT OR REPLACE INTO infrastructure_posts
-        (slug, title, subtitle, category, environment, difficulty, techStack, architectureOverview, specs, contentMarkdown, author, tags, language, views, likes)
+        (slug, title, subtitle, category, environment, difficulty, techStack, architectureOverview, specs, contentMarkdown, author, tags, language, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @title, @subtitle, @category, @environment, @difficulty, @techStack, @architectureOverview, @specs, @contentMarkdown, @author, @tags, @language, @views, @likes)
+        (@slug, @title, @subtitle, @category, @environment, @difficulty, @techStack, @architectureOverview, @specs, @contentMarkdown, @author, @tags, @language, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const infraData = readJson<InfrastructureSeedItem[]>('infrastructure.json');
     for (const item of infraData) {
@@ -540,6 +598,9 @@ export function seedSoftware(
         language: item.language || 'es',
         views: item.views || 0,
         likes: item.likes || 0,
+        featured: item.featured ? 1 : 0,
+        orderPriority: item.orderPriority || 0,
+        publishedAt: item.publishedAt || null,
       });
     }
   });

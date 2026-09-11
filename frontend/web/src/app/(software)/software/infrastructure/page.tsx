@@ -12,7 +12,8 @@ export default function InfrastructureCategoryPage() {
   const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
-  const { posts, loading, error } = useInfrastructure(category, undefined, undefined, search);
+  const [sortBy, setSortBy] = useState<'smart' | 'recent' | 'views' | 'difficulty'>('smart');
+  const { posts, loading, error } = useInfrastructure(category, undefined, undefined, search, sortBy);
 
   const categories = [
     { id: 'all', label: tFilters('allCategories') },
@@ -22,6 +23,13 @@ export default function InfrastructureCategoryPage() {
     { id: 'networking', label: tInfra('catNetworking') },
     { id: 'ci_cd', label: tInfra('catCiCd') },
     { id: 'hardening', label: tInfra('catHardening') },
+  ];
+
+  const sortOptions = [
+    { id: 'smart', label: '★ Relevancia Arquitectónica' },
+    { id: 'recent', label: 'Más Recientes' },
+    { id: 'views', label: 'Más Populares' },
+    { id: 'difficulty', label: 'Mayor Complejidad' },
   ];
 
   return (
@@ -76,6 +84,26 @@ export default function InfrastructureCategoryPage() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Barra de Ordenación Inteligente Multi-Criterio */}
+            <div className="flex items-center justify-center gap-2 pt-3 flex-wrap">
+              <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider mr-1">
+                Ordenar por:
+              </span>
+              {sortOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setSortBy(opt.id as any)}
+                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${
+                    sortBy === opt.id
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)] font-bold'
+                      : 'text-zinc-500 hover:text-zinc-300 bg-black/10 dark:bg-white/[0.03] border border-white/5'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
           </header>
 

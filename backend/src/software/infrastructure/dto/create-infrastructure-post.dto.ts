@@ -57,4 +57,13 @@ export class CreateInfrastructurePostDto {
   @IsString()
   @IsOptional()
   language?: string;
+
+  @IsOptional()
+  featured?: boolean;
+
+  @IsOptional()
+  orderPriority?: number;
+
+  @IsOptional()
+  publishedAt?: Date | string;
 }

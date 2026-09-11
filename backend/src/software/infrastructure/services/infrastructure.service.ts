@@ -22,6 +22,7 @@ export class InfrastructureService {
     difficulty?: InfrastructureDifficulty,
     search?: string,
     lang?: string,
+    sortBy?: 'smart' | 'recent' | 'views' | 'likes' | 'difficulty',
   ): Promise<InfrastructurePost[]> {
     const qb = this.infraRepository.createQueryBuilder('infra');
 
@@ -48,11 +49,53 @@ export class InfrastructureService {
       );
     }
 
-    qb.orderBy('infra.createdAt', 'DESC');
+    // Ordenamiento Inteligente Enterprise
+    if (sortBy === 'recent') {
+      qb.orderBy('COALESCE(infra.publishedAt, infra.createdAt)', 'DESC');
+      qb.addOrderBy('infra.id', 'DESC');
+    } else if (sortBy === 'views') {
+      qb.orderBy('infra.views', 'DESC');
+      qb.addOrderBy('infra.likes', 'DESC');
+      qb.addOrderBy('infra.id', 'DESC');
+    } else if (sortBy === 'likes') {
+      qb.orderBy('infra.likes', 'DESC');
+      qb.addOrderBy('infra.views', 'DESC');
+      qb.addOrderBy('infra.id', 'DESC');
+    } else if (sortBy === 'difficulty') {
+      // Ordenar por complejidad técnica (expert -> advanced -> intermediate -> beginner)
+      qb.orderBy(
+        `CASE infra.difficulty 
+          WHEN 'expert' THEN 4 
+          WHEN 'advanced' THEN 3 
+          WHEN 'intermediate' THEN 2 
+          WHEN 'beginner' THEN 1 
+          ELSE 0 END`,
+        'DESC',
+      );
+      qb.addOrderBy('infra.views', 'DESC');
+    } else {
+      // Algoritmo de Inteligencia Editorial ('smart' por defecto)
+      // Prioriza: 1. Destacados (featured) -> 2. Peso Editorial (orderPriority) -> 3. Ponderación engagement (likes*3 + views) -> 4. Recientes
+      qb.addSelect(
+        '((infra.featured * 1000) + (infra.orderPriority * 20) + (infra.likes * 4) + (infra.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('COALESCE(infra.publishedAt, infra.createdAt)', 'DESC');
+      qb.addOrderBy('infra.id', 'DESC');
+    }
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(category, environment, difficulty, search, 'es');
+      return this.findAll(
+        category,
+        environment,
+        difficulty,
+        search,
+        'es',
+        sortBy,
+      );
     }
 
     return results;
@@ -98,6 +141,11 @@ export class InfrastructureService {
       category: createDto.category || 'servers',
       environment: createDto.environment || 'production',
       difficulty: createDto.difficulty || 'intermediate',
+      featured: createDto.featured ?? false,
+      orderPriority: createDto.orderPriority ?? 0,
+      publishedAt: createDto.publishedAt
+        ? new Date(createDto.publishedAt)
+        : new Date(),
     });
     return this.infraRepository.save(post);
   }

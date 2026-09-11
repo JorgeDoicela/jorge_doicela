@@ -37,7 +37,14 @@ export class TutorialsService {
       );
     }
 
-    qb.orderBy('tut.createdAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore)
+    qb.addSelect(
+      '((tut.featured * 1000) + (tut.orderPriority * 20) + (tut.likes * 4) + (tut.views * 1.5))',
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('COALESCE(tut.publishedAt, tut.createdAt)', 'DESC');
+    qb.addOrderBy('tut.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

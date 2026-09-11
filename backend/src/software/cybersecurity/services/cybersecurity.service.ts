@@ -42,7 +42,14 @@ export class CybersecurityService {
       );
     }
 
-    qb.orderBy('sec.createdAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore con ponderación CVE)
+    qb.addSelect(
+      `((sec.featured * 1000) + (CASE sec.severity WHEN 'CRITICAL' THEN 300 WHEN 'HIGH' THEN 150 WHEN 'MEDIUM' THEN 50 ELSE 0 END) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5))`,
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('COALESCE(sec.publishedAt, sec.createdAt)', 'DESC');
+    qb.addOrderBy('sec.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

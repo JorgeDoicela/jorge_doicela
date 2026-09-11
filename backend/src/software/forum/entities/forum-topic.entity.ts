@@ -40,6 +40,9 @@ export class ForumTopic {
   isPinned: boolean;
 
   @Column({ default: 0 })
+  orderPriority: number;
+
+  @Column({ default: 0 })
   repliesCount: number;
 
   @Column({ default: 0 })

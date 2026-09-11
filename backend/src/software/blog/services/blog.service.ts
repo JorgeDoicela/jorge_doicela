@@ -33,7 +33,14 @@ export class BlogService {
       qb.andWhere('blog.series = :series', { series });
     }
 
-    qb.orderBy('blog.createdAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore)
+    qb.addSelect(
+      '((blog.featured * 1000) + (blog.orderPriority * 20) + (blog.likes * 4) + (blog.views * 1.5))',
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('COALESCE(blog.publishedAt, blog.createdAt)', 'DESC');
+    qb.addOrderBy('blog.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

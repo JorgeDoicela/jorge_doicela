@@ -43,6 +43,9 @@ export class Project {
   featured: boolean;
 
   @Column({ default: 0 })
+  orderPriority: number;
+
+  @Column({ default: 0 })
   stars: number;
 
   @Column({ default: 0 })

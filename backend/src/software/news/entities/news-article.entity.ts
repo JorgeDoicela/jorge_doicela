@@ -31,6 +31,12 @@ export class NewsArticle {
   @Column({ default: false })
   isBreaking: boolean;
 
+  @Column({ default: false })
+  featured: boolean;
+
+  @Column({ default: 0 })
+  orderPriority: number;
+
   @Column({ default: 'Jorge Doicela' })
   author: string;
 

@@ -9,6 +9,7 @@
     "liveUrl": "https://portfolio.jorgedoicela.com",
     "status": "active",
     "featured": true,
+    "orderPriority": 100,
     "stars": 45,
     "views": 890,
     "architectureDiagramUrl": "/portfolio/diagram.png"
@@ -23,6 +24,7 @@
     "liveUrl": "https://bible.jorgedoicela.com",
     "status": "active",
     "featured": true,
+    "orderPriority": 90,
     "stars": 120,
     "views": 1450,
     "architectureDiagramUrl": "/bible/diagram.png"
@@ -37,6 +39,7 @@
     "liveUrl": "https://software.jorgedoicela.com",
     "status": "active",
     "featured": true,
+    "orderPriority": 80,
     "stars": 88,
     "views": 1120,
     "architectureDiagramUrl": "/software/diagram.png"

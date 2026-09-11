@@ -55,6 +55,15 @@ export class BlogPost {
   @Column({ default: 0 })
   likes: number;
 
+  @Column({ default: false })
+  featured: boolean;
+
+  @Column({ default: 0 })
+  orderPriority: number;
+
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  publishedAt: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 

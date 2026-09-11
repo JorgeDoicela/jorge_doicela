@@ -12,6 +12,8 @@
     "githubUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
     "tags": "ai,llm,deepseek,reasoning,open-source",
     "language": "es",
+    "featured": true,
+    "orderPriority": 100,
     "views": 680,
     "likes": 195
   },
@@ -28,6 +30,8 @@
     "githubUrl": "https://github.com/modelcontextprotocol",
     "tags": "ai,mcp,agents,tools,anthropic",
     "language": "es",
+    "featured": false,
+    "orderPriority": 20,
     "views": 520,
     "likes": 142
   },
@@ -44,6 +48,8 @@
     "githubUrl": "https://github.com/deepseek-ai/DeepSeek-R1",
     "tags": "ai,llm,deepseek,reasoning,open-source",
     "language": "en",
+    "featured": true,
+    "orderPriority": 100,
     "views": 680,
     "likes": 195
   },

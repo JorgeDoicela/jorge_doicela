@@ -28,7 +28,11 @@ frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism)
 ├── layout.tsx                        # Layout raíz del subdominio
 ├── components/                       # Componentes compartidos del subdominio
-│   └── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
+│   ├── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
+│   ├── SoftwareCard.tsx              # Tarjeta atómica universal normalizada (escala exacta y neumorphism)
+│   ├── ArticleCover.tsx              # Banner de portada 16:9 con soporte SVG procedural temático
+│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada
+│   └── SoftwareFooter.tsx            # Pie de página tecnológico institucional
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
 │   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)
 │   ├── news/
@@ -106,15 +110,29 @@ frontend/web/src/app/(software)/
   * **Barra de Navegación y Control Unificada a Ancho Completo (`w-full glass-concave-panel`):**
     * Encapsulada dentro de un único contenedor cóncavo continuo (`glass-concave-panel`) que abarca el 100% del ancho del layout, alineándose exactamente con los márgenes exteriores de las tarjetas de la grilla de publicaciones:
       * **Flanco Izquierdo:** Botón de retorno al portal principal ([`BackToPortalButton`](/software/components/BackToPortalButton.tsx)).
-      * **Centro:** Menú de categorías ([`CategoryNav`](/software/features/navigation/components/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 7 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`) con filtrado en tiempo real y soporte scrollable.
+      * **Centro:** Menú de categorías ([`CategoryNav`](/software/features/navigation/components/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 8 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`, `infrastructure`). Funciona bajo **arquitectura canónica URL-driven**: cada pestaña enlaza directamente a su módulo dedicado (`/software/news`, `/software/blog`, etc.), permitiendo que el usuario experimente el módulo completo con sus propios filtros, buscadores y controles avanzados sin estados efímeros en memoria que oculten las rutas.
       * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/navigation/components/LanguageToggle.tsx) ES/EN).
-* **Portadas Visuales de Alta Precisión (`ArticleCover.tsx` en 16:9):**
-  * Soporta imágenes estáticas con `next/image` y fallback procedural limpio y elegante con texturas de ingeniería (`.tech-grid-bg`), gradientes temáticos según categoría, refracción vítrea y un icono SVG central libre y flotante (`w-12 h-12`) sin recuadros ni marcos perimetrales.
-* **Sección `Featured Posts` (Bandeja Envolvente y Celdas Internas):**
-  * Las 3 publicaciones destacadas se organizan en un **panel envolvente amplio** (`glass-convex-panel` a ancho completo). Dentro de esta bandeja, cada artículo es una **celda interna definida** (`bg-black/20 dark:bg-[#16202c]/80 border border-black/5 dark:border-white/[0.07] rounded-2xl p-4 sm:p-5`) con banner 16:9 (`ArticleCover`), metadatos de categoría temáticos limpios y minimalistas, titulares prominentes y extractos técnicos, emulando la jerarquía de tarjetas contenidas de MalwareTech.
-  * **Visibilidad Condicional Ergonómica (`activeCategory === 'all'`):** Para garantizar que al filtrar por una categoría específica (`news`, `blog`, `ai`, `cybersecurity`, etc.) el feed ascienda inmediatamente al primer pliegue visual (*above the fold*) sin exigir scroll vertical innecesario, la sección de publicaciones destacadas se renderiza exclusivamente en la portada general (*Todo el Contenido*), con animación sutil de entrada `animate-in fade-in duration-300`.
-* **Sección `Latest Posts` (Bandeja Editorial y Celdas Internas):**
-  * Toda la cuadrícula de publicaciones generales y filtradas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`) reside dentro de su **panel envolvente amplio** (`glass-convex-panel` a ancho completo), alojando cada publicación como una **celda interna individualizada** con fondo distintivo y esquinas redondeadas, logrando coherencia visual absoluta en toda la revista técnica. Al filtrar por categoría, este contenedor toma el protagonismo inmediato bajo la barra de navegación.
+* **Portadas Visuales de Alta Precisión e Inteligencia Temática (`ArticleCover.tsx` en 16:9):**
+  * Soporta imágenes estáticas con `next/image` y fallback procedural dinámico por subcategoría técnica (`subCategory`):
+    * **Servidores (`servers`):** Nodos bare-metal y topologías físicas en gradientes esmeralda (`from-emerald-950/70`).
+    * **Redes y mTLS (`networking`):** Topologías de red mallada y perímetros en gradientes cian (`from-teal-950/70 via-slate-900 to-cyan-950`).
+    * **Contenedores (`containers`):** Arquitectura de micro-contenedores y cgroups en gradientes índigo/azul cobalto.
+    * **CI/CD (`ci_cd`):** Pipelines continuos, automatización y ramas en gradientes violeta/fucsia.
+    * **Hardening (`hardening`):** Escudos de blindaje, mTLS y sockets seguros en gradientes ámbar/cobre con resplandor dorado.
+    * **Cloud (`cloud`):** Topologías de nube híbrida y orquestación systemd en gradientes azul cielo.
+  * Refracción vítrea, texturas de ingeniería (`.tech-grid-bg`) y badges animados de `★ DESTACADO` en artículos de alta prioridad editorial.
+* **Motor de Relevancia y Ordenamiento Inteligente Enterprise (`sortBy`):**
+  * Tanto la página de categoría `/software/infrastructure` como el Hub de Software integran un algoritmo de ponderación matemática en el backend:
+    $$\text{SmartScore} = (\text{featured} \times 1000) + (\text{orderPriority} \times 20) + (\text{likes} \times 4) + (\text{views} \times 1.5)$$
+  * Esto garantiza que los artículos insignia (como el análisis forense del incidente P1 y la arquitectura en 1 GB de RAM) encabecen la experiencia del usuario, evitando el desplazamiento errático de nuevas publicaciones al fondo.
+  * El usuario dispone de una barra de control interactiva multi-criterio: *★ Relevancia Arquitectónica*, *Más Recientes*, *Más Populares* y *Mayor Complejidad*.
+* **Normalización de Escala Tipográfica Universal (`SoftwareCard.tsx`):**
+  * Para garantizar consistencia visual absoluta entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura, Foro) y la vista general (*Todo el Contenido / Publicaciones Destacadas*), se eliminaron las clases de escalado ad-hoc (como `sm:text-lg` o 18px en títulos destacados).
+  * Toda tarjeta implementa la escala estándar calibrada de Noticias:
+    * **Titular:** `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
+    * **Metadatos y Categoría:** `text-[11px] font-mono text-zinc-400`, con soporte opcional para subcategorías técnicas o niveles de severidad.
+    * **Extracto Descriptivo:** `text-xs` (12px, `text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5`).
+    * **Contenedor y Elevación:** `glass-convex-panel rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01]`.
 * **Coherencia Editorial Total en las 7 Páginas de Categoría (`/software/[category]`):**
   * Las 7 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `forum`) incorporan la misma estructura arquitectónica que el home `/software`: cabecera editorial de marca [`SoftwareHeaderNav`](/software/components/SoftwareHeaderNav.tsx) con la categoría activa resaltada en la cápsula, retorno a `/software`, barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`SoftwareFooter`](/software/components/SoftwareFooter.tsx).
   * **Tarjetas con Banners de Portada (`ArticleCover` 16:9):** Todas las tarjetas de catálogo (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`) integran en la parte superior el banner de portada en proporción 16:9 (`<ArticleCover />`), ya sea con su imagen real de alta resolución o con el banner procedural SVG temático neumórfico/glassmórfico de la categoría, estructuradas en grillas responsivas de 3 columnas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`).

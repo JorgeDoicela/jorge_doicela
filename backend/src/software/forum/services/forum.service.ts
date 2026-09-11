@@ -36,7 +36,14 @@ export class ForumService {
       });
     }
 
-    qb.orderBy('topic.isPinned', 'DESC').addOrderBy('topic.createdAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore con ponderación Comunitaria)
+    qb.addSelect(
+      '((topic.isPinned * 1000) + (topic.orderPriority * 20) + (topic.repliesCount * 15) + (topic.views * 1.5))',
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('topic.createdAt', 'DESC');
+    qb.addOrderBy('topic.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

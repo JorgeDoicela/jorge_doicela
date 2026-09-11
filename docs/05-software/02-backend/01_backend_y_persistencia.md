@@ -149,29 +149,46 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 
 La persistencia implementa soporte multiidioma nativo mediante la columna `language TEXT NOT NULL DEFAULT 'es'` e índices únicos compuestos `(slug, language)` para permitir registros homólogos en español e inglés sin colisión:
 
-* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `author`, `tags`, `language`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`.  
+* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `tags`, `language`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`.  
   * **Índice Único:** `IDX_news_articles_slug_lang (slug, language)`.
-* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`.  
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_blog_posts_slug_lang (slug, language)`.
-* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `isSolved`, `isPinned`, `repliesCount`, `views`.  
+* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`.  
   * **Índice Único:** `IDX_forum_topics_slug_lang (slug, language)`.
 * `forum_replies`: `id`, `topicId` (FK), `parentId`, `author`, `content`, `isAcceptedAnswer`, `likes`.
-* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `views`, `likes`.  
+* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_ai_resources_slug_lang (slug, language)`.
-* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`.  
+* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_security_posts_slug_lang (slug, language)`.
-* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`.  
+* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_tutorials_slug_lang (slug, language)`.
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`.
-* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `repoUrl`, `liveUrl`, `status`, `featured`, `stars`, `views`, `architectureDiagramUrl`.  
+* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`.  
   * **Índice Único:** `IDX_projects_slug_lang (slug, language)`.
-* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`, `createdAt`, `updatedAt`.  
+* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Índice Único:** `IDX_infrastructure_posts_slug_lang (slug, language)`.
-  * **Índices Secundarios:** `IDX_infrastructure_posts_cat (category)`, `IDX_infrastructure_posts_env (environment)`.
+  * **Índices Secundarios:** `IDX_infrastructure_posts_cat (category)`, `IDX_infrastructure_posts_env (environment)`, `IDX_infrastructure_posts_feat (featured)`, `IDX_infrastructure_posts_prio (orderPriority)`.
 
 ---
 
-## 5. Corpus JSON Bilingüe y Sembrador Atómico (`seed-software.ts`)
+## 5. Algoritmo de Inteligencia Editorial Global (SmartScore)
+
+Todos los servicios del backend calculan dinámicamente un `smart_score` compuesto en sus consultas `findAll` para ordenar los contenidos con criterio enterprise:
+
+$$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\text{orderPriority} \times 20) + (\text{engagement}) + \text{RecencyTiebreaker}$$
+
+* **Noticias (`NewsService`):** `(news.featured * 1000) + (news.isBreaking * 500) + (news.orderPriority * 20) + (news.likes * 4) + (news.views * 1.5)`
+* **Ensayos de Arquitectura (`BlogService`):** `(blog.featured * 1000) + (blog.orderPriority * 20) + (blog.likes * 4) + (blog.views * 1.5)`
+* **Ciberseguridad (`CybersecurityService`):** `(sec.featured * 1000) + (CASE sec.severity WHEN 'CRITICAL' THEN 300 WHEN 'HIGH' THEN 150 WHEN 'MEDIUM' THEN 50 ELSE 0 END) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5)`
+* **Tutoriales (`TutorialsService`):** `(tut.featured * 1000) + (tut.orderPriority * 20) + (tut.likes * 4) + (tut.views * 1.5)`
+* **Modelos IA & MCP (`AiService`):** `(ai.featured * 1000) + (ai.orderPriority * 20) + (ai.likes * 4) + (ai.views * 1.5)`
+* **Proyectos Showcase (`ProjectsService`):** `(proj.featured * 1000) + (proj.orderPriority * 20) + (proj.stars * 10) + (proj.views * 1.5)`
+* **Foros Comunitarios (`ForumService`):** `(forum.isPinned * 1000) + (forum.orderPriority * 20) + (forum.repliesCount * 15) + (forum.views * 1.5)`
+* **Infraestructura (`InfrastructureService`):** `(infra.featured * 1000) + (infra.orderPriority * 20) + (infra.likes * 4) + (infra.views * 1.5)`
+
+---
+
+## 6. Corpus JSON Bilingüe y Sembrador Atómico (`seed-software.ts`)
 
 Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`).
 

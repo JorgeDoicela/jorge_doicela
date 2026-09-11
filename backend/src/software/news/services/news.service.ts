@@ -33,7 +33,14 @@ export class NewsService {
       qb.andWhere('news.tags LIKE :tag', { tag: `%${tag}%` });
     }
 
-    qb.orderBy('news.publishedAt', 'DESC');
+    // Algoritmo de Inteligencia Editorial (SmartScore)
+    qb.addSelect(
+      '((news.featured * 1000) + (news.isBreaking * 500) + (news.orderPriority * 20) + (news.likes * 4) + (news.views * 1.5))',
+      'smart_score',
+    );
+    qb.orderBy('smart_score', 'DESC');
+    qb.addOrderBy('COALESCE(news.publishedAt, news.createdAt)', 'DESC');
+    qb.addOrderBy('news.id', 'DESC');
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {

@@ -1,6 +1,7 @@
 [
   {
     "id": "jerusalem",
+    "language": "es",
     "name": "Jerusalén",
     "originalName": {
       "hebrew": "יְרוּשָׁלַיִם",
@@ -32,6 +33,7 @@
   },
   {
     "id": "bethlehem",
+    "language": "es",
     "name": "Belén de Judá",
     "originalName": {
       "hebrew": "בֵּית לֶחֶם",
@@ -61,6 +63,7 @@
   },
   {
     "id": "mount_sinai",
+    "language": "es",
     "name": "Monte Sinaí (Horeb)",
     "originalName": {
       "hebrew": "הַר סִינַי",
@@ -81,6 +84,94 @@
     "archaeologicalNotes": {
       "discoveries": ["Monasterio de Santa Catalina (s. VI)", "Códice Sinaítico"],
       "excavationStatus": "Patrimonio histórico protegido",
+      "verifiedByBiblicalArchaeology": true
+    }
+  },
+  {
+    "id": "jerusalem",
+    "language": "en",
+    "name": "Jerusalem",
+    "originalName": {
+      "hebrew": "יְרוּשָׁלַיִם",
+      "greek": "Ἱεροσόλυμα",
+      "transliteration": "Yerushalayim",
+      "meaning": "Foundation or abode of peace"
+    },
+    "coordinates": { "lat": 31.7767, "lng": 35.2345 },
+    "category": "city",
+    "era": ["patriarchs", "monarchy", "exile_restoration", "second_temple", "apostolic"],
+    "modernName": "Al-Quds / Yerushalayim",
+    "country": "Israel / Palestine",
+    "elevationMeters": 754,
+    "description": "Spiritual, political, and prophetic center of God's covenant people. Ancient Jebusite stronghold conquered by David, site of Solomon's and Herod's Temples, and setting of Christ's passion and resurrection.",
+    "biblicalReferences": [
+      { "reference": "Genesis 14:18", "context": "Melchizedek king of Salem" },
+      { "reference": "2 Samuel 5:6-9", "context": "David captures the fortress of Zion" },
+      { "reference": "Acts 2:1-4", "context": "Pentecost in Jerusalem" }
+    ],
+    "archaeologicalNotes": {
+      "discoveries": [
+        "Hezekiah's Tunnel and Siloam Inscription",
+        "Bullae of King Hezekiah and the Prophet Isaiah",
+        "Western Wall and Stepped Herodian Street"
+      ],
+      "excavationStatus": "Ongoing excavation (City of David)",
+      "verifiedByBiblicalArchaeology": true
+    }
+  },
+  {
+    "id": "bethlehem",
+    "language": "en",
+    "name": "Bethlehem of Judah",
+    "originalName": {
+      "hebrew": "בֵּית לֶחֶם",
+      "greek": "Βηθλεέμ",
+      "transliteration": "Beit Lejem",
+      "meaning": "House of Bread"
+    },
+    "coordinates": { "lat": 31.7054, "lng": 35.2024 },
+    "category": "city",
+    "era": ["patriarchs", "monarchy", "second_temple"],
+    "modernName": "Beit Lahm",
+    "country": "Palestine (West Bank)",
+    "elevationMeters": 775,
+    "description": "Burial place of Rachel, home of Ruth and Boaz, birthplace of King David, and prophetically designated birthplace of the Messiah (Micah 5:2; Matthew 2:1).",
+    "biblicalReferences": [
+      { "reference": "Micah 5:2", "context": "Messianic prophecy of eternal origin" },
+      { "reference": "Matthew 2:1", "context": "Birth of Jesus in the days of Herod" }
+    ],
+    "archaeologicalNotes": {
+      "discoveries": [
+        "4th-century Basilica of the Nativity",
+        "Fiscal bullae of Bethlehem in the City of David"
+      ],
+      "excavationStatus": "Active archaeological site",
+      "verifiedByBiblicalArchaeology": true
+    }
+  },
+  {
+    "id": "mount_sinai",
+    "language": "en",
+    "name": "Mount Sinai (Horeb)",
+    "originalName": {
+      "hebrew": "הַר סִינַי",
+      "transliteration": "Har Sinai",
+      "meaning": "Mountain of the Covenant"
+    },
+    "coordinates": { "lat": 28.5394, "lng": 33.9753 },
+    "category": "mountain",
+    "era": ["patriarchs", "exodus"],
+    "modernName": "Jabal Musa",
+    "country": "Egypt (Sinai Peninsula)",
+    "elevationMeters": 2285,
+    "description": "Sacred mountain where God revealed Himself to Moses at the burning bush and delivered the Torah and the Ten Commandments to Israel.",
+    "biblicalReferences": [
+      { "reference": "Exodus 19:1-25", "context": "Theophany at Sinai" },
+      { "reference": "1 Kings 19:8-18", "context": "Elijah at the cave of Horeb" }
+    ],
+    "archaeologicalNotes": {
+      "discoveries": ["Saint Catherine's Monastery (6th century)", "Codex Sinaiticus"],
+      "excavationStatus": "Protected UNESCO historical heritage",
       "verifiedByBiblicalArchaeology": true
     }
   }

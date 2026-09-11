@@ -40,7 +40,7 @@ export async function searchGrammarTokens(
       strong: t.strongCode || '',
       language: (t.strongCode || '').startsWith('G') ? 'Griego' : 'Hebreo',
       partOfSpeech: t.morphologyCode?.startsWith('V-') ? 'Verbo' : t.morphologyCode?.startsWith('N-') ? 'Sustantivo' : 'Partícula',
-      tense: 'Indeterminado',
+      tense: '',
       morphologyCode: t.morphologyCode || '',
       parsingSummary: `${t.morphologyCode || 'Morfología'} [${t.gloss || ''}]`,
       fullVerseContext: {

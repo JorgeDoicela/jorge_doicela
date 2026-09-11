@@ -3,20 +3,35 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useSyncFilter } from '../hooks/useSyncFilter';
-import { TimelineSelectedItem } from '../types';
+import {
+  TimelineSelectedItem,
+  MonarchData,
+  ProphetData,
+  WorldEmpireData,
+  ArchaeologicalMilestone,
+} from '../types';
 
 interface SynchronousComparisonViewProps {
   cursorYearBC: number | null;
   onSelectItem: (item: TimelineSelectedItem) => void;
+  monarchs?: MonarchData[];
+  prophets?: ProphetData[];
+  empires?: WorldEmpireData[];
+  milestones?: ArchaeologicalMilestone[];
 }
 
 export const SynchronousComparisonView: React.FC<SynchronousComparisonViewProps> = ({
   cursorYearBC,
   onSelectItem,
+  monarchs = [],
+  prophets = [],
+  empires = [],
+  milestones = [],
 }) => {
   const t = useTranslations('Timeline');
   const { judahMonarchs, israelMonarchs, activeProphets, activeEmpires, nearbyMilestones } =
-    useSyncFilter(cursorYearBC);
+    useSyncFilter(cursorYearBC, monarchs, prophets, empires, milestones);
+
 
   if (cursorYearBC === null) return null;
 

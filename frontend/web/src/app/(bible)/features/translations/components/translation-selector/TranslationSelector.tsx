@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations as useI18n } from 'next-intl';
 import { useTranslations } from '../../hooks/useTranslations';
 import { BibleSelect, BibleSelectOption } from '../../../../components/BibleSelect';
 
@@ -13,6 +14,7 @@ export function TranslationSelector({
   selectedTranslationId,
   onSelectTranslation,
 }: TranslationSelectorProps) {
+  const t = useI18n('Toolbar');
   const { translations, loading, error } = useTranslations();
 
   if (loading) {
@@ -40,10 +42,8 @@ export function TranslationSelector({
       options={options}
       className="w-36 sm:w-56 shrink-0"
       size="sm"
-      title="Seleccionar traducción bíblica"
-      ariaLabel="Seleccionar traducción bíblica"
+      title={t('selectTranslation')}
+      ariaLabel={t('selectTranslation')}
     />
   );
 }
-
-

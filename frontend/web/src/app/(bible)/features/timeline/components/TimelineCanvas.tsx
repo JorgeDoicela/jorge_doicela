@@ -2,11 +2,13 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { MONARCHS_DATA } from '../data/kingsJudahIsrael';
-import { BIBLICAL_PROPHETS } from '../data/biblicalProphets';
-import { WORLD_EMPIRES } from '../data/worldEmpires';
-import { ARCHAEOLOGICAL_MILESTONES } from '../data/archaeologicalMilestones';
-import { TimelineSelectedItem } from '../types';
+import {
+  TimelineSelectedItem,
+  MonarchData,
+  ProphetData,
+  WorldEmpireData,
+  ArchaeologicalMilestone,
+} from '../types';
 
 interface TimelineCanvasProps {
   centerYearBC: number;
@@ -31,6 +33,11 @@ interface TimelineCanvasProps {
   onTouchMove?: (e: React.TouchEvent) => void;
   onTouchEnd?: (e: React.TouchEvent) => void;
   className?: string;
+  monarchs?: MonarchData[];
+  prophets?: ProphetData[];
+  empires?: WorldEmpireData[];
+  milestones?: ArchaeologicalMilestone[];
+  isLoading?: boolean;
 }
 
 export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
@@ -50,6 +57,11 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
   onTouchMove,
   onTouchEnd,
   className,
+  monarchs = [],
+  prophets = [],
+  empires = [],
+  milestones = [],
+  isLoading = false,
 }) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -220,7 +232,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
             >
               JUDÁ (SUR) & MONARQUÍA UNIDA
             </text>
-            {MONARCHS_DATA.filter((m) => m.kingdom === 'judah' || m.kingdom === 'united').map((m, idx) => {
+            {monarchs.filter((m) => m.kingdom === 'judah' || m.kingdom === 'united').map((m, idx) => {
               const x1 = yearToX(m.startYearBC);
               const x2 = yearToX(m.endYearBC);
               const width = Math.max(x2 - x1, 16);
@@ -280,7 +292,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
             >
               ISRAEL (NORTE - 10 TRIBUS)
             </text>
-            {MONARCHS_DATA.filter((m) => m.kingdom === 'israel').map((m, idx) => {
+            {monarchs.filter((m) => m.kingdom === 'israel').map((m, idx) => {
               const x1 = yearToX(m.startYearBC);
               const x2 = yearToX(m.endYearBC);
               const width = Math.max(x2 - x1, 16);
@@ -339,7 +351,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
             >
               PROFETAS BÍBLICOS
             </text>
-            {BIBLICAL_PROPHETS.map((p, idx) => {
+            {prophets.map((p, idx) => {
               const x1 = yearToX(p.startYearBC);
               const x2 = yearToX(p.endYearBC);
               const width = Math.max(x2 - x1, 18);
@@ -399,7 +411,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
             >
               IMPERIOS MUNDIALES (EGIPTO, ASIRIA, BABILONIA, PERSIA, ROMA)
             </text>
-            {WORLD_EMPIRES.map((emp, idx) => {
+            {empires.map((emp, idx) => {
               const x1 = yearToX(emp.startYearBC);
               const x2 = yearToX(emp.endYearBC);
               const width = Math.max(x2 - x1, 20);
@@ -458,7 +470,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
             >
               HITOS & EVIDENCIAS ARQUEOLÓGICAS FECHADAS
             </text>
-            {ARCHAEOLOGICAL_MILESTONES.map((m, idx) => {
+            {milestones.map((m, idx) => {
               const x = yearToX(m.yearBC);
               // 3 niveles de altura escalonada para que los títulos nunca colisionen
               const labelY = 22 + (idx % 3) * 20;
@@ -525,6 +537,13 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
           </g>
         )}
       </svg>
+      {isLoading && (
+        <div className="absolute top-2 right-2 flex items-center gap-1.5 px-2 py-1 rounded-md bg-background/80 backdrop-blur-xs border border-accents-2 text-[10px] font-mono text-accents-4 pointer-events-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span>Sync</span>
+        </div>
+      )}
     </div>
   );
 };
+

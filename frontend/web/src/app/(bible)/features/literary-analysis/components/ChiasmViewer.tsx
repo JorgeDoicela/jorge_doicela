@@ -1,22 +1,49 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useState, useEffect } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { ChiasmStructure, PoeticColon } from '../types';
-import { POETIC_STRUCTURES_DATABASE } from '../data/poeticStructuresData';
+import { fetchChiasms } from '../services/literaryApiService';
 
 export const ChiasmViewer: React.FC = () => {
   const t = useTranslations('LiteraryAnalysis');
-  const [selectedStructureId, setSelectedStructureId] = useState<string>(
-    POETIC_STRUCTURES_DATABASE[0]?.id || '',
-  );
+  const locale = useLocale();
+
+  const [structures, setStructures] = useState<ChiasmStructure[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedStructureId, setSelectedStructureId] = useState<string>('');
   const [hoveredColonId, setHoveredColonId] = useState<string | null>(null);
   const [activeColon, setActiveColon] = useState<PoeticColon | null>(null);
 
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    fetchChiasms(locale).then((data) => {
+      if (!isMounted) return;
+      setStructures(data);
+      if (data.length > 0) {
+        setSelectedStructureId(data[0].id);
+      }
+      setLoading(false);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [locale]);
+
   const currentStructure =
-    POETIC_STRUCTURES_DATABASE.find((s) => s.id === selectedStructureId) ||
-    POETIC_STRUCTURES_DATABASE[0] ||
+    structures.find((s) => s.id === selectedStructureId) ||
+    structures[0] ||
     null;
+
+  if (loading) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-3 animate-pulse">
+        <div className="h-4 w-48 bg-accents-2 rounded mx-auto" />
+        <div className="h-3 w-64 bg-accents-2/60 rounded mx-auto" />
+      </div>
+    );
+  }
 
   if (!currentStructure) {
     return (
@@ -62,7 +89,7 @@ export const ChiasmViewer: React.FC = () => {
             {t('poeticPassage')}
           </span>
           <div className="flex flex-wrap gap-1.5">
-            {POETIC_STRUCTURES_DATABASE.map((item) => (
+            {structures.map((item) => (
               <button
                 key={item.id}
                 type="button"
@@ -170,7 +197,7 @@ export const ChiasmViewer: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Texto en Español */}
+                    {/* Texto del Pasaje (Bilingüe) */}
                     <p
                       className={`text-sm sm:text-base font-serif leading-relaxed ${
                         colon.isFocalCenter
@@ -178,7 +205,7 @@ export const ChiasmViewer: React.FC = () => {
                           : 'text-foreground'
                       }`}
                     >
-                      «{colon.textSpanish}»
+                      «{(colon as any).text || colon.textSpanish}»
                     </p>
 
                     {/* Texto Hebreo Masorético Original */}

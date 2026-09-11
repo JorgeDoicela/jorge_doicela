@@ -1,29 +1,56 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useState, useEffect } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   PaulinePassageDiscourse,
   DiscourseClause,
   ConjunctionCategory,
 } from '../types';
-import { PAULINE_DISCOURSE_DATABASE } from '../data/paulineDiscourseData';
+import { fetchPaulineDiscourses } from '../services/literaryApiService';
 
 export const PaulineDiscourseViewer: React.FC = () => {
   const t = useTranslations('LiteraryAnalysis');
-  const [selectedPassageId, setSelectedPassageId] = useState<string>(
-    PAULINE_DISCOURSE_DATABASE[0]?.id || '',
-  );
+  const locale = useLocale();
+
+  const [passages, setPassages] = useState<PaulinePassageDiscourse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedPassageId, setSelectedPassageId] = useState<string>('');
   const [activeCategoryFilter, setActiveCategoryFilter] =
     useState<ConjunctionCategory | 'all'>('all');
   const [selectedClause, setSelectedClause] = useState<DiscourseClause | null>(
     null,
   );
 
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    fetchPaulineDiscourses(locale).then((data) => {
+      if (!isMounted) return;
+      setPassages(data);
+      if (data.length > 0) {
+        setSelectedPassageId(data[0].id);
+      }
+      setLoading(false);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [locale]);
+
   const currentPassage =
-    PAULINE_DISCOURSE_DATABASE.find((p) => p.id === selectedPassageId) ||
-    PAULINE_DISCOURSE_DATABASE[0] ||
+    passages.find((p) => p.id === selectedPassageId) ||
+    passages[0] ||
     null;
+
+  if (loading) {
+    return (
+      <div className="p-12 text-center rounded-2xl border border-accents-2 bg-accents-1/30 space-y-3 animate-pulse">
+        <div className="h-4 w-48 bg-accents-2 rounded mx-auto" />
+        <div className="h-3 w-64 bg-accents-2/60 rounded mx-auto" />
+      </div>
+    );
+  }
 
   if (!currentPassage) {
     return (
@@ -75,7 +102,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
             {t('epistleLabel')}
           </span>
           <div className="flex flex-wrap gap-1.5">
-            {PAULINE_DISCOURSE_DATABASE.map((item) => (
+            {passages.map((item) => (
               <button
                 key={item.id}
                 type="button"
@@ -253,7 +280,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Texto en Español */}
+                  {/* Texto de la Proposición (Bilingüe) */}
                   <p
                     className={`font-serif leading-relaxed ${
                       clause.clauseType === 'main'
@@ -261,7 +288,7 @@ export const PaulineDiscourseViewer: React.FC = () => {
                         : 'text-foreground/90 text-sm sm:text-base'
                     }`}
                   >
-                    «{clause.textSpanish}»
+                    «{(clause as any).text || clause.textSpanish}»
                   </p>
 
                   {/* Texto en Griego */}

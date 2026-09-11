@@ -1,0 +1,98 @@
+[
+  {
+    "id": "romans-8-1-4",
+    "language": "es",
+    "bookAbbreviation": "ROM",
+    "bookName": "Romanos",
+    "passageRef": "Romanos 8:1-4",
+    "title": "La Base Trinitaria de la No Condenación en Cristo Jesús",
+    "theologicalTheme": "La liberación definitiva del régimen del pecado y de la muerte operada por el Espíritu de vida.",
+    "centralProposition": "Ninguna condenación hay para los que están unidos vitalmente a Cristo Jesús.",
+    "clauses": [
+      {
+        "id": "c1",
+        "verseRef": "Romanos 8:1",
+        "indentationLevel": 0,
+        "clauseType": "main",
+        "conjunction": {
+          "greek": "ἄρα",
+          "transliteration": "ara",
+          "gloss": "Por consiguiente / Así pues",
+          "category": "inferential",
+          "syntacticRole": "Conclusión mayúscula que se desprende de la justificación por la fe tratada en Romanos 3-7."
+        },
+        "text": "Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús.",
+        "textSpanish": "Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús.",
+        "textGreek": "Οὐδὲν ἄρα νῦν κατάκριμα τοῖς ἐν Χριστῷ Ἰησοῦ.",
+        "grammaticalAnalysis": "Proposición principal con adverbio temporal (νῦν) y sustantivo enfático con negación absoluta (οὐδὲν κατάκριμα).",
+        "theologicalFlow": "Establece la tesis dogmática suprema del creyente redimido."
+      },
+      {
+        "id": "c2",
+        "verseRef": "Romanos 8:2",
+        "indentationLevel": 1,
+        "clauseType": "subordinate_causal",
+        "conjunction": {
+          "greek": "γάρ",
+          "transliteration": "gar",
+          "gloss": "porque / pues",
+          "category": "causal",
+          "syntacticRole": "Introduce el fundamento causal de la no condenación declarada en v.1."
+        },
+        "text": "porque la ley del Espíritu de vida en Cristo Jesús me ha librado de la ley del pecado y de la muerte.",
+        "textSpanish": "porque la ley del Espíritu de vida en Cristo Jesús me ha librado de la ley del pecado y de la muerte.",
+        "textGreek": "ὁ γὰρ νόμος τοῦ πνεύματος τῆς ζωῆς ἐν Χριστῷ Ἰησοῦ ἠλευθέρωσέν σε ἀπὸ τοῦ νόμου τῆς ἁμαρτίας καὶ τοῦ θανάτου.",
+        "grammaticalAnalysis": "Oración subordinada causal introducida por γάρ con verbo en Aoristo Indicativo Activo (ἠλευθέρωσεν = liberó de una vez y para siempre).",
+        "theologicalFlow": "Explica el mecanismo pneumatológico y cristocéntrico de la victoria sobre el régimen de muerte."
+      }
+    ]
+  },
+  {
+    "id": "romans-8-1-4",
+    "language": "en",
+    "bookAbbreviation": "ROM",
+    "bookName": "Romans",
+    "passageRef": "Romans 8:1-4",
+    "title": "The Trinitarian Basis of No Condemnation in Christ Jesus",
+    "theologicalTheme": "The definitive liberation from the realm of sin and death accomplished by the Spirit of life.",
+    "centralProposition": "There is now no condemnation for those who are vitally united to Christ Jesus.",
+    "clauses": [
+      {
+        "id": "c1",
+        "verseRef": "Romans 8:1",
+        "indentationLevel": 0,
+        "clauseType": "main",
+        "conjunction": {
+          "greek": "ἄρα",
+          "transliteration": "ara",
+          "gloss": "Therefore / Consequently",
+          "category": "inferential",
+          "syntacticRole": "Grand conclusion deduced from justification by faith expounded in Romans 3-7."
+        },
+        "text": "There is therefore now no condemnation for those who are in Christ Jesus.",
+        "textSpanish": "There is therefore now no condemnation for those who are in Christ Jesus.",
+        "textGreek": "Οὐδὲν ἄρα νῦν κατάκριμα τοῖς ἐν Χριστῷ Ἰησοῦ.",
+        "grammaticalAnalysis": "Main clause with temporal adverb (νῦν) and emphatic substantive with absolute negation (οὐδὲν κατάκριμα).",
+        "theologicalFlow": "Establishes the supreme dogmatic thesis of the redeemed believer."
+      },
+      {
+        "id": "c2",
+        "verseRef": "Romans 8:2",
+        "indentationLevel": 1,
+        "clauseType": "subordinate_causal",
+        "conjunction": {
+          "greek": "γάρ",
+          "transliteration": "gar",
+          "gloss": "for / because",
+          "category": "causal",
+          "syntacticRole": "Introduces the causal grounding for the no condemnation declared in v.1."
+        },
+        "text": "For the law of the Spirit of life has set you free in Christ Jesus from the law of sin and death.",
+        "textSpanish": "For the law of the Spirit of life has set you free in Christ Jesus from the law of sin and death.",
+        "textGreek": "ὁ γὰρ νόμος τοῦ πνεύματος τῆς ζωῆς ἐν Χριστῷ Ἰησοῦ ἠλευθέρωσέν σε ἀπὸ τοῦ νόμου τῆς ἁμαρτίας καὶ τοῦ θανάτου.",
+        "grammaticalAnalysis": "Subordinate causal clause introduced by γάρ with verb in Aorist Indicative Active (ἠλευθέρωσεν = set free once for all).",
+        "theologicalFlow": "Explains the pneumatological and Christocentric mechanism of triumph over the regime of death."
+      }
+    ]
+  }
+]

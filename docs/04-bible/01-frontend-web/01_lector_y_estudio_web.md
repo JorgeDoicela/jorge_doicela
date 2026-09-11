@@ -61,12 +61,12 @@ frontend/web/src/app/(bible)/
     ├── parallel-view/         # Comparador multi-columna alineado por versículo
     ├── textual-diff/          # Algoritmo LCS para resaltar variantes textuales
     ├── interlinear/           # services/interlinearApiService (API /bible/morphology/passage)
-    ├── literary-analysis/     # Quiasmos y paralelismos estructurados
+    ├── literary-analysis/     # services/literaryApiService (API /bible/literary/chiasms & /bible/literary/pauline)
     ├── lexicons/              # services/lexiconApiService (API /bible/morphology/lexicon)
     ├── grammar-search/        # services/grammarSearchApiService (API /bible/morphology/tokens/search)
-    ├── atlas/                 # services/atlasApiService (API /bible/historical/atlas/places)
-    ├── timeline/              # services/timelineApiService (API /bible/historical/timeline)
-    └── archaeology-feed/      # services/archaeologyApiService (API /bible/historical/articles)
+    ├── atlas/                 # services/atlasApiService (API /bible/historical/atlas/places con ?lang=)
+    ├── timeline/              # services/timelineApiService (API /bible/historical/timeline con ?lang=)
+    └── archaeology-feed/      # services/archaeologyApiService (API /bible/historical/articles con ?lang=)
 ```
 
 ### 2.1 Arquitectura Visual de la Landing Page (`bible/page.tsx`)
@@ -126,7 +126,7 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
 6. **Búsqueda Gramatical y Sintáctica (`features/grammar-search/`):** Consume `GET /bible/morphology/tokens/search`. Filtra por lema consonántico, código Strong y categoría morfológica.
 7. **Estructuras Literarias y Quiasmos (`features/literary-analysis/`):** Diagramación concéntrica de pasajes simétricos (Hexamerón de Génesis 1:1 - 2:3, discurso paulino de Romanos 8).
 8. **Atlas Bíblico Georreferenciado (`features/atlas/`):** Consume `GET /bible/historical/atlas/places`. Coordenadas WGS84 proyectadas sobre canvas vectorial con filtro por épocas.
-9. **Cronología y Arqueología (`features/timeline/` y `features/archaeology-feed/`):** Consume `/bible/historical/timeline` y `/bible/historical/articles`.
+9. **Cronología y Arqueología (`features/timeline/` y `features/archaeology-feed/`):** Conexión 100% reactiva y bilingüe con `GET /bible/historical/timeline` y `GET /bible/historical/articles`. `TimelineCanvas` y `SynchronousComparisonView` consumen los eventos históricos dinámicos tipados (`MonarchData`, `ProphetData`, `WorldEmpireData`, `ArchaeologicalMilestone`) transformados por `timelineApiService.ts` y orquestados por el hook `useBiblicalTimeline` según el idioma activo (`next-intl`), eliminando por completo cualquier dataset estático o mock local.
 
 ---
 

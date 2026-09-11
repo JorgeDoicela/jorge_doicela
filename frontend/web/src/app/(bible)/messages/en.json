@@ -20,6 +20,7 @@
     "historical": "Historical Context"
   },
   "Toolbar": {
+    "selectTranslation": "Select Bible translation",
     "passage": "Scripture Passage",
     "version": "Translation",
     "fontSize": "Font Size",

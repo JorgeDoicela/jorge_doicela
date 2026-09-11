@@ -1,0 +1,174 @@
+[
+  {
+    "id": "genesis-1-creation-hexameron",
+    "language": "es",
+    "bookAbbreviation": "GEN",
+    "bookName": "Génesis",
+    "passageRef": "Génesis 1:1 - 2:3",
+    "title": "La Arquitectura Simétrica del Hexamerón (Los 6 Días de la Creación)",
+    "description": "Estructura paralela y concéntrica donde los primeros tres días forman los reinos cósmicos y los tres días siguientes los pueblan con sus respectivos habitantes, culminando en el reposo sagrado del Shabat.",
+    "literaryCategory": "Pentateuco",
+    "focalMessage": "Dios es el Soberano Creador que transforma el caos y el vacío (Tohu va-Vohu) en un templo cósmico armonioso, coronado por la humanidad como su imagen representativa.",
+    "cola": [
+      {
+        "id": "A1",
+        "label": "A (Día 1)",
+        "verseRef": "Génesis 1:3-5",
+        "text": "Creación de la Luz y separación de las Tinieblas (Día / Noche)",
+        "textSpanish": "Creación de la Luz y separación de las Tinieblas (Día / Noche)",
+        "textHebrew": "וַיֹּ֥אמֶר אֱלֹהִ֖ים יְהִ֣י א֑וֹר וַֽיְהִי־אֽוֹר",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Formación del tiempo y el ciclo cósmico de la luz."
+      },
+      {
+        "id": "B1",
+        "label": "B (Día 2)",
+        "verseRef": "Génesis 1:6-8",
+        "text": "Separación de las Aguas: Creación de la Expansión (Cielos)",
+        "textSpanish": "Separación de las Aguas: Creación de la Expansión (Cielos)",
+        "textHebrew": "יְהִ֥י רָקִ֖יעַ בְּת֣וֹךְ הַמָּ֑יִם",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Formación del espacio vital y división de aguas superiores e inferiores."
+      },
+      {
+        "id": "C1",
+        "label": "C (Día 3)",
+        "verseRef": "Génesis 1:9-13",
+        "text": "Emergencia de la Tierra Seca, Mares y Vegetación fértil",
+        "textSpanish": "Emergencia de la Tierra Seca, Mares y Vegetación fértil",
+        "textHebrew": "תַּֽדְשֵׁ֤א הָאָ֙רֶץ֙ דֶּ֔שֶׁא עֵ֚שֶׂב מַזְרִ֣יעַ זֶ֔רַע",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Formación del hábitat terrestre y provisión alimenticia."
+      },
+      {
+        "id": "A2",
+        "label": "A' (Día 4)",
+        "verseRef": "Génesis 1:14-19",
+        "text": "Llenado del Reino de la Luz: Sol, Luna y Estrellas para gobernar el Día y la Noche",
+        "textSpanish": "Llenado del Reino de la Luz: Sol, Luna y Estrellas para gobernar el Día y la Noche",
+        "textHebrew": "יְהִ֤י מְאֹרֹת֙ בִּרְקִ֣יעַ הַשָּׁמַ֔יִם",
+        "matchingPairId": "A1",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Corresponde al Día 1: Se puebla el reino de la luz con las lumbreras cósmicas."
+      },
+      {
+        "id": "B2",
+        "label": "B' (Día 5)",
+        "verseRef": "Génesis 1:20-23",
+        "text": "Llenado de las Aguas y la Expansión: Monstruos marinos, peces y aves aladas",
+        "textSpanish": "Llenado de las Aguas y la Expansión: Monstruos marinos, peces y aves aladas",
+        "textHebrew": "יִשְׁרְצ֣וּ הַמַּ֔יִם שֶׁ֖רֶץ נֶ֣פֶשׁ חַיָּ֑ה וְעוֹף֙ יְעוֹפֵ֣ף עַל־הָאָ֔רֶץ",
+        "matchingPairId": "B1",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Corresponde al Día 2: Se pueblan las aguas y el firmamento creados en el Día 2."
+      },
+      {
+        "id": "C2",
+        "label": "C' (Día 6)",
+        "verseRef": "Génesis 1:24-31",
+        "text": "Llenado de la Tierra Seca: Animales terrestres y el Ser Humano a Imagen de Dios (Imago Dei)",
+        "textSpanish": "Llenado de la Tierra Seca: Animales terrestres y el Ser Humano a Imagen de Dios (Imago Dei)",
+        "textHebrew": "נַֽעֲשֶׂ֥ה אָדָ֛ם בְּצַלְמֵ֖נוּ כִּדְמוּתֵ֑נוּ",
+        "matchingPairId": "C1",
+        "parallelismType": "climactic",
+        "theologicalNote": "Corresponde al Día 3: Se puebla la tierra seca con animales y la cúspide de la Creación (el hombre)."
+      },
+      {
+        "id": "CENTER",
+        "label": "Clímax (Día 7)",
+        "verseRef": "Génesis 2:1-3",
+        "text": "La Consagración del Reposo (Shabat): Dios cesa y santifica el séptimo día",
+        "textSpanish": "La Consagración del Reposo (Shabat): Dios cesa y santifica el séptimo día",
+        "textHebrew": "וַיְשַׁ变ת֙ בַּיּ֣וֹם הַשְּׁבִיעִ֔י מִכָּל־מְלַאכְתּ֖וֹ אֲשֶׁ֣ר עָשָֽׂה",
+        "isFocalCenter": true,
+        "theologicalNote": "El objetivo de la creación no es meramente funcional sino litúrgico y relacional: entrar en el reposo sagrado de Dios."
+      }
+    ]
+  },
+  {
+    "id": "genesis-1-creation-hexameron",
+    "language": "en",
+    "bookAbbreviation": "GEN",
+    "bookName": "Genesis",
+    "passageRef": "Genesis 1:1 - 2:3",
+    "title": "The Symmetrical Architecture of the Hexameron (The 6 Days of Creation)",
+    "description": "Parallel and concentric framework where the first three days establish the cosmic realms and the next three days populate them with their respective rulers, culminating in the holy rest of the Sabbath.",
+    "literaryCategory": "Pentateuco",
+    "focalMessage": "God is the Sovereign Creator who transforms chaos and emptiness (Tohu va-Vohu) into a harmonious cosmic temple, crowned by humanity as His representative image.",
+    "cola": [
+      {
+        "id": "A1",
+        "label": "A (Day 1)",
+        "verseRef": "Genesis 1:3-5",
+        "text": "Creation of Light and separation of Darkness (Day / Night)",
+        "textSpanish": "Creation of Light and separation of Darkness (Day / Night)",
+        "textHebrew": "וַיֹּ֥אמֶר אֱלֹהִ֖ים יְהִ֣י א֑וֹר וַֽיְהִי־אֽוֹר",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Formation of time and the cosmic cycle of day and night."
+      },
+      {
+        "id": "B1",
+        "label": "B (Day 2)",
+        "verseRef": "Genesis 1:6-8",
+        "text": "Separation of Waters: Creation of the Expanse (Heavens)",
+        "textSpanish": "Separation of Waters: Creation of the Expanse (Heavens)",
+        "textHebrew": "יְהִ֥י רָקִ֖יעַ בְּת֣וֹךְ הַמָּ֑יִם",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Formation of vital atmospheric space and dividing upper and lower waters."
+      },
+      {
+        "id": "C1",
+        "label": "C (Day 3)",
+        "verseRef": "Genesis 1:9-13",
+        "text": "Emergence of Dry Land, Seas, and fertile Vegetation",
+        "textSpanish": "Emergence of Dry Land, Seas, and fertile Vegetation",
+        "textHebrew": "תַּֽדְשֵׁ֤א הָאָ֙רֶץ֙ דֶּ֔שֶׁא עֵ֚שֶׂב מַזְרִ֣יעַ זֶ֔רַע",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Formation of terrestrial habitat and food provision."
+      },
+      {
+        "id": "A2",
+        "label": "A' (Day 4)",
+        "verseRef": "Genesis 1:14-19",
+        "text": "Filling the Realm of Light: Sun, Moon, and Stars to govern Day and Night",
+        "textSpanish": "Filling the Realm of Light: Sun, Moon, and Stars to govern Day and Night",
+        "textHebrew": "יְהִ֤י מְאֹרֹת֙ בִּרְקִ֣יעַ הַשָּׁמַ֔יִם",
+        "matchingPairId": "A1",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Corresponds to Day 1: Populates the realm of light with heavenly luminaries."
+      },
+      {
+        "id": "B2",
+        "label": "B' (Day 5)",
+        "verseRef": "Genesis 1:20-23",
+        "text": "Filling the Waters and Expanse: Sea creatures, fish, and winged birds",
+        "textSpanish": "Filling the Waters and Expanse: Sea creatures, fish, and winged birds",
+        "textHebrew": "יִשְׁרְצ֣וּ הַמַּ֔יִם שֶׁ֖רֶץ נֶ֣פֶשׁ חַיָּ֑ה וְעוֹף֙ יְעוֹפֵ֣ף עַל־הָאָ֔רֶץ",
+        "matchingPairId": "B1",
+        "parallelismType": "synthetic",
+        "theologicalNote": "Corresponds to Day 2: Populates the waters and sky created on Day 2."
+      },
+      {
+        "id": "C2",
+        "label": "C' (Day 6)",
+        "verseRef": "Genesis 1:24-31",
+        "text": "Filling Dry Land: Land animals and Mankind in God's Image (Imago Dei)",
+        "textSpanish": "Filling Dry Land: Land animals and Mankind in God's Image (Imago Dei)",
+        "textHebrew": "נַֽעֲשֶׂ֥ה אָדָ֛ם בְּצַלְמֵ֖נוּ כִּדְמוּתֵ֑נוּ",
+        "matchingPairId": "C1",
+        "parallelismType": "climactic",
+        "theologicalNote": "Corresponds to Day 3: Populates dry land with creatures and creation's pinnacle (man)."
+      },
+      {
+        "id": "CENTER",
+        "label": "Climax (Day 7)",
+        "verseRef": "Genesis 2:1-3",
+        "text": "Consecration of Rest (Shabbat): God ceases and sanctifies the seventh day",
+        "textSpanish": "Consecration of Rest (Shabbat): God ceases and sanctifies the seventh day",
+        "textHebrew": "וַיְשַׁבֵּת֙ בַּיּ֣וֹם הַשְּׁבִיעִ֔י מִכָּל־מְלַאכְתּ֖וֹ אֲשֶׁ֣ר עָשָֽׂה",
+        "isFocalCenter": true,
+        "theologicalNote": "The climax of creation is liturgical and covenantal: communion in God's holy rest."
+      }
+    ]
+  }
+]

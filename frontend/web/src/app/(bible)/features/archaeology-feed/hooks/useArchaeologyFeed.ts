@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { ArticleCategory, GeographicRegion, ArchaeologyArticle, AncientManuscript } from '../types';
 import { fetchArchaeologyArticles } from '../services/archaeologyApiService';
 
 export function useArchaeologyFeed() {
+  const locale = useLocale();
   const [articles, setArticles] = useState<ArchaeologyArticle[]>([]);
   const [manuscripts, setManuscripts] = useState<AncientManuscript[]>([]);
   const [loading, setLoading] = useState(false);
@@ -19,7 +21,7 @@ export function useArchaeologyFeed() {
     const loadArticles = async () => {
       setLoading(true);
       try {
-        const data = await fetchArchaeologyArticles(selectedCategory, searchQuery);
+        const data = await fetchArchaeologyArticles(selectedCategory, searchQuery, locale);
         if (active) setArticles(data);
       } catch {
         if (active) setArticles([]);
@@ -31,7 +33,7 @@ export function useArchaeologyFeed() {
     return () => {
       active = false;
     };
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, locale]);
 
   // Filtrado de artículos por región
   const filteredArticles = useMemo(() => {

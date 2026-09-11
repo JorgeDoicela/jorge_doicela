@@ -36,6 +36,11 @@ export const TimelineDashboard: React.FC = () => {
     handleTouchStart,
     handleTouchMove,
     handleTouchEnd,
+    monarchs,
+    prophets,
+    empires,
+    milestones,
+    isLoadingTimeline,
   } = useBiblicalTimeline();
 
   const toggleExpanded = () => {
@@ -98,6 +103,11 @@ export const TimelineDashboard: React.FC = () => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           className={isExpanded ? 'h-full' : 'h-[460px]'}
+          monarchs={monarchs}
+          prophets={prophets}
+          empires={empires}
+          milestones={milestones}
+          isLoading={isLoadingTimeline}
         />
 
         <TimelineDetailDrawer
@@ -110,6 +120,10 @@ export const TimelineDashboard: React.FC = () => {
       <SynchronousComparisonView
         cursorYearBC={cursorYearBC}
         onSelectItem={setSelectedItem}
+        monarchs={monarchs}
+        prophets={prophets}
+        empires={empires}
+        milestones={milestones}
       />
     </div>
   );

@@ -47,8 +47,9 @@ La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rá
 │   historical_places    │       │    timeline_events     │       │  archaeology_articles  │
 ├────────────────────────┤       ├────────────────────────┤       ├────────────────────────┤
 │ id (PK)                │       │ id (PK)                │       │ id (PK)                │
+│ language (PK)          │       │ language (PK)          │       │ language (PK)          │
 │ name                   │       │ name                   │       │ title                  │
-│ originalName (JSON)    │       │ type (INDEX)           │       │ slug (UNIQUE, INDEX)   │
+│ originalName (JSON)    │       │ type (INDEX)           │       │ slug (INDEX)           │
 │ coordinates (JSON)     │       │ startYearBC (INDEX)    │       │ category (INDEX)       │
 │ category (INDEX)       │       │ endYearBC (INDEX)      │       │ region                 │
 │ era (JSON)             │       │ kingdom                │       │ publishDate            │
@@ -56,6 +57,21 @@ La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rá
 │ description            │       │ biblicalReferences     │       │ contentMarkdown        │
 │ archaeologicalNotes    │       │ keyEvents              │       │ biblicalReferences     │
 └────────────────────────┘       └────────────────────────┘       └────────────────────────┘
+
+┌────────────────────────┐       ┌────────────────────────┐
+│   chiasm_structures    │       │   pauline_discourses   │
+├────────────────────────┤       ├────────────────────────┤
+│ id (PK)                │       │ id (PK)                │
+│ language (PK)          │       │ language (PK)          │
+│ bookAbbreviation (IDX) │       │ bookAbbreviation (IDX) │
+│ bookName               │       │ bookName               │
+│ passageRef             │       │ passageRef             │
+│ title                  │       │ title                  │
+│ description            │       │ theologicalTheme       │
+│ literaryCategory (IDX) │       │ centralProposition     │
+│ focalMessage           │       │ clauses (JSON)         │
+│ cola (JSON)            │       └────────────────────────┘
+└────────────────────────┘
 ```
 
 ---
@@ -73,10 +89,13 @@ backend/src/bible/corpus/
 ├── kjv/01_genesis.json           # King James Version
 ├── bhs/01_genesis.json           # Biblia Hebraica Stuttgartensia (Hebreo)
 ├── lxx/01_genesis.json           # Septuaginta (Griego Koiné)
-└── historical/                   # Fuentes de Contexto Histórico
-    ├── atlas_locations.json      # Coordenadas WGS84, regiones y excavaciones
-    ├── timeline_events.json      # Monarcas, profetas e imperios
-    └── archaeology_articles.json # Artículos de epigrafía y manuscritos
+├── historical/                   # Fuentes de Contexto Histórico Bilingüe (ES / EN)
+│   ├── atlas_locations.json      # Coordenadas WGS84, regiones y excavaciones
+│   ├── timeline_events.json      # Monarcas, profetas e imperios
+│   └── archaeology_articles.json # Artículos de epigrafía y manuscritos
+└── literary/                     # Fuentes de Análisis Literario y Quiasmos (ES / EN)
+    ├── chiasms.json              # Estructuras simétricas concéntricas y Hexamerón
+    └── pauline.json              # Proposiciones y conectores de discurso paulino
 ```
 
 ---
@@ -88,10 +107,11 @@ La persistencia del corpus bíblico e histórico sigue el principio de **Ingesti
 ### 3.1 Flujo de Recreación Limpia
 Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
 
-1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 8 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`).
-2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug`, etc.).
+1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 10 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `chiasm_structures`, `pauline_discourses`).
+2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, etc.), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
 3. **Sembrado Canónico y Textual por Lotes:** Inserta los 66 libros canónicos, versiones y procesa los versículos por lotes transaccionales (`better-sqlite3`).
-4. **Sembrado de Contexto Histórico:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía.
+4. **Sembrado de Contexto Histórico Bilingüe:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía en español e inglés.
+5. **Sembrado de Análisis Literario:** Inserta quiasmos concéntricos y diagramación de discurso paulino bilingüe.
 
 ### 3.2 Beneficios Arquitectónicos
 * **Cero Residuos ni Datos Huérfanos:** Si se renombran slugs, corrigen versículos o ajustan fechas en los JSON, no quedan registros obsoletos ni desalineados.
@@ -104,23 +124,25 @@ Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
   ```bash
   pnpm --filter backend seed:bible
   ```
-* **Rendimiento Medido:** Procesa y recrea todo el corpus en **< 80 ms**.
-* **Consumo de Memoria:** `< 165 MB` de RAM durante el sembrado.
+* **Rendimiento Medido:** Procesa y recrea todo el corpus en **~110 ms**.
+* **Consumo de Memoria:** `< 180 MB` de RAM durante el sembrado.
 * **Salida de Ejecución Típica:**
   ```text
-  [CorpusSeeder] Recreando base de datos desde cero: bible.sqlite...
+  [CorpusSeeder] 🚀 Recreando base de datos desde cero: bible.sqlite...
   [CorpusSeeder] Purgando tablas anteriores (Reset Limpio)...
   [CorpusSeeder] Sembrando catálogo de 66 libros canónicos...
+  [CorpusSeeder] Sembrando catálogo de 5 traducciones oficiales...
   [CorpusSeeder] Procesando בְּרֵאשִׁית (GEN) en BHS...
-  [CorpusSeeder] Procesando ΓΕΝΕΣΙΣ (GEN) en LXX...
-  [CorpusSeeder] Procesando Génesis (GEN) en NBLA...
-  [CorpusSeeder] Procesando Génesis (GEN) en NVI...
-  [CorpusSeeder] Procesando Génesis (GEN) en RV1960...
-  [MorphologySeeder] -> 30 entradas léxicas Strong indexadas.
-  [MorphologySeeder] -> 355 tokens morfológicos masoréticos indexados.
-  [HistoricalSeeder] -> 3 ubicaciones geográficas indexadas.
-  [HistoricalSeeder] -> 17 entidades cronológicas indexadas.
-  [HistoricalSeeder] -> 3 artículos arqueológicos indexados.
-  [CorpusSeeder] Completado con éxito: 351 versículos indexados en 23 ms. Consumo de RAM: 146.47 MB.
+  [CorpusSeeder] Procesando Mateo (MAT) en NA28...
+  [CorpusSeeder] Procesando Génesis (GEN) en RV1909...
+  [CorpusSeeder] Procesando Mateo (MAT) en RV1909...
+  [MorphologySeeder] -> 40 entradas léxicas Strong indexadas.
+  [MorphologySeeder] -> 412 tokens morfológicos interlineales indexados.
+  [HistoricalSeeder] -> 6 ubicaciones geográficas indexadas.
+  [HistoricalSeeder] -> 34 entidades cronológicas indexadas.
+  [HistoricalSeeder] -> 6 artículos arqueológicos indexados.
+  [LiterarySeeder] -> 2 estructuras quiásticas indexadas.
+  [LiterarySeeder] -> 2 discursos paulinos indexados.
+  [CorpusSeeder] Completado con éxito: 161 versículos indexados en 110 ms. Consumo de RAM: 177.60 MB.
   ```
 * **Automatización CI/CD:** Se ejecuta automáticamente tras cada despliegue en GitHub Actions para mantener `bible.sqlite` sincronizada con el repositorio.

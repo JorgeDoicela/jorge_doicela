@@ -1,7 +1,13 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { TimelineSelectedItem } from '../types';
+import {
+  fetchTimelineEvents,
+  mapApiEventsToTimelineData,
+  TimelineDataState,
+} from '../services/timelineApiService';
 
 export interface TimelineEraShortcut {
   id: string;
@@ -57,6 +63,32 @@ export const TIMELINE_ERA_SHORTCUTS: TimelineEraShortcut[] = [
 ];
 
 export function useBiblicalTimeline() {
+  const locale = useLocale();
+  const [timelineData, setTimelineData] = useState<TimelineDataState>({
+    monarchs: [],
+    prophets: [],
+    empires: [],
+    milestones: [],
+  });
+  const [isLoadingTimeline, setIsLoadingTimeline] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoadingTimeline(true);
+    fetchTimelineEvents(undefined, undefined, undefined, locale)
+      .then((events) => {
+        if (!isMounted) return;
+        setTimelineData(mapApiEventsToTimelineData(events));
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingTimeline(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [locale]);
+
   // Año central visible en a.C. (ej. 850)
   const [centerYearBC, setCenterYearBC] = useState<number>(850);
   const [zoomLevel, setZoomLevel] = useState<number>(1.2);
@@ -228,6 +260,11 @@ export function useBiblicalTimeline() {
   }, []);
 
   return {
+    monarchs: timelineData.monarchs,
+    prophets: timelineData.prophets,
+    empires: timelineData.empires,
+    milestones: timelineData.milestones,
+    isLoadingTimeline,
     centerYearBC,
     setCenterYearBC,
     zoomLevel,
@@ -256,3 +293,4 @@ export function useBiblicalTimeline() {
     handleTouchEnd,
   };
 }
+

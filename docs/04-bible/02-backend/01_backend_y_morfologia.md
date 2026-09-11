@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `HistoricalController`.
->   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `HistoricalService`.
->   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`.
+>   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `HistoricalController`, `LiteraryController`.
+>   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `HistoricalService`, `LiteraryService`.
+>   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `ChiasmStructureEntity`, `PaulineDiscourseEntity`.
 
 ---
 
@@ -54,11 +54,17 @@ backend/src/bible/
 │   ├── services/morphology.service.ts
 │   └── entities/ (MorphologyToken, LexiconEntry)
 │
-└── historical/                # Sub-módulo de contexto histórico (/bible/historical/*)
-    ├── historical.module.ts
-    ├── controllers/historical.controller.ts
-    ├── services/historical.service.ts
-    └── entities/ (HistoricalPlaceEntity, TimelineEventEntity, ArchaeologyArticleEntity)
+├── historical/                # Sub-módulo de contexto histórico (/bible/historical/*)
+│   ├── historical.module.ts
+│   ├── controllers/historical.controller.ts
+│   ├── services/historical.service.ts
+│   └── entities/ (HistoricalPlaceEntity, TimelineEventEntity, ArchaeologyArticleEntity)
+│
+└── literary/                  # Sub-módulo de análisis literario y quiasmos (/bible/literary/*)
+    ├── literary.module.ts
+    ├── controllers/literary.controller.ts
+    ├── services/literary.service.ts
+    └── entities/ (ChiasmStructureEntity, PaulineDiscourseEntity)
 ```
 
 ---
@@ -91,3 +97,10 @@ backend/src/bible/
 * **`GET /bible/historical/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500&lang=es|en`).
 * **`GET /bible/historical/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos con índice compuesto `(slug, language)` (`?category=recent_discoveries&lang=es|en`).
 * **`GET /bible/historical/articles/:slug`**: Detalle completo de un artículo de evidencia material localizado (`?lang=es|en`).
+
+### 3.6 Análisis Literario (`/bible/literary/*`)
+* **`GET /bible/literary/chiasms`**: Estructuras concéntricas, paralelismos y quiasmos poéticos bilingües (`?book=GEN&lang=es|en`).
+* **`GET /bible/literary/chiasms/:id`**: Detalle exegético de un quiasmo por identificador (`?lang=es|en`).
+* **`GET /bible/literary/pauline`**: Árboles de proposiciones y análisis de discurso paulino (`?epistle=ROM&lang=es|en`).
+* **`GET /bible/literary/pauline/:id`**: Detalle de cláusulas y conectores griegos de un pasaje paulino (`?lang=es|en`).
+

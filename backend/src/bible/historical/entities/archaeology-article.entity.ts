@@ -61,6 +61,6 @@ export class ArchaeologyArticleEntity {
   @Column('simple-json', { nullable: true })
   tags: string[];
 
-  @Column({ default: 'es' })
+  @PrimaryColumn({ length: 8, default: 'es' })
   language: string;
 }

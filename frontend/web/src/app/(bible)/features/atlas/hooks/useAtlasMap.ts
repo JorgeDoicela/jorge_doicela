@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import { AncientPlace, HistoricalEra, MapLayerType, PlaceCategory } from '../types';
 import { fetchAtlasPlaces } from '../services/atlasApiService';
 
@@ -27,6 +28,7 @@ export function projectGeoToCanvas(
 }
 
 export function useAtlasMap() {
+  const locale = useLocale();
   const [places, setPlaces] = useState<AncientPlace[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('historical');
@@ -46,7 +48,7 @@ export function useAtlasMap() {
     const loadPlaces = async () => {
       setLoading(true);
       try {
-        const data = await fetchAtlasPlaces(selectedCategory, searchQuery);
+        const data = await fetchAtlasPlaces(selectedCategory, searchQuery, locale);
         if (active) setPlaces(data);
       } catch {
         if (active) setPlaces([]);
@@ -58,7 +60,7 @@ export function useAtlasMap() {
     return () => {
       active = false;
     };
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, locale]);
 
   // Filtrado de lugares según criterios activos
   const filteredPlaces = useMemo(() => {

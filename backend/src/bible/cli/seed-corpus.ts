@@ -102,6 +102,31 @@ interface SeedArchaeologyArticle {
   language?: string;
 }
 
+interface SeedChiasmStructure {
+  id: string;
+  language?: string;
+  bookAbbreviation: string;
+  bookName: string;
+  passageRef: string;
+  title: string;
+  description: string;
+  literaryCategory: string;
+  focalMessage: string;
+  cola: unknown;
+}
+
+interface SeedPaulineDiscourse {
+  id: string;
+  language?: string;
+  bookAbbreviation: string;
+  bookName: string;
+  passageRef: string;
+  title: string;
+  theologicalTheme: string;
+  centralProposition: string;
+  clauses: unknown;
+}
+
 export const CANONICAL_BOOKS = [
   // Antiguo Testamento (39 libros)
   { id: 1, name: 'Génesis', abbreviation: 'GEN', testament: 'OT' },
@@ -196,6 +221,8 @@ export function seedCorpus(
     DROP TABLE IF EXISTS historical_places;
     DROP TABLE IF EXISTS timeline_events;
     DROP TABLE IF EXISTS archaeology_articles;
+    DROP TABLE IF EXISTS chiasm_structures;
+    DROP TABLE IF EXISTS pauline_discourses;
 
     CREATE TABLE books (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -253,7 +280,7 @@ export function seedCorpus(
     CREATE INDEX IF NOT EXISTS IDX_morph_strong ON morphology_tokens(strongCode);
 
     CREATE TABLE historical_places (
-      id VARCHAR(64) PRIMARY KEY,
+      id VARCHAR(64) NOT NULL,
       name VARCHAR(128) NOT NULL,
       originalName TEXT,
       coordinates TEXT NOT NULL,
@@ -265,12 +292,13 @@ export function seedCorpus(
       description TEXT NOT NULL,
       biblicalReferences TEXT,
       archaeologicalNotes TEXT,
-      language VARCHAR(10) NOT NULL DEFAULT 'es'
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      PRIMARY KEY (id, language)
     );
     CREATE INDEX IF NOT EXISTS IDX_places_category ON historical_places(category);
 
     CREATE TABLE timeline_events (
-      id VARCHAR(64) PRIMARY KEY,
+      id VARCHAR(64) NOT NULL,
       name VARCHAR(128) NOT NULL,
       type VARCHAR(32) NOT NULL,
       originalName TEXT,
@@ -283,14 +311,15 @@ export function seedCorpus(
       biblicalReferences TEXT,
       keyEvents TEXT,
       details TEXT,
-      language VARCHAR(10) NOT NULL DEFAULT 'es'
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      PRIMARY KEY (id, language)
     );
     CREATE INDEX IF NOT EXISTS IDX_timeline_type ON timeline_events(type);
     CREATE INDEX IF NOT EXISTS IDX_timeline_start ON timeline_events(startYearBC);
     CREATE INDEX IF NOT EXISTS IDX_timeline_end ON timeline_events(endYearBC);
 
     CREATE TABLE archaeology_articles (
-      id VARCHAR(64) PRIMARY KEY,
+      id VARCHAR(64) NOT NULL,
       title VARCHAR(256) NOT NULL,
       slug VARCHAR(256) NOT NULL,
       category VARCHAR(64) NOT NULL,
@@ -306,10 +335,41 @@ export function seedCorpus(
       museumOrLocation VARCHAR(256),
       keyArtifact VARCHAR(256),
       tags TEXT,
-      language VARCHAR(10) NOT NULL DEFAULT 'es'
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      PRIMARY KEY (id, language)
     );
     CREATE INDEX IF NOT EXISTS IDX_articles_cat ON archaeology_articles(category);
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_articles_slug_lang ON archaeology_articles(slug, language);
+
+    CREATE TABLE chiasm_structures (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      bookAbbreviation VARCHAR(16) NOT NULL,
+      bookName VARCHAR(64) NOT NULL,
+      passageRef VARCHAR(64) NOT NULL,
+      title VARCHAR(256) NOT NULL,
+      description TEXT NOT NULL,
+      literaryCategory VARCHAR(64) NOT NULL,
+      focalMessage TEXT NOT NULL,
+      cola TEXT NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_chiasm_book ON chiasm_structures(bookAbbreviation);
+    CREATE INDEX IF NOT EXISTS IDX_chiasm_category ON chiasm_structures(literaryCategory);
+
+    CREATE TABLE pauline_discourses (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      bookAbbreviation VARCHAR(16) NOT NULL,
+      bookName VARCHAR(64) NOT NULL,
+      passageRef VARCHAR(64) NOT NULL,
+      title VARCHAR(256) NOT NULL,
+      theologicalTheme TEXT NOT NULL,
+      centralProposition TEXT NOT NULL,
+      clauses TEXT NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_pauline_epistle ON pauline_discourses(bookAbbreviation);
   `);
 
   // Sembrar los 66 libros canónicos de forma segura
@@ -390,7 +450,12 @@ export function seedCorpus(
   let totalVersesInserted = 0;
 
   for (const transFolder of translations) {
-    if (transFolder === 'historical' || transFolder === 'morphology') continue;
+    if (
+      transFolder === 'historical' ||
+      transFolder === 'morphology' ||
+      transFolder === 'literary'
+    )
+      continue;
     const transPath = path.join(corpusDir, transFolder);
     if (!fs.statSync(transPath).isDirectory()) continue;
 
@@ -672,6 +737,73 @@ export function seedCorpus(
       txArticles(articles);
       console.log(
         `[HistoricalSeeder] -> ${articles.length} artículos arqueológicos indexados.`,
+      );
+    }
+  }
+
+  // 6. Sembrado Transaccional de Análisis Literario (Quiasmos y Discurso Paulino)
+  const literaryDir = path.join(corpusDir, 'literary');
+  if (fs.existsSync(literaryDir)) {
+    // A. Chiasm Structures
+    const chiasmsPath = path.join(literaryDir, 'chiasms.json');
+    if (fs.existsSync(chiasmsPath)) {
+      const chiasms = JSON.parse(
+        fs.readFileSync(chiasmsPath, 'utf8'),
+      ) as SeedChiasmStructure[];
+      const insertChiasm = db.prepare(`
+        INSERT INTO chiasm_structures (id, language, bookAbbreviation, bookName, passageRef, title, description, literaryCategory, focalMessage, cola)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txChiasms = db.transaction((items: SeedChiasmStructure[]) => {
+        for (const c of items) {
+          insertChiasm.run(
+            c.id,
+            c.language || 'es',
+            c.bookAbbreviation,
+            c.bookName,
+            c.passageRef,
+            c.title,
+            c.description,
+            c.literaryCategory,
+            c.focalMessage,
+            JSON.stringify(c.cola || []),
+          );
+        }
+      });
+      txChiasms(chiasms);
+      console.log(
+        `[LiterarySeeder] -> ${chiasms.length} estructuras quiásticas indexadas.`,
+      );
+    }
+
+    // B. Pauline Discourses
+    const paulinePath = path.join(literaryDir, 'pauline.json');
+    if (fs.existsSync(paulinePath)) {
+      const discourses = JSON.parse(
+        fs.readFileSync(paulinePath, 'utf8'),
+      ) as SeedPaulineDiscourse[];
+      const insertDiscourse = db.prepare(`
+        INSERT INTO pauline_discourses (id, language, bookAbbreviation, bookName, passageRef, title, theologicalTheme, centralProposition, clauses)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txDiscourses = db.transaction((items: SeedPaulineDiscourse[]) => {
+        for (const d of items) {
+          insertDiscourse.run(
+            d.id,
+            d.language || 'es',
+            d.bookAbbreviation,
+            d.bookName,
+            d.passageRef,
+            d.title,
+            d.theologicalTheme,
+            d.centralProposition,
+            JSON.stringify(d.clauses || []),
+          );
+        }
+      });
+      txDiscourses(discourses);
+      console.log(
+        `[LiterarySeeder] -> ${discourses.length} discursos paulinos indexados.`,
       );
     }
   }

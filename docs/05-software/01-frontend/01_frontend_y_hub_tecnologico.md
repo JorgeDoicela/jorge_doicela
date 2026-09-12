@@ -35,6 +35,7 @@ frontend/web/src/app/(software)/
 │   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (Spotlight + ThemeToggle + LanguageToggle)
 │   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
 │   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales
+│   ├── MarkdownRenderer.tsx          # Lector formal de contenido técnico (react-markdown + remark-gfm, soporte GFM tables y dual-mode)
 │   └── SoftwareFooter.tsx            # Pie de página tecnológico institucional
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
 │   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)

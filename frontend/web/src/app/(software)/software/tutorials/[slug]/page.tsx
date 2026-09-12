@@ -72,8 +72,8 @@ export default function TutorialDetailPage({
       subtitle={tutorial.description}
       author="Jorge Doicela"
       extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
+        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
+          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
             {tDetail('stepsIndex', { count: steps.length })}
           </h5>
           <div className="space-y-1.5 text-xs font-mono">
@@ -83,8 +83,8 @@ export default function TutorialDetailPage({
                 onClick={() => setActiveStep(idx)}
                 className={`w-full text-left px-3 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
                   activeStep === idx
-                    ? 'glass-concave-panel text-cyan-400 font-bold border border-cyan-500/30'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                    ? 'glass-concave-panel text-cyan-600 dark:text-cyan-400 font-bold border border-cyan-500/30'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
                 <span className="text-[10px] opacity-60">0{idx + 1}.</span>
@@ -98,11 +98,11 @@ export default function TutorialDetailPage({
       {/* Wizard por pasos interactivo dentro del contenedor editorial unificado */}
       {currentStep ? (
         <div className="space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-white/5">
-            <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+          <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/5">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
               {tDetail('stepLabel', { step: activeStep + 1, title: currentStep.title })}
             </h3>
-            <span className="text-xs font-mono text-cyan-400 font-semibold">
+            <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 font-semibold">
               {tDetail('stepOf', { current: activeStep + 1, total: steps.length })}
             </span>
           </div>
@@ -110,7 +110,7 @@ export default function TutorialDetailPage({
           <MarkdownRenderer content={currentStep.contentMarkdown} />
 
           {currentStep.codeSnippet && (
-            <div className="my-5 rounded-2xl bg-[#090e17] border border-white/10 overflow-hidden shadow-inner font-mono text-xs">
+            <div className="my-5 rounded-2xl bg-[#090e17] border border-black/10 dark:border-white/10 overflow-hidden shadow-inner font-mono text-xs">
               <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5 text-[11px] text-zinc-400 uppercase tracking-wider">
                 <span>{currentStep.codeLanguage || 'bash'}</span>
               </div>

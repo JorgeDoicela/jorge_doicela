@@ -70,32 +70,32 @@ export default function AiDetailPage({
       subtitle={resource.description}
       author={resource.provider}
       extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
+        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
+          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
             {tDetail('aiSpec')}
           </h5>
           <div className="space-y-2.5 text-xs font-mono">
             <div className="flex items-center justify-between">
               <span className="text-zinc-500">{tDetail('provider')}</span>
-              <span className="font-bold text-white">{resource.provider}</span>
+              <span className="font-bold text-slate-900 dark:text-white">{resource.provider}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-500">{tDetail('type')}</span>
-              <span className="text-indigo-400 uppercase">{resource.type}</span>
+              <span className="text-indigo-600 dark:text-indigo-400 uppercase font-semibold">{resource.type}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-500">{tDetail('license')}</span>
-              <span className="text-zinc-300">{resource.license}</span>
+              <span className="text-slate-800 dark:text-zinc-300">{resource.license}</span>
             </div>
           </div>
 
           {(resource.documentationUrl || resource.githubUrl || resource.paperUrl) && (
-            <div className="pt-2 border-t border-white/5">
+            <div className="pt-2 border-t border-black/5 dark:border-white/5">
               <a
                 href={resource.documentationUrl || resource.githubUrl || resource.paperUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-indigo-400 hover:text-white transition-all shadow-sm"
+                className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-white transition-all shadow-sm"
               >
                 {tCard('accessModel')}
               </a>

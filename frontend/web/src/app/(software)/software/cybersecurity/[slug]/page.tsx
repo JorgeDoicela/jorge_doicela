@@ -76,47 +76,47 @@ export default function SecurityDetailPage({
       author="Jorge Doicela"
       callout={
         post.remediation ? (
-          <div className="p-5 rounded-2xl bg-cyan-950/20 border-l-4 border-cyan-400 space-y-1.5 shadow-sm">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
+          <div className="p-5 rounded-2xl bg-cyan-500/10 dark:bg-cyan-950/20 border-l-4 border-cyan-600 dark:border-cyan-400 space-y-1.5 shadow-sm">
+            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
               {tDetail('remediationTitle')}
             </h4>
-            <p className="text-xs sm:text-sm text-cyan-200/90 font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-cyan-950 dark:text-cyan-200/90 font-medium dark:font-light leading-relaxed">
               {post.remediation}
             </p>
           </div>
         ) : undefined
       }
       extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-white/5">
+        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
+          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
             {tDetail('cveSpec')}
           </h5>
           <div className="space-y-2.5 text-xs font-mono">
             <div className="flex items-center justify-between">
               <span className="text-zinc-500">{tDetail('severity')}</span>
-              <span className="font-bold text-rose-400">{post.severity}</span>
+              <span className="font-bold text-rose-600 dark:text-rose-400">{post.severity}</span>
             </div>
             {post.cveId && (
               <div className="flex items-center justify-between">
                 <span className="text-zinc-500">{tDetail('cveId')}</span>
-                <span className="font-bold text-cyan-400">{post.cveId}</span>
+                <span className="font-bold text-cyan-600 dark:text-cyan-400">{post.cveId}</span>
               </div>
             )}
             <div className="flex items-center justify-between">
               <span className="text-zinc-500">{tDetail('type')}</span>
-              <span className="text-zinc-300">{post.postType}</span>
+              <span className="text-slate-800 dark:text-zinc-300">{post.postType}</span>
             </div>
             {post.affectedSystems && (
               <div className="flex items-center justify-between">
                 <span className="text-zinc-500">{tDetail('systems')}</span>
-                <span className="text-zinc-300 truncate max-w-[140px] text-right">{post.affectedSystems}</span>
+                <span className="text-slate-900 dark:text-zinc-200 truncate max-w-[140px] text-right font-medium">{post.affectedSystems}</span>
               </div>
             )}
           </div>
-          <div className="pt-2 border-t border-white/5">
+          <div className="pt-2 border-t border-black/5 dark:border-white/5">
             <Link
               href="/software/cybersecurity"
-              className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-rose-400 hover:text-white transition-all"
+              className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-white transition-all"
             >
               {tDetail('allAdvisories')}
             </Link>

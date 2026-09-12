@@ -55,7 +55,7 @@ export function SoftwareArticleLayout({
         />
 
         {/* Migas de Pan (Breadcrumbs) */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-zinc-500 overflow-x-auto scrollbar-none py-1">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-500 overflow-x-auto scrollbar-none py-1">
           <Link href="/software" className="hover:text-[var(--foreground)] transition-colors">
             Software
           </Link>
@@ -64,20 +64,20 @@ export function SoftwareArticleLayout({
             {categoryLabel}
           </Link>
           <span>/</span>
-          <span className="text-zinc-300 truncate max-w-[240px] sm:max-w-md">{title}</span>
+          <span className="text-slate-800 dark:text-zinc-300 font-medium truncate max-w-[240px] sm:max-w-md">{title}</span>
         </nav>
 
         {/* Cuadrícula Principal (8 cols contenido unificado + 4 cols barra lateral) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Columna Izquierda: Contenedor Editorial Unificado Continuo (Estilo MalwareTech) */}
-          <article className="lg:col-span-8 p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-white/5 space-y-8 shadow-2xl">
+          <article className="lg:col-span-8 p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl">
             
             {/* Cabecera del Artículo */}
             <header className="space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
               {/* Fecha superior limpia */}
               {date && (
-                <div className="text-xs font-mono text-zinc-400">
+                <div className="text-xs font-mono text-slate-500 dark:text-zinc-400">
                   <time>{date}</time>
                 </div>
               )}
@@ -89,14 +89,14 @@ export function SoftwareArticleLayout({
 
               {/* Subtítulo / Extracto Destacado */}
               {subtitle && (
-                <p className="text-sm sm:text-base text-zinc-400 font-light leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed">
                   {subtitle}
                 </p>
               )}
 
               {/* Firma del Autor solo texto (sin foto redundante) */}
               {author && (
-                <div className="text-xs font-mono text-zinc-400 pt-1">
+                <div className="text-xs font-mono text-slate-500 dark:text-zinc-400 pt-1">
                   <span>{author}</span>
                 </div>
               )}

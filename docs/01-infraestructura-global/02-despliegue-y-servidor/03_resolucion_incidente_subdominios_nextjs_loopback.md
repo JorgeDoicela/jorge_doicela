@@ -210,7 +210,7 @@ server {
     server_name jorgedoicela.com *.jorgedoicela.com;
 
     # 1. API REST Backend NestJS / Frontend Next.js
-    location ~ ^/(bible/(verses|translations|morphology|books|historical|literary|evangelism)|software/(ai|blog|cybersecurity|forum|news|projects|tutorials|infrastructure|hub)|portfolio/(contact|projects|sandbox)) {
+    location ~ ^/(bible|software|portfolio)/ {
         limit_req zone=api_limit_zone burst=25 nodelay;
         proxy_pass $backend_upstream;
         # ...

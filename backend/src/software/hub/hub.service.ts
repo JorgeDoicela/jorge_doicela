@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { NewsService } from '../news/services/news.service';
 import { BlogService } from '../blog/services/blog.service';
 import { CybersecurityService } from '../cybersecurity/services/cybersecurity.service';
@@ -49,6 +49,8 @@ export interface HubResponseDto {
 
 @Injectable()
 export class HubService {
+  private readonly logger = new Logger(HubService.name);
+
   constructor(
     private readonly newsService: NewsService,
     private readonly blogService: BlogService,
@@ -64,17 +66,8 @@ export class HubService {
     lang: string = 'es',
     search?: string,
   ): Promise<HubResponseDto> {
-    // Consultas consolidadas en paralelo en SQLite local
-    const [
-      news,
-      posts,
-      secPosts,
-      tutorials,
-      infraPosts,
-      resources,
-      projects,
-      topics,
-    ] = await Promise.all([
+    // Consultas consolidadas resilientes en paralelo en SQLite local (Fault-Tolerant Aggregator)
+    const results = await Promise.allSettled([
       this.newsService.findAll(search, undefined, lang),
       this.blogService.findAll(search, undefined, lang),
       this.secService.findAll(undefined, undefined, search, lang),
@@ -91,6 +84,32 @@ export class HubService {
       this.projService.findAll(undefined, search, lang),
       this.forumService.findAllTopics(undefined, search, lang),
     ]);
+
+    const extract = <T>(
+      result: PromiseSettledResult<T[]>,
+      domain: string,
+    ): T[] => {
+      if (result.status === 'fulfilled') {
+        return Array.isArray(result.value) ? result.value : [];
+      }
+      const errorMessage =
+        result.reason instanceof Error
+          ? result.reason.message
+          : String(result.reason);
+      this.logger.error(
+        `Fallo al obtener datos del submódulo software/${domain}: ${errorMessage}`,
+      );
+      return [];
+    };
+
+    const news = extract(results[0], 'news');
+    const posts = extract(results[1], 'blog');
+    const secPosts = extract(results[2], 'cybersecurity');
+    const tutorials = extract(results[3], 'tutorials');
+    const infraPosts = extract(results[4], 'infrastructure');
+    const resources = extract(results[5], 'ai');
+    const projects = extract(results[6], 'projects');
+    const topics = extract(results[7], 'forum');
 
     // Mapeo normalizado con cálculo de SmartScore
     const newsItems: HubFeedItem[] = news.map((item) => ({

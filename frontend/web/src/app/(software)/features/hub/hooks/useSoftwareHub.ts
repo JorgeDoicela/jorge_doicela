@@ -22,11 +22,17 @@ export function useSoftwareHub(search: string = '') {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [reloadTrigger, setReloadTrigger] = useState<number>(0);
+
+  const refetch = () => {
+    setReloadTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     let isMounted = true;
+    let retryTimer: NodeJS.Timeout | null = null;
 
-    const fetchHub = async () => {
+    const fetchHub = async (isRetry = false) => {
       setLoading(true);
       setError(null);
 
@@ -49,10 +55,21 @@ export function useSoftwareHub(search: string = '') {
         }
       } catch (err: any) {
         if (!isMounted) return;
+
+        // Auto-reintento único defensivo ante carrera de arranque o fallo transitorio de conexión
+        if (!isRetry) {
+          retryTimer = setTimeout(() => {
+            if (isMounted) {
+              fetchHub(true);
+            }
+          }, 1500);
+          return;
+        }
+
         console.error('Error al cargar hub de software:', err);
         setError(err.message || 'No se pudo cargar el feed editorial');
       } finally {
-        if (isMounted) {
+        if (isMounted && !retryTimer) {
           setLoading(false);
         }
       }
@@ -62,8 +79,9 @@ export function useSoftwareHub(search: string = '') {
 
     return () => {
       isMounted = false;
+      if (retryTimer) clearTimeout(retryTimer);
     };
-  }, [search, locale]);
+  }, [search, locale, reloadTrigger]);
 
-  return { featured, feed, spotlightData, loading, error };
+  return { featured, feed, spotlightData, loading, error, refetch };
 }

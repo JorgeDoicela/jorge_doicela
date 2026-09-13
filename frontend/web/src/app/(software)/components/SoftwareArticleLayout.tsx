@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from './SoftwareHeaderNav';
 import { SoftwareFooter } from './SoftwareFooter';
 import { AuthorSidebarCard } from './AuthorSidebarCard';
@@ -42,6 +43,8 @@ export function SoftwareArticleLayout({
   extraSidebarCard,
   children,
 }: SoftwareArticleLayoutProps) {
+  const tNav = useTranslations('Nav');
+
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
       <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-6 sm:px-6 lg:px-8 flex-1 pb-16 md:pb-24 space-y-6 sm:space-y-8">
@@ -57,7 +60,7 @@ export function SoftwareArticleLayout({
         {/* Migas de Pan (Breadcrumbs) */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-500 overflow-x-auto scrollbar-none py-1">
           <Link href="/" className="hover:text-[var(--foreground)] transition-colors">
-            Software
+            {tNav('home')}
           </Link>
           <span>/</span>
           <Link href={categoryHref} className="hover:text-[var(--foreground)] transition-colors">

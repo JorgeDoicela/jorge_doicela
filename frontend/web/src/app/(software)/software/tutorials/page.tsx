@@ -8,6 +8,7 @@ import { TutorialGrid } from '../../features/tutorials/components/TutorialGrid';
 import { useTutorials } from '../../features/tutorials/hooks/useTutorials';
 
 export default function TutorialsCategoryPage() {
+  const tNav = useTranslations('Nav');
   const tTutorials = useTranslations('Tutorials');
   const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
@@ -27,8 +28,8 @@ export default function TutorialsCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="tutorials"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

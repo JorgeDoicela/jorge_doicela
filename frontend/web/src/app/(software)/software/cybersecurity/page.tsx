@@ -8,6 +8,7 @@ import { SecurityGrid } from '../../features/cybersecurity/components/SecurityGr
 import { useCybersecurity } from '../../features/cybersecurity/hooks/useCybersecurity';
 
 export default function CybersecurityCategoryPage() {
+  const tNav = useTranslations('Nav');
   const tSec = useTranslations('Cybersecurity');
   const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
@@ -28,8 +29,8 @@ export default function CybersecurityCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="cybersecurity"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

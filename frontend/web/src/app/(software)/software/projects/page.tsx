@@ -7,6 +7,7 @@ import { SoftwareFooter } from '../../components/SoftwareFooter';
 import { ProjectGrid } from '../../features/projects/components/ProjectGrid';
 
 export default function ProjectsCategoryPage() {
+  const tNav = useTranslations('Nav');
   const tProjects = useTranslations('Projects');
   const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
@@ -24,8 +25,8 @@ export default function ProjectsCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="projects"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

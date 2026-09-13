@@ -8,6 +8,7 @@ import { NewsGrid } from '../../features/news/components/NewsGrid';
 import { useNews } from '../../features/news/hooks/useNews';
 
 export default function NewsCategoryPage() {
+  const tNav = useTranslations('Nav');
   const t = useTranslations('News');
   const [search, setSearch] = useState('');
   const { news, loading, error } = useNews(search);
@@ -18,8 +19,8 @@ export default function NewsCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="news"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

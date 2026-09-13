@@ -6,6 +6,7 @@ import { SoftwareFooter } from '../../components/SoftwareFooter';
 import { ForumSection } from '../../features/forum/components/ForumSection';
 
 export default function ForumCategoryPage() {
+  const tNav = useTranslations('Nav');
   const tForum = useTranslations('Forum');
 
   return (
@@ -14,8 +15,8 @@ export default function ForumCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="forum"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

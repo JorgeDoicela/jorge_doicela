@@ -8,6 +8,7 @@ import { InfrastructureGrid } from '../../features/infrastructure/components/Inf
 import { useInfrastructure } from '../../features/infrastructure/hooks/useInfrastructure';
 
 export default function InfrastructureCategoryPage() {
+  const tNav = useTranslations('Nav');
   const tInfra = useTranslations('Infrastructure');
   const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
@@ -38,8 +39,8 @@ export default function InfrastructureCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="infrastructure"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

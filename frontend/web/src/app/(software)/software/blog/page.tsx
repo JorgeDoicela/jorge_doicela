@@ -7,6 +7,7 @@ import { BlogGrid } from '../../features/blog/components/BlogGrid';
 import { useBlog } from '../../features/blog/hooks/useBlog';
 
 export default function BlogCategoryPage() {
+  const tNav = useTranslations('Nav');
   const tBlog = useTranslations('Blog');
   const [search, setSearch] = useState('');
   const { posts, loading, error } = useBlog(search);
@@ -14,8 +15,8 @@ export default function BlogCategoryPage() {
   return (
     <SoftwarePageLayout
       activeCategory="blog"
-      backHref="/software"
-      backLabel="Software"
+      backHref="/"
+      backLabel={tNav('home')}
     >
       {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}
       <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel shadow-2xl space-y-8">

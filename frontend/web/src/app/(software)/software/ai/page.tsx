@@ -8,6 +8,7 @@ import { AiGrid } from '../../features/ai/components/AiGrid';
 import { useAi } from '../../features/ai/hooks/useAi';
 
 export default function AiCategoryPage() {
+  const tNav = useTranslations('Nav');
   const t = useTranslations('Ai');
   const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
@@ -28,8 +29,8 @@ export default function AiCategoryPage() {
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="ai"
-          backHref="/software"
-          backLabel="Software"
+          backHref="/"
+          backLabel={tNav('home')}
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}

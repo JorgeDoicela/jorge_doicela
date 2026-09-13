@@ -5,6 +5,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./theme-provider";
 import SoftwareJsonLd from "./components/SoftwareJsonLd";
+import { ScrollToTopButton } from "./components/ScrollToTopButton";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -78,6 +79,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             {children}
+            <ScrollToTopButton />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

@@ -65,7 +65,7 @@ export function SoftwareArticleLayout({
           <article className="lg:col-span-8 p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl">
             
             {/* Cabecera del Artículo */}
-            <header className="space-y-5 pb-6 border-b border-black/5 dark:border-white/5">
+            <header className="space-y-5">
               
               {/* Barra Jerárquica y Metadatos Contextuales (Propuesta 1: Integración Editorial) */}
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs select-none">
@@ -149,7 +149,7 @@ export function SoftwareArticleLayout({
             </header>
 
             {/* Cuerpo del Artículo (Renderizado Fluido) */}
-            <div className="pt-2 leading-relaxed">
+            <div className="leading-relaxed">
               {children}
             </div>
           </article>

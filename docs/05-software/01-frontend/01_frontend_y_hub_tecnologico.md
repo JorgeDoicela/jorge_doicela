@@ -156,6 +156,11 @@ frontend/web/src/app/(software)/
 * **Lector Editorial Unificado y Migas de Pan Embebidas (`SoftwareArticleLayout.tsx`):**
   * Shell reutilizable para todos los artículos individuales con cabecera adaptada: el botón de retroceso de la barra superior apunta a su respectiva categoría de origen (`← Infraestructura`, `← Noticias`, etc.).
   * **Integración Editorial en el Encabezado del Artículo:** La ruta jerárquica (`[🏠 Inicio] › [Categoría]`) se encuentra integrada de forma limpia dentro del `<header>` de la propia tarjeta `<article>` (`glass-convex-panel`), unificada con la fecha y metadatos con micro-iconos de Lucide (`Home`, `ChevronRight`). Esto erradica el texto plano huérfano flotante, elimina la redundancia con el título H1 inferior y garantiza una jerarquía espacial sobria y estándar de la industria.
+* **Navegación Flotante Global "Scroll to Top" ([`ScrollToTopButton.tsx`](/software/components/ScrollToTopButton.tsx)):**
+  * Botón flotante interactivo situado en la esquina inferior derecha (`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40`).
+  * Detección reactiva de scroll con listener pasivo de alto rendimiento: permanece oculto en la cabecera y se revela con animación fluida de opacidad y elevación al desplazarse más de 300px hacia abajo.
+  * Al activarlo, ejecuta un desplazamiento suave hasta la parte superior de la página (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
+  * Diseño Neumórfico UI + Glassmorphic (`.glass-convex-panel`), micro-interacciones táctiles al hover/active, icono `ArrowUp` de Lucide y soporte bilingüe (`Nav.scrollToTop`). Se integra a nivel global en el layout raíz `(software)/layout.tsx` para todas las páginas y subrutas de Software.
 
 ---
 

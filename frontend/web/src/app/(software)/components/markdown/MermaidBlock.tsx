@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useId } from 'react';
 import { useTheme } from 'next-themes';
-import { Workflow, Copy, Check, AlertCircle } from 'lucide-react';
+import { Copy, Check, AlertCircle, Loader2 } from 'lucide-react';
 
 interface MermaidBlockProps {
   chart: string;
@@ -107,8 +107,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
           </div>
 
           {/* Título del Diagrama */}
-          <div className="flex items-center gap-1.5 text-[11px] font-mono tracking-wider font-semibold uppercase text-slate-600 dark:text-zinc-400 pl-2 border-l border-black/10 dark:border-white/10">
-            <Workflow className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+          <div className="flex items-center text-[11px] font-mono tracking-wider font-semibold uppercase text-slate-600 dark:text-zinc-400 pl-2 border-l border-black/10 dark:border-white/10">
             <span>Diagrama Arquitectónico</span>
           </div>
         </div>
@@ -138,7 +137,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
       <div className="p-4 sm:p-6 overflow-x-auto scrollbar-thin">
         {loading && (
           <div className="flex flex-col items-center justify-center py-10 space-y-2 text-slate-400 dark:text-zinc-500 text-xs font-mono animate-pulse">
-            <Workflow className="w-6 h-6 animate-spin text-blue-500/50" />
+            <Loader2 className="w-6 h-6 animate-spin text-blue-500/50" />
             <span>Generando diagrama vectorial...</span>
           </div>
         )}

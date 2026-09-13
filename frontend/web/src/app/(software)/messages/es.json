@@ -16,7 +16,8 @@
     "home": "Inicio",
     "backToSoftware": "← Volver a Software",
     "portal": "Volver a jorgedoicela.com",
-    "portalShort": "Portal"
+    "portalShort": "Portal",
+    "scrollToTop": "Volver arriba"
   },
   "Search": {
     "placeholder": "Buscar noticias, artículos, avisos o proyectos...",

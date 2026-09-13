@@ -35,7 +35,7 @@ frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
 ├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider + generateMetadata)
-├── components/                       # Componentes compartidos (SoftwareHeaderNav, SoftwareArticleLayout, SoftwareFooter, etc.)
+├── components/                       # Componentes compartidos (SoftwareHeaderNav, SoftwareArticleLayout, SoftwareFooter, ScrollToTopButton, etc.)
 │   └── markdown/                     # Suite editorial técnica (CodeBlock con Prism, MermaidBlock, TableBlock, CalloutBlock)
 ├── software/                         # Subrutas individuales
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Copy, Check, Terminal, Code2 } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { MermaidBlock } from './MermaidBlock';
 import Prism from 'prismjs';
 
@@ -64,7 +64,6 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
     return <MermaidBlock chart={cleanCode} />;
   }
 
-  const isTerminal = ['bash', 'sh', 'zsh', 'shell'].includes(normalizedLang);
   const displayLabel = LANGUAGE_LABELS[normalizedLang] || normalizedLang.toUpperCase();
 
   // Resaltado de sintaxis con Prism
@@ -104,12 +103,7 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
           </div>
 
           {/* Badge del Lenguaje */}
-          <div className="flex items-center gap-1.5 text-[11px] font-mono tracking-wider font-semibold uppercase text-slate-600 dark:text-zinc-400 pl-2 border-l border-black/10 dark:border-white/10">
-            {isTerminal ? (
-              <Terminal className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            ) : (
-              <Code2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            )}
+          <div className="flex items-center text-[11px] font-mono tracking-wider font-semibold uppercase text-slate-600 dark:text-zinc-400 pl-2 border-l border-black/10 dark:border-white/10">
             <span>{displayLabel}</span>
           </div>
         </div>

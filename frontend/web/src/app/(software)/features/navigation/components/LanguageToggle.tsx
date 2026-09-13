@@ -3,7 +3,6 @@
 import React, { useTransition } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { Globe } from 'lucide-react';
 
 export function LanguageToggle() {
   const locale = useLocale();
@@ -22,13 +21,16 @@ export function LanguageToggle() {
 
   return (
     <button
+      type="button"
       onClick={toggleLanguage}
       disabled={isPending}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-sans font-medium text-zinc-600 dark:text-zinc-400 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-150 cursor-pointer disabled:opacity-50"
+      className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 cursor-pointer shrink-0 select-none disabled:opacity-50"
+      title={t('switchLang', { locale })}
       aria-label={t('switchLang', { locale })}
     >
-      <Globe className="w-3.5 h-3.5" />
-      <span className="font-mono uppercase text-[11px]">{locale}</span>
+      <span className="font-mono uppercase font-bold text-[11px] sm:text-xs tracking-wider">
+        {locale}
+      </span>
     </button>
   );
 }

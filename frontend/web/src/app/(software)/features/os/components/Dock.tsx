@@ -17,14 +17,14 @@ export function Dock({ onOpenSpotlight }: DockProps) {
 
   const dockItems = [
     { label: tNav('all'), shortLabel: 'HOME', href: '/software' },
+    { label: tNav('tutorials'), shortLabel: 'TUTS', href: '/software/tutorials' },
     { label: tNav('news'), shortLabel: 'NEWS', href: '/software/news' },
-    { label: tNav('blog'), shortLabel: 'BLOG', href: '/software/blog' },
     { label: tNav('ai'), shortLabel: 'AI', href: '/software/ai' },
     { label: tNav('cybersecurity'), shortLabel: 'SEC', href: '/software/cybersecurity' },
-    { label: tNav('tutorials'), shortLabel: 'TUTS', href: '/software/tutorials' },
-    { label: tNav('forum'), shortLabel: 'FORUM', href: '/software/forum' },
-    { label: tNav('projects'), shortLabel: 'PROJ', href: '/software/projects' },
     { label: tNav('infrastructure'), shortLabel: 'INFRA', href: '/software/infrastructure' },
+    { label: tNav('projects'), shortLabel: 'PROJ', href: '/software/projects' },
+    { label: tNav('blog'), shortLabel: 'BLOG', href: '/software/blog' },
+    { label: tNav('forum'), shortLabel: 'FORUM', href: '/software/forum' },
   ];
 
   return (

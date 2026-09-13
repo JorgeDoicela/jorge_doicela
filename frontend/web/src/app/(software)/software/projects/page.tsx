@@ -20,7 +20,7 @@ export default function ProjectsCategoryPage() {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
-      <div className="w-full max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 space-y-8 md:space-y-10 flex-1 pb-16 md:pb-24">
+      <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10 flex-1 pb-16 md:pb-24">
         {/* Cabecera Editorial Reutilizable */}
         <SoftwareHeaderNav
           activeCategory="projects"
@@ -31,9 +31,6 @@ export default function ProjectsCategoryPage() {
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}
         <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-8">
           <header className="text-center space-y-4 pb-6 border-b border-white/5">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase text-[var(--chip-text)]">
-              {tProjects('badge')}
-            </div>
 
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
               {tProjects('title')}

@@ -9,7 +9,7 @@ export function SoftwareFooter() {
 
   return (
     <footer className="w-full mt-auto border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-100/80 dark:bg-[#070b12] backdrop-blur-md">
-      <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 md:py-16">
+      <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] mx-auto px-6 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 pb-10 border-b border-black/5 dark:border-white/5">
           <div className="md:col-span-1 space-y-2.5">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">Software</p>
@@ -32,8 +32,8 @@ export function SoftwareFooter() {
             <ul className="space-y-2 text-xs text-zinc-500">
               <li><Link href="/software/ai" className="hover:text-blue-400 transition-colors">{t('aiDirectory')}</Link></li>
               <li><Link href="/software/cybersecurity" className="hover:text-rose-400 transition-colors">{t('secAdvisories')}</Link></li>
-              <li><Link href="/software/forum" className="hover:text-blue-400 transition-colors">{t('communityForums')}</Link></li>
               <li><Link href="/software/projects" className="hover:text-blue-400 transition-colors">{t('projectsShowcase')}</Link></li>
+              <li><Link href="/software/forum" className="hover:text-blue-400 transition-colors">{t('communityForums')}</Link></li>
             </ul>
           </div>
 

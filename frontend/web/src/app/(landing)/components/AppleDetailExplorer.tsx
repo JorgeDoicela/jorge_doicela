@@ -90,7 +90,7 @@ export const AppleDetailExplorer: React.FC = () => {
                     <div className="grid grid-cols-2 divide-x divide-card-border pt-3 md:pt-4 border-t border-card-border my-auto">
                         <div className="flex flex-col gap-0.5 sm:gap-1 pr-3 sm:pr-6">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'IA & Modelos' : 'AI & Models'}
+                                {isEs ? 'IA' : 'AI'}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
                                 {isEs

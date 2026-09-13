@@ -8,14 +8,14 @@ import { ChevronDown } from 'lucide-react';
 
 export type SoftwareSection =
     | 'all'
+    | 'tutorials'
     | 'news'
-    | 'blog'
-    | 'forum'
     | 'ai'
     | 'cybersecurity'
-    | 'tutorials'
+    | 'infrastructure'
     | 'projects'
-    | 'infrastructure';
+    | 'blog'
+    | 'forum';
 
 interface CategoryNavProps {
     selectedCategory: SoftwareSection;
@@ -25,26 +25,26 @@ interface CategoryNavProps {
 
 export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
     all: '/software',
+    tutorials: '/software/tutorials',
     news: '/software/news',
-    blog: '/software/blog',
     ai: '/software/ai',
     cybersecurity: '/software/cybersecurity',
-    tutorials: '/software/tutorials',
-    forum: '/software/forum',
-    projects: '/software/projects',
     infrastructure: '/software/infrastructure',
+    projects: '/software/projects',
+    blog: '/software/blog',
+    forum: '/software/forum',
 };
 
 export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
     { id: 'all', key: 'all' },
+    { id: 'tutorials', key: 'tutorials' },
     { id: 'news', key: 'news' },
-    { id: 'blog', key: 'blog' },
     { id: 'ai', key: 'ai' },
     { id: 'cybersecurity', key: 'cybersecurity' },
-    { id: 'tutorials', key: 'tutorials' },
-    { id: 'forum', key: 'forum' },
-    { id: 'projects', key: 'projects' },
     { id: 'infrastructure', key: 'infrastructure' },
+    { id: 'projects', key: 'projects' },
+    { id: 'blog', key: 'blog' },
+    { id: 'forum', key: 'forum' },
 ];
 
 export function CategoryNav({

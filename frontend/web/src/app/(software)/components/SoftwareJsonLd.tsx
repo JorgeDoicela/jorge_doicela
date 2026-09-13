@@ -20,18 +20,13 @@ export default function SoftwareJsonLd() {
         'hasPart': [
           {
             '@type': 'WebPage',
+            'name': 'Tutoriales Paso a Paso',
+            'url': 'https://software.jorgedoicela.com/software/tutorials'
+          },
+          {
+            '@type': 'WebPage',
             'name': 'Noticias de Software & Tecnología',
             'url': 'https://software.jorgedoicela.com/software/news'
-          },
-          {
-            '@type': 'WebPage',
-            'name': 'Blog de Arquitectura de Sistemas',
-            'url': 'https://software.jorgedoicela.com/software/blog'
-          },
-          {
-            '@type': 'WebPage',
-            'name': 'Foros Técnicos de Discusión',
-            'url': 'https://software.jorgedoicela.com/software/forum'
           },
           {
             '@type': 'WebPage',
@@ -45,8 +40,8 @@ export default function SoftwareJsonLd() {
           },
           {
             '@type': 'WebPage',
-            'name': 'Tutoriales Paso a Paso',
-            'url': 'https://software.jorgedoicela.com/software/tutorials'
+            'name': 'Infraestructura, Servidores & Cloud',
+            'url': 'https://software.jorgedoicela.com/software/infrastructure'
           },
           {
             '@type': 'WebPage',
@@ -55,8 +50,13 @@ export default function SoftwareJsonLd() {
           },
           {
             '@type': 'WebPage',
-            'name': 'Infraestructura, Servidores & Cloud',
-            'url': 'https://software.jorgedoicela.com/software/infrastructure'
+            'name': 'Blog de Arquitectura de Sistemas',
+            'url': 'https://software.jorgedoicela.com/software/blog'
+          },
+          {
+            '@type': 'WebPage',
+            'name': 'Foros Técnicos de Discusión',
+            'url': 'https://software.jorgedoicela.com/software/forum'
           }
         ]
       }

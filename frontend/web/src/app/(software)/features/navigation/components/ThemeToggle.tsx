@@ -34,7 +34,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="w-9 h-9 rounded-xl flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 cursor-pointer shrink-0"
+      className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 cursor-pointer shrink-0 select-none"
       title={isDark ? 'Cambiar a modo claro (Titanio)' : 'Cambiar a modo oscuro (Obsidiana)'}
       aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
     >

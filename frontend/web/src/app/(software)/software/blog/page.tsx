@@ -20,9 +20,6 @@ export default function BlogCategoryPage() {
       {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}
       <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel shadow-2xl space-y-8">
         <header className="text-center space-y-3 pb-6 border-b border-black/5 dark:border-white/5">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-concave-panel text-[10px] tracking-[0.15em] font-semibold uppercase text-[var(--chip-text)]">
-            {tBlog('badge')}
-          </div>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
             {tBlog('title')}

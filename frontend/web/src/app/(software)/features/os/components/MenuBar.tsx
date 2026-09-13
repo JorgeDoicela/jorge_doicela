@@ -51,7 +51,7 @@ export function MenuBar({
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--background)]/90 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-colors duration-400">
-      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 h-14 flex items-center justify-between gap-4">
+      <div className="max-w-[1490px] 2xl:max-w-[1620px] mx-auto px-6 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
         {/* Izquierda: Retorno al Portal + Logotipo y Marca */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <BackToPortalButton />

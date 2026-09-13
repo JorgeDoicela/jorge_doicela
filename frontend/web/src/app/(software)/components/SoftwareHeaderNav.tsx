@@ -99,7 +99,7 @@ export function SoftwareHeaderNav({
           href="https://linkedin.com/in/jorgedoicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="LinkedIn"
           aria-label="LinkedIn"
         >
@@ -113,7 +113,7 @@ export function SoftwareHeaderNav({
           href="https://github.com/JorgeDoicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="GitHub"
           aria-label="GitHub"
         >
@@ -126,7 +126,7 @@ export function SoftwareHeaderNav({
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="X (Twitter)"
           aria-label="X (Twitter)"
         >
@@ -139,7 +139,7 @@ export function SoftwareHeaderNav({
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="Instagram"
           aria-label="Instagram"
         >
@@ -152,7 +152,7 @@ export function SoftwareHeaderNav({
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="Facebook"
           aria-label="Facebook"
         >
@@ -166,7 +166,7 @@ export function SoftwareHeaderNav({
           href="https://www.youtube.com/@jorge.doicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="YouTube"
           aria-label="YouTube"
         >
@@ -180,7 +180,7 @@ export function SoftwareHeaderNav({
           href="https://www.tiktok.com/@jorge.doicela"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="TikTok"
           aria-label="TikTok"
         >
@@ -192,7 +192,7 @@ export function SoftwareHeaderNav({
         {/* Email */}
         <a
           href="mailto:jorge.doicela.m@gmail.com"
-          className="text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+          className="text-black dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-200 hover:scale-110 p-1 sm:p-0.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
           title="Email"
           aria-label="Email"
         >
@@ -204,7 +204,7 @@ export function SoftwareHeaderNav({
 
       {/* Barra de Navegación Unificada en Cápsula Cóncava a Ancho Completo */}
       <div className="mt-8 sm:mt-10 w-full py-2.5 sm:py-3 px-3 sm:px-4 min-h-[54px] sm:min-h-[58px] rounded-2xl glass-concave-panel flex items-center justify-between gap-2.5 sm:gap-3">
-        <div className="shrink-0 min-w-[90px] sm:min-w-[110px] flex items-center justify-start">
+        <div className="shrink-0 flex items-center justify-start sm:min-w-[110px]">
           <BackToPortalButton href={backHref} label={backLabel} />
         </div>
         <div className="flex-1 flex justify-center min-w-0 overflow-x-auto scrollbar-none">
@@ -214,7 +214,7 @@ export function SoftwareHeaderNav({
             bare={true}
           />
         </div>
-        <div className="shrink-0 min-w-[90px] sm:min-w-[110px] flex items-center justify-end gap-1.5">
+        <div className="shrink-0 flex items-center justify-end gap-1 sm:gap-1.5 sm:min-w-[110px]">
           <button
             onClick={() => {
               if (onOpenSpotlight) {

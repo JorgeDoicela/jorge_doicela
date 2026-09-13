@@ -40,12 +40,12 @@ export function AuthorSidebarCard() {
 
             {/* Enlaces y Redes Sociales */}
             <div className="pt-3 border-t border-black/5 dark:border-white/5">
-                <div className="flex items-center justify-center gap-4 text-zinc-400">
+                <div className="flex items-center justify-center gap-4 text-zinc-500 dark:text-zinc-400">
                     <a
                         href="https://github.com/JorgeDoicela"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-white transition-colors p-1"
+                        className="hover:text-zinc-950 dark:hover:text-white transition-colors p-1"
                         title={t('githubAria')}
                         aria-label={t('githubAria')}
                     >
@@ -57,7 +57,7 @@ export function AuthorSidebarCard() {
                         href="https://www.linkedin.com/in/jorgedoicela/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-white transition-colors p-1"
+                        className="hover:text-zinc-950 dark:hover:text-white transition-colors p-1"
                         title={t('linkedinAria')}
                         aria-label={t('linkedinAria')}
                     >
@@ -67,7 +67,7 @@ export function AuthorSidebarCard() {
                     </a>
                     <a
                         href="mailto:jorge.doicela.m@gmail.com"
-                        className="hover:text-white transition-colors p-1"
+                        className="hover:text-zinc-950 dark:hover:text-white transition-colors p-1"
                         title={t('emailTitle')}
                         aria-label={t('emailTitle')}
                     >

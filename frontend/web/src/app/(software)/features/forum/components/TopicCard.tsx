@@ -25,7 +25,7 @@ export function TopicCard({ topic }: TopicCardProps) {
 
   return (
     <Link
-      href={`/software/forum/${topic.slug}`}
+      href={`/forum/${topic.slug}`}
       className="group relative flex flex-col md:flex-row md:items-center justify-between p-6 rounded-3xl glass-convex-panel transition-all duration-300 hover:-translate-y-1 hover:shadow-xl gap-4 block cursor-pointer"
     >
       <div className="flex-1">
@@ -47,24 +47,24 @@ export function TopicCard({ topic }: TopicCardProps) {
           <span className="text-xs text-zinc-500 font-mono">• {formattedDate}</span>
         </div>
 
-        <h3 className="text-base font-bold text-[var(--foreground)] group-hover:text-blue-400 transition-colors leading-snug">
+        <h3 className="text-base font-bold text-[var(--foreground)] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
           {topic.title}
         </h3>
-        <p className="text-xs text-zinc-400 line-clamp-2 mt-1 font-light">
+        <p className="text-xs text-slate-600 dark:text-zinc-400 line-clamp-2 mt-1 font-normal dark:font-light">
           {topic.content}
         </p>
       </div>
 
-      <div className="flex items-center gap-4 self-end md:self-center border-t md:border-t-0 pt-3 md:pt-0 border-white/5">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel text-xs text-blue-400 font-semibold font-mono">
+      <div className="flex items-center gap-4 self-end md:self-center border-t md:border-t-0 pt-3 md:pt-0 border-slate-200/70 dark:border-white/5">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel text-xs text-blue-600 dark:text-blue-400 font-semibold font-mono">
           <span>{tCard('repliesCount', { count: topic.repliesCount })}</span>
         </div>
 
-        <div className="text-xs text-zinc-500 font-mono">
+        <div className="text-xs text-slate-500 dark:text-zinc-500 font-mono">
           <span>{tCard('viewsCount', { count: topic.views })}</span>
         </div>
 
-        <span className="px-3 py-1.5 rounded-xl glass-btn-neumorphic text-xs font-semibold text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 transition-all">
+        <span className="px-3 py-1.5 rounded-xl glass-btn-neumorphic text-xs font-semibold text-slate-600 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all">
           {tCard('viewTopic')}
         </span>
       </div>

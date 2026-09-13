@@ -15,9 +15,9 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
   const tFilters = useTranslations('Filters');
 
   const diffColors: Record<string, string> = {
-    beginner: 'text-emerald-400',
-    intermediate: 'text-amber-400',
-    advanced: 'text-rose-400',
+    beginner: 'text-emerald-600 dark:text-emerald-400',
+    intermediate: 'text-amber-600 dark:text-amber-400',
+    advanced: 'text-rose-600 dark:text-rose-400',
   };
 
   const badgeColor = diffColors[tutorial.difficulty] || diffColors.intermediate;
@@ -25,7 +25,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
 
   return (
     <Link
-      href={`/software/tutorials/${tutorial.slug}`}
+      href={`/tutorials/${tutorial.slug}`}
       className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-amber-500/30 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none cursor-pointer"
     >
       <div className="space-y-3.5">

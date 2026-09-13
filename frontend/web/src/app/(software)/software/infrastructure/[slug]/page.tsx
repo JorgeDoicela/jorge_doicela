@@ -52,7 +52,7 @@ export default function InfrastructureDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
         <p className="text-rose-500 font-mono text-sm">{error || tDetail('postNotFound')}</p>
-        <Link href="/software/infrastructure" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-emerald-400 hover:text-white transition-all">
+        <Link href="/infrastructure" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-white transition-all">
           {tInfra('back')}
         </Link>
       </div>
@@ -78,7 +78,7 @@ export default function InfrastructureDetailPage({
     <SoftwareArticleLayout
       category="infrastructure"
       categoryLabel={tNav('infrastructure')}
-      categoryHref="/software/infrastructure"
+      categoryHref="/infrastructure"
       title={post.title}
       subtitle={post.subtitle || undefined}
       date={formattedDate}
@@ -122,7 +122,7 @@ export default function InfrastructureDetailPage({
           </div>
           <div className="pt-2 border-t border-black/5 dark:border-white/5">
             <Link
-              href="/software/infrastructure"
+              href="/infrastructure"
               className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-white transition-all"
             >
               {tDetail('allInfrastructure')}

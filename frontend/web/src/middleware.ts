@@ -93,6 +93,22 @@ export function middleware(request: NextRequest) {
 
     if (matchedSubdomain) {
         const targetPrefix = SUBDOMAIN_TARGET_MAP[matchedSubdomain];
+        const cleanPath = pathname.replace(/^\/+|\/+$/g, '');
+        const prefixWithoutSlash = targetPrefix.replace(/^\/+/, '');
+
+        // 1. Redirección canónica 308 si se solicita la ruta redundante en el subdominio
+        // (ej. software.jorgedoicela.com/software -> software.jorgedoicela.com/)
+        // (ej. software.jorgedoicela.com/software/tutorials -> software.jorgedoicela.com/tutorials)
+        if (cleanPath === prefixWithoutSlash) {
+            url.pathname = '/';
+            return NextResponse.redirect(url, 308);
+        }
+        if (cleanPath.startsWith(`${prefixWithoutSlash}/`)) {
+            url.pathname = `/${cleanPath.slice(prefixWithoutSlash.length + 1)}`;
+            return NextResponse.redirect(url, 308);
+        }
+
+        // 2. Rewrite interno transparente hacia la carpeta física de Next.js
         const resolvedPath = resolveSubdomainPath(targetPrefix, pathname);
 
         if (pathname !== resolvedPath) {

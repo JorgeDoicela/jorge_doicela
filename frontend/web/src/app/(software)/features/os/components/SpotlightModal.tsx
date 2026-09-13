@@ -84,7 +84,7 @@ export function SpotlightModal({
         category: 'news',
         categoryLabel: tNav('news'),
         snippet: n.excerpt,
-        href: `/software/news/${n.slug}`,
+        href: `/news/${n.slug}`,
         tag: n.isBreaking ? 'BREAKING' : undefined,
       });
     });
@@ -96,7 +96,7 @@ export function SpotlightModal({
         category: 'blog',
         categoryLabel: tNav('blog'),
         snippet: p.excerpt,
-        href: `/software/blog/${p.slug}`,
+        href: `/blog/${p.slug}`,
       });
     });
 
@@ -107,7 +107,7 @@ export function SpotlightModal({
         category: 'ai',
         categoryLabel: tNav('ai'),
         snippet: a.description,
-        href: `/software/ai/${a.slug}`,
+        href: `/ai/${a.slug}`,
         tag: a.type.toUpperCase(),
       });
     });
@@ -119,7 +119,7 @@ export function SpotlightModal({
         category: 'cybersecurity',
         categoryLabel: tNav('cybersecurity'),
         snippet: s.excerpt,
-        href: `/software/cybersecurity/${s.slug}`,
+        href: `/cybersecurity/${s.slug}`,
         tag: s.severity.toUpperCase(),
       });
     });
@@ -131,7 +131,7 @@ export function SpotlightModal({
         category: 'tutorials',
         categoryLabel: tNav('tutorials'),
         snippet: t.description,
-        href: `/software/tutorials/${t.slug}`,
+        href: `/tutorials/${t.slug}`,
         tag: t.difficulty.toUpperCase(),
       });
     });
@@ -143,7 +143,7 @@ export function SpotlightModal({
         category: 'forum',
         categoryLabel: tNav('forum'),
         snippet: top.content.slice(0, 100) + '...',
-        href: `/software/forum/${top.slug}`,
+        href: `/forum/${top.slug}`,
         tag: tCard('repliesCount', { count: top.repliesCount }),
       });
     });
@@ -155,7 +155,7 @@ export function SpotlightModal({
         category: 'projects',
         categoryLabel: tNav('projects'),
         snippet: prj.description,
-        href: `/software/projects/${prj.slug}`,
+        href: `/projects/${prj.slug}`,
         tag: prj.status.toUpperCase(),
       });
     });
@@ -167,7 +167,7 @@ export function SpotlightModal({
         category: 'infrastructure',
         categoryLabel: tNav('infrastructure'),
         snippet: inf.subtitle || inf.architectureOverview || inf.contentMarkdown.slice(0, 100),
-        href: `/software/infrastructure/${inf.slug}`,
+        href: `/infrastructure/${inf.slug}`,
         tag: inf.environment.toUpperCase(),
       });
     });
@@ -203,27 +203,27 @@ export function SpotlightModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Barra de Búsqueda Input */}
-        <div className="p-4 border-b border-white/10 flex items-center gap-3">
-          <span className="font-mono text-zinc-400 text-sm font-bold pl-2">⌥</span>
+        <div className="p-4 border-b border-black/10 dark:border-white/10 flex items-center gap-3">
+          <span className="font-mono text-zinc-500 dark:text-zinc-400 text-sm font-bold pl-2">⌥</span>
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={tSearch('placeholder')}
-            className="w-full bg-transparent text-sm md:text-base text-[var(--foreground)] placeholder-zinc-500 outline-none font-mono"
+            className="w-full bg-transparent text-sm md:text-base text-[var(--foreground)] placeholder-zinc-400 dark:placeholder-zinc-500 outline-none font-mono"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="text-xs text-zinc-500 hover:text-zinc-300 font-mono px-2 py-1 rounded bg-white/5 cursor-pointer"
+              className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 font-mono px-2 py-1 rounded bg-black/5 dark:bg-white/5 cursor-pointer"
             >
               {t('clear')}
             </button>
           )}
           <button
             onClick={onClose}
-            className="text-xs text-zinc-400 hover:text-zinc-200 px-2 py-1 rounded-lg glass-btn-neumorphic cursor-pointer"
+            className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 px-2 py-1 rounded-lg glass-btn-neumorphic cursor-pointer"
           >
             ESC
           </button>
@@ -241,27 +241,27 @@ export function SpotlightModal({
                 key={item.id}
                 href={item.href}
                 onClick={onClose}
-                className="group flex items-center justify-between p-3 rounded-2xl glass-concave-panel hover:bg-white/5 hover:border-white/20 transition-all block"
+                className="group flex items-center justify-between p-3 rounded-2xl glass-concave-panel hover:bg-black/5 dark:hover:bg-white/5 border border-transparent hover:border-black/10 dark:hover:border-white/20 transition-all block"
               >
                 <div className="space-y-1 pr-4 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-400">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                       [{item.categoryLabel}]
                     </span>
                     {item.tag && (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded border border-white/10 text-zinc-400">
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded border border-black/10 dark:border-white/10 text-zinc-600 dark:text-zinc-400">
                         {item.tag}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs md:text-sm font-bold text-[var(--header-title)] truncate group-hover:text-indigo-400 transition-colors">
+                  <p className="text-xs md:text-sm font-bold text-[var(--header-title)] truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     {item.title}
                   </p>
-                  <p className="text-[11px] text-zinc-400 line-clamp-1 font-light">
+                  <p className="text-[11px] text-zinc-600 dark:text-zinc-400 line-clamp-1 font-light">
                     {item.snippet}
                   </p>
                 </div>
-                <span className="text-xs font-mono text-zinc-500 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all shrink-0">
+                <span className="text-xs font-mono text-zinc-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-1 transition-all shrink-0">
                   {t('go')}
                 </span>
               </Link>

@@ -24,15 +24,15 @@ interface CategoryNavProps {
 }
 
 export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
-    all: '/software',
-    tutorials: '/software/tutorials',
-    news: '/software/news',
-    ai: '/software/ai',
-    cybersecurity: '/software/cybersecurity',
-    infrastructure: '/software/infrastructure',
-    projects: '/software/projects',
-    blog: '/software/blog',
-    forum: '/software/forum',
+    all: '/',
+    tutorials: '/tutorials',
+    news: '/news',
+    ai: '/ai',
+    cybersecurity: '/cybersecurity',
+    infrastructure: '/infrastructure',
+    projects: '/projects',
+    blog: '/blog',
+    forum: '/forum',
 };
 
 export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
@@ -72,13 +72,13 @@ export function CategoryNav({
                     value={selectedCategory}
                     onChange={handleSelectChange}
                     aria-label={t('all')}
-                    className="w-full appearance-none pl-3 pr-7 py-2 rounded-xl text-xs font-sans font-semibold text-blue-500 dark:text-blue-400 bg-white/10 dark:bg-black/30 border border-white/10 dark:border-white/10 glass-convex-panel shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer text-center truncate"
+                    className="w-full appearance-none pl-3 pr-7 py-2 rounded-xl text-xs font-sans font-semibold text-blue-600 dark:text-blue-400 bg-white/80 dark:bg-black/30 border border-slate-300 dark:border-white/10 glass-convex-panel shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer text-center truncate"
                 >
                     {SOFTWARE_CATEGORY_KEYS.map((cat) => (
                         <option
                             key={cat.id}
                             value={cat.id}
-                            className="bg-zinc-900 text-white py-1.5 text-xs font-medium"
+                            className="bg-white dark:bg-zinc-900 text-slate-900 dark:text-white py-1.5 text-xs font-medium"
                         >
                             {t(cat.key as any)}
                         </option>

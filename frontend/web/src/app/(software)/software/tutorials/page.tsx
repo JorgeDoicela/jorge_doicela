@@ -32,14 +32,14 @@ export default function TutorialsCategoryPage() {
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}
-        <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-8">
-          <header className="text-center space-y-4 pb-6 border-b border-white/5">
+        <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 shadow-2xl space-y-8">
+          <header className="text-center space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
 
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
               {tTutorials('title')}
             </h1>
 
-            <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-zinc-400 max-w-4xl lg:max-w-5xl mx-auto font-normal dark:font-light leading-relaxed">
               {tTutorials('subtitle')}
             </p>
 
@@ -61,8 +61,8 @@ export default function TutorialsCategoryPage() {
                     onClick={() => setDifficulty(d.id)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       difficulty === d.id
-                        ? 'glass-btn-neumorphic text-amber-400 font-bold'
-                        : 'text-zinc-500 hover:text-zinc-300'
+                        ? 'glass-btn-neumorphic text-amber-600 dark:text-amber-400 font-bold'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
                     }`}
                   >
                     {d.label}

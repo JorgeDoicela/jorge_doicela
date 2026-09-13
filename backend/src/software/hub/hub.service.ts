@@ -114,7 +114,7 @@ export class HubService {
     // Mapeo normalizado con cálculo de SmartScore
     const newsItems: HubFeedItem[] = news.map((item) => ({
       id: `news-${item.id}`,
-      href: `/software/news/${item.slug}`,
+      href: `/news/${item.slug}`,
       title: item.title,
       category: 'news',
       coverImage: item.coverImage,
@@ -135,7 +135,7 @@ export class HubService {
 
     const blogItems: HubFeedItem[] = posts.map((item) => ({
       id: `blog-${item.id}`,
-      href: `/software/blog/${item.slug}`,
+      href: `/blog/${item.slug}`,
       title: item.title,
       category: 'blog',
       coverImage: item.coverImage,
@@ -155,7 +155,7 @@ export class HubService {
 
     const secItems: HubFeedItem[] = secPosts.map((sec) => ({
       id: `sec-${sec.id}`,
-      href: `/software/cybersecurity/${sec.slug}`,
+      href: `/cybersecurity/${sec.slug}`,
       title: sec.title,
       category: 'cybersecurity',
       tag: sec.cveId || 'CVE',
@@ -179,7 +179,7 @@ export class HubService {
 
     const tutItems: HubFeedItem[] = tutorials.map((tut) => ({
       id: `tut-${tut.id}`,
-      href: `/software/tutorials/${tut.slug}`,
+      href: `/tutorials/${tut.slug}`,
       title: tut.title,
       category: 'tutorials',
       coverImage: tut.coverImage,
@@ -199,7 +199,7 @@ export class HubService {
 
     const infraItems: HubFeedItem[] = infraPosts.map((inf) => ({
       id: `infra-${inf.id}`,
-      href: `/software/infrastructure/${inf.slug}`,
+      href: `/infrastructure/${inf.slug}`,
       title: inf.title,
       category: 'infrastructure',
       subCategory: inf.category,
@@ -219,7 +219,7 @@ export class HubService {
 
     const aiItems: HubFeedItem[] = resources.map((res) => ({
       id: `ai-${res.id}`,
-      href: `/software/ai/${res.slug}`,
+      href: `/ai/${res.slug}`,
       title: res.name,
       category: 'ai',
       tag: res.type.toUpperCase(),
@@ -238,7 +238,7 @@ export class HubService {
 
     const projItems: HubFeedItem[] = projects.map((proj) => ({
       id: `proj-${proj.id}`,
-      href: `/software/projects/${proj.slug}`,
+      href: `/projects/${proj.slug}`,
       title: proj.name,
       category: 'projects',
       tag: 'PROYECTO',
@@ -251,7 +251,7 @@ export class HubService {
 
     const forumItems: HubFeedItem[] = topics.map((top) => ({
       id: `topic-${top.id}`,
-      href: `/software/forum/${top.slug}`,
+      href: `/forum/${top.slug}`,
       title: top.title,
       category: 'forum',
       tag: 'DEBATE',

@@ -14,18 +14,18 @@ export function AiCard({ resource }: AiCardProps) {
   const tCard = useTranslations('CardActions');
 
   const typeLabels: Record<string, { label: string; color: string }> = {
-    llm: { label: 'LLM Reasoning', color: 'text-purple-400' },
-    agent: { label: 'Agentic Framework', color: 'text-cyan-400' },
-    mcp_server: { label: 'MCP Server', color: 'text-emerald-400' },
-    framework: { label: 'Framework', color: 'text-indigo-400' },
-    tool: { label: 'AI Tool', color: 'text-blue-400' },
+    llm: { label: 'LLM Reasoning', color: 'text-purple-600 dark:text-purple-400' },
+    agent: { label: 'Agentic Framework', color: 'text-cyan-600 dark:text-cyan-400' },
+    mcp_server: { label: 'MCP Server', color: 'text-emerald-600 dark:text-emerald-400' },
+    framework: { label: 'Framework', color: 'text-indigo-600 dark:text-indigo-400' },
+    tool: { label: 'AI Tool', color: 'text-blue-600 dark:text-blue-400' },
   };
 
   const badge = typeLabels[resource.type] || typeLabels.tool;
 
   return (
     <Link
-      href={`/software/ai/${resource.slug}`}
+      href={`/ai/${resource.slug}`}
       className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-purple-500/30 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none cursor-pointer"
     >
       <div className="space-y-3.5">

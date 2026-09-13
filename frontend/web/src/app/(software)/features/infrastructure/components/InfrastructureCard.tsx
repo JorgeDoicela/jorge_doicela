@@ -11,7 +11,7 @@ interface InfrastructureCardProps {
 export function InfrastructureCard({ post }: InfrastructureCardProps) {
   return (
     <SoftwareCard
-      href={`/software/infrastructure/${post.slug}`}
+      href={`/infrastructure/${post.slug}`}
       title={post.title}
       category="infrastructure"
       subCategory={post.category}

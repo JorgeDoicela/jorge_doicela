@@ -21,42 +21,42 @@ export default function SoftwareJsonLd() {
           {
             '@type': 'WebPage',
             'name': 'Tutoriales Paso a Paso',
-            'url': 'https://software.jorgedoicela.com/software/tutorials'
+            'url': 'https://software.jorgedoicela.com/tutorials'
           },
           {
             '@type': 'WebPage',
             'name': 'Noticias de Software & Tecnología',
-            'url': 'https://software.jorgedoicela.com/software/news'
+            'url': 'https://software.jorgedoicela.com/news'
           },
           {
             '@type': 'WebPage',
             'name': 'Directorio de IA, Agentes y Servidores MCP',
-            'url': 'https://software.jorgedoicela.com/software/ai'
+            'url': 'https://software.jorgedoicela.com/ai'
           },
           {
             '@type': 'WebPage',
             'name': 'Ciberseguridad y Guías de Remediación',
-            'url': 'https://software.jorgedoicela.com/software/cybersecurity'
+            'url': 'https://software.jorgedoicela.com/cybersecurity'
           },
           {
             '@type': 'WebPage',
             'name': 'Infraestructura, Servidores & Cloud',
-            'url': 'https://software.jorgedoicela.com/software/infrastructure'
+            'url': 'https://software.jorgedoicela.com/infrastructure'
           },
           {
             '@type': 'WebPage',
             'name': 'Catálogo de Proyectos Showcase',
-            'url': 'https://software.jorgedoicela.com/software/projects'
+            'url': 'https://software.jorgedoicela.com/projects'
           },
           {
             '@type': 'WebPage',
             'name': 'Blog de Arquitectura de Sistemas',
-            'url': 'https://software.jorgedoicela.com/software/blog'
+            'url': 'https://software.jorgedoicela.com/blog'
           },
           {
             '@type': 'WebPage',
             'name': 'Foros Técnicos de Discusión',
-            'url': 'https://software.jorgedoicela.com/software/forum'
+            'url': 'https://software.jorgedoicela.com/forum'
           }
         ]
       }

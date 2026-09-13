@@ -26,7 +26,7 @@ export default function InfrastructureCategoryPage() {
   ];
 
   const sortOptions = [
-    { id: 'smart', label: '★ Relevancia Arquitectónica' },
+    { id: 'smart', label: 'Relevancia Arquitectónica' },
     { id: 'recent', label: 'Más Recientes' },
     { id: 'views', label: 'Más Populares' },
     { id: 'difficulty', label: 'Mayor Complejidad' },
@@ -43,14 +43,14 @@ export default function InfrastructureCategoryPage() {
         />
 
         {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}
-        <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-white/5 shadow-2xl space-y-8">
-          <header className="text-center space-y-4 pb-6 border-b border-white/5">
+        <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 shadow-2xl space-y-8">
+          <header className="text-center space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
 
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
               {tInfra('title')}
             </h1>
 
-            <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-zinc-400 max-w-4xl lg:max-w-5xl mx-auto font-normal dark:font-light leading-relaxed">
               {tInfra('subtitle')}
             </p>
 
@@ -73,8 +73,8 @@ export default function InfrastructureCategoryPage() {
                     onClick={() => setCategory(c.id)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       category === c.id
-                        ? 'glass-btn-neumorphic text-emerald-400 font-bold'
-                        : 'text-zinc-500 hover:text-zinc-300'
+                        ? 'glass-btn-neumorphic text-emerald-600 dark:text-emerald-400 font-bold'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
                     }`}
                   >
                     {c.label}
@@ -85,17 +85,17 @@ export default function InfrastructureCategoryPage() {
 
             {/* Barra de Ordenación Inteligente Multi-Criterio */}
             <div className="flex items-center justify-center gap-2 pt-3 flex-wrap">
-              <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider mr-1">
+              <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 uppercase tracking-wider mr-1 font-medium">
                 Ordenar por:
               </span>
               {sortOptions.map((opt) => (
                 <button
                   key={opt.id}
                   onClick={() => setSortBy(opt.id as any)}
-                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all duration-200 cursor-pointer ${
                     sortBy === opt.id
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)] font-bold'
-                      : 'text-zinc-500 hover:text-zinc-300 bg-black/10 dark:bg-white/[0.03] border border-white/5'
+                      ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-600/30 dark:border-emerald-500/40 shadow-sm shadow-emerald-500/10 dark:shadow-[0_0_10px_rgba(16,185,129,0.15)] font-bold'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.03] dark:hover:bg-white/[0.08] border border-black/10 dark:border-white/5'
                   }`}
                 >
                   {opt.label}

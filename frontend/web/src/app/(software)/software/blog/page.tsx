@@ -25,7 +25,7 @@ export default function BlogCategoryPage() {
             {tBlog('title')}
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-zinc-500 dark:text-zinc-400 max-w-4xl lg:max-w-5xl mx-auto font-light leading-relaxed">
             {tBlog('subtitle')}
           </p>
 

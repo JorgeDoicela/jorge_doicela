@@ -15,16 +15,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const tCard = useTranslations('CardActions');
 
   const statusLabels: Record<string, { label: string; color: string }> = {
-    active: { label: tFilters('inProduction'), color: 'text-emerald-400 font-bold' },
-    wip: { label: tFilters('inDevelopment'), color: 'text-amber-400 font-bold' },
-    archived: { label: tFilters('archived'), color: 'text-zinc-400 font-medium' },
+    active: { label: tFilters('inProduction'), color: 'text-emerald-600 dark:text-emerald-400 font-bold' },
+    wip: { label: tFilters('inDevelopment'), color: 'text-amber-600 dark:text-amber-400 font-bold' },
+    archived: { label: tFilters('archived'), color: 'text-zinc-500 dark:text-zinc-400 font-medium' },
   };
 
   const statusBadge = statusLabels[project.status] || statusLabels.active;
 
   return (
     <Link
-      href={`/software/projects/${project.slug}`}
+      href={`/projects/${project.slug}`}
       className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-blue-500/30 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none cursor-pointer"
     >
       <div className="space-y-3.5">
@@ -73,7 +73,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                   e.stopPropagation();
                   window.open(project.repoUrl, '_blank');
                 }}
-                className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-0.5 cursor-pointer"
+                className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors inline-flex items-center gap-0.5 cursor-pointer"
               >
                 GitHub ↗
               </span>
@@ -85,14 +85,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
                   e.stopPropagation();
                   window.open(project.liveUrl, '_blank');
                 }}
-                className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center gap-0.5 cursor-pointer"
+                className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors inline-flex items-center gap-0.5 cursor-pointer"
               >
                 Demo ↗
               </span>
             )}
           </div>
 
-          <span className="text-xs font-semibold text-blue-400 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+          <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
             {tCard('viewProject')}
           </span>
         </div>

@@ -16,15 +16,15 @@ export function Dock({ onOpenSpotlight }: DockProps) {
   const tSpotlight = useTranslations('Spotlight');
 
   const dockItems = [
-    { label: tNav('all'), shortLabel: 'HOME', href: '/software' },
-    { label: tNav('tutorials'), shortLabel: 'TUTS', href: '/software/tutorials' },
-    { label: tNav('news'), shortLabel: 'NEWS', href: '/software/news' },
-    { label: tNav('ai'), shortLabel: 'AI', href: '/software/ai' },
-    { label: tNav('cybersecurity'), shortLabel: 'SEC', href: '/software/cybersecurity' },
-    { label: tNav('infrastructure'), shortLabel: 'INFRA', href: '/software/infrastructure' },
-    { label: tNav('projects'), shortLabel: 'PROJ', href: '/software/projects' },
-    { label: tNav('blog'), shortLabel: 'BLOG', href: '/software/blog' },
-    { label: tNav('forum'), shortLabel: 'FORUM', href: '/software/forum' },
+    { label: tNav('all'), shortLabel: 'HOME', href: '/' },
+    { label: tNav('tutorials'), shortLabel: 'TUTS', href: '/tutorials' },
+    { label: tNav('news'), shortLabel: 'NEWS', href: '/news' },
+    { label: tNav('ai'), shortLabel: 'AI', href: '/ai' },
+    { label: tNav('cybersecurity'), shortLabel: 'SEC', href: '/cybersecurity' },
+    { label: tNav('infrastructure'), shortLabel: 'INFRA', href: '/infrastructure' },
+    { label: tNav('projects'), shortLabel: 'PROJ', href: '/projects' },
+    { label: tNav('blog'), shortLabel: 'BLOG', href: '/blog' },
+    { label: tNav('forum'), shortLabel: 'FORUM', href: '/forum' },
   ];
 
   return (
@@ -35,9 +35,9 @@ export function Dock({ onOpenSpotlight }: DockProps) {
       >
         {dockItems.map((item) => {
           const isActive =
-            item.href === '/software'
-              ? pathname === '/software'
-              : pathname.startsWith(item.href);
+            item.href === '/'
+              ? pathname === '/' || pathname === '/software'
+              : pathname === item.href || pathname.startsWith(item.href + '/') || pathname.startsWith('/software' + item.href);
 
           return (
             <Link

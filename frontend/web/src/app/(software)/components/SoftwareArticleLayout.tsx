@@ -56,7 +56,7 @@ export function SoftwareArticleLayout({
 
         {/* Migas de Pan (Breadcrumbs) */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-500 overflow-x-auto scrollbar-none py-1">
-          <Link href="/software" className="hover:text-[var(--foreground)] transition-colors">
+          <Link href="/" className="hover:text-[var(--foreground)] transition-colors">
             Software
           </Link>
           <span>/</span>

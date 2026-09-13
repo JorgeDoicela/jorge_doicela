@@ -53,7 +53,7 @@ export default function ProjectDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
         <p className="text-rose-500 font-mono text-sm">{error || tDetail('projectNotFound')}</p>
-        <Link href="/software/projects" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-400 hover:text-white transition-all">
+        <Link href="/projects" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all">
           {tProjects('back')}
         </Link>
       </div>
@@ -61,11 +61,11 @@ export default function ProjectDetailPage({
   }
 
   const statusLabels: Record<string, { label: string; color: string }> = {
-    active: { label: tFilters('inProduction'), color: 'text-emerald-400 font-bold' },
-    wip: { label: tFilters('inDevelopment'), color: 'text-amber-400 font-bold' },
-    archived: { label: tFilters('archived'), color: 'text-zinc-400 font-medium' },
+    active: { label: tFilters('inProduction'), color: 'text-emerald-600 dark:text-emerald-400 font-bold' },
+    wip: { label: tFilters('inDevelopment'), color: 'text-amber-600 dark:text-amber-400 font-bold' },
+    archived: { label: tFilters('archived'), color: 'text-zinc-500 dark:text-zinc-400 font-medium' },
   };
-  const statusBadge = statusLabels[project.status] || { label: project.status, color: 'text-emerald-400 font-bold' };
+  const statusBadge = statusLabels[project.status] || { label: project.status, color: 'text-emerald-600 dark:text-emerald-400 font-bold' };
 
   const techList = project.techStack ? project.techStack.split(',').map((t) => t.trim()) : [];
 
@@ -73,7 +73,7 @@ export default function ProjectDetailPage({
     <SoftwareArticleLayout
       category="projects"
       categoryLabel={tNav('projects')}
-      categoryHref="/software/projects"
+      categoryHref="/projects"
       title={project.name}
       subtitle={project.description}
       author="Jorge Doicela"
@@ -126,15 +126,15 @@ export default function ProjectDetailPage({
     >
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (
-        <div className="space-y-3 pb-6 border-b border-white/5">
-          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+        <div className="space-y-3 pb-6 border-b border-black/5 dark:border-white/5">
+          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
             {tDetail('techStackUsed')}
           </h4>
           <div className="flex flex-wrap gap-2">
             {techList.map((tech, idx) => (
               <span
                 key={idx}
-                className="px-3 py-1 rounded-xl glass-concave-panel text-zinc-300 text-xs font-mono border border-white/5"
+                className="px-3 py-1 rounded-xl glass-concave-panel text-slate-700 dark:text-zinc-300 text-xs font-mono border border-black/5 dark:border-white/5"
               >
                 {tech}
               </span>
@@ -145,10 +145,10 @@ export default function ProjectDetailPage({
 
       {/* Caso de Estudio y Arquitectura */}
       <div className="space-y-4 pt-4">
-        <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight font-mono">
+        <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight font-mono">
           {tDetail('architecturePrinciples')}
         </h3>
-        <p className="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-700 dark:text-zinc-300 font-light leading-relaxed">
           {tDetail('architecturePrinciplesDesc')}
         </p>
       </div>

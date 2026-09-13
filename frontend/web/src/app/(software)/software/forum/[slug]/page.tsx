@@ -83,7 +83,7 @@ export default function ForumTopicDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
         <p className="text-rose-500 font-mono text-sm">{error || tDetail('topicNotFound')}</p>
-        <Link href="/software/forum" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-400 hover:text-white transition-all">
+        <Link href="/forum" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all">
           {tForum('back')}
         </Link>
       </div>
@@ -100,7 +100,7 @@ export default function ForumTopicDetailPage({
     <SoftwareArticleLayout
       category="forum"
       categoryLabel={tNav('forum')}
-      categoryHref="/software/forum"
+      categoryHref="/forum"
       title={topic.title}
       date={formattedDate}
       author={topic.author || 'Jorge Doicela'}
@@ -127,7 +127,7 @@ export default function ForumTopicDetailPage({
           </div>
           <div className="pt-2 border-t border-black/5 dark:border-white/5">
             <Link
-              href="/software/forum"
+              href="/forum"
               className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all"
             >
               {tDetail('allTopics')}
@@ -140,7 +140,7 @@ export default function ForumTopicDetailPage({
       <MarkdownRenderer content={topic.content} />
 
       {/* Sección de Respuestas */}
-      <div className="mt-12 pt-8 border-t border-white/5 space-y-6">
+      <div className="mt-12 pt-8 border-t border-black/5 dark:border-white/5 space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight font-mono">
             {tDetail('communityReplies', { count: topic.replies?.length || 0 })}
@@ -173,8 +173,8 @@ export default function ForumTopicDetailPage({
         )}
 
         {/* Formulario de Respuesta Rápida */}
-        <form onSubmit={handlePostReply} className="mt-8 p-6 rounded-2xl glass-concave-panel border border-white/5 space-y-4">
-          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+        <form onSubmit={handlePostReply} className="mt-8 p-6 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-4">
+          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
             {tDetail('joinDiscussion')}
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -183,7 +183,7 @@ export default function ForumTopicDetailPage({
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder={tDetail('namePlaceholder')}
-              className="px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-xs font-mono text-white placeholder:text-zinc-500 outline-none focus:border-cyan-400"
+              className="px-3.5 py-2.5 rounded-xl bg-white/80 dark:bg-black/40 border border-slate-300 dark:border-white/10 text-xs font-mono text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-sm transition-colors"
             />
           </div>
           <textarea
@@ -192,7 +192,7 @@ export default function ForumTopicDetailPage({
             placeholder={tDetail('replyPlaceholder')}
             rows={4}
             required
-            className="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs font-sans text-white placeholder:text-zinc-500 outline-none focus:border-cyan-400 resize-none leading-relaxed"
+            className="w-full p-3.5 rounded-xl bg-white/80 dark:bg-black/40 border border-slate-300 dark:border-white/10 text-xs font-sans text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 resize-none leading-relaxed shadow-sm transition-colors"
           />
           <div className="flex justify-end">
             <button

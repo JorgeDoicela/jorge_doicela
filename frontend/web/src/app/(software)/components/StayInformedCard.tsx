@@ -16,7 +16,7 @@ export function StayInformedCard() {
   };
 
   return (
-    <div className="p-6 rounded-3xl glass-convex-panel border border-white/5 space-y-3.5 shadow-xl">
+    <div className="p-6 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 space-y-3.5 shadow-xl">
       <h4 className="text-base sm:text-lg font-bold text-[var(--header-title)] tracking-tight">
         {t('title')}
       </h4>
@@ -36,7 +36,7 @@ export function StayInformedCard() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t('placeholder')}
             required
-            className="flex-1 px-3.5 py-2.5 rounded-xl bg-white text-zinc-900 placeholder:text-zinc-400 text-xs font-sans outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+            className="flex-1 px-3.5 py-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 text-xs font-sans outline-none focus:ring-2 focus:ring-blue-500 shadow-inner transition-colors"
           />
           <button
             type="submit"

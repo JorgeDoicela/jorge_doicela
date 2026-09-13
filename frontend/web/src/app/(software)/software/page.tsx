@@ -128,13 +128,13 @@ export default function SoftwarePage() {
                       </svg>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-red-300">No se pudo sincronizar el feed de software</p>
-                      <p className="text-xs text-zinc-400 max-w-md">{hubError}</p>
+                      <p className="text-sm font-semibold text-red-600 dark:text-red-300">No se pudo sincronizar el feed de software</p>
+                      <p className="text-xs text-slate-600 dark:text-zinc-400 max-w-md">{hubError}</p>
                     </div>
                     <button
                       type="button"
                       onClick={refetchHub}
-                      className="px-4 py-2 rounded-xl text-xs font-medium bg-white/10 hover:bg-white/15 text-white transition-colors border border-white/10 flex items-center gap-2 cursor-pointer active:scale-95"
+                      className="px-4 py-2 rounded-xl text-xs font-medium bg-slate-900 text-white dark:bg-white/10 dark:hover:bg-white/15 dark:text-white transition-colors border border-slate-700 dark:border-white/10 flex items-center gap-2 cursor-pointer active:scale-95 shadow-sm"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -145,8 +145,8 @@ export default function SoftwarePage() {
                 )}
 
                 {!isLoadingCurrent && !hubError && latestFeed.length === 0 && (
-                  <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-500 glass-concave-panel rounded-2xl border border-white/5">
-                    <p className="text-sm font-medium text-zinc-400">{tCommon('notFound')}</p>
+                  <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-500 glass-concave-panel rounded-2xl border border-slate-200/80 dark:border-white/5">
+                    <p className="text-sm font-medium text-slate-600 dark:text-zinc-400">{tCommon('notFound')}</p>
                   </div>
                 )}
 

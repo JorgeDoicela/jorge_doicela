@@ -53,7 +53,7 @@ export default function NewsDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
         <p className="text-rose-500 font-mono text-sm">{error || t('empty')}</p>
-        <Link href="/software/news" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-cyan-400 hover:text-white transition-all">
+        <Link href="/news" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-white transition-all">
           {t('back')}
         </Link>
       </div>
@@ -70,7 +70,7 @@ export default function NewsDetailPage({
     <SoftwareArticleLayout
       category="news"
       categoryLabel={tNav('news')}
-      categoryHref="/software/news"
+      categoryHref="/news"
       title={article.title}
       subtitle={article.excerpt}
       date={formattedDate}
@@ -84,7 +84,7 @@ export default function NewsDetailPage({
             {tDetail('exploreNewsDesc')}
           </p>
           <Link
-            href="/software/news"
+            href="/news"
             className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-white transition-all"
           >
             {t('allNews')}
@@ -102,7 +102,7 @@ export default function NewsDetailPage({
             href={article.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors"
           >
             <span>{tCommon('officialSource')}</span>
           </a>

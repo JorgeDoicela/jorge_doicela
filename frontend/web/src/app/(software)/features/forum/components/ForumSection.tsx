@@ -24,7 +24,7 @@ export function ForumSection() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-3xl glass-convex-panel">
         <div>
           <h2 className="text-xl font-bold text-[var(--foreground)]">{tForum('discussionsAndCommunity')}</h2>
-          <p className="text-xs text-zinc-400 mt-1">{tForum('discussionsDesc')}</p>
+          <p className="text-xs text-slate-600 dark:text-zinc-400 mt-1">{tForum('discussionsDesc')}</p>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
@@ -34,8 +34,8 @@ export function ForumSection() {
               onClick={() => setFilterCategory(c.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 filterCategory === c.id
-                  ? 'glass-btn-neumorphic text-indigo-400 font-bold'
-                  : 'text-zinc-500 hover:text-zinc-300'
+                  ? 'glass-btn-neumorphic text-indigo-600 dark:text-indigo-400 font-bold'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
               }`}
             >
               {c.label}

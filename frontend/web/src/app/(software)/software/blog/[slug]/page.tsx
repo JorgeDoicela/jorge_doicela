@@ -52,7 +52,7 @@ export default function BlogDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
         <p className="text-rose-500 font-mono text-sm">{error || tDetail('articleNotFound')}</p>
-        <Link href="/software/blog" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-400 hover:text-white transition-all">
+        <Link href="/blog" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all">
           {tBlog('back')}
         </Link>
       </div>
@@ -69,7 +69,7 @@ export default function BlogDetailPage({
     <SoftwareArticleLayout
       category="blog"
       categoryLabel={tNav('blog')}
-      categoryHref="/software/blog"
+      categoryHref="/blog"
       title={post.title}
       subtitle={post.subtitle || post.excerpt}
       date={formattedDate}
@@ -83,7 +83,7 @@ export default function BlogDetailPage({
             {tDetail('softwareArchitectureDesc')}
           </p>
           <Link
-            href="/software/blog"
+            href="/blog"
             className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all"
           >
             {tDetail('allEssays')}

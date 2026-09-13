@@ -26,7 +26,7 @@ export function BlogCard({ post }: BlogCardProps) {
 
   return (
     <Link
-      href={`/software/blog/${post.slug}`}
+      href={`/blog/${post.slug}`}
       className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-blue-500/30 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none cursor-pointer"
     >
       <div className="space-y-3.5">
@@ -66,7 +66,7 @@ export function BlogCard({ post }: BlogCardProps) {
           <span>{tCard('viewsCount', { count: post.views })}</span>
         </div>
 
-        <span className="inline-flex items-center gap-1 font-semibold text-blue-400 group-hover:translate-x-1 transition-transform">
+        <span className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform">
           {tCard('readEssay')}
         </span>
       </div>

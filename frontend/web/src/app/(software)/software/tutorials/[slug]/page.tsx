@@ -53,7 +53,7 @@ export default function TutorialDetailPage({
     return (
       <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
         <p className="text-rose-500 font-mono text-sm">{error || tDetail('tutorialNotFound')}</p>
-        <Link href="/software/tutorials" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-slate-300 hover:text-white transition-all">
+        <Link href="/tutorials" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
           {tTutorials('back')}
         </Link>
       </div>
@@ -67,7 +67,7 @@ export default function TutorialDetailPage({
     <SoftwareArticleLayout
       category="tutorials"
       categoryLabel={tNav('tutorials')}
-      categoryHref="/software/tutorials"
+      categoryHref="/tutorials"
       title={tutorial.title}
       subtitle={tutorial.description}
       author="Jorge Doicela"
@@ -121,11 +121,11 @@ export default function TutorialDetailPage({
           )}
 
           {/* Botones de Navegación entre pasos */}
-          <div className="flex items-center justify-between pt-6 border-t border-white/5">
+          <div className="flex items-center justify-between pt-6 border-t border-black/5 dark:border-white/5">
             <button
               onClick={() => setActiveStep((prev) => Math.max(0, prev - 1))}
               disabled={activeStep === 0}
-              className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono text-zinc-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
+              className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
             >
               {tDetail('prevStep')}
             </button>

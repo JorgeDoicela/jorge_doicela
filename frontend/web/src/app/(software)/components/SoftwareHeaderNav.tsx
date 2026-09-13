@@ -27,16 +27,19 @@ export function SoftwareHeaderNav({
   backLabel,
 }: SoftwareHeaderNavProps) {
   const tSpotlight = useTranslations('Spotlight');
-  const [softwareUrl, setSoftwareUrl] = useState('/software');
+  const [softwareUrl, setSoftwareUrl] = useState('/');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
       const isLocal = hostname.includes('localhost') || hostname.includes('127.0.0.1');
+      const isSubdomain = hostname.startsWith('software.');
       const port = window.location.port ? `:${window.location.port}` : '';
       const protocol = window.location.protocol;
-      if (isLocal) {
-        setSoftwareUrl(`${protocol}//software.localhost${port}/software`);
+      if (isSubdomain) {
+        setSoftwareUrl('/');
+      } else if (isLocal) {
+        setSoftwareUrl(`${protocol}//software.localhost${port}/`);
       } else {
         setSoftwareUrl('https://software.jorgedoicela.com');
       }

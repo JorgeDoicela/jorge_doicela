@@ -21,29 +21,29 @@ export function SoftwareFooter() {
           <div className="space-y-2.5">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('contents')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><Link href="/software/news" className="hover:text-cyan-400 transition-colors">{t('techNews')}</Link></li>
-              <li><Link href="/software/blog" className="hover:text-blue-400 transition-colors">{t('archEssays')}</Link></li>
-              <li><Link href="/software/tutorials" className="hover:text-slate-300 transition-colors">{t('handsOnTutorials')}</Link></li>
+              <li><Link href="/news" className="hover:text-cyan-400 transition-colors">{t('techNews')}</Link></li>
+              <li><Link href="/blog" className="hover:text-blue-400 transition-colors">{t('archEssays')}</Link></li>
+              <li><Link href="/tutorials" className="hover:text-slate-300 transition-colors">{t('handsOnTutorials')}</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('specialties')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><Link href="/software/ai" className="hover:text-blue-400 transition-colors">{t('aiDirectory')}</Link></li>
-              <li><Link href="/software/cybersecurity" className="hover:text-rose-400 transition-colors">{t('secAdvisories')}</Link></li>
-              <li><Link href="/software/projects" className="hover:text-blue-400 transition-colors">{t('projectsShowcase')}</Link></li>
-              <li><Link href="/software/forum" className="hover:text-blue-400 transition-colors">{t('communityForums')}</Link></li>
+              <li><Link href="/ai" className="hover:text-blue-400 transition-colors">{t('aiDirectory')}</Link></li>
+              <li><Link href="/cybersecurity" className="hover:text-rose-400 transition-colors">{t('secAdvisories')}</Link></li>
+              <li><Link href="/projects" className="hover:text-blue-400 transition-colors">{t('projectsShowcase')}</Link></li>
+              <li><Link href="/forum" className="hover:text-blue-400 transition-colors">{t('communityForums')}</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('platforms')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><a href="https://jorgedoicela.com" className="hover:text-zinc-300 transition-colors">{t('mainPortal')}</a></li>
-              <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-300 transition-colors">{t('portfolioSSH')}</a></li>
-              <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-300 transition-colors">{t('exegesisBible')}</a></li>
-              <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
+              <li><a href="https://jorgedoicela.com" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('mainPortal')}</a></li>
+              <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('portfolioSSH')}</a></li>
+              <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('exegesisBible')}</a></li>
+              <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
             </ul>
           </div>
         </div>
@@ -51,12 +51,12 @@ export function SoftwareFooter() {
         {/* Barra Inferior: Copyright + Redes Sociales (Idéntico a MalwareTech) */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
           <p>{t('copyright', { year: new Date().getFullYear() })}</p>
-          <div className="flex items-center gap-3 text-zinc-400">
+          <div className="flex items-center gap-3 text-zinc-500 dark:text-zinc-400">
             <a
               href="https://www.linkedin.com/in/jorgedoicela/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="LinkedIn"
               aria-label="LinkedIn"
             >
@@ -68,7 +68,7 @@ export function SoftwareFooter() {
               href="https://github.com/JorgeDoicela"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="GitHub"
               aria-label="GitHub"
             >
@@ -79,7 +79,7 @@ export function SoftwareFooter() {
             <a
               href="#"
               onClick={(e) => e.preventDefault()}
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="X (Twitter)"
               aria-label="X (Twitter)"
             >
@@ -90,7 +90,7 @@ export function SoftwareFooter() {
             <a
               href="#"
               onClick={(e) => e.preventDefault()}
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="Instagram"
               aria-label="Instagram"
             >
@@ -101,7 +101,7 @@ export function SoftwareFooter() {
             <a
               href="#"
               onClick={(e) => e.preventDefault()}
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="Facebook"
               aria-label="Facebook"
             >
@@ -113,7 +113,7 @@ export function SoftwareFooter() {
               href="https://www.youtube.com/@jorge.doicela"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="YouTube"
               aria-label="YouTube"
             >
@@ -125,7 +125,7 @@ export function SoftwareFooter() {
               href="https://www.tiktok.com/@jorge.doicela"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="TikTok"
               aria-label="TikTok"
             >
@@ -135,7 +135,7 @@ export function SoftwareFooter() {
             </a>
             <a
               href="mailto:jorge.doicela.m@gmail.com"
-              className="hover:text-white transition-colors duration-200 p-1"
+              className="hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 p-1"
               title="Email"
               aria-label="Email"
             >

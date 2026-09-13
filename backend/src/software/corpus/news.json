@@ -2,8 +2,8 @@
   {
     "slug": "novedades-nextjs-16-react-server-components",
     "title": "Novedades de Next.js 16 y el Futuro de React Server Components",
-    "excerpt": "Análisis técnico sobre las mejoras de compilación estática, streaming y Server Actions.",
-    "contentMarkdown": "Next.js 16 redefine el estándar de rendimiento en desarrollo web moderno. Con la integración profunda de React 19 y optimizaciones en el compilador de server components, los desarrolladores pueden lograr TTFB ultra-bajos manteniendo un desacoplamiento limpio de la interfaz.\n\n### Puntos Destacados:\n- **Turbopack Estable:** Tiempos de hot-reload hasta un 70% más rápidos.\n- **Server Actions con Tipado Defensivo:** Validación automática de esquemas con inferencia directa.\n- **Reducción de Memoria:** Optimización crítica para despliegues en servidores con recursos acotados.",
+    "excerpt": "Análisis técnico sobre las mejoras de compilación estática, streaming y Server Actions en arquitecturas modernas.",
+    "contentMarkdown": "# Novedades de Next.js 16 y la Evolución de React Server Components\n\nNext.js 16 consolida la madurez de **React Server Components (RSC)** y la integración nativa con React 19, transformando la forma en que estructuramos aplicaciones web de alto rendimiento. En entornos con recursos de hardware acotados, estas optimizaciones marcan la diferencia entre una aplicación ágil y un servidor saturado.\n\n---\n\n## 1. Compilador Turbopack Estable en Producción\n\nTurbopack alcanza estabilidad completa para entornos de desarrollo y compilación de producción, reduciendo los tiempos de arranque en frío y hot-reloading hasta en un **70%** frente a Webpack tradicional. Esto permite ciclos de iteración instantáneos incluso en monorepos complejos.\n\n```bash\n# Ejecución optimizada con Turbopack nativo\nnext dev --turbo\n```\n\n---\n\n## 2. Server Actions con Inferencia y Validación Defensiva\n\nLas *Server Actions* ahora se integran de forma natural con validación de esquemas (como Zod) y tipado estricto de TypeScript en el cliente y servidor, eliminando la necesidad de crear rutas API intermedias para operaciones CRUD simples:\n\n```typescript\n'use server';\n\nexport async function updateArticle(formData: FormData) {\n  const title = formData.get('title') as string;\n  if (!title || title.length < 5) {\n    throw new Error('El título debe tener al menos 5 caracteres.');\n  }\n  // Mutación en base de datos aislada\n  return { success: true };\n}\n```\n\n---\n\n## 3. Reducción Crítica de Memoria en Modo Standalone\n\nPara despliegues en servidores VPS de recursos limitados (como nuestra arquitectura de 1 GB de RAM), el bundle generado mediante `output: 'standalone'` ahora excluye dependencias dev y optimiza el árbol de imports en memoria, reduciendo el consumo base del proceso Node.js a **menos de 90 MB** en reposo.\n\n---\n\n## 4. Conclusión\n\nNext.js 16 no solo acelera la velocidad de desarrollo, sino que optimiza el coste operativo y la eficiencia en hardware real, permitiendo que arquitecturas multi-tenant corran de forma estable y resiliente.",
     "sourceUrl": "https://nextjs.org/blog",
     "isBreaking": true,
     "featured": true,
@@ -15,29 +15,12 @@
     "readTimeMinutes": 5,
     "views": 320,
     "likes": 64
-  },
-  {
-    "slug": "typescript-5-8-lanzamiento-rendimiento-tipado",
-    "title": "TypeScript 5.8: Comprobación de Tipos Ultrarrápida y Mejoras en Módulos ESM",
-    "excerpt": "La nueva versión de TypeScript introduce comprobaciones más estrictas sin penalizar el tiempo de compilación.",
-    "contentMarkdown": "TypeScript 5.8 refina la inferencia en tipos condicionales complejos y acelera el análisis sintáctico de monorepos con múltiples paquetes referenciados.\n\n### Mejoras Clave:\n- Detección mejorada de retornos nunca alcanzados en bucles infinitos.\n- Soporte nativo para resolución de submódulos en package.json.\n- Disminución del 15% en el uso de memoria en proyectos con TypeORM y Decoradores.",
-    "sourceUrl": "https://devblogs.microsoft.com/typescript",
-    "isBreaking": false,
-    "featured": false,
-    "orderPriority": 10,
-    "author": "Jorge Doicela",
-    "tags": "typescript,javascript,compilers",
-    "language": "es",
-    "coverImage": "/software/images/ts58.jpg",
-    "readTimeMinutes": 4,
-    "views": 215,
-    "likes": 49
   },
   {
     "slug": "novedades-nextjs-16-react-server-components",
     "title": "What's New in Next.js 16 and the Future of React Server Components",
-    "excerpt": "Technical deep dive into static compilation enhancements, streaming architecture, and Server Actions.",
-    "contentMarkdown": "Next.js 16 redefines the performance standard in modern web engineering. With deep React 19 integration and server component compiler optimizations, engineers achieve ultra-low TTFB while preserving clean UI decoupling.\n\n### Highlights:\n- **Stable Turbopack:** Hot-reload speeds up to 70% faster.\n- **Defensively Typed Server Actions:** Automatic schema validation with direct inference.\n- **Memory Reduction:** Critical optimization for constrained server deployments.",
+    "excerpt": "Technical deep dive into static compilation enhancements, streaming architecture, and Server Actions in modern stacks.",
+    "contentMarkdown": "# Next.js 16 Innovations and the Evolution of React Server Components\n\nNext.js 16 solidifies the maturity of **React Server Components (RSC)** and native React 19 integration, fundamentally transforming how high-performance web applications are engineered. In resource-constrained hardware environments, these architectural optimizations mean the difference between responsive interfaces and server memory exhaustion.\n\n---\n\n## 1. Stable Turbopack Engine in Production\n\nTurbopack achieves production-ready stability for development runtimes and production builds, slashing cold start and hot-module replacement cycles by up to **70%** compared to legacy Webpack pipelines. This enables instant feedback loops even across large-scale monorepo architectures.\n\n```bash\n# Optimized development with native Turbopack\nnext dev --turbo\n```\n\n---\n\n## 2. Defensively Typed Server Actions\n\n*Server Actions* now integrate seamlessly with schema validation libraries (such as Zod) alongside end-to-end TypeScript inference across server and client boundaries, obsoleting boilerplated REST handler endpoints for straightforward transactional mutations:\n\n```typescript\n'use server';\n\nexport async function updateArticle(formData: FormData) {\n  const title = formData.get('title') as string;\n  if (!title || title.length < 5) {\n    throw new Error('Title must contain at least 5 characters.');\n  }\n  // Database mutation in isolated domain\n  return { success: true };\n}\n```\n\n---\n\n## 3. Critical Memory Footprint Reduction in Standalone Output\n\nFor deployments on constrained VPS hardware (such as our 1 GB RAM architecture), the bundle produced via `output: 'standalone'` systematically prunes build devDependencies and optimizes tree-shaken runtime imports, locking the baseline Node.js memory footprint to **under 90 MB** at idle.\n\n---\n\n## 4. Conclusion\n\nNext.js 16 not only amplifies engineering throughput, but drastically optimizes operational infrastructure costs, enabling multi-tenant platforms to operate reliably on minimal hardware.",
     "sourceUrl": "https://nextjs.org/blog",
     "isBreaking": true,
     "featured": true,
@@ -49,20 +32,5 @@
     "readTimeMinutes": 5,
     "views": 320,
     "likes": 64
-  },
-  {
-    "slug": "typescript-5-8-lanzamiento-rendimiento-tipado",
-    "title": "TypeScript 5.8: Blazing-Fast Type Checking and ESM Module Enhancements",
-    "excerpt": "The new TypeScript release introduces stricter checks without compromising compilation throughput.",
-    "contentMarkdown": "TypeScript 5.8 refines complex conditional type inference and accelerates AST parsing across monorepos with multiple referenced packages.\n\n### Key Improvements:\n- Enhanced detection of unreachable returns in infinite loops.\n- Native support for subpath exports resolution in package.json.\n- 15% decrease in memory footprint for projects utilizing TypeORM and Decorators.",
-    "sourceUrl": "https://devblogs.microsoft.com/typescript",
-    "isBreaking": false,
-    "author": "Jorge Doicela",
-    "tags": "typescript,javascript,compilers",
-    "language": "en",
-    "coverImage": "/software/images/ts58.jpg",
-    "readTimeMinutes": 4,
-    "views": 215,
-    "likes": 49
   }
 ]

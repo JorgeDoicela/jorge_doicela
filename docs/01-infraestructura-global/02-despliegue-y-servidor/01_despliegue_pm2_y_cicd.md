@@ -196,13 +196,6 @@ sudo journalctl -u ssh --since "24 hours ago" | grep "Failed\|Invalid" | tail -2
 La configuración del servidor web está versionada directamente en el repositorio bajo `nginx/jorgedoicela.com.conf`. El pipeline de CI/CD se encarga de sincronizarla automáticamente con el servidor en cada despliegue.
 
 ```nginx
-# Mapa dinámico de enrutamiento: Peticiones de navegación de páginas web HTML van al frontend Next.js ([::1]:3001),
-# mientras que peticiones de datos de la API REST (JSON) van al backend NestJS (127.0.0.1:3000).
-map $http_accept $backend_upstream {
-    default                 http://127.0.0.1:3000;
-    ~*text/html             http://[::1]:3001;
-}
-
 # Extracción de IP real del cliente detrás del proxy Cloudflare mTLS
 map $http_cf_connecting_ip $real_client_ip {
     default                 $http_cf_connecting_ip;
@@ -277,10 +270,10 @@ server {
     gzip_proxied any;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
 
-    # 1. API REST Backend NestJS / Frontend Next.js - Desacoplamiento por Accept Header + Rate Limiting
-    location ~ ^/(bible|software|portfolio)/ {
+    # 1. API REST Backend NestJS (Puerto 3000) - Namespace canónico universal /api/
+    location /api/ {
         limit_req zone=api_limit_zone burst=25 nodelay;
-        proxy_pass $backend_upstream;
+        proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

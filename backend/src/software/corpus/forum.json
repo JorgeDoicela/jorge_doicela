@@ -2,55 +2,29 @@
   "topics": [
     {
       "id": 1,
-      "slug": "estrategia-estado-global-nextjs-app-router",
-      "title": "¿Cuál es la mejor estrategia para gestionar el estado global en Next.js App Router?",
-      "content": "Abro debate sobre cuándo conviene usar Zustand vs React Context vs delegar en Server Actions y URL searchParams en proyectos Next.js 16.",
-      "author": "Alex Dev",
-      "category": "frontend",
+      "slug": "optimizacion-ram-vps-1gb-nodejs",
+      "title": "Buenas prácticas de optimización de RAM en servidores VPS de 1GB para Node.js",
+      "content": "En entornos de producción con una instancia de 1 GB de RAM en la nube (AWS Lightsail / Debian 13), ¿cuáles son las configuraciones de PM2, límites de V8 y optimizaciones de SQLite recomendadas para garantizar alta estabilidad y prevenir reinicios por Out-Of-Memory (OOM)?",
+      "author": "Jorge Doicela",
+      "category": "devops",
       "language": "es",
       "isSolved": true,
       "isPinned": true,
-      "repliesCount": 2,
-      "views": 290
+      "repliesCount": 1,
+      "views": 480
     },
     {
       "id": 2,
       "slug": "optimizacion-ram-vps-1gb-nodejs",
-      "title": "Buenas prácticas de optimización de RAM en servidores VPS de 1GB para Node.js",
-      "content": "En producción con 1 GB de RAM, ¿qué banderas de V8 y configuraciones de PM2 les han dado mejores resultados para evitar reinicios por OOM?",
+      "title": "Best practices for RAM optimization on 1 GB VPS servers running Node.js",
+      "content": "In production environments operating on a strictly budgeted 1 GB RAM cloud instance (AWS Lightsail / Debian 13), what are the recommended PM2 configurations, V8 memory flags, and SQLite tunings to guarantee high stability and eliminate Out-Of-Memory (OOM) crashes?",
       "author": "Jorge Doicela",
       "category": "devops",
-      "language": "es",
-      "isSolved": true,
-      "isPinned": false,
-      "repliesCount": 1,
-      "views": 430
-    },
-    {
-      "id": 3,
-      "slug": "estrategia-estado-global-nextjs-app-router",
-      "title": "What is the best strategy for global state management in Next.js App Router?",
-      "content": "Opening discussion on when to choose Zustand vs React Context vs delegating to Server Actions and URL searchParams in Next.js 16 architectures.",
-      "author": "Alex Dev",
-      "category": "frontend",
       "language": "en",
       "isSolved": true,
       "isPinned": true,
-      "repliesCount": 2,
-      "views": 290
-    },
-    {
-      "id": 4,
-      "slug": "optimizacion-ram-vps-1gb-nodejs",
-      "title": "Best practices for RAM optimization on 1 GB VPS servers running Node.js",
-      "content": "In production with a strictly allocated 1 GB RAM instance, what V8 flags and PM2 daemon settings yield the highest stability against OOM exits?",
-      "author": "Jorge Doicela",
-      "category": "devops",
-      "language": "en",
-      "isSolved": true,
-      "isPinned": false,
       "repliesCount": 1,
-      "views": 430
+      "views": 480
     }
   ],
   "replies": [
@@ -59,54 +33,18 @@
       "topicId": 1,
       "parentId": null,
       "author": "Jorge Doicela",
-      "content": "Para estado del servidor (caching, mutaciones), los Server Components + URL searchParams son lo más limpio. Para estado efímero del cliente (modales, toolbars interactivos), Zustand o React Context aislado por feature funciona de forma excelente sin penalizar el bundle.",
+      "content": "Para un VPS de 1 GB de RAM ejecutando NestJS y Next.js en producción, la arquitectura probada con cero caídas por OOM se basa en 4 pilares fundamentales:\n\n1. **Límites de Heap V8:** Configurar `--max-old-space-size=250` en los argumentos de Node.js en PM2 para forzar al recolector de basura (Garbage Collector) de V8 a liberar memoria antes de rozar el límite del sistema operativo.\n2. **Swapfile Amortiguador:** Crear un swap de 2 GB en disco NVMe con `vm.swappiness=10` y `vm.vfs_cache_pressure=50` en `/etc/sysctl.conf`. Esto amortigua picos esporádicos de tráfico sin provocar degradación por thrashing.\n3. **Persistencia Aislada en SQLite WAL:** Utilizar `better-sqlite3` con modo `WAL` (`PRAGMA journal_mode = WAL;`) en lugar de levantar bases de datos pesadas cliente-servidor como PostgreSQL o MySQL. Esto ahorra instantáneamente entre 200 y 300 MB de RAM estática del sistema.\n4. **Supervisión Automática en PM2:** Establecer `max_memory_restart: '300M'` en `pm2.config.js`. Si un leak imprevisto ocurre, PM2 recicla el worker de forma controlada en milisegundos sin tirar el servidor.",
       "isAcceptedAnswer": true,
-      "likes": 18
+      "likes": 28
     },
     {
       "id": 2,
-      "topicId": 1,
-      "parentId": 1,
-      "author": "Alex Dev",
-      "content": "Excelente punto, separar el estado de servidor del de cliente reduce drásticamente los rerenders innecesarios.",
-      "isAcceptedAnswer": false,
-      "likes": 5
-    },
-    {
-      "id": 3,
       "topicId": 2,
       "parentId": null,
-      "author": "DevOps Engineer",
-      "content": "Configurar --max-old-space-size=300 en PM2 para el proceso backend y activar swap de 1GB en Debian previene caídas drásticas por picos de tráfico.",
-      "isAcceptedAnswer": true,
-      "likes": 24
-    },
-    {
-      "id": 4,
-      "topicId": 3,
-      "parentId": null,
       "author": "Jorge Doicela",
-      "content": "For server state (caching, data mutations), Server Components paired with URL searchParams provide the cleanest solution. For transient client UI state (modals, interactive toolbars), Zustand or localized React Context per feature slice excels without bloating bundle weights.",
+      "content": "For a 1 GB RAM VPS hosting NestJS and Next.js in production, our battle-tested zero-OOM architecture relies on 4 core engineering pillars:\n\n1. **V8 Heap Caps:** Pass `--max-old-space-size=250` within PM2 runtime arguments to mandate aggressive V8 Garbage Collection cycles prior to reaching OS thresholds.\n2. **Buffer Swapfile:** Allocate a 2 GB NVMe swapfile with `vm.swappiness=10` and `vm.vfs_cache_pressure=50` in `/etc/sysctl.conf`. This absorbs transient traffic spikes while preventing swap thrashing.\n3. **Isolated SQLite WAL Persistence:** Employ `better-sqlite3` in WAL mode (`PRAGMA journal_mode = WAL;`) instead of memory-heavy client-server engines like PostgreSQL or MySQL. This instantly recovers 200–300 MB of persistent host RAM.\n4. **PM2 Automated Watchdog:** Specify `max_memory_restart: '300M'` inside `pm2.config.js`. Should an unanticipated memory leak arise, PM2 recycles the process within milliseconds without taking the node offline.",
       "isAcceptedAnswer": true,
-      "likes": 18
-    },
-    {
-      "id": 5,
-      "topicId": 3,
-      "parentId": 4,
-      "author": "Alex Dev",
-      "content": "Spot-on analysis. Strictly segregating server state from client reactivity dramatically eliminates redundant rerenders.",
-      "isAcceptedAnswer": false,
-      "likes": 5
-    },
-    {
-      "id": 6,
-      "topicId": 4,
-      "parentId": null,
-      "author": "DevOps Engineer",
-      "content": "Configuring --max-old-space-size=300 in PM2 for the backend daemon alongside a 1 GB swapfile on Debian completely mitigates traffic burst OOM crashes.",
-      "isAcceptedAnswer": true,
-      "likes": 24
+      "likes": 28
     }
   ]
 }

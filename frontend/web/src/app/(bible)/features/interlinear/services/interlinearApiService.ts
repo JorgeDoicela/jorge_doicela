@@ -6,9 +6,7 @@ import {
 import { MASORETIC_INTERLINEAR_DATA } from '../data/masoreticData';
 import { GREEK_INTERLINEAR_DATA } from '../data/greekData';
 import { STRONG_LEXICON_DATABASE } from '../data/strongLexiconData';
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+import { API_URL } from '../../../../config';
 
 export async function fetchInterlinearPassage(
   bookAbbr: string,
@@ -22,7 +20,7 @@ export async function fetchInterlinearPassage(
 
   try {
     const response = await fetch(
-      `${API_BASE_URL}/bible/morphology/passage?book=${encodeURIComponent(
+      `${API_URL}/bible/morphology/passage?book=${encodeURIComponent(
         upper,
       )}&chapter=${chapter}`,
       {
@@ -140,7 +138,7 @@ export async function fetchStrongLexiconEntry(
 ): Promise<StrongLexiconEntry> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/bible/morphology/lexicon/${encodeURIComponent(strongCode)}`,
+      `${API_URL}/bible/morphology/lexicon/${encodeURIComponent(strongCode)}`,
       {
         headers: { 'Content-Type': 'application/json' },
         next: { revalidate: 86400 },

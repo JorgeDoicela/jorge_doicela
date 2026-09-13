@@ -198,21 +198,15 @@ module.exports = {
 
 ### 6.2 Enrutador Nginx (`nginx/jorgedoicela.com.conf`)
 ```nginx
-# Mapa dinámico desacoplado: Peticiones HTML a Next.js ([::1]), APIs REST a NestJS (127.0.0.1)
-map $http_accept $backend_upstream {
-    default                 http://127.0.0.1:3000;
-    ~*text/html             http://[::1]:3001;
-}
-
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name jorgedoicela.com *.jorgedoicela.com;
 
-    # 1. API REST Backend NestJS / Frontend Next.js
-    location ~ ^/(bible|software|portfolio)/ {
+    # 1. API REST Backend NestJS (Puerto 3000) - Namespace canónico /api/
+    location /api/ {
         limit_req zone=api_limit_zone burst=25 nodelay;
-        proxy_pass $backend_upstream;
+        proxy_pass http://127.0.0.1:3000;
         # ...
     }
 

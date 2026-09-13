@@ -197,11 +197,23 @@ $$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\te
 
 ## 6. Corpus JSON Bilingüe y Sembrador Atómico (`seed-software.ts`)
 
-Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`).
+Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`). La plataforma mantiene una publicación maestra de referencia por sección para garantizar una línea base limpia y de máxima profundidad técnica:
+
+| Sección | Archivo JSON | Slug Canónico | Publicación Maestra de Referencia |
+|---|---|---|---|
+| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | Novedades de Next.js 16 y Server Components |
+| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | Arquitectura Limpia y Monolitos Modulares en NestJS |
+| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | Optimización de RAM en VPS de 1GB para Node.js |
+| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | Model Context Protocol (MCP) |
+| **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | Guía Integral de Bastionado SSH en Servidores Linux |
+| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | Terminal SSH Virtual con WebSockets en React y NestJS |
+| **Proyectos** | `projects.json` | `software-tecnologico` | Software Hub Tecnológico |
+| **Infraestructura** | `infrastructure.json` | `vps-1gb-debian-nginx-pm2` | Arquitectura de Despliegue en VPS de 1 GB RAM |
 
 * **Comando de Sembrado:**
   ```bash
   pnpm --filter backend seed:software
   ```
-* **Garantía Transaccional:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, garantizando reconstrucción limpia e indexación sin pérdida de datos ni lecturas sucias.
+* **Garantía Transaccional:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, garantizando reconstrucción limpia e indexación sin pérdida de datos ni lecturas sucias en menos de 50ms.
+
 

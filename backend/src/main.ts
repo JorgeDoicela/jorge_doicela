@@ -34,6 +34,9 @@ async function bootstrap() {
   // Filtro global de excepciones
   app.useGlobalFilters(new GlobalExceptionFilter());
 
+  // Prefijo global canónico para todas las APIs REST del sistema
+  app.setGlobalPrefix('api');
+
   // CORS: lista blanca explícita de orígenes autorizados
   // Fallback: en desarrollo local permite localhost. Nunca origin: true en producción.
   const allowedOrigins = process.env.CORS_ORIGINS

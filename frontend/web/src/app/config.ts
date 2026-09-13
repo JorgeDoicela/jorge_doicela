@@ -1,5 +1,10 @@
 const isClient = typeof window !== 'undefined';
 
+const normalizeApiUrl = (baseUrl: string): string => {
+  const clean = baseUrl.replace(/\/+$/, '');
+  return clean.endsWith('/api') ? clean : `${clean}/api`;
+};
+
 const getApiUrl = (): string => {
   if (isClient) {
     const hostname = window.location.hostname;
@@ -10,16 +15,16 @@ const getApiUrl = (): string => {
       window.location.port === '3001';
 
     if (isLocal) {
-      return 'http://localhost:3000';
+      return 'http://localhost:3000/api';
     }
   }
 
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  return normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000');
 };
 
 export const API_URL = isClient
   ? getApiUrl()
-  : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  : normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000');
 
 const getSandboxTunnelUrl = (): string => {
   if (isClient) {

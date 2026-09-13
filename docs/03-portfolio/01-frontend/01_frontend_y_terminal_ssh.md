@@ -7,9 +7,12 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 ## 1. Contexto Arquitectónico Macro y Micro
 
 > [!IMPORTANT]
-> **Arquitectura Macro:**
-> * **Subdominio:** `portfolio.jorgedoicela.com` (o `http://localhost:3001` en local — **nunca** `portfolio.localhost:3001`).
-> * **Enrutamiento:** `src/middleware.ts` reescribe el host hacia el grupo de rutas `frontend/web/src/app/(portfolio)/`.
+> **Arquitectura Macro y Enrutamiento Canónico Limpio:**
+> * **Subdominio Canónico:** `portfolio.jorgedoicela.com` (o `http://portfolio.localhost:3001` en desarrollo local).
+> * **URL Canónica Única:** La raíz del subdominio es `/`. Al ser una Single Page Application (SPA) interactiva, no posee subpáginas.
+> * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud con el prefijo redundante `/portfolio` o `/portfolio/*` en el subdominio se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/`), protegiendo el SEO y evitando contenido duplicado.
+> * **Reescritura Interna Transparente:** Next.js reescribe internamente la ruta raíz `/` al directorio físico `frontend/web/src/app/(portfolio)/portfolio/page.tsx` para evitar colisiones entre proyectos consolidados.
+> * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/portfolio` siguen respondiendo 200 OK directamente.
 > * **Consolidación Física:** Se ejecuta en el único servidor Next.js 16 (puerto `3001`) para optimizar el límite de **1 GB de RAM** del VPS.
 > * **Aislamiento:** Cero importaciones de otros subdominios (`bible`, `software`, `landing`). Estilos encapsulados en `(portfolio)/globals.css`.
 >

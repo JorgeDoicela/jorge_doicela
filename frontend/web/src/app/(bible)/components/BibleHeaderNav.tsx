@@ -16,13 +16,13 @@ interface NavTabItem {
 }
 
 const NAV_TABS: NavTabItem[] = [
-  { path: '/bible/study/standard', key: 'standard' },
-  { path: '/bible/study/parallel', key: 'parallel' },
-  { path: '/bible/study/interlinear', key: 'interlinear' },
-  { path: '/bible/study/word-study', key: 'wordStudy' },
-  { path: '/bible/study/literary', key: 'literary' },
-  { path: '/bible/study/historical-context', key: 'historical' },
-  { path: '/bible/study/evangelism', key: 'evangelism' },
+  { path: '/study/standard', key: 'standard' },
+  { path: '/study/parallel', key: 'parallel' },
+  { path: '/study/interlinear', key: 'interlinear' },
+  { path: '/study/word-study', key: 'wordStudy' },
+  { path: '/study/literary', key: 'literary' },
+  { path: '/study/historical-context', key: 'historical' },
+  { path: '/study/evangelism', key: 'evangelism' },
 ];
 
 interface BibleHeaderNavProps {
@@ -49,11 +49,20 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
   }, []);
 
   const isCurrentTab = (tabPath: string) => {
-    if (tabPath === '/bible/study/standard') {
-      return pathname === '/bible/study/standard' || pathname === '/bible/study' || pathname === '/study';
+    if (tabPath === '/study/standard') {
+      return (
+        pathname === '/study/standard' ||
+        pathname === '/study' ||
+        pathname === '/bible/study/standard' ||
+        pathname === '/bible/study'
+      );
     }
-    const segment = tabPath.replace('/bible', '');
-    return pathname.startsWith(tabPath) || pathname.startsWith(segment);
+    return (
+      pathname === tabPath ||
+      pathname.startsWith(tabPath + '/') ||
+      pathname === `/bible${tabPath}` ||
+      pathname.startsWith(`/bible${tabPath}/`)
+    );
   };
 
   const activeTab = NAV_TABS.find((t) => isCurrentTab(t.path)) || NAV_TABS[0];

@@ -34,7 +34,7 @@ import { BackToPortalButton } from '../components/BackToPortalButton';
 
 export default function BibleLandingPage() {
     const tLanding = useTranslations('Landing');
-    const studyUrl = '/bible/study';
+    const studyUrl = '/study';
 
     // Propósito de estudio activo (Inspirado en los filtros de Google Perfil de Negocio)
     const [activePurpose, setActivePurpose] = useState<'daily' | 'compare' | 'originals' | 'history'>('daily');
@@ -42,70 +42,70 @@ export default function BibleLandingPage() {
     // 10 Suites de Estudio Bíblico y Exegético
     const engines = [
         {
-            href: '/bible/study/standard',
+            href: '/study/standard',
             icon: BookOpen,
             colorClass: 'bg-accents-1 border-accents-2 text-foreground',
             title: tLanding('engine1Title'),
             desc: tLanding('engine1Desc'),
         },
         {
-            href: '/bible/study/parallel',
+            href: '/study/parallel',
             icon: Columns2,
             colorClass: 'bg-blue-500/10 border-blue-500/20 text-blue-500',
             title: tLanding('engine2Title'),
             desc: tLanding('engine2Desc'),
         },
         {
-            href: '/bible/study/interlinear',
+            href: '/study/interlinear',
             icon: Languages,
             colorClass: 'bg-amber-500/10 border-amber-500/20 text-amber-500',
             title: tLanding('engine3Title'),
             desc: tLanding('engine3Desc'),
         },
         {
-            href: '/bible/study/literary',
+            href: '/study/literary',
             icon: ScrollText,
             colorClass: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500',
             title: tLanding('engine4Title'),
             desc: tLanding('engine4Desc'),
         },
         {
-            href: '/bible/study/word-study',
+            href: '/study/word-study',
             icon: Library,
             colorClass: 'bg-purple-500/10 border-purple-500/20 text-purple-500',
             title: tLanding('engine5Title'),
             desc: tLanding('engine5Desc'),
         },
         {
-            href: '/bible/study/word-study',
+            href: '/study/word-study',
             icon: Search,
             colorClass: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-500',
             title: tLanding('engine6Title'),
             desc: tLanding('engine6Desc'),
         },
         {
-            href: '/bible/study/historical-context',
+            href: '/study/historical-context',
             icon: MapPin,
             colorClass: 'bg-rose-500/10 border-rose-500/20 text-rose-500',
             title: tLanding('engine7Title'),
             desc: tLanding('engine7Desc'),
         },
         {
-            href: '/bible/study/historical-context',
+            href: '/study/historical-context',
             icon: Clock,
             colorClass: 'bg-amber-400/10 border-amber-400/20 text-amber-500',
             title: tLanding('engine8Title'),
             desc: tLanding('engine8Desc'),
         },
         {
-            href: '/bible/study/historical-context',
+            href: '/study/historical-context',
             icon: Landmark,
             colorClass: 'bg-teal-400/10 border-teal-400/20 text-teal-500',
             title: tLanding('engine9Title'),
             desc: tLanding('engine9Desc'),
         },
         {
-            href: '/bible/study/evangelism',
+            href: '/study/evangelism',
             icon: Sparkles,
             colorClass: 'bg-rose-500/10 border-rose-500/20 text-rose-500',
             title: tLanding('engine10Title'),
@@ -156,7 +156,7 @@ export default function BibleLandingPage() {
             desc: tLanding('corpusV1Desc'),
             sample: tLanding('corpusV1Sample'),
             source: tLanding('corpusV1Source'),
-            href: '/bible/study/standard?trans=rv1960',
+            href: '/study/standard?trans=rv1960',
             dir: 'ltr' as const,
         },
         {
@@ -167,7 +167,7 @@ export default function BibleLandingPage() {
             desc: tLanding('corpusV2Desc'),
             sample: tLanding('corpusV2Sample'),
             source: tLanding('corpusV2Source'),
-            href: '/bible/study/standard?trans=nbla',
+            href: '/study/standard?trans=nbla',
             dir: 'ltr' as const,
         },
         {
@@ -178,7 +178,7 @@ export default function BibleLandingPage() {
             desc: tLanding('corpusV3Desc'),
             sample: tLanding('corpusV3Sample'),
             source: tLanding('corpusV3Source'),
-            href: '/bible/study/standard?trans=nvi',
+            href: '/study/standard?trans=nvi',
             dir: 'ltr' as const,
         },
         {
@@ -189,7 +189,7 @@ export default function BibleLandingPage() {
             desc: tLanding('corpusV4Desc'),
             sample: tLanding('corpusV4Sample'),
             source: tLanding('corpusV4Source'),
-            href: '/bible/study/standard?trans=ntv',
+            href: '/study/standard?trans=ntv',
             dir: 'ltr' as const,
         },
         {
@@ -200,7 +200,7 @@ export default function BibleLandingPage() {
             desc: tLanding('corpusV5Desc'),
             sample: tLanding('corpusV5Sample'),
             source: tLanding('corpusV5Source'),
-            href: '/bible/study/interlinear',
+            href: '/study/interlinear',
             dir: 'rtl' as const,
         },
         {
@@ -211,7 +211,7 @@ export default function BibleLandingPage() {
             desc: tLanding('corpusV6Desc'),
             sample: tLanding('corpusV6Sample'),
             source: tLanding('corpusV6Source'),
-            href: '/bible/study/parallel',
+            href: '/study/parallel',
             dir: 'ltr' as const,
         },
     ];
@@ -820,12 +820,12 @@ export default function BibleLandingPage() {
                         <Link
                             href={
                                 activePurpose === 'daily'
-                                    ? '/bible/study/standard'
+                                    ? '/study/standard'
                                     : activePurpose === 'compare'
-                                    ? '/bible/study/parallel'
+                                    ? '/study/parallel'
                                     : activePurpose === 'originals'
-                                    ? '/bible/study/interlinear'
-                                    : '/bible/study/historical-context'
+                                    ? '/study/interlinear'
+                                    : '/study/historical-context'
                             }
                             className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-white text-black hover:bg-zinc-200 text-sm font-semibold transition-all shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
                         >
@@ -1417,7 +1417,7 @@ export default function BibleLandingPage() {
 
                         <div className="pt-2">
                             <Link
-                                href="/bible/study/interlinear"
+                                href="/study/interlinear"
                                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 transition-all shadow-sm cursor-pointer"
                             >
                                 <span>{tLanding('manuscriptsCta')}</span>

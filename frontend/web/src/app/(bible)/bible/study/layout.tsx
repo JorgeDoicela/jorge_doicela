@@ -126,7 +126,7 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
             <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
               <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
               <div className="flex gap-4">
-                <Link href="/bible" className="hover:text-foreground transition-colors duration-150">
+                <Link href="/" className="hover:text-foreground transition-colors duration-150">
                   {t('presentation')}
                 </Link>
                 <span className="text-zinc-300 dark:text-zinc-700">|</span>

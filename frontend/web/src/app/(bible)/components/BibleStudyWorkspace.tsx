@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useTranslations as useI18n } from 'next-intl';
 import { VerseList, useVerses } from '../features/verses';
 import { UnifiedPassagePicker, useBooks } from '../features/books';
@@ -254,9 +255,9 @@ export function BibleStudyWorkspace() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
           <div>{tStudy('title', { year: new Date().getFullYear().toString() })}</div>
           <div className="flex gap-4">
-            <a href="/bible" className="hover:text-foreground transition-colors duration-150">
+            <Link href="/" className="hover:text-foreground transition-colors duration-150">
               {tStudy('presentation')}
-            </a>
+            </Link>
             <span className="text-accents-2">|</span>
             <span className="hover:text-foreground transition-colors duration-150 cursor-default">
               {tStudy('holyScriptures')}

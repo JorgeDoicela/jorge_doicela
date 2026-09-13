@@ -2,11 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Home, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from './SoftwareHeaderNav';
 import { SoftwareFooter } from './SoftwareFooter';
 import { AuthorSidebarCard } from './AuthorSidebarCard';
 import { StayInformedCard } from './StayInformedCard';
+import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
+import { ExploreTopicsSidebarCard } from './ExploreTopicsSidebarCard';
 import { SoftwareSection } from '../features/navigation/components/CategoryNav';
 
 export interface BreadcrumbItem {
@@ -25,7 +28,6 @@ interface SoftwareArticleLayoutProps {
   badge?: React.ReactNode;
   callout?: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
-  extraSidebarCard?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -40,7 +42,6 @@ export function SoftwareArticleLayout({
   badge,
   callout,
   breadcrumbs,
-  extraSidebarCard,
   children,
 }: SoftwareArticleLayoutProps) {
   const tNav = useTranslations('Nav');
@@ -57,19 +58,6 @@ export function SoftwareArticleLayout({
           backLabel={categoryLabel}
         />
 
-        {/* Migas de Pan (Breadcrumbs) */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-500 overflow-x-auto scrollbar-none py-1">
-          <Link href="/" className="hover:text-[var(--foreground)] transition-colors">
-            {tNav('home')}
-          </Link>
-          <span>/</span>
-          <Link href={categoryHref} className="hover:text-[var(--foreground)] transition-colors">
-            {categoryLabel}
-          </Link>
-          <span>/</span>
-          <span className="text-slate-800 dark:text-zinc-300 font-medium truncate max-w-[240px] sm:max-w-md">{title}</span>
-        </nav>
-
         {/* Cuadrícula Principal (8 cols contenido unificado + 4 cols barra lateral) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
@@ -77,13 +65,61 @@ export function SoftwareArticleLayout({
           <article className="lg:col-span-8 p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl">
             
             {/* Cabecera del Artículo */}
-            <header className="space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
-              {/* Fecha superior limpia */}
-              {date && (
-                <div className="text-xs font-mono text-slate-500 dark:text-zinc-400">
-                  <time>{date}</time>
-                </div>
-              )}
+            <header className="space-y-5">
+              
+              {/* Barra Jerárquica y Metadatos Contextuales (Propuesta 1: Integración Editorial) */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs select-none">
+                {/* Migas de Pan (Breadcrumbs) Embebidas */}
+                <nav aria-label="Breadcrumb" className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400">
+                  <Link
+                    href="/"
+                    className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                    title={tNav('home')}
+                  >
+                    <Home className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
+                    <span>{tNav('home')}</span>
+                  </Link>
+
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
+
+                  <Link
+                    href={categoryHref}
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-semibold transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                  >
+                    {categoryLabel}
+                  </Link>
+
+                  {breadcrumbs?.map((bc, idx) => (
+                    <React.Fragment key={idx}>
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
+                      {bc.href ? (
+                        <Link href={bc.href} className="hover:text-[var(--foreground)] transition-colors py-0.5">
+                          {bc.label}
+                        </Link>
+                      ) : (
+                        <span className="text-slate-700 dark:text-zinc-300 font-medium">{bc.label}</span>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </nav>
+
+                {/* Separador de Metadatos y Fecha */}
+                {date && (
+                  <>
+                    <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
+                    <time dateTime={date} className="font-mono text-slate-500 dark:text-zinc-400">
+                      {date}
+                    </time>
+                  </>
+                )}
+
+                {/* Badge contextual opcional */}
+                {badge && (
+                  <div className="ml-auto">
+                    {badge}
+                  </div>
+                )}
+              </div>
 
               {/* Título Principal H1 */}
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] leading-[1.15] tracking-tight">
@@ -113,21 +149,24 @@ export function SoftwareArticleLayout({
             </header>
 
             {/* Cuerpo del Artículo (Renderizado Fluido) */}
-            <div className="pt-2 leading-relaxed">
+            <div className="leading-relaxed">
               {children}
             </div>
           </article>
 
-          {/* Columna Derecha: Barra Lateral Fija (Sidebar) */}
+          {/* Columna Derecha: Barra Lateral Fija (Sidebar con Jerarquía Editorial MalwareTech) */}
           <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
-            {/* Tarjeta 1: Stay Informed / Boletín de Suscripción */}
-            <StayInformedCard />
-
-            {/* Tarjeta 2: Perfil y Biografía de Jorge Doicela */}
+            {/* 1. Perfil y Biografía de Jorge Doicela */}
             <AuthorSidebarCard />
 
-            {/* Tarjeta 3: Ficha Técnica Opcional (Específica de cada categoría) */}
-            {extraSidebarCard}
+            {/* 2. Publicaciones Destacadas con Miniaturas (Inspiración MalwareTech) */}
+            <FeaturedPostsSidebarCard />
+
+            {/* 3. Explorador de Especialidades Técnicas con Contadores (Inspiración MalwareTech) */}
+            <ExploreTopicsSidebarCard />
+
+            {/* 4. Boletín / Mantente Informado */}
+            <StayInformedCard />
           </aside>
 
         </div>

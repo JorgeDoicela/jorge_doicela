@@ -104,37 +104,6 @@ export default function ForumTopicDetailPage({
       title={topic.title}
       date={formattedDate}
       author={topic.author || 'Jorge Doicela'}
-      extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
-            {tDetail('forumStats')}
-          </h5>
-          <div className="space-y-2.5 text-xs font-mono">
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-500">{tDetail('category')}</span>
-              <span className="font-bold text-slate-900 dark:text-white">{topic.category}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-500">{tDetail('replies')}</span>
-              <span className="font-bold text-cyan-600 dark:text-cyan-400">{topic.replies?.length || 0}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-500">{tDetail('status')}</span>
-              <span className={topic.isSolved ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-blue-600 dark:text-blue-400 font-bold'}>
-                {topic.isSolved ? tCard('solved') : tCard('open')}
-              </span>
-            </div>
-          </div>
-          <div className="pt-2 border-t border-black/5 dark:border-white/5">
-            <Link
-              href="/forum"
-              className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all"
-            >
-              {tDetail('allTopics')}
-            </Link>
-          </div>
-        </div>
-      }
     >
       {/* Contenido del Hilo Principal */}
       <MarkdownRenderer content={topic.content} />
@@ -160,9 +129,9 @@ export default function ForumTopicDetailPage({
                     {new Date(reply.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US')}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed whitespace-pre-line">
-                  {reply.content}
-                </p>
+                <div className="pt-1 text-xs sm:text-sm leading-relaxed">
+                  <MarkdownRenderer content={reply.content} />
+                </div>
               </div>
             ))}
           </div>

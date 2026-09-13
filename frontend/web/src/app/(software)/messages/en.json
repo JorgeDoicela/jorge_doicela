@@ -16,7 +16,11 @@
     "home": "Home",
     "backToSoftware": "← Back to Software",
     "portal": "Back to jorgedoicela.com",
-    "portalShort": "Portal"
+    "portalShort": "Portal",
+    "scrollToTop": "Back to top",
+    "exploreTopics": "Explore Topics",
+    "viewAllInCategory": "View all in {category} →",
+    "noPostsInCategory": "No publications yet"
   },
   "Search": {
     "placeholder": "Search news, articles, advisories or projects...",

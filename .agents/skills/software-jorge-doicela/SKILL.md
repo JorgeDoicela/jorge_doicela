@@ -35,7 +35,8 @@ frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
 ├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider + generateMetadata)
-├── components/                       # Componentes compartidos (SoftwareHeaderNav con ThemeToggle, SoftwarePageLayout, SoftwareFooter, etc.)
+├── components/                       # Componentes compartidos (SoftwareHeaderNav, SoftwareArticleLayout, SoftwareFooter, ScrollToTopButton, FeaturedPostsSidebarCard, ExploreTopicsSidebarCard, etc.)
+│   └── markdown/                     # Suite editorial técnica (CodeBlock con Prism, MermaidBlock, TableBlock, CalloutBlock)
 ├── software/                         # Subrutas individuales
 
 │   ├── page.tsx                      # Página principal: Bento Grid + selector de 7 categorías
@@ -90,6 +91,14 @@ frontend/web/src/app/(software)/
 ### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
 * **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
 * **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
+
+### 2.4 Suite Editorial y Renderizado Técnico de Contenido (`components/markdown/`)
+* **Modelo Arquitectónico:** Almacenamiento de Markdown puro en `software.sqlite` (`contentMarkdown TEXT`) sin procesamiento pesado en NestJS (Zero-RAM en VPS 1 GB). El frontend Next.js intercepta y enriquece los elementos sintácticos mediante componentes React modulares:
+  * **Diagramas Vectoriales (`MermaidBlock.tsx`):** Bloques ` ```mermaid ` renderizados dinámicamente con `mermaid` en cliente (SSR: false). Sincroniza temas oscuro/claro y provee botón de copia.
+  * **Bloques de Código (`CodeBlock.tsx`):** Resaltado con `prismjs` (TS, TSX, JS, JSX, Bash, JSON, YAML, SQL, Nginx, Docker, Python, INI), badge de lenguaje y botón interactivo para copiar código.
+  * **Tablas Técnicas (`TableBlock.tsx`):** Tablas GFM con desplazamiento horizontal responsivo y estética neumórfica.
+  * **Alertas y Callouts (`CalloutBlock.tsx`):** Directivas estándar GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) con micro-iconos semánticos de Lucide.
+* **Orquestador Universal:** Todos los lectores de artículos (`[slug]/page.tsx`) delegan su contenido en [`MarkdownRenderer.tsx`](/software/components/MarkdownRenderer.tsx).
 
 ---
 

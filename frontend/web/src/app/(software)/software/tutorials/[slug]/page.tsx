@@ -72,33 +72,29 @@ export default function TutorialDetailPage({
       title={tutorial.title}
       subtitle={tutorial.description}
       author="Jorge Doicela"
-      extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
-            {tDetail('stepsIndex', { count: steps.length })}
-          </h5>
-          <div className="space-y-1.5 text-xs font-mono">
-            {steps.map((st, idx) => (
-              <button
-                key={st.id || idx}
-                onClick={() => setActiveStep(idx)}
-                className={`w-full text-left px-3 py-2 rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
-                  activeStep === idx
-                    ? 'glass-concave-panel text-cyan-600 dark:text-cyan-400 font-bold border border-cyan-500/30'
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
-              >
-                <span className="text-[10px] opacity-60">0{idx + 1}.</span>
-                <span className="truncate">{st.title}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      }
     >
       {/* Wizard por pasos interactivo dentro del contenedor editorial unificado */}
       {currentStep ? (
         <div className="space-y-6">
+          {/* Selector de Pasos en Pills Horizontales */}
+          {steps.length > 1 && (
+            <div className="flex flex-wrap items-center gap-2 pb-1">
+              {steps.map((st, idx) => (
+                <button
+                  key={st.id || idx}
+                  onClick={() => setActiveStep(idx)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
+                    activeStep === idx
+                      ? 'glass-concave-panel text-cyan-600 dark:text-cyan-400 font-bold border border-cyan-500/30 shadow-xs'
+                      : 'glass-convex-panel text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white border border-black/5 dark:border-white/5'
+                  }`}
+                >
+                  <span className="opacity-60 text-[10px]">0{idx + 1}.</span>
+                  <span className="truncate max-w-[180px]">{st.title}</span>
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/5">
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
               {tDetail('stepLabel', { step: activeStep + 1, title: currentStep.title })}

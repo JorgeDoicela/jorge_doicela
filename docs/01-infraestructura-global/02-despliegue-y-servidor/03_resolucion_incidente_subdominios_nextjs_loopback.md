@@ -110,9 +110,9 @@ Al llegar la respuesta del middleware a `resolve-routes.js` (Línea 464):
 const destination = getRelativeURL(middlewareHeaders['x-middleware-rewrite'], initUrl);
 ```
 Se comparan los orígenes:
-* `baseURL.origin` $\rightarrow$ `https://127.0.0.1:3001` (proveniente de `initUrl`).
-* `relative.origin` $\rightarrow$ `https://localhost:3001` (proveniente de `NextURL`).
-* **`baseURL.origin === relative.origin` $\rightarrow$ ¡FALSO!**
+* `baseURL.origin` → `https://127.0.0.1:3001` (proveniente de `initUrl`).
+* `relative.origin` → `https://localhost:3001` (proveniente de `NextURL`).
+* **`baseURL.origin === relative.origin` → ¡FALSO!**
 
 ### 3.4 El Disparo Fatal de `proxyRequest` (`router-server.js`)
 Dado que `isRelative` es `false`:

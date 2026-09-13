@@ -75,22 +75,6 @@ export default function NewsDetailPage({
       subtitle={article.excerpt}
       date={formattedDate}
       author={article.author || 'Jorge Doicela'}
-      extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-3">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
-            {tDetail('exploreNews')}
-          </h5>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 font-light leading-relaxed">
-            {tDetail('exploreNewsDesc')}
-          </p>
-          <Link
-            href="/news"
-            className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-white transition-all"
-          >
-            {t('allNews')}
-          </Link>
-        </div>
-      }
     >
       {/* Contenido Enriquecido en Markdown */}
       <MarkdownRenderer content={article.contentMarkdown} />

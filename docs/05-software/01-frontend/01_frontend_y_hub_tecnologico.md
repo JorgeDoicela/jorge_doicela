@@ -37,7 +37,10 @@ frontend/web/src/app/(software)/
 │   ├── ArticleCover.tsx              # Banner de portada 16:9 con soporte SVG procedural temático
 │   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (Spotlight + ThemeToggle + LanguageToggle)
 │   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
-│   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales
+│   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales (Sidebar MalwareTech)
+│   ├── FeaturedPostsSidebarCard.tsx  # Tarjeta de artículos destacados con miniaturas cuadradas 1:1
+│   ├── ExploreTopicsSidebarCard.tsx  # Explorador de las 8 categorías con contadores vivos
+│   ├── ScrollToTopButton.tsx         # Botón flotante para retorno suave al inicio de página
 │   ├── MarkdownRenderer.tsx          # Orquestador formal de contenido técnico (react-markdown + suite markdown/)
 │   ├── markdown/                     # SUITE EDITORIAL MODULAR DE CONTENIDO TÉCNICO
 │   │   ├── CodeBlock.tsx             # Bloque de código con Prism syntax highlighting, badge y botón "Copiar"
@@ -161,6 +164,17 @@ frontend/web/src/app/(software)/
   * Detección reactiva de scroll con listener pasivo de alto rendimiento: permanece oculto en la cabecera y se revela con animación fluida de opacidad y elevación al desplazarse más de 300px hacia abajo.
   * Al activarlo, ejecuta un desplazamiento suave hasta la parte superior de la página (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
   * Diseño Neumórfico UI + Glassmorphic (`.glass-convex-panel`), micro-interacciones táctiles al hover/active, icono `ArrowUp` de Lucide y soporte bilingüe (`Nav.scrollToTop`). Se integra a nivel global en el layout raíz `(software)/layout.tsx` para todas las páginas y subrutas de Software.
+* **Barra Lateral de Recirculación Editorial ([`FeaturedPostsSidebarCard.tsx`](/software/components/FeaturedPostsSidebarCard.tsx)):**
+  * Inspirado en la arquitectura editorial de **Marcus Hutchins (MalwareTech)** y alineado 100% con la estética **Neumorphism UI + Glassmorphism** de Software, sustituye las fichas estáticas de hardware por un widget dinámico de publicaciones destacadas de alta retención.
+  * Disposición editorial asimétrica limpia: cada fila muestra la fecha formateada localmente según el idioma (`Intl.DateTimeFormat`, ej. `13 sep 2026` / `Sep 13, 2026`) en tipografía mono (`text-[11px] font-mono text-slate-500 dark:text-zinc-400`), titular con transición cromática en hover y miniatura nítida a la derecha (`w-14 h-14 rounded-xl overflow-hidden glass-concave-panel`) exclusivamente cuando el post dispone de imagen de portada real (`coverImage`).
+  * Erradica por completo los tags técnicos crudos (`mcp_server`, `cve`, `intermediate`), los iconos SVG decorativos artificiales y los gradientes pastel genéricos en miniaturas ausentes, permitiendo que los artículos sin fotografía expandan su contenido con total alineación visual a la izquierda.
+  * Integra filtrado contextual automático (`usePathname`) para nunca recomendar el artículo actualmente abierto y skeletons de carga fluidos integrados.
+* **Directorio Tipográfico con Acordeón por Especialidad ([`ExploreTopicsSidebarCard.tsx`](/software/components/ExploreTopicsSidebarCard.tsx)):**
+  * Inspirado en la navegación técnica de **Marcus Hutchins (MalwareTech)** y optimizado para la ergonomía del sidebar fijo (`sticky`), implementa un **acordeón interactivo individual por cada especialidad**:
+    * **Despliegue In-Situ por Sección:** Al pulsar sobre cualquiera de las 8 especialidades (Ciberseguridad, Infraestructura, IA, Tutoriales, Proyectos, Blog, Noticias, Foros), la fila se expande suavemente revelando los artículos técnicos de esa área con enlaces directos (`[slug]`), indicador `ChevronRight` rotativo y enlace al catálogo completo (`Ver todo en {Especialidad} →`).
+    * **Ergonomía Anti-Saturación:** Resuelve el crecimiento del catálogo cuando existan decenas o cientos de artículos, mostrando un máximo de 5 publicaciones por categoría y permitiendo al usuario cambiar entre especialidades rápidamente sin abandonar el artículo actual ni inundar la pantalla.
+    * **Estética Neumórfica Limpia:** Nombre de especialidad en tipografía sans técnica con transición de color en hover, compartimento cóncavo neumórfico hendido (`glass-concave-panel rounded-2xl p-3.5 border border-black/5 dark:border-white/5`) al expandir en lugar de líneas artificiales, y pastilla cóncava neumórfica (`glass-concave-panel px-2.5 py-0.5 rounded-md text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400`) con conteo numérico en tiempo real desde el backend NestJS (`/software/hub`).
+  * Consolida la jerarquía editorial de 4 niveles en la barra lateral fija ([`SoftwareArticleLayout.tsx`](/software/components/SoftwareArticleLayout.tsx)): **1. Autor (`AuthorSidebarCard`) → 2. Publicaciones Destacadas (`FeaturedPostsSidebarCard`) → 3. Explorador de Especialidades (`ExploreTopicsSidebarCard`) → 4. Mantente Informado (`StayInformedCard`)**.
 
 ---
 

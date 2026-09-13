@@ -8,6 +8,8 @@ import { SoftwareHeaderNav } from './SoftwareHeaderNav';
 import { SoftwareFooter } from './SoftwareFooter';
 import { AuthorSidebarCard } from './AuthorSidebarCard';
 import { StayInformedCard } from './StayInformedCard';
+import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
+import { ExploreTopicsSidebarCard } from './ExploreTopicsSidebarCard';
 import { SoftwareSection } from '../features/navigation/components/CategoryNav';
 
 export interface BreadcrumbItem {
@@ -26,7 +28,6 @@ interface SoftwareArticleLayoutProps {
   badge?: React.ReactNode;
   callout?: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
-  extraSidebarCard?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -41,7 +42,6 @@ export function SoftwareArticleLayout({
   badge,
   callout,
   breadcrumbs,
-  extraSidebarCard,
   children,
 }: SoftwareArticleLayoutProps) {
   const tNav = useTranslations('Nav');
@@ -154,16 +154,19 @@ export function SoftwareArticleLayout({
             </div>
           </article>
 
-          {/* Columna Derecha: Barra Lateral Fija (Sidebar) */}
+          {/* Columna Derecha: Barra Lateral Fija (Sidebar con Jerarquía Editorial MalwareTech) */}
           <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
-            {/* Tarjeta 1: Stay Informed / Boletín de Suscripción */}
-            <StayInformedCard />
-
-            {/* Tarjeta 2: Perfil y Biografía de Jorge Doicela */}
+            {/* 1. Perfil y Biografía de Jorge Doicela */}
             <AuthorSidebarCard />
 
-            {/* Tarjeta 3: Ficha Técnica Opcional (Específica de cada categoría) */}
-            {extraSidebarCard}
+            {/* 2. Publicaciones Destacadas con Miniaturas (Inspiración MalwareTech) */}
+            <FeaturedPostsSidebarCard />
+
+            {/* 3. Explorador de Especialidades Técnicas con Contadores (Inspiración MalwareTech) */}
+            <ExploreTopicsSidebarCard />
+
+            {/* 4. Boletín / Mantente Informado */}
+            <StayInformedCard />
           </aside>
 
         </div>

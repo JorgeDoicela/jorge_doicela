@@ -65,15 +65,6 @@ export default function InfrastructureDetailPage({
     year: 'numeric',
   });
 
-  let parsedSpecs: Record<string, string> = {};
-  if (post.specs) {
-    try {
-      parsedSpecs = JSON.parse(post.specs);
-    } catch {
-      // Ignorar error si no es JSON válido
-    }
-  }
-
   return (
     <SoftwareArticleLayout
       category="infrastructure"
@@ -94,41 +85,6 @@ export default function InfrastructureDetailPage({
             </p>
           </div>
         ) : undefined
-      }
-      extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
-            {tDetail('serverSpecs')}
-          </h5>
-          <div className="space-y-2.5 text-xs font-mono">
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-500">{tDetail('environment')}</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400 uppercase">{post.environment}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-500">{tDetail('difficulty')}</span>
-              <span className="font-bold text-cyan-600 dark:text-cyan-400 capitalize">{post.difficulty}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-500">{tDetail('category')}</span>
-              <span className="text-slate-800 dark:text-zinc-300 capitalize">{post.category}</span>
-            </div>
-            {Object.entries(parsedSpecs).map(([key, val]) => (
-              <div key={key} className="flex items-center justify-between gap-2">
-                <span className="text-zinc-500 capitalize">{key}</span>
-                <span className="text-slate-900 dark:text-zinc-200 truncate max-w-[140px] text-right font-medium">{val}</span>
-              </div>
-            ))}
-          </div>
-          <div className="pt-2 border-t border-black/5 dark:border-white/5">
-            <Link
-              href="/infrastructure"
-              className="w-full py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-white transition-all"
-            >
-              {tDetail('allInfrastructure')}
-            </Link>
-          </div>
-        </div>
       }
     >
       <MarkdownRenderer content={post.contentMarkdown} />

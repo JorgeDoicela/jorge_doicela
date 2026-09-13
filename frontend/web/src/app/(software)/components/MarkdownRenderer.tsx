@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock, InlineCode, TableBlock, CalloutBlock } from './markdown';
@@ -9,8 +9,41 @@ interface MarkdownRendererProps {
   content: string;
 }
 
+/**
+ * Normaliza defensivamente sintaxis pseudo-LaTeX o flechas matemáticas a Markdown / Unicode limpio.
+ * Evita introducir dependencias pesadas de renderizado matemático (KaTeX/MathJax) en el VPS de 1 GB de RAM.
+ */
+function normalizeMarkdownContent(raw: string): string {
+  if (!raw) return '';
+
+  return (
+    raw
+      // Flechas LaTeX a Unicode estándar
+      .replace(/\$(?:\\rightarrow|\\to)\$/g, '→')
+      .replace(/\\rightarrow\b/g, '→')
+      .replace(/\$(?:\\leftarrow|\\gets)\$/g, '←')
+      .replace(/\\leftarrow\b/g, '←')
+      .replace(/\$\\leftrightarrow\$/g, '↔')
+      .replace(/\\leftrightarrow\b/g, '↔')
+      // Desempaqueta bloques display pseudo-LaTeX: $$\text{...}$$ -> `...`
+      .replace(/\$\$([\s\S]*?)\$\$/g, (_match, inner) => {
+        const cleaned = inner.replace(/\\text\{([^}]+)\}/g, '$1').trim();
+        return `\`${cleaned}\``;
+      })
+      // Desempaqueta inline math con \text{...} -> `...`
+      .replace(/\$([^\n$]*\\text\{[^}]+\}[^\n$]*)\$/g, (_match, inner) => {
+        const cleaned = inner.replace(/\\text\{([^}]+)\}/g, '$1').trim();
+        return `\`${cleaned}\``;
+      })
+      // Elimina cualquier comando \text{...} residual fuera de bloques
+      .replace(/\\text\{([^}]+)\}/g, '$1')
+  );
+}
+
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  if (!content) return null;
+  const sanitizedContent = useMemo(() => normalizeMarkdownContent(content), [content]);
+
+  if (!sanitizedContent) return null;
 
   return (
     <div className="space-y-4 text-sm sm:text-base text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed">
@@ -77,19 +110,19 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <TableBlock {...props}>{children}</TableBlock>
           ),
           thead: ({ node: _node, ...props }) => (
-            <thead className="bg-slate-100/90 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 select-none" {...props} />
+            <thead className="bg-black/[0.035] dark:bg-white/[0.04] border-b border-black/[0.06] dark:border-white/[0.06] select-none" {...props} />
           ),
           th: ({ node: _node, ...props }) => (
-            <th className="px-4 py-3 font-mono font-bold text-slate-900 dark:text-zinc-200 uppercase text-[11px] tracking-wider" {...props} />
+            <th className="px-4 py-3.5 font-mono font-bold text-slate-800 dark:text-zinc-200 uppercase text-[11px] tracking-wider" {...props} />
           ),
           tbody: ({ node: _node, ...props }) => (
-            <tbody className="divide-y divide-slate-200/80 dark:divide-white/5" {...props} />
+            <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]" {...props} />
           ),
           tr: ({ node: _node, ...props }) => (
-            <tr className="hover:bg-slate-100/60 dark:hover:bg-white/[0.02] transition-colors" {...props} />
+            <tr className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors" {...props} />
           ),
           td: ({ node: _node, ...props }) => (
-            <td className="px-4 py-3 text-slate-700 dark:text-zinc-300 font-normal leading-relaxed align-top" {...props} />
+            <td className="px-4 py-3.5 text-slate-700 dark:text-zinc-300 font-normal leading-relaxed align-top" {...props} />
           ),
           pre: ({ children }) => <>{children}</>,
           code: ({ node: _node, className, children, ...props }) => {
@@ -106,7 +139,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           },
         }}
       >
-        {content}
+        {sanitizedContent}
       </ReactMarkdown>
     </div>
   );

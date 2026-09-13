@@ -38,7 +38,13 @@ frontend/web/src/app/(software)/
 │   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (Spotlight + ThemeToggle + LanguageToggle)
 │   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
 │   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales
-│   ├── MarkdownRenderer.tsx          # Lector formal de contenido técnico (react-markdown + remark-gfm, soporte GFM tables y dual-mode)
+│   ├── MarkdownRenderer.tsx          # Orquestador formal de contenido técnico (react-markdown + suite markdown/)
+│   ├── markdown/                     # SUITE EDITORIAL MODULAR DE CONTENIDO TÉCNICO
+│   │   ├── CodeBlock.tsx             # Bloque de código con Prism syntax highlighting, badge y botón "Copiar"
+│   │   ├── MermaidBlock.tsx          # Renderizador dinámico de diagramas SVG vectoriales (Mermaid.js, Zero-RAM en SSR)
+│   │   ├── TableBlock.tsx            # Tablas responsivas GFM con scroll horizontal y estilo neumórfico
+│   │   ├── CalloutBlock.tsx          # Alertas tipo GitHub ([!NOTE], [!WARNING], [!TIP], [!IMPORTANT], [!CAUTION])
+│   │   └── index.ts                  # Barril de exportación
 │   └── SoftwareFooter.tsx            # Pie de página tecnológico institucional
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
 │   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)
@@ -147,9 +153,9 @@ frontend/web/src/app/(software)/
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
   * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`SoftwareHeaderNav`](/software/components/SoftwareHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`SoftwareFooter`](/software/components/SoftwareFooter.tsx).
   * **Tarjetas con Banners de Portada (`ArticleCover` 16:9):** Todas las tarjetas de catálogo (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`) integran en la parte superior el banner de portada en proporción 16:9 (`<ArticleCover />`), ya sea con su imagen real de alta resolución o con el banner procedural SVG temático neumórfico/glassmórfico de la categoría, estructuradas en grillas responsivas de 3 columnas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`).
-* **Lector Editorial Unificado y Migas de Pan Canónicas (`SoftwareArticleLayout.tsx`):**
-  * Shell reutilizable para todos los artículos individuales con cabecera adaptada: el botón de retroceso apunta a su respectiva categoría de origen (`← Infraestructura`, `← Noticias`, etc.).
-  * Migas de pan canónicas internacionalizadas (`Inicio / [Categoría] / [Título]` en español y `Home / [Category] / [Title]` en inglés) enlazando el nodo raíz directamente a `/` para una orientación ergonómica estándar de la industria.
+* **Lector Editorial Unificado y Migas de Pan Embebidas (`SoftwareArticleLayout.tsx`):**
+  * Shell reutilizable para todos los artículos individuales con cabecera adaptada: el botón de retroceso de la barra superior apunta a su respectiva categoría de origen (`← Infraestructura`, `← Noticias`, etc.).
+  * **Integración Editorial en el Encabezado del Artículo:** La ruta jerárquica (`[🏠 Inicio] › [Categoría]`) se encuentra integrada de forma limpia dentro del `<header>` de la propia tarjeta `<article>` (`glass-convex-panel`), unificada con la fecha y metadatos con micro-iconos de Lucide (`Home`, `ChevronRight`). Esto erradica el texto plano huérfano flotante, elimina la redundancia con el título H1 inferior y garantiza una jerarquía espacial sobria y estándar de la industria.
 
 ---
 
@@ -162,5 +168,32 @@ frontend/web/src/app/(software)/
   * Se eliminaron por completo las estimaciones de lectura ("5 min lectura", "readingTime") tanto en la base de datos `software.sqlite` (entidades TypeORM), en los esquemas y corpus JSON, como en todos los componentes de la interfaz (`NewsCard`, `BlogCard`, `TutorialCard`, etc.). La plataforma sigue una filosofía de ingeniería y referencia directa sin métricas artificiales.
 * **Slugs Canónicos Bilingües:**
   * Cada recurso mantiene el mismo `slug` canónico para español e inglés en la base de datos (`IDX_<tabla>_slug_lang`), permitiendo alternar de idioma con `LanguageToggle` de manera instantánea sin redirecciones 404 ni roturas de navegación.
+
+---
+
+## 7. Suite Editorial y Renderizado de Contenido Técnico (Markdown Enriquecido)
+
+* **Almacenamiento Desacoplado en Base de Datos (`software.sqlite`):**
+  * El contenido técnico de todas las categorías se almacena como texto plano Markdown estándar (`contentMarkdown TEXT` o `content TEXT`).
+  * **Cero Carga en el Servidor (VPS 1 GB RAM):** El backend en NestJS se limita a servir el texto crudo sin transformaciones pesadas ni manipulación de árboles sintácticos en el servidor.
+  * **Seguridad (Inmunidad XSS):** No se almacena HTML crudo en base de datos. El parsing lo realiza el cliente de forma controlada y segura mediante componentes React.
+* **Componentes Modulares Especializados (`components/markdown/`):**
+  1. **Diagramas Vectoriales Interactivos ([`MermaidBlock.tsx`](/software/components/markdown/MermaidBlock.tsx)):**
+     * Detecta bloques de código con lenguaje `mermaid` (ej. `graph TD`, `sequenceDiagram`).
+     * Renderizado mediante carga dinámica en cliente (`next/dynamic` con `ssr: false`). Si el artículo no contiene diagramas, la librería **nunca se descarga** en el navegador del usuario.
+     * Sincronización en tiempo real con el tema de la aplicación (`light`/`dark`), botón para copiar el código fuente y fallback de error seguro.
+  2. **Bloques de Código de Alta Precisión ([`CodeBlock.tsx`](/software/components/markdown/CodeBlock.tsx)):**
+     * Resaltado de sintaxis profesional con `prismjs` para 13 lenguajes esenciales (`TypeScript`, `TSX`, `JavaScript`, `JSX`, `Bash`, `JSON`, `YAML`, `SQL`, `Python`, `Nginx`, `Docker`, `Markdown`, `INI`).
+     * Cabecera con icono semántico (`Terminal` o `Code2`), badge de lenguaje en mayúsculas y botón interactivo para copiar código con feedback de confirmación (`¡Copiado!`).
+     * Paleta calibrada Obsidian / Dark Luxury integrada en `globals.css` (funciones en ámbar, cadenas en esmeralda, palabras clave en índigo, comentarios en cursiva).
+     * Soporte para código en línea (`InlineCode`).
+  3. **Tablas Técnicas Responsivas ([`TableBlock.tsx`](/software/components/markdown/TableBlock.tsx)):**
+     * Contenedor con desplazamiento horizontal suave para pantallas móviles, bordes redondeados y relieve neumórfico.
+     * Encabezados con tipografía mono técnica en mayúsculas y filas alternadas con resaltado sutil al pasar el cursor.
+  4. **Alertas y Callouts de Ingeniería ([`CalloutBlock.tsx`](/software/components/markdown/CalloutBlock.tsx)):**
+     * Soporte automático para directivas estándar de GitHub: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`.
+     * Renderizado con micro-iconos de Lucide (`Info`, `Lightbulb`, `AlertCircle`, `AlertTriangle`, `ShieldAlert`), borde de color semántico y contenedor estilizado.
+* **Orquestador Central ([`MarkdownRenderer.tsx`](/software/components/MarkdownRenderer.tsx)):**
+  * Conecta `react-markdown` y `remark-gfm` con los componentes de la suite, garantizando una experiencia editorial homogénea en todas las subrutas `[slug]/page.tsx`.
 
 

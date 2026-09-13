@@ -160,9 +160,9 @@ export default function ForumTopicDetailPage({
                     {new Date(reply.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US')}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed whitespace-pre-line">
-                  {reply.content}
-                </p>
+                <div className="pt-1 text-xs sm:text-sm leading-relaxed">
+                  <MarkdownRenderer content={reply.content} />
+                </div>
               </div>
             ))}
           </div>

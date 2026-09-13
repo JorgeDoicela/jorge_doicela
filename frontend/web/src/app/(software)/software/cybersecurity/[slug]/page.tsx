@@ -76,11 +76,11 @@ export default function SecurityDetailPage({
       author="Jorge Doicela"
       callout={
         post.remediation ? (
-          <div className="p-5 rounded-2xl bg-cyan-500/10 dark:bg-cyan-950/20 border-l-4 border-cyan-600 dark:border-cyan-400 space-y-1.5 shadow-sm">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
+          <div className="p-5 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-1.5">
+            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
               {tDetail('remediationTitle')}
             </h4>
-            <p className="text-xs sm:text-sm text-cyan-950 dark:text-cyan-200/90 font-medium dark:font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed">
               {post.remediation}
             </p>
           </div>

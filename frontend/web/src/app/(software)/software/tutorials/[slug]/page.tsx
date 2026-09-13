@@ -7,6 +7,7 @@ import { Tutorial } from '../../../features/tutorials/types';
 import { API_URL } from '../../../../config';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
+import { CodeBlock } from '../../../components/markdown';
 
 export default function TutorialDetailPage({
   params,
@@ -110,14 +111,10 @@ export default function TutorialDetailPage({
           <MarkdownRenderer content={currentStep.contentMarkdown} />
 
           {currentStep.codeSnippet && (
-            <div className="my-5 rounded-2xl bg-[#090e17] border border-black/10 dark:border-white/10 overflow-hidden shadow-inner font-mono text-xs">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5 text-[11px] text-zinc-400 uppercase tracking-wider">
-                <span>{currentStep.codeLanguage || 'bash'}</span>
-              </div>
-              <pre className="p-4 overflow-x-auto text-cyan-300 leading-relaxed scrollbar-none">
-                <code>{currentStep.codeSnippet}</code>
-              </pre>
-            </div>
+            <CodeBlock
+              code={currentStep.codeSnippet}
+              language={currentStep.codeLanguage || 'bash'}
+            />
           )}
 
           {/* Botones de Navegación entre pasos */}

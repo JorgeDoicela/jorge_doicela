@@ -85,11 +85,11 @@ export default function InfrastructureDetailPage({
       author="Jorge Doicela"
       callout={
         post.architectureOverview ? (
-          <div className="p-5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/20 border-l-4 border-emerald-600 dark:border-emerald-400 space-y-1.5 shadow-sm">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+          <div className="p-5 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-1.5">
+            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
               {tDetail('architectureOverview')}
             </h4>
-            <p className="text-xs sm:text-sm text-emerald-950 dark:text-emerald-200/90 font-medium dark:font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed">
               {post.architectureOverview}
             </p>
           </div>

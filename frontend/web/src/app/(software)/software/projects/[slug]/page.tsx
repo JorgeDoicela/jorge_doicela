@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Project } from '../../../features/projects/types';
 import { API_URL } from '../../../../config';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
+import { MermaidBlock, CalloutBlock } from '../../../components/markdown';
 
 export default function ProjectDetailPage({
   params,
@@ -144,13 +145,73 @@ export default function ProjectDetailPage({
       )}
 
       {/* Caso de Estudio y Arquitectura */}
-      <div className="space-y-4 pt-4">
-        <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight font-mono">
-          {tDetail('architecturePrinciples')}
-        </h3>
-        <p className="text-sm sm:text-base text-slate-700 dark:text-zinc-300 font-light leading-relaxed">
-          {tDetail('architecturePrinciplesDesc')}
-        </p>
+      <div className="space-y-6 pt-4">
+        <div className="space-y-2">
+          <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight font-mono">
+            {tDetail('architecturePrinciples')}
+          </h3>
+          <p className="text-sm sm:text-base text-slate-700 dark:text-zinc-300 font-light leading-relaxed">
+            {tDetail('architecturePrinciplesDesc')}
+          </p>
+        </div>
+
+        <MermaidBlock
+          chart={
+            locale === 'es'
+              ? `graph TD
+    subgraph Edge ["Perímetro Seguro (AWS Lightsail)"]
+        CF["Cloudflare Edge (SSL / DNS)"]
+        Nginx["Nginx Reverse Proxy (:80 / :443)"]
+    end
+
+    subgraph Runtimes ["Runtimes Consolidados (1 GB RAM)"]
+        Next["Next.js 16 (App Router + FSD)<br/>Puerto 3001"]
+        Nest["NestJS 11 (Modular Monolith)<br/>Puerto 3000"]
+    end
+
+    subgraph Storage ["Persistencia Aislada (Cajas Negras)"]
+        DBSw[("software.sqlite (WAL)")]
+        DBBib[("bible.sqlite (WAL)")]
+        DBPort[("portfolio.sqlite (WAL)")]
+    end
+
+    CF --> Nginx
+    Nginx -->|Web Traffic| Next
+    Nginx -->|API Traffic| Nest
+    Nest --> DBSw
+    Nest --> DBBib
+    Nest --> DBPort`
+              : `graph TD
+    subgraph Edge ["Secure Perimeter (AWS Lightsail)"]
+        CF["Cloudflare Edge (SSL / DNS)"]
+        Nginx["Nginx Reverse Proxy (:80 / :443)"]
+    end
+
+    subgraph Runtimes ["Consolidated Runtimes (1 GB RAM)"]
+        Next["Next.js 16 (App Router + FSD)<br/>Port 3001"]
+        Nest["NestJS 11 (Modular Monolith)<br/>Port 3000"]
+    end
+
+    subgraph Storage ["Isolated Persistence (Black-Box)"]
+        DBSw[("software.sqlite (WAL)")]
+        DBBib[("bible.sqlite (WAL)")]
+        DBPort[("portfolio.sqlite (WAL)")]
+    end
+
+    CF --> Nginx
+    Nginx -->|Web Traffic| Next
+    Nginx -->|API Traffic| Nest
+    Nest --> DBSw
+    Nest --> DBBib
+    Nest --> DBPort`
+          }
+        />
+
+        <CalloutBlock type="note">
+          {locale === 'es'
+            ? 'Las 4 aplicaciones (landing, portfolio, bible, software) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
+            : 'All 4 sub-applications (landing, portfolio, bible, software) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
+        </CalloutBlock>
       </div>
     </SoftwareArticleLayout>
   );

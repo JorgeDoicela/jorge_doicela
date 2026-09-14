@@ -3,7 +3,18 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ChevronRight } from 'lucide-react';
+import {
+  ChevronRight,
+  ArrowUpRight,
+  Shield,
+  Server,
+  Bot,
+  Terminal,
+  FolderGit2,
+  BookOpen,
+  Newspaper,
+  MessageSquare,
+} from 'lucide-react';
 import { useSoftwareHub } from '../features/hub/hooks/useSoftwareHub';
 import { HubFeedItem } from '../features/hub/types';
 
@@ -15,7 +26,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
   const tNav = useTranslations('Nav');
   const { featured, feed, spotlightData, loading } = useSoftwareHub();
 
-  // Estado para la categoría actualmente abierta en el acordeón
+  // Estado para la categoría actualmente abierta en el árbol
   const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
 
   const toggleCategory = (catId: string) => {
@@ -54,48 +65,56 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
       label: tNav('cybersecurity'),
       href: '/cybersecurity',
       spotlightKey: 'secPosts',
+      icon: Shield,
     },
     {
       id: 'infrastructure',
       label: tNav('infrastructure'),
       href: '/infrastructure',
       spotlightKey: 'infraPosts',
+      icon: Server,
     },
     {
       id: 'ai',
       label: tNav('ai'),
       href: '/ai',
       spotlightKey: 'aiResources',
+      icon: Bot,
     },
     {
       id: 'tutorials',
       label: tNav('tutorials'),
       href: '/tutorials',
       spotlightKey: 'tutorials',
+      icon: Terminal,
     },
     {
       id: 'projects',
       label: tNav('projects'),
       href: '/projects',
       spotlightKey: 'projects',
+      icon: FolderGit2,
     },
     {
       id: 'blog',
       label: tNav('blog'),
       href: '/blog',
       spotlightKey: 'posts',
+      icon: BookOpen,
     },
     {
       id: 'news',
       label: tNav('news'),
       href: '/news',
       spotlightKey: 'news',
+      icon: Newspaper,
     },
     {
       id: 'forum',
       label: tNav('forum'),
       href: '/forum',
       spotlightKey: 'topics',
+      icon: MessageSquare,
     },
   ];
 
@@ -104,11 +123,13 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
       className={`p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-3.5 shadow-xl select-none ${className}`}
     >
       {/* Cabecera de la tarjeta */}
-      <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
-        {tNav('exploreTopics')}
-      </h5>
+      <div className="flex items-center justify-between">
+        <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+          {tNav('exploreTopics')}
+        </h5>
+      </div>
 
-      {/* Lista de Secciones Colapsables (Acordeón de Especialidades) */}
+      {/* Lista de Secciones Colapsables (Tree / Branch View) */}
       <div className="space-y-1">
         {categories.map((cat) => {
           const isOpen = openCategoryId === cat.id;
@@ -118,30 +139,37 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
             (spotlightData as any)?.[cat.spotlightKey]?.length ||
             0;
 
-          // Mostrar un máximo de 5 publicaciones dentro del acordeón para no saturar
           const displayedPosts = categoryPosts.slice(0, 5);
           const hasMorePosts = categoryPosts.length > 5;
+          const IconComponent = cat.icon;
 
           return (
-            <div key={cat.id} className="rounded-xl overflow-hidden transition-colors">
+            <div key={cat.id} className="rounded-2xl transition-colors">
               {/* Botón de la Especialidad (Toggle del Acordeón) */}
               <button
                 type="button"
                 onClick={() => toggleCategory(cat.id)}
-                className={`group flex items-center justify-between w-full py-2 px-3 rounded-xl transition-all duration-200 text-left cursor-pointer active:scale-[0.99] ${
+                className={`group flex items-center justify-between w-full py-2.5 px-3 rounded-xl transition-all duration-200 text-left cursor-pointer active:scale-[0.99] ${
                   isOpen
-                    ? 'bg-black/[0.04] dark:bg-white/[0.04]'
+                    ? 'bg-black/[0.045] dark:bg-white/[0.045]'
                     : 'hover:bg-black/[0.035] dark:hover:bg-white/[0.035]'
                 }`}
                 aria-expanded={isOpen}
               >
-                {/* Lado izquierdo: Chevron indicador + Nombre */}
-                <div className="flex items-center gap-2 min-w-0">
+                {/* Lado izquierdo: Chevron + Icono semántico + Nombre */}
+                <div className="flex items-center gap-2.5 min-w-0">
                   <ChevronRight
                     className={`w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 transition-transform duration-200 shrink-0 ${
                       isOpen
                         ? 'rotate-90 text-blue-600 dark:text-blue-400'
                         : 'group-hover:text-slate-700 dark:group-hover:text-zinc-300'
+                    }`}
+                  />
+                  <IconComponent
+                    className={`w-4 h-4 shrink-0 transition-colors ${
+                      isOpen
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-slate-500 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
                     }`}
                   />
                   <span
@@ -167,32 +195,40 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                 </span>
               </button>
 
-              {/* Panel Desplegable: Compartimento Cóncavo Neumórfico Hendido */}
+              {/* CONTENIDO DESPLEGABLE (ESTÁNDAR TREE / BRANCH VIEW) */}
               {isOpen && (
-                <div className="p-3.5 mt-1.5 mb-1 space-y-2 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 animate-fadeIn">
+                <div className="pt-2 pb-2 px-2 animate-in fade-in duration-200">
                   {loading && categoryPosts.length === 0 ? (
-                    <div className="space-y-1.5 py-1 animate-pulse">
+                    <div className="space-y-1.5 py-2 pl-4 animate-pulse">
                       <div className="h-3 w-4/5 bg-black/5 dark:bg-white/5 rounded" />
                       <div className="h-3 w-3/5 bg-black/5 dark:bg-white/5 rounded" />
                     </div>
                   ) : displayedPosts.length > 0 ? (
-                    <>
-                      <div className="space-y-1">
-                        {displayedPosts.map((post) => (
+                    <div className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-3 py-1">
+                      {displayedPosts.map((post) => {
+                        const metaText = post.categoryMeta || post.tag;
+                        return (
                           <Link
                             key={post.id || post.href}
                             href={post.href}
-                            className="group/item block py-1 px-2 -mx-1 rounded-lg text-xs font-sans text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-black/[0.035] dark:hover:bg-white/[0.035] transition-colors"
+                            className="group/tree block relative -ml-[19px] pl-5 transition-all"
                           >
-                            <span className="line-clamp-2 leading-snug">
+                            {/* Nodo conector */}
+                            <span className="absolute left-[3px] top-1.5 w-2 h-2 rounded-full bg-slate-300 dark:bg-zinc-700 border-2 border-[var(--background)] group-hover/tree:bg-blue-500 group-hover/tree:scale-125 transition-all" />
+                            {metaText && (
+                              <span className="block text-[10px] font-mono text-slate-500 dark:text-zinc-400 truncate">
+                                {metaText}
+                              </span>
+                            )}
+                            <h6 className="text-xs font-sans font-medium text-slate-800 dark:text-zinc-200 group-hover/tree:text-blue-600 dark:group-hover/tree:text-blue-400 line-clamp-2 leading-snug transition-colors">
                               {post.title}
-                            </span>
+                            </h6>
                           </Link>
-                        ))}
-                      </div>
+                        );
+                      })}
 
-                      {/* Enlace para ver todo el catálogo de esta especialidad */}
-                      <div className="pt-1.5 border-t border-black/5 dark:border-white/5">
+                      {/* Enlace final de la rama */}
+                      <div className="pt-1">
                         <Link
                           href={cat.href}
                           className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
@@ -200,13 +236,14 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                           <span>
                             {hasMorePosts
                               ? tNav('viewAllInCategory', { category: cat.label })
-                              : `${tNav('all')} (${count}) →`}
+                              : `${tNav('all')} (${count})`}
                           </span>
+                          <ArrowUpRight className="w-3 h-3" />
                         </Link>
                       </div>
-                    </>
+                    </div>
                   ) : (
-                    <div className="py-1 text-xs font-mono text-slate-400 dark:text-zinc-500 space-y-1">
+                    <div className="py-2 pl-3 text-xs font-mono text-slate-400 dark:text-zinc-500 space-y-1">
                       <p>{tNav('noPostsInCategory')}</p>
                       <Link
                         href={cat.href}

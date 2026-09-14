@@ -26,7 +26,8 @@ export class InfrastructureController {
     @Query('difficulty') difficulty?: string,
     @Query('search') search?: string,
     @Query('lang') lang?: string,
-    @Query('sortBy') sortBy?: string,
+    @Query('sortBy')
+    sortBy?: 'smart' | 'recent' | 'views' | 'likes' | 'difficulty',
   ) {
     return this.infraService.findAll(
       category as InfrastructureCategory,
@@ -34,7 +35,7 @@ export class InfrastructureController {
       difficulty as InfrastructureDifficulty,
       search,
       lang,
-      sortBy as any,
+      sortBy,
     );
   }
 

@@ -312,14 +312,31 @@
     "copy": "Copiar",
     "copied": "¡Copiado!",
     "copyCodeAria": "Copiar código al portapapeles",
-    "diagramTitle": "Diagrama Arquitectónico",
     "copyDiagramAria": "Copiar código del diagrama",
+    "diagram": "Diagrama de Arquitectura",
+    "terminal": "Terminal / Salida",
     "generatingDiagram": "Generando diagrama vectorial...",
     "diagramError": "Error al compilar el diagrama Mermaid",
+    "expand": "Expandir",
+    "close": "Cerrar",
+    "clickToExpand": "Click para inspeccionar en pantalla completa",
     "calloutNote": "NOTA",
     "calloutTip": "CONSEJO",
     "calloutImportant": "IMPORTANTE",
     "calloutWarning": "ADVERTENCIA",
-    "calloutCaution": "PRECAUCIÓN"
+    "calloutCaution": "PRECAUCIÓN",
+    "diagramTypes": {
+      "sequence": "Diagrama de Secuencia",
+      "flowchart": "Diagrama de Flujo",
+      "class": "Diagrama de Clases",
+      "er": "Diagrama Entidad-Relación",
+      "state": "Diagrama de Estados",
+      "git": "Grafo Git",
+      "architecture": "Diagrama de Arquitectura",
+      "c4": "Modelo C4",
+      "mindmap": "Mapa Mental",
+      "pie": "Gráfico de Sectores",
+      "generic": "Diagrama Arquitectónico"
+    }
   }
 }

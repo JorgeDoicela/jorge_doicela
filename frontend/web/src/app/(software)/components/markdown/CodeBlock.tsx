@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Terminal, Code2, FileCode } from 'lucide-react';
 import { MermaidBlock } from './MermaidBlock';
 import Prism from 'prismjs';
 
@@ -21,7 +21,7 @@ import 'prismjs/components/prism-docker';
 import 'prismjs/components/prism-markdown';
 import 'prismjs/components/prism-ini';
 
-interface CodeBlockProps {
+export interface CodeBlockProps {
   code: string;
   language?: string;
   className?: string;
@@ -50,9 +50,22 @@ const LANGUAGE_LABELS: Record<string, string> = {
   md: 'Markdown',
   markdown: 'Markdown',
   ini: 'INI Config',
-  text: 'Texto Plano',
-  plaintext: 'Texto Plano',
+  text: 'logs / output',
+  plaintext: 'logs / output',
 };
+
+/**
+ * Extrae defensivamente un posible nombre de archivo o ruta de la primera línea de código
+ */
+function extractFilename(code: string): string | null {
+  if (!code) return null;
+  const firstLine = code.split('\n')[0].trim();
+  const match = firstLine.match(/^(?:\/\/|#|\/\*)\s*(?:[A-Za-z0-9_./-]+\/)?([A-Za-z0-9_.-]+\.[A-Za-z0-9]+)/);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return null;
+}
 
 export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
   const t = useTranslations('Markdown');
@@ -66,7 +79,15 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
     return <MermaidBlock chart={cleanCode} />;
   }
 
-  const displayLabel = LANGUAGE_LABELS[normalizedLang] || normalizedLang.toUpperCase();
+  const isBashOrShell =
+    normalizedLang === 'bash' ||
+    normalizedLang === 'sh' ||
+    normalizedLang === 'zsh' ||
+    normalizedLang === 'shell';
+  const isLogOrText =
+    normalizedLang === 'text' || normalizedLang === 'plaintext' || !normalizedLang;
+  const displayLabel = LANGUAGE_LABELS[normalizedLang] || normalizedLang;
+  const detectedFilename = extractFilename(cleanCode);
 
   // Resaltado de sintaxis con Prism
   const highlightedHtml = useMemo(() => {
@@ -93,27 +114,47 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
 
   return (
     <div className="my-6 rounded-2xl bg-[#f6f8fa] dark:bg-[#12161f] border border-black/[0.08] dark:border-white/[0.08] overflow-hidden text-xs font-mono select-text transition-all duration-300">
-      {/* Barra superior de control estilo macOS / Apple */}
-      <div className="flex items-center justify-between px-4 py-3 bg-black/[0.025] dark:bg-white/[0.025] border-b border-black/[0.06] dark:border-white/[0.06] select-none">
-        {/* Lado izquierdo: Botones de control de ventana macOS (Traffic Lights) + Badge */}
-        <div className="flex items-center gap-3">
-          {/* Semáforo de ventana macOS */}
-          <div className="flex items-center gap-1.5" aria-hidden="true">
-            <span className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/40 shadow-xs" />
-            <span className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/40 shadow-xs" />
-            <span className="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/40 shadow-xs" />
-          </div>
-
-          {/* Badge del Lenguaje */}
-          <div className="flex items-center text-[11px] font-mono tracking-wider font-semibold uppercase text-slate-600 dark:text-zinc-400 pl-2 border-l border-black/10 dark:border-white/10">
-            <span>{displayLabel}</span>
-          </div>
+      {/* Cabecera Inteligente y Localizada: Contexto de Archivo / Terminal / Código */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-black/[0.025] dark:bg-white/[0.025] border-b border-black/[0.06] dark:border-white/[0.06] select-none">
+        <div className="flex items-center gap-2 min-w-0">
+          {detectedFilename ? (
+            <>
+              <FileCode className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span className="text-[12px] font-mono font-semibold text-slate-800 dark:text-zinc-200 truncate">
+                {detectedFilename}
+              </span>
+              <span className="text-[10px] font-mono font-medium text-slate-500 dark:text-zinc-400 uppercase px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 shrink-0">
+                {displayLabel}
+              </span>
+            </>
+          ) : isBashOrShell ? (
+            <>
+              <Terminal className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span className="text-[11px] font-mono font-semibold text-slate-700 dark:text-zinc-300">
+                {displayLabel}
+              </span>
+            </>
+          ) : isLogOrText ? (
+            <>
+              <Terminal className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400 shrink-0" />
+              <span className="text-[11px] font-mono font-medium text-slate-700 dark:text-zinc-300">
+                {t('terminal')}
+              </span>
+            </>
+          ) : (
+            <>
+              <Code2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span className="text-[11px] font-mono font-semibold text-slate-700 dark:text-zinc-300">
+                {displayLabel}
+              </span>
+            </>
+          )}
         </div>
 
-        {/* Lado derecho: Botón Copiar estilo Apple */}
+        {/* Botón Copiar con confirmación */}
         <button
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-sans font-medium text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-sans font-medium text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 shrink-0"
           title={t('copyCodeAria')}
           aria-label={t('copyCodeAria')}
         >
@@ -131,7 +172,7 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
         </button>
       </div>
 
-      {/* Contenedor del código adaptado a modo claro y oscuro */}
+      {/* Cuerpo del código */}
       <pre className="p-4 sm:p-5 overflow-x-auto text-[#1d1d1f] dark:text-[#f0f6fc] leading-relaxed font-mono text-[13px] scrollbar-thin selection:bg-blue-500/20 dark:selection:bg-blue-500/30">
         {highlightedHtml ? (
           <code

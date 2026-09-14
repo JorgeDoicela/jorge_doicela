@@ -108,10 +108,10 @@ export function CalloutBlock({ type: explicitType, title: explicitTitle, childre
   const type: NormalizedCalloutType | null = normalizedExplicit || extracted.type;
   const content = normalizedExplicit ? children : extracted.content;
 
-  // Si no es un callout especial [!TIPO] ni tiene tipo explícito, renderiza un blockquote neumórfico cóncavo
+  // Si no es un callout especial [!TIPO] ni tiene tipo explícito, renderiza un blockquote editorial elegante con riel sutil
   if (!type) {
     return (
-      <blockquote className="my-6 p-4 sm:p-5 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs sm:text-sm text-slate-700 dark:text-zinc-300 italic leading-relaxed">
+      <blockquote className="my-6 p-4 sm:p-5 rounded-r-2xl border-l-4 border-blue-500/80 bg-black/[0.02] dark:bg-white/[0.02] border-y border-r border-black/5 dark:border-white/5 text-xs sm:text-sm text-slate-700 dark:text-zinc-300 italic leading-relaxed">
         {children}
       </blockquote>
     );
@@ -123,7 +123,7 @@ export function CalloutBlock({ type: explicitType, title: explicitTitle, childre
 
   return (
     <aside
-      className="my-6 p-4 sm:p-5 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-2 select-text transition-all"
+      className="my-6 p-5 sm:p-6 rounded-2xl glass-convex-panel border border-black/10 dark:border-white/10 space-y-2.5 select-text shadow-md transition-all bg-gradient-to-br from-black/[0.015] via-transparent to-black/[0.025] dark:from-white/[0.02] dark:via-transparent dark:to-white/[0.03]"
       role="note"
       aria-label={displayTitle}
     >
@@ -133,7 +133,7 @@ export function CalloutBlock({ type: explicitType, title: explicitTitle, childre
           {displayTitle}
         </span>
       </div>
-      <div className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
+      <div className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 leading-relaxed font-normal">
         {content}
       </div>
     </aside>

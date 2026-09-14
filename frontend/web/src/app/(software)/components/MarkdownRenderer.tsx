@@ -110,19 +110,19 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <TableBlock {...props}>{children}</TableBlock>
           ),
           thead: ({ node: _node, ...props }) => (
-            <thead className="bg-black/[0.035] dark:bg-white/[0.04] border-b border-black/[0.06] dark:border-white/[0.06] select-none" {...props} />
+            <thead className="bg-slate-100/90 dark:bg-zinc-800/80 backdrop-blur-md border-b-2 border-blue-500/30 select-none" {...props} />
           ),
           th: ({ node: _node, ...props }) => (
-            <th className="px-4 py-3.5 font-mono font-bold text-slate-800 dark:text-zinc-200 uppercase text-[11px] tracking-wider" {...props} />
+            <th className="px-5 py-3.5 font-mono font-bold text-slate-900 dark:text-zinc-100 uppercase text-[11px] tracking-wider" {...props} />
           ),
           tbody: ({ node: _node, ...props }) => (
-            <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]" {...props} />
+            <tbody className="divide-y divide-black/5 dark:divide-white/5" {...props} />
           ),
           tr: ({ node: _node, ...props }) => (
-            <tr className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors" {...props} />
+            <tr className="hover:bg-blue-500/[0.035] dark:hover:bg-blue-400/[0.04] transition-colors" {...props} />
           ),
           td: ({ node: _node, ...props }) => (
-            <td className="px-4 py-3.5 text-slate-700 dark:text-zinc-300 font-normal leading-relaxed align-top" {...props} />
+            <td className="px-5 py-4 text-slate-700 dark:text-zinc-300 font-normal leading-relaxed align-top first:font-mono first:font-semibold first:text-slate-900 dark:first:text-zinc-100 first:bg-black/[0.015] dark:first:bg-white/[0.015] first:w-[28%] first:border-r first:border-black/5 dark:first:border-white/5" {...props} />
           ),
           pre: ({ children }) => <>{children}</>,
           code: ({ node: _node, className, children, ...props }) => {
@@ -144,3 +144,4 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     </div>
   );
 }
+

@@ -248,6 +248,7 @@ export class HubService {
         accentHoverColor: 'group-hover:text-emerald-300',
         date: dateStr,
         smartScore:
+          (inf.featured ? 600 : 0) +
           (inf.orderPriority || 0) * 20 +
           (inf.likes || 0) * 4 +
           (inf.views || 0) * 1.5 +

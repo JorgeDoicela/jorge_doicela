@@ -312,14 +312,31 @@
     "copy": "Copy",
     "copied": "Copied!",
     "copyCodeAria": "Copy code to clipboard",
-    "diagramTitle": "Architectural Diagram",
     "copyDiagramAria": "Copy diagram code",
+    "diagram": "Architecture Diagram",
+    "terminal": "Terminal / Output",
     "generatingDiagram": "Generating vector diagram...",
     "diagramError": "Error compiling Mermaid diagram",
+    "expand": "Expand",
+    "close": "Close",
+    "clickToExpand": "Click to inspect in full screen",
     "calloutNote": "NOTE",
     "calloutTip": "TIP",
     "calloutImportant": "IMPORTANT",
     "calloutWarning": "WARNING",
-    "calloutCaution": "CAUTION"
+    "calloutCaution": "CAUTION",
+    "diagramTypes": {
+      "sequence": "Sequence Diagram",
+      "flowchart": "Flowchart",
+      "class": "Class Diagram",
+      "er": "Entity-Relationship Diagram",
+      "state": "State Diagram",
+      "git": "Git Graph",
+      "architecture": "Architecture Diagram",
+      "c4": "C4 Model",
+      "mindmap": "Mindmap",
+      "pie": "Pie Chart",
+      "generic": "Architectural Diagram"
+    }
   }
 }

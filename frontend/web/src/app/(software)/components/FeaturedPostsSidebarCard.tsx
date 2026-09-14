@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
 import { useSoftwareHub } from '../features/hub/hooks/useSoftwareHub';
 
@@ -13,24 +13,12 @@ interface FeaturedPostsSidebarCardProps {
   className?: string;
 }
 
-function formatDisplayDate(dateStr?: string, locale: string = 'es') {
-  if (!dateStr) return '';
-  const parsed = new Date(dateStr);
-  if (isNaN(parsed.getTime())) return dateStr;
-  return parsed.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
 export function FeaturedPostsSidebarCard({
   maxPosts = 4,
   className = '',
 }: FeaturedPostsSidebarCardProps) {
   const tHome = useTranslations('Home');
   const tNav = useTranslations('Nav');
-  const locale = useLocale();
   const pathname = usePathname();
   const { featured, feed, loading } = useSoftwareHub();
 
@@ -75,7 +63,7 @@ export function FeaturedPostsSidebarCard({
           ))
         ) : displayPosts.length > 0 ? (
           displayPosts.map((item) => {
-            const formattedDate = formatDisplayDate(item.date, locale);
+            const metaText = item.categoryMeta || item.tag;
 
             return (
               <Link
@@ -83,11 +71,11 @@ export function FeaturedPostsSidebarCard({
                 href={item.href}
                 className="group flex items-start justify-between gap-3 p-2.5 -mx-2.5 rounded-2xl hover:bg-black/[0.035] dark:hover:bg-white/[0.035] active:scale-[0.99] transition-all duration-200"
               >
-                {/* Lado izquierdo: Fecha y Título */}
+                {/* Lado izquierdo: Metadatos y Título */}
                 <div className="flex-1 min-w-0 space-y-1">
-                  {formattedDate && (
-                    <span className="block text-[11px] font-mono text-slate-500 dark:text-zinc-400">
-                      {formattedDate}
+                  {metaText && (
+                    <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate">
+                      {metaText}
                     </span>
                   )}
                   <h6 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">

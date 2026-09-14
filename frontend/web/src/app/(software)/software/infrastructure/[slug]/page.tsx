@@ -25,7 +25,9 @@ export default function InfrastructureDetailPage({
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`${API_URL}/software/infrastructure/${slug}?lang=${locale}`);
+        const res = await fetch(`${API_URL}/software/infrastructure/${slug}?lang=${locale}`, {
+          cache: 'no-store',
+        });
         if (!res.ok) throw new Error(tDetail('postNotFound'));
         const data = await res.json();
         setPost(data.data || data);
@@ -76,11 +78,11 @@ export default function InfrastructureDetailPage({
       author="Jorge Doicela"
       callout={
         post.architectureOverview ? (
-          <div className="p-5 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-1.5">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+          <div className="relative p-5 sm:p-6 rounded-2xl overflow-hidden glass-convex-panel border border-blue-500/20 bg-gradient-to-br from-blue-950/15 via-black/[0.02] to-slate-900/20 dark:from-blue-950/30 dark:via-zinc-900/40 dark:to-slate-950/30 space-y-2.5 shadow-md">
+            <h4 className="text-[11px] font-mono font-bold tracking-wider uppercase text-blue-600 dark:text-blue-400">
               {tDetail('architectureOverview')}
             </h4>
-            <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 font-normal dark:font-light leading-relaxed">
               {post.architectureOverview}
             </p>
           </div>
@@ -91,3 +93,5 @@ export default function InfrastructureDetailPage({
     </SoftwareArticleLayout>
   );
 }
+
+

@@ -36,6 +36,7 @@ frontend/web/
 │       ├── theme-provider.tsx  # Proveedor de tema local aislado (next-themes)
 │       ├── components/
 │       │   ├── ThemeToggle.tsx         # Selector modular reutilizable de modo claro/oscuro
+│       │   ├── AppleHighlightsCarousel.tsx # Carrusel Apple Highlights con arrastre (drag & swipe) por Pointer Events
 │       │   ├── ConsultaHeader.tsx      # Cabecera de consulta con reloj, i18n y ThemeToggle
 │       │   ├── PwaRegister.tsx         # Registro del Service Worker de la PWA
 │       │   ├── PersonJsonLd.tsx        # Datos estructurados Schema.org (SEO)

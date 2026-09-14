@@ -76,11 +76,23 @@ Un script en React (`useEffect`) evalúa el host de navegación:
 * **Seguridad y Anti-Jailbreak:** Inmunidad contra inyecciones de prompt, limitador de tasa deslizante por IP (`checkRateLimit`) y caché LRU en memoria.
 * **Estilo Ejecutivo:** Prohibición absoluta de emojis, temperatura 0.2 para alta fidelidad y formato Markdown limpio.
 
+### 3.8 Carrusel Oficial Apple Highlights (Multitarjeta con Arrastre Interactivo / Drag & Swipe)
+* **Arquitectura de Interacción Unificada:** Implementado en `AppleHighlightsCarousel.tsx` mediante API estándar de *Pointer Events* (`onPointerDown`, `onPointerMove`, `onPointerUp`, `onPointerCancel`) garantizando paridad total e idéntica sensibilidad táctil en dispositivos móviles, tablets y ratón en escritorio (desktop).
+* **Física y Arrastre en Tiempo Real (Drag & Swipe):**
+  * Desplazamiento dinámico en vivo (`dragOffset` en píxeles) sin transiciones CSS lentas durante el agarre (`isDragging`), asegurando una respuesta instantánea a 60/120 FPS.
+  * **Resistencia Elástica en Extremos:** Factor de amortiguación de `0.35x` al intentar arrastrar más allá de la primera o última diapositiva para brindar retroalimentación táctil prémium.
+  * **Umbral Elástico de Transición:** Desplazamiento mínimo de 60 px (`DRAG_THRESHOLD`) para activar el avance (`nextSlide()`) o retroceso (`prevSlide()`).
+* **Preservación del Scroll Vertical Móvil:** Detección direccional temprana; si el desplazamiento inicial supera 7 px y el eje vertical predomina (`|deltaY| > |deltaX|`), se cede el control inmediatamente al navegador nativo (`touch-pan-y`) para evitar bloquear el desplazamiento de la página en smartphones.
+* **Inmunidad contra Clics Fantasma:** Bloqueo selectivo de eventos `onClick` y `onAuxClick` cuando se ha ejecutado un gesto de arrastre (`hasDragged.current = true`), evitando la navegación involuntaria a los proyectos al soltar el puntero.
+* **Autoplay y Controles de Accesibilidad:** Temporizador de diapositivas con pausa automática durante la interacción de arrastre, controles de reproducción (`Play`/`Pause`), indicadores de posición por puntos con aria-labels y botones de acción directa internos (`Abrir Biblia`, `Entrar a Software`, `Ver Portafolio`).
+* **Cero Dependencias Adicionales (Zero-RAM Overhead):** Diseñado sin librerías externas de carrusel (ni Swiper ni Embla), reduciendo a cero el consumo extra de memoria para la estricta cuota de 1 GB en VPS.
+
 ---
 
 ## 4. Estética Visual y Bento Grid
 
 * **Disposición Modular Bento Grid:** Cuadrícula asimétrica y responsiva con tarjetas de tamaños jerárquicos (`col-span-*`, `row-span-*`) que presentan de forma balanceada las diferentes facetas, enlaces a subdominios y proyectos.
+* **Apple Highlights Carousel:** Vitrina central de proyectos con estilo oficial Apple, tarjetas centradas y asomadas en los bordes (`[--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)]`), soporte de arrastre por ratón/touch y tipografía refinada.
 * **Static & Interactive Bento Cards:** Tarjetas modulares con micro-animaciones al hacer hover (elevación sutil, iluminación de bordes y desplazamiento interactivo de flechas).
 * **Fondo de Profundidad Sutil:** Elipses degradadas con desenfoque suave (`blur-[130px]`) que aportan tridimensionalidad moderna sin penalizar el rendimiento ni la GPU.
 * **Compatibilidad de Temas (Dark & Light Mode):** Soporte integral y desacoplado para modo oscuro (`dark`, Apple Dark Slate & Deep Cosmos) y modo claro (`light`, Apple Impoluto #fafafc) mediante `ThemeProvider` local (`next-themes`) en `layout.tsx` y el componente reutilizable `ThemeToggle.tsx` en todos los encabezados (`page.tsx`, `ConsultaHeader.tsx`, `LinksTopBar.tsx`).

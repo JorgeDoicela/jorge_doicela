@@ -3,18 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import {
-  ChevronRight,
-  ArrowUpRight,
-  Shield,
-  Server,
-  Bot,
-  Terminal,
-  FolderGit2,
-  BookOpen,
-  Newspaper,
-  MessageSquare,
-} from 'lucide-react';
+import { ChevronRight, ArrowUpRight } from 'lucide-react';
 import { useSoftwareHub } from '../features/hub/hooks/useSoftwareHub';
 import { HubFeedItem } from '../features/hub/types';
 
@@ -26,11 +15,13 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
   const tNav = useTranslations('Nav');
   const { featured, feed, spotlightData, loading } = useSoftwareHub();
 
-  // Estado para la categoría actualmente abierta en el árbol
-  const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
+  // Estado para las categorías abiertas en el árbol (múltiple concurrente, no cierre automático)
+  const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
 
   const toggleCategory = (catId: string) => {
-    setOpenCategoryId((prev) => (prev === catId ? null : catId));
+    setOpenCategoryIds((prev) =>
+      prev.includes(catId) ? prev.filter((id) => id !== catId) : [...prev, catId]
+    );
   };
 
   // Mapeo ordenado de todas las publicaciones por categoría
@@ -65,56 +56,48 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
       label: tNav('cybersecurity'),
       href: '/cybersecurity',
       spotlightKey: 'secPosts',
-      icon: Shield,
     },
     {
       id: 'infrastructure',
       label: tNav('infrastructure'),
       href: '/infrastructure',
       spotlightKey: 'infraPosts',
-      icon: Server,
     },
     {
       id: 'ai',
       label: tNav('ai'),
       href: '/ai',
       spotlightKey: 'aiResources',
-      icon: Bot,
     },
     {
       id: 'tutorials',
       label: tNav('tutorials'),
       href: '/tutorials',
       spotlightKey: 'tutorials',
-      icon: Terminal,
     },
     {
       id: 'projects',
       label: tNav('projects'),
       href: '/projects',
       spotlightKey: 'projects',
-      icon: FolderGit2,
     },
     {
       id: 'blog',
       label: tNav('blog'),
       href: '/blog',
       spotlightKey: 'posts',
-      icon: BookOpen,
     },
     {
       id: 'news',
       label: tNav('news'),
       href: '/news',
       spotlightKey: 'news',
-      icon: Newspaper,
     },
     {
       id: 'forum',
       label: tNav('forum'),
       href: '/forum',
       spotlightKey: 'topics',
-      icon: MessageSquare,
     },
   ];
 
@@ -132,7 +115,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
       {/* Lista de Secciones Colapsables (Tree / Branch View) */}
       <div className="space-y-1">
         {categories.map((cat) => {
-          const isOpen = openCategoryId === cat.id;
+          const isOpen = openCategoryIds.includes(cat.id);
           const categoryPosts = postsByCategory[cat.id] || [];
           const count =
             categoryPosts.length ||
@@ -140,8 +123,6 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
             0;
 
           const displayedPosts = categoryPosts.slice(0, 5);
-          const hasMorePosts = categoryPosts.length > 5;
-          const IconComponent = cat.icon;
 
           return (
             <div key={cat.id} className="rounded-2xl transition-colors">
@@ -156,20 +137,13 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                 }`}
                 aria-expanded={isOpen}
               >
-                {/* Lado izquierdo: Chevron + Icono semántico + Nombre */}
-                <div className="flex items-center gap-2.5 min-w-0">
+                {/* Lado izquierdo: Chevron + Nombre */}
+                <div className="flex items-center gap-2 min-w-0">
                   <ChevronRight
                     className={`w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 transition-transform duration-200 shrink-0 ${
                       isOpen
                         ? 'rotate-90 text-blue-600 dark:text-blue-400'
                         : 'group-hover:text-slate-700 dark:group-hover:text-zinc-300'
-                    }`}
-                  />
-                  <IconComponent
-                    className={`w-4 h-4 shrink-0 transition-colors ${
-                      isOpen
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-slate-500 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
                     }`}
                   />
                   <span
@@ -205,27 +179,17 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                     </div>
                   ) : displayedPosts.length > 0 ? (
                     <div className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-3 py-1">
-                      {displayedPosts.map((post) => {
-                        const metaText = post.categoryMeta || post.tag;
-                        return (
-                          <Link
-                            key={post.id || post.href}
-                            href={post.href}
-                            className="group/tree block relative -ml-[19px] pl-5 transition-all"
-                          >
-                            {/* Nodo conector */}
-                            <span className="absolute left-[3px] top-1.5 w-2 h-2 rounded-full bg-slate-300 dark:bg-zinc-700 border-2 border-[var(--background)] group-hover/tree:bg-blue-500 group-hover/tree:scale-125 transition-all" />
-                            {metaText && (
-                              <span className="block text-[10px] font-mono text-slate-500 dark:text-zinc-400 truncate">
-                                {metaText}
-                              </span>
-                            )}
-                            <h6 className="text-xs font-sans font-medium text-slate-800 dark:text-zinc-200 group-hover/tree:text-blue-600 dark:group-hover/tree:text-blue-400 line-clamp-2 leading-snug transition-colors">
-                              {post.title}
-                            </h6>
-                          </Link>
-                        );
-                      })}
+                      {displayedPosts.map((post) => (
+                        <Link
+                          key={post.id || post.href}
+                          href={post.href}
+                          className="group/tree block transition-all"
+                        >
+                          <h6 className="text-xs font-sans font-medium text-slate-800 dark:text-zinc-200 group-hover/tree:text-blue-600 dark:group-hover/tree:text-blue-400 line-clamp-2 leading-snug transition-colors">
+                            {post.title}
+                          </h6>
+                        </Link>
+                      ))}
 
                       {/* Enlace final de la rama */}
                       <div className="pt-1">
@@ -233,11 +197,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                           href={cat.href}
                           className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
                         >
-                          <span>
-                            {hasMorePosts
-                              ? tNav('viewAllInCategory', { category: cat.label })
-                              : `${tNav('all')} (${count})`}
-                          </span>
+                          <span>{tNav('all')}</span>
                           <ArrowUpRight className="w-3 h-3" />
                         </Link>
                       </div>
@@ -262,3 +222,4 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
     </div>
   );
 }
+

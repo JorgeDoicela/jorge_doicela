@@ -179,30 +179,98 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
         return () => observer.disconnect();
     }, []);
 
+    const [dragOffset, setDragOffset] = useState<number>(0);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const pointerStartX = useRef<number | null>(null);
+    const pointerStartY = useRef<number | null>(null);
+    const isHorizontalDrag = useRef<boolean | null>(null);
+    const hasDragged = useRef<boolean>(false);
+
     useEffect(() => {
-        if (!isPlaying || !isInView) return;
+        if (!isPlaying || !isInView || isDragging) return;
 
         const timer = setTimeout(() => {
             nextSlide();
         }, SLIDE_DURATION);
 
         return () => clearTimeout(timer);
-    }, [isPlaying, isInView, activeIndex, nextSlide]);
+    }, [isPlaying, isInView, isDragging, activeIndex, nextSlide]);
 
-    const touchStartX = useRef<number | null>(null);
-
-    const handleTouchStart = (e: React.TouchEvent) => {
-        touchStartX.current = e.touches[0].clientX;
+    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.button !== 0) return;
+        pointerStartX.current = e.clientX;
+        pointerStartY.current = e.clientY;
+        hasDragged.current = false;
+        isHorizontalDrag.current = null;
     };
 
-    const handleTouchEnd = (e: React.TouchEvent) => {
-        if (touchStartX.current === null) return;
-        const diff = touchStartX.current - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 45) {
-            if (diff > 0) nextSlide();
-            else prevSlide();
+    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (pointerStartX.current === null) return;
+
+        const deltaX = e.clientX - pointerStartX.current;
+        const deltaY = e.clientY - (pointerStartY.current ?? e.clientY);
+
+        if (isHorizontalDrag.current === null) {
+            if (Math.abs(deltaX) > 7 || Math.abs(deltaY) > 7) {
+                if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+                    isHorizontalDrag.current = true;
+                    setIsDragging(true);
+                    try {
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                    } catch {
+                        // Safe fallback
+                    }
+                } else {
+                    isHorizontalDrag.current = false;
+                }
+            }
         }
-        touchStartX.current = null;
+
+        if (isHorizontalDrag.current === true) {
+            hasDragged.current = true;
+
+            // Resistencia elástica en los extremos
+            let currentOffset = deltaX;
+            if (activeIndex === 0 && deltaX > 0) {
+                currentOffset = deltaX * 0.35;
+            } else if (activeIndex === totalSlides - 1 && deltaX < 0) {
+                currentOffset = deltaX * 0.35;
+            }
+
+            setDragOffset(currentOffset);
+        }
+    };
+
+    const handlePointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (pointerStartX.current === null) return;
+
+        if (isDragging) {
+            const DRAG_THRESHOLD = 60;
+            if (dragOffset < -DRAG_THRESHOLD) {
+                nextSlide();
+            } else if (dragOffset > DRAG_THRESHOLD) {
+                prevSlide();
+            }
+
+            setDragOffset(0);
+            setIsDragging(false);
+
+            try {
+                if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                }
+            } catch {
+                // Safe fallback
+            }
+        }
+
+        pointerStartX.current = null;
+        pointerStartY.current = null;
+        isHorizontalDrag.current = null;
+
+        setTimeout(() => {
+            hasDragged.current = false;
+        }, 60);
     };
 
     return (
@@ -218,16 +286,22 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 </h2>
             </div>
 
-            {/* Contenedor del Carrusel Multitarjeta con laterales asomados (Mismo tamaño y altura sin encogerse) */}
+            {/* Contenedor del Carrusel Multitarjeta con laterales asomados (Arrastrable con Mouse y Touch) */}
             <div
-                className="w-full relative overflow-hidden py-4 select-none"
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
+                className="w-full relative overflow-hidden py-4 select-none touch-pan-y"
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerEnd}
+                onPointerCancel={handlePointerEnd}
             >
                 <div
-                    className="flex transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] items-center"
+                    className={`flex items-center ${
+                        isDragging
+                            ? 'transition-none cursor-grabbing'
+                            : 'transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-grab'
+                    }`}
                     style={{
-                        transform: `translateX(calc(50vw - (var(--card-w) / 2) - ${activeIndex} * (var(--card-w) + var(--card-gap))))`,
+                        transform: `translateX(calc(50vw - (var(--card-w) / 2) - ${activeIndex} * (var(--card-w) + var(--card-gap)) + ${dragOffset}px))`,
                     }}
                 >
                     {slides.map((slide, idx) => {
@@ -237,6 +311,11 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                             <div
                                 key={slide.id}
                                 onClick={(e) => {
+                                    if (hasDragged.current) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        return;
+                                    }
                                     if ((e.target as HTMLElement).closest('a')) {
                                         return;
                                     }
@@ -251,6 +330,11 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                     }
                                 }}
                                 onAuxClick={(e) => {
+                                    if (hasDragged.current) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        return;
+                                    }
                                     if ((e.target as HTMLElement).closest('a')) {
                                         return;
                                     }

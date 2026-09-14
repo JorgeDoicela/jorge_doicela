@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
@@ -71,7 +70,7 @@ export function FeaturedPostsSidebarCard({
                 href={item.href}
                 className="group flex items-start justify-between gap-3 p-2.5 -mx-2.5 rounded-2xl hover:bg-black/[0.035] dark:hover:bg-white/[0.035] active:scale-[0.99] transition-all duration-200"
               >
-                {/* Lado izquierdo: Metadatos y Título */}
+                {/* Título y metadatos */}
                 <div className="flex-1 min-w-0 space-y-1">
                   {metaText && (
                     <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate">
@@ -82,19 +81,6 @@ export function FeaturedPostsSidebarCard({
                     {item.title}
                   </h6>
                 </div>
-
-                {/* Lado derecho: Imagen de portada real (solo si existe coverImage) */}
-                {item.coverImage && (
-                  <div className="relative w-13 h-13 sm:w-14 sm:h-14 shrink-0 rounded-xl overflow-hidden bg-slate-200/70 dark:bg-zinc-800/80 border border-black/5 dark:border-white/5 shadow-xs">
-                    <Image
-                      src={item.coverImage}
-                      alt={item.title}
-                      fill
-                      sizes="56px"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
               </Link>
             );
           })

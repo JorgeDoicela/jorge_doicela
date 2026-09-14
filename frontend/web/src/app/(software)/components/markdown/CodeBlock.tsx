@@ -151,23 +151,18 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
           )}
         </div>
 
-        {/* Botón Copiar con confirmación */}
+        {/* Botón Copiar con confirmación (Solo icono) */}
         <button
+          type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-sans font-medium text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 shrink-0"
-          title={t('copyCodeAria')}
+          className="p-1 rounded-md text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 shrink-0"
+          title={copied ? t('copied') : t('copyCodeAria')}
           aria-label={t('copyCodeAria')}
         >
           {copied ? (
-            <>
-              <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{t('copied')}</span>
-            </>
+            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
           ) : (
-            <>
-              <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
-              <span>{t('copy')}</span>
-            </>
+            <Copy className="w-3.5 h-3.5" />
           )}
         </button>
       </div>

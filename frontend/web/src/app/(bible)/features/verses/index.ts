@@ -8,7 +8,9 @@ export type {
   ReaderLayoutMode,
   ReaderFontSize,
   ReaderFontFamily,
+  ReaderTone,
   ReaderSettings,
 } from './types';
 export { useVerses } from './hooks/useVerses';
+export { useReaderKeybindings } from './hooks/useReaderKeybindings';
 export { BOOK_CHAPTERS, getChapterCountForBook } from './data/bookChapters';

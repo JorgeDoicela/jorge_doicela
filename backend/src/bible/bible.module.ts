@@ -5,9 +5,9 @@ import { Book } from './books/entities/book.entity';
 import { Translation } from './translations/entities/translation.entity';
 import { LexiconEntry } from './morphology/entities/lexicon-entry.entity';
 import { MorphologyToken } from './morphology/entities/morphology-token.entity';
-import { HistoricalPlaceEntity } from './historical/entities/historical-place.entity';
-import { TimelineEventEntity } from './historical/entities/timeline-event.entity';
-import { ArchaeologyArticleEntity } from './historical/entities/archaeology-article.entity';
+import { HistoricalPlaceEntity } from './atlas/entities/historical-place.entity';
+import { TimelineEventEntity } from './timeline/entities/timeline-event.entity';
+import { ArchaeologyArticleEntity } from './archaeology/entities/archaeology-article.entity';
 import { EvangelismPathwayEntity } from './evangelism/entities/evangelism-pathway.entity';
 import { EvangelismObjectionEntity } from './evangelism/entities/evangelism-objection.entity';
 import { EvangelismTractEntity } from './evangelism/entities/evangelism-tract.entity';
@@ -15,7 +15,9 @@ import { VersesModule } from './verses/verses.module';
 import { BooksModule } from './books/books.module';
 import { TranslationsModule } from './translations/translations.module';
 import { MorphologyModule } from './morphology/morphology.module';
-import { HistoricalModule } from './historical/historical.module';
+import { AtlasModule } from './atlas/atlas.module';
+import { TimelineModule } from './timeline/timeline.module';
+import { ArchaeologyModule } from './archaeology/archaeology.module';
 import { EvangelismModule } from './evangelism/evangelism.module';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
@@ -44,7 +46,9 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     BooksModule,
     TranslationsModule,
     MorphologyModule,
-    HistoricalModule,
+    AtlasModule,
+    TimelineModule,
+    ArchaeologyModule,
     EvangelismModule,
   ],
 })

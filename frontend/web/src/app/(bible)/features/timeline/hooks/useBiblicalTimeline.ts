@@ -164,11 +164,17 @@ export function useBiblicalTimeline() {
     setZoomLevel((prev) => Math.max(Number((prev - 0.4).toFixed(2)), 0.4));
   }, []);
 
-  const handleJumpToEra = useCallback((shortcut: TimelineEraShortcut) => {
-    setCenterYearBC(shortcut.yearBC);
-    setPinnedYearBC(shortcut.yearBC);
-    setHoverYearBC(null);
-    setZoomLevel(shortcut.zoom);
+  const handleJumpToEra = useCallback((shortcutOrYear: TimelineEraShortcut | number) => {
+    if (typeof shortcutOrYear === 'number') {
+      setCenterYearBC(shortcutOrYear);
+      setPinnedYearBC(shortcutOrYear);
+      setHoverYearBC(null);
+    } else {
+      setCenterYearBC(shortcutOrYear.yearBC);
+      setPinnedYearBC(shortcutOrYear.yearBC);
+      setHoverYearBC(null);
+      setZoomLevel(shortcutOrYear.zoom);
+    }
   }, []);
 
   const handlePinYear = useCallback((year: number) => {

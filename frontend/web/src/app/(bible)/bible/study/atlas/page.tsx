@@ -1,13 +1,12 @@
 'use client';
 
 import React from 'react';
-import { LexiconView } from '../features/lexicons';
+import { AtlasDashboard } from '../../../features/atlas';
 
-export const WordStudyView: React.FC = () => {
+export default function AtlasStudyPage() {
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      <LexiconView />
+      <AtlasDashboard />
     </div>
   );
-};
-
+}

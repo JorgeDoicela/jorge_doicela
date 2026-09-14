@@ -10,13 +10,28 @@ import { BibleHeaderNav } from '../../components/BibleHeaderNav';
 import { BibleNavigationSidebar } from '../../components/BibleNavigationSidebar';
 import { BibleExegesisInspector } from '../../components/BibleExegesisInspector';
 import { DraggableEdgeTab } from '../../components/DraggableEdgeTab';
-import { AtlasProvider, HistoricalSidebar, HistoricalInspector } from '../../features/atlas';
+import { AtlasProvider, AtlasSidebar, AtlasInspector } from '../../features/atlas';
+import { TimelineSidebar, TimelineInspector } from '../../features/timeline';
+import { ArchaeologySidebar, ArchaeologyInspector } from '../../features/archaeology-feed';
 import { EvangelismProvider, EvangelismSidebar, EvangelismInspector } from '../../features/evangelism';
+import { ParallelProvider, ParallelSidebar, ParallelDiffInspector } from '../../features/parallel-view';
+import { InterlinearProvider, InterlinearSidebar, InterlinearInspector } from '../../features/interlinear';
+import { LexiconProvider, WordStudySidebar, WordStudyInspector } from '../../features/lexicons';
 
 function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';
-  const isHistorical = pathname.includes('/historical-context');
-  const isEvangelism = pathname.includes('/evangelism');
+  const isParallel = pathname.includes('/parallel');
+  const isInterlinear = pathname.includes('/interlinear');
+  const isWordStudy = pathname.includes('/word-study');
+  const isAtlas = pathname.includes('/atlas');
+  const isTimeline = pathname.includes('/timeline');
+  const isArchaeology = pathname.includes('/archaeology');
+  const isEvangelism =
+    pathname.includes('/evangelism') ||
+    pathname.includes('/pathways') ||
+    pathname.includes('/objections') ||
+    pathname.includes('/tracts');
+
 
   const passageContext = useBiblePassageSafe();
   const t = useTranslations('StudyLayout');
@@ -88,16 +103,44 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
     lastScrollTopRef.current = currentScrollTop;
   };
 
-  const leftTabTitle = isHistorical
+  const leftTabTitle = isAtlas
     ? (tStudio('toggleAtlasSidebar') || 'Mostrar eras, lugares y rutas')
+    : isTimeline
+    ? 'Mostrar eras y sincronización histórica'
+    : isArchaeology
+    ? 'Mostrar regiones y filtros arqueológicos'
     : isEvangelism
-    ? (tStudio('toggleEvangelismSidebar') || 'Mostrar rutas y objeciones')
+    ? pathname.includes('/objections')
+      ? 'Mostrar categorías de objeciones'
+      : pathname.includes('/tracts')
+      ? 'Mostrar catálogo de tratados y bosquejos'
+      : (tStudio('toggleEvangelismSidebar') || 'Mostrar rutas y catálogo soteriológico')
+    : isParallel
+    ? 'Mostrar gestión de columnas y presets'
+    : isInterlinear
+    ? 'Mostrar corpus y capas morfológicas'
+    : isWordStudy
+    ? 'Mostrar léxico y términos teológicos'
     : (tStudio('toggleSidebar') || 'Mostrar libros y capítulos');
 
-  const rightTabTitle = isHistorical
-    ? (tStudio('toggleAtlasInspector') || 'Mostrar ficha arqueológica')
+  const rightTabTitle = isAtlas
+    ? (tStudio('toggleAtlasInspector') || 'Mostrar telemetría y ficha arqueológica')
+    : isTimeline
+    ? 'Mostrar ficha del evento cronológico'
+    : isArchaeology
+    ? 'Mostrar ficha técnica de la excavación'
     : isEvangelism
-    ? (tStudio('toggleEvangelismInspector') || 'Mostrar guía ministerial y pasajes')
+    ? pathname.includes('/objections')
+      ? 'Mostrar argumentación y defensa bíblica'
+      : pathname.includes('/tracts')
+      ? 'Mostrar bosquejo homilético completo'
+      : (tStudio('toggleEvangelismInspector') || 'Mostrar guía ministerial y pasajes')
+    : isParallel
+    ? 'Mostrar diff textual y variantes'
+    : isInterlinear
+    ? 'Mostrar ficha morfológica y léxica'
+    : isWordStudy
+    ? 'Mostrar concordancia y exégesis'
     : (tStudio('toggleInspector') || 'Mostrar panel de estudio');
 
   return (
@@ -130,10 +173,20 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
       {/* Workspace Studio FSD: Panel Izquierdo + Canvas Central + Inspector Derecho */}
       <div className="flex-1 flex flex-row w-full min-h-0 overflow-hidden relative">
         {/* Panel Lateral Izquierdo Especializado por Módulo */}
-        {isHistorical ? (
-          <HistoricalSidebar />
+        {isAtlas ? (
+          <AtlasSidebar />
+        ) : isTimeline ? (
+          <TimelineSidebar />
+        ) : isArchaeology ? (
+          <ArchaeologySidebar />
         ) : isEvangelism ? (
           <EvangelismSidebar />
+        ) : isParallel ? (
+          <ParallelSidebar />
+        ) : isInterlinear ? (
+          <InterlinearSidebar />
+        ) : isWordStudy ? (
+          <WordStudySidebar />
         ) : (
           <BibleNavigationSidebar />
         )}
@@ -164,10 +217,20 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
         </main>
 
         {/* Panel Lateral Derecho Especializado por Módulo */}
-        {isHistorical ? (
-          <HistoricalInspector />
+        {isAtlas ? (
+          <AtlasInspector />
+        ) : isTimeline ? (
+          <TimelineInspector />
+        ) : isArchaeology ? (
+          <ArchaeologyInspector />
         ) : isEvangelism ? (
           <EvangelismInspector />
+        ) : isParallel ? (
+          <ParallelDiffInspector />
+        ) : isInterlinear ? (
+          <InterlinearInspector />
+        ) : isWordStudy ? (
+          <WordStudyInspector />
         ) : (
           <BibleExegesisInspector />
         )}
@@ -186,7 +249,13 @@ export default function BibleStudyLayout({
       <BiblePassageProvider>
         <AtlasProvider>
           <EvangelismProvider>
-            <BibleStudyWorkspace>{children}</BibleStudyWorkspace>
+            <ParallelProvider>
+              <InterlinearProvider>
+                <LexiconProvider>
+                  <BibleStudyWorkspace>{children}</BibleStudyWorkspace>
+                </LexiconProvider>
+              </InterlinearProvider>
+            </ParallelProvider>
           </EvangelismProvider>
         </AtlasProvider>
       </BiblePassageProvider>

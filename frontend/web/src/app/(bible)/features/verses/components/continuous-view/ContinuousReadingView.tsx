@@ -5,13 +5,14 @@ import { useTranslations } from 'next-intl';
 
 import { Sparkles } from 'lucide-react';
 
-import { Verse, ReaderFontSize, ReaderFontFamily } from '../../types';
+import { Verse, ReaderFontSize, ReaderFontFamily, ReaderTone } from '../../types';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 
 interface ContinuousReadingViewProps {
   verses: Verse[];
   fontSize: ReaderFontSize;
   fontFamily: ReaderFontFamily;
+  readerTone?: ReaderTone;
   showVerseNumbers: boolean;
   bookName?: string;
   bookAbbr?: string;
@@ -24,6 +25,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   verses,
   fontSize,
   fontFamily,
+  readerTone = 'system',
   showVerseNumbers,
   bookName,
   bookAbbr,
@@ -45,7 +47,6 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     };
   }, []);
 
-
   const rawAbbr =
     bookAbbr ||
     (typeof verses[0]?.book === 'object' && verses[0]?.book !== null
@@ -62,8 +63,6 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
         : verses[0]?.book;
     return bookName || firstVerseBook || 'Génesis';
   }, [rawAbbr, tBooks, verses, bookName]);
-
-
 
   const getFontSizeClass = (size: ReaderFontSize) => {
     switch (size) {
@@ -101,8 +100,34 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     setToastMessage(withCitation ? t('citationCopied') : t('textCopied'));
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 2500);
-  };  return (
-    <div className="w-full bg-white dark:bg-[#0a0a0a] rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] pt-8 pb-8 px-6 sm:px-10 lg:px-12 relative print:border-none print:shadow-none print:p-0 print:m-0 print:bg-transparent transition-all">
+  };
+
+  const getToneContainerClass = (tone: ReaderTone) => {
+    switch (tone) {
+      case 'sepia':
+        return 'bg-[#FAF6EE] dark:bg-[#1E1A16] border-[#E8DEC8] dark:border-[#382E24] text-[#2C221E] dark:text-[#EAE0D0] shadow-sm';
+      case 'dark':
+        return 'bg-black border-zinc-800 text-zinc-100 shadow-none';
+      case 'system':
+      default:
+        return 'bg-white dark:bg-[#0a0a0a] border-zinc-200/80 dark:border-zinc-800/80 text-zinc-900 dark:text-zinc-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]';
+    }
+  };
+
+  const getToneTextClass = (tone: ReaderTone) => {
+    switch (tone) {
+      case 'sepia':
+        return 'text-[#2C221E] dark:text-[#EAE0D0] selection:bg-[#EADAB8] selection:text-[#2C221E]';
+      case 'dark':
+        return 'text-zinc-200 selection:bg-zinc-800 selection:text-white';
+      case 'system':
+      default:
+        return 'text-zinc-800 dark:text-zinc-200 selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900';
+    }
+  };
+
+  return (
+    <div className={`w-full rounded-2xl border pt-8 pb-8 px-6 sm:px-10 lg:px-12 relative print:border-none print:shadow-none print:p-0 print:m-0 print:bg-transparent transition-colors duration-200 ${getToneContainerClass(readerTone)}`}>
       {/* Toast flotante de confirmación */}
       {toastMessage && (
         <div className="fixed bottom-8 right-8 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-medium px-4 py-2 rounded-full shadow-lg border border-zinc-200/20 animate-fade-in flex items-center gap-2 print:hidden">
@@ -114,20 +139,20 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       )}
 
       {/* Cabecera Editorial del Capítulo */}
-      <div className="text-center pb-6 mb-6 border-b border-zinc-100 dark:border-zinc-800/80">
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
+      <div className={`text-center pb-6 mb-6 border-b ${readerTone === 'sepia' ? 'border-[#E8DEC8] dark:border-[#382E24]' : 'border-zinc-100 dark:border-zinc-800/80'}`}>
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
           {localizedBookTitle}
         </h2>
         <div className="flex items-center justify-center gap-2 mt-2">
           {chapter !== null && (
-            <span className="text-xs font-mono font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+            <span className={`text-xs font-mono font-medium uppercase tracking-widest ${readerTone === 'sepia' ? 'text-[#8C765C] dark:text-[#A8947C]' : 'text-zinc-400 dark:text-zinc-500'}`}>
               {t('chapter')} {chapter}
             </span>
           )}
           {(translationAbbr || translationName) && (
             <>
-              <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
-              <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500 tracking-wider">
+              <span className={`select-none ${readerTone === 'sepia' ? 'text-[#D4C3A3] dark:text-[#524332]' : 'text-zinc-300 dark:text-zinc-700'}`}>•</span>
+              <span className={`text-xs font-mono font-medium tracking-wider ${readerTone === 'sepia' ? 'text-[#8C765C] dark:text-[#A8947C]' : 'text-zinc-400 dark:text-zinc-500'}`}>
                 {translationAbbr || translationName}
               </span>
             </>
@@ -139,7 +164,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       <div
         className={`w-full ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
           fontFamily,
-        )} text-zinc-800 dark:text-zinc-200 select-text leading-relaxed sm:leading-loose`}
+        )} ${getToneTextClass(readerTone)} select-text leading-relaxed sm:leading-loose`}
       >
         <p className="space-x-1 text-justify sm:text-left">
           {verses.map((verse) => {

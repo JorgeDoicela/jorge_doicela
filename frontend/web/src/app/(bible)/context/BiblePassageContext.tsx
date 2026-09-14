@@ -119,6 +119,16 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
     });
   });
 
+  const selectedBook = useMemo(
+    () => books.find((b) => b.id === selectedBookId) || books[0],
+    [books, selectedBookId]
+  );
+
+  const activeTranslation = useMemo(
+    () => translations.find((t) => t.id === selectedTranslationId) || translations[0],
+    [translations, selectedTranslationId]
+  );
+
   // Control del Panel Lateral Izquierdo (Navegación Canónica):
   // Inicialización determinista en false para evitar Hydration Mismatch entre SSR y cliente
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
@@ -172,9 +182,31 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
 
   // Control del Panel Lateral Derecho (Inspector Exegético de Versículos & Strong)
   const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(false);
-  const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>('strong');
+  const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>('versions');
   const [inspectedWord, setInspectedWord] = useState<InspectedWordData | null>(null);
-  const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(null);
+  const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(() => ({
+    bookId: selectedBookId || 1,
+    bookName: 'Génesis',
+    chapter: selectedChapter || 1,
+    verseNumber: 1,
+    text: '',
+  }));
+
+  // Sincronizar el versículo inspeccionado por defecto al cambiar libro o capítulo si no pertenece al pasaje actual
+  useEffect(() => {
+    setInspectedVerse((prev) => {
+      if (!prev || prev.bookId !== selectedBookId || prev.chapter !== selectedChapter) {
+        return {
+          bookId: selectedBookId,
+          bookName: selectedBook?.name || 'Génesis',
+          chapter: selectedChapter,
+          verseNumber: 1,
+          text: '',
+        };
+      }
+      return prev;
+    });
+  }, [selectedBookId, selectedChapter, selectedBook?.name]);
 
   const toggleRightInspector = useCallback(() => {
     setIsRightInspectorOpen((prev) => !prev);
@@ -236,16 +268,6 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
       }
     }
   }, [initialBookParam, books]);
-
-  const selectedBook = useMemo(
-    () => books.find((b) => b.id === selectedBookId) || books[0],
-    [books, selectedBookId]
-  );
-
-  const activeTranslation = useMemo(
-    () => translations.find((t) => t.id === selectedTranslationId) || translations[0],
-    [translations, selectedTranslationId]
-  );
 
   // Sincronizar cambios en los search params de la URL de forma fluida
   const updateUrlParams = (bookId: number, chapter: number, transId: number | null) => {

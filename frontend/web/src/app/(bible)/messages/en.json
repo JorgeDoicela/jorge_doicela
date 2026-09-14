@@ -21,7 +21,13 @@
     "interlinear": "Interlinear",
     "wordStudy": "Word Study",
     "historical": "Historical Context",
-    "evangelism": "Evangelism"
+    "evangelism": "Evangelism",
+    "atlas": "Biblical Atlas",
+    "timeline": "Timeline",
+    "archaeology": "Archaeology",
+    "pathways": "Biblical Pathways",
+    "objections": "Objections",
+    "tracts": "Tracts"
   },
   "Toolbar": {
     "selectTranslation": "Select Bible translation",
@@ -771,6 +777,7 @@
     "toggleEvangelismInspector": "Ministry Guide & Passages",
     "collapseSidebar": "Collapse navigation panel",
     "expandSidebar": "Expand navigation panel",
+    "closeSidebar": "Hide panel",
     "closeInspector": "Close inspector",
     "searchBook": "Search book or abbreviation...",
     "oldTestament": "Old Testament",

@@ -9,7 +9,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > [!IMPORTANT]
 > **Arquitectura Macro y Enrutamiento Canónico Limpio:**
 > * **Subdominio Canónico:** `bible.jorgedoicela.com` (o `http://bible.localhost:3001` en desarrollo local).
-> * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las suites exegéticas son rutas directas de primer nivel (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/historical-context`, `/study/evangelism`).
+> * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las 8 suites de estudio son rutas directas de primer nivel (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`).
 > * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud en el subdominio con el prefijo redundante `/bible` o `/bible/*` se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/*`), eliminando URLs duplicadas en el navegador y protegiendo el SEO.
 > * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(bible)/bible/*` para evitar colisiones con los demás dominios bajo el runtime consolidado de 1 GB de RAM.
 > * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/bible` siguen respondiendo 200 OK directamente.
@@ -17,10 +17,10 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > * **Aislamiento de Dominio:** Cero dependencias de otros subdominios. Estilos aislados en `(bible)/globals.css`.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** Cada una de las herramientas exegéticas está encapsulada en su propia subcarpeta funcional dentro de `(bible)/features/` (`verses`, `books`, `translations`, `interlinear`, `parallel-view`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`).
-> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todos los motores exegéticos (Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong) consumen namespaces tipados sin cadenas hardcodeadas.
+> * **Feature-Sliced Design (FSD):** Cada una de las herramientas exegéticas está encapsulada en su propia subcarpeta funcional dentro de `(bible)/features/` (`verses`, `books`, `translations`, `interlinear`, `parallel-view`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados.
+> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todos los motores exegéticos (Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong, Arqueología) consumen namespaces tipados sin cadenas hardcodeadas.
 > * **Cero Datos Hardcodeados en Cliente:** Ningún archivo TypeScript contiene versículos, palabras, coordenadas ni textos bíblicos incrustados. Toda la data se consume asíncronamente desde los endpoints de NestJS (`GET /bible/*`).
-> * **Header Unificado y Responsivo:** `BibleHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de 6 suites en pantallas móviles (`< md`).
+> * **Header Unificado y Responsivo:** `BibleHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 8 suites en pantallas móviles (`< md`).
 > * **Barra de Control Exegético:** `ReaderToolbar.tsx` agrupa pasaje (`UnifiedPassagePicker`), versión bíblica (`TranslationSelector`) y controles de tipografía/diseño (`ReaderLayoutMode`, `ReaderFontSize`, `ReaderFontFamily`) de forma 100% responsiva.
 > * **Estética Geist / Vercel Style:** Monocromática de alta precisión, micro-interacciones de alta densidad, bordes ultra-delgados (`border-zinc-800`), tipografía Geist y legibilidad editorial para análisis exegético.
 
@@ -28,7 +28,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 
 ## 2. Estructura de Rutas y Navegación URL-Driven
 
-El subdominio cuenta con una Landing Page y 6 suites de estudio con enrutamiento dedicado y layout persistente:
+El subdominio cuenta con una Landing Page y 8 módulos de estudio independientes con enrutamiento dedicado y layout persistente:
 
 ```text
 frontend/web/src/app/(bible)/
@@ -38,14 +38,16 @@ frontend/web/src/app/(bible)/
 ├── bible/                     # ENRUTAMIENTO (App Router)
 │   ├── page.tsx               # Landing Page de presentación y Live Preview interactivo
 │   └── study/
-│       ├── layout.tsx         # Layout compartido: BiblePassageProvider + BibleHeaderNav persistente
+│       ├── layout.tsx         # Layout compartido: Providers + BibleHeaderNav + Laterales FSD desacoplados
 │       ├── page.tsx           # Redirección por defecto a /study/standard
-│       ├── standard/page.tsx  # Suite 1: Lectura Editorial Continua
-│       ├── parallel/page.tsx  # Suite 2: Comparador Multi-Versión & Diff Textual
-│       ├── interlinear/page.tsx # Suite 3: Interlineal Inverso (Hebreo BHS / Griego NA28)
-│       ├── word-study/page.tsx # Suite 4: Análisis de Palabra (Léxicos Strong BDB/Gesenius)
-│       ├── historical-context/page.tsx # Suite 5: Atlas Vectorial, Cronología y Arqueología
-│       └── evangelism/page.tsx # Suite 6: Rutas Bíblicas, Objeciones y Tratados
+│       ├── standard/page.tsx  # Módulo 1: Lectura Estándar Continua
+│       ├── parallel/page.tsx  # Módulo 2: Cotejo Paralelo Multi-Versión & Diff Textual
+│       ├── interlinear/page.tsx # Módulo 3: Interlineal Inverso (Hebreo BHS / Griego NA28)
+│       ├── word-study/page.tsx # Módulo 4: Análisis de Palabra / Léxicos (BDB / Gesenius / Thayer)
+│       ├── atlas/page.tsx     # Módulo 5: Atlas Bíblico Vectorial y Georreferenciado WGS84 & 3D
+│       ├── timeline/page.tsx  # Módulo 6: Cronología Sincrónica e Historia Comparada
+│       ├── archaeology/page.tsx # Módulo 7: Arqueología Bíblica y Feed de Excavaciones
+│       └── evangelism/page.tsx # Módulo 8: Evangelización y Apologética (?tab=pathways | objections | tracts)
 │
 ├── context/                   # GESTIÓN DE ESTADO REACTIVO Y URL PARAMS
 │   └── BiblePassageContext.tsx # Sincroniza bookId, chapter y trans con la URL (?book=GEN&chapter=1)
@@ -54,8 +56,7 @@ frontend/web/src/app/(bible)/
 │   ├── BibleHeaderNav.tsx     # Header con selector de suites móvil flotante y desktop
 │   ├── BackToBibleButton.tsx  # Retorno directo al inicio de la Biblia
 │   ├── BackToPortalButton.tsx # Retorno directo al portal principal (jorgedoicela.com)
-│   ├── WordStudyView.tsx      # Orquestador de Léxicos Strong y ocurrencias canónicas
-│   └── HistoricalContextView.tsx # Orquestador con subtabs de Atlas, Cronología y Arqueología
+│   └── DraggableEdgeTab.tsx   # Pestañas táctiles flotantes para reapertura de paneles laterales
 │
 └── features/                  # FEATURE-SLICED DESIGN (FSD) CON SERVICIOS API
     ├── verses/                # services/ + hooks/useVerses (API /bible/verses)
@@ -119,10 +120,18 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
 
 ## 3. Los Motores de Estudio Exegético y Clientes API
 
-1. **Lectura Continua (`features/verses/`):** Consume `GET /bible/verses?bookId=&chapter=&translationId=`. Incluye notas de atribución legal de copyright oficiales al pie de cada capítulo.
+1. **Lectura Continua (`features/verses/`):** Consume `GET /bible/verses?bookId=&chapter=&translationId=`. Integra controles tipográficos (Serif / Sans, tamaños de escala con `+`/`-`), modos de tono de lectura (Auto / Sistema, Sepia / Papel Cálido `#FAF6EE`, Dark / OLED `#000000`), Modo Enfoque Inmersivo a pantalla completa sin distracciones (tecla `F` o botón de foco, salida con `Esc`), navegación por atajos de teclado (`←`/`→`, `J`/`K`), persistencia de preferencias (`bible_reader_settings` en `localStorage`), notas de atribución legal de copyright oficiales al pie de cada capítulo, e integración con el lateral derecho (`BibleExegesisInspector`) inicializado por defecto en la pestaña `'versions'` para cotejo ágil de versículos.
 2. **Vista Paralela (`features/parallel-view/`):** Comparación simultánea de 2 a 4 versiones sincronizadas por capítulo (`RV1960`, `NVI`, `NBLA`, `BHS`, `LXX`).
-3. **Diff Textual (`features/textual-diff/`):** Algoritmo de Diferencia de Texto para resaltar adiciones, omisiones y divergencias de traducción.
+   * **Arquitectura de Laterales Especializados y Desacoplados:**
+     * **Panel Lateral Izquierdo (`ParallelSidebar`):** Gestor interactivo de columnas activas (adición, reordenamiento y eliminación de traducciones), catálogo de Presets Rápidos de Cotejo (*Equivalencia Formal, Dinámica, Textos Base Originales y Panorámica Cuádruple*) y navegación ágil de pasaje.
+     * **Panel Lateral Derecho (`ParallelDiffInspector`):** Inspector granular de Diferencia de Texto (LCS) versículo a versículo sincronizado con el cursor o clic de fila, selector dinámico de los dos textos base a contrastar, barra de porcentaje de similitud léxica, resaltado de adiciones/omisiones cromáticas y pestaña conmutadora a morfología Strong.
+     * **Gestión de Estado (`ParallelContext`):** Proveedor de contexto transversal (`ParallelProvider`) que comunica y reactiva el lienzo central con ambos paneles laterales en tiempo real con 0 latencia.
+3. **Diff Textual (`features/textual-diff/`):** Algoritmo de Diferencia de Texto (LCS) para resaltar adiciones, omisiones y divergencias de traducción entre dos versiones seleccionadas.
 4. **Interlineal Inverso (`features/interlinear/`):** Consume `GET /bible/morphology/passage`. Integra lectura corrida en español limpia omitiendo etiquetas técnicas de partículas intransferibles (`אֵת` Strong H853) en el texto superior, manteniendo la tarjeta morfológica interactiva en el desglose masorético inferior.
+   * **Arquitectura de Laterales Especializados y Desacoplados:**
+     * **Panel Lateral Izquierdo (`InterlinearSidebar`):** Navegador canónico categorizado por tradición lingüística (*Torá Masorética, Nevi'im, Ketuvim con secciones destacadas en Arameo Imperial vs Evangelios, Corpus Paulino y Epístolas en Griego Koiné*), panel de conmutación de capas morfológicas visibles (Nikkud, transliteración fonética, glosas, claves Strong y parsing gramatical) y selector de modo de estudio (Inverso continuo vs Cuadrícula de fichas).
+     * **Panel Lateral Derecho (`InterlinearInspector`):** Ficha morfológica y léxica profunda del lema/token seleccionado en el texto (caracteres originales en gran formato, IPA, transliteración fonética, pronunciación en audio fonético en vivo mediante `biblicalAudioService`, desglose morfosintáctico de categoría/binyan/aspecto/tiempo/voz/modo/caso, y definiciones exegéticas BDB/Gesenius/Thayer con conteo de ocurrencias canónicas). Incluye pestaña secundaria para cotejo sincrónico de versículo.
+     * **Gestión de Estado (`InterlinearContext`):** Proveedor de contexto (`InterlinearProvider`) que sincroniza en tiempo real la palabra inspeccionada, las capas activas, el canon lingüístico y el lienzo de lectura sin acoplamientos cruzados.
 5. **Estudio de Palabra / Léxicos (`features/lexicons/`):** Consume `GET /bible/morphology/lexicon`. Diccionarios académicos BDB / Gesenius para raíces hebreas y léxico griego.
 6. **Atlas Bíblico Georreferenciado (`features/atlas/`):** Consume `GET /bible/historical/atlas/places`. Coordenadas WGS84 proyectadas sobre canvas vectorial con filtro por épocas.
 7. **Cronología y Arqueología (`features/timeline/` y `features/archaeology-feed/`):** Conexión 100% reactiva y bilingüe con `GET /bible/historical/timeline` y `GET /bible/historical/articles`. `TimelineCanvas` y `SynchronousComparisonView` consumen los eventos históricos dinámicos tipados (`MonarchData`, `ProphetData`, `WorldEmpireData`, `ArchaeologicalMilestone`) transformados por `timelineApiService.ts` y orquestados por el hook `useBiblicalTimeline` según el idioma activo (`next-intl`), eliminando por completo cualquier dataset estático o mock local.
@@ -197,7 +206,8 @@ Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingres
   * En móviles (`< lg`), se proyecta como Drawer con cabecera dedicada, cortina oscura y auto-cierre al seleccionar capítulo.
 * **Inspector Exegético Desacoplado (`BibleExegesisInspector.tsx`):**
   * En desktop (`lg:`), inicia de inmediato con sus pestañas en segmented control Geist (`Morfología Strong` y `Versiones Sinópticas`), eliminando barras de título duplicadas.
-  * Estados vacíos minimalistas sin cajas punteadas sobredimensionadas, con iconografía circular en reposo.
+  * **Activación Predeterminada de Alto Valor en Lectura Estándar:** La pestaña activa por defecto es **«Versiones Paralelas»** (`versions`), inicializada automáticamente con el **Versículo 1 del capítulo en curso** (`inspectedVerse`). De esta manera, el usuario siempre visualiza de inmediato la comparación sincrónica multi-traducción en lugar de una pantalla en blanco.
+  * **Sincronización Contextual y Botón ✨:** Al pulsar el botón de acción ✨ de cualquier versículo (en vista continua o versículo por versículo), el inspector se abre o enfoca automáticamente la pestaña de versiones paralelas con ese versículo específico. Al transitar entre libros o capítulos, el versículo por defecto se sincroniza automáticamente al versículo 1 del nuevo pasaje canónico.
   * Componentes internos puros y desacoplados (`StrongMorphologyInspector` y `ParallelVerseInspector`).
 * **Barra de Navegación de Suites Geist Pura (`BibleHeaderNav.tsx`):**
   * Supresión definitiva de puntos circulares de colores en las pestañas de suites.
@@ -272,32 +282,55 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
 * **Centrado Vertical y Horizontal Ergonómico:** Los tiradores de colapso en [BibleNavigationSidebar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BibleNavigationSidebar.tsx) y [BibleExegesisInspector.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BibleExegesisInspector.tsx) se sitúan exactamente en la mitad vertical de la pantalla (`items-center justify-center` sobre el riel `h-full`), eliminando la fijación superior previa (`items-start pt-3`).
 * **Cero Recortes de Borde:** Se resolvió el corte visual que seccionaba el botón en dos mitades al reemplazar la posición estática y el `overflow-hidden` del panel por `lg:relative lg:z-20` y `lg:overflow-visible` con un contenedor simétrico de 24px (`w-6`, `-right-3` / `-left-3`), permitiendo que el squircle completo (`w-6 h-7 rounded-md`) con el glifo dual `< | >` emerja con nitidez absoluta y sombra suave en el centro de la arista divisoria al pasar el cursor.
 
-### 7.11 Consolidación en 3 Espacios Maestros y Desacoplamiento de Workspaces Autónomos
-* **Preservación Integral de Motores y Backend (Cero Pérdida de Datos):** Tras un análisis riguroso de arquitectura, teología y UX, se determinó **no eliminar ningún módulo, tabla SQLite ni lógica backend**, conservando el 100% de la riqueza exegética desarrollada. La solución profesional consistió en reestructurar la Arquitectura de Información (AI) mediante **3 Espacios Maestros de Alto Nivel** en la cabecera superior:
-  1. **Texto & Exégesis (`/study/standard`):** Espacio primario de análisis escritural. Agrupa la lectura continua estándar (`/study/standard`), la comparación sinóptica multi-versión (`/study/parallel`) y el análisis interlineal inverso hebreo/griego (`/study/interlinear`), así como los estudios de palabra y simetría literaria.
-  2. **Historia & Contexto (`/study/historical-context`):** Workspace autónomo dedicado a la arqueología y cronología bíblica, unificando el Atlas Georreferenciado, la Línea de Tiempo Sincrónica y el Feed de Excavaciones Arqueológicas.
-  3. **Ministerio & Apologética (`/study/evangelism`):** Workspace autónomo orientado a la proclamación y defensa de la fe, integrando Rutas Bíblicas Secuenciales (Romanos, Puente), Banco de Objeciones Apologéticas y Tratados/Bosquejos interactivos.
-* **Alternador Rápido de Modos de Lectura (`BibleViewModeSwitcher.tsx`):**
-  * Presente en [BiblePassageToolbar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BiblePassageToolbar.tsx) y [ReaderToolbar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/features/verses/components/reader-toolbar/ReaderToolbar.tsx).
-  * Permite conmutar al instante entre las 4 modalidades del espacio Texto & Exégesis: **Estándar** (`/study/standard`), **Paralelo** (`/study/parallel`), **Interlineal** (`/study/interlinear`) y **Análisis de Palabra** (`/study/word-study`), conservando intactos el libro, capítulo y versión activos en los query parameters de la URL.
-* **Deep-Linking y Sincronización Bidireccional de Sub-Pestañas (`?tab=...`):**
-  * Todas las suites con submódulos internos sincronizan reactivamente su estado con el parámetro `?tab=` de la URL mediante `next/navigation`:
-    1. **Historia & Contexto (`HistoricalContextView.tsx`):** `?tab=atlas` (Atlas Georreferenciado), `?tab=timeline` (Línea de Tiempo Sincrónica) y `?tab=archaeology` (Feed de Arqueología).
-    2. **Ministerio & Apologética (`useEvangelism.ts` / `EvangelismWorkspace.tsx`):** `?tab=pathways` (Rutas Soteriológicas), `?tab=objections` (Banco de Objeciones) y `?tab=tracts` (Tratados y Bosquejos).
-* **Paneles Laterales e Inspectores Especializados por Dominio (`study/layout.tsx`):**
-  * Para erradicar la sobrecarga cognitiva y garantizar que cada herramienta cuente con interfaces adaptadas a su propósito de estudio (sin forzar una lista idéntica de 66 libros canónicos donde no aporta valor directo), el App Shell (`BibleStudyLayout`) orquesta paneles perimetrales independientes y especializados según la ruta activa (`usePathname()`):
-    1. **En Texto & Exégesis (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`):**
-       * **Panel Izquierdo (`BibleNavigationSidebar.tsx`):** Directorio de los 66 libros bíblicos organizados por testamentos y categorías literarias, selector rápido de capítulos, y buscador instantáneo de libros.
-       * **Inspector Derecho (`BibleExegesisInspector.tsx`):** Análisis morfológico profundo Strong H/G, lemas hebreos/griegos, información gramatical y panel de comparación de versículos en versiones paralelas.
-    2. **En Historia & Contexto (`/study/historical-context`):**
-       * **Panel Izquierdo (`HistoricalSidebar.tsx`):** Explorador de las 6 Grandes Épocas Bíblicas (*Patriarcas, Éxodo, Monarquía, Exilio, Segundo Templo, Apostólica*), directorio exhaustivo de lugares agrupados por categoría (*Ciudades, Montes, Ríos y Mares, Yacimientos*) y selector sincronizado reactivamente con la sub-pestaña activa (ej. Épocas predeterminadas al estar en Cronología).
-       * **Inspector Derecho (`HistoricalInspector.tsx`):** Telemetría arqueológica georreferenciada WGS84 del lugar seleccionado (toponimia hebrea/griega, nombre moderno, país, hallazgos arqueológicos, referencias bíblicas con acceso directo al lector) y ficha histórica del libro canónico activo ([`BookHistoricalProfile.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BookHistoricalProfile.tsx)).
-    3. **En Ministerio & Apologética (`/study/evangelism`):**
-       * **Panel Izquierdo (`EvangelismSidebar.tsx`):** Selector de sub-suites (*Rutas Bíblicas, Banco de Objeciones, Tratados/Bosquejos*), lista interactiva de rutas secuenciales con conteo de pasos, filtro temático por categorías (*Existencia de Dios, Confiabilidad Bíblica, Sufrimiento, Salvación, Moralidad*) y buscador de objeciones en tiempo real sincronizado con `?tab=...`.
-       * **Inspector Derecho (`EvangelismInspector.tsx`):** Detalle exegético del paso ministerial activo, referencias de lectura, notas teológicas de aplicación pastoral, preguntas clave de diálogo personal y perfil apologético fundamental ([`EvangelismApologeticsProfile.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/EvangelismApologeticsProfile.tsx)).
-  * **Ergonomía Unificada y Control Total:**
-    * Todos los paneles especializados heredan los mismos estándares visuales Geist / Vercel: pestañas flotantes arrastrables en el eje Y ([`DraggableEdgeTab.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/DraggableEdgeTab.tsx)), tiradores interactivos de colapso en la línea divisoria (`group-hover:opacity-100` con `(←|→)` centrado verticalmente), drawers adaptativos con backdrop en móviles y sincronización fluida de estado global mediante sus contextos dedicados (`BiblePassageContext`, `AtlasContext`, `EvangelismContext`).
-    * En cualquier momento, el usuario puede colapsar ambos paneles para disfrutar del canvas central de mapas, cronología o lectura en modo cine a pantalla completa.
+### 7.11 Los 8 Módulos Canónicos de Estudio y sus Paneles Especializados Desacoplados
+* **Arquitectura de Navegación de Primer Nivel en Cabecera (`BibleHeaderNav.tsx`):**
+  Cada módulo de estudio cuenta con su pestaña directa de primer nivel en la cabecera superior persistente, eliminando niveles de anidamiento artificiales:
+  1. **Lectura Estándar (`/study/standard`):** Lectura editorial continua o versículo por versículo sin distracciones.
+  2. **Cotejo Paralelo (`/study/parallel`):** Comparador sincrónico multi-versión (2 a 4 columnas) con cálculo diff textual.
+  3. **Interlineal Inverso (`/study/interlinear`):** Desglose morfológico palabra por palabra sobre textos masoréticos (BHS) y griegos (NA28).
+  4. **Análisis de Palabra (`/study/word-study`):** Diccionarios léxicos Strong (BDB, Gesenius, Thayer) y ocurrencias canónicas.
+  5. **Atlas Bíblico (`/study/atlas`):** Atlas vectorial WGS84, itinerarios de peregrinación y visor 3D arquitectónico.
+  6. **Cronología Sincrónica (`/study/timeline`):** Línea de tiempo sincrónica de reyes, profetas e imperios mundiales.
+  7. **Arqueología Bíblica (`/study/archaeology`):** Feed de excavaciones, manuscritos milenarios y fichas epigráficas.
+  8. **Evangelización y Apologética (`/study/evangelism`):** Módulo integral que agrupa Rutas Soteriológicas, Banco de Objeciones y Tratados/Bosquejos mediante sub-pestañas reactivas (`?tab=pathways | objections | tracts`).
+
+* **Navegación Limpia y Directa sin Duplicidad:**
+  Con la presencia de las pestañas directas en [BibleHeaderNav.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/BibleHeaderNav.tsx), se eliminó el sub-conmutador secundario (`BibleViewModeSwitcher`), dejando la barra de herramientas (`ReaderToolbar` y `BiblePassageToolbar`) exclusivamente enfocada en pasaje, versión bíblica y opciones de lectura/párrafo, sin redundancias visuales pegadas bajo la cabecera.
+
+* **Paneles Laterales e Inspectores Especializados por Módulo (`study/layout.tsx`):**
+  Para erradicar la sobrecarga cognitiva y garantizar que cada herramienta cuente con interfaces adaptadas a su propósito de estudio (sin forzar un selector genérico de libros donde no aplica), el App Shell (`BibleStudyLayout`) orquesta paneles perimetrales independientes y especializados según la ruta activa (`usePathname()`):
+  1. **Módulo 1: Lectura Estándar (`/study/standard`):**
+     * **Panel Izquierdo (`BibleNavigationSidebar.tsx`):** Directorio de los 66 libros bíblicos organizados por testamentos (AT / NT) y categorías literarias, selector rápido de capítulos con resaltado activo y buscador reactivo instantáneo.
+     * **Inspector Derecho (`BibleExegesisInspector.tsx`):** Análisis morfológico profundo Strong H/G, lemas hebreos/griegos, información gramatical y pestaña de versículos paralelos comparativos.
+  2. **Módulo 2: Vista Paralela & Diff Textual (`/study/parallel`):**
+     * **Panel Izquierdo (`ParallelSidebar.tsx`):** Gestor de columnas activas (2 a 4 versiones en simultáneo), presets de estudio rápido (*Equivalencia Formal, Dinámica, Textos Base Originales, Visión Panorámica*) y navegación rápida de pasaje.
+     * **Inspector Derecho (`ParallelDiffInspector.tsx`):** Motor de cálculo diff textual en tiempo real (algoritmo LCS con similitud en porcentaje, resaltado cromático de adiciones en esmeralda y supresiones en ámbar), alternador de versículo de análisis y pestaña de morfología Strong.
+  3. **Módulo 3: Interlineal Inverso Morfológico (`/study/interlinear`):**
+     * **Panel Izquierdo (`InterlinearSidebar.tsx`):** Navegación canónica por tradición lingüística (*Torah, Nevi'im, Ketuvim* con indicación de secciones en Arameo Imperial vs *Evangelios, Hechos, Corpus Paulino, Epístolas Generales, Apocalipsis* en Griego Koiné), y controles granulares de capas morfológicas visibles (Nikkud, transliteración, glosas, números Strong y parsing).
+     * **Inspector Derecho (`InterlinearInspector.tsx`):** Ficha léxica profunda del vocablo seleccionado con tipografía original a gran formato, pronunciación fonética IPA, reproductor de audio bíblico vocalizado (`biblicalAudioService`), análisis morfosintáctico y definiciones integradas de Gesenius, BDB y Thayer.
+  4. **Módulo 4: Análisis de Palabra / Léxicos (`/study/word-study`):**
+     * **Panel Izquierdo (`WordStudySidebar.tsx`):** Selector de corpus idiomático (Hebreo AT vs Griego NT), explorador de términos teológicos vertebrales (*Jesed, Shalom, Bara, Shuv, Kadosh, Berit, Logos, Agape, Charis, Koinonia, Pneuma, Dikaiosyne*) con conteo de ocurrencias, y buscador reactivo por código Strong, lema o glosa.
+     * **Inspector Derecho (`WordStudyInspector.tsx`):** Ficha exegética del vocablo activo con lema, transliteración, glosa formal, concepto teológico central, lista interactiva de pasajes clave en el canon bíblico con enlaces directos y botón de copia formateada.
+  5. **Módulo 5: Atlas Bíblico Vectorial (`/study/atlas`):**
+     * **Panel Izquierdo (`HistoricalSidebar.tsx` en Lugares):** Catálogo exhaustivo de lugares bíblicos agrupados por categorías (*Ciudades, Montes, Ríos y Mares, Yacimientos arqueológicos*), buscador reactivo con telemetría WGS84 y capas cartográficas.
+     * **Inspector Derecho (`HistoricalInspector.tsx`):** Telemetría georreferenciada WGS84 del lugar seleccionado, nombres originales, hallazgos y referencias bíblicas.
+  6. **Módulo 6: Cronología Sincrónica (`/study/timeline`):**
+     * **Panel Izquierdo (`HistoricalSidebar.tsx` en Épocas):** Explorador de las 6 Grandes Épocas Bíblicas (*Patriarcas, Éxodo, Monarquía, Exilio, Segundo Templo, Apostólica*), filtrado por imperios contemporáneos.
+     * **Inspector Derecho (`HistoricalInspector.tsx`):** Ficha técnica del evento cronológico activo, sincronización de fechas a.C./d.C. e interconexión con reyes de Judá e Israel.
+  7. **Módulo 7: Arqueología Bíblica (`/study/archaeology`):**
+     * **Panel Izquierdo (`HistoricalSidebar.tsx` en Categorías):** Filtro por regiones de excavación, instituciones arqueológicas, museos y tipos de artefactos epigráficos.
+     * **Inspector Derecho (`HistoricalInspector.tsx`):** Ficha técnica de la excavación y hallazgo, transcripción epigráfica y confirmación arqueológica del texto bíblico.
+  8. **Módulo 8: Evangelización y Apologética (`/study/evangelism`):**
+     * **Panel Izquierdo (`EvangelismSidebar.tsx`):** Conmutación contextual adaptada al sub-eje activo (`?tab=`):
+       - *Rutas (`pathways`):* Catálogo de rutas soteriológicas secuenciales (*Camino de Romanos, Puente a la Vida, Cuatro Verdades*) con indicador de pasos.
+       - *Objeciones (`objections`):* Filtro por categorías apologéticas temáticas (*Existencia de Dios, Confiabilidad de las Escrituras, El Problema del Mal, La Resurrección, Moralidad*) y buscador en vivo.
+       - *Tratados (`tracts`):* Catálogo de tratados por público objetivo (*Jóvenes, Universitarios, Buscadores, Familia*) y bosquejos homiléticos.
+     * **Inspector Derecho (`EvangelismInspector.tsx`):** Detalle exegético del paso activo, argumentación apologética rigurosa con consejos prácticos para el diálogo o bosquejo homilético completo con oración de fe y discipulado inicial.
+
+* **Ergonomía Unificada y Control Total:**
+  * Todos los paneles especializados heredan los mismos estándares visuales Geist / Vercel: pestañas flotantes arrastrables en el eje Y ([`DraggableEdgeTab.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/DraggableEdgeTab.tsx)), tiradores interactivos de colapso en la línea divisoria (`group-hover:opacity-100` con `(←|→)` centrado verticalmente), drawers adaptativos con backdrop en pantallas móviles y sincronización fluida de estado global mediante sus contextos dedicados (`BiblePassageContext`, `ParallelContext`, `InterlinearContext`, `LexiconContext`, `AtlasContext`, `EvangelismContext`).
+  * En cualquier momento, el usuario puede colapsar ambos paneles para disfrutar del canvas central de lectura, comparación, interlineal, mapas o cronología en modo libre a pantalla completa.
+
 
 
 

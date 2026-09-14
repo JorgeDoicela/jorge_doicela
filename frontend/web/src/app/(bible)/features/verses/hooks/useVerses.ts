@@ -50,6 +50,8 @@ export function useVerses(
     fontSize: 'md',
     fontFamily: 'serif',
     showVerseNumbers: true,
+    readerTone: 'system',
+    focusMode: false,
   });
 
   // Cargar configuraciones guardadas en localStorage
@@ -58,7 +60,11 @@ export function useVerses(
       const saved = localStorage.getItem('bible_reader_settings');
       if (saved) {
         const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
-        setReaderSettings((prev) => ({ ...prev, ...parsed }));
+        setReaderSettings((prev) => ({
+          ...prev,
+          ...parsed,
+          focusMode: false, // Iniciar siempre en modo estándar al recargar
+        }));
       }
     } catch {
       // Ignorar errores de parsing
@@ -69,7 +75,13 @@ export function useVerses(
     setReaderSettings((prev) => {
       const updated = { ...prev, ...newSettings };
       try {
-        localStorage.setItem('bible_reader_settings', JSON.stringify(updated));
+        localStorage.setItem('bible_reader_settings', JSON.stringify({
+          layoutMode: updated.layoutMode,
+          fontSize: updated.fontSize,
+          fontFamily: updated.fontFamily,
+          showVerseNumbers: updated.showVerseNumbers,
+          readerTone: updated.readerTone,
+        }));
       } catch {
         // Fallback si localStorage no está disponible
       }
@@ -92,11 +104,30 @@ export function useVerses(
     [updateReaderSettings],
   );
 
+  const setReaderTone = useCallback(
+    (readerTone: 'system' | 'sepia' | 'dark') => updateReaderSettings({ readerTone }),
+    [updateReaderSettings],
+  );
+
+  const toggleFocusMode = useCallback(() => {
+    setReaderSettings((prev) => ({ ...prev, focusMode: !prev.focusMode }));
+  }, []);
+
+  const setFocusMode = useCallback((focusMode: boolean) => {
+    setReaderSettings((prev) => ({ ...prev, focusMode }));
+  }, []);
+
   const toggleVerseNumbers = useCallback(() => {
     setReaderSettings((prev) => {
       const updated = { ...prev, showVerseNumbers: !prev.showVerseNumbers };
       try {
-        localStorage.setItem('bible_reader_settings', JSON.stringify(updated));
+        localStorage.setItem('bible_reader_settings', JSON.stringify({
+          layoutMode: updated.layoutMode,
+          fontSize: updated.fontSize,
+          fontFamily: updated.fontFamily,
+          showVerseNumbers: updated.showVerseNumbers,
+          readerTone: updated.readerTone,
+        }));
       } catch {
         // Fallback
       }
@@ -213,6 +244,9 @@ export function useVerses(
     setLayoutMode,
     setFontSize,
     setFontFamily,
+    setReaderTone,
+    toggleFocusMode,
+    setFocusMode,
     toggleVerseNumbers,
     nextChapter,
     prevChapter,

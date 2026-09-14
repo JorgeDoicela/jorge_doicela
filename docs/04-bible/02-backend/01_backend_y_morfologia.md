@@ -14,8 +14,8 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `HistoricalController`, `EvangelismController`.
->   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `HistoricalService`, `EvangelismService`.
+>   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `AtlasController`, `TimelineController`, `ArchaeologyController`, `EvangelismController`.
+>   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `AtlasService`, `TimelineService`, `ArchaeologyService`, `EvangelismService`.
 >   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `EvangelismPathwayEntity`, `EvangelismObjectionEntity`, `EvangelismTractEntity`.
 
 ---
@@ -54,11 +54,23 @@ backend/src/bible/
 │   ├── services/morphology.service.ts
 │   └── entities/ (MorphologyToken, LexiconEntry)
 │
-├── historical/                # Sub-módulo de contexto histórico (/bible/historical/*)
-│   ├── historical.module.ts
-│   ├── controllers/historical.controller.ts
-│   ├── services/historical.service.ts
-│   └── entities/ (HistoricalPlaceEntity, TimelineEventEntity, ArchaeologyArticleEntity)
+├── atlas/                     # Sub-módulo de Atlas Bíblico Vectorial y 3D (/bible/atlas/*)
+│   ├── atlas.module.ts
+│   ├── controllers/atlas.controller.ts
+│   ├── services/atlas.service.ts
+│   └── entities/ (HistoricalPlaceEntity)
+│
+├── timeline/                  # Sub-módulo de Cronología Sincrónica (/bible/timeline/*)
+│   ├── timeline.module.ts
+│   ├── controllers/timeline.controller.ts
+│   ├── services/timeline.service.ts
+│   └── entities/ (TimelineEventEntity)
+│
+├── archaeology/               # Sub-módulo de Arqueología y Epigrafía (/bible/archaeology/*)
+│   ├── archaeology.module.ts
+│   ├── controllers/archaeology.controller.ts
+│   ├── services/archaeology.service.ts
+│   └── entities/ (ArchaeologyArticleEntity)
 │
 └── evangelism/                 # Sub-módulo de evangelización y apologética (/bible/evangelism/*)
     ├── evangelism.module.ts
@@ -91,11 +103,15 @@ backend/src/bible/
 * **`GET /bible/morphology/lexicon`**: Búsqueda léxica con soporte de filtro de lengua (`?q=logos&lang=greek&limit=50`).
 * **`GET /bible/morphology/lexicon/:strong`**: Obtiene la definición académica y lema de un código Strong (ej. `H7225`, `G3056`).
 
-### 3.5 Contexto Histórico (`/bible/historical/*`)
-* **`GET /bible/historical/atlas/places`**: Catálogo de ubicaciones geográficas y yacimientos arqueológicos con coordenadas WGS84 y soporte bilingüe (`?category=city&q=jerusalen&lang=es|en`).
-* **`GET /bible/historical/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500&lang=es|en`).
-* **`GET /bible/historical/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos con índice compuesto `(slug, language)` (`?category=recent_discoveries&lang=es|en`).
-* **`GET /bible/historical/articles/:slug`**: Detalle completo de un artículo de evidencia material localizado (`?lang=es|en`).
+### 3.5 Atlas Bíblico (`/bible/atlas/*` y retrocompatible `/bible/historical/atlas/*`)
+* **`GET /bible/atlas/places`**: Catálogo de ubicaciones geográficas y yacimientos arqueológicos con coordenadas WGS84 y soporte bilingüe (`?category=city&q=jerusalen&lang=es|en`).
+
+### 3.6 Cronología Sincrónica (`/bible/timeline` y retrocompatible `/bible/historical/timeline`)
+* **`GET /bible/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500&lang=es|en`).
+
+### 3.7 Arqueología y Epigrafía (`/bible/archaeology/*` y retrocompatible `/bible/historical/articles*`)
+* **`GET /bible/archaeology/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos con índice compuesto `(slug, language)` (`?category=recent_discoveries&lang=es|en`).
+* **`GET /bible/archaeology/articles/:slug`**: Detalle completo de un artículo de evidencia material localizado (`?lang=es|en`).
 
 ### 3.7 Evangelización y Apologética (`/bible/evangelism/*`)
 * **`GET /bible/evangelism/pathways`**: Rutas y secuencias bíblicas bilingües (Camino de Romanos, Puente a la Vida, Cuatro Verdades) (`?lang=es|en`).

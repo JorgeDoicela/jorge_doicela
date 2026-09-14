@@ -43,6 +43,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
 
   const isHistoricalContext = pathname.includes('/historical-context');
   const isEvangelism = pathname.includes('/evangelism');
+  const isOriginalLanguages = pathname.includes('/parallel') || pathname.includes('/interlinear') || pathname.includes('/word-study');
 
   // Soporte Dual: Props controladas con Fallback seguro a BiblePassageContext
   const isOpen = propIsOpen !== undefined ? propIsOpen : passageContext?.isRightInspectorOpen ?? false;
@@ -52,7 +53,9 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
     ? 'historical'
     : isEvangelism
     ? 'apologetics'
-    : 'strong';
+    : isOriginalLanguages
+    ? 'strong'
+    : 'versions';
 
   const [internalTab, setInternalTab] = useState<InspectorTab>(defaultTabForRoute);
 
@@ -62,10 +65,12 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
       setInternalTab('historical');
     } else if (isEvangelism) {
       setInternalTab('apologetics');
-    } else {
+    } else if (isOriginalLanguages) {
       setInternalTab('strong');
+    } else {
+      setInternalTab('versions');
     }
-  }, [isHistoricalContext, isEvangelism]);
+  }, [isHistoricalContext, isEvangelism, isOriginalLanguages]);
 
   const activeTab = propActiveTab ?? passageContext?.activeInspectorTab ?? internalTab;
   const handleTabChange = (tab: InspectorTab) => {

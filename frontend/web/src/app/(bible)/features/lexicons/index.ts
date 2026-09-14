@@ -5,3 +5,6 @@ export * from './components/HebrewRootBrowser';
 export * from './components/GreekLemmaBrowser';
 export * from './components/LexiconEntryDetail';
 export * from './components/LexiconView';
+export * from './context/LexiconContext';
+export * from './components/panels/WordStudySidebar';
+export * from './components/panels/WordStudyInspector';

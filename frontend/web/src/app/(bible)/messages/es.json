@@ -21,7 +21,13 @@
     "interlinear": "Interlineal",
     "wordStudy": "Análisis de Palabra",
     "historical": "Contexto Histórico",
-    "evangelism": "Evangelización"
+    "evangelism": "Evangelización",
+    "atlas": "Atlas Bíblico",
+    "timeline": "Cronología",
+    "archaeology": "Arqueología",
+    "pathways": "Rutas Bíblicas",
+    "objections": "Objeciones",
+    "tracts": "Tratados"
   },
   "Toolbar": {
     "selectTranslation": "Seleccionar traducción bíblica",
@@ -770,6 +776,7 @@
     "toggleEvangelismInspector": "Guía Ministerial y Pasajes",
     "collapseSidebar": "Colapsar panel de navegación",
     "expandSidebar": "Expandir panel de navegación",
+    "closeSidebar": "Ocultar panel",
     "closeInspector": "Cerrar inspector",
     "searchBook": "Buscar libro o abreviatura...",
     "oldTestament": "Antiguo Testamento",

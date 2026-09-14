@@ -12,4 +12,7 @@ export * from './components/GreekMorphologyModal';
 export * from './components/ReverseInterlinearReader';
 export * from './components/StrongLexiconDrawer';
 export * from './components/InterlinearView';
+export * from './context/InterlinearContext';
+export * from './components/panels/InterlinearSidebar';
+export * from './components/panels/InterlinearInspector';
 

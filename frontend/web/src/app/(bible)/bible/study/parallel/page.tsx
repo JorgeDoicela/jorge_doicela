@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   ParallelViewGrid,
-  useParallelVerses,
+  useParallelContext,
   ParallelVerseRow,
 } from '../../../features/parallel-view';
 import { TextualDiffModal, VerseComparisonData } from '../../../features/textual-diff';
@@ -17,20 +17,11 @@ export default function ParallelStudyPage() {
     translations,
     selectedBookId,
     selectedChapter,
-    selectedTranslationId,
+    selectedBook,
+    openInspectorWithVerse,
   } = useBiblePassage();
 
-  const [diffModalOpen, setDiffModalOpen] = useState(false);
-  const [activeDiffData, setActiveDiffData] = useState<VerseComparisonData | null>(null);
-  const [rowVersesMap, setRowVersesMap] = useState<
-    Record<number, { text: string; name: string; abbreviation: string }>
-  >({});
-
-  const defaultSecondTrans = selectedTranslationId === 3 ? 5 : 3;
-  const initialTranslations = selectedTranslationId
-    ? [selectedTranslationId, defaultSecondTrans]
-    : [3, 5];
-
+  const parallel = useParallelContext();
   const {
     columns,
     rows,
@@ -39,11 +30,36 @@ export default function ParallelStudyPage() {
     removeColumn,
     updateColumnTranslation,
     addColumn,
-  } = useParallelVerses(selectedBookId, selectedChapter, initialTranslations);
+    setSelectedVerseNumber,
+  } = parallel;
+
+  const [diffModalOpen, setDiffModalOpen] = useState(false);
+  const [activeDiffData, setActiveDiffData] = useState<VerseComparisonData | null>(null);
+  const [rowVersesMap, setRowVersesMap] = useState<
+    Record<number, { text: string; name: string; abbreviation: string }>
+  >({});
 
   const nextAvailableTranslation = translations.find(
     (t) => !columns.some((c) => c.translationId === t.id),
   ) || translations[0];
+
+  const handleInspectRow = (row: ParallelVerseRow) => {
+    setSelectedVerseNumber(row.verseNumber);
+    const validTranslations = Object.values(row.translations).filter(
+      (v): v is NonNullable<typeof v> => v !== null,
+    );
+    const firstValid = validTranslations[0];
+    const text = firstValid?.text || '';
+    const bName = firstValid?.bookName || selectedBook?.name || 'Génesis';
+
+    openInspectorWithVerse({
+      bookId: selectedBookId || 1,
+      bookName: bName,
+      chapter: selectedChapter || 1,
+      verseNumber: row.verseNumber,
+      text: text,
+    });
+  };
 
   const handleOpenDiffModal = (row: ParallelVerseRow) => {
     const validTranslations = Object.values(row.translations).filter(
@@ -124,6 +140,7 @@ export default function ParallelStudyPage() {
           onSelectTranslation={updateColumnTranslation}
           onRemoveColumn={removeColumn}
           onCompareRow={handleOpenDiffModal}
+          onInspectRow={handleInspectRow}
         />
       </section>
 

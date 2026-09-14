@@ -24,6 +24,7 @@ import { ReverseInterlinearReader } from './ReverseInterlinearReader';
 import { StrongLexiconDrawer } from './StrongLexiconDrawer';
 import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
+import { useInterlinearContextSafe } from '../context/InterlinearContext';
 
 interface InterlinearViewProps {
   selectedBookAbbr?: string | null;
@@ -38,13 +39,14 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
 }) => {
   const t = useTranslations('Interlinear');
   const passageContext = useBiblePassageSafe();
-  const [activeCanon, setActiveCanon] = useState<'OT' | 'NT'>('OT');
+  const interlinearCtx = useInterlinearContextSafe();
 
-  const [hebrewVerses, setHebrewVerses] = useState<InterlinearVerse[]>([]);
-  const [greekVerses, setGreekVerses] = useState<GreekInterlinearVerse[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [localActiveCanon, setLocalActiveCanon] = useState<'OT' | 'NT'>('OT');
+  const [localHebrewVerses, setLocalHebrewVerses] = useState<InterlinearVerse[]>([]);
+  const [localGreekVerses, setLocalGreekVerses] = useState<GreekInterlinearVerse[]>([]);
+  const [localIsLoading, setLocalIsLoading] = useState(false);
 
-  const [settings, setSettings] = useState<InterlinearDisplaySettings>({
+  const [localSettings, setLocalSettings] = useState<InterlinearDisplaySettings>({
     layout: 'reverse_interlinear',
     showNikkud: true,
     showTransliteration: true,
@@ -54,6 +56,14 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
     fontSize: 'xl',
     audioSpeed: 1.0,
   });
+
+  const settings = interlinearCtx?.settings ?? localSettings;
+  const setSettings = interlinearCtx?.setSettings ?? setLocalSettings;
+  const activeCanon = interlinearCtx?.activeCanon ?? localActiveCanon;
+  const setActiveCanon = interlinearCtx?.setActiveCanon ?? setLocalActiveCanon;
+  const hebrewVerses = interlinearCtx?.hebrewVerses ?? localHebrewVerses;
+  const greekVerses = interlinearCtx?.greekVerses ?? localGreekVerses;
+  const isLoading = interlinearCtx?.isLoading ?? localIsLoading;
 
   // Estado interactivo de hover sincronizado
   const [hoveredTokenId, setHoveredTokenId] = useState<string | null>(null);
@@ -76,6 +86,9 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
     const entry = await fetchStrongLexiconEntry(strongCode);
     setSelectedStrongEntry(entry);
     setStrongDrawerOpen(true);
+    if (interlinearCtx) {
+      interlinearCtx.setSelectedStrongEntry(entry);
+    }
     if (passageContext) {
       passageContext.openInspectorWithWord({
         strongNumber: strongCode,
@@ -88,7 +101,29 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
         language: strongCode.startsWith('H') ? 'hebrew' : 'greek',
       });
     }
-  }, [passageContext]);
+  }, [passageContext, interlinearCtx]);
+
+  const handleSelectHebrew = useCallback(
+    (tok: HebrewAramaicToken) => {
+      setSelectedHebrewToken(tok);
+      setHebrewModalOpen(true);
+      if (interlinearCtx) {
+        void interlinearCtx.selectToken(tok);
+      }
+    },
+    [interlinearCtx],
+  );
+
+  const handleSelectGreek = useCallback(
+    (tok: GreekToken) => {
+      setSelectedGreekToken(tok);
+      setGreekModalOpen(true);
+      if (interlinearCtx) {
+        void interlinearCtx.selectToken(tok);
+      }
+    },
+    [interlinearCtx],
+  );
 
 
   // Sincronizar automáticamente el canon según el libro o testamento seleccionado
@@ -107,27 +142,28 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
 
   // Carga asíncrona de datos desde el backend NestJS con fallback local
   useEffect(() => {
+    if (interlinearCtx) return;
     let isMounted = true;
     const book = selectedBookAbbr || 'GEN';
     const canon = testament || (book.toUpperCase() === 'JN' || book.toUpperCase() === 'ROM' ? 'NT' : 'OT');
 
-    setIsLoading(true);
+    setLocalIsLoading(true);
     fetchInterlinearPassage(book, chapter, canon)
       .then((data) => {
         if (isMounted) {
-          setHebrewVerses(data.hebrewVerses);
-          setGreekVerses(data.greekVerses);
-          setIsLoading(false);
+          setLocalHebrewVerses(data.hebrewVerses);
+          setLocalGreekVerses(data.greekVerses);
+          setLocalIsLoading(false);
         }
       })
       .catch(() => {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) setLocalIsLoading(false);
       });
 
     return () => {
       isMounted = false;
     };
-  }, [selectedBookAbbr, chapter, testament]);
+  }, [selectedBookAbbr, chapter, testament, interlinearCtx]);
 
   return (
     <div className="space-y-5">
@@ -150,10 +186,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
                 settings={settings}
                 activeTokenId={hoveredTokenId}
                 onHoverToken={setHoveredTokenId}
-                onSelectToken={(tok) => {
-                  setSelectedHebrewToken(tok as HebrewAramaicToken);
-                  setHebrewModalOpen(true);
-                }}
+                onSelectToken={(tok) => handleSelectHebrew(tok as HebrewAramaicToken)}
                 onOpenStrong={handleOpenStrong}
               />
             ))}
@@ -166,10 +199,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
                 settings={settings}
                 activeTokenId={hoveredTokenId}
                 onHoverToken={setHoveredTokenId}
-                onSelectToken={(tok) => {
-                  setSelectedGreekToken(tok as GreekToken);
-                  setGreekModalOpen(true);
-                }}
+                onSelectToken={(tok) => handleSelectGreek(tok as GreekToken)}
                 onOpenStrong={handleOpenStrong}
               />
             ))}
@@ -227,10 +257,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
                           onHover={(id) => setHoveredTokenId(id)}
                           onLeave={() => setHoveredTokenId(null)}
                           onOpenStrong={handleOpenStrong}
-                          onSelectToken={(tok) => {
-                            setSelectedHebrewToken(tok);
-                            setHebrewModalOpen(true);
-                          }}
+                          onSelectToken={handleSelectHebrew}
                         />
                       </div>
                     ))}
@@ -275,10 +302,7 @@ export const InterlinearView: React.FC<InterlinearViewProps> = ({
                         onHover={(id) => setHoveredTokenId(id)}
                         onLeave={() => setHoveredTokenId(null)}
                         onOpenStrong={handleOpenStrong}
-                        onSelectToken={(tok) => {
-                          setSelectedGreekToken(tok);
-                          setGreekModalOpen(true);
-                        }}
+                        onSelectToken={handleSelectGreek}
                       />
                     ))}
                   </div>

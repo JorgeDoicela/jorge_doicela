@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import { Sparkles } from 'lucide-react';
 import { ParallelColumn, ParallelVerseRow } from '../types';
 import { ParallelColumnHeader } from './ParallelColumnHeader';
 import { Translation } from '../../translations/hooks/useTranslations';
@@ -16,6 +17,7 @@ interface ParallelViewGridProps {
   onSelectTranslation: (columnId: string, translationId: number) => void;
   onRemoveColumn: (columnId: string) => void;
   onCompareRow?: (row: ParallelVerseRow) => void;
+  onInspectRow?: (row: ParallelVerseRow) => void;
 }
 
 export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
@@ -27,6 +29,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
   onSelectTranslation,
   onRemoveColumn,
   onCompareRow,
+  onInspectRow,
 }) => {
   const t = useTranslations('Parallel');
 
@@ -103,10 +106,22 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                   className="group hover:bg-accents-1/40 transition-colors duration-150 relative"
                 >
                   {/* Acciones flotantes por fila */}
-                  <div className="absolute top-2 left-2 z-10 hidden md:flex items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
-                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-background border border-accents-2 text-accents-5 shadow-xs">
-                      v.{row.verseNumber}
-                    </span>
+                  <div className="absolute top-2 left-2 z-10 hidden md:flex items-center gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                    {onInspectRow ? (
+                      <button
+                        type="button"
+                        onClick={() => onInspectRow(row)}
+                        className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-background border border-accents-2 text-accents-5 hover:text-foreground hover:border-foreground transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+                        title="Inspeccionar versículo en panel derecho"
+                      >
+                        <span>v.{row.verseNumber}</span>
+                        <Sparkles className="w-2.5 h-2.5 text-primary" />
+                      </button>
+                    ) : (
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-background border border-accents-2 text-accents-5 shadow-xs">
+                        v.{row.verseNumber}
+                      </span>
+                    )}
 
                     {onCompareRow && (
                       <button
@@ -134,14 +149,26 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                         >
                           {/* Indicador en móviles */}
                           <div className="flex items-center justify-between mb-2 md:hidden">
-                            <span className="text-[11px] font-mono font-semibold text-foreground">
-                              v.{row.verseNumber} ({verseData?.translationAbbreviation || '---'})
-                            </span>
+                            {onInspectRow ? (
+                              <button
+                                type="button"
+                                onClick={() => onInspectRow(row)}
+                                className="text-[11px] font-mono font-semibold text-foreground flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
+                                title="Inspeccionar versículo"
+                              >
+                                <span>v.{row.verseNumber} ({verseData?.translationAbbreviation || '---'})</span>
+                                <Sparkles className="w-3 h-3 text-primary" />
+                              </button>
+                            ) : (
+                              <span className="text-[11px] font-mono font-semibold text-foreground">
+                                v.{row.verseNumber} ({verseData?.translationAbbreviation || '---'})
+                              </span>
+                            )}
                             {onCompareRow && (
                               <button
                                 type="button"
                                 onClick={() => onCompareRow(row)}
-                                className="text-[10px] font-medium px-2 py-0.5 rounded bg-accents-1 border border-accents-2 text-foreground"
+                                className="text-[10px] font-medium px-2 py-0.5 rounded bg-accents-1 border border-accents-2 text-foreground cursor-pointer"
                               >
                                 ± {t('variants')}
                               </button>

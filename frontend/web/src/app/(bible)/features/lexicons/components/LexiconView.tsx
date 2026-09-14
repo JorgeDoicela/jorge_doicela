@@ -14,6 +14,7 @@ import { GreekLemmaBrowser } from './GreekLemmaBrowser';
 import { LexiconEntryDetail } from './LexiconEntryDetail';
 import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
 import { searchLexiconEntries } from '../services/lexiconApiService';
+import { useLexiconContextSafe, CuratedTheologicalTerm } from '../context/LexiconContext';
 
 function mapApiToHebrewEntry(raw: any): HebrewLexiconEntry {
   const strong = raw.strongCode || 'H1254';
@@ -28,7 +29,7 @@ function mapApiToHebrewEntry(raw: any): HebrewLexiconEntry {
     language: 'Hebreo',
     partOfSpeech: raw.partOfSpeech || 'Sustantivo / Verbo',
     gloss: raw.shortDefinition || 'Definición léxica',
-    occurrences: 54,
+    occurrences: raw.occurrences || 54,
     cognates: ['Ugarítico', 'Arameo', 'Árabe'],
     derivedWords: [
       {
@@ -37,7 +38,7 @@ function mapApiToHebrewEntry(raw: any): HebrewLexiconEntry {
         transliteration: translit,
         partOfSpeech: raw.partOfSpeech || 'Lema',
         gloss: raw.shortDefinition || 'Definición',
-        occurrences: 54,
+        occurrences: raw.occurrences || 54,
       },
     ],
     bdb: {
@@ -46,7 +47,7 @@ function mapApiToHebrewEntry(raw: any): HebrewLexiconEntry {
         {
           number: '1',
           definition: raw.shortDefinition || 'Definición académica BDB',
-          biblicalRefs: ['Génesis 1:1', 'Salmos 104', 'Isaías 40'],
+          biblicalRefs: raw.keyPassages || ['Génesis 1:1', 'Salmos 104', 'Isaías 40'],
         },
       ],
     },
@@ -56,19 +57,130 @@ function mapApiToHebrewEntry(raw: any): HebrewLexiconEntry {
       grammaticalForms: [raw.partOfSpeech || 'Forma base'],
     },
     dtat: {
-      theologicalConcept: 'Uso teológico fundamental en el canon del Antiguo Testamento.',
-      covenantContext: 'Contexto de la Creación y el Pacto en Génesis.',
+      theologicalConcept: raw.theologicalConcept || raw.extendedDefinition || 'Uso teológico fundamental en el canon del Antiguo Testamento.',
+      covenantContext: 'Contexto de la revelación y el pacto.',
+    },
+  };
+}
+
+function mapApiToGreekEntry(raw: any): GreekLexiconEntry {
+  const strong = raw.strongCode || 'G3056';
+  const lemma = raw.lemma || 'λόγος';
+  const translit = raw.transliteration || 'logos';
+  const shortDef = raw.shortDefinition || 'Palabra, Verbo divino, razón';
+  const extDef = raw.extendedDefinition || shortDef;
+  const keyPassages = raw.keyPassages || ['Juan 1:1', '1 Juan 1:1'];
+
+  return {
+    id: `grk-${strong}`,
+    strong: strong,
+    lemma: lemma,
+    transliteration: translit,
+    ipa: raw.ipa || `/${translit}/`,
+    partOfSpeech: raw.partOfSpeech || 'Sustantivo masculino',
+    gloss: shortDef,
+    occurrences: raw.occurrences || 330,
+    rootOrOrigin: raw.rootOrOrigin || `De raíz léxica griega (${translit})`,
+    thayer: {
+      primaryMeaning: shortDef,
+      senses: [
+        {
+          number: '1',
+          heading: 'Uso canónico en el Nuevo Testamento',
+          details: extDef,
+          biblicalRefs: keyPassages,
+        },
+      ],
+    },
+    lsj: {
+      classicalUsage: `Uso clásico y filosófico de ${translit}.`,
+      septuagintUsage: `Correspondencia con dabar en la Septuaginta (LXX).`,
+      papyriContext: 'Atestiguado ampliamente en papiros helenísticos del siglo I.',
+    },
+    robertson: {
+      keyPassages: keyPassages.map((ref: string) => ({
+        verseRef: ref,
+        grammaticalExegesis: `Exégesis morfológica y sintáctica en ${ref}.`,
+        historicalInsight: `Contexto histórico y teológico en el testimonio apostólico de ${ref}.`,
+      })),
+    },
+    vincent: {
+      wordStudies: keyPassages.map((ref: string) => ({
+        verseRef: ref,
+        pictorialMetaphor: `Metáfora visual y peso conceptual en ${ref}.`,
+        culturalContext: 'Cosmovisión grecorromana y revelación neotestamentaria.',
+      })),
     },
   };
 }
 
 export const LexiconView: React.FC = () => {
   const t = useTranslations('Lexicons');
-  const [activeTab, setActiveTab] = useState<LexiconLanguageTab>('hebrew');
+  const lexiconContext = useLexiconContextSafe();
+
+  const [activeTab, setActiveTab] = useState<LexiconLanguageTab>(
+    lexiconContext?.activeLanguage ?? 'hebrew'
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [hebrewEntries, setHebrewEntries] = useState<HebrewLexiconEntry[]>([]);
   const [selectedHebrewEntry, setSelectedHebrewEntry] = useState<HebrewLexiconEntry | null>(null);
-  const [selectedGreekEntry, setSelectedGreekEntry] = useState<GreekLexiconEntry | null>(GREEK_LEXICONS_DATABASE[0] || null);
+  const [selectedGreekEntry, setSelectedGreekEntry] = useState<GreekLexiconEntry | null>(() => {
+    if (GREEK_LEXICONS_DATABASE.length > 0) return GREEK_LEXICONS_DATABASE[0];
+    return mapApiToGreekEntry({
+      strongCode: 'G3056',
+      lemma: 'λόγος',
+      transliteration: 'logos',
+      shortDefinition: 'Palabra, Verbo divino, razón',
+      extendedDefinition: 'La expresión final y personal de Dios revelada en la encarnación de Cristo.',
+      keyPassages: ['Juan 1:1', 'Juan 1:14', '1 Juan 1:1'],
+      occurrences: 330,
+    });
+  });
+
+  // Sincronizar pestaña de idioma con el contexto si cambia externamente
+  useEffect(() => {
+    if (lexiconContext?.activeLanguage && lexiconContext.activeLanguage !== activeTab) {
+      setActiveTab(lexiconContext.activeLanguage);
+    }
+  }, [lexiconContext?.activeLanguage]);
+
+  // Sincronizar término seleccionado desde el contexto (ej. clic en panel lateral)
+  useEffect(() => {
+    const term = lexiconContext?.activeTerm;
+    if (!term) return;
+
+    if (term.language === 'hebrew') {
+      setActiveTab('hebrew');
+      const found = hebrewEntries.find((e) => e.strongPrimary === term.strong);
+      if (found) {
+        setSelectedHebrewEntry(found);
+      } else {
+        const mapped = mapApiToHebrewEntry({
+          strongCode: term.strong,
+          lemma: term.lemma,
+          transliteration: term.transliteration,
+          shortDefinition: term.gloss,
+          extendedDefinition: term.concept,
+          theologicalConcept: term.concept,
+          occurrences: term.occurrences,
+          keyPassages: term.keyPassages,
+        });
+        setSelectedHebrewEntry(mapped);
+      }
+    } else {
+      setActiveTab('greek');
+      const mapped = mapApiToGreekEntry({
+        strongCode: term.strong,
+        lemma: term.lemma,
+        transliteration: term.transliteration,
+        shortDefinition: term.gloss,
+        extendedDefinition: term.concept,
+        occurrences: term.occurrences,
+        keyPassages: term.keyPassages,
+      });
+      setSelectedGreekEntry(mapped);
+    }
+  }, [lexiconContext?.activeTerm, hebrewEntries]);
 
   useEffect(() => {
     let active = true;
@@ -81,7 +193,7 @@ export const LexiconView: React.FC = () => {
           setSelectedHebrewEntry((prev) => prev || mapped[0] || null);
         }
       } catch {
-        // Fallback
+        // Fallback silencioso
       }
     };
     loadHebrewLexicon();

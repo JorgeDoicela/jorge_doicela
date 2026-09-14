@@ -34,6 +34,8 @@ export default function StandardStudyPage() {
     setLayoutMode,
     setFontSize,
     setFontFamily,
+    setReaderTone,
+    toggleFocusMode,
     toggleVerseNumbers,
     refetch,
   } = useVerses(selectedBookId, selectedChapter, selectedTranslationId);
@@ -49,6 +51,8 @@ export default function StandardStudyPage() {
         onLayoutModeChange={setLayoutMode}
         onFontSizeChange={setFontSize}
         onFontFamilyChange={setFontFamily}
+        onReaderToneChange={setReaderTone}
+        onToggleFocusMode={toggleFocusMode}
         onToggleVerseNumbers={toggleVerseNumbers}
         books={books}
         selectedBookId={selectedBookId}

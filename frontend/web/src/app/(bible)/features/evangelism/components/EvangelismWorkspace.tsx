@@ -9,7 +9,11 @@ import { ObjectionsExplorer } from './ObjectionsExplorer';
 import { TractsExplorer } from './TractsExplorer';
 import { EvangelismSubSuite } from '../types';
 
-export const EvangelismWorkspace: React.FC = () => {
+interface EvangelismWorkspaceProps {
+  initialSubSuite?: EvangelismSubSuite;
+}
+
+export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initialSubSuite }) => {
   const t = useTranslations('Evangelism');
   const contextState = useEvangelismContextSafe();
   const localState = useEvangelism();
@@ -35,6 +39,12 @@ export const EvangelismWorkspace: React.FC = () => {
     setSelectedTractId,
     isLoading,
   } = state;
+
+  React.useEffect(() => {
+    if (initialSubSuite && setSubSuite) {
+      setSubSuite(initialSubSuite);
+    }
+  }, [initialSubSuite, setSubSuite]);
 
   const suites: { key: EvangelismSubSuite; label: string }[] = [
     { key: 'pathways', label: t('tabPathways') },

@@ -11,11 +11,13 @@ import {
   ChevronRight,
   Sparkles,
 } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
 import { EvangelismSubSuite } from '../../types';
 
 export const EvangelismSidebar: React.FC = () => {
+  const pathname = usePathname() || '';
   const passageContext = useBiblePassageSafe();
   const evangelism = useEvangelismContextSafe();
   const t = useTranslations('Evangelism');
@@ -24,10 +26,20 @@ export const EvangelismSidebar: React.FC = () => {
   const isOpen = passageContext?.isLeftSidebarOpen ?? true;
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
-  if (!isOpen) return null;
-
   const subSuite = evangelism?.subSuite ?? 'pathways';
   const setSubSuite = evangelism?.setSubSuite ?? (() => {});
+
+  React.useEffect(() => {
+    if (pathname.includes('/objections')) {
+      setSubSuite('objections');
+    } else if (pathname.includes('/tracts')) {
+      setSubSuite('tracts');
+    } else if (pathname.includes('/pathways')) {
+      setSubSuite('pathways');
+    }
+  }, [pathname, setSubSuite]);
+
+  if (!isOpen) return null;
 
   const suites: { key: EvangelismSubSuite; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'pathways', label: 'Rutas', icon: Compass },

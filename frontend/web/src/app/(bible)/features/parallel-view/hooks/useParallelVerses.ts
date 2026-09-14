@@ -59,6 +59,16 @@ export function useParallelVerses(
     );
   }, []);
 
+  const setColumnTranslations = useCallback((translationIds: number[]) => {
+    if (!translationIds || translationIds.length < 2) return;
+    setColumns(
+      translationIds.slice(0, 4).map((tid, idx) => ({
+        id: `col-${idx + 1}-${Date.now()}`,
+        translationId: tid,
+      })),
+    );
+  }, []);
+
   const fetchAllColumns = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -157,6 +167,7 @@ export function useParallelVerses(
     addColumn,
     removeColumn,
     updateColumnTranslation,
+    setColumnTranslations,
     refetch: fetchAllColumns,
   };
 }

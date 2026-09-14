@@ -6,6 +6,7 @@ import {
   ReaderLayoutMode,
   ReaderFontSize,
   ReaderFontFamily,
+  ReaderTone,
   ReaderSettings,
   Verse,
   BookInfo,
@@ -14,15 +15,16 @@ import { UnifiedPassagePicker } from '../../../books/components/passage-picker/U
 import { getChaptersForBookId } from '../../../books/data/canonicCategories';
 import { TranslationSelector } from '../../../translations/components/translation-selector/TranslationSelector';
 import { Book } from '../../../books/hooks/useBooks';
-import { Printer, Copy, Check, SlidersHorizontal, Type, AlignLeft, ListOrdered } from 'lucide-react';
+import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
-import { BibleViewModeSwitcher } from '../../../../components/BibleViewModeSwitcher';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;
   onLayoutModeChange: (mode: ReaderLayoutMode) => void;
   onFontSizeChange: (size: ReaderFontSize) => void;
   onFontFamilyChange: (family: ReaderFontFamily) => void;
+  onReaderToneChange?: (tone: ReaderTone) => void;
+  onToggleFocusMode?: () => void;
   onToggleVerseNumbers: () => void;
   books?: (BookInfo | Book | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
@@ -45,6 +47,8 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   onLayoutModeChange,
   onFontSizeChange,
   onFontFamilyChange,
+  onReaderToneChange,
+  onToggleFocusMode,
   onToggleVerseNumbers,
   books = [],
   selectedBookId,
@@ -152,9 +156,6 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 
         {/* Derecha: Selector de Modo, Apariencia Tipográfica y Acciones */}
         <div className="flex items-center gap-2 shrink-0 justify-end flex-wrap">
-          {/* Alternador de Modo de Vista (Estándar, Paralelo, Interlineal) */}
-          <BibleViewModeSwitcher />
-
           {/* Alternador de Modo de Lectura Geist Segmented Control */}
           <div className="flex items-center rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
             <button
@@ -259,6 +260,48 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   </div>
                 </div>
 
+                {/* Tono de Lienzo Editorial */}
+                <div>
+                  <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
+                    Tono de Lectura
+                  </span>
+                  <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden text-[11px]">
+                    <button
+                      type="button"
+                      onClick={() => onReaderToneChange?.('system')}
+                      className={`py-1.5 transition-colors cursor-pointer text-center ${
+                        (readerSettings.readerTone || 'system') === 'system'
+                          ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                      }`}
+                    >
+                      Auto
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onReaderToneChange?.('sepia')}
+                      className={`py-1.5 transition-colors cursor-pointer text-center ${
+                        readerSettings.readerTone === 'sepia'
+                          ? 'bg-[#FAF6EE] dark:bg-[#2A231C] text-[#5F4B32] dark:text-[#F3E5AB] font-bold border border-amber-300/40'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                      }`}
+                    >
+                      Sepia
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onReaderToneChange?.('dark')}
+                      className={`py-1.5 transition-colors cursor-pointer text-center ${
+                        readerSettings.readerTone === 'dark'
+                          ? 'bg-black text-white font-bold'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                      }`}
+                    >
+                      OLED
+                    </button>
+                  </div>
+                </div>
+
                 {/* Alternar Números de Versículo */}
                 <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
                   <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">
@@ -276,11 +319,43 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     123
                   </button>
                 </div>
+
+                {/* Guía Rápida de Atajos de Teclado */}
+                <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800/80 text-[10px] text-zinc-400 space-y-1 font-mono">
+                  <div className="flex justify-between">
+                    <span>Navegar capítulos:</span>
+                    <span className="text-zinc-600 dark:text-zinc-300 font-bold">← / → ó J / K</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Modo Enfoque:</span>
+                    <span className="text-zinc-600 dark:text-zinc-300 font-bold">F</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tamaño de fuente:</span>
+                    <span className="text-zinc-600 dark:text-zinc-300 font-bold">+ / -</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
 
           <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none mx-0.5" />
+
+          {/* Modo Enfoque Inmersivo */}
+          {onToggleFocusMode && (
+            <button
+              type="button"
+              onClick={onToggleFocusMode}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                readerSettings.focusMode
+                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs'
+                  : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+              }`}
+              title={readerSettings.focusMode ? 'Salir de Modo Enfoque [Esc]' : 'Modo Enfoque Inmersivo [F]'}
+            >
+              {readerSettings.focusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            </button>
+          )}
 
           {/* Copiar Capítulo */}
           {verses.length > 0 && (

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
 import {
   MapPin,
   Clock,
@@ -19,29 +18,13 @@ import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 import { useAtlasContextSafe } from '../../context/AtlasContext';
 import { HistoricalEra, PlaceCategory } from '../../types';
 
-export const HistoricalSidebar: React.FC = () => {
+export const AtlasSidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const atlas = useAtlasContextSafe();
-  const searchParams = useSearchParams();
   const tStudio = useTranslations('Studio');
   const tAtlas = useTranslations('Atlas');
 
-  const urlSubTab = searchParams?.get('tab');
-  const getInitialTab = (): 'places' | 'eras' | 'categories' => {
-    if (urlSubTab === 'timeline') return 'eras';
-    if (urlSubTab === 'archaeology') return 'categories';
-    return 'places';
-  };
-
-  const [activeTab, setActiveTab] = useState<'places' | 'eras' | 'categories'>(getInitialTab);
-
-  useEffect(() => {
-    if (urlSubTab === 'timeline') {
-      setActiveTab('eras');
-    } else if (urlSubTab === 'archaeology') {
-      setActiveTab('categories');
-    }
-  }, [urlSubTab]);
+  const [activeTab, setActiveTab] = useState<'places' | 'eras' | 'categories'>('places');
 
   const isOpen = passageContext?.isLeftSidebarOpen ?? true;
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
@@ -70,7 +53,7 @@ export const HistoricalSidebar: React.FC = () => {
 
   return (
     <>
-      {/* Backdrop en Móviles (< lg) */}
+      {/* Cortina oscura en Móviles (< lg) */}
       <div
         onClick={handleClose}
         className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
@@ -78,14 +61,14 @@ export const HistoricalSidebar: React.FC = () => {
       />
 
       <aside
-        aria-label="Panel de Exploración Histórica y Geográfica"
-        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-72 sm:w-80 flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
+        aria-label="Navegación del Atlas Bíblico"
+        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-84 xl:w-92 flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
       >
-        {/* Handle de Colapso Interactivo en Borde Divisorio estilo DIITRA */}
+        {/* Handle de Colapso Interactivo en Borde Divisorio Derecho (Estilo DIITRA) */}
         <div
           className="hidden lg:flex absolute top-0 -right-3 w-6 h-full cursor-pointer z-30 group/border items-center justify-center select-none"
           onClick={handleClose}
-          title={tStudio('collapseSidebar') || 'Ocultar panel'}
+          title={tStudio('closeSidebar') || 'Ocultar panel'}
         >
           <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-transparent group-hover/border:bg-zinc-400 dark:group-hover/border:bg-zinc-500 transition-colors duration-150" />
           <div className="relative z-10 w-6 h-7 rounded-md bg-white dark:bg-[#0a0a0a] border border-zinc-300 dark:border-zinc-700 shadow-sm opacity-0 group-hover/border:opacity-100 hover:scale-110 hover:border-zinc-500 dark:hover:border-zinc-400 transition-all duration-150 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100">
@@ -108,91 +91,91 @@ export const HistoricalSidebar: React.FC = () => {
         {/* Cabecera Móvil */}
         <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
+            <Compass className="w-4 h-4 text-rose-500" />
             <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              Atlas & Arqueología
+              Atlas Bíblico WGS84
             </span>
           </div>
           <button
-            type="button"
             onClick={handleClose}
-            className="p-1 rounded-md text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+            className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Selector de Pestañas Geist */}
-        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
+        {/* Barra de Sub-Pestañas del Atlas */}
+        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80 shrink-0 space-y-2.5">
+          <div className="grid grid-cols-3 gap-1 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-[11px]">
             <button
               type="button"
               onClick={() => setActiveTab('places')}
-              className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1 ${
                 activeTab === 'places'
-                  ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
+              <MapPin className="w-3 h-3 text-rose-500" />
               <span>Lugares</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('eras')}
-              className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1 ${
                 activeTab === 'eras'
-                  ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <Clock className="w-3.5 h-3.5 shrink-0" />
+              <Clock className="w-3 h-3 text-amber-500" />
               <span>Épocas</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('categories')}
-              className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1 ${
                 activeTab === 'categories'
-                  ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <Compass className="w-3.5 h-3.5 shrink-0" />
+              <Layers className="w-3 h-3 text-blue-500" />
               <span>Tipos</span>
             </button>
           </div>
+
+          {/* Buscador reactivo rápido */}
+          {activeTab === 'places' && (
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <input
+                type="text"
+                value={atlas?.searchQuery || ''}
+                onChange={(e) => atlas?.setSearchQuery(e.target.value)}
+                placeholder="Buscar lugar bíblico o moderno..."
+                className="w-full pl-8 pr-7 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 transition-colors"
+              />
+              {atlas?.searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => atlas?.setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Contenido Dinámico */}
+        {/* Contenido con Scroll de la Pestaña Activa */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {/* SUB-PESTAÑA 1: LUGARES BÍBLICOS */}
           {activeTab === 'places' && (
             <div className="space-y-2">
-              {/* Buscador de Lugares */}
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400" />
-                <input
-                  type="text"
-                  value={atlas?.searchQuery || ''}
-                  onChange={(e) => atlas?.setSearchQuery(e.target.value)}
-                  placeholder="Buscar lugar (ej. Jerusalén)..."
-                  className="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200/80 dark:border-zinc-800 rounded-xl pl-8 pr-7 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors"
-                />
-                {atlas?.searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => atlas?.setSearchQuery('')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
-              </div>
-
-              {/* Conteo de Lugares */}
-              <div className="px-1 flex items-center justify-between text-[10px] font-mono text-zinc-400">
-                <span>{places.length} lugares encontrados</span>
+              <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 px-1">
+                <span>{places.length} ubicaciones</span>
                 {atlas?.activeEra !== 'all' && (
                   <span className="text-amber-500 font-semibold">Filtro de época activo</span>
                 )}

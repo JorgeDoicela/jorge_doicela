@@ -16,9 +16,14 @@ interface NavTabItem {
 }
 
 const NAV_TABS: NavTabItem[] = [
-  { path: '/study/standard', key: 'textExegesis' },
-  { path: '/study/historical-context', key: 'historicalContext' },
-  { path: '/study/evangelism', key: 'ministryApologetics' },
+  { path: '/study/standard', key: 'standard' },
+  { path: '/study/parallel', key: 'parallel' },
+  { path: '/study/interlinear', key: 'interlinear' },
+  { path: '/study/word-study', key: 'wordStudy' },
+  { path: '/study/atlas', key: 'atlas' },
+  { path: '/study/timeline', key: 'timeline' },
+  { path: '/study/archaeology', key: 'archaeology' },
+  { path: '/study/evangelism', key: 'evangelism' },
 ];
 
 interface BibleHeaderNavProps {
@@ -46,28 +51,30 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
 
   const isCurrentTab = (tabPath: string) => {
     if (tabPath === '/study/standard') {
-      // Activo para todas las suites pertenecientes al espacio Texto & Exégesis
       return (
         pathname === '/study/standard' ||
-        pathname === '/study/parallel' ||
-        pathname === '/study/interlinear' ||
-        pathname === '/study/word-study' ||
         pathname === '/study' ||
         pathname === '/bible/study/standard' ||
-        pathname === '/bible/study/parallel' ||
-        pathname === '/bible/study/interlinear' ||
-        pathname === '/bible/study/word-study' ||
         pathname === '/bible/study' ||
         pathname.startsWith('/study/standard/') ||
-        pathname.startsWith('/study/parallel/') ||
-        pathname.startsWith('/study/interlinear/')
+        pathname.startsWith('/bible/study/standard/')
       );
     }
+    if (pathname.includes('/historical-context')) {
+      const currentSubTab = searchParams?.get('tab') || 'atlas';
+      if (tabPath === '/study/atlas' && currentSubTab === 'atlas') return true;
+      if (tabPath === '/study/timeline' && currentSubTab === 'timeline') return true;
+      if (tabPath === '/study/archaeology' && currentSubTab === 'archaeology') return true;
+    }
+
+    const clean = tabPath;
+    const prefixed = `/bible${tabPath}`;
+
     return (
-      pathname === tabPath ||
-      pathname.startsWith(tabPath + '/') ||
-      pathname === `/bible${tabPath}` ||
-      pathname.startsWith(`/bible${tabPath}/`)
+      pathname === clean ||
+      pathname.startsWith(`${clean}/`) ||
+      pathname === prefixed ||
+      pathname.startsWith(`${prefixed}/`)
     );
   };
 

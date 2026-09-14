@@ -24,10 +24,13 @@ export interface Verse {
 export type ReaderLayoutMode = 'continuous' | 'verse-by-verse';
 export type ReaderFontSize = 'sm' | 'md' | 'lg' | 'xl';
 export type ReaderFontFamily = 'sans' | 'serif';
+export type ReaderTone = 'system' | 'sepia' | 'dark';
 
 export interface ReaderSettings {
   layoutMode: ReaderLayoutMode;
   fontSize: ReaderFontSize;
   fontFamily: ReaderFontFamily;
   showVerseNumbers: boolean;
+  readerTone: ReaderTone;
+  focusMode: boolean;
 }

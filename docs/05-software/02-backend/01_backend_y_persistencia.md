@@ -217,5 +217,8 @@ Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen regi
   pnpm --filter backend seed:software
   ```
 * **Garantía Transaccional y Migración Defensiva:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, con comprobaciones preventivas `ensureColumn` para agregar dinámicamente columnas faltantes a tablas preexistentes sin requerir reinicios forzados, garantizando reconstrucción limpia e indexación en menos de 60ms.
+* **Bilingüismo Riguroso en Diagramas Vectoriales (Mermaid):** Los diagramas embebidos en el markdown de cada publicación están traducidos de raíz según el idioma:
+  * **En Español (`es`):** Actores humanos, subgraphs y estados traducidos al español profesional (`Usuario / Navegador`, `Proxy Inverso Nginx`, `Gestor de Comandos`, `Módulo`, `Modo WAL`), preservando intactos los nombres literales de código, variables, APIs, llamadas POSIX y directivas de red (`stdout`, `socket.emit()`, `child_process.spawn()`, `resolve-routes.js`, `proxy_pass`).
+  * **En Inglés (`en`):** 100% en terminología técnica internacional (`Browser Client`, `Nginx Reverse Proxy`, `Command Handler`, `WAL Mode`).
 
 

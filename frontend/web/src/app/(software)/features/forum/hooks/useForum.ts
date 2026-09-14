@@ -29,7 +29,7 @@ export function useForum(category: string = 'all', search: string = '') {
       setTopics(list);
     } catch (err: any) {
       console.error('Error al obtener foros:', err);
-      setError(err.message || 'No se pudieron cargar los temas del foro');
+      setError(err.message || (locale === 'es' ? 'No se pudieron cargar los temas del foro' : 'Failed to load forum topics'));
     } finally {
       setLoading(false);
     }

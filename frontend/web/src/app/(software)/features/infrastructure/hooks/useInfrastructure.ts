@@ -37,7 +37,7 @@ export function useInfrastructure(
       const list = Array.isArray(data) ? data : data.data || [];
       setPosts(list);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'No se pudieron cargar las guías de infraestructura';
+      const message = err instanceof Error ? err.message : (locale === 'es' ? 'No se pudieron cargar las guías de infraestructura' : 'Failed to load infrastructure guides');
       console.error('Error al obtener guías de infraestructura:', err);
       setError(message);
     } finally {

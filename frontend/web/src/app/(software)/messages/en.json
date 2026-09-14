@@ -20,7 +20,9 @@
     "scrollToTop": "Back to top",
     "exploreTopics": "Explore Topics",
     "viewAllInCategory": "View all in {category} →",
-    "noPostsInCategory": "No publications yet"
+    "noPostsInCategory": "No publications yet",
+    "headerSrTitle": "Software | Jorge Doicela - DevSecOps Specialist",
+    "headerLogoAlt": "Jorge Doicela - DevSecOps Specialist"
   },
   "Search": {
     "placeholder": "Search news, articles, advisories or projects...",
@@ -62,7 +64,9 @@
     "tutorialTag": "Tutorial",
     "guideTag": "Guide",
     "forumTag": "Forum",
-    "projectTag": "Project"
+    "projectTag": "Project",
+    "syncError": "Could not synchronize software feed",
+    "retryConnection": "Retry connection"
   },
   "AuthorCard": {
     "role": "DevSecOps & Cloud Specialist",
@@ -143,7 +147,11 @@
     "llmModels": "LLM Models",
     "agenticFrameworks": "Agentic Frameworks",
     "mcpServers": "MCP Servers",
-    "tools": "Tools"
+    "tools": "Tools",
+    "sortSmart": "Architectural Relevance",
+    "sortRecent": "Most Recent",
+    "sortViews": "Most Popular",
+    "sortDifficulty": "Highest Difficulty"
   },
   "Detail": {
     "stepsIndex": "Steps Index ({count})",
@@ -295,5 +303,19 @@
     "catCiCd": "CI/CD & DevOps",
     "catHardening": "Hardening & Bastion",
     "empty": "No infrastructure guides found in this section."
+  },
+  "Markdown": {
+    "copy": "Copy",
+    "copied": "Copied!",
+    "copyCodeAria": "Copy code to clipboard",
+    "diagramTitle": "Architectural Diagram",
+    "copyDiagramAria": "Copy diagram code",
+    "generatingDiagram": "Generating vector diagram...",
+    "diagramError": "Error compiling Mermaid diagram",
+    "calloutNote": "NOTE",
+    "calloutTip": "TIP",
+    "calloutImportant": "IMPORTANT",
+    "calloutWarning": "WARNING",
+    "calloutCaution": "CAUTION"
   }
 }

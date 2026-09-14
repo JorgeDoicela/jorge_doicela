@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useId } from 'react';
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { Copy, Check, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -9,6 +10,7 @@ interface MermaidBlockProps {
 }
 
 export function MermaidBlock({ chart }: MermaidBlockProps) {
+  const t = useTranslations('Markdown');
   const { resolvedTheme } = useTheme();
   const rawId = useId();
   const cleanId = `mermaid-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
@@ -108,7 +110,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
 
           {/* Título del Diagrama */}
           <div className="flex items-center text-[11px] font-mono tracking-wider font-semibold uppercase text-slate-600 dark:text-zinc-400 pl-2 border-l border-black/10 dark:border-white/10">
-            <span>Diagrama Arquitectónico</span>
+            <span>{t('diagramTitle')}</span>
           </div>
         </div>
 
@@ -116,18 +118,18 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
         <button
           onClick={handleCopy}
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-sans font-medium text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
-          title="Copiar código del diagrama"
-          aria-label="Copiar código del diagrama"
+          title={t('copyDiagramAria')}
+          aria-label={t('copyDiagramAria')}
         >
           {copied ? (
             <>
               <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">¡Copiado!</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{t('copied')}</span>
             </>
           ) : (
             <>
               <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
-              <span>Copiar</span>
+              <span>{t('copy')}</span>
             </>
           )}
         </button>
@@ -138,7 +140,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
         {loading && (
           <div className="flex flex-col items-center justify-center py-10 space-y-2 text-slate-400 dark:text-zinc-500 text-xs font-mono animate-pulse">
             <Loader2 className="w-6 h-6 animate-spin text-blue-500/50" />
-            <span>Generando diagrama vectorial...</span>
+            <span>{t('generatingDiagram')}</span>
           </div>
         )}
 
@@ -146,7 +148,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
           <div className="space-y-3 py-2">
             <div className="flex items-center gap-2 text-rose-500 dark:text-rose-400 text-xs font-mono">
               <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>Error al compilar el diagrama Mermaid</span>
+              <span>{t('diagramError')}</span>
             </div>
             <pre className="p-3 rounded-xl bg-black/40 text-zinc-300 text-xs font-mono overflow-x-auto">
               <code>{chart}</code>

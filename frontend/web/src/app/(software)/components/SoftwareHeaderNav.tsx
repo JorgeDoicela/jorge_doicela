@@ -27,6 +27,7 @@ export function SoftwareHeaderNav({
   backLabel,
 }: SoftwareHeaderNavProps) {
   const tSpotlight = useTranslations('Spotlight');
+  const tNav = useTranslations('Nav');
   const [softwareUrl, setSoftwareUrl] = useState('/');
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function SoftwareHeaderNav({
   return (
     <header className="flex flex-col items-center justify-center pt-6 sm:pt-2 pb-4 text-center w-full">
       {/* Título semántico accesible para SEO */}
-      <h1 className="sr-only">Software | Jorge Doicela - Especialista en DevSecOps</h1>
+      <h1 className="sr-only">{tNav('headerSrTitle')}</h1>
 
       {/* Logotipo Central Compuesto Ampliado (Linkeado determinísticamente al subdominio de Software) */}
       <Link
@@ -85,7 +86,7 @@ export function SoftwareHeaderNav({
         <div className={`${compact ? 'h-10 sm:h-10' : 'h-14 sm:h-13 md:h-16 lg:h-[72px]'} w-auto flex items-center justify-center`}>
           <Image
             src="/software/logo/nombre_rol.png"
-            alt="Jorge Doicela - Especialista en DevSecOps"
+            alt={tNav('headerLogoAlt')}
             width={340}
             height={80}
             className="h-full w-auto object-contain filter invert dark:filter-none contrast-125 transition-all duration-300"

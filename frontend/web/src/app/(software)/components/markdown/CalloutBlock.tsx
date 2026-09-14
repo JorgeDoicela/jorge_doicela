@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { Info, Lightbulb, AlertCircle, AlertTriangle, ShieldAlert } from 'lucide-react';
 
 export interface CalloutBlockProps {
@@ -13,33 +16,33 @@ export type NormalizedCalloutType = 'note' | 'tip' | 'important' | 'warning' | '
 const CALLOUT_CONFIG: Record<
   NormalizedCalloutType,
   {
-    title: string;
+    translationKey: 'calloutNote' | 'calloutTip' | 'calloutImportant' | 'calloutWarning' | 'calloutCaution';
     icon: React.ComponentType<{ className?: string }>;
     accentColor: string;
   }
 > = {
   note: {
-    title: 'NOTA',
+    translationKey: 'calloutNote',
     icon: Info,
     accentColor: 'text-blue-600 dark:text-blue-400',
   },
   tip: {
-    title: 'CONSEJO',
+    translationKey: 'calloutTip',
     icon: Lightbulb,
     accentColor: 'text-emerald-600 dark:text-emerald-400',
   },
   important: {
-    title: 'IMPORTANTE',
+    translationKey: 'calloutImportant',
     icon: AlertCircle,
     accentColor: 'text-indigo-600 dark:text-indigo-400',
   },
   warning: {
-    title: 'ADVERTENCIA',
+    translationKey: 'calloutWarning',
     icon: AlertTriangle,
     accentColor: 'text-amber-600 dark:text-amber-400',
   },
   caution: {
-    title: 'PRECAUCIÓN',
+    translationKey: 'calloutCaution',
     icon: ShieldAlert,
     accentColor: 'text-rose-600 dark:text-rose-400',
   },
@@ -99,6 +102,7 @@ function extractCalloutInfo(children: React.ReactNode): { type: NormalizedCallou
 }
 
 export function CalloutBlock({ type: explicitType, title: explicitTitle, children }: CalloutBlockProps) {
+  const t = useTranslations('Markdown');
   const extracted = extractCalloutInfo(children);
   const normalizedExplicit = explicitType ? (explicitType.toLowerCase() as NormalizedCalloutType) : null;
   const type: NormalizedCalloutType | null = normalizedExplicit || extracted.type;
@@ -115,7 +119,7 @@ export function CalloutBlock({ type: explicitType, title: explicitTitle, childre
 
   const config = CALLOUT_CONFIG[type];
   const Icon = config.icon;
-  const displayTitle = explicitTitle || config.title;
+  const displayTitle = explicitTitle || t(config.translationKey);
 
   return (
     <aside

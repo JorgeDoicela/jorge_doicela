@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { Copy, Check } from 'lucide-react';
 import { MermaidBlock } from './MermaidBlock';
 import Prism from 'prismjs';
@@ -54,6 +55,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
 };
 
 export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
+  const t = useTranslations('Markdown');
   const [copied, setCopied] = useState<boolean>(false);
 
   const cleanCode = code ? code.replace(/\n$/, '') : '';
@@ -112,18 +114,18 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
         <button
           onClick={handleCopy}
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-sans font-medium text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
-          title="Copiar código al portapapeles"
-          aria-label="Copiar código al portapapeles"
+          title={t('copyCodeAria')}
+          aria-label={t('copyCodeAria')}
         >
           {copied ? (
             <>
               <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">¡Copiado!</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{t('copied')}</span>
             </>
           ) : (
             <>
               <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
-              <span>Copiar</span>
+              <span>{t('copy')}</span>
             </>
           )}
         </button>

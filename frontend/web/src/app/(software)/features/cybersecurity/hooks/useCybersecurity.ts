@@ -31,7 +31,7 @@ export function useCybersecurity(severity?: string, postType?: string, search: s
         setPosts(list);
       } catch (err: any) {
         console.error('Error al obtener posts de ciberseguridad:', err);
-        setError(err.message || 'No se pudieron cargar los avisos de seguridad');
+        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los avisos de seguridad' : 'Failed to load security advisories'));
       } finally {
         setLoading(false);
       }

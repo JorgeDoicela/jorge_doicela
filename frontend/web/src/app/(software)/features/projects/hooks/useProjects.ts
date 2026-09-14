@@ -30,7 +30,7 @@ export function useProjects(status?: string, search: string = '') {
         setProjects(list);
       } catch (err: any) {
         console.error('Error al obtener proyectos:', err);
-        setError(err.message || 'No se pudieron cargar los proyectos');
+        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los proyectos' : 'Failed to load projects'));
       } finally {
         setLoading(false);
       }

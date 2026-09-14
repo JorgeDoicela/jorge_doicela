@@ -30,7 +30,7 @@ export function useNews(search: string = '', tag?: string) {
         setNews(list);
       } catch (err: any) {
         console.error('Error al obtener noticias:', err);
-        setError(err.message || 'No se pudieron cargar las noticias');
+        setError(err.message || (locale === 'es' ? 'No se pudieron cargar las noticias' : 'Failed to load news'));
       } finally {
         setLoading(false);
       }

@@ -27,10 +27,10 @@ export default function InfrastructureCategoryPage() {
   ];
 
   const sortOptions = [
-    { id: 'smart', label: 'Relevancia Arquitectónica' },
-    { id: 'recent', label: 'Más Recientes' },
-    { id: 'views', label: 'Más Populares' },
-    { id: 'difficulty', label: 'Mayor Complejidad' },
+    { id: 'smart', label: tFilters('sortSmart') },
+    { id: 'recent', label: tFilters('sortRecent') },
+    { id: 'views', label: tFilters('sortViews') },
+    { id: 'difficulty', label: tFilters('sortDifficulty') },
   ];
 
   return (

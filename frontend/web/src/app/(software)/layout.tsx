@@ -73,7 +73,7 @@ export default async function RootLayout({
     >
       <head>
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
-        <SoftwareJsonLd />
+        <SoftwareJsonLd locale={locale} />
       </head>
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
         <NextIntlClientProvider messages={messages} locale={locale}>

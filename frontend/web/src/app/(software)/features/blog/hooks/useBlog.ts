@@ -29,8 +29,8 @@ export function useBlog(search: string = '', series?: string) {
         const list = Array.isArray(data) ? data : data.data || [];
         setPosts(list);
       } catch (err: any) {
-        console.error('Error al obtener posts del blog:', err);
-        setError(err.message || 'No se pudieron cargar los artículos del blog');
+        console.error('Error al obtener artículos del blog:', err);
+        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los artículos del blog' : 'Failed to load blog posts'));
       } finally {
         setLoading(false);
       }

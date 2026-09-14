@@ -30,7 +30,7 @@ export function useAi(type?: string, search: string = '') {
         setResources(list);
       } catch (err: any) {
         console.error('Error al obtener recursos de IA:', err);
-        setError(err.message || 'No se pudieron cargar los modelos y agentes de IA');
+        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los modelos y agentes de IA' : 'Failed to load AI models and agents'));
       } finally {
         setLoading(false);
       }

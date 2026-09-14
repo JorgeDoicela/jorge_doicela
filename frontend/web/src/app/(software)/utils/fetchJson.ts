@@ -25,7 +25,7 @@ export async function safeFetchJson<T>(
   const contentType = response.headers.get('content-type') || '';
 
   if (!response.ok || !contentType.includes('application/json')) {
-    let errorMessage = `Error (${response.status}): ${response.statusText || 'Respuesta no válida del servidor'}`;
+    let errorMessage = `Error (${response.status}): ${response.statusText || 'Invalid server response'}`;
 
     if (contentType.includes('application/json')) {
       try {

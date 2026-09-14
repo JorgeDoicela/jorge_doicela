@@ -20,7 +20,9 @@
     "scrollToTop": "Volver arriba",
     "exploreTopics": "Explorar Especialidades",
     "viewAllInCategory": "Ver todo en {category} →",
-    "noPostsInCategory": "Sin publicaciones aún"
+    "noPostsInCategory": "Sin publicaciones aún",
+    "headerSrTitle": "Software | Jorge Doicela - Especialista en DevSecOps",
+    "headerLogoAlt": "Jorge Doicela - Especialista en DevSecOps"
   },
   "Search": {
     "placeholder": "Buscar noticias, artículos, avisos o proyectos...",
@@ -62,7 +64,9 @@
     "tutorialTag": "Tutorial",
     "guideTag": "Guía",
     "forumTag": "Foro",
-    "projectTag": "Proyecto"
+    "projectTag": "Proyecto",
+    "syncError": "No se pudo sincronizar el feed de software",
+    "retryConnection": "Reintentar conexión"
   },
   "AuthorCard": {
     "role": "Especialista en DevSecOps & Cloud",
@@ -143,7 +147,11 @@
     "llmModels": "Modelos LLM",
     "agenticFrameworks": "Frameworks Agénticos",
     "mcpServers": "Servidores MCP",
-    "tools": "Herramientas"
+    "tools": "Herramientas",
+    "sortSmart": "Relevancia Arquitectónica",
+    "sortRecent": "Más Recientes",
+    "sortViews": "Más Populares",
+    "sortDifficulty": "Mayor Complejidad"
   },
   "Detail": {
     "stepsIndex": "Índice de Pasos ({count})",
@@ -295,5 +303,19 @@
     "catCiCd": "CI/CD & DevOps",
     "catHardening": "Hardening & Bastionado",
     "empty": "No se encontraron guías de infraestructura en esta sección."
+  },
+  "Markdown": {
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "copyCodeAria": "Copiar código al portapapeles",
+    "diagramTitle": "Diagrama Arquitectónico",
+    "copyDiagramAria": "Copiar código del diagrama",
+    "generatingDiagram": "Generando diagrama vectorial...",
+    "diagramError": "Error al compilar el diagrama Mermaid",
+    "calloutNote": "NOTA",
+    "calloutTip": "CONSEJO",
+    "calloutImportant": "IMPORTANTE",
+    "calloutWarning": "ADVERTENCIA",
+    "calloutCaution": "PRECAUCIÓN"
   }
 }

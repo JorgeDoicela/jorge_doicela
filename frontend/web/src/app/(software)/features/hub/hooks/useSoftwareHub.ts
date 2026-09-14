@@ -67,7 +67,7 @@ export function useSoftwareHub(search: string = '') {
         }
 
         console.error('Error al cargar hub de software:', err);
-        setError(err.message || 'No se pudo cargar el feed editorial');
+        setError(err.message || (locale === 'es' ? 'No se pudo cargar el feed editorial' : 'Failed to load editorial feed'));
       } finally {
         if (isMounted && !retryTimer) {
           setLoading(false);

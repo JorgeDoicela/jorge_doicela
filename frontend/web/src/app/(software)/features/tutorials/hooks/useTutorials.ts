@@ -30,7 +30,7 @@ export function useTutorials(difficulty?: string, search: string = '') {
         setTutorials(list);
       } catch (err: any) {
         console.error('Error al obtener tutoriales:', err);
-        setError(err.message || 'No se pudieron cargar los tutoriales');
+        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los tutoriales' : 'Failed to load tutorials'));
       } finally {
         setLoading(false);
       }

@@ -181,8 +181,9 @@ frontend/web/src/app/(software)/
 ## 6. Eliminación de Datos Hardcodeados y Erradicación de Tiempos de Lectura
 
 * **Cero Cadenas en Duro (100% i18n con `next-intl`):**
-  * Todo texto de interfaz de usuario (etiquetas, placeholders, accesibilidad `aria-label`, títulos de tooltips, mensajes de error, estados de carga y empty states) se resuelve a través de `messages/es.json` y `messages/en.json`.
-  * Namespaces dedicados y consistentes: `Nav`, `Search`, `Common`, `Home`, `AuthorCard`, `Newsletter`, `Footer`, `Spotlight`, `CardActions`, `Filters`, `Detail`, `News`, `Blog`, `Forum`, `Ai`, `Cybersecurity`, `Tutorials`, `Projects`.
+  * Todo texto de interfaz de usuario (etiquetas, placeholders, accesibilidad `aria-label`, títulos de tooltips, mensajes de error, estados de carga, empty states, botones de copia de código y diagramas, y badges de callout) se resuelve a través de `messages/es.json` y `messages/en.json`.
+  * Namespaces dedicados y consistentes con paridad 1:1 estricta: `Metadata`, `Nav`, `Search`, `Common`, `Home`, `AuthorCard`, `Newsletter`, `Footer`, `Spotlight`, `CardActions`, `Filters`, `Detail`, `Markdown`, `News`, `Blog`, `Forum`, `Ai`, `Cybersecurity`, `Tutorials`, `Projects`, `Infrastructure`.
+  * Datos estructurados `Schema.org` ([`SoftwareJsonLd.tsx`](/software/components/SoftwareJsonLd.tsx)) dinámicamente localizados según el `locale` activo.
 * **Erradicación Total de "Tiempos de Lectura":**
   * Se eliminaron por completo las estimaciones de lectura ("5 min lectura", "readingTime") tanto en la base de datos `software.sqlite` (entidades TypeORM), en los esquemas y corpus JSON, como en todos los componentes de la interfaz (`NewsCard`, `BlogCard`, `TutorialCard`, etc.). La plataforma sigue una filosofía de ingeniería y referencia directa sin métricas artificiales.
 * **Slugs Canónicos Bilingües:**

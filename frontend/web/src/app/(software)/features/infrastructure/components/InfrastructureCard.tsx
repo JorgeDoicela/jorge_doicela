@@ -14,6 +14,7 @@ export function InfrastructureCard({ post }: InfrastructureCardProps) {
       href={`/infrastructure/${post.slug}`}
       title={post.title}
       category="infrastructure"
+      coverImage={post.coverImage}
       subCategory={post.category}
       tag={post.environment.toUpperCase()}
       categoryMeta={`${post.category}, ${post.environment}`}

@@ -59,6 +59,7 @@ export interface InfrastructurePost {
   author: string;
   tags: string;
   language: string;
+  coverImage?: string;
   views: number;
   likes: number;
   featured?: boolean;

@@ -31,6 +31,9 @@ export class Project {
   language: string;
 
   @Column({ nullable: true })
+  coverImage?: string;
+
+  @Column({ nullable: true })
   repoUrl?: string;
 
   @Column({ nullable: true })

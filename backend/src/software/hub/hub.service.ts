@@ -185,6 +185,7 @@ export class HubService {
         href: `/cybersecurity/${sec.slug}`,
         title: sec.title,
         category: 'cybersecurity',
+        coverImage: sec.coverImage,
         tag: sec.cveId || 'CVE',
         categoryMeta: isEn
           ? `Advisory ${sec.severity} — Cybersecurity, Linux`
@@ -239,6 +240,7 @@ export class HubService {
         href: `/infrastructure/${inf.slug}`,
         title: inf.title,
         category: 'infrastructure',
+        coverImage: inf.coverImage,
         subCategory: inf.category,
         tag: inf.environment.toUpperCase(),
         categoryMeta: `${inf.category}, ${inf.environment}`,
@@ -262,6 +264,7 @@ export class HubService {
         href: `/ai/${res.slug}`,
         title: res.name,
         category: 'ai',
+        coverImage: res.coverImage,
         tag: res.type.toUpperCase(),
         categoryMeta: `${res.provider} — ${res.type.toUpperCase()}`,
         excerpt: res.description,
@@ -283,6 +286,7 @@ export class HubService {
         href: `/projects/${proj.slug}`,
         title: proj.name,
         category: 'projects',
+        coverImage: proj.coverImage,
         tag: isEn ? 'PROJECT' : 'PROYECTO',
         categoryMeta: isEn
           ? `${proj.stars || 0} GitHub stars`
@@ -306,6 +310,7 @@ export class HubService {
         href: `/forum/${top.slug}`,
         title: top.title,
         category: 'forum',
+        coverImage: top.coverImage,
         tag: isEn ? 'DISCUSSION' : 'DEBATE',
         categoryMeta: isEn
           ? `${top.repliesCount || 0} replies`
@@ -340,12 +345,27 @@ export class HubService {
         b.smartScore - a.smartScore ||
         new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
-    const featured = sortedBySmart.slice(0, 8);
 
-    // 2. Feed Cronológico Unificado: El catálogo completo ordenado por fecha descendente
-    const feed = [...allItems].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    // Lógica Editorial de Partición y Deduplicación:
+    // Las publicaciones promovidas al carrusel destacado no deben duplicarse en el feed cronológico
+    // inferior de la misma vista, evitando redundancia visual y maximizando la diversidad del catálogo.
+    const isSmallCatalog = allItems.length <= 3;
+    const featuredLimit = isSmallCatalog
+      ? allItems.length
+      : Math.min(5, Math.max(3, allItems.length - 3));
+
+    const featured = sortedBySmart.slice(0, featuredLimit);
+    const featuredIds = new Set(featured.map((item) => item.id));
+
+    // 2. Feed Cronológico de Últimas Publicaciones (Deduplicación Estricta):
+    // Excluye los ítems presentes en 'featured' para que cada tarjeta en la página sea única.
+    const feed = isSmallCatalog
+      ? sortedBySmart
+      : [...allItems]
+          .filter((item) => !featuredIds.has(item.id))
+          .sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          );
 
     return {
       featured,

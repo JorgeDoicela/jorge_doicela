@@ -39,6 +39,7 @@ frontend/web/src/app/(software)/
 │   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
 │   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales (Sidebar MalwareTech)
 │   ├── FeaturedPostsSidebarCard.tsx  # Tarjeta de artículos destacados con miniaturas cuadradas 1:1
+│   ├── FeaturedCarousel.tsx          # Carrusel interactivo para publicaciones destacadas (Autoplay + Neumorphic Controls)
 │   ├── ExploreTopicsSidebarCard.tsx  # Explorador de las 8 categorías con contadores vivos
 │   ├── ScrollToTopButton.tsx         # Botón flotante para retorno suave al inicio de página
 │   ├── MarkdownRenderer.tsx          # Orquestador formal de contenido técnico (react-markdown + suite markdown/)
@@ -146,13 +147,13 @@ frontend/web/src/app/(software)/
 * **Portada General de Todo el Contenido: Podio Top 3 Global y Feed Cronológico Unificado:**
   * **Podio de Destacados (Top 3):** No está restringido artificialmente a categorías fijas; evalúa el `smartScore` consolidado entre todas las áreas para seleccionar las 3 publicaciones insignia de mayor impacto global de la plataforma.
   * **Feed de Últimas Publicaciones:** Unifica todas las publicaciones restantes en una lista polimórfica ordenada estrictamente por fecha de publicación descendente (`publishedAt DESC`), garantizando un flujo vivo, orgánico y fresco donde cada nueva publicación (sea tutorial, aviso de seguridad, servidor o noticia) aparece de inmediato en la parte superior.
-* **Normalización de Escala Tipográfica Universal (`SoftwareCard.tsx`):**
-  * Para garantizar consistencia visual absoluta entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura, Foro) y la vista general (*Todo el Contenido / Publicaciones Destacadas*), se eliminaron las clases de escalado ad-hoc (como `sm:text-lg` o 18px en títulos destacados).
-  * Toda tarjeta implementa la escala estándar calibrada de Noticias:
-    * **Titular:** `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
-    * **Metadatos y Categoría:** `text-[11px] font-mono text-zinc-400`, con soporte opcional para subcategorías técnicas o niveles de severidad.
-    * **Extracto Descriptivo:** `text-xs` (12px, `text-zinc-400 font-light line-clamp-2 leading-relaxed mt-1.5`).
-    * **Contenedor y Elevación:** `glass-convex-panel rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01]`.
+* **Normalización Arquitectónica Universal de 3 Secciones (`SoftwareCard.tsx`):**
+  * Para garantizar simetría visual absoluta, sobriedad y máxima elegancia entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura), todas las tarjetas especializadas (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`, `InfrastructureCard`) delegan como componentes de presentación en la tarjeta atómica unificada `SoftwareCard`.
+  * Toda tarjeta bajo la portada 16:9 (`<ArticleCover />`) implementa **única y estrictamente 3 secciones verticales limpias**:
+    * **1. Metadatos / Contexto:** Una sola línea mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate font-medium`).
+    * **2. Titular Principal:** `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
+    * **3. Extracto Descriptivo:** `text-xs` (12px, `text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5`).
+  * **Cero Ruido Visual (Prohibición de Footers):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas y botones redundantes de acción (`Iniciar guía →`, `Leer más →`, `Ver proyecto →`), asegurando una experiencia visual limpia, consistente y simétrica en todas las cuadrículas y el carrusel.
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
   * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`SoftwareHeaderNav`](/software/components/SoftwareHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`SoftwareFooter`](/software/components/SoftwareFooter.tsx).
   * **Tarjetas con Banners de Portada (`ArticleCover` 16:9):** Todas las tarjetas de catálogo (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`) integran en la parte superior el banner de portada en proporción 16:9 (`<ArticleCover />`), ya sea con su imagen real de alta resolución o con el banner procedural SVG temático neumórfico/glassmórfico de la categoría, estructuradas en grillas responsivas de 3 columnas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`).
@@ -215,5 +216,40 @@ frontend/web/src/app/(software)/
      * Renderizado con micro-iconos de Lucide (`Info`, `Lightbulb`, `AlertCircle`, `AlertTriangle`, `ShieldAlert`), borde de color semántico y contenedor estilizado.
 * **Orquestador Central ([`MarkdownRenderer.tsx`](/software/components/MarkdownRenderer.tsx)):**
   * Conecta `react-markdown` y `remark-gfm` con los componentes de la suite, garantizando una experiencia editorial homogénea en todas las subrutas `[slug]/page.tsx`.
+
+---
+
+## 8. Arquitectura de Activos Estáticos e Imágenes (`public/software/images/`)
+
+Para garantizar escalabilidad, trazabilidad y cero colisión de archivos a medida que crezca el catálogo editorial, los recursos visuales se organizan estrictamente bajo `frontend/web/public/software/images/`, alineados 100% con la directiva de caché estático de Nginx en Debian 13 (`location ^~ /software/images/`):
+
+```text
+public/software/images/
+├── covers/                      # Portadas 16:9 oficiales (1 por publicación, nombrada con el slug)
+│   ├── news/                    # ej: /software/images/covers/news/nextjs-16.jpg
+│   ├── tutorials/               # ej: /software/images/covers/tutorials/terminal-ssh-websockets.jpg
+│   ├── blog/                    # Portadas de ensayos de arquitectura
+│   ├── cybersecurity/           # Portadas de avisos de seguridad
+│   ├── ai/                      # Portadas de modelos y herramientas IA
+│   ├── infrastructure/          # Portadas de guías y análisis forenses
+│   └── projects/                # Portadas de proyectos showcase
+│
+├── content/                     # Imágenes internas de contenido embebidas en Markdown y StepWizard
+│   ├── news/[slug]/             # Capturas e infografías del artículo
+│   ├── tutorials/[slug]/        # Pasos ilustrados del StepWizard
+│   ├── blog/[slug]/             # Diagramas arquitectónicos complementarios
+│   ├── cybersecurity/[slug]/    # Diagramas de ataque/defensa, logs
+│   ├── ai/[slug]/               # Benchmarks, topologías de modelos
+│   ├── infrastructure/[slug]/   # Topologías de red, métricas htop/systemd
+│   └── projects/[slug]/         # Capturas de la UI del proyecto
+│
+└── placeholders/                # Gráficos procedurales y SVGs de respaldo
+    └── default-software-cover.svg
+```
+
+* **Nomenclatura basada en `slug`:** Las portadas coinciden exactamente con el `slug` del artículo (`covers/<categoría>/<slug>.<ext>`), garantizando rutas predecibles en base de datos SQLite y corpus JSON.
+* **Encapsulación por Artículo:** Las imágenes internas de texto se almacenan en una carpeta propia por slug (`content/<categoría>/<slug>/`), facilitando la depuración o retiro limpio de archivos huérfanos cuando un artículo sea despublicado.
+* **Compatibilidad de Infraestructura Nginx:** Al concentrar los recursos bajo `images/`, el servidor Nginx en AWS Lightsail cachea automáticamente todos los recursos visuales mediante el alias `alias /home/admin/jorge_doicela/frontend/web/public/software/images/;`, con encabezados `Cache-Control: "public, no-transform"` y expiración a 30 días sin sobrecargar el runtime Node.js.
+
 
 

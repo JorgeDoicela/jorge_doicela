@@ -15,17 +15,16 @@ export interface SoftwareCardProps {
   subCategory?: string;
   priority?: boolean;
   accentHoverColor?: string;
-  footer?: React.ReactNode;
 }
 
 /**
  * SoftwareCard - Componente de presentación normalizado para tarjetas de contenido técnico.
  * 
  * Estandariza la jerarquía visual de acuerdo con el sistema de diseño de Software:
- * - Metadatos: 11px font-mono text-zinc-400
- * - Título: 16px (text-base) font-bold con leading-snug y line-clamp-2
- * - Extracto: 12px (text-xs) font-light con line-clamp-2 y leading-relaxed
- * - Contenedor: p-4 sm:p-5 con elevación y transición neumórfica
+ * - Sección 1: Metadatos en 1 sola línea (11px font-mono text-zinc-400)
+ * - Sección 2: Título en negrita (16px font-bold leading-snug line-clamp-2)
+ * - Sección 3: Extracto descriptivo (12px text-xs line-clamp-2 leading-relaxed)
+ * - Cero footers, cero divisores extras y contenedor simétrico con elevación neumórfica
  */
 export function SoftwareCard({
   href,
@@ -38,7 +37,6 @@ export function SoftwareCard({
   subCategory,
   priority = false,
   accentHoverColor = 'group-hover:text-cyan-300',
-  footer,
 }: SoftwareCardProps) {
   return (
     <Link
@@ -71,8 +69,6 @@ export function SoftwareCard({
           )}
         </div>
       </div>
-
-      {footer && <div className="mt-4 pt-3 border-t border-slate-200/70 dark:border-white/5">{footer}</div>}
     </Link>
   );
 }

@@ -66,7 +66,11 @@
     "forumTag": "Forum",
     "projectTag": "Project",
     "syncError": "Could not synchronize software feed",
-    "retryConnection": "Retry connection"
+    "retryConnection": "Retry connection",
+    "prevFeatured": "Previous post",
+    "nextFeatured": "Next post",
+    "carouselAria": "Featured posts carousel",
+    "slideOf": "Page {current} of {total}"
   },
   "AuthorCard": {
     "role": "DevSecOps & Cloud Specialist",

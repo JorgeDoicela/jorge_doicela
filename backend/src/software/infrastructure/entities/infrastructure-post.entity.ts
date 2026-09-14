@@ -76,6 +76,9 @@ export class InfrastructurePost {
   @Column({ default: 'es' })
   language: string;
 
+  @Column({ nullable: true })
+  coverImage?: string;
+
   @Column({ default: 0 })
   views: number;
 

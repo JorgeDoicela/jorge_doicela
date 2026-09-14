@@ -100,7 +100,7 @@ backend/src/software/
 └── hub/                              # 9. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
     ├── hub.module.ts
     ├── hub.controller.ts             # /software/hub
-    └── hub.service.ts                # Consulta consolidada de alto rendimiento (Top 3 por SmartScore + feed cronológico)
+    └── hub.service.ts                # Consulta consolidada de alto rendimiento (Top publicaciones por SmartScore con recency boost para carrusel + feed cronológico)
 ```
 
 ---
@@ -148,7 +148,7 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `GET /software/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
 | | `POST /software/infrastructure` | - | Crear nueva publicación de infraestructura |
 | | `DELETE /software/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
-| **Hub Global** | `GET /software/hub` | `search`, `lang` | Consulta consolidada única: Top 3 destacados globales por SmartScore, feed cronológico polimórfico unificado y datos para Spotlight |
+| **Hub Global** | `GET /software/hub` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
 
 ---
 
@@ -170,11 +170,13 @@ La persistencia implementa soporte multiidioma nativo mediante la columna `langu
 * `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_tutorials_slug_lang (slug, language)`.
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`.
-* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`.  
+* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`.  
   * **Índice Único:** `IDX_projects_slug_lang (slug, language)`.
-* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Índice Único:** `IDX_infrastructure_posts_slug_lang (slug, language)`.
   * **Índices Secundarios:** `IDX_infrastructure_posts_cat (category)`, `IDX_infrastructure_posts_env (environment)`, `IDX_infrastructure_posts_feat (featured)`, `IDX_infrastructure_posts_prio (orderPriority)`.
+* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.
+* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.
 
 ---
 
@@ -195,25 +197,25 @@ $$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\te
 
 ---
 
-## 6. Corpus JSON Bilingüe y Sembrador Atómico (`seed-software.ts`)
+## 6. Corpus JSON Bilingüe, Portadas Profesionales y Sembrador Atómico (`seed-software.ts`)
 
-Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`). La plataforma mantiene una publicación maestra de referencia por sección para garantizar una línea base limpia y de máxima profundidad técnica:
+Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`). Cada publicación técnica cuenta con su portada editorial profesional (16:9, Dark Luxury / Neumorphic Glassmorphism) servida estáticamente desde `frontend/web/public/software/images/covers/<categoría>/`:
 
-| Sección | Archivo JSON | Slug Canónico | Publicación Maestra de Referencia |
+| Sección | Archivo JSON | Slug Canónico | Portada Editorial (16:9) |
 |---|---|---|---|
-| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | Novedades de Next.js 16 y Server Components |
-| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | Arquitectura Limpia y Monolitos Modulares en NestJS |
-| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | Optimización de RAM en VPS de 1GB para Node.js |
-| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | Model Context Protocol (MCP) |
-| **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | Guía Integral de Bastionado SSH en Servidores Linux |
-| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | Terminal SSH Virtual con WebSockets en React y NestJS |
-| **Proyectos** | `projects.json` | `software-tecnologico` | Software Hub Tecnológico |
-| **Infraestructura** | `infrastructure.json` | `vps-1gb-debian-nginx-pm2` | Arquitectura de Despliegue en VPS de 1 GB RAM |
+| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | `/software/images/covers/news/nextjs-16.jpg` |
+| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/software/images/covers/blog/arquitectura-limpia-monolitos.jpg` |
+| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/software/images/covers/forum/optimizacion-ram-vps.jpg` |
+| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/software/images/covers/ai/model-context-protocol.jpg` |
+| **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/software/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
+| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/software/images/covers/tutorials/terminal-ssh-websockets.jpg` |
+| **Proyectos** | `projects.json` | `software-tecnologico` | `/software/images/covers/projects/software-hub-tecnologico.jpg` |
+| **Infraestructura** | `infrastructure.json` | `nextjs-multitenant-loopback-incident-resolution` | `/software/images/covers/infrastructure/incidente-p1-nextjs.jpg` |
 
 * **Comando de Sembrado:**
   ```bash
   pnpm --filter backend seed:software
   ```
-* **Garantía Transaccional:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, garantizando reconstrucción limpia e indexación sin pérdida de datos ni lecturas sucias en menos de 50ms.
+* **Garantía Transaccional y Migración Defensiva:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, con comprobaciones preventivas `ensureColumn` para agregar dinámicamente columnas faltantes a tablas preexistentes sin requerir reinicios forzados, garantizando reconstrucción limpia e indexación en menos de 60ms.
 
 

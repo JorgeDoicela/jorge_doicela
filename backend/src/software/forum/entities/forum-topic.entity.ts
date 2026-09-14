@@ -33,6 +33,9 @@ export class ForumTopic {
   @Column({ default: 'es' })
   language: string;
 
+  @Column({ nullable: true })
+  coverImage?: string;
+
   @Column({ default: false })
   isSolved: boolean;
 

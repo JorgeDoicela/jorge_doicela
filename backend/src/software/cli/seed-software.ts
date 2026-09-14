@@ -33,6 +33,7 @@ interface BlogSeedItem {
   language?: string;
   series?: string;
   tableOfContents?: string;
+  coverImage?: string;
   readTimeMinutes: number;
   views: number;
   likes: number;
@@ -50,6 +51,7 @@ interface ForumSeedData {
     author: string;
     category: string;
     language?: string;
+    coverImage?: string;
     isSolved: boolean;
     isPinned: boolean;
     orderPriority?: number;
@@ -80,6 +82,7 @@ interface AiSeedItem {
   githubUrl?: string;
   tags: string;
   language?: string;
+  coverImage?: string;
   views: number;
   likes: number;
   featured?: boolean;
@@ -100,6 +103,7 @@ interface SecuritySeedItem {
   author: string;
   tags: string;
   language?: string;
+  coverImage?: string;
   views: number;
   likes: number;
   featured?: boolean;
@@ -145,6 +149,7 @@ interface ProjectSeedItem {
   description: string;
   techStack: string;
   language?: string;
+  coverImage?: string;
   repoUrl?: string;
   liveUrl?: string;
   status: string;
@@ -169,6 +174,7 @@ interface InfrastructureSeedItem {
   author?: string;
   tags?: string;
   language?: string;
+  coverImage?: string;
   views?: number;
   likes?: number;
   featured?: boolean;
@@ -257,6 +263,7 @@ export function seedSoftware(
       author TEXT NOT NULL DEFAULT 'Comunidad Tech',
       category TEXT NOT NULL DEFAULT 'general',
       language TEXT NOT NULL DEFAULT 'es',
+      coverImage TEXT,
       isSolved INTEGER NOT NULL DEFAULT 0,
       isPinned INTEGER NOT NULL DEFAULT 0,
       orderPriority INTEGER NOT NULL DEFAULT 0,
@@ -294,6 +301,7 @@ export function seedSoftware(
       githubUrl TEXT,
       tags TEXT NOT NULL DEFAULT 'ai,llm',
       language TEXT NOT NULL DEFAULT 'es',
+      coverImage TEXT,
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
       featured INTEGER NOT NULL DEFAULT 0,
@@ -318,6 +326,7 @@ export function seedSoftware(
       author TEXT NOT NULL DEFAULT 'Jorge Doicela',
       tags TEXT NOT NULL DEFAULT 'cybersecurity,devsecops',
       language TEXT NOT NULL DEFAULT 'es',
+      coverImage TEXT,
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
       featured INTEGER NOT NULL DEFAULT 0,
@@ -373,6 +382,7 @@ export function seedSoftware(
       description TEXT NOT NULL,
       techStack TEXT NOT NULL,
       language TEXT NOT NULL DEFAULT 'es',
+      coverImage TEXT,
       repoUrl TEXT,
       liveUrl TEXT,
       status TEXT NOT NULL DEFAULT 'active',
@@ -401,6 +411,7 @@ export function seedSoftware(
       author TEXT NOT NULL DEFAULT 'Jorge Doicela',
       tags TEXT NOT NULL DEFAULT 'infrastructure,cloud,sysadmin',
       language TEXT NOT NULL DEFAULT 'es',
+      coverImage TEXT,
       views INTEGER NOT NULL DEFAULT 0,
       likes INTEGER NOT NULL DEFAULT 0,
       featured INTEGER NOT NULL DEFAULT 0,
@@ -414,8 +425,35 @@ export function seedSoftware(
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_env ON infrastructure_posts (environment);
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_feat ON infrastructure_posts (featured);
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_prio ON infrastructure_posts (orderPriority);
-
   `);
+
+  const ensureColumn = (
+    tableName: string,
+    columnName: string,
+    columnDef: string,
+  ) => {
+    try {
+      const columns = db.pragma(`table_info(${tableName})`) as {
+        name: string;
+      }[];
+      if (!columns.some((c) => c.name === columnName)) {
+        db.exec(
+          `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnDef};`,
+        );
+      }
+    } catch {
+      // Ignore if table does not exist yet
+    }
+  };
+
+  ensureColumn('news_articles', 'coverImage', 'TEXT');
+  ensureColumn('blog_posts', 'coverImage', 'TEXT');
+  ensureColumn('ai_resources', 'coverImage', 'TEXT');
+  ensureColumn('security_posts', 'coverImage', 'TEXT');
+  ensureColumn('tutorials', 'coverImage', 'TEXT');
+  ensureColumn('projects', 'coverImage', 'TEXT');
+  ensureColumn('infrastructure_posts', 'coverImage', 'TEXT');
+  ensureColumn('forum_topics', 'coverImage', 'TEXT');
 
   let corpusDir = path.resolve(__dirname, '../corpus');
   if (!fs.existsSync(corpusDir)) {
@@ -443,6 +481,8 @@ export function seedSoftware(
     for (const item of newsData) {
       insertNews.run({
         ...item,
+        coverImage: item.coverImage ?? null,
+        sourceUrl: item.sourceUrl ?? null,
         isBreaking: item.isBreaking ? 1 : 0,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
@@ -454,14 +494,15 @@ export function seedSoftware(
     // 2. Blog Posts (blog_posts)
     const insertBlog = db.prepare(`
       INSERT OR REPLACE INTO blog_posts 
-        (slug, title, subtitle, excerpt, contentMarkdown, author, tags, language, series, tableOfContents, readTimeMinutes, views, likes, featured, orderPriority, publishedAt)
+        (slug, title, subtitle, excerpt, contentMarkdown, author, tags, language, series, tableOfContents, coverImage, readTimeMinutes, views, likes, featured, orderPriority, publishedAt)
       VALUES 
-        (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @tags, @language, @series, @tableOfContents, @readTimeMinutes, @views, @likes, @featured, @orderPriority, @publishedAt)
+        (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @tags, @language, @series, @tableOfContents, @coverImage, @readTimeMinutes, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const blogData = readJson<BlogSeedItem[]>('blog.json');
     for (const item of blogData) {
       insertBlog.run({
         ...item,
+        coverImage: item.coverImage ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
@@ -472,9 +513,9 @@ export function seedSoftware(
     // 3. Foros (forum_topics y forum_replies)
     const insertTopic = db.prepare(`
       INSERT OR REPLACE INTO forum_topics 
-        (id, slug, title, content, author, category, language, isSolved, isPinned, orderPriority, repliesCount, views)
+        (id, slug, title, content, author, category, language, coverImage, isSolved, isPinned, orderPriority, repliesCount, views)
       VALUES 
-        (@id, @slug, @title, @content, @author, @category, @language, @isSolved, @isPinned, @orderPriority, @repliesCount, @views)
+        (@id, @slug, @title, @content, @author, @category, @language, @coverImage, @isSolved, @isPinned, @orderPriority, @repliesCount, @views)
     `);
     const insertReply = db.prepare(`
       INSERT OR REPLACE INTO forum_replies
@@ -486,6 +527,7 @@ export function seedSoftware(
     for (const topic of forumData.topics) {
       insertTopic.run({
         ...topic,
+        coverImage: topic.coverImage ?? null,
         isSolved: topic.isSolved ? 1 : 0,
         isPinned: topic.isPinned ? 1 : 0,
         orderPriority: topic.orderPriority || 0,
@@ -502,14 +544,15 @@ export function seedSoftware(
     // 4. Inteligencia Artificial (ai_resources)
     const insertAi = db.prepare(`
       INSERT OR REPLACE INTO ai_resources
-        (slug, name, type, provider, description, contentMarkdown, license, documentationUrl, paperUrl, githubUrl, tags, language, views, likes, featured, orderPriority, publishedAt)
+        (slug, name, type, provider, description, contentMarkdown, license, documentationUrl, paperUrl, githubUrl, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @name, @type, @provider, @description, @contentMarkdown, @license, @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @views, @likes, @featured, @orderPriority, @publishedAt)
+        (@slug, @name, @type, @provider, @description, @contentMarkdown, @license, @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const aiData = readJson<AiSeedItem[]>('ai.json');
     for (const item of aiData) {
       insertAi.run({
         ...item,
+        coverImage: item.coverImage ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
@@ -520,14 +563,15 @@ export function seedSoftware(
     // 5. Ciberseguridad (security_posts)
     const insertSec = db.prepare(`
       INSERT OR REPLACE INTO security_posts
-        (slug, title, severity, postType, cveId, affectedSystems, remediation, excerpt, contentMarkdown, author, tags, language, views, likes, featured, orderPriority, publishedAt)
+        (slug, title, severity, postType, cveId, affectedSystems, remediation, excerpt, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @title, @severity, @postType, @cveId, @affectedSystems, @remediation, @excerpt, @contentMarkdown, @author, @tags, @language, @views, @likes, @featured, @orderPriority, @publishedAt)
+        (@slug, @title, @severity, @postType, @cveId, @affectedSystems, @remediation, @excerpt, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const secData = readJson<SecuritySeedItem[]>('security.json');
     for (const item of secData) {
       insertSec.run({
         ...item,
+        coverImage: item.coverImage ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
@@ -552,6 +596,7 @@ export function seedSoftware(
     for (const item of tutorialsData.tutorials) {
       insertTutorial.run({
         ...item,
+        coverImage: item.coverImage ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
@@ -565,14 +610,15 @@ export function seedSoftware(
     // 7. Proyectos (projects)
     const insertProj = db.prepare(`
       INSERT OR REPLACE INTO projects
-        (slug, name, description, techStack, language, repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl)
+        (slug, name, description, techStack, language, coverImage, repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl)
       VALUES
-        (@slug, @name, @description, @techStack, @language, @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl)
+        (@slug, @name, @description, @techStack, @language, @coverImage, @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl)
     `);
     const projectsData = readJson<ProjectSeedItem[]>('projects.json');
     for (const item of projectsData) {
       insertProj.run({
         ...item,
+        coverImage: item.coverImage ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
@@ -582,14 +628,15 @@ export function seedSoftware(
     // 8. Infraestructura (infrastructure_posts)
     const insertInfra = db.prepare(`
       INSERT OR REPLACE INTO infrastructure_posts
-        (slug, title, subtitle, category, environment, difficulty, techStack, architectureOverview, specs, contentMarkdown, author, tags, language, views, likes, featured, orderPriority, publishedAt)
+        (slug, title, subtitle, category, environment, difficulty, techStack, architectureOverview, specs, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @title, @subtitle, @category, @environment, @difficulty, @techStack, @architectureOverview, @specs, @contentMarkdown, @author, @tags, @language, @views, @likes, @featured, @orderPriority, @publishedAt)
+        (@slug, @title, @subtitle, @category, @environment, @difficulty, @techStack, @architectureOverview, @specs, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
     `);
     const infraData = readJson<InfrastructureSeedItem[]>('infrastructure.json');
     for (const item of infraData) {
       insertInfra.run({
         ...item,
+        coverImage: item.coverImage ?? null,
         subtitle: item.subtitle || null,
         architectureOverview: item.architectureOverview || null,
         specs: item.specs || null,

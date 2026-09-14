@@ -7,6 +7,7 @@ import { SpotlightModal } from '../features/os/components/SpotlightModal';
 import { SoftwareCard } from '../components/SoftwareCard';
 import { SoftwareFooter } from '../components/SoftwareFooter';
 import { SoftwareHeaderNav } from '../components/SoftwareHeaderNav';
+import { FeaturedCarousel } from '../components/FeaturedCarousel';
 
 export default function SoftwarePage() {
   const tHome = useTranslations('Home');
@@ -61,46 +62,12 @@ export default function SoftwarePage() {
             onOpenSpotlight={() => setIsSpotlightOpen(true)}
           />
 
-          {/* SECCIÓN 1: FEATURED POSTS (PODIO GLOBAL TOP 3 POR SMARTSCORE) */}
-          <section className="animate-in fade-in duration-300">
-            {/* Contenedor Único para las 3 Publicaciones Destacadas */}
-            <div className="p-5 sm:p-6 rounded-3xl glass-convex-panel space-y-5">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--header-title)]">
-                  {tHome('featuredPosts')}
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {isLoadingCurrent && topFeatured.length === 0 ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <div
-                      key={`feat-pulse-${i}`}
-                      className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center glass-concave-panel"
-                    >
-                      {tCommon('loading')}
-                    </div>
-                  ))
-                ) : (
-                  topFeatured.map((item) => (
-                    <SoftwareCard
-                      key={item.id}
-                      href={item.href}
-                      title={item.title}
-                      category={item.category}
-                      subCategory={item.subCategory}
-                      coverImage={item.coverImage}
-                      tag={item.tag}
-                      categoryMeta={item.categoryMeta}
-                      excerpt={item.excerpt}
-                      priority={true}
-                      accentHoverColor={item.accentHoverColor}
-                    />
-                  ))
-                )}
-              </div>
-            </div>
-          </section>
+          {/* SECCIÓN 1: CARRUSEL DE PUBLICACIONES DESTACADAS (SMARTSCORE DINÁMICO) */}
+          <FeaturedCarousel
+            items={topFeatured}
+            title={tHome('featuredPosts')}
+            isLoading={isLoadingCurrent}
+          />
 
           {/* SECCIÓN 2: LATEST POSTS / FEED CRONOLÓGICO UNIFICADO */}
           <section className="animate-in fade-in duration-300">

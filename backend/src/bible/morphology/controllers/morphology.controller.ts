@@ -23,23 +23,6 @@ export class MorphologyController {
     return this.morphologyService.getTokensByVerse(verseId);
   }
 
-  @Get('tokens/search')
-  async searchTokens(
-    @Query('q') query?: string,
-    @Query('book') book?: string,
-    @Query('strong') strongCode?: string,
-    @Query('morph') morphologyCode?: string,
-    @Query('limit') limit?: string,
-  ): Promise<MorphologyToken[]> {
-    return this.morphologyService.searchTokens({
-      query,
-      book,
-      strongCode,
-      morphologyCode,
-      limit: limit ? parseInt(limit, 10) : 50,
-    });
-  }
-
   @Get('lexicon/:strongCode')
   async getLexiconEntry(
     @Param('strongCode') strongCode: string,

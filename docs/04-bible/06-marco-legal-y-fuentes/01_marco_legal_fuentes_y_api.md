@@ -51,14 +51,14 @@ Este documento define la política legal, el catálogo de fuentes textuales de d
   * *Liddell-Scott-Jones Greek-English Lexicon (Edición Clásica)* $\rightarrow$ Dominio Público.
 * **Numeración Concordante:** Códigos numéricos universales del *Dr. James Strong (Exhaustive Concordance of the Bible, 1890)* $\rightarrow$ Dominio Público.
 
-### 3.3 Estructuras Literarias y Quiasmos
-* **Análisis Poético Semítico:** Diagramación simétrica objetiva de paralelismos (sinónimos, antitéticos, sintéticos) y macroestructuras quiásticas (Hexamerón de Génesis 1, discurso paulino de Romanos 8).
-* **Estado Legal:** Análisis literario estructural de libre divulgación.
-
-### 3.4 Contexto Histórico, Atlas y Arqueología
+### 3.3 Contexto Histórico, Atlas y Arqueología
 * **Atlas Bíblico Georreferenciado:** Coordenadas espaciales WGS84 derivadas de datos satelitales públicos (NASA Earth Data, USGS y OpenStreetMap).
 * **Cronología Sincrónica:** Tablas cronológicas de datación del Antiguo Cercano Oriente (reyes de Israel/Judá vs imperios egipcio, asirio, babilónico y persa).
 * **Arqueología Bíblica:** Documentación de artefactos y epigrafía de dominio público custodiados en museos estatales (Estela de Tel Dan, Cilindro de Ciro, Inscripción de Siloé, Papiros de Oxirrinco).
+
+### 3.4 Evangelización y Apologética Práctica
+* **Rutas Soteriológicas:** Progresión canónica de pasajes (Camino de Romanos, El Puente a la Vida, Las Cuatro Verdades) sobre traducciones de dominio público o autorizadas.
+* **Banco de Objeciones:** Respuestas apologéticas fundamentadas en exégesis bíblica e historia documental.
 
 ---
 

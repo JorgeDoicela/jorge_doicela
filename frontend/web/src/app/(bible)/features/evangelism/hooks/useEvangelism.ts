@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocale } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   EvangelismPathway,
   EvangelismObjection,
@@ -16,8 +17,34 @@ import {
 
 export function useEvangelism() {
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [subSuite, setSubSuite] = useState<EvangelismSubSuite>('pathways');
+  const urlTab = searchParams?.get('tab') as EvangelismSubSuite | null;
+  const initialSubSuite: EvangelismSubSuite =
+    urlTab === 'pathways' || urlTab === 'objections' || urlTab === 'tracts'
+      ? urlTab
+      : 'pathways';
+
+  const [subSuite, setSubSuiteState] = useState<EvangelismSubSuite>(initialSubSuite);
+
+  useEffect(() => {
+    if (urlTab && (urlTab === 'pathways' || urlTab === 'objections' || urlTab === 'tracts')) {
+      setSubSuiteState(urlTab);
+    }
+  }, [urlTab]);
+
+  const setSubSuite = useCallback(
+    (newSuite: EvangelismSubSuite) => {
+      setSubSuiteState(newSuite);
+      const params = new URLSearchParams(searchParams?.toString() || '');
+      params.set('tab', newSuite);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [pathname, router, searchParams]
+  );
+
   const [pathways, setPathways] = useState<EvangelismPathway[]>([]);
   const [selectedPathwayId, setSelectedPathwayId] = useState<string>('romans-road');
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);

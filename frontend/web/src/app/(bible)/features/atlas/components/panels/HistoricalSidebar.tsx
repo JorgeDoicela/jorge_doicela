@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import {
   MapPin,
   Clock,
@@ -21,10 +22,26 @@ import { HistoricalEra, PlaceCategory } from '../../types';
 export const HistoricalSidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const atlas = useAtlasContextSafe();
+  const searchParams = useSearchParams();
   const tStudio = useTranslations('Studio');
   const tAtlas = useTranslations('Atlas');
 
-  const [activeTab, setActiveTab] = useState<'places' | 'eras' | 'categories'>('places');
+  const urlSubTab = searchParams?.get('tab');
+  const getInitialTab = (): 'places' | 'eras' | 'categories' => {
+    if (urlSubTab === 'timeline') return 'eras';
+    if (urlSubTab === 'archaeology') return 'categories';
+    return 'places';
+  };
+
+  const [activeTab, setActiveTab] = useState<'places' | 'eras' | 'categories'>(getInitialTab);
+
+  useEffect(() => {
+    if (urlSubTab === 'timeline') {
+      setActiveTab('eras');
+    } else if (urlSubTab === 'archaeology') {
+      setActiveTab('categories');
+    }
+  }, [urlSubTab]);
 
   const isOpen = passageContext?.isLeftSidebarOpen ?? true;
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});

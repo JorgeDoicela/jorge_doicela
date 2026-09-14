@@ -8,12 +8,12 @@ Catálogo exhaustivo de requerimientos, módulos completados y objetivos futuros
 - [x] **Vista Paralela Multi-Columna:** Comparador de 2 a 4 traducciones con desplazamiento sincronizado.
 - [x] **Comparador de Variantes Textuales:** Algoritmo LCS para resaltar divergencias entre traducciones.
 - [x] **Interlineal Inverso Morfológico:** Texto Masorético Hebreo/Arameo y NA28 Griego con códigos Strong y hover bidireccional.
-- [x] **Visualizador de Estructuras Literarias:** Detección visual de quiasmos y paralelismos semíticos.
-- [x] **Léxicos Integrados:** Diccionarios BDB, Gesenius, Thayer, DTAT y Robertson.
-- [x] **Búsqueda Gramatical y Morfológica:** Filtro por categorías gramaticales y concordancia FTS5.
-- [x] **Atlas Bíblico 3D:** Rutas del Éxodo, viajes de Pablo y ministerio de Jesús.
-- [x] **Línea de Tiempo Sincrónica:** Reyes de Israel/Judá vs profetas e imperios.
-- [ ] **Red de Referencias Cruzadas:** Integración de las 340,000 referencias del *Treasury of Scripture Knowledge (TSK)*.
+- [x] **Léxicos Integrados:** Diccionarios BDB, Gesenius, Thayer y concordancia exhaustiva de James Strong.
+- [x] **Atlas Bíblico WGS84:** Rutas del Éxodo, viajes apostólicos e itinerarios bíblicos.
+- [x] **Línea de Tiempo Sincrónica:** Reyes de Israel/Judá vs profetas e imperios contemporáneos.
+- [x] **Evidencias & Arqueología:** Catálogo de artefactos, manuscritos del Mar Muerto y epigrafía.
+- [x] **Evangelización y Apologética:** Rutas soteriológicas canónicas, banco de objeciones y tratados homiléticos.
+- [ ] **Red de Referencias Cruzadas:** Integración de las referencias del *Treasury of Scripture Knowledge (TSK)*.
 - [ ] **Comentarios Clásicos Versículo por Versículo:** Matthew Henry, Jamieson-Fausset-Brown, John Gill.
 
 ---

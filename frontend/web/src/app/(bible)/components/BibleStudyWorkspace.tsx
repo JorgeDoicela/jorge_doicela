@@ -14,9 +14,7 @@ import {
 } from '../features/parallel-view';
 import { TextualDiffModal, VerseComparisonData } from '../features/textual-diff';
 import { InterlinearView } from '../features/interlinear';
-import { LiteraryAnalysisView } from '../features/literary-analysis';
 import { LexiconView } from '../features/lexicons';
-import { GrammarSearchDashboard } from '../features/grammar-search';
 import { AtlasDashboard } from '../features/atlas';
 import { TimelineDashboard } from '../features/timeline';
 import { ArchaeologyFeedDashboard } from '../features/archaeology-feed';
@@ -126,7 +124,7 @@ export function BibleStudyWorkspace() {
     setSelectedChapter(chapter);
   };
 
-  const isPassageBasedMode = ['parallel', 'interlinear', 'literary', 'grammar-search'].includes(studyMode);
+  const isPassageBasedMode = ['parallel', 'interlinear'].includes(studyMode);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -166,16 +164,6 @@ export function BibleStudyWorkspace() {
                   {selectedBook?.testament === 'NT' ? tInterlinear('activeOriginalBadgeNt') : tInterlinear('activeOriginalBadgeOt')}
                 </span>
               )}
-              {studyMode === 'literary' && (
-                <span className="text-[11px] font-mono text-emerald-500/90 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                  {tNav('literary')}
-                </span>
-              )}
-              {studyMode === 'grammar-search' && (
-                <span className="text-[11px] font-mono text-cyan-500/90 bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">
-                  {tNav('wordStudy')}
-                </span>
-              )}
             </div>
           </section>
         )}
@@ -195,22 +183,10 @@ export function BibleStudyWorkspace() {
             />
           ) : studyMode === 'interlinear' ? (
             <InterlinearView selectedBookAbbr={selectedBook?.abbreviation} />
-          ) : studyMode === 'word-study' ? (
+          ) : studyMode === 'word-study' || studyMode === 'lexicon' ? (
             <WordStudyView />
-          ) : studyMode === 'historical-context' ? (
+          ) : studyMode === 'historical-context' || studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology' ? (
             <HistoricalContextView />
-          ) : studyMode === 'literary' ? (
-            <LiteraryAnalysisView />
-          ) : studyMode === 'lexicon' ? (
-            <WordStudyView initialSubTab="lexicon" />
-          ) : studyMode === 'grammar-search' ? (
-            <WordStudyView initialSubTab="morphology" />
-          ) : studyMode === 'atlas' ? (
-            <HistoricalContextView initialSubTab="atlas" />
-          ) : studyMode === 'timeline' ? (
-            <HistoricalContextView initialSubTab="timeline" />
-          ) : studyMode === 'archaeology' ? (
-            <HistoricalContextView initialSubTab="archaeology" />
           ) : (
             <VerseList
               verses={verses}

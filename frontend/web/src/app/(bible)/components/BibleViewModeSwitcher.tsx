@@ -3,11 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { BookOpen, Columns2, Languages } from 'lucide-react';
+import { BookOpen, Columns2, Languages, BookOpenCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface ViewMode {
-  id: 'standard' | 'parallel' | 'interlinear';
+  id: 'standard' | 'parallel' | 'interlinear' | 'wordStudy';
   path: string;
   labelKey: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -17,6 +17,7 @@ const VIEW_MODES: ViewMode[] = [
   { id: 'standard', path: '/study/standard', labelKey: 'standard', icon: BookOpen },
   { id: 'parallel', path: '/study/parallel', labelKey: 'parallel', icon: Columns2 },
   { id: 'interlinear', path: '/study/interlinear', labelKey: 'interlinear', icon: Languages },
+  { id: 'wordStudy', path: '/study/word-study', labelKey: 'wordStudy', icon: BookOpenCheck },
 ];
 
 export const BibleViewModeSwitcher: React.FC = () => {

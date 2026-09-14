@@ -38,48 +38,6 @@ export class MorphologyService {
       .getMany();
   }
 
-  async searchTokens(filter: {
-    query?: string;
-    book?: string;
-    strongCode?: string;
-    morphologyCode?: string;
-    limit?: number;
-  }): Promise<MorphologyToken[]> {
-    const qb = this.tokenRepository
-      .createQueryBuilder('token')
-      .innerJoinAndSelect('token.verse', 'verse')
-      .innerJoinAndSelect('verse.book', 'book');
-
-    if (filter.query && filter.query.trim() !== '') {
-      const q = `%${filter.query.trim().toLowerCase()}%`;
-      qb.andWhere(
-        '(LOWER(token.surfaceText) LIKE :q OR LOWER(token.gloss) LIKE :q OR LOWER(token.strongCode) LIKE :q)',
-        { q },
-      );
-    }
-
-    if (filter.book && filter.book.trim() !== '') {
-      qb.andWhere('UPPER(book.abbreviation) = :book', {
-        book: filter.book.toUpperCase(),
-      });
-    }
-
-    if (filter.strongCode && filter.strongCode.trim() !== '') {
-      qb.andWhere('UPPER(token.strongCode) = :strong', {
-        strong: filter.strongCode.toUpperCase(),
-      });
-    }
-
-    if (filter.morphologyCode && filter.morphologyCode.trim() !== '') {
-      qb.andWhere('token.morphologyCode LIKE :morph', {
-        morph: `%${filter.morphologyCode}%`,
-      });
-    }
-
-    const limit = Math.min(Math.max(filter.limit || 50, 1), 100);
-    return qb.limit(limit).getMany();
-  }
-
   async getLexiconEntry(strongCode: string): Promise<LexiconEntry> {
     const entry = await this.lexiconRepository.findOne({
       where: { strongCode: strongCode.toUpperCase() },

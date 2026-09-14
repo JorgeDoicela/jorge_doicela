@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { AtlasDashboard } from '../features/atlas';
 import { TimelineDashboard } from '../features/timeline';
 import { ArchaeologyFeedDashboard } from '../features/archaeology-feed';
@@ -17,7 +18,24 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
   initialSubTab = 'atlas',
 }) => {
   const t = useTranslations('HistoricalContext');
-  const [subTab, setSubTab] = useState<HistoricalContextSubTab>(initialSubTab);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const urlTab = searchParams?.get('tab') as HistoricalContextSubTab | null;
+  const subTab: HistoricalContextSubTab =
+    urlTab === 'atlas' || urlTab === 'timeline' || urlTab === 'archaeology'
+      ? urlTab
+      : initialSubTab;
+
+  const handleSubTabChange = useCallback(
+    (newTab: HistoricalContextSubTab) => {
+      const params = new URLSearchParams(searchParams?.toString() || '');
+      params.set('tab', newTab);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [pathname, router, searchParams]
+  );
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
@@ -30,7 +48,7 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
           <div className="inline-flex flex-wrap rounded-lg border border-accents-2 bg-background p-1 text-xs gap-1">
             <button
               type="button"
-              onClick={() => setSubTab('atlas')}
+              onClick={() => handleSubTabChange('atlas')}
               className={`px-3 py-1.5 rounded-md font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                 subTab === 'atlas'
                   ? 'bg-foreground text-background font-bold shadow-xs'
@@ -42,7 +60,7 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setSubTab('timeline')}
+              onClick={() => handleSubTabChange('timeline')}
               className={`px-3 py-1.5 rounded-md font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                 subTab === 'timeline'
                   ? 'bg-foreground text-background font-bold shadow-xs'
@@ -54,7 +72,7 @@ export const HistoricalContextView: React.FC<HistoricalContextViewProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setSubTab('archaeology')}
+              onClick={() => handleSubTabChange('archaeology')}
               className={`px-3 py-1.5 rounded-md font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                 subTab === 'archaeology'
                   ? 'bg-foreground text-background font-bold shadow-xs'

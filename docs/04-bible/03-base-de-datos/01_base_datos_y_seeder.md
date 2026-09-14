@@ -58,20 +58,6 @@ La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rá
 │ archaeologicalNotes    │       │ keyEvents              │       │ biblicalReferences     │
 └────────────────────────┘       └────────────────────────┘       └────────────────────────┘
 
-┌────────────────────────┐       ┌────────────────────────┐
-│   chiasm_structures    │       │   pauline_discourses   │
-├────────────────────────┤       ├────────────────────────┤
-│ id (PK)                │       │ id (PK)                │
-│ language (PK)          │       │ language (PK)          │
-│ bookAbbreviation (IDX) │       │ bookAbbreviation (IDX) │
-│ bookName               │       │ bookName               │
-│ passageRef             │       │ passageRef             │
-│ title                  │       │ title                  │
-│ description            │       │ theologicalTheme       │
-│ literaryCategory (IDX) │       │ centralProposition     │
-│ focalMessage           │       │ clauses (JSON)         │
-│ cola (JSON)            │       └────────────────────────┘
-└────────────────────────┘
 
 ┌────────────────────────┐       ┌────────────────────────┐       ┌────────────────────────┐
 │  evangelism_pathways   │       │ evangelism_objections  │       │   evangelism_tracts    │
@@ -108,9 +94,6 @@ backend/src/bible/corpus/
 │   ├── atlas_locations.json      # Coordenadas WGS84, regiones y excavaciones
 │   ├── timeline_events.json      # Monarcas, profetas e imperios
 │   └── archaeology_articles.json # Artículos de epigrafía y manuscritos
-└── literary/                     # Fuentes de Análisis Literario y Quiasmos (ES / EN)
-    ├── chiasms.json              # Estructuras simétricas concéntricas y Hexamerón
-    └── pauline.json              # Proposiciones y conectores de discurso paulino
 └── evangelism/                   # Fuentes de Evangelización y Apologética (ES / EN)
     ├── pathways.json             # Rutas y secuencias bíblicas (Camino de Romanos, Puente a la Vida)
     ├── objections.json           # Objeciones escépticas y defensas exegéticas
@@ -127,12 +110,11 @@ La persistencia del corpus bíblico e histórico sigue el principio de **Ingesti
 ### 3.1 Flujo de Recreación Limpia
 Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
 
-1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 13 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `chiasm_structures`, `pauline_discourses`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`).
+1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 11 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`).
 2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
 3. **Sembrado Canónico y Textual por Lotes:** Inserta los 66 libros canónicos, versiones y procesa los versículos por lotes transaccionales (`better-sqlite3`).
 4. **Sembrado de Contexto Histórico Bilingüe:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía en español e inglés.
-5. **Sembrado de Análisis Literario:** Inserta quiasmos concéntricos y diagramación de discurso paulino bilingüe.
-6. **Sembrado de Evangelización y Apologética:** Inserta rutas salvíficas estructuradas, banco de objeciones exegéticas y tratados listos para predicar.
+5. **Sembrado de Evangelización y Apologética:** Inserta rutas salvíficas estructuradas, banco de objeciones exegéticas y tratados listos para predicar.
 
 
 ### 3.2 Beneficios Arquitectónicos
@@ -163,8 +145,9 @@ Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
   [HistoricalSeeder] -> 6 ubicaciones geográficas indexadas.
   [HistoricalSeeder] -> 34 entidades cronológicas indexadas.
   [HistoricalSeeder] -> 6 artículos arqueológicos indexados.
-  [LiterarySeeder] -> 2 estructuras quiásticas indexadas.
-  [LiterarySeeder] -> 2 discursos paulinos indexados.
+  [EvangelismSeeder] -> 3 rutas bíblicas evangelísticas indexadas.
+  [EvangelismSeeder] -> 10 objeciones apologéticas indexadas.
+  [EvangelismSeeder] -> 5 tratados y bosquejos homiléticos indexados.
   [CorpusSeeder] Completado con éxito: 161 versículos indexados en 110 ms. Consumo de RAM: 177.60 MB.
   ```
 * **Automatización CI/CD:** Se ejecuta automáticamente tras cada despliegue en GitHub Actions para mantener `bible.sqlite` sincronizada con el repositorio.

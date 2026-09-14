@@ -39,7 +39,7 @@ export default function BibleLandingPage() {
     // Propósito de estudio activo (Inspirado en los filtros de Google Perfil de Negocio)
     const [activePurpose, setActivePurpose] = useState<'daily' | 'compare' | 'originals' | 'history'>('daily');
 
-    // 10 Suites de Estudio Bíblico y Exegético
+    // Suites de Estudio Bíblico y Exegético
     const engines = [
         {
             href: '/study/standard',
@@ -63,13 +63,6 @@ export default function BibleLandingPage() {
             desc: tLanding('engine3Desc'),
         },
         {
-            href: '/study/literary',
-            icon: ScrollText,
-            colorClass: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500',
-            title: tLanding('engine4Title'),
-            desc: tLanding('engine4Desc'),
-        },
-        {
             href: '/study/word-study',
             icon: Library,
             colorClass: 'bg-purple-500/10 border-purple-500/20 text-purple-500',
@@ -77,28 +70,21 @@ export default function BibleLandingPage() {
             desc: tLanding('engine5Desc'),
         },
         {
-            href: '/study/word-study',
-            icon: Search,
-            colorClass: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-500',
-            title: tLanding('engine6Title'),
-            desc: tLanding('engine6Desc'),
-        },
-        {
-            href: '/study/historical-context',
+            href: '/study/historical-context?tab=atlas',
             icon: MapPin,
             colorClass: 'bg-rose-500/10 border-rose-500/20 text-rose-500',
             title: tLanding('engine7Title'),
             desc: tLanding('engine7Desc'),
         },
         {
-            href: '/study/historical-context',
+            href: '/study/historical-context?tab=timeline',
             icon: Clock,
             colorClass: 'bg-amber-400/10 border-amber-400/20 text-amber-500',
             title: tLanding('engine8Title'),
             desc: tLanding('engine8Desc'),
         },
         {
-            href: '/study/historical-context',
+            href: '/study/historical-context?tab=archaeology',
             icon: Landmark,
             colorClass: 'bg-teal-400/10 border-teal-400/20 text-teal-500',
             title: tLanding('engine9Title'),
@@ -221,9 +207,7 @@ export default function BibleLandingPage() {
             '/bible/images/hero_editorial_dark.jpg',
             '/bible/images/parallel_versions_study.jpg',
             '/bible/images/codex_interlinear_scroll.jpg',
-            '/bible/images/chiasm_poetry_manuscript.jpg',
             '/bible/images/strong_lexicon_study.jpg',
-            '/bible/images/smart_search_scriptures.jpg',
             '/bible/images/bible_atlas_topography.jpg',
             '/bible/images/historical_timeline_chronology.jpg',
             '/bible/images/manuscripts_heritage.jpg',
@@ -512,30 +496,8 @@ export default function BibleLandingPage() {
                                                 </div>
                                             )}
 
-                                            {/* 4. ESTRUCTURA Y POESÍA BÍBLICA: Cajón Lateral Derecho con Árbol Quiástico */}
+                                            {/* 4. DICCIONARIOS BÍBLICOS Y STRONG: Ficha "Salidita" en Esquina Inferior Izquierda */}
                                             {idx === 3 && (
-                                                <div className="absolute top-3.5 bottom-3.5 right-3.5 z-10 w-full sm:w-[320px] md:w-[335px] flex flex-col justify-center">
-                                                    <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-1.5 font-mono text-[10px]">
-                                                        <div className="flex items-center justify-between text-foreground font-semibold pb-1 border-b border-border text-[10.5px]">
-                                                            <span className="flex items-center gap-1.5">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                                                Quiasmo Simétrico
-                                                            </span>
-                                                            <span className="text-accents-4 text-[9.5px]">Salmos 23</span>
-                                                        </div>
-                                                        <div className="space-y-1 text-accents-5 pt-0.5">
-                                                            <div className="text-accents-4">[A] Provisión integral (v.1)</div>
-                                                            <div className="pl-2 border-l border-border/80">[B] Reposo y renovación (v.2-3)</div>
-                                                            <div className="pl-3 font-semibold text-foreground bg-accents-1 p-1 rounded border-l-2 border-foreground">[C] Clímax: «Tú estás conmigo» (v.4)</div>
-                                                            <div className="pl-2 border-l border-border/80">[B'] Banquete ante adversarios (v.5)</div>
-                                                            <div className="text-accents-4">[A'] Comunión eterna con Dios (v.6)</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* 5. DICCIONARIOS BÍBLICOS Y STRONG: Ficha "Salidita" en Esquina Inferior Izquierda */}
-                                            {idx === 4 && (
                                                 <div className="absolute -bottom-3 sm:-bottom-5 -left-2 sm:-left-6 w-[92%] sm:w-[370px] z-20 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left space-y-2">
                                                     <div className="flex items-center justify-between border-b border-border pb-1.5">
                                                         <div className="flex items-center gap-2">
@@ -555,33 +517,8 @@ export default function BibleLandingPage() {
                                                 </div>
                                             )}
 
-                                            {/* 6. BUSCADOR BÍBLICO INTELIGENTE: Omnibar Spotlight Centrado Superior */}
-                                            {idx === 5 && (
-                                                <div className="absolute top-4 sm:top-6 inset-x-3 sm:inset-x-6 z-10 flex flex-col items-center">
-                                                    <div className="w-full max-w-[420px] rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
-                                                        <div className="p-2.5 rounded-xl bg-accents-1/80 border border-border/80 flex items-center justify-between text-xs font-mono">
-                                                            <div className="flex items-center gap-2">
-                                                                <Search className="w-3.5 h-3.5 text-foreground" />
-                                                                <span className="font-semibold text-foreground">«gracia y verdad»</span>
-                                                            </div>
-                                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-foreground text-background font-bold">14 hits</span>
-                                                        </div>
-                                                        <div className="space-y-1.5 text-[10.5px] font-mono text-accents-4 px-1">
-                                                            <div className="flex justify-between items-center py-0.5 border-b border-border/40">
-                                                                <span>AT: <strong className="text-foreground">Éxodo 34:6</strong></span>
-                                                                <span className="text-[9.5px]">Hebreo jésed ve'emet</span>
-                                                            </div>
-                                                            <div className="flex justify-between items-center py-0.5">
-                                                                <span>NT: <strong className="text-foreground">Juan 1:14, 17</strong></span>
-                                                                <span className="text-[9.5px]">Griego járis kai alétheia</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* 7. MAPAS BÍBLICOS Y RUTAS: Doble HUD (Ruta Superior + Telemetría Inferior "Salidita" a la Derecha) */}
-                                            {idx === 6 && (
+                                            {/* 5. MAPAS BÍBLICOS Y RUTAS: Doble HUD (Ruta Superior + Telemetría Inferior "Salidita" a la Derecha) */}
+                                            {idx === 4 && (
                                                 <>
                                                     <div className="absolute top-3.5 left-3.5 z-10 rounded-xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3 shadow-xl backdrop-blur-xl text-left max-w-[270px] space-y-1">
                                                         <div className="flex items-center justify-between text-foreground font-semibold text-xs border-b border-border pb-1">
@@ -610,8 +547,8 @@ export default function BibleLandingPage() {
                                                 </>
                                             )}
 
-                                            {/* 8. LÍNEA DE TIEMPO HISTÓRICA: Cinta Cronológica Corrida a lo Ancho */}
-                                            {idx === 7 && (
+                                            {/* 6. LÍNEA DE TIEMPO HISTÓRICA: Cinta Cronológica Corrida a lo Ancho */}
+                                            {idx === 5 && (
                                                 <div className="absolute bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-4 z-10 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
                                                     <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
                                                         <span className="font-mono font-bold text-foreground uppercase text-[10.5px] flex items-center gap-2">
@@ -637,8 +574,8 @@ export default function BibleLandingPage() {
                                                 </div>
                                             )}
 
-                                            {/* 9. ARQUEOLOGÍA Y MANUSCRITOS: Ficha de Registro de Museo Arqueológico a la Derecha */}
-                                            {idx === 8 && (
+                                            {/* 7. ARQUEOLOGÍA Y MANUSCRITOS: Ficha de Registro de Museo Arqueológico a la Derecha */}
+                                            {idx === 6 && (
                                                 <div className="absolute bottom-3.5 sm:bottom-4 right-3.5 sm:right-4 left-3.5 sm:left-auto sm:w-[350px] z-10">
                                                     <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2">
                                                         <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
@@ -662,8 +599,8 @@ export default function BibleLandingPage() {
                                                 </div>
                                             )}
 
-                                            {/* 10. EVANGELIZACIÓN Y APOLOGÉTICA: Tarjeta HUD de Gran Comisión y Soteriología */}
-                                            {idx === 9 && (
+                                            {/* 8. EVANGELIZACIÓN Y APOLOGÉTICA: Tarjeta HUD de Gran Comisión y Soteriología */}
+                                            {idx === 7 && (
                                                 <div className="absolute bottom-3.5 sm:bottom-4 right-3.5 sm:right-4 left-3.5 sm:left-auto sm:w-[360px] z-10">
                                                     <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2">
                                                         <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">

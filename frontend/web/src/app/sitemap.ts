@@ -166,12 +166,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.85,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/literary',
-            lastModified: now,
-            changeFrequency: 'weekly',
-            priority: 0.85,
-        },
-        {
             url: 'https://bible.jorgedoicela.com/study/historical-context',
             lastModified: now,
             changeFrequency: 'weekly',

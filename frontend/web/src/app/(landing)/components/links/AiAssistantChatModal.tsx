@@ -261,8 +261,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     if (q.includes('biblia') || q.includes('bible') || q.includes('exege') || q.includes('strong')) {
       return {
         text: isEs
-          ? 'La Biblia es un motor de estudio teológico con 9 motores exegéticos: morfología palabra por palabra en BHS (hebreo) y NA28 (griego), diccionarios Strong (BDB y Thayer), paralelismos literarios y mapas geoespaciales WGS84.'
-          : 'The Bible is an advanced theological exegesis engine featuring 9 modules: word-by-word morphology in BHS (Hebrew) and NA28 (Greek), Strong lexicons (BDB & Thayer), literary parallelisms, and WGS84 biblical mapping.'
+          ? 'La Biblia es un motor de estudio teológico con suites modulares exegéticas: morfología palabra por palabra en BHS (hebreo) y NA28 (griego), diccionarios Strong (BDB y Thayer), cronología histórica sincrónica, mapas geoespaciales WGS84 y apologética.'
+          : 'The Bible is an advanced theological exegesis engine featuring modular study suites: word-by-word morphology in BHS (Hebrew) and NA28 (Greek), Strong lexicons (BDB & Thayer), synchronic timeline, WGS84 biblical mapping, and apologetics.'
       };
     }
 

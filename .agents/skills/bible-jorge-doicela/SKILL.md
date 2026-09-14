@@ -46,10 +46,9 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
    - **Suite 1: Lectura Editorial Continua (`/bible/study/standard`):** Prosa continua sin distracciones.
    - **Suite 2: Vista Paralela & Diff (`/bible/study/parallel`):** Comparación simultánea de versiones.
    - **Suite 3: Interlineal Inverso (`/bible/study/interlinear`):** Desglose morfológico palabra por palabra (BHS/NA28).
-   - **Suite 4: Análisis de Palabra (`/bible/study/word-study`):** Léxicos Strong BDB/Thayer y Búsqueda Gramatical.
-   - **Suite 5: Análisis Literario (`/bible/study/literary`):** Quiasmos, paralelismos y discurso paulino.
-   - **Suite 6: Contexto Histórico (`/bible/study/historical-context`):** Atlas Vectorial WGS84, Cronología Sincrónica y Arqueología.
-   - **Suite 7: Evangelización y Apologética (`/bible/study/evangelism`):** Rutas bíblicas estructuradas (Camino de Romanos, Puente a la Vida), banco de objeciones apologéticas y tratados/bosquejos homiléticos listos para predicar.
+   - **Suite 4: Análisis de Palabra (`/bible/study/word-study`):** Léxicos Strong BDB/Thayer y ocurrencias canónicas.
+   - **Suite 5: Contexto Histórico (`/bible/study/historical-context`):** Atlas Vectorial WGS84, Cronología Sincrónica y Arqueología.
+   - **Suite 6: Evangelización y Apologética (`/bible/study/evangelism`):** Rutas bíblicas estructuradas (Camino de Romanos, Puente a la Vida), banco de objeciones apologéticas y tratados/bosquejos homiléticos listos para predicar.
 
 ### 2.2 Catálogo de Features y Clientes API (`(bible)/features/`)
 * `verses` $\rightarrow$ `useVerses` (`GET /bible/verses`)
@@ -57,7 +56,6 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * `translations` $\rightarrow$ `useTranslations` (`GET /bible/translations`)
 * `interlinear` $\rightarrow$ `interlinearApiService` (`GET /bible/morphology/passage`)
 * `lexicons` $\rightarrow$ `lexiconApiService` (`GET /bible/morphology/lexicon`)
-* `grammar-search` $\rightarrow$ `grammarSearchApiService` (`GET /bible/morphology/tokens/search`)
 * `atlas` $\rightarrow$ `atlasApiService` (`GET /bible/historical/atlas/places`)
 * `timeline` $\rightarrow$ `timelineApiService` (`GET /bible/historical/timeline`)
 * `archaeology-feed` $\rightarrow$ `archaeologyApiService` (`GET /bible/historical/articles`)

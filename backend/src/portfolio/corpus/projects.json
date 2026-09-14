@@ -3,7 +3,7 @@
     "id": 1,
     "slug": "la-biblia-modular",
     "title": "La Biblia Modular",
-    "description": "Plataforma de estudio bíblico y exégesis con 9 motores teológicos, morfología Strong masorética y Septuaginta, y app móvil nativa en Expo.",
+    "description": "Plataforma de estudio bíblico y exégesis con suites teológicas modulares, morfología Strong masorética y griega, y app móvil nativa en Expo.",
     "role": "Lead Architect & Full Stack Developer",
     "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
     "language": "es",
@@ -13,13 +13,13 @@
     "overview": "Plataforma integral de exégesis bíblica orientada a la investigación académica y estudio pastoral profundo, combinando la lectura textual continua con aparatos morfológicos masoréticos y griegos en tiempo real.",
     "challenge": "Indexar y relacionar de forma determinista más de 31,000 versículos, tokens morfológicos BHS/NA28 y léxicos Strong BDB/Gesenius manteniendo tiempos de respuesta inferiores a 40 ms bajo una memoria RAM severamente restringida.",
     "architectureHighlights": [
-      "9 motores de exégesis modulares (Interlineal Inverso, Quiasmos, Atlas WGS84, Cronología Sincrónica, etc.)",
+      "Suites de exégesis modulares (Interlineal Inverso, Léxicos Strong, Atlas WGS84, Cronología Sincrónica, Evangelización)",
       "Persistencia ultra-ligera en bible.sqlite con better-sqlite3 en modo WAL e índices compuestos B-Tree",
       "Integración oficial autorizada con API.Bible para versiones con derechos y fallback determinista local",
       "Cliente móvil nativo con Expo SDK 52, FlashList a 60 fps constantes y arquitectura Offline-First"
     ],
     "metrics": [
-      { "label": "Motores de Exégesis", "value": "9" },
+      { "label": "Suites Exegéticas", "value": "6" },
       { "label": "Tiempo de Ingestión", "value": "< 80 ms" },
       { "label": "Consumo de RAM", "value": "~45 MB" }
     ]
@@ -28,7 +28,7 @@
     "id": 2,
     "slug": "the-modular-bible",
     "title": "The Modular Bible",
-    "description": "Exegesis and scripture study platform featuring 9 theological engines, Masoretic BHS / LXX morphology, Strong dictionaries, and Expo native mobile app.",
+    "description": "Exegesis and scripture study platform featuring modular theological suites, Masoretic BHS / NA28 morphology, Strong dictionaries, and Expo native mobile app.",
     "role": "Lead Architect & Full Stack Developer",
     "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
     "language": "en",
@@ -38,13 +38,13 @@
     "overview": "Comprehensive biblical exegesis platform tailored for academic research and deep pastoral study, combining continuous scripture reading with real-time Masoretic and Greek morphological apparatuses.",
     "challenge": "Deterministically indexing and querying over 31,000 verses, BHS/NA28 morphology tokens, and Strong lexicons while sustaining under 40 ms query latencies under tight RAM constraints.",
     "architectureHighlights": [
-      "9 modular exegesis suites (Reverse Interlinear, Chiasms, WGS84 Atlas, Synchronic Chronology, etc.)",
+      "Modular exegesis suites (Reverse Interlinear, Strong Lexicons, WGS84 Atlas, Synchronic Chronology, Evangelism Pathways)",
       "Ultra-lightweight SQLite WAL persistence with better-sqlite3 and B-Tree compound indices",
       "Official authorized API.Bible integration with resilient local deterministic caching",
       "Native mobile client with Expo SDK 52, FlashList 60 fps recycling, and Offline-First architecture"
     ],
     "metrics": [
-      { "label": "Exegesis Suites", "value": "9" },
+      { "label": "Exegesis Suites", "value": "6" },
       { "label": "Ingestion Time", "value": "< 80 ms" },
       { "label": "RAM Footprint", "value": "~45 MB" }
     ]

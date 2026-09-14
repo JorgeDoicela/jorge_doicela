@@ -126,7 +126,7 @@
     "mediaCategoryLead": "Captura de Leads & Telegram Bot",
     "project1Badge": "La Biblia",
     "project1Title": "La Biblia",
-    "project1Desc": "Plataforma de exégesis bíblica con 9 motores de estudio: morfología palabra por palabra en BHS y NA28, léxicos Strong, paralelismos literarios y atlas geoespacial WGS84.",
+    "project1Desc": "Plataforma de exégesis bíblica con suites modulares de estudio: morfología palabra por palabra en BHS y NA28, léxicos Strong, cronología histórica, atlas WGS84 y apologética.",
     "project2Badge": "Portafolio",
     "project2Title": "Portafolio",
     "project2Desc": "Consola interactiva virtual conectada bidireccionalmente por WebSockets (Socket.io) para explorar proyectos, métricas de servidor y comandos personalizados.",

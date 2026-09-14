@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `HistoricalController`, `LiteraryController`.
->   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `HistoricalService`, `LiteraryService`.
->   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `ChiasmStructureEntity`, `PaulineDiscourseEntity`.
+>   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `HistoricalController`, `EvangelismController`.
+>   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `HistoricalService`, `EvangelismService`.
+>   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `EvangelismPathwayEntity`, `EvangelismObjectionEntity`, `EvangelismTractEntity`.
 
 ---
 
@@ -60,11 +60,11 @@ backend/src/bible/
 │   ├── services/historical.service.ts
 │   └── entities/ (HistoricalPlaceEntity, TimelineEventEntity, ArchaeologyArticleEntity)
 │
-└── literary/                  # Sub-módulo de análisis literario y quiasmos (/bible/literary/*)
-    ├── literary.module.ts
-    ├── controllers/literary.controller.ts
-    ├── services/literary.service.ts
-    └── entities/ (ChiasmStructureEntity, PaulineDiscourseEntity)
+└── evangelism/                 # Sub-módulo de evangelización y apologética (/bible/evangelism/*)
+    ├── evangelism.module.ts
+    ├── controllers/evangelism.controller.ts
+    ├── services/evangelism.service.ts
+    └── entities/ (EvangelismPathwayEntity, EvangelismObjectionEntity, EvangelismTractEntity)
 ```
 
 ---
@@ -88,7 +88,6 @@ backend/src/bible/
 
 ### 3.4 Morfología y Léxicos (`/bible/morphology/*`)
 * **`GET /bible/morphology/passage`**: Retorna los tokens morfológicos agrupados por versículo para un pasaje completo (`?book=GEN&chapter=1`).
-* **`GET /bible/morphology/tokens/search`**: Búsqueda avanzada de tokens morfológicos por lema, texto original, código Strong, código de parsing gramatical y libro (`?q=bara&strong=H1254&limit=50`).
 * **`GET /bible/morphology/lexicon`**: Búsqueda léxica con soporte de filtro de lengua (`?q=logos&lang=greek&limit=50`).
 * **`GET /bible/morphology/lexicon/:strong`**: Obtiene la definición académica y lema de un código Strong (ej. `H7225`, `G3056`).
 
@@ -97,12 +96,6 @@ backend/src/bible/
 * **`GET /bible/historical/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500&lang=es|en`).
 * **`GET /bible/historical/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos con índice compuesto `(slug, language)` (`?category=recent_discoveries&lang=es|en`).
 * **`GET /bible/historical/articles/:slug`**: Detalle completo de un artículo de evidencia material localizado (`?lang=es|en`).
-
-### 3.6 Análisis Literario (`/bible/literary/*`)
-* **`GET /bible/literary/chiasms`**: Estructuras concéntricas, paralelismos y quiasmos poéticos bilingües (`?book=GEN&lang=es|en`).
-* **`GET /bible/literary/chiasms/:id`**: Detalle exegético de un quiasmo por identificador (`?lang=es|en`).
-* **`GET /bible/literary/pauline`**: Árboles de proposiciones y análisis de discurso paulino (`?epistle=ROM&lang=es|en`).
-* **`GET /bible/literary/pauline/:id`**: Detalle de cláusulas y conectores griegos de un pasaje paulino (`?lang=es|en`).
 
 ### 3.7 Evangelización y Apologética (`/bible/evangelism/*`)
 * **`GET /bible/evangelism/pathways`**: Rutas y secuencias bíblicas bilingües (Camino de Romanos, Puente a la Vida, Cuatro Verdades) (`?lang=es|en`).

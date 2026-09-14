@@ -52,13 +52,11 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
         pathname === '/study/parallel' ||
         pathname === '/study/interlinear' ||
         pathname === '/study/word-study' ||
-        pathname === '/study/literary' ||
         pathname === '/study' ||
         pathname === '/bible/study/standard' ||
         pathname === '/bible/study/parallel' ||
         pathname === '/bible/study/interlinear' ||
         pathname === '/bible/study/word-study' ||
-        pathname === '/bible/study/literary' ||
         pathname === '/bible/study' ||
         pathname.startsWith('/study/standard/') ||
         pathname.startsWith('/study/parallel/') ||

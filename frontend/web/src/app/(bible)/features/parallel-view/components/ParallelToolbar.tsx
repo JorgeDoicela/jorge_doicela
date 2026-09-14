@@ -9,11 +9,9 @@ export type BibleStudyMode =
   | 'parallel'
   | 'interlinear'
   | 'word-study'
-  | 'literary'
   | 'historical-context'
   // Modos y aliases compatibles
   | 'lexicon'
-  | 'grammar-search'
   | 'atlas'
   | 'timeline'
   | 'archaeology';
@@ -61,13 +59,12 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           <button
             type="button"
             onClick={() => onChangeStudyMode('parallel')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
               studyMode === 'parallel'
                 ? 'bg-background text-foreground shadow-sm font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
-            <span className="inline-block w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
             {t('modes.parallel')}
           </button>
           <button
@@ -86,25 +83,13 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             type="button"
             onClick={() => onChangeStudyMode('word-study')}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'word-study' || studyMode === 'lexicon' || studyMode === 'grammar-search'
+              studyMode === 'word-study' || studyMode === 'lexicon'
                 ? 'bg-background text-foreground shadow-sm font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
             {t('modes.wordStudy')}
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeStudyMode('literary')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'literary'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-accents-5 hover:text-foreground'
-            }`}
-          >
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            {t('modes.literary')}
           </button>
           <button
             type="button"
@@ -162,15 +147,8 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
         </div>
       )}
 
-      {/* Indicador para vista literaria */}
-      {studyMode === 'literary' && (
-        <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
-          {t('indicators.literary')}
-        </div>
-      )}
-
       {/* Indicador para vista de Análisis de Palabra */}
-      {(studyMode === 'word-study' || studyMode === 'lexicon' || studyMode === 'grammar-search') && (
+      {(studyMode === 'word-study' || studyMode === 'lexicon') && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
           {t('indicators.wordStudy')}
         </div>

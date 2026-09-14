@@ -1,4 +1,7 @@
 export * from './types';
+export * from './context/AtlasContext';
+export * from './components/panels/HistoricalSidebar';
+export * from './components/panels/HistoricalInspector';
 export * from './components/AtlasDashboard';
 export * from './components/map/InteractiveMapCanvas';
 export * from './components/map/MapToolbar';

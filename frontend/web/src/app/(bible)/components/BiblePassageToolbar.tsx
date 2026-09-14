@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { UnifiedPassagePicker } from '../features/books';
 import { useBiblePassage } from '../context/BiblePassageContext';
+import { BibleViewModeSwitcher } from './BibleViewModeSwitcher';
 
 interface BiblePassageToolbarProps {
   rightBadge?: React.ReactNode;
@@ -40,7 +41,10 @@ export const BiblePassageToolbar: React.FC<BiblePassageToolbarProps> = ({ rightB
         </div>
       </div>
 
-      {rightBadge && <div className="flex items-center gap-2">{rightBadge}</div>}
+      <div className="flex items-center gap-2 ml-auto">
+        <BibleViewModeSwitcher />
+        {rightBadge && <div className="flex items-center gap-2">{rightBadge}</div>}
+      </div>
     </section>
   );
 };

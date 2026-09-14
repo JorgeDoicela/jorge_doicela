@@ -1,18 +1,26 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { X, Languages, BookMarked, Sparkles } from 'lucide-react';
-import { useBiblePassageSafe, InspectedWordData, InspectedVerseData } from '../context/BiblePassageContext';
+import { X, Languages, BookMarked, Sparkles, Compass, Shield } from 'lucide-react';
+import {
+  useBiblePassageSafe,
+  InspectedWordData,
+  InspectedVerseData,
+  InspectorTab,
+} from '../context/BiblePassageContext';
 import { StrongMorphologyInspector } from './StrongMorphologyInspector';
 import { ParallelVerseInspector } from './ParallelVerseInspector';
+import { BookHistoricalProfile } from './BookHistoricalProfile';
+import { EvangelismApologeticsProfile } from './EvangelismApologeticsProfile';
 import { Translation } from '../features/translations';
 
 export interface BibleExegesisInspectorProps {
   isOpen?: boolean;
   onClose?: () => void;
-  activeTab?: 'strong' | 'versions' | 'notes';
-  onTabChange?: (tab: 'strong' | 'versions' | 'notes') => void;
+  activeTab?: InspectorTab;
+  onTabChange?: (tab: InspectorTab) => void;
   word?: InspectedWordData | null;
   verse?: InspectedVerseData | null;
   translations?: Translation[];
@@ -30,15 +38,37 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
   className = '',
 }) => {
   const tStudio = useTranslations('Studio');
+  const pathname = usePathname() || '';
   const passageContext = useBiblePassageSafe();
+
+  const isHistoricalContext = pathname.includes('/historical-context');
+  const isEvangelism = pathname.includes('/evangelism');
 
   // Soporte Dual: Props controladas con Fallback seguro a BiblePassageContext
   const isOpen = propIsOpen !== undefined ? propIsOpen : passageContext?.isRightInspectorOpen ?? false;
   const handleClose = propOnClose ?? passageContext?.closeInspector ?? (() => {});
 
-  const [internalTab, setInternalTab] = useState<'strong' | 'versions' | 'notes'>('strong');
+  const defaultTabForRoute: InspectorTab = isHistoricalContext
+    ? 'historical'
+    : isEvangelism
+    ? 'apologetics'
+    : 'strong';
+
+  const [internalTab, setInternalTab] = useState<InspectorTab>(defaultTabForRoute);
+
+  // Sincronizar tab por defecto al cambiar de suite si no se ha seleccionado otra
+  useEffect(() => {
+    if (isHistoricalContext) {
+      setInternalTab('historical');
+    } else if (isEvangelism) {
+      setInternalTab('apologetics');
+    } else {
+      setInternalTab('strong');
+    }
+  }, [isHistoricalContext, isEvangelism]);
+
   const activeTab = propActiveTab ?? passageContext?.activeInspectorTab ?? internalTab;
-  const handleTabChange = (tab: 'strong' | 'versions' | 'notes') => {
+  const handleTabChange = (tab: InspectorTab) => {
     if (propOnTabChange) {
       propOnTabChange(tab);
     } else if (passageContext) {
@@ -139,38 +169,135 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
           </button>
         </div>
 
-        {/* Selector de Pestañas de Inspección Geist Plano (Vercel Style) */}
+        {/* Selector de Pestañas de Inspección Adaptativo (Geist / Vercel Style) */}
         <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
-            <button
-              type="button"
-              onClick={() => handleTabChange('strong')}
-              className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === 'strong'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
-            >
-              <Languages className="w-3.5 h-3.5" />
-              <span>{tStudio('tabStrong')}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleTabChange('versions')}
-              className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === 'versions'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
-            >
-              <BookMarked className="w-3.5 h-3.5" />
-              <span>{tStudio('tabVersions')}</span>
-            </button>
-          </div>
+          {/* Caso 1: Suite Historia & Contexto */}
+          {isHistoricalContext && (
+            <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => handleTabChange('historical')}
+                className={`flex items-center justify-center gap-1 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'historical'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+                title={tStudio('tabHistorical')}
+              >
+                <Compass className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Histórico</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTabChange('versions')}
+                className={`flex items-center justify-center gap-1 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'versions'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+                title={tStudio('tabVersions')}
+              >
+                <BookMarked className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Versiones</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTabChange('strong')}
+                className={`flex items-center justify-center gap-1 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'strong'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+                title={tStudio('tabStrong')}
+              >
+                <Languages className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Strong</span>
+              </button>
+            </div>
+          )}
+
+          {/* Caso 2: Suite Ministerio & Apologética */}
+          {isEvangelism && (
+            <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => handleTabChange('apologetics')}
+                className={`flex items-center justify-center gap-1 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'apologetics'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+                title={tStudio('tabApologetics')}
+              >
+                <Shield className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Doctrina</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTabChange('versions')}
+                className={`flex items-center justify-center gap-1 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'versions'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+                title={tStudio('tabVersions')}
+              >
+                <BookMarked className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Citas</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTabChange('strong')}
+                className={`flex items-center justify-center gap-1 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'strong'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+                title={tStudio('tabStrong')}
+              >
+                <Languages className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Strong</span>
+              </button>
+            </div>
+          )}
+
+          {/* Caso 3: Suite Texto & Exégesis */}
+          {!isHistoricalContext && !isEvangelism && (
+            <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => handleTabChange('strong')}
+                className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'strong'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+              >
+                <Languages className="w-3.5 h-3.5" />
+                <span>{tStudio('tabStrong')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTabChange('versions')}
+                className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  activeTab === 'versions'
+                    ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                }`}
+              >
+                <BookMarked className="w-3.5 h-3.5" />
+                <span>{tStudio('tabVersions')}</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Contenido Modular con Scroll independiente */}
+        {/* Contenido Modular con Scroll independiente y Perfiles Adaptativos */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
+          {activeTab === 'historical' && <BookHistoricalProfile />}
+
+          {activeTab === 'apologetics' && <EvangelismApologeticsProfile />}
+
           {activeTab === 'strong' && (
             <StrongMorphologyInspector word={word} />
           )}

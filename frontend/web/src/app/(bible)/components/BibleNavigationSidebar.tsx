@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   Search,
@@ -8,9 +10,13 @@ import {
   ChevronRight,
   ChevronDown,
   X,
+  ArrowRight,
+  Compass,
+  Shield,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../context/BiblePassageContext';
 import { getChaptersForBookId } from '../features/books/data/canonicCategories';
+import { getBookHistoricalInfo } from '../features/books/data/bookHistoricalMetadata';
 import { Book } from '../features/books';
 
 export interface BibleNavigationSidebarProps {
@@ -34,6 +40,10 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
   onSelectPassage: propOnSelectPassage,
   className = '',
 }) => {
+  const pathname = usePathname() || '';
+  const isHistoricalContext = pathname.includes('/historical-context');
+  const isEvangelism = pathname.includes('/evangelism');
+
   const tStudio = useTranslations('Studio');
   const tBooks = useTranslations('Books');
   const passageContext = useBiblePassageSafe();
@@ -203,6 +213,10 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
             const isSelected = selectedBookId === book.id;
             const localizedName = getBookTitle(book);
             const totalChapters = getChaptersForBookId(book.id);
+            const histInfo = getBookHistoricalInfo(book.id);
+
+            // Identificar libros clave doctrinales y evangelísticos
+            const isKeyDoctrineBook = [1, 40, 42, 43, 44, 45, 48, 49, 58].includes(book.id);
 
             return (
               <div key={book.id} className="rounded-xl overflow-hidden transition-colors">
@@ -216,13 +230,25 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
                       : 'text-zinc-700 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/60 hover:text-zinc-900 dark:hover:text-zinc-100'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 w-6 text-left">
+                  <div className="flex items-center gap-2 truncate min-w-0">
+                    <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 w-6 text-left shrink-0">
                       {book.abbreviation}
                     </span>
                     <span className="truncate font-medium">{localizedName}</span>
+
+                    {/* Insignia Contextual de Época en Historia */}
+                    {isHistoricalContext && histInfo && (
+                      <span className="hidden sm:inline text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 truncate max-w-[90px]">
+                        {histInfo.era.split(' ')[0]}
+                      </span>
+                    )}
+
+                    {/* Insignia Contextual Doctrinal en Evangelismo */}
+                    {isEvangelism && isKeyDoctrineBook && (
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" title="Libro fundamental de doctrina y evangelismo" />
+                    )}
                   </div>
-                  <div className="flex items-center shrink-0">
+                  <div className="flex items-center shrink-0 ml-1">
                     {isExpanded ? (
                       <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
                     ) : (
@@ -253,6 +279,23 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
                         );
                       })}
                     </div>
+
+                    {/* Enlace Cruzado al Lector cuando se está en Historia o Evangelismo */}
+                    {(isHistoricalContext || isEvangelism) && (
+                      <div className="mt-2.5 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between">
+                        <Link
+                          href={`/study/standard?book=${book.abbreviation}&chapter=${selectedChapter || 1}`}
+                          className="text-[11px] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center gap-1 transition-colors font-medium group"
+                        >
+                          <BookOpen className="w-3 h-3 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />
+                          <span>Leer en Lector</span>
+                          <ArrowRight className="w-3 h-3 opacity-60 group-hover:translate-x-0.5 transition-transform" />
+                        </Link>
+                        <span className="text-[10px] font-mono text-zinc-400">
+                          {totalChapters} caps
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

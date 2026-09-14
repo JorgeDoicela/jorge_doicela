@@ -16,6 +16,7 @@ import { TranslationSelector } from '../../../translations/components/translatio
 import { Book } from '../../../books/hooks/useBooks';
 import { Printer, Copy, Check, SlidersHorizontal, Type, AlignLeft, ListOrdered } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { BibleViewModeSwitcher } from '../../../../components/BibleViewModeSwitcher';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;
@@ -150,7 +151,10 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
         </div>
 
         {/* Derecha: Selector de Modo, Apariencia Tipográfica y Acciones */}
-        <div className="flex items-center gap-1.5 shrink-0 justify-end">
+        <div className="flex items-center gap-2 shrink-0 justify-end flex-wrap">
+          {/* Alternador de Modo de Vista (Estándar, Paralelo, Interlineal) */}
+          <BibleViewModeSwitcher />
+
           {/* Alternador de Modo de Lectura Geist Segmented Control */}
           <div className="flex items-center rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
             <button

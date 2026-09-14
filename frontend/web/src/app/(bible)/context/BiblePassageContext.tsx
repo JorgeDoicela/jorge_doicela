@@ -36,6 +36,8 @@ export interface InspectedVerseData {
   text: string;
 }
 
+export type InspectorTab = 'strong' | 'versions' | 'historical' | 'apologetics' | 'notes';
+
 interface BiblePassageContextValue {
   books: Book[];
   translations: Translation[];
@@ -61,8 +63,8 @@ interface BiblePassageContextValue {
   isRightInspectorOpen: boolean;
   toggleRightInspector: () => void;
   setRightInspectorOpen: (open: boolean) => void;
-  activeInspectorTab: 'strong' | 'versions' | 'notes';
-  setActiveInspectorTab: (tab: 'strong' | 'versions' | 'notes') => void;
+  activeInspectorTab: InspectorTab;
+  setActiveInspectorTab: (tab: InspectorTab) => void;
 
   inspectedWord: InspectedWordData | null;
   inspectedVerse: InspectedVerseData | null;
@@ -170,7 +172,7 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
 
   // Control del Panel Lateral Derecho (Inspector Exegético de Versículos & Strong)
   const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(false);
-  const [activeInspectorTab, setActiveInspectorTab] = useState<'strong' | 'versions' | 'notes'>('strong');
+  const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>('strong');
   const [inspectedWord, setInspectedWord] = useState<InspectedWordData | null>(null);
   const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(null);
 

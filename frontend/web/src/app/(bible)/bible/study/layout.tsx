@@ -2,6 +2,7 @@
 
 import React, { Suspense } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { PanelLeft, PanelRight } from 'lucide-react';
 import { BiblePassageProvider, useBiblePassageSafe } from '../../context/BiblePassageContext';
@@ -9,8 +10,14 @@ import { BibleHeaderNav } from '../../components/BibleHeaderNav';
 import { BibleNavigationSidebar } from '../../components/BibleNavigationSidebar';
 import { BibleExegesisInspector } from '../../components/BibleExegesisInspector';
 import { DraggableEdgeTab } from '../../components/DraggableEdgeTab';
+import { AtlasProvider, HistoricalSidebar, HistoricalInspector } from '../../features/atlas';
+import { EvangelismProvider, EvangelismSidebar, EvangelismInspector } from '../../features/evangelism';
 
 function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname() || '';
+  const isHistorical = pathname.includes('/historical-context');
+  const isEvangelism = pathname.includes('/evangelism');
+
   const passageContext = useBiblePassageSafe();
   const t = useTranslations('StudyLayout');
   const tStudio = useTranslations('Studio');
@@ -81,12 +88,24 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
     lastScrollTopRef.current = currentScrollTop;
   };
 
+  const leftTabTitle = isHistorical
+    ? (tStudio('toggleAtlasSidebar') || 'Mostrar eras, lugares y rutas')
+    : isEvangelism
+    ? (tStudio('toggleEvangelismSidebar') || 'Mostrar rutas y objeciones')
+    : (tStudio('toggleSidebar') || 'Mostrar libros y capítulos');
+
+  const rightTabTitle = isHistorical
+    ? (tStudio('toggleAtlasInspector') || 'Mostrar ficha arqueológica')
+    : isEvangelism
+    ? (tStudio('toggleEvangelismInspector') || 'Mostrar guía ministerial y pasajes')
+    : (tStudio('toggleInspector') || 'Mostrar panel de estudio');
+
   return (
     <div className="h-screen bg-zinc-50/60 dark:bg-black text-foreground flex flex-col overflow-hidden selection:bg-primary/10">
       {/* Header Superior con Auto-Hide Inteligente y Suave */}
       <BibleHeaderNav isVisible={isHeaderVisible} />
 
-      {/* Pestaña Flotante Movible Izquierda (Aparece cuando el sidebar está oculto) */}
+      {/* Pestaña Flotante Movible Izquierda (Aparece cuando el sidebar está colapsado) */}
       <DraggableEdgeTab
         side="left"
         isOpen={isLeftOpen}
@@ -94,10 +113,10 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
         icon={PanelLeft}
         storageKey="bible_drag_tab_left_y"
         defaultTop={200}
-        title={tStudio('toggleSidebar') || 'Mostrar libros y capítulos'}
+        title={leftTabTitle}
       />
 
-      {/* Pestaña Flotante Movible Derecha (Aparece cuando el inspector está oculto) */}
+      {/* Pestaña Flotante Movible Derecha (Aparece cuando el inspector está colapsado) */}
       <DraggableEdgeTab
         side="right"
         isOpen={isRightOpen}
@@ -105,19 +124,25 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
         icon={PanelRight}
         storageKey="bible_drag_tab_right_y"
         defaultTop={260}
-        title={tStudio('toggleInspector') || 'Mostrar panel de estudio'}
+        title={rightTabTitle}
       />
 
       {/* Workspace Studio FSD: Panel Izquierdo + Canvas Central + Inspector Derecho */}
       <div className="flex-1 flex flex-row w-full min-h-0 overflow-hidden relative">
-        {/* Panel Lateral Izquierdo: Libros y Capítulos */}
-        <BibleNavigationSidebar />
+        {/* Panel Lateral Izquierdo Especializado por Módulo */}
+        {isHistorical ? (
+          <HistoricalSidebar />
+        ) : isEvangelism ? (
+          <EvangelismSidebar />
+        ) : (
+          <BibleNavigationSidebar />
+        )}
 
         {/* Canvas Central de Contenido y Suites de Estudio con Scroll Independiente */}
         <main
           ref={mainRef}
           onScroll={handleMainScroll}
-          className="flex-1 min-w-0 h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-2 pb-16 space-y-4 overflow-x-hidden print:p-0 print:m-0 print:pb-0"
+          className="flex-1 min-w-0 h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0"
         >
           {children}
 
@@ -138,8 +163,14 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
           </footer>
         </main>
 
-        {/* Panel Lateral Derecho: Ficha Morfológica Strong y Versiones Paralelas */}
-        <BibleExegesisInspector />
+        {/* Panel Lateral Derecho Especializado por Módulo */}
+        {isHistorical ? (
+          <HistoricalInspector />
+        ) : isEvangelism ? (
+          <EvangelismInspector />
+        ) : (
+          <BibleExegesisInspector />
+        )}
       </div>
     </div>
   );
@@ -153,7 +184,11 @@ export default function BibleStudyLayout({
   return (
     <Suspense fallback={<div className="min-h-screen bg-zinc-50/60 dark:bg-black" />}>
       <BiblePassageProvider>
-        <BibleStudyWorkspace>{children}</BibleStudyWorkspace>
+        <AtlasProvider>
+          <EvangelismProvider>
+            <BibleStudyWorkspace>{children}</BibleStudyWorkspace>
+          </EvangelismProvider>
+        </AtlasProvider>
       </BiblePassageProvider>
     </Suspense>
   );

@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useEvangelism } from '../hooks/useEvangelism';
+import { useEvangelismContextSafe } from '../context/EvangelismContext';
 import { PathwayViewer } from './PathwayViewer';
 import { ObjectionsExplorer } from './ObjectionsExplorer';
 import { TractsExplorer } from './TractsExplorer';
@@ -10,6 +11,10 @@ import { EvangelismSubSuite } from '../types';
 
 export const EvangelismWorkspace: React.FC = () => {
   const t = useTranslations('Evangelism');
+  const contextState = useEvangelismContextSafe();
+  const localState = useEvangelism();
+  const state = contextState || localState;
+
   const {
     subSuite,
     setSubSuite,
@@ -29,7 +34,7 @@ export const EvangelismWorkspace: React.FC = () => {
     selectedTract,
     setSelectedTractId,
     isLoading,
-  } = useEvangelism();
+  } = state;
 
   const suites: { key: EvangelismSubSuite; label: string }[] = [
     { key: 'pathways', label: t('tabPathways') },

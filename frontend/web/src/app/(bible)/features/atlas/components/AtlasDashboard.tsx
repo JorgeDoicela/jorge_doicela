@@ -4,15 +4,23 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { AtlasSubTab } from '../types';
 import { useAtlasMap } from '../hooks/useAtlasMap';
+import { useAtlasContextSafe } from '../context/AtlasContext';
 import { MapToolbar } from './map/MapToolbar';
 import { InteractiveMapCanvas } from './map/InteractiveMapCanvas';
 import { PlaceDetailsDrawer } from './map/PlaceDetailsDrawer';
 import { HistoricalRoutesPlayer } from './routes/HistoricalRoutesPlayer';
 import { Archaeological3DViewer } from './3d/Archaeological3DViewer';
+import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
 
 export const AtlasDashboard: React.FC = () => {
   const t = useTranslations('HistoricalContext');
   const [activeTab, setActiveTab] = useState<AtlasSubTab>('map');
+  const passageContext = useBiblePassageSafe();
+  const isRightInspectorOpen = passageContext?.isRightInspectorOpen ?? false;
+
+  const contextAtlas = useAtlasContextSafe();
+  const localAtlas = useAtlasMap();
+  const atlas = contextAtlas || localAtlas;
 
   const {
     activeLayer,
@@ -42,7 +50,7 @@ export const AtlasDashboard: React.FC = () => {
     handleTouchEnd,
     focusOnPlace,
     focusOnRegion,
-  } = useAtlasMap();
+  } = atlas;
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
@@ -132,10 +140,12 @@ export const AtlasDashboard: React.FC = () => {
               onTouchEnd={handleTouchEnd}
             />
 
-            <PlaceDetailsDrawer
-              place={selectedPlace}
-              onClose={() => setSelectedPlaceId(null)}
-            />
+            {!isRightInspectorOpen && (
+              <PlaceDetailsDrawer
+                place={selectedPlace}
+                onClose={() => setSelectedPlaceId(null)}
+              />
+            )}
           </div>
         </div>
       )}

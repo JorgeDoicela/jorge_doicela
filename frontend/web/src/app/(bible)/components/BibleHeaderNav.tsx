@@ -16,13 +16,9 @@ interface NavTabItem {
 }
 
 const NAV_TABS: NavTabItem[] = [
-  { path: '/study/standard', key: 'standard' },
-  { path: '/study/parallel', key: 'parallel' },
-  { path: '/study/interlinear', key: 'interlinear' },
-  { path: '/study/word-study', key: 'wordStudy' },
-  { path: '/study/literary', key: 'literary' },
-  { path: '/study/historical-context', key: 'historical' },
-  { path: '/study/evangelism', key: 'evangelism' },
+  { path: '/study/standard', key: 'textExegesis' },
+  { path: '/study/historical-context', key: 'historicalContext' },
+  { path: '/study/evangelism', key: 'ministryApologetics' },
 ];
 
 interface BibleHeaderNavProps {
@@ -50,11 +46,23 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
 
   const isCurrentTab = (tabPath: string) => {
     if (tabPath === '/study/standard') {
+      // Activo para todas las suites pertenecientes al espacio Texto & Exégesis
       return (
         pathname === '/study/standard' ||
+        pathname === '/study/parallel' ||
+        pathname === '/study/interlinear' ||
+        pathname === '/study/word-study' ||
+        pathname === '/study/literary' ||
         pathname === '/study' ||
         pathname === '/bible/study/standard' ||
-        pathname === '/bible/study'
+        pathname === '/bible/study/parallel' ||
+        pathname === '/bible/study/interlinear' ||
+        pathname === '/bible/study/word-study' ||
+        pathname === '/bible/study/literary' ||
+        pathname === '/bible/study' ||
+        pathname.startsWith('/study/standard/') ||
+        pathname.startsWith('/study/parallel/') ||
+        pathname.startsWith('/study/interlinear/')
       );
     }
     return (

@@ -115,11 +115,16 @@ jobs:
         run: |
           if [ -n "${{ secrets.CLOUDFLARE_ZONE_ID }}" ] && [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
             echo "Purgando caché de Cloudflare automáticamente vía API..."
-            curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            RESPONSE=$(curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
               -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
               -H "Content-Type: application/json" \
-              --data '{"purge_everything":true}'
-            echo "Caché de Cloudflare purgada exitosamente."
+              --data '{"purge_everything":true}')
+            echo "Respuesta de Cloudflare: $RESPONSE"
+            if echo "$RESPONSE" | grep -q '"success":true'; then
+              echo "Caché de Cloudflare purgada exitosamente."
+            else
+              echo "ADVERTENCIA: La purga en Cloudflare no reportó éxito. Revisa el token o la Zone ID."
+            fi
           else
-            echo "Aviso: CLOUDFLARE_ZONE_ID o CLOUDFLARE_API_TOKEN no configurados en GitHub Secrets (el header no-cache de Nginx previene la caché)."
+            echo "Aviso: CLOUDFLARE_ZONE_ID o CLOUDFLARE_API_TOKEN no configurados en GitHub Secrets (el header no-cache de Nginx previene la caché de HTML)."
           fi

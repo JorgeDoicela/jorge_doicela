@@ -23,9 +23,17 @@ interface ClientSessionState {
     origin: [
       'https://portfolio.jorgedoicela.com',
       'https://jorgedoicela.com',
-      // Permitir localhost solo en entornos de desarrollo local
+      // Permitir localhost y subdominios en desarrollo local
       ...(process.env.NODE_ENV !== 'production'
-        ? ['http://localhost:3001', 'http://localhost:3000']
+        ? [
+            'http://localhost:3001',
+            'http://portfolio.localhost:3001',
+            'http://software.localhost:3001',
+            'http://bible.localhost:3001',
+            'http://127.0.0.1:3001',
+            'http://localhost:3000',
+            'http://127.0.0.1:3000',
+          ]
         : []),
     ],
     credentials: true,

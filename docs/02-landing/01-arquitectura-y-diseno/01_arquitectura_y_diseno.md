@@ -20,7 +20,12 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ## 2. Descripción y Aislamiento
 
-* **100% del Lado del Cliente (Next.js):** La Landing Page es un portal de bienvenida y conversión ultra-rápido y optimizado.
+* **Arquitectura Server-First (Next.js App Router):** `page.tsx` opera como un **Server Component nativo asíncrono**, entregando el 100% de la semántica HTML (Hero, titulares, Bento Grid, enlaces y metadatos) en el primer byte (SSR) sin spinners bloqueantes ni anti-patrones de montaje (`if (!mounted)`).
+* **Arquitectura de Islas de Interactividad:** Los efectos dinámicos se desacoplan en microcomponentes clientes aislados en `(landing)/components/`:
+  * `LandingVisualEffects.tsx`: Fondos cinemáticos (`ParallaxBackground`, `InteractiveParticles`, `CinematicSpiralGalaxy`).
+  * `QuitoClockBadge.tsx`: Reloj en vivo de Quito.
+  * `LanguageToggleButton.tsx`: Selector de idioma con `useLanguage()`.
+  * `AppleHighlightsCarousel.tsx`: Carrusel interactivo.
 * **Aislamiento de Estilos:** Posee su propio archivo independiente `frontend/web/src/app/(landing)/globals.css` que configura la estructura **Bento Grid**, fuentes (Inter y Outfit) y tokens visuales de Tailwind CSS v4.
 * **Enrutamiento y Subpáginas:**
   * `/`: Página principal de bienvenida y portal a los 3 proyectos con Bento Grid interactivo.
@@ -32,19 +37,17 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ## 3. Características Técnicas
 
-### 3.1 Resolutor Dinámico de Enlaces
-Un script en React (`useEffect`) evalúa el host de navegación:
-* **Local:** Si detecta `localhost`, enlaza hacia `http://*.localhost:3001`.
-* **Producción:** Enlaza hacia `https://*.jorgedoicela.com` con SSL.
+### 3.1 Enlaces Canónicos y Adaptabilidad Local
+* **SSR (Primer Byte):** Enlaces directos a producción (`https://*.jorgedoicela.com`) garantizando máxima indexabilidad para buscadores y crawlers.
+* **Entornos de Desarrollo:** En cliente, `AppleHighlightsCarousel` adapta dinámicamente los subdominios hacia `*.localhost:[port]` sin alterar el renderizado en servidor.
 
-### 3.2 Widget de Reloj de Quito y Saludo Dinámico
+### 3.2 Widget de Reloj de Quito (`QuitoClockBadge`)
 * **Zona Horaria:** Formateado explícitamente con `'America/Guayaquil'` (UTC-5), mostrando siempre la hora local en Quito independientemente de dónde se encuentre el visitante.
-* **Saludo Dinámico:**
-  * 06:00 - 11:59 $\rightarrow$ *Buenos días*
-  * 12:00 - 18:59 $\rightarrow$ *Buenas tardes*
-  * 19:00 - 05:59 $\rightarrow$ *Buenas noches*
+* **Aislamiento e Hidratación:** Renderizado seguro con `suppressHydrationWarning` para erradicar cualquier parpadeo de hidratación sin bloquear la pintura inicial del DOM.
 
-### 3.3 Internacionalización Profesional (next-intl + SSR & SEO Gold Standard)
+### 3.3 Internacionalización Profesional (next-intl Unificado + SSR & SEO Gold Standard)
+* **Unificación Total en next-intl:** Arquitectura 100% estandarizada con `useTranslations` de `next-intl`. Se eliminó por completo el archivo `translations.ts` manual obsoleto, erradicando duplicidades y garantizando paridad bilingüe estricta entre `src/messages/es.json` y `src/messages/en.json`.
+* **LanguageContext Desacoplado:** El proveedor de contexto de idioma gestiona exclusivamente el estado de locale ('es' | 'en'), cookies `NEXT_LOCALE` y transiciones atómicas (`useTransition`), delegando todas las cadenas de texto a los diccionarios reactivos de `next-intl`.
 * **Arquitectura de Servidor:** Configuración en `src/i18n/request.ts` integrada mediante `createNextIntlPlugin` en `next.config.ts`.
 * **Cero Parpadeos (SSR):** El servidor entrega el HTML ya traducido en el primer byte evitando el fenómeno *FOUC*.
 * **Detección y Negociación:** Detección automática por cookie `NEXT_LOCALE` o cabecera HTTP `Accept-Language` del visitante.

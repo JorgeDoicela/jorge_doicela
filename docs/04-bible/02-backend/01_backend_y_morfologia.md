@@ -51,30 +51,35 @@ backend/src/bible/
 ├── morphology/                # Sub-módulo de morfología y léxicos (/bible/morphology/*)
 │   ├── morphology.module.ts
 │   ├── controllers/morphology.controller.ts
+│   ├── dto/ (GetPassageTokensDto, SearchLexiconDto)
 │   ├── services/morphology.service.ts
 │   └── entities/ (MorphologyToken, LexiconEntry)
 │
 ├── atlas/                     # Sub-módulo de Atlas Bíblico Vectorial y 3D (/bible/atlas/*)
 │   ├── atlas.module.ts
 │   ├── controllers/atlas.controller.ts
+│   ├── dto/ (GetPlacesQueryDto)
 │   ├── services/atlas.service.ts
 │   └── entities/ (HistoricalPlaceEntity)
 │
 ├── timeline/                  # Sub-módulo de Cronología Sincrónica (/bible/timeline/*)
 │   ├── timeline.module.ts
 │   ├── controllers/timeline.controller.ts
+│   ├── dto/ (GetTimelineQueryDto)
 │   ├── services/timeline.service.ts
 │   └── entities/ (TimelineEventEntity)
 │
 ├── archaeology/               # Sub-módulo de Arqueología y Epigrafía (/bible/archaeology/*)
 │   ├── archaeology.module.ts
 │   ├── controllers/archaeology.controller.ts
+│   ├── dto/ (GetArticlesQueryDto)
 │   ├── services/archaeology.service.ts
 │   └── entities/ (ArchaeologyArticleEntity)
 │
 └── evangelism/                 # Sub-módulo de evangelización y apologética (/bible/evangelism/*)
     ├── evangelism.module.ts
     ├── controllers/evangelism.controller.ts
+    ├── dto/ (GetPathwaysQueryDto, GetObjectionsQueryDto, GetTractsQueryDto)
     ├── services/evangelism.service.ts
     └── entities/ (EvangelismPathwayEntity, EvangelismObjectionEntity, EvangelismTractEntity)
 ```

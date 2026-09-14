@@ -6,14 +6,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EvangelismService } from '../services/evangelism.service';
+import {
+  GetPathwaysQueryDto,
+  GetObjectionsQueryDto,
+  GetTractsQueryDto,
+} from '../dto/evangelism-query.dto';
 
 @Controller('bible/evangelism')
 export class EvangelismController {
   constructor(private readonly evangelismService: EvangelismService) {}
 
   @Get('pathways')
-  async getPathways(@Query('lang') lang?: string) {
-    return this.evangelismService.getPathways(lang || 'es');
+  async getPathways(@Query() query: GetPathwaysQueryDto) {
+    return this.evangelismService.getPathways(query.lang || 'es');
   }
 
   @Get('pathways/:slug')
@@ -34,20 +39,17 @@ export class EvangelismController {
   }
 
   @Get('objections')
-  async getObjections(
-    @Query('category') category?: string,
-    @Query('q') query?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.evangelismService.getObjections(category, query, lang || 'es');
+  async getObjections(@Query() query: GetObjectionsQueryDto) {
+    return this.evangelismService.getObjections(
+      query.category,
+      query.q,
+      query.lang || 'es',
+    );
   }
 
   @Get('tracts')
-  async getTracts(
-    @Query('audience') audience?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.evangelismService.getTracts(audience, lang || 'es');
+  async getTracts(@Query() query: GetTractsQueryDto) {
+    return this.evangelismService.getTracts(query.audience, query.lang || 'es');
   }
 
   @Get('tracts/:slug')

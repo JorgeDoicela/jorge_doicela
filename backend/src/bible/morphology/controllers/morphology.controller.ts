@@ -2,6 +2,8 @@ import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { MorphologyService } from '../services/morphology.service';
 import { MorphologyToken } from '../entities/morphology-token.entity';
 import { LexiconEntry } from '../entities/lexicon-entry.entity';
+import { GetPassageTokensDto } from '../dto/get-passage-tokens.dto';
+import { SearchLexiconDto } from '../dto/search-lexicon.dto';
 
 @Controller('bible/morphology')
 export class MorphologyController {
@@ -9,11 +11,10 @@ export class MorphologyController {
 
   @Get('passage')
   async getTokensByPassage(
-    @Query('book') bookAbbr: string,
-    @Query('chapter', ParseIntPipe) chapter: number,
+    @Query() query: GetPassageTokensDto,
   ): Promise<MorphologyToken[]> {
-    if (!bookAbbr) return [];
-    return this.morphologyService.getTokensByPassage(bookAbbr, chapter);
+    if (!query.book) return [];
+    return this.morphologyService.getTokensByPassage(query.book, query.chapter);
   }
 
   @Get('verse/:verseId')
@@ -32,14 +33,12 @@ export class MorphologyController {
 
   @Get('lexicon')
   async searchLexicon(
-    @Query('q') query?: string,
-    @Query('lang') language?: string,
-    @Query('limit') limit?: string,
+    @Query() query: SearchLexiconDto,
   ): Promise<LexiconEntry[]> {
     return this.morphologyService.searchLexicon(
-      query,
-      language,
-      limit ? parseInt(limit, 10) : 30,
+      query.q,
+      query.lang,
+      query.limit ?? 30,
     );
   }
 }

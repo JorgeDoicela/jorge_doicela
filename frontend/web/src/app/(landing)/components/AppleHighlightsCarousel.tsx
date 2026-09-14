@@ -5,19 +5,41 @@ import { Play, Pause } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface AppleHighlightsCarouselProps {
-    links: {
+    links?: {
         portfolio: string;
         bible: string;
         software: string;
     };
 }
 
-export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = ({ links }) => {
+const DEFAULT_LINKS = {
+    portfolio: 'https://portfolio.jorgedoicela.com',
+    bible: 'https://bible.jorgedoicela.com',
+    software: 'https://software.jorgedoicela.com',
+};
+
+export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = ({ links = DEFAULT_LINKS }) => {
     const { language } = useLanguage();
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [isInView, setIsInView] = useState(false);
+    const [resolvedLinks, setResolvedLinks] = useState(links);
     const sectionRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const hostname = window.location.hostname;
+            const port = window.location.port ? `:${window.location.port}` : '';
+            const protocol = window.location.protocol;
+            if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+                setResolvedLinks({
+                    portfolio: `${protocol}//portfolio.localhost${port}`,
+                    bible: `${protocol}//bible.localhost${port}`,
+                    software: `${protocol}//software.localhost${port}`,
+                });
+            }
+        }
+    }, [links]);
 
     const isEs = language === 'es';
     const SLIDE_DURATION = 6500;
@@ -29,7 +51,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             description: isEs
                 ? '9 motores de exégesis teológica, análisis morfológico Strong y lectura pura libre de distracciones.'
                 : '9 theological exegesis engines, Strong morphology analysis, and distraction-free reading.',
-            linkUrl: links.bible,
+            linkUrl: resolvedLinks.bible,
             linkText: isEs ? 'Abrir Biblia' : 'Open Bible',
             renderVisual: () => (
                 <div className="w-full flex flex-col justify-center gap-5 sm:gap-6 text-left py-1">
@@ -69,7 +91,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             description: isEs
                 ? 'Noticias de vanguardia, análisis de modelos de razonamiento, ciberseguridad y herramientas web.'
                 : 'Cutting-edge news, reasoning model analysis, cybersecurity, and modern web tools.',
-            linkUrl: links.software,
+            linkUrl: resolvedLinks.software,
             linkText: isEs ? 'Entrar a Software' : 'Enter Software',
             renderVisual: () => (
                 <div className="w-full flex flex-col justify-center text-left py-1">
@@ -106,7 +128,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             description: isEs
                 ? 'Arquitectura de software de alta calidad, proyectos de producción, consultoría y soluciones de ingeniería.'
                 : 'High-quality software architecture, production projects, technical consulting, and engineering solutions.',
-            linkUrl: links.portfolio,
+            linkUrl: resolvedLinks.portfolio,
             linkText: isEs ? 'Ver Portafolio' : 'View Portfolio',
             renderVisual: () => (
                 <div className="w-full flex flex-col justify-center text-left py-1">

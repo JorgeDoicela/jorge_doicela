@@ -1,24 +1,18 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { TimelineService } from '../services/timeline.service';
+import { GetTimelineQueryDto } from '../dto/get-timeline-query.dto';
 
 @Controller('bible')
 export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}
 
   @Get(['timeline', 'historical/timeline'])
-  async getTimeline(
-    @Query('type') type?: string,
-    @Query('from') from?: string,
-    @Query('to') to?: string,
-    @Query('lang') lang?: string,
-  ) {
-    const fromYearBC = from ? parseInt(from, 10) : undefined;
-    const toYearBC = to ? parseInt(to, 10) : undefined;
+  async getTimeline(@Query() query: GetTimelineQueryDto) {
     return this.timelineService.getTimelineEvents(
-      type,
-      fromYearBC,
-      toYearBC,
-      lang,
+      query.type,
+      query.from,
+      query.to,
+      query.lang,
     );
   }
 }

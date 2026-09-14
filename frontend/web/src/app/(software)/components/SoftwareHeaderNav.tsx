@@ -5,9 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { BackToPortalButton } from './BackToPortalButton';
-import { CategoryNav, SoftwareSection } from '../features/navigation/components/CategoryNav';
-import { LanguageToggle } from '../features/navigation/components/LanguageToggle';
-import { ThemeToggle } from '../features/navigation/components/ThemeToggle';
+import { CategoryNav, SoftwareSection } from './CategoryNav';
+import { LanguageToggle } from './LanguageToggle';
+import { ThemeToggle } from './ThemeToggle';
 
 interface SoftwareHeaderNavProps {
   activeCategory?: SoftwareSection;

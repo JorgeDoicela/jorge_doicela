@@ -10,7 +10,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 
 ## Documentación Técnica Oficial
 * [01_frontend_y_hub_tecnologico.md](../../../docs/05-software/01-frontend/01_frontend_y_hub_tecnologico.md)
-* [02_backend_y_persistencia.md](../../../docs/05-software/02-backend/01_backend_y_persistencia.md)
+* [01_backend_y_persistencia.md](../../../docs/05-software/02-backend/01_backend_y_persistencia.md)
 * [01_roadmap_software.md](../../../docs/05-software/03-roadmap/01_roadmap_software.md)
 
 ---

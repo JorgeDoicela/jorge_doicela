@@ -99,8 +99,13 @@ backend/src/software/
 │
 └── hub/                              # 9. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
     ├── hub.module.ts
-    ├── hub.controller.ts             # /software/hub
-    └── hub.service.ts                # Consulta consolidada de alto rendimiento (Top publicaciones por SmartScore con recency boost para carrusel + feed cronológico)
+    ├── controllers/
+    │   └── hub.controller.ts         # GET /software/hub con GetHubQueryDto validado
+    ├── dto/
+    │   ├── hub-response.dto.ts       # HubFeedItem, HubSpotlightData, HubResponseDto
+    │   └── get-hub-query.dto.ts      # Validación class-validator (?lang, ?search)
+    └── services/
+        └── hub.service.ts            # Consulta consolidada resiliente (SmartScore + feed cronológico + Spotlight)
 ```
 
 ---

@@ -17,7 +17,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > * **Aislamiento de Dominio:** Estilos independientes en `(software)/globals.css`. Cero importaciones de otros subdominios.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** `features/news/`, `features/blog/`, `features/forum/`, `features/ai/`, `features/cybersecurity/`, `features/tutorials/`, `features/projects/`, `features/infrastructure/`, `features/navigation/`.
+> * **Feature-Sliced Design (FSD):** `features/news/`, `features/blog/`, `features/forum/`, `features/ai/`, `features/cybersecurity/`, `features/tutorials/`, `features/projects/`, `features/infrastructure/`, `features/hub/`. Componentes UI compartidos y de navegación desacoplados en `components/`.
 > * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, barras de navegación (`MenuBar`, `Dock`), badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
 > * **Estética Neumorphism UI + Glassmorphism:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas.
@@ -31,11 +31,17 @@ frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
 ├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider)
-├── components/                       # Componentes compartidos del subdominio
+├── components/                       # Componentes compartidos del subdominio (Widgets & Shared UI)
 │   ├── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
+│   ├── CategoryNav.tsx               # Selector unificado de las 8 categorías (URL-driven con pestañas de escritorio y dropdown táctil)
+│   ├── LanguageToggle.tsx            # Selector de idioma ES/EN con persistencia y refresh
+│   ├── ThemeToggle.tsx               # Alternador de tema Titanio Claro / Obsidiana Oscuro
+│   ├── Dock.tsx                      # Barra de navegación flotante estilo macOS
+│   ├── MenuBar.tsx                   # Cabecera de sistema con reloj Guayaquil y Spotlight
+│   ├── SpotlightModal.tsx            # Buscador omnisciente Cmd+K multi-dominio
 │   ├── SoftwareCard.tsx              # Tarjeta atómica universal normalizada (escala exacta y neumorphism)
 │   ├── ArticleCover.tsx              # Banner de portada 16:9 con soporte SVG procedural temático
-│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (Spotlight + ThemeToggle + LanguageToggle)
+│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada
 │   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
 │   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales (Sidebar MalwareTech)
 │   ├── FeaturedPostsSidebarCard.tsx  # Tarjeta de artículos destacados con miniaturas cuadradas 1:1
@@ -77,17 +83,16 @@ frontend/web/src/app/(software)/
 │       ├── page.tsx                  # Catálogo de infraestructura con selector de categorías y buscador
 │       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del servidor
 │
-└── features/                         # FEATURE-SLICED DESIGN (FSD)
-    ├── navigation/                   # CategoryNav (filtro de las 8 categorías)
-    ├── news/                         # NewsCard, NewsGrid, useNews, types
-    ├── blog/                         # BlogCard, BlogGrid, useBlog, types
-    ├── forum/                        # TopicCard, ForumSection, useForum, types
-    ├── ai/                           # AiCard, AiGrid, useAi, types
-    ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
-    ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
-    ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types
-    ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
-    └── hub/                          # useSoftwareHub (consumo consolidado del endpoint GET /software/hub)
+└── features/                         # FEATURE-SLICED DESIGN (FSD: Features de Negocio con Barriles index.ts)
+    ├── news/                         # NewsCard, NewsGrid, useNews, types, index.ts
+    ├── blog/                         # BlogCard, BlogGrid, useBlog, types, index.ts
+    ├── forum/                        # TopicCard, ForumSection, useForum, types, index.ts
+    ├── ai/                           # AiCard, AiGrid, useAi, types, index.ts
+    ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types, index.ts
+    ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types, index.ts
+    ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types, index.ts
+    ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types, index.ts
+    └── hub/                          # SoftwareHubFeed, useSoftwareHub, types, index.ts (consumo consolidado GET /software/hub)
 ```
 
 ---
@@ -128,8 +133,8 @@ frontend/web/src/app/(software)/
   * **Barra de Navegación y Control Unificada a Ancho Completo (`w-full glass-concave-panel`):**
     * Encapsulada dentro de un único contenedor cóncavo continuo (`glass-concave-panel`) que abarca el 100% del ancho del layout, alineándose exactamente con los márgenes exteriores de las tarjetas de la grilla de publicaciones:
       * **Flanco Izquierdo:** Botón adaptativo de retorno ([`BackToPortalButton`](/software/components/BackToPortalButton.tsx)): enlaza al portal central `jorgedoicela.com` desde la raíz con etiqueta `Portal`, o a la raíz del subdominio (`/`) desde páginas de categoría con la etiqueta internacionalizada `Inicio` (ES) / `Home` (EN).
-      * **Centro:** Menú de categorías ([`CategoryNav`](/software/features/navigation/components/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 8 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`, `infrastructure`). Funciona bajo **arquitectura canónica URL-driven**: cada pestaña enlaza directamente a su módulo dedicado (`/news`, `/blog`, `/infrastructure`, etc.), permitiendo que el usuario experimente el módulo completo con sus propios filtros, buscadores y controles avanzados sin estados efímeros en memoria que oculten las rutas.
-      * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/navigation/components/LanguageToggle.tsx) ES/EN).
+      * **Centro:** Menú de categorías ([`CategoryNav`](/software/components/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 8 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`, `infrastructure`). Funciona bajo **arquitectura canónica URL-driven**: cada pestaña enlaza directamente a su módulo dedicado (`/news`, `/blog`, `/infrastructure`, etc.), permitiendo que el usuario experimente el módulo completo con sus propios filtros, buscadores y controles avanzados sin estados efímeros en memoria que oculten las rutas.
+      * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/components/LanguageToggle.tsx) ES/EN).
 * **Portadas Visuales de Alta Precisión e Inteligencia Temática (`ArticleCover.tsx` en 16:9):**
   * Soporta imágenes estáticas con `next/image` y fallback procedural dinámico por subcategoría técnica (`subCategory`):
     * **Servidores (`servers`):** Nodos bare-metal y topologías físicas en gradientes esmeralda (`from-emerald-950/70`).

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PortfolioProject } from '../types';
+import { useProjects } from '../hooks/useProjects';
 import { ExternalLink, BookOpen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ProjectDetailModal } from './ProjectDetailModal';
@@ -12,9 +13,15 @@ interface ProjectShowcaseProps {
 
 export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
   const t = useTranslations('Projects');
-  const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const {
+    activeFilter,
+    setActiveFilter,
+    selectedProject,
+    isModalOpen,
+    filteredProjects,
+    handleOpenDetail,
+    handleCloseDetail,
+  } = useProjects(projects);
 
   const categories = [
     { id: 'all', label: t('filterAll') },
@@ -22,31 +29,6 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
     { id: 'cloud', label: 'Cloud & DevSecOps' },
     { id: 'ai', label: 'IA & Sistemas' },
   ];
-
-  const filteredProjects = projects.filter((p) => {
-    if (activeFilter === 'all') return true;
-    if (activeFilter === 'fullstack') {
-      return p.technologies.some((tech) =>
-        ['Next.js 16', 'NestJS 11', 'React', 'Expo'].includes(tech)
-      );
-    }
-    if (activeFilter === 'cloud') {
-      return p.technologies.some((tech) =>
-        ['AWS Lightsail', 'Debian 13', 'Nginx', 'PM2', 'GitHub Actions', 'Docker'].includes(tech)
-      );
-    }
-    if (activeFilter === 'ai') {
-      return p.technologies.some((tech) =>
-        ['SQLite', 'TypeScript', 'ANSI Parser', 'AI'].includes(tech)
-      );
-    }
-    return true;
-  });
-
-  const handleOpenDetail = (project: PortfolioProject) => {
-    setSelectedProject(project);
-    setIsModalOpen(true);
-  };
 
   return (
     <section className="flex flex-col gap-8">
@@ -197,7 +179,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
       <ProjectDetailModal
         project={selectedProject}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseDetail}
       />
     </section>
   );

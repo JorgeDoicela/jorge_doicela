@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
-import { HubFeedItem, HubResponseData } from '../types';
+import { HubFeedItem, HubResponseData, HubSpotlightData } from '../types';
 import { API_URL } from '../../../../config';
 import { safeFetchJson } from '../../../utils/fetchJson';
 
@@ -10,7 +10,7 @@ export function useSoftwareHub(search: string = '') {
   const locale = useLocale();
   const [featured, setFeatured] = useState<HubFeedItem[]>([]);
   const [feed, setFeed] = useState<HubFeedItem[]>([]);
-  const [spotlightData, setSpotlightData] = useState<HubResponseData['spotlightData']>({
+  const [spotlightData, setSpotlightData] = useState<HubSpotlightData>({
     news: [],
     posts: [],
     topics: [],
@@ -42,18 +42,21 @@ export function useSoftwareHub(search: string = '') {
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/hub${params.toString() ? `?${params.toString()}` : ''}`;
-        const res = await safeFetchJson<any>(url);
+        const res = await safeFetchJson<HubResponseData | { data: HubResponseData }>(url);
 
         if (!isMounted) return;
 
-        const payload = res?.data?.data || res?.data || res;
-        const data: HubResponseData = payload || { featured: [], feed: [] };
+        const isWrapped = (r: HubResponseData | { data: HubResponseData }): r is { data: HubResponseData } =>
+          'data' in r && r.data !== null && typeof r.data === 'object';
+        const data: HubResponseData = isWrapped(res)
+          ? res.data
+          : (res as HubResponseData);
         setFeatured(Array.isArray(data.featured) ? data.featured : []);
         setFeed(Array.isArray(data.feed) ? data.feed : []);
         if (data.spotlightData) {
           setSpotlightData(data.spotlightData);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!isMounted) return;
 
         // Auto-reintento único defensivo ante carrera de arranque o fallo transitorio de conexión
@@ -66,8 +69,9 @@ export function useSoftwareHub(search: string = '') {
           return;
         }
 
-        console.error('Error al cargar hub de software:', err);
-        setError(err.message || (locale === 'es' ? 'No se pudo cargar el feed editorial' : 'Failed to load editorial feed'));
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('Error al cargar hub de software:', msg);
+        setError(msg || (locale === 'es' ? 'No se pudo cargar el feed editorial' : 'Failed to load editorial feed'));
       } finally {
         if (isMounted && !retryTimer) {
           setLoading(false);

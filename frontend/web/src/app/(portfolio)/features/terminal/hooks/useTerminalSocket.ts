@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { API_URL } from '../../../../config';
+import { SOCKET_URL } from '../../../../config';
 import {
   TerminalTab,
   TerminalPane,
@@ -43,7 +43,7 @@ export const useTerminalSocket = () => {
 
   // Inicializar Socket.io
   useEffect(() => {
-    const socket = io(`${API_URL}/terminal`, {
+    const socket = io(`${SOCKET_URL}/terminal`, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 15,
       reconnectionDelay: 1000,

@@ -1,11 +1,7 @@
 import { useState } from 'react';
 
-export interface ContactFormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
+import { ContactFormData } from '../types';
+export type { ContactFormData };
 
 import { API_URL } from '../../../../config';
 
@@ -60,8 +56,9 @@ export function useContact() {
 
       setSuccess(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (err: any) {
-      setError(err.message || 'Ocurrió un error inesperado.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Ocurrió un error inesperado.');
     } finally {
       setLoading(false);
     }

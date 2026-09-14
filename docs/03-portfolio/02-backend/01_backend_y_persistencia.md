@@ -355,3 +355,22 @@ new ValidationPipe({
   * `name`, `email`, `subject`, `message`: Campos del formulario.
   * `createdAt`: Timestamp automático.
   * `read`: Estado de lectura (`boolean`).
+
+---
+
+### 7.4 Protocolo de Salud, Integridad y Modo WAL (`portfolio.sqlite`)
+
+* **Modo Diario (Write-Ahead Logging):** Opera con `journal_mode = WAL` y `synchronous = NORMAL` para garantizar escrituras no bloqueantes de alta concurrencia.
+* **Comprobación de Integridad:**
+  * `PRAGMA integrity_check;` $\rightarrow$ Retorna estrictamente `ok`.
+  * `PRAGMA foreign_key_check;` $\rightarrow$ Retorna 0 violaciones referenciales.
+* **Protocolo ante Páginas WAL Huérfanas:** Si el proceso NestJS se detiene abruptamente durante una transacción abierta y genera desincronización en `portfolio.sqlite-wal`:
+  1. No eliminar el archivo `-wal` a ciegas.
+  2. Forzar un checkpoint pasivo o truncado: `PRAGMA wal_checkpoint(TRUNCATE);`.
+  3. Ejecutar `VACUUM;` para compactar y desfragmentar las páginas del archivo de base de datos principal.
+* **Comando de Sembrado Atómico y Resincronización:**
+  ```bash
+  pnpm --filter backend seed:portfolio
+  ```
+  Este script limpia, indexa y siembra atómicamente los 8 proyectos bilingües desde `corpus/projects.json` mediante sentencias `INSERT OR REPLACE` en transacción atómica.
+

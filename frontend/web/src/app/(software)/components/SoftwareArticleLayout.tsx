@@ -10,7 +10,7 @@ import { AuthorSidebarCard } from './AuthorSidebarCard';
 import { StayInformedCard } from './StayInformedCard';
 import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
 import { ExploreTopicsSidebarCard } from './ExploreTopicsSidebarCard';
-import { SoftwareSection } from '../features/navigation/components/CategoryNav';
+import { SoftwareSection } from './CategoryNav';
 
 export interface BreadcrumbItem {
   label: string;
@@ -28,6 +28,7 @@ interface SoftwareArticleLayoutProps {
   badge?: React.ReactNode;
   callout?: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
+  extraSidebarCard?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -42,6 +43,7 @@ export function SoftwareArticleLayout({
   badge,
   callout,
   breadcrumbs,
+  extraSidebarCard,
   children,
 }: SoftwareArticleLayoutProps) {
   const tNav = useTranslations('Nav');
@@ -156,6 +158,9 @@ export function SoftwareArticleLayout({
 
           {/* Columna Derecha: Barra Lateral Fija (Sidebar con Jerarquía Editorial MalwareTech) */}
           <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
+            {/* Ficha Técnica / Especificación Opcional */}
+            {extraSidebarCard}
+
             {/* 1. Perfil y Biografía de Jorge Doicela */}
             <AuthorSidebarCard />
 

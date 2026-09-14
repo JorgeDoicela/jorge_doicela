@@ -13,6 +13,7 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * [02_backend_y_morfologia.md](../../../docs/04-bible/02-backend/01_backend_y_morfologia.md)
 * [03_base_datos_y_seeder.md](../../../docs/04-bible/03-base-de-datos/01_base_datos_y_seeder.md)
 * [04_app_movil_expo.md](../../../docs/04-bible/04-mobile-expo/01_app_movil_expo.md)
+* [01_roadmap_bible.md](../../../docs/04-bible/05-roadmap/01_roadmap_bible.md)
 * [01_marco_legal_fuentes_y_api.md](../../../docs/04-bible/06-marco-legal-y-fuentes/01_marco_legal_fuentes_y_api.md)
 
 ---

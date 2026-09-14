@@ -17,6 +17,7 @@ import { EvangelismProvider, EvangelismSidebar, EvangelismInspector } from '../.
 import { ParallelProvider, ParallelSidebar, ParallelDiffInspector } from '../../features/parallel-view';
 import { InterlinearProvider, InterlinearSidebar, InterlinearInspector } from '../../features/interlinear';
 import { LexiconProvider, WordStudySidebar, WordStudyInspector } from '../../features/lexicons';
+import { useHeaderScrollBehavior } from '../../hooks/useHeaderScrollBehavior';
 
 function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';
@@ -42,66 +43,7 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
   const isHeaderVisible = passageContext?.isHeaderVisible ?? true;
   const setIsHeaderVisible = passageContext?.setIsHeaderVisible;
 
-  const mainRef = React.useRef<HTMLElement>(null);
-  const lastScrollTopRef = React.useRef(0);
-  const accumulatedDeltaRef = React.useRef(0);
-  const scrollDirectionRef = React.useRef<'up' | 'down'>('up');
-
-  const REPOSE_ZONE_PX = 200; // Zona de reposo superior: primeros 200px inamovibles
-  const SCROLL_DOWN_HIDE_INTENT_PX = 80; // Intención sostenida de lectura continua hacia abajo
-  const SCROLL_UP_REVEAL_INTENT_PX = 25; // Reaparición inmediata y sensible al subir
-
-  const handleMainScroll = () => {
-    const mainEl = mainRef.current;
-    if (!mainEl || !setIsHeaderVisible) return;
-
-    const currentScrollTop = Math.max(0, mainEl.scrollTop);
-    const delta = currentScrollTop - lastScrollTopRef.current;
-
-    // Ignorar micro-vibraciones (< 2px)
-    if (Math.abs(delta) < 2) return;
-
-    // 1. Zona de reposo superior: la cabecera permanece fija y serena
-    if (currentScrollTop <= REPOSE_ZONE_PX) {
-      setIsHeaderVisible(true);
-      accumulatedDeltaRef.current = 0;
-      scrollDirectionRef.current = 'up';
-    } else if (delta > 0) {
-      // Desplazamiento hacia abajo más allá de la zona de reposo
-      if (scrollDirectionRef.current !== 'down') {
-        scrollDirectionRef.current = 'down';
-        accumulatedDeltaRef.current = 0;
-      }
-
-      const effectiveDelta =
-        lastScrollTopRef.current <= REPOSE_ZONE_PX
-          ? currentScrollTop - REPOSE_ZONE_PX
-          : delta;
-
-      if (effectiveDelta > 0) {
-        accumulatedDeltaRef.current += effectiveDelta;
-      }
-
-      // Ocultar únicamente tras una intención de lectura sostenida y deliberada
-      if (accumulatedDeltaRef.current >= SCROLL_DOWN_HIDE_INTENT_PX) {
-        setIsHeaderVisible(false);
-      }
-    } else if (delta < 0) {
-      // Desplazamiento hacia arriba
-      if (scrollDirectionRef.current !== 'up') {
-        scrollDirectionRef.current = 'up';
-        accumulatedDeltaRef.current = 0;
-      }
-      accumulatedDeltaRef.current += Math.abs(delta);
-
-      // Reaparecer con intención de navegación hacia arriba ágil
-      if (accumulatedDeltaRef.current >= SCROLL_UP_REVEAL_INTENT_PX) {
-        setIsHeaderVisible(true);
-      }
-    }
-
-    lastScrollTopRef.current = currentScrollTop;
-  };
+  const { mainRef, handleMainScroll } = useHeaderScrollBehavior(setIsHeaderVisible);
 
   const leftTabTitle = isAtlas
     ? (tStudio('toggleAtlasSidebar') || 'Mostrar eras, lugares y rutas')

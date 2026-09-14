@@ -3,20 +3,20 @@
 import React, { createContext, useContext, useTransition } from 'react';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { Language, translations, Translations } from '../i18n/translations';
+
+export type Language = 'es' | 'en';
 
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
     toggleLanguage: () => void;
-    t: Translations;
     isPending: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const locale = useLocale() as Language;
+    const locale = (useLocale() || 'es') as Language;
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
@@ -36,10 +36,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setLanguage(nextLang);
     };
 
-    const t = translations[locale] || translations.es;
-
     return (
-        <LanguageContext.Provider value={{ language: locale, setLanguage, toggleLanguage, t, isPending }}>
+        <LanguageContext.Provider value={{ language: locale, setLanguage, toggleLanguage, isPending }}>
             {children}
         </LanguageContext.Provider>
     );
@@ -52,4 +50,3 @@ export function useLanguage(): LanguageContextType {
     }
     return context;
 }
-

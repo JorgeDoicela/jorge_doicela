@@ -1,11 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useState, useEffect, useMemo } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function TypewriterRole() {
-    const { t, language } = useLanguage();
-    const roles = t.roles;
+    const t = useTranslations();
+    const locale = useLocale();
+
+    const roles = useMemo(() => [
+        t('Roles.0'),
+        t('Roles.1'),
+        t('Roles.2'),
+        t('Roles.3'),
+    ], [t]);
+
     const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
     const [currentText, setCurrentText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
@@ -15,7 +23,7 @@ export default function TypewriterRole() {
         setCurrentRoleIndex(0);
         setCurrentText('');
         setIsDeleting(false);
-    }, [language]);
+    }, [locale]);
 
     useEffect(() => {
         const fullText = roles[currentRoleIndex] || roles[0];

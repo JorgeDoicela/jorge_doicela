@@ -78,8 +78,9 @@ export function ConsultaForm() {
         serviceType: '',
         message: '',
       });
-    } catch (err: any) {
-      setError(err.message || t('errorMsg'));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || t('errorMsg'));
     } finally {
       setLoading(false);
     }

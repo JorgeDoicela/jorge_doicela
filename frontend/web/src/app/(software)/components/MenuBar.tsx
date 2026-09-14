@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { LanguageToggle } from '../../navigation/components/LanguageToggle';
-import { BackToPortalButton } from '../../../components/BackToPortalButton';
+import { LanguageToggle } from './LanguageToggle';
+import { BackToPortalButton } from './BackToPortalButton';
 
 interface MenuBarProps {
   theme?: 'light' | 'dark';

@@ -24,13 +24,14 @@ export function useAi(type?: string, search: string = '') {
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/ai${params.toString() ? `?${params.toString()}` : ''}`;
-        const data = await safeFetchJson<any>(url);
+        const data = await safeFetchJson<AiResource[] | { data: AiResource[] }>(url);
 
         const list = Array.isArray(data) ? data : data.data || [];
         setResources(list);
-      } catch (err: any) {
-        console.error('Error al obtener recursos de IA:', err);
-        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los modelos y agentes de IA' : 'Failed to load AI models and agents'));
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('Error al obtener recursos de IA:', msg);
+        setError(msg || (locale === 'es' ? 'No se pudieron cargar los modelos y agentes de IA' : 'Failed to load AI models and agents'));
       } finally {
         setLoading(false);
       }

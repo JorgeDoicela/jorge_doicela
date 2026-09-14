@@ -6,18 +6,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ArchaeologyService } from '../services/archaeology.service';
+import { GetArticlesQueryDto } from '../dto/get-articles-query.dto';
 
 @Controller('bible')
 export class ArchaeologyController {
   constructor(private readonly archaeologyService: ArchaeologyService) {}
 
   @Get(['archaeology/articles', 'historical/articles'])
-  async getArticles(
-    @Query('category') category?: string,
-    @Query('q') query?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.archaeologyService.getArticles(category, query, lang);
+  async getArticles(@Query() query: GetArticlesQueryDto) {
+    return this.archaeologyService.getArticles(
+      query.category,
+      query.q,
+      query.lang,
+    );
   }
 
   @Get(['archaeology/articles/:slug', 'historical/articles/:slug'])

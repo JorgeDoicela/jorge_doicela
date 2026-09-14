@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { HubController } from './hub.controller';
-import { HubService } from './hub.service';
+import { HubController } from './controllers/hub.controller';
+import { HubService } from './services/hub.service';
 import { NewsModule } from '../news/news.module';
 import { BlogModule } from '../blog/blog.module';
 import { CybersecurityModule } from '../cybersecurity/cybersecurity.module';

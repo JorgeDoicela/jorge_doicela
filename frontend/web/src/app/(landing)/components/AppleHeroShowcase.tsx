@@ -1,12 +1,11 @@
 'use client';
 
 import React from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslations } from 'next-intl';
 import TypewriterRole from './TypewriterRole';
 
 export const AppleHeroIntro: React.FC = () => {
-    const { language } = useLanguage();
-    const isEs = language === 'es';
+    const tLanding = useTranslations('Landing');
 
     return (
         <section className="w-full min-h-[84vh] sm:min-h-[88vh] flex flex-col justify-center items-center text-center px-4 animate-fade-in-up relative">
@@ -22,9 +21,7 @@ export const AppleHeroIntro: React.FC = () => {
 
             {/* Párrafo Descriptivo Estilo Apple */}
             <p className="text-base sm:text-lg md:text-xl text-text-muted max-w-2xl font-normal leading-relaxed tracking-[-0.012em] mb-10">
-                {isEs
-                    ? 'Desarrollo Full Stack, Ciberseguridad y Tecnologías Web construidas con excelencia técnica, fe cristiana y pasión por el detalle.'
-                    : 'Full Stack Development, Cybersecurity and Web Technologies built with technical excellence, Christian faith and passion for detail.'}
+                {tLanding('heroDescription')}
             </p>
 
             {/* Botón Píldora Apple CTA */}
@@ -41,7 +38,7 @@ export const AppleHeroIntro: React.FC = () => {
                     }}
                     className="px-8 py-3.5 rounded-full bg-foreground text-background font-medium text-sm sm:text-base tracking-tight hover:opacity-90 active:scale-95 transition-all shadow-md cursor-pointer"
                 >
-                    {isEs ? 'Explorar lo más destacado' : 'Explore highlights'}
+                    {tLanding('heroCta')}
                 </a>
             </div>
         </section>

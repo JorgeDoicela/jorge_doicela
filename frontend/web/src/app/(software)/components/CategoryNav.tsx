@@ -35,7 +35,7 @@ export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
     forum: '/forum',
 };
 
-export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: string }[] = [
+export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: SoftwareSection }[] = [
     { id: 'all', key: 'all' },
     { id: 'tutorials', key: 'tutorials' },
     { id: 'news', key: 'news' },
@@ -80,7 +80,7 @@ export function CategoryNav({
                             value={cat.id}
                             className="bg-white dark:bg-zinc-900 text-slate-900 dark:text-white py-1.5 text-xs font-medium"
                         >
-                            {t(cat.key as any)}
+                            {t(cat.key)}
                         </option>
                     ))}
                 </select>
@@ -115,7 +115,7 @@ export function CategoryNav({
                                     : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
                         >
-                            <span>{t(cat.key as any)}</span>
+                            <span>{t(cat.key)}</span>
                         </Link>
                     );
                 })}
@@ -123,4 +123,3 @@ export function CategoryNav({
         </nav>
     );
 }
-

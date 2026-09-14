@@ -46,11 +46,16 @@ async function bootstrap() {
         'https://portfolio.jorgedoicela.com',
         'https://bible.jorgedoicela.com',
         'https://software.jorgedoicela.com',
-        // En desarrollo local se añaden los puertos del monorepo
+        // En desarrollo local se añaden los puertos y subdominios del monorepo
         ...(process.env.NODE_ENV !== 'production'
           ? [
               'http://localhost:3001',
+              'http://portfolio.localhost:3001',
+              'http://software.localhost:3001',
+              'http://bible.localhost:3001',
+              'http://127.0.0.1:3001',
               'http://localhost:3000',
+              'http://127.0.0.1:3000',
               'http://localhost:3002',
             ]
           : []),

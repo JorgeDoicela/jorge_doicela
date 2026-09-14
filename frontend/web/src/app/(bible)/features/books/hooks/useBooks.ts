@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
+import type { Book } from '../types';
 
-export interface Book {
-  id: number;
-  name: string;
-  abbreviation: string;
-  testament: 'OT' | 'NT';
-}
+export type { Book };
 
 export const CANONICAL_BOOKS: Book[] = [
   // Antiguo Testamento (39 libros)

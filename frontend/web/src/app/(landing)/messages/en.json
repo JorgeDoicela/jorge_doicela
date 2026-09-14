@@ -10,6 +10,7 @@
     "toggleTheme": "Toggle theme",
     "toggleLang": "Switch to Spanish",
     "loading": "Loading page...",
+    "skipToContent": "Skip to main content",
     "footer": "© {year} Jorge Doicela. All rights reserved."
   },
   "Roles": [

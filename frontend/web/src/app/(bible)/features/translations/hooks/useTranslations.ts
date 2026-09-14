@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'react';
+import type { Translation } from '../types';
 
-export interface Translation {
-  id: number;
-  name: string;
-  abbreviation: string;
-  language: string;
-  copyrightNotice?: string;
-  copyrightOwner?: string;
-}
+export type { Translation };
 
 export const CANONICAL_TRANSLATIONS: Translation[] = [
   {

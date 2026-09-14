@@ -1,51 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NewsService } from '../news/services/news.service';
-import { BlogService } from '../blog/services/blog.service';
-import { CybersecurityService } from '../cybersecurity/services/cybersecurity.service';
-import { TutorialsService } from '../tutorials/services/tutorials.service';
-import { InfrastructureService } from '../infrastructure/services/infrastructure.service';
-import { AiService } from '../ai/services/ai.service';
-import { ProjectsService } from '../projects/services/projects.service';
-import { ForumService } from '../forum/services/forum.service';
+import { NewsService } from '../../news/services/news.service';
+import { BlogService } from '../../blog/services/blog.service';
+import { CybersecurityService } from '../../cybersecurity/services/cybersecurity.service';
+import { TutorialsService } from '../../tutorials/services/tutorials.service';
+import { InfrastructureService } from '../../infrastructure/services/infrastructure.service';
+import { AiService } from '../../ai/services/ai.service';
+import { ProjectsService } from '../../projects/services/projects.service';
+import { ForumService } from '../../forum/services/forum.service';
+import {
+  HubFeedItem,
+  HubSpotlightData,
+  HubResponseDto,
+} from '../dto/hub-response.dto';
 
-export interface HubFeedItem {
-  id: string;
-  href: string;
-  title: string;
-  category:
-    | 'news'
-    | 'blog'
-    | 'ai'
-    | 'cybersecurity'
-    | 'tutorials'
-    | 'projects'
-    | 'infrastructure'
-    | 'forum';
-  subCategory?: string;
-  coverImage?: string;
-  tag?: string;
-  categoryMeta: string;
-  excerpt?: string | null;
-  accentHoverColor?: string;
-  date: string;
-  smartScore: number;
-}
-
-export interface HubResponseDto {
-  featured: HubFeedItem[];
-  feed: HubFeedItem[];
-  totalCount: number;
-  spotlightData: {
-    news: any[];
-    posts: any[];
-    topics: any[];
-    aiResources: any[];
-    secPosts: any[];
-    tutorials: any[];
-    projects: any[];
-    infraPosts: any[];
-  };
-}
+export type { HubFeedItem, HubSpotlightData, HubResponseDto };
 
 @Injectable()
 export class HubService {

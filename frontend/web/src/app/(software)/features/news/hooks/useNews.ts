@@ -24,13 +24,15 @@ export function useNews(search: string = '', tag?: string) {
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/news${params.toString() ? `?${params.toString()}` : ''}`;
-        const data = await safeFetchJson<any>(url);
+        const data = await safeFetchJson<NewsArticle[] | { data: NewsArticle[] }>(url);
 
         const list = Array.isArray(data) ? data : data.data || [];
         setNews(list);
-      } catch (err: any) {
-        console.error('Error al obtener noticias:', err);
-        setError(err.message || (locale === 'es' ? 'No se pudieron cargar las noticias' : 'Failed to load news'));
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('Error al obtener noticias:', msg);
+        setError(msg || (locale === 'es' ? 'No se pudieron cargar las noticias' : 'Failed to load news'));
+
       } finally {
         setLoading(false);
       }

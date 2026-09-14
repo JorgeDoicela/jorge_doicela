@@ -56,7 +56,18 @@ frontend/web/src/app/(bible)/
 │   ├── BibleHeaderNav.tsx     # Header con selector de suites móvil flotante y desktop
 │   ├── BackToBibleButton.tsx  # Retorno directo al inicio de la Biblia
 │   ├── BackToPortalButton.tsx # Retorno directo al portal principal (jorgedoicela.com)
-│   └── DraggableEdgeTab.tsx   # Pestañas táctiles flotantes para reapertura de paneles laterales
+│   ├── DraggableEdgeTab.tsx   # Pestañas táctiles flotantes para reapertura de paneles laterales
+│   └── landing/               # COMPONENTES MODULARES DE LA LANDING (Descomposición atómica)
+│       ├── BibleLandingHeader.tsx         # Navbar sticky con selector de tema/idioma y acceso a portal
+│       ├── BibleHeroSection.tsx           # Hero editorial masorético, tipografía y tarjeta flotante
+│       ├── BibleEnginesCarousel.tsx       # Carrusel interactivo Google-style con autoplay y HUDs
+│       ├── BiblePurposeSection.tsx        # Pestañas Geist de propósito y 12 tarjetas de estudio
+│       ├── BibleCorpusVersionsSection.tsx # 6 versiones canónicas, lenguas originales y muestras RTL
+│       ├── BibleManuscriptsSection.tsx    # Códices antiguos, Qumrán y facsímil patrimonial
+│       ├── BibleStepsSection.tsx          # 3 pasos simples de iniciación al estudio bíblico
+│       ├── BibleMobileAppSection.tsx      # App Expo offline con mockup iPhone y especificaciones
+│       ├── BibleFinalCtaAndFooter.tsx     # Llamada a la acción final y pie de página institucional
+│       └── index.ts                       # Barril de exportación unificado
 │
 └── features/                  # FEATURE-SLICED DESIGN (FSD) CON SERVICIOS API
     ├── verses/                # services/ + hooks/useVerses (API /bible/verses)
@@ -73,6 +84,9 @@ frontend/web/src/app/(bible)/
 ```
 
 ### 2.1 Arquitectura Visual de la Landing Page (`bible/page.tsx`)
+> [!TIP]
+> **Descomposición Modular Atómica:** La Landing Page de la Biblia opera mediante un orquestador declarativo ultra-liviano (`bible/page.tsx`, < 45 líneas) que ensambla 9 subcomponentes atómicos e independientes ubicados en `components/landing/` (`BibleLandingHeader`, `BibleHeroSection`, `BibleEnginesCarousel`, `BiblePurposeSection`, `BibleCorpusVersionsSection`, `BibleManuscriptsSection`, `BibleStepsSection`, `BibleMobileAppSection`, `BibleFinalCtaAndFooter`). Cada componente encapsula su propio estado, interactividad y suscripción i18n (`BibleLanding` / `Landing`), erradicando la deuda técnica de archivos monolíticos y garantizando mantenibilidad a largo plazo.
+
 Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de Negocio* (inspección DevTools):
 1. **Calibración Dimensional y Escala Tipográfica:**
    * **Headline Principal (`h1`):** `text-4xl sm:text-5xl md:text-6xl lg:text-[68px]` con `leading-[1.12]` y color suave `#202124` (dark charcoal) para máxima legibilidad humana sin agresividad visual.

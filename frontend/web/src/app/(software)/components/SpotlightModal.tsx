@@ -3,15 +3,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { SpotlightSearchResult } from '../types';
-import { NewsArticle } from '../../news/types';
-import { BlogPost } from '../../blog/types';
-import { ForumTopic } from '../../forum/types';
-import { AiResource } from '../../ai/types';
-import { SecurityPost } from '../../cybersecurity/types';
-import { Tutorial } from '../../tutorials/types';
-import { Project } from '../../projects/types';
-import { InfrastructurePost } from '../../infrastructure/types';
+import { SpotlightSearchResult } from '../types/os';
+import { NewsArticle } from '../features/news';
+import { BlogPost } from '../features/blog';
+import { ForumTopic } from '../features/forum';
+import { AiResource } from '../features/ai';
+import { SecurityPost } from '../features/cybersecurity';
+import { Tutorial } from '../features/tutorials';
+import { Project } from '../features/projects';
+import { InfrastructurePost } from '../features/infrastructure';
 
 interface SpotlightModalProps {
   isOpen: boolean;
@@ -173,7 +173,7 @@ export function SpotlightModal({
     });
 
     return items;
-  }, [news, posts, topics, aiResources, secPosts, tutorials, projects, infraPosts]);
+  }, [news, posts, topics, aiResources, secPosts, tutorials, projects, infraPosts, tNav, tCard]);
 
   const filteredResults = useMemo(() => {
     if (!query.trim()) {

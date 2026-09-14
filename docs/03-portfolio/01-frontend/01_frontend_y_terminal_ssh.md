@@ -45,7 +45,10 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── components/
 │   │   │   ├── ProjectShowcase.tsx     # Galería con filtros reactivos y botones Dark Luxury
 │   │   │   └── ProjectDetailModal.tsx  # Modal in-page de Casos de Estudio (createPortal)
-│   │   └── types.ts           # Interfaces de proyectos, métricas y casos de estudio
+│   │   ├── hooks/
+│   │   │   └── useProjects.ts          # Estado de filtrado por categoría y selección modal
+│   │   ├── types.ts                    # Interfaces de proyectos, métricas y casos de estudio
+│   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
 │   ├── terminal/              # FEATURE: SISTEMA TRI-MODAL DE TERMINAL
 │   │   ├── components/
@@ -60,14 +63,16 @@ frontend/web/src/app/(portfolio)/
 │   │   │   └── useSandboxTerminal.ts     # WebSocket + xterm.js del Sandbox (/sandbox)
 │   │   ├── utils/
 │   │   │   └── ansiParser.tsx            # Renderizado de colores y secuencias ANSI
-│   │   └── types.ts
+│   │   ├── types.ts
+│   │   └── index.ts                      # Barril de exportación pública de la feature
 │   │
 │   └── contact/               # FEATURE: FORMULARIO DE CONTACTO
 │       ├── components/
 │       │   └── ContactForm.tsx       # Formulario con validación en tiempo real
 │       ├── hooks/
-│       │   └── useContact.ts         # Llamada HTTP POST al backend
-│       └── types.ts
+│       │   └── useContact.ts         # Llamada HTTP POST al backend y estados reactivos
+│       ├── types.ts                  # DTOs y tipos del formulario de contacto
+│       └── index.ts                  # Barril de exportación pública de la feature
 ```
 
 ---

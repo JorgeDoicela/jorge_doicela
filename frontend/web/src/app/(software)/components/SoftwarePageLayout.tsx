@@ -3,7 +3,7 @@
 import React from 'react';
 import { SoftwareHeaderNav } from './SoftwareHeaderNav';
 import { SoftwareFooter } from './SoftwareFooter';
-import { SoftwareSection } from '../features/navigation/components/CategoryNav';
+import { SoftwareSection } from './CategoryNav';
 
 export interface SoftwarePageLayoutProps {
   activeCategory?: SoftwareSection;

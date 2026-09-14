@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { API_URL, SANDBOX_TUNNEL_URL } from '../../../../config';
+import { SOCKET_URL, SANDBOX_TUNNEL_URL } from '../../../../config';
 
 export type SandboxStatus =
   | 'idle'
@@ -213,7 +213,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
 
       const targetMode = options?.targetMode || 'vps';
       const isTunnel = targetMode === 'tunnel';
-      const socketBaseUrl = isTunnel ? SANDBOX_TUNNEL_URL : API_URL;
+      const socketBaseUrl = isTunnel ? SANDBOX_TUNNEL_URL : SOCKET_URL;
       const socketUrl = `${socketBaseUrl}/sandbox`;
       const forceReplace = !!startOpts?.forceReplace;
 

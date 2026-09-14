@@ -10,9 +10,11 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 
 ## Documentación Técnica Oficial
 * [01_frontend_y_terminal_ssh.md](../../../docs/03-portfolio/01-frontend/01_frontend_y_terminal_ssh.md)
-* [02_backend_y_persistencia.md](../../../docs/03-portfolio/02-backend/01_backend_y_persistencia.md)
+* [01_backend_y_persistencia.md](../../../docs/03-portfolio/02-backend/01_backend_y_persistencia.md)
+* [01_roadmap_portfolio.md](../../../docs/03-portfolio/03-roadmap/01_roadmap_portfolio.md)
 * [02_terminal_real_sandbox_linux.md](../../../docs/03-portfolio/03-roadmap/02_terminal_real_sandbox_linux.md)
 * [03_tunnel_cloudflare_setup.md](../../../docs/03-portfolio/03-roadmap/03_tunnel_cloudflare_setup.md)
+* [04_puesta_en_marcha_vps_y_arquitectura_sandbox.md](../../../docs/03-portfolio/03-roadmap/04_puesta_en_marcha_vps_y_arquitectura_sandbox.md)
 
 ---
 

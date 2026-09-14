@@ -25,13 +25,14 @@ export function useCybersecurity(severity?: string, postType?: string, search: s
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/cybersecurity${params.toString() ? `?${params.toString()}` : ''}`;
-        const data = await safeFetchJson<any>(url);
+        const data = await safeFetchJson<SecurityPost[] | { data: SecurityPost[] }>(url);
 
         const list = Array.isArray(data) ? data : data.data || [];
         setPosts(list);
-      } catch (err: any) {
-        console.error('Error al obtener posts de ciberseguridad:', err);
-        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los avisos de seguridad' : 'Failed to load security advisories'));
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('Error al obtener posts de ciberseguridad:', msg);
+        setError(msg || (locale === 'es' ? 'No se pudieron cargar los avisos de seguridad' : 'Failed to load security advisories'));
       } finally {
         setLoading(false);
       }

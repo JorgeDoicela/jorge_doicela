@@ -10,6 +10,7 @@ Esta habilidad define los estándares técnicos, estéticos, de accesibilidad y 
 
 ## Documentación Técnica Oficial
 * [01_arquitectura_y_diseno.md](../../../docs/02-landing/01-arquitectura-y-diseno/01_arquitectura_y_diseno.md)
+* [01_roadmap_landing.md](../../../docs/02-landing/02-roadmap/01_roadmap_landing.md)
 
 ---
 

@@ -24,13 +24,14 @@ export function useTutorials(difficulty?: string, search: string = '') {
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/software/tutorials${params.toString() ? `?${params.toString()}` : ''}`;
-        const data = await safeFetchJson<any>(url);
+        const data = await safeFetchJson<Tutorial[] | { data: Tutorial[] }>(url);
 
         const list = Array.isArray(data) ? data : data.data || [];
         setTutorials(list);
-      } catch (err: any) {
-        console.error('Error al obtener tutoriales:', err);
-        setError(err.message || (locale === 'es' ? 'No se pudieron cargar los tutoriales' : 'Failed to load tutorials'));
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('Error al obtener tutoriales:', msg);
+        setError(msg || (locale === 'es' ? 'No se pudieron cargar los tutoriales' : 'Failed to load tutorials'));
       } finally {
         setLoading(false);
       }

@@ -1,100 +1,52 @@
-'use client';
-
-import { use, useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
-import { useLocale, useTranslations } from 'next-intl';
+import { notFound } from 'next/navigation';
+import { getLocale, getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { ForumTopic, ForumReply } from '../../../features/forum/types';
-import { API_URL } from '../../../../config';
+import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
+import { ForumReplyForm } from '../ForumReplyForm';
 
-export default function ForumTopicDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = use(params);
-  const locale = useLocale();
-  const tNav = useTranslations('Nav');
-  const tForum = useTranslations('Forum');
-  const tDetail = useTranslations('Detail');
-  const tCard = useTranslations('CardActions');
-  const [topic, setTopic] = useState<ForumTopic | null>(null);
-  const [replyContent, setReplyContent] = useState('');
-  const [authorName, setAuthorName] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+type Params = { params: Promise<{ slug: string }> };
 
-  const fetchTopic = useCallback(async () => {
-    try {
-      const res = await fetch(`${API_URL}/software/forum/${slug}?lang=${locale}`);
-      if (!res.ok) throw new Error(tDetail('topicNotFound'));
-      const data = await res.json();
-      setTopic(data.data || data);
-    } catch (err: any) {
-      setError(err.message || tDetail('topicNotFound'));
-    } finally {
-      setLoading(false);
-    }
-  }, [slug, locale, tDetail]);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { slug } = await params;
+  const locale = await getLocale();
+  const topic = await serverGet<ForumTopic>(`/software/forum/${slug}?lang=${locale}`);
 
-  useEffect(() => {
-    fetchTopic();
-  }, [fetchTopic]);
+  if (!topic) {
+    return { title: 'Hilo no encontrado | Foro — Jorge Doicela' };
+  }
 
-  const handlePostReply = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!replyContent.trim() || !topic) return;
-
-    setSubmitting(true);
-    try {
-      const res = await fetch(`${API_URL}/software/forum/replies`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topicId: topic.id,
-          content: replyContent.trim(),
-          author: authorName.trim() || (locale === 'es' ? 'Desarrollador Anónimo' : 'Anonymous Developer'),
-        }),
-      });
-
-      if (!res.ok) throw new Error('Error al enviar respuesta');
-      setReplyContent('');
-      await fetchTopic();
-    } catch (err: any) {
-      alert(err.message || 'Error al publicar');
-    } finally {
-      setSubmitting(false);
-    }
+  return {
+    title: `${topic.title} | Foro — Jorge Doicela`,
+    description: topic.content.slice(0, 160),
+    openGraph: {
+      title: topic.title,
+      description: topic.content.slice(0, 160),
+      type: 'article',
+      authors: [topic.author || 'Jorge Doicela'],
+    },
+    alternates: {
+      canonical: `https://software.jorgedoicela.com/forum/${slug}`,
+    },
   };
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen py-20 px-4 flex justify-center items-center bg-[var(--background)]">
-        <div className="p-8 rounded-3xl glass-convex-panel animate-pulse text-zinc-400 text-xs font-mono">
-          {tDetail('loadingDiscussion')}
-        </div>
-      </div>
-    );
-  }
+export default async function ForumTopicDetailPage({ params }: Params) {
+  const { slug } = await params;
+  const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tDetail = await getTranslations('Detail');
 
-  if (error || !topic) {
-    return (
-      <div className="min-h-screen py-20 px-4 flex flex-col justify-center items-center gap-4 bg-[var(--background)]">
-        <p className="text-rose-500 font-mono text-sm">{error || tDetail('topicNotFound')}</p>
-        <Link href="/forum" className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all">
-          {tForum('back')}
-        </Link>
-      </div>
-    );
-  }
+  const topic = await serverGet<ForumTopic>(`/software/forum/${slug}?lang=${locale}`);
 
-  const formattedDate = new Date(topic.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
+  if (!topic) notFound();
+
+  const formattedDate = new Date(topic.createdAt).toLocaleDateString(
+    locale === 'es' ? 'es-ES' : 'en-US',
+    { day: '2-digit', month: 'long', year: 'numeric' },
+  );
 
   return (
     <SoftwareArticleLayout
@@ -105,16 +57,14 @@ export default function ForumTopicDetailPage({
       date={formattedDate}
       author={topic.author || 'Jorge Doicela'}
     >
-      {/* Contenido del Hilo Principal */}
+      {/* Contenido del Hilo Principal — Server */}
       <MarkdownRenderer content={topic.content} />
 
-      {/* Sección de Respuestas */}
+      {/* Sección de Respuestas — Server */}
       <div className="mt-12 pt-8 border-t border-black/5 dark:border-white/5 space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight font-mono">
-            {tDetail('communityReplies', { count: topic.replies?.length || 0 })}
-          </h3>
-        </div>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight font-mono">
+          {tDetail('communityReplies', { count: topic.replies?.length ?? 0 })}
+        </h3>
 
         {topic.replies && topic.replies.length > 0 ? (
           <div className="space-y-4">
@@ -141,38 +91,8 @@ export default function ForumTopicDetailPage({
           </div>
         )}
 
-        {/* Formulario de Respuesta Rápida */}
-        <form onSubmit={handlePostReply} className="mt-8 p-6 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-4">
-          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-            {tDetail('joinDiscussion')}
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input
-              type="text"
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              placeholder={tDetail('namePlaceholder')}
-              className="px-3.5 py-2.5 rounded-xl bg-white/80 dark:bg-black/40 border border-slate-300 dark:border-white/10 text-xs font-mono text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-sm transition-colors"
-            />
-          </div>
-          <textarea
-            value={replyContent}
-            onChange={(e) => setReplyContent(e.target.value)}
-            placeholder={tDetail('replyPlaceholder')}
-            rows={4}
-            required
-            className="w-full p-3.5 rounded-xl bg-white/80 dark:bg-black/40 border border-slate-300 dark:border-white/10 text-xs font-sans text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 resize-none leading-relaxed shadow-sm transition-colors"
-          />
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs font-mono disabled:opacity-40 transition-all cursor-pointer shadow-md hover:shadow-blue-500/25"
-            >
-              {submitting ? tDetail('publishing') : tDetail('postReplyBtn')}
-            </button>
-          </div>
-        </form>
+        {/* Formulario de Respuesta — Client Component aislado */}
+        <ForumReplyForm topic={topic} locale={locale} />
       </div>
     </SoftwareArticleLayout>
   );

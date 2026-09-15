@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ForumTopic } from '../../features/forum/types';
-import { API_URL } from '../../../config';
+import { ForumTopic } from '../types';
+import { API_URL } from '../../../../config';
 
 interface ForumReplyFormProps {
   topic: ForumTopic;
@@ -31,9 +31,7 @@ export function ForumReplyForm({ topic, locale, onReplySent }: ForumReplyFormPro
         body: JSON.stringify({
           topicId: topic.id,
           content: replyContent.trim(),
-          author:
-            authorName.trim() ||
-            (locale === 'es' ? 'Desarrollador Anónimo' : 'Anonymous Developer'),
+          author: authorName.trim() || tDetail('anonymousDeveloper'),
         }),
       });
 

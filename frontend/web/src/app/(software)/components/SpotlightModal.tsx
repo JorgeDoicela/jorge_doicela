@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { SpotlightSearchResult } from '../types/os';
+import { SpotlightSearchResult } from '../types/spotlight';
 import { NewsArticle } from '../features/news';
 import { BlogPost } from '../features/blog';
 import { ForumTopic } from '../features/forum';

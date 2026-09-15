@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { NewsGrid } from '../../features/news/components/NewsGrid';
-import { useNews } from '../../features/news/hooks/useNews';
+import { NewsGrid, useNews } from '../../features/news';
 
 export default function NewsCategoryPage() {
   const tNav = useTranslations('Nav');

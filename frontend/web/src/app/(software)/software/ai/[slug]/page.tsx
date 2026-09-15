@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { AiResource } from '../../../features/ai/types';
+import { AiResource } from '../../../features/ai';
 import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
@@ -11,14 +11,16 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tCommon = await getTranslations('Common');
   const resource = await serverGet<AiResource>(`/software/ai/${slug}?lang=${locale}`);
 
   if (!resource) {
-    return { title: 'Recurso no encontrado | IA — Jorge Doicela' };
+    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
   return {
-    title: `${resource.name} | IA & Modelos — Jorge Doicela`,
+    title: `${resource.name} | ${tNav('ai')} — Jorge Doicela`,
     description: resource.description,
     openGraph: {
       title: resource.name,

@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tutorial, TutorialDifficulty } from '../entities/tutorial.entity';
+import { Tutorial } from '../entities/tutorial.entity';
 import { TutorialStep } from '../entities/tutorial-step.entity';
 import { CreateTutorialDto } from '../dto/create-tutorial.dto';
 import { CreateTutorialStepDto } from '../dto/create-tutorial-step.dto';
+import { GetTutorialsQueryDto } from '../dto/get-tutorials-query.dto';
 
 @Injectable()
 export class TutorialsService {
@@ -15,11 +16,11 @@ export class TutorialsService {
     private readonly stepRepository: Repository<TutorialStep>,
   ) {}
 
-  async findAll(
-    difficulty?: TutorialDifficulty,
-    search?: string,
-    lang?: string,
-  ): Promise<Tutorial[]> {
+  async findAll(query: GetTutorialsQueryDto = {}): Promise<Tutorial[]> {
+    const { difficulty, search, lang } = query;
+    const page = Math.max(1, query.page ? Number(query.page) : 1);
+    const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
+
     const qb = this.tutorialRepository.createQueryBuilder('tut');
 
     if (lang) {
@@ -45,10 +46,14 @@ export class TutorialsService {
     qb.orderBy('smart_score', 'DESC');
     qb.addOrderBy('COALESCE(tut.publishedAt, tut.createdAt)', 'DESC');
     qb.addOrderBy('tut.id', 'DESC');
+
+    // Techo de seguridad de memoria para VPS 1 GB RAM
+    qb.skip((page - 1) * limit).take(limit);
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(difficulty, search, 'es');
+      return this.findAll({ ...query, lang: 'es' });
     }
 
     return results;
@@ -87,8 +92,8 @@ export class TutorialsService {
       tutorial.steps.sort((a, b) => a.stepOrder - b.stepOrder);
     }
 
+    void this.tutorialRepository.increment({ id: tutorial.id }, 'views', 1);
     tutorial.views += 1;
-    await this.tutorialRepository.save(tutorial);
     return tutorial;
   }
 
@@ -113,6 +118,9 @@ export class TutorialsService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.tutorialRepository.delete(id);
+    const result = await this.tutorialRepository.delete(id);
+    if (!result.affected) {
+      throw new NotFoundException(`Tutorial #${id} no encontrado`);
+    }
   }
 }

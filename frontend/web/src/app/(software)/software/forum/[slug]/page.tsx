@@ -1,25 +1,26 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { ForumTopic, ForumReply } from '../../../features/forum/types';
+import { ForumTopic, ForumReply, ForumReplyForm } from '../../../features/forum';
 import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
-import { ForumReplyForm } from '../ForumReplyForm';
 
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tCommon = await getTranslations('Common');
   const topic = await serverGet<ForumTopic>(`/software/forum/${slug}?lang=${locale}`);
 
   if (!topic) {
-    return { title: 'Hilo no encontrado | Foro — Jorge Doicela' };
+    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
   return {
-    title: `${topic.title} | Foro — Jorge Doicela`,
+    title: `${topic.title} | ${tNav('forum')} — Jorge Doicela`,
     description: topic.content.slice(0, 160),
     openGraph: {
       title: topic.title,

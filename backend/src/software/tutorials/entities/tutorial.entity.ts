@@ -13,6 +13,9 @@ export type TutorialDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
 @Entity('tutorials')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'difficulty', 'orderPriority', 'publishedAt'])
+@Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class Tutorial {
   @PrimaryGeneratedColumn()
   id: number;

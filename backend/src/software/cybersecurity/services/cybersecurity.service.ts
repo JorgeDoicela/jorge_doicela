@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  SecurityPost,
-  SecuritySeverity,
-  SecurityPostType,
-} from '../entities/security-post.entity';
+import { SecurityPost } from '../entities/security-post.entity';
 import { CreateSecurityPostDto } from '../dto/create-security-post.dto';
+import { GetSecurityPostsQueryDto } from '../dto/get-security-posts-query.dto';
 
 @Injectable()
 export class CybersecurityService {
@@ -15,12 +12,11 @@ export class CybersecurityService {
     private readonly securityRepository: Repository<SecurityPost>,
   ) {}
 
-  async findAll(
-    severity?: SecuritySeverity,
-    postType?: SecurityPostType,
-    search?: string,
-    lang?: string,
-  ): Promise<SecurityPost[]> {
+  async findAll(query: GetSecurityPostsQueryDto = {}): Promise<SecurityPost[]> {
+    const { severity, postType, search, lang } = query;
+    const page = Math.max(1, query.page ? Number(query.page) : 1);
+    const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
+
     const qb = this.securityRepository.createQueryBuilder('sec');
 
     if (lang) {
@@ -50,10 +46,14 @@ export class CybersecurityService {
     qb.orderBy('smart_score', 'DESC');
     qb.addOrderBy('COALESCE(sec.publishedAt, sec.createdAt)', 'DESC');
     qb.addOrderBy('sec.id', 'DESC');
+
+    // Techo de seguridad de memoria para VPS 1 GB RAM
+    qb.skip((page - 1) * limit).take(limit);
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(severity, postType, search, 'es');
+      return this.findAll({ ...query, lang: 'es' });
     }
 
     return results;
@@ -86,8 +86,8 @@ export class CybersecurityService {
       );
     }
 
+    void this.securityRepository.increment({ id: post.id }, 'views', 1);
     post.views += 1;
-    await this.securityRepository.save(post);
     return post;
   }
 
@@ -103,6 +103,11 @@ export class CybersecurityService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.securityRepository.delete(id);
+    const result = await this.securityRepository.delete(id);
+    if (!result.affected) {
+      throw new NotFoundException(
+        `Publicación de ciberseguridad #${id} no encontrada`,
+      );
+    }
   }
 }

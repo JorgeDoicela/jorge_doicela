@@ -161,7 +161,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
         const mermaid = (await import('mermaid')).default;
         const isDark = resolvedTheme === 'dark';
 
-        // Configuración universal calibrada para Mermaid 12
+        // Configuración universal calibrada para Mermaid 12 (Commit aa831c0204b697c5ca00c78a984f7c1a3345cd20)
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'loose',
@@ -344,7 +344,11 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{t('diagramError')}</span>
               </div>
-              <pre className="p-3 rounded-xl bg-black/40 text-zinc-300 text-xs font-mono overflow-x-auto">
+              <pre
+                tabIndex={0}
+                suppressHydrationWarning
+                className="p-3 rounded-xl bg-black/40 text-zinc-300 text-xs font-mono overflow-x-auto"
+              >
                 <code>{chart}</code>
               </pre>
             </div>

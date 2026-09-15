@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { InfrastructureGrid } from '../../features/infrastructure/components/InfrastructureGrid';
-import { useInfrastructure } from '../../features/infrastructure/hooks/useInfrastructure';
+import { InfrastructureGrid, useInfrastructure } from '../../features/infrastructure';
 
 export default function InfrastructureCategoryPage() {
   const tNav = useTranslations('Nav');
@@ -87,12 +86,12 @@ export default function InfrastructureCategoryPage() {
             {/* Barra de Ordenación Inteligente Multi-Criterio */}
             <div className="flex items-center justify-center gap-2 pt-3 flex-wrap">
               <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 uppercase tracking-wider mr-1 font-medium">
-                Ordenar por:
+                {tFilters('sortBy')}
               </span>
               {sortOptions.map((opt) => (
                 <button
                   key={opt.id}
-                  onClick={() => setSortBy(opt.id as any)}
+                  onClick={() => setSortBy(opt.id as 'smart' | 'recent' | 'views' | 'difficulty')}
                   className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all duration-200 cursor-pointer ${
                     sortBy === opt.id
                       ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-600/30 dark:border-emerald-500/40 shadow-sm shadow-emerald-500/10 dark:shadow-[0_0_10px_rgba(16,185,129,0.15)] font-bold'

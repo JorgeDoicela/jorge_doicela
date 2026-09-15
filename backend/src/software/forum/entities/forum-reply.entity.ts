@@ -5,12 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
   Index,
 } from 'typeorm';
 import { ForumTopic } from './forum-topic.entity';
 
 @Entity('forum_replies')
+@Index(['topicId', 'createdAt'])
 export class ForumReply {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,6 +21,7 @@ export class ForumReply {
   @Column()
   topicId: number;
 
+  @Index()
   @Column({ nullable: true })
   parentId?: number;
 
@@ -39,6 +42,16 @@ export class ForumReply {
   })
   @JoinColumn({ name: 'topicId' })
   topic: ForumTopic;
+
+  @ManyToOne(() => ForumReply, (reply) => reply.children, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'parentId' })
+  parent?: ForumReply;
+
+  @OneToMany(() => ForumReply, (reply) => reply.parent)
+  children?: ForumReply[];
 
   @CreateDateColumn()
   createdAt: Date;

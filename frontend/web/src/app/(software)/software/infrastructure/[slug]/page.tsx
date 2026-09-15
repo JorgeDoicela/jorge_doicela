@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { InfrastructurePost } from '../../../features/infrastructure/types';
+import { InfrastructurePost } from '../../../features/infrastructure';
 import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
@@ -11,15 +11,17 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tCommon = await getTranslations('Common');
   const post = await serverGet<InfrastructurePost>(`/software/infrastructure/${slug}?lang=${locale}`);
 
   if (!post) {
-    return { title: 'Guía no encontrada | Infraestructura — Jorge Doicela' };
+    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
   return {
-    title: `${post.title} | Infraestructura — Jorge Doicela`,
-    description: post.subtitle || `Guía de ${post.category}: ${post.title}`,
+    title: `${post.title} | ${tNav('infrastructure')} — Jorge Doicela`,
+    description: post.subtitle || post.title,
     openGraph: {
       title: post.title,
       description: post.subtitle || post.title,

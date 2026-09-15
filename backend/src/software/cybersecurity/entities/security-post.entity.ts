@@ -12,6 +12,10 @@ export type SecurityPostType = 'advisory' | 'hardening_guide' | 'writeup';
 
 @Entity('security_posts')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'severity', 'orderPriority', 'publishedAt'])
+@Index(['language', 'postType', 'orderPriority', 'publishedAt'])
+@Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class SecurityPost {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Project, ProjectStatus } from '../entities/project.entity';
+import { Project } from '../entities/project.entity';
 import { CreateProjectDto } from '../dto/create-project.dto';
 import { UpdateProjectDto } from '../dto/update-project.dto';
+import { GetProjectsQueryDto } from '../dto/get-projects-query.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -12,11 +13,11 @@ export class ProjectsService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async findAll(
-    status?: ProjectStatus,
-    search?: string,
-    lang?: string,
-  ): Promise<Project[]> {
+  async findAll(query: GetProjectsQueryDto = {}): Promise<Project[]> {
+    const { status, search, lang } = query;
+    const page = Math.max(1, query.page ? Number(query.page) : 1);
+    const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
+
     const qb = this.projectRepository.createQueryBuilder('proj');
 
     if (lang) {
@@ -42,10 +43,14 @@ export class ProjectsService {
     qb.orderBy('smart_score', 'DESC');
     qb.addOrderBy('proj.createdAt', 'DESC');
     qb.addOrderBy('proj.id', 'DESC');
+
+    // Techo de seguridad de memoria para VPS 1 GB RAM
+    qb.skip((page - 1) * limit).take(limit);
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(status, search, 'es');
+      return this.findAll({ ...query, lang: 'es' });
     }
 
     return results;
@@ -76,8 +81,8 @@ export class ProjectsService {
       throw new NotFoundException(`Proyecto "${idOrSlug}" no encontrado`);
     }
 
+    void this.projectRepository.increment({ id: project.id }, 'views', 1);
     project.views += 1;
-    await this.projectRepository.save(project);
     return project;
   }
 
@@ -99,6 +104,9 @@ export class ProjectsService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.projectRepository.delete(id);
+    const result = await this.projectRepository.delete(id);
+    if (!result.affected) {
+      throw new NotFoundException(`Proyecto #${id} no encontrado`);
+    }
   }
 }

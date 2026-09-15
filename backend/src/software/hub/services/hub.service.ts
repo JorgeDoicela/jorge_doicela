@@ -36,21 +36,14 @@ export class HubService {
   ): Promise<HubResponseDto> {
     // Consultas consolidadas resilientes en paralelo en SQLite local (Fault-Tolerant Aggregator)
     const results = await Promise.allSettled([
-      this.newsService.findAll(search, undefined, lang),
-      this.blogService.findAll(search, undefined, lang),
-      this.secService.findAll(undefined, undefined, search, lang),
-      this.tutService.findAll(undefined, search, lang),
-      this.infraService.findAll(
-        undefined,
-        undefined,
-        undefined,
-        search,
-        lang,
-        'smart',
-      ),
-      this.aiService.findAll(undefined, search, lang),
-      this.projService.findAll(undefined, search, lang),
-      this.forumService.findAllTopics(undefined, search, lang),
+      this.newsService.findAll({ search, lang }),
+      this.blogService.findAll({ search, lang }),
+      this.secService.findAll({ search, lang }),
+      this.tutService.findAll({ search, lang }),
+      this.infraService.findAll({ search, lang, sortBy: 'smart' }),
+      this.aiService.findAll({ search, lang }),
+      this.projService.findAll({ search, lang }),
+      this.forumService.findAllTopics({ search, lang }),
     ]);
 
     const extract = <T>(

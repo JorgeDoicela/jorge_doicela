@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { TutorialGrid } from '../../features/tutorials/components/TutorialGrid';
-import { useTutorials } from '../../features/tutorials/hooks/useTutorials';
+import { TutorialGrid, useTutorials } from '../../features/tutorials';
 
 export default function TutorialsCategoryPage() {
   const tNav = useTranslations('Nav');

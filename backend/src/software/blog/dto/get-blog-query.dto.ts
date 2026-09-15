@@ -1,15 +1,8 @@
 import { IsOptional, IsString } from 'class-validator';
+import { SoftwareQueryDto } from '../../common/dto/software-query.dto';
 
-export class GetBlogQueryDto {
-  @IsOptional()
-  @IsString({ message: 'El parámetro search debe ser una cadena de texto.' })
-  search?: string;
-
+export class GetBlogQueryDto extends SoftwareQueryDto {
   @IsOptional()
   @IsString({ message: 'El parámetro series debe ser una cadena de texto.' })
   series?: string;
-
-  @IsOptional()
-  @IsString({ message: 'El parámetro lang debe ser una cadena de texto.' })
-  lang?: string = 'es';
 }

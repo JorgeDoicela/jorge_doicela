@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { NewsArticle } from '../../../features/news/types';
+import { NewsArticle } from '../../../features/news';
 import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
@@ -11,14 +11,16 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tCommon = await getTranslations('Common');
   const article = await serverGet<NewsArticle>(`/software/news/${slug}?lang=${locale}`);
 
   if (!article) {
-    return { title: 'Noticia no encontrada | Software — Jorge Doicela' };
+    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
   return {
-    title: `${article.title} | Noticias — Jorge Doicela`,
+    title: `${article.title} | ${tNav('news')} — Jorge Doicela`,
     description: article.excerpt,
     openGraph: {
       title: article.title,

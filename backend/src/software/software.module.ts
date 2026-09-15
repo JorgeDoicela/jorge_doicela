@@ -23,6 +23,7 @@ import { TutorialsModule } from './tutorials/tutorials.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { HubModule } from './hub/hub.module';
+import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
@@ -34,6 +35,15 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         'DATABASE_SOFTWARE_PATH',
         'software.sqlite',
       ),
+      enableWAL: true,
+      prepareDatabase: (db: Database.Database) => {
+        db.pragma('foreign_keys = ON');
+        db.pragma('synchronous = NORMAL');
+        db.pragma('busy_timeout = 5000');
+        db.pragma('cache_size = -20000'); // 20 MB de caché en RAM para alto rendimiento
+        db.pragma('journal_size_limit = 67108864'); // 64 MB límite de WAL para proteger disco en 1 GB RAM
+        db.pragma('temp_store = MEMORY'); // Tablas y ordenamientos temporales en RAM
+      },
       entities: [
         NewsArticle,
         BlogPost,

@@ -16,6 +16,9 @@ export type AiResourceType =
 
 @Entity('ai_resources')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'orderPriority', 'createdAt'])
+@Index(['language', 'type', 'orderPriority', 'createdAt'])
+@Index(['language', 'featured', 'orderPriority', 'createdAt'])
 export class AiResource {
   @PrimaryGeneratedColumn()
   id: number;

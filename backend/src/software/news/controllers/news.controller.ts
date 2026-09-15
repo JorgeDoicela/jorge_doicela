@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { NewsService } from '../services/news.service';
 import { CreateNewsDto } from '../dto/create-news.dto';
@@ -17,7 +18,7 @@ export class NewsController {
 
   @Get()
   async findAll(@Query() query: GetNewsQueryDto) {
-    return this.newsService.findAll(query.search, query.tag, query.lang);
+    return this.newsService.findAll(query);
   }
 
   @Get(':idOrSlug')
@@ -34,8 +35,8 @@ export class NewsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.newsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.newsService.remove(id);
     return { success: true };
   }
 }

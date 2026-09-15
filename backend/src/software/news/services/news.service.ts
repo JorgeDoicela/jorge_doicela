@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NewsArticle } from '../entities/news-article.entity';
 import { CreateNewsDto } from '../dto/create-news.dto';
+import { GetNewsQueryDto } from '../dto/get-news-query.dto';
 
 @Injectable()
 export class NewsService {
@@ -11,11 +12,11 @@ export class NewsService {
     private readonly newsRepository: Repository<NewsArticle>,
   ) {}
 
-  async findAll(
-    search?: string,
-    tag?: string,
-    lang?: string,
-  ): Promise<NewsArticle[]> {
+  async findAll(query: GetNewsQueryDto = {}): Promise<NewsArticle[]> {
+    const { search, tag, lang } = query;
+    const page = Math.max(1, query.page ? Number(query.page) : 1);
+    const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
+
     const qb = this.newsRepository.createQueryBuilder('news');
 
     if (lang) {
@@ -41,10 +42,14 @@ export class NewsService {
     qb.orderBy('smart_score', 'DESC');
     qb.addOrderBy('COALESCE(news.publishedAt, news.createdAt)', 'DESC');
     qb.addOrderBy('news.id', 'DESC');
+
+    // Techo de seguridad de memoria para VPS 1 GB RAM
+    qb.skip((page - 1) * limit).take(limit);
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(search, tag, 'es');
+      return this.findAll({ ...query, lang: 'es' });
     }
 
     return results;
@@ -75,8 +80,8 @@ export class NewsService {
       throw new NotFoundException(`Noticia "${idOrSlug}" no encontrada`);
     }
 
+    void this.newsRepository.increment({ id: article.id }, 'views', 1);
     article.views += 1;
-    await this.newsRepository.save(article);
     return article;
   }
 
@@ -86,6 +91,9 @@ export class NewsService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.newsRepository.delete(id);
+    const result = await this.newsRepository.delete(id);
+    if (!result.affected) {
+      throw new NotFoundException(`Noticia #${id} no encontrada`);
+    }
   }
 }

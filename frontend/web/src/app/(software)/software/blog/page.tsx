@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwarePageLayout } from '../../components/SoftwarePageLayout';
-import { BlogGrid } from '../../features/blog/components/BlogGrid';
-import { useBlog } from '../../features/blog/hooks/useBlog';
+import { BlogGrid, useBlog } from '../../features/blog';
 
 export default function BlogCategoryPage() {
   const tNav = useTranslations('Nav');

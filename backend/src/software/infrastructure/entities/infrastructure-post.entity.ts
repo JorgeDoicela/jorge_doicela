@@ -31,8 +31,10 @@ export type InfrastructureDifficulty =
 
 @Entity('infrastructure_posts')
 @Index(['slug', 'language'], { unique: true })
-@Index(['category'])
-@Index(['environment'])
+@Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
+@Index(['language', 'environment', 'orderPriority', 'publishedAt'])
+@Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class InfrastructurePost {
   @PrimaryGeneratedColumn()
   id: number;
@@ -86,7 +88,6 @@ export class InfrastructurePost {
   likes: number;
 
   @Column({ default: false })
-  @Index()
   featured: boolean;
 
   @Column({ default: 0 })

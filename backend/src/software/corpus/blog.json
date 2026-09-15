@@ -12,7 +12,7 @@
     "featured": true,
     "orderPriority": 100,
     "series": "Arquitectura y Monolitos",
-    "tableOfContents": "1. Principio de Cajas Negras, 2. Persistencia Aislada Físicamente, 3. Arquitectura en 3 Capas, 4. Conclusión",
+    "tableOfContents": "1. Principio de Cajas Negras, 2. Persistencia Aislada Físicamente, 3. Matriz Comparativa de Arquitecturas, 4. Arquitectura en 3 Capas, 5. Conclusión",
     "readTimeMinutes": 9,
     "views": 540,
     "likes": 128
@@ -30,7 +30,7 @@
     "featured": true,
     "orderPriority": 100,
     "series": "Architecture & Monoliths",
-    "tableOfContents": "1. Black Box Principle, 2. Physically Isolated Persistence, 3. Three-Tier Architecture, 4. Conclusion",
+    "tableOfContents": "1. Black Box Principle, 2. Physically Isolated Persistence, 3. Architecture Comparison Matrix, 4. Three-Tier Architecture, 5. Conclusion",
     "readTimeMinutes": 9,
     "views": 540,
     "likes": 128

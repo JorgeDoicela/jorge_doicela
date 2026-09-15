@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { SecurityGrid } from '../../features/cybersecurity/components/SecurityGrid';
-import { useCybersecurity } from '../../features/cybersecurity/hooks/useCybersecurity';
+import { SecurityGrid, useCybersecurity } from '../../features/cybersecurity';
 
 export default function CybersecurityCategoryPage() {
   const tNav = useTranslations('Nav');

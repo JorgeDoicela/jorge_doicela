@@ -10,33 +10,46 @@ interface MarkdownRendererProps {
 }
 
 /**
- * Normaliza defensivamente sintaxis pseudo-LaTeX o flechas matemáticas a Markdown / Unicode limpio.
- * Evita introducir dependencias pesadas de renderizado matemático (KaTeX/MathJax) en el VPS de 1 GB de RAM.
+ * Normaliza defensivamente sintaxis pseudo-LaTeX o flechas matemáticas a Markdown / Unicode limpio,
+ * protegiendo de forma estricta los bloques de código cercados (```...```) e inline (`...`)
+ * para jamás corromper snippets de código fuente ni sintaxis de diagramas Mermaid.
  */
 function normalizeMarkdownContent(raw: string): string {
   if (!raw) return '';
 
-  return (
-    raw
-      // Flechas LaTeX a Unicode estándar
-      .replace(/\$(?:\\rightarrow|\\to)\$/g, '→')
-      .replace(/\\rightarrow\b/g, '→')
-      .replace(/\$(?:\\leftarrow|\\gets)\$/g, '←')
-      .replace(/\\leftarrow\b/g, '←')
-      .replace(/\$\\leftrightarrow\$/g, '↔')
-      .replace(/\\leftrightarrow\b/g, '↔')
-      // Desempaqueta bloques display pseudo-LaTeX: $$\text{...}$$ -> `...`
-      .replace(/\$\$([\s\S]*?)\$\$/g, (_match, inner) => {
-        const cleaned = inner.replace(/\\text\{([^}]+)\}/g, '$1').trim();
-        return `\`${cleaned}\``;
-      })
-      // Desempaqueta inline math con \text{...} -> `...`
-      .replace(/\$([^\n$]*\\text\{[^}]+\}[^\n$]*)\$/g, (_match, inner) => {
-        const cleaned = inner.replace(/\\text\{([^}]+)\}/g, '$1').trim();
-        return `\`${cleaned}\``;
-      })
-      // Elimina cualquier comando \text{...} residual fuera de bloques
-      .replace(/\\text\{([^}]+)\}/g, '$1')
+  // 1. Extraer y proteger bloques de código y diagramas con placeholders seguros
+  const codePlaceholders: string[] = [];
+  const protectedContent = raw.replace(/(```[\s\S]*?```|`[^`\n]+`)/g, (match) => {
+    codePlaceholders.push(match);
+    return `__MD_CODE_BLOCK_SLOT_${codePlaceholders.length - 1}__`;
+  });
+
+  // 2. Normalizar únicamente el texto plano / editorial exterior
+  const normalized = protectedContent
+    // Flechas LaTeX a Unicode estándar
+    .replace(/\$(?:\\rightarrow|\\to)\$/g, '→')
+    .replace(/\\rightarrow\b/g, '→')
+    .replace(/\$(?:\\leftarrow|\\gets)\$/g, '←')
+    .replace(/\\leftarrow\b/g, '←')
+    .replace(/\$\\leftrightarrow\$/g, '↔')
+    .replace(/\\leftrightarrow\b/g, '↔')
+    // Desempaqueta bloques display pseudo-LaTeX: $$\text{...}$$ -> `...`
+    .replace(/\$\$([\s\S]*?)\$\$/g, (_match, inner) => {
+      const cleaned = inner.replace(/\\text\{([^}]+)\}/g, '$1').trim();
+      return `\`${cleaned}\``;
+    })
+    // Desempaqueta inline math con \text{...} -> `...`
+    .replace(/\$([^\n$]*\\text\{[^}]+\}[^\n$]*)\$/g, (_match, inner) => {
+      const cleaned = inner.replace(/\\text\{([^}]+)\}/g, '$1').trim();
+      return `\`${cleaned}\``;
+    })
+    // Elimina cualquier comando \text{...} residual fuera de bloques
+    .replace(/\\text\{([^}]+)\}/g, '$1');
+
+  // 3. Restaurar exactamente los bloques de código y diagramas sin alteraciones
+  return normalized.replace(
+    /__MD_CODE_BLOCK_SLOT_(\d+)__/g,
+    (_match, index) => codePlaceholders[Number(index)] ?? '',
   );
 }
 

@@ -6,27 +6,20 @@ import {
   Body,
   Param,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TutorialsService } from '../services/tutorials.service';
 import { CreateTutorialDto } from '../dto/create-tutorial.dto';
 import { CreateTutorialStepDto } from '../dto/create-tutorial-step.dto';
-import type { TutorialDifficulty } from '../entities/tutorial.entity';
+import { GetTutorialsQueryDto } from '../dto/get-tutorials-query.dto';
 
 @Controller('software/tutorials')
 export class TutorialsController {
   constructor(private readonly tutorialsService: TutorialsService) {}
 
   @Get()
-  async findAll(
-    @Query('difficulty') difficulty?: string,
-    @Query('search') search?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.tutorialsService.findAll(
-      difficulty as TutorialDifficulty,
-      search,
-      lang,
-    );
+  async findAll(@Query() query: GetTutorialsQueryDto) {
+    return this.tutorialsService.findAll(query);
   }
 
   @Get(':idOrSlug')
@@ -48,8 +41,8 @@ export class TutorialsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.tutorialsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.tutorialsService.remove(id);
     return { success: true };
   }
 }

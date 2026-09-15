@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { AiGrid } from '../../features/ai/components/AiGrid';
-import { useAi } from '../../features/ai/hooks/useAi';
+import { AiGrid, useAi } from '../../features/ai';
 
 export default function AiCategoryPage() {
   const tNav = useTranslations('Nav');

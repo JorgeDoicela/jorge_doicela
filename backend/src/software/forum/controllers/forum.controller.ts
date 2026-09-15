@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ForumService } from '../services/forum.service';
 import { CreateForumTopicDto } from '../dto/create-forum-topic.dto';
 import { CreateForumReplyDto } from '../dto/create-forum-reply.dto';
@@ -10,11 +18,7 @@ export class ForumController {
 
   @Get()
   async findAll(@Query() query: GetForumTopicsQueryDto) {
-    return this.forumService.findAllTopics(
-      query.category,
-      query.search,
-      query.lang,
-    );
+    return this.forumService.findAllTopics(query);
   }
 
   @Get(':idOrSlug')
@@ -36,7 +40,7 @@ export class ForumController {
   }
 
   @Get(':id/replies')
-  async getReplies(@Param('id') id: string) {
-    return this.forumService.findRepliesByTopic(+id);
+  async getReplies(@Param('id', ParseIntPipe) id: number) {
+    return this.forumService.findRepliesByTopic(id);
   }
 }

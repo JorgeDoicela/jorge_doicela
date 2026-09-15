@@ -1,13 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  InfrastructurePost,
-  InfrastructureCategory,
-  InfrastructureEnvironment,
-  InfrastructureDifficulty,
-} from '../entities/infrastructure-post.entity';
+import { InfrastructurePost } from '../entities/infrastructure-post.entity';
 import { CreateInfrastructurePostDto } from '../dto/create-infrastructure-post.dto';
+import { GetInfrastructureQueryDto } from '../dto/get-infrastructure-query.dto';
 
 @Injectable()
 export class InfrastructureService {
@@ -17,13 +13,12 @@ export class InfrastructureService {
   ) {}
 
   async findAll(
-    category?: InfrastructureCategory,
-    environment?: InfrastructureEnvironment,
-    difficulty?: InfrastructureDifficulty,
-    search?: string,
-    lang?: string,
-    sortBy?: 'smart' | 'recent' | 'views' | 'likes' | 'difficulty',
+    query: GetInfrastructureQueryDto = {},
   ): Promise<InfrastructurePost[]> {
+    const { category, environment, difficulty, search, lang, sortBy } = query;
+    const page = Math.max(1, query.page ? Number(query.page) : 1);
+    const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
+
     const qb = this.infraRepository.createQueryBuilder('infra');
 
     if (lang) {
@@ -85,17 +80,13 @@ export class InfrastructureService {
       qb.addOrderBy('infra.id', 'DESC');
     }
 
+    // Techo de seguridad de memoria para VPS 1 GB RAM
+    qb.skip((page - 1) * limit).take(limit);
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(
-        category,
-        environment,
-        difficulty,
-        search,
-        'es',
-        sortBy,
-      );
+      return this.findAll({ ...query, lang: 'es' });
     }
 
     return results;
@@ -128,8 +119,8 @@ export class InfrastructureService {
       );
     }
 
+    void this.infraRepository.increment({ id: post.id }, 'views', 1);
     post.views += 1;
-    await this.infraRepository.save(post);
     return post;
   }
 
@@ -155,8 +146,9 @@ export class InfrastructureService {
     if (!post) {
       throw new NotFoundException(`Guía con id ${id} no encontrada`);
     }
+    void this.infraRepository.increment({ id }, 'likes', 1);
     post.likes += 1;
-    return this.infraRepository.save(post);
+    return post;
   }
 
   async getCategories(
@@ -183,6 +175,11 @@ export class InfrastructureService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.infraRepository.delete(id);
+    const result = await this.infraRepository.delete(id);
+    if (!result.affected) {
+      throw new NotFoundException(
+        `Guía de infraestructura #${id} no encontrada`,
+      );
+    }
   }
 }

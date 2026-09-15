@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { SecurityPost } from '../../../features/cybersecurity/types';
+import { SecurityPost } from '../../../features/cybersecurity';
 import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
@@ -11,15 +11,17 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tCommon = await getTranslations('Common');
   const post = await serverGet<SecurityPost>(`/software/cybersecurity/${slug}?lang=${locale}`);
 
   if (!post) {
-    return { title: 'Aviso no encontrado | Ciberseguridad — Jorge Doicela' };
+    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
   const severityLabel = post.cveId ? `[${post.cveId}] ` : '';
   return {
-    title: `${severityLabel}${post.title} | Ciberseguridad — Jorge Doicela`,
+    title: `${severityLabel}${post.title} | ${tNav('cybersecurity')} — Jorge Doicela`,
     description: post.excerpt,
     openGraph: {
       title: `${severityLabel}${post.title}`,

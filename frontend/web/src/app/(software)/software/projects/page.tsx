@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { ProjectGrid } from '../../features/projects/components/ProjectGrid';
+import { ProjectGrid } from '../../features/projects';
 
 export default function ProjectsCategoryPage() {
   const tNav = useTranslations('Nav');

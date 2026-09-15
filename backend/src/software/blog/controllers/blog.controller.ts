@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { BlogService } from '../services/blog.service';
 import { CreateBlogPostDto } from '../dto/create-blog-post.dto';
@@ -17,7 +18,7 @@ export class BlogController {
 
   @Get()
   async findAll(@Query() query: GetBlogQueryDto) {
-    return this.blogService.findAll(query.search, query.series, query.lang);
+    return this.blogService.findAll(query);
   }
 
   @Get(':idOrSlug')
@@ -34,8 +35,8 @@ export class BlogController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.blogService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.blogService.remove(id);
     return { success: true };
   }
 }

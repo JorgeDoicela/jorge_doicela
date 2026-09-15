@@ -11,6 +11,8 @@ import { ForumReply } from './forum-reply.entity';
 
 @Entity('forum_topics')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'isPinned', 'orderPriority', 'createdAt'])
+@Index(['language', 'category', 'isPinned', 'orderPriority', 'createdAt'])
 export class ForumTopic {
   @PrimaryGeneratedColumn()
   id: number;

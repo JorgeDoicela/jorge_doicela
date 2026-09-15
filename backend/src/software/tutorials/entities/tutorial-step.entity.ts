@@ -11,6 +11,7 @@ import {
 import { Tutorial } from './tutorial.entity';
 
 @Entity('tutorial_steps')
+@Index(['tutorialId', 'stepOrder'])
 export class TutorialStep {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,6 +20,7 @@ export class TutorialStep {
   @Column()
   tutorialId: number;
 
+  @Index()
   @Column({ default: 1 })
   stepOrder: number;
 

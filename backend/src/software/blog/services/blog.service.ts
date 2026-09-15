@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BlogPost } from '../entities/blog-post.entity';
 import { CreateBlogPostDto } from '../dto/create-blog-post.dto';
+import { GetBlogQueryDto } from '../dto/get-blog-query.dto';
 
 @Injectable()
 export class BlogService {
@@ -11,11 +12,11 @@ export class BlogService {
     private readonly blogRepository: Repository<BlogPost>,
   ) {}
 
-  async findAll(
-    search?: string,
-    series?: string,
-    lang?: string,
-  ): Promise<BlogPost[]> {
+  async findAll(query: GetBlogQueryDto = {}): Promise<BlogPost[]> {
+    const { search, series, lang } = query;
+    const page = Math.max(1, query.page ? Number(query.page) : 1);
+    const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
+
     const qb = this.blogRepository.createQueryBuilder('blog');
 
     if (lang) {
@@ -41,10 +42,14 @@ export class BlogService {
     qb.orderBy('smart_score', 'DESC');
     qb.addOrderBy('COALESCE(blog.publishedAt, blog.createdAt)', 'DESC');
     qb.addOrderBy('blog.id', 'DESC');
+
+    // Techo de seguridad de memoria para VPS 1 GB RAM
+    qb.skip((page - 1) * limit).take(limit);
+
     const results = await qb.getMany();
 
     if (results.length === 0 && lang && lang !== 'es') {
-      return this.findAll(search, series, 'es');
+      return this.findAll({ ...query, lang: 'es' });
     }
 
     return results;
@@ -75,8 +80,8 @@ export class BlogService {
       );
     }
 
+    void this.blogRepository.increment({ id: post.id }, 'views', 1);
     post.views += 1;
-    await this.blogRepository.save(post);
     return post;
   }
 
@@ -86,6 +91,9 @@ export class BlogService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.blogRepository.delete(id);
+    const result = await this.blogRepository.delete(id);
+    if (!result.affected) {
+      throw new NotFoundException(`Artículo de blog #${id} no encontrado`);
+    }
   }
 }

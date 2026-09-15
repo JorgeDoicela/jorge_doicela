@@ -155,9 +155,11 @@
     "sortSmart": "Architectural Relevance",
     "sortRecent": "Most Recent",
     "sortViews": "Most Popular",
-    "sortDifficulty": "Highest Difficulty"
+    "sortDifficulty": "Highest Difficulty",
+    "sortBy": "Sort by:"
   },
   "Detail": {
+    "diagramAlt": "Architecture Diagram — {name}",
     "stepsIndex": "Steps Index ({count})",
     "nextStep": "Next Step →",
     "prevStep": "← Previous Step",
@@ -192,6 +194,7 @@
     "noRepliesYet": "No replies yet in this discussion. Be the first to contribute.",
     "joinDiscussion": "Join the Discussion",
     "namePlaceholder": "Your name or handle (e.g. SeniorDev)",
+    "anonymousDeveloper": "Anonymous Developer",
     "replyPlaceholder": "Write your technical analysis, solution or perspective...",
     "publishing": "Publishing...",
     "postReplyBtn": "Post Reply →",

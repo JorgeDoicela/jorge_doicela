@@ -6,22 +6,19 @@ import {
   Body,
   Param,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AiService } from '../services/ai.service';
 import { CreateAiResourceDto } from '../dto/create-ai-resource.dto';
-import type { AiResourceType } from '../entities/ai-resource.entity';
+import { GetAiResourcesQueryDto } from '../dto/get-ai-resources-query.dto';
 
 @Controller('software/ai')
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 
   @Get()
-  async findAll(
-    @Query('type') type?: string,
-    @Query('search') search?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.aiService.findAll(type as AiResourceType, search, lang);
+  async findAll(@Query() query: GetAiResourcesQueryDto) {
+    return this.aiService.findAll(query);
   }
 
   @Get(':idOrSlug')
@@ -38,8 +35,8 @@ export class AiController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.aiService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.aiService.remove(id);
     return { success: true };
   }
 }

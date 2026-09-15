@@ -38,64 +38,66 @@ backend/src/software/
 │   ├── projects.json                  # Proyectos showcase de Jorge Doicela
 │   └── infrastructure.json            # Guías de infraestructura, servidores y cloud
 │
+├── common/                            # DTOs Y UTILIDADES COMPARTIDAS DEL MÓDULO SOFTWARE
+│   └── dto/software-query.dto.ts      # Clase base con paginación (limit/page), search y lang
+│
 ├── news/                              # 1. NOTICIAS Y TENDENCIAS
 │   ├── news.module.ts
-│   ├── controllers/news.controller.ts # /software/news
+│   ├── controllers/news.controller.ts # /software/news (ParseIntPipe en :id)
 │   ├── services/news.service.ts
 │   ├── entities/news-article.entity.ts
-│   └── dto/create-news.dto.ts
+│   └── dto/{create-news.dto.ts, get-news-query.dto.ts}
 │
 ├── blog/                              # 2. BLOG DE ARQUITECTURA
 │   ├── blog.module.ts
-│   ├── controllers/blog.controller.ts # /software/blog
+│   ├── controllers/blog.controller.ts # /software/blog (ParseIntPipe en :id)
 │   ├── services/blog.service.ts
 │   ├── entities/blog-post.entity.ts
-│   └── dto/create-blog-post.dto.ts
+│   └── dto/{create-blog-post.dto.ts, get-blog-query.dto.ts}
 │
 ├── forum/                             # 3. FOROS Y DEBATES COMUNITARIOS
 │   ├── forum.module.ts
-│   ├── controllers/forum.controller.ts # /software/forum
+│   ├── controllers/forum.controller.ts # /software/forum (ParseIntPipe en :id/replies)
 │   ├── services/forum.service.ts
 │   ├── entities/forum-topic.entity.ts
 │   ├── entities/forum-reply.entity.ts
-│   └── dto/{create-forum-topic.dto.ts, create-forum-reply.dto.ts}
+│   └── dto/{create-forum-topic.dto.ts, create-forum-reply.dto.ts, get-forum-topics-query.dto.ts}
 │
 ├── ai/                                # 4. INTELIGENCIA ARTIFICIAL Y AGENTES
 │   ├── ai.module.ts
-│   ├── controllers/ai.controller.ts   # /software/ai
+│   ├── controllers/ai.controller.ts   # /software/ai (ParseIntPipe en :id)
 │   ├── services/ai.service.ts
 │   ├── entities/ai-resource.entity.ts
-│   └── dto/create-ai-resource.dto.ts
+│   └── dto/{create-ai-resource.dto.ts, get-ai-resources-query.dto.ts}
 │
 ├── cybersecurity/                     # 5. CIBERSEGURIDAD Y BASTIONADO
 │   ├── cybersecurity.module.ts
-│   ├── controllers/cybersecurity.controller.ts # /software/cybersecurity
+│   ├── controllers/cybersecurity.controller.ts # /software/cybersecurity (ParseIntPipe en :id)
 │   ├── services/cybersecurity.service.ts
 │   ├── entities/security-post.entity.ts
-│   └── dto/create-security-post.dto.ts
+│   └── dto/{create-security-post.dto.ts, get-security-posts-query.dto.ts}
 │
 ├── tutorials/                         # 6. TUTORIALES PRÁCTICOS
 │   ├── tutorials.module.ts
-│   ├── controllers/tutorials.controller.ts # /software/tutorials
+│   ├── controllers/tutorials.controller.ts # /software/tutorials (ParseIntPipe en :id)
 │   ├── services/tutorials.service.ts
 │   ├── entities/tutorial.entity.ts
 │   ├── entities/tutorial-step.entity.ts
-│   └── dto/{create-tutorial.dto.ts, create-tutorial-step.dto.ts}
+│   └── dto/{create-tutorial.dto.ts, create-tutorial-step.dto.ts, get-tutorials-query.dto.ts}
 │
 ├── projects/                          # 7. PROYECTOS SHOWCASE
 │   ├── projects.module.ts
-│   ├── controllers/projects.controller.ts # /software/projects
+│   ├── controllers/projects.controller.ts # /software/projects (ParseIntPipe en :id)
 │   ├── services/projects.service.ts
 │   ├── entities/project.entity.ts
-│   └── dto/{create-project.dto.ts, update-project.dto.ts}
-│
+│   └── dto/{create-project.dto.ts, update-project.dto.ts, get-projects-query.dto.ts}
 │
 ├── infrastructure/                   # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD
 │   ├── infrastructure.module.ts
-│   ├── controllers/infrastructure.controller.ts # /software/infrastructure
+│   ├── controllers/infrastructure.controller.ts # /software/infrastructure (ParseIntPipe en :id y like)
 │   ├── services/infrastructure.service.ts
 │   ├── entities/infrastructure-post.entity.ts
-│   └── dto/{create-infrastructure-post.dto.ts}
+│   └── dto/{create-infrastructure-post.dto.ts, get-infrastructure-query.dto.ts}
 │
 └── hub/                              # 9. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
     ├── hub.module.ts
@@ -165,23 +167,47 @@ La persistencia implementa soporte multiidioma nativo mediante la columna `langu
   * **Índice Único:** `IDX_news_articles_slug_lang (slug, language)`.
 * `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_blog_posts_slug_lang (slug, language)`.
-* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`.  
-  * **Índice Único:** `IDX_forum_topics_slug_lang (slug, language)`.
-* `forum_replies`: `id`, `topicId` (FK), `parentId`, `author`, `content`, `isAcceptedAnswer`, `likes`.
-* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
-  * **Índice Único:** `IDX_ai_resources_slug_lang (slug, language)`.
-* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
-  * **Índice Único:** `IDX_security_posts_slug_lang (slug, language)`.
-* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
-  * **Índice Único:** `IDX_tutorials_slug_lang (slug, language)`.
-* `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`.
-* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`.  
-  * **Índice Único:** `IDX_projects_slug_lang (slug, language)`.
+### 4.1 Pragmas de Conexión SQLite (`better-sqlite3`)
+En `backend/src/software/software.module.ts` y en `seed-software.ts`, la base de datos `software.sqlite` está configurada con los siguientes pragmas de alto rendimiento y blindaje de memoria:
+* `enableWAL: true` (`PRAGMA journal_mode = WAL;`): Permite lecturas y escrituras concurrentes sin bloqueo.
+* `PRAGMA foreign_keys = ON;`: Garantiza integridad referencial y borrado en cascada relacional (`ON DELETE CASCADE`).
+* `PRAGMA synchronous = NORMAL;`: Reduce el I/O en disco un 80% manteniendo durabilidad completa contra caídas en modo WAL.
+* `PRAGMA busy_timeout = 5000;`: Previene errores de contención `SQLITE_BUSY` ante concurrencia.
+* `PRAGMA cache_size = -20000;`: Asigna 20 MB de caché en RAM para lecturas ultra-rápidas O(1).
+* `PRAGMA journal_size_limit = 67108864;`: Límite de 64 MB para el archivo `.sqlite-wal`, protegiendo el espacio en disco en el VPS de 1 GB de RAM.
+* `PRAGMA temp_store = MEMORY;`: Almacena tablas y ordenamientos temporales en memoria RAM, erradicando lecturas/escrituras secundarias en disco.
+
+### 4.2 Catálogo de Tablas, Restricciones CHECK e Índices Compuestos
+
+Todas las tablas cuentan con índices compuestos cubrientes alineados con los filtros y ordenamientos reales de las consultas (`language`, filtros de dominio, `orderPriority DESC`, `publishedAt DESC`), eliminando el costo de ordenamiento en memoria RAM (*B-Tree Filesort*):
+
+* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `tags`, `language`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Índices:** `IDX_news_articles_slug_lang (slug, language) UNIQUE`, `IDX_news_articles_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_break_feed (language, isBreaking, orderPriority DESC, publishedAt DESC)`.
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Índices:** `IDX_blog_posts_slug_lang (slug, language) UNIQUE`, `IDX_blog_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_series_feed (language, series, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `coverImage`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
+  * **Índices:** `IDX_forum_topics_slug_lang (slug, language) UNIQUE`, `IDX_forum_topics_feed (language, isPinned DESC, orderPriority DESC, createdAt DESC)`, `IDX_forum_topics_cat_feed (language, category, isPinned DESC, orderPriority DESC, createdAt DESC)`.
+* `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `createdAt`, `updatedAt`.  
+  * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`, `FOREIGN KEY (parentId) REFERENCES forum_replies(id) ON DELETE CASCADE`.  
+  * **Índices:** `IDX_forum_replies_topic (topicId)`, `IDX_forum_replies_parent (parentId)`, `IDX_forum_replies_topic_created (topicId, createdAt ASC)`.
+* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (type IN ('llm', 'agent', 'framework', 'mcp_server', 'tool'))`.  
+  * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_type_feed (language, type, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, createdAt DESC)`.
+* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL'))`, `CHECK (postType IN ('advisory', 'hardening_guide', 'writeup'))`.  
+  * **Índices:** `IDX_security_posts_slug_lang (slug, language) UNIQUE`, `IDX_security_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_sev_feed (language, severity, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_type_feed (language, postType, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced'))`.  
+  * **Índices:** `IDX_tutorials_slug_lang (slug, language) UNIQUE`, `IDX_tutorials_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_diff_feed (language, difficulty, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`, `createdAt`, `updatedAt`.  
+  * **Integridad:** `FOREIGN KEY (tutorialId) REFERENCES tutorials(id) ON DELETE CASCADE`.  
+  * **Índices:** `IDX_tutorial_steps_tut (tutorialId)`, `IDX_tutorial_steps_tut_order (tutorialId, stepOrder ASC)`.
+* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (status IN ('active', 'archived', 'wip'))`.  
+  * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, stars DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, stars DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, stars DESC)`.
 * `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Índice Único:** `IDX_infrastructure_posts_slug_lang (slug, language)`.
-  * **Índices Secundarios:** `IDX_infrastructure_posts_cat (category)`, `IDX_infrastructure_posts_env (environment)`, `IDX_infrastructure_posts_feat (featured)`, `IDX_infrastructure_posts_prio (orderPriority)`.
-* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.
-* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.
+  * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram'))`, `CHECK (environment IN ('production', 'edge', 'hybrid', 'vps', 'bare_metal'))`, `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced', 'expert'))`.  
+  * **Índices:** `IDX_infrastructure_posts_slug_lang (slug, language) UNIQUE`, `IDX_infrastructure_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_env_feed (language, environment, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 
 ---
 
@@ -202,7 +228,7 @@ $$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\te
 
 ---
 
-## 6. Corpus JSON Bilingüe, Portadas Profesionales y Sembrador Atómico (`seed-software.ts`)
+## 6. Corpus JSON Bilingüe, Portadas Profesionales y Sincronización Idempotente (`seed-software.ts`)
 
 Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`). Cada publicación técnica cuenta con su portada editorial profesional (16:9, Dark Luxury / Neumorphic Glassmorphism) servida estáticamente desde `frontend/web/public/software/images/covers/<categoría>/`:
 
@@ -217,11 +243,17 @@ Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen regi
 | **Proyectos** | `projects.json` | `software-tecnologico` | `/software/images/covers/projects/software-hub-tecnologico.jpg` |
 | **Infraestructura** | `infrastructure.json` | `nextjs-multitenant-loopback-incident-resolution` | `/software/images/covers/infrastructure/incidente-p1-nextjs.jpg` |
 
-* **Comando de Sembrado:**
+### 6.1 Modo de Operación del Seeder (`seed-software.ts`)
+El script `seed-software.ts` está diseñado para reconstruir y reiniciar la base de datos limpia desde cero de forma instantánea:
+
+* **Reinicio y Sembrado Directo:**
   ```bash
-  pnpm --filter backend seed:software
+  pnpm seed:software
   ```
-* **Garantía Transaccional y Migración Defensiva:** Ejecutado dentro de `db.transaction()` en modo `WAL` sobre `better-sqlite3`, con comprobaciones preventivas `ensureColumn` para agregar dinámicamente columnas faltantes a tablas preexistentes sin requerir reinicios forzados, garantizando reconstrucción limpia e indexación en menos de 60ms.
+  * Ejecuta una purga atómica de tablas anteriores (`DROP TABLE IF EXISTS`) para garantizar un estado limpio libre de esquemas desactualizados o datos residuales.
+  * Reconstruye las 10 tablas relacionales con sus restricciones de integridad `CHECK`, relaciones foráneas con `ON DELETE CASCADE` e índices compuestos cubrientes.
+  * Inserta todo el corpus bilingüe (`es` / `en`) desde `corpus/*.json` dentro de una transacción `better-sqlite3` en menos de **100 ms**.
+
 * **Bilingüismo Riguroso en Diagramas Vectoriales (Mermaid):** Los diagramas embebidos en el markdown de cada publicación están traducidos de raíz según el idioma:
   * **En Español (`es`):** Actores humanos, subgraphs y estados traducidos al español profesional (`Usuario / Navegador`, `Proxy Inverso Nginx`, `Gestor de Comandos`, `Módulo`, `Modo WAL`), preservando intactos los nombres literales de código, variables, APIs, llamadas POSIX y directivas de red (`stdout`, `socket.emit()`, `child_process.spawn()`, `resolve-routes.js`, `proxy_pass`).
   * **En Inglés (`en`):** 100% en terminología técnica internacional (`Browser Client`, `Nginx Reverse Proxy`, `Command Handler`, `WAL Mode`).

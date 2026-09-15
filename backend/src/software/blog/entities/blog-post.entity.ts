@@ -9,6 +9,9 @@ import {
 
 @Entity('blog_posts')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'series', 'orderPriority', 'publishedAt'])
+@Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class BlogPost {
   @PrimaryGeneratedColumn()
   id: number;

@@ -6,31 +6,19 @@ import {
   Body,
   Param,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CybersecurityService } from '../services/cybersecurity.service';
 import { CreateSecurityPostDto } from '../dto/create-security-post.dto';
-import type {
-  SecuritySeverity,
-  SecurityPostType,
-} from '../entities/security-post.entity';
+import { GetSecurityPostsQueryDto } from '../dto/get-security-posts-query.dto';
 
 @Controller('software/cybersecurity')
 export class CybersecurityController {
   constructor(private readonly securityService: CybersecurityService) {}
 
   @Get()
-  async findAll(
-    @Query('severity') severity?: string,
-    @Query('postType') postType?: string,
-    @Query('search') search?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.securityService.findAll(
-      severity as SecuritySeverity,
-      postType as SecurityPostType,
-      search,
-      lang,
-    );
+  async findAll(@Query() query: GetSecurityPostsQueryDto) {
+    return this.securityService.findAll(query);
   }
 
   @Get(':idOrSlug')
@@ -47,8 +35,8 @@ export class CybersecurityController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.securityService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.securityService.remove(id);
     return { success: true };
   }
 }

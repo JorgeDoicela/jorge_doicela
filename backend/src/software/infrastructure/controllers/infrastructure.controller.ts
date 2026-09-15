@@ -6,37 +6,19 @@ import {
   Body,
   Param,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { InfrastructureService } from '../services/infrastructure.service';
 import { CreateInfrastructurePostDto } from '../dto/create-infrastructure-post.dto';
-import type {
-  InfrastructureCategory,
-  InfrastructureEnvironment,
-  InfrastructureDifficulty,
-} from '../entities/infrastructure-post.entity';
+import { GetInfrastructureQueryDto } from '../dto/get-infrastructure-query.dto';
 
 @Controller('software/infrastructure')
 export class InfrastructureController {
   constructor(private readonly infraService: InfrastructureService) {}
 
   @Get()
-  async findAll(
-    @Query('category') category?: string,
-    @Query('environment') environment?: string,
-    @Query('difficulty') difficulty?: string,
-    @Query('search') search?: string,
-    @Query('lang') lang?: string,
-    @Query('sortBy')
-    sortBy?: 'smart' | 'recent' | 'views' | 'likes' | 'difficulty',
-  ) {
-    return this.infraService.findAll(
-      category as InfrastructureCategory,
-      environment as InfrastructureEnvironment,
-      difficulty as InfrastructureDifficulty,
-      search,
-      lang,
-      sortBy,
-    );
+  async findAll(@Query() query: GetInfrastructureQueryDto) {
+    return this.infraService.findAll(query);
   }
 
   @Get('categories')
@@ -53,8 +35,8 @@ export class InfrastructureController {
   }
 
   @Post(':id/like')
-  async like(@Param('id') id: string) {
-    return this.infraService.like(+id);
+  async like(@Param('id', ParseIntPipe) id: number) {
+    return this.infraService.like(id);
   }
 
   @Post()
@@ -63,8 +45,8 @@ export class InfrastructureController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.infraService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.infraService.remove(id);
     return { success: true };
   }
 }

@@ -168,7 +168,11 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
       </div>
 
       {/* Cuerpo del código */}
-      <pre className="p-4 sm:p-5 overflow-x-auto text-[#1d1d1f] dark:text-[#f0f6fc] leading-relaxed font-mono text-[13px] scrollbar-thin selection:bg-blue-500/20 dark:selection:bg-blue-500/30">
+      <pre
+        tabIndex={0}
+        suppressHydrationWarning
+        className="p-4 sm:p-5 overflow-x-auto text-[#1d1d1f] dark:text-[#f0f6fc] leading-relaxed font-mono text-[13px] scrollbar-thin selection:bg-blue-500/20 dark:selection:bg-blue-500/30"
+      >
         {highlightedHtml ? (
           <code
             className={`language-${normalizedLang}`}

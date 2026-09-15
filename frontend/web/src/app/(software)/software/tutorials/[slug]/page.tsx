@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { Tutorial } from '../../../features/tutorials/types';
+import { Tutorial, TutorialStepWizard } from '../../../features/tutorials';
 import { serverGet } from '../../../utils/serverFetch';
 import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
 import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
@@ -11,14 +11,16 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const tNav = await getTranslations('Nav');
+  const tCommon = await getTranslations('Common');
   const tutorial = await serverGet<Tutorial>(`/software/tutorials/${slug}?lang=${locale}`);
 
   if (!tutorial) {
-    return { title: 'Tutorial no encontrado | Software — Jorge Doicela' };
+    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
   return {
-    title: `${tutorial.title} | Tutoriales — Jorge Doicela`,
+    title: `${tutorial.title} | ${tNav('tutorials')} — Jorge Doicela`,
     description: tutorial.excerpt,
     openGraph: {
       title: tutorial.title,
@@ -57,7 +59,14 @@ export default async function TutorialDetailPage({ params }: Params) {
       date={formattedDate}
       author={tutorial.author || 'Jorge Doicela'}
     >
-      <MarkdownRenderer content={tutorial.description} />
+      <div className="space-y-8">
+        {tutorial.description && (
+          <div className="pb-4 border-b border-black/5 dark:border-white/5">
+            <MarkdownRenderer content={tutorial.description} />
+          </div>
+        )}
+        <TutorialStepWizard steps={tutorial.steps || []} />
+      </div>
     </SoftwareArticleLayout>
   );
 }

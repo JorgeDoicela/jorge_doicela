@@ -11,6 +11,9 @@ export type ProjectStatus = 'active' | 'archived' | 'wip';
 
 @Entity('projects')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'orderPriority', 'stars'])
+@Index(['language', 'status', 'orderPriority', 'stars'])
+@Index(['language', 'featured', 'orderPriority', 'stars'])
 export class Project {
   @PrimaryGeneratedColumn()
   id: number;

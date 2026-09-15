@@ -5,10 +5,17 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ChevronRight, ArrowUpRight } from 'lucide-react';
 import { useSoftwareHub } from '../features/hub/hooks/useSoftwareHub';
-import { HubFeedItem } from '../features/hub/types';
+import { HubFeedItem, HubSpotlightData } from '../features/hub/types';
 
 interface ExploreTopicsSidebarCardProps {
   className?: string;
+}
+
+interface TopicCategory {
+  id: string;
+  label: string;
+  href: string;
+  spotlightKey: keyof HubSpotlightData;
 }
 
 export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSidebarCardProps) {
@@ -50,7 +57,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
     return map;
   }, [featured, feed]);
 
-  const categories = [
+  const categories: TopicCategory[] = [
     {
       id: 'cybersecurity',
       label: tNav('cybersecurity'),
@@ -119,7 +126,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
           const categoryPosts = postsByCategory[cat.id] || [];
           const count =
             categoryPosts.length ||
-            (spotlightData as any)?.[cat.spotlightKey]?.length ||
+            (spotlightData ? spotlightData[cat.spotlightKey]?.length : 0) ||
             0;
 
           const displayedPosts = categoryPosts.slice(0, 5);

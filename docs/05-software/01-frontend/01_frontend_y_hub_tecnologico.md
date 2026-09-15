@@ -18,7 +18,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 >
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD):** `features/news/`, `features/blog/`, `features/forum/`, `features/ai/`, `features/cybersecurity/`, `features/tutorials/`, `features/projects/`, `features/infrastructure/`, `features/hub/`. Componentes UI compartidos y de navegación desacoplados en `components/`.
-> * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, barras de navegación (`MenuBar`, `Dock`), badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
+> * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, cabecera `SoftwareHeaderNav`, badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
 > * **Estética Neumorphism UI + Glassmorphism:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas.
 
@@ -31,17 +31,27 @@ frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
 ├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider)
-├── components/                       # Componentes compartidos del subdominio (Widgets & Shared UI)
+├── types/
+│   └── spotlight.ts                  # Interfaces para SpotlightSearchResult
+├── features/                         # DOMINIOS VERTICALES (FSD)
+│   ├── tutorials/
+│   │   ├── components/               # TutorialCard, TutorialGrid, TutorialStepWizard
+│   │   ├── hooks/                    # useTutorials
+│   │   └── types.ts                  # Tutorial, TutorialStep
+│   ├── forum/
+│   │   ├── components/               # ForumSection, TopicCard, ForumReplyForm
+│   │   ├── hooks/                    # useForum
+│   │   └── types.ts                  # ForumTopic, ForumReply
+│   └── ...                           # (news, blog, ai, cybersecurity, projects, infrastructure, hub)
+├── components/                       # COMPONENTES COMPARTIDOS DEL SUBDOMINIO (Widgets & Shared UI)
 │   ├── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
 │   ├── CategoryNav.tsx               # Selector unificado de las 8 categorías (URL-driven con pestañas de escritorio y dropdown táctil)
 │   ├── LanguageToggle.tsx            # Selector de idioma ES/EN con persistencia y refresh
 │   ├── ThemeToggle.tsx               # Alternador de tema Titanio Claro / Obsidiana Oscuro
-│   ├── Dock.tsx                      # Barra de navegación flotante estilo macOS
-│   ├── MenuBar.tsx                   # Cabecera de sistema con reloj Guayaquil y Spotlight
 │   ├── SpotlightModal.tsx            # Buscador omnisciente Cmd+K multi-dominio
 │   ├── SoftwareCard.tsx              # Tarjeta atómica universal normalizada (escala exacta y neumorphism)
 │   ├── ArticleCover.tsx              # Banner de portada 16:9 con soporte SVG procedural temático
-│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada
+│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (reloj, idioma, tema, spotlight)
 │   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
 │   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales (Sidebar MalwareTech)
 │   ├── FeaturedPostsSidebarCard.tsx  # Tarjeta de artículos destacados con miniaturas cuadradas 1:1
@@ -214,12 +224,12 @@ frontend/web/src/app/(software)/
    1. **Diagramas Vectoriales Multidiagrama Adaptativos Estilo Mermaid Chart ([`MermaidBlock.tsx`](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(software)/components/markdown/MermaidBlock.tsx)):**
       * **Detección Tipificada Robusta:** Analiza el bloque ignorando comentarios (`%%`) y frontmatter YAML (`---`) para identificar automáticamente la familia del diagrama (`sequenceDiagram`, `flowchart` / `graph`, `classDiagram`, `erDiagram`, `stateDiagram-v2`, `gitGraph`, `architecture-beta`, `c4Context`, `mindmap`, `pie`, etc.).
       * **Cabecera Técnica Minimalista (Solo Iconos de Acción):** Muestra el título específico del tipo de diagrama traducido vía `next-intl` con su icono temático de Lucide, y a la derecha dos botones de acción con **solo iconos** de alta precisión (`Maximize2` para expandir y `Copy` / `Check` para copiar) con tooltips nativos accesibles, manteniendo máxima sobriedad y elegancia sin saturar la cabecera con textos redundantes.
-      * **Renderizado Universal en Cliente (Mermaid 12):** Motor configurado con `look: 'neo'`, paleta semántica `redux-color` en claro y `redux-dark-color` en oscuro, curvas orgánicas `basis` en flowcharts y tipografía uniforme ($14\text{px}$ a $15\text{px}$).
+      * **Renderizado Universal en Cliente (Mermaid 12):** Motor configurado con `look: 'neo'`, temas oficiales nativos (`theme: 'dark'` en modo oscuro y `'neutral'` en claro) y `themeVariables` de alta definición calibradas para Neumorphism / Dark Luxury, curvas orgánicas `basis` en flowcharts y tipografía uniforme ($13\text{px}$ a $14\text{px}$).
       * **Arquitectura Híbrida de Primera Clase (Ajuste Fluido en Artículo + Visor de Inspección Forense a Pantalla Completa):**
         - *En el Artículo (Móvil y Escritorio):* El diagrama se muestra siempre **completo de inicio a fin** (`max-w-full mx-auto`), sin recortes a la izquierda ni barras de scroll forzadas que interrumpan el flujo de lectura. En escritorio respeta su ancho intrínseco 1:1 (`targetInlineWidth` hasta $1020\text{px}$) centrado simétricamente sin agigantarse.
-        - *Visor Inmersivo a Pantalla Completa Inmune a Grids (`createPortal`):* Al pulsar el botón de expandir o hacer click en el diagrama (`cursor-zoom-in`), se monta un lienzo modal directamente en `document.body` mediante `createPortal`, cubriendo el $100\%$ real de la pantalla del dispositivo (`z-[999999]`) con vidrio esmerilado suave de alta fidelidad (`backdrop-blur-xl bg-black/20 dark:bg-black/40`), eliminando fondos oscuros pesados y permitiendo un efecto bokeh elegante donde el artículo de fondo se difumina sutilmente. Diseñado sin barras superiores redundantes: el SVG flota nítido a escala 1:1 en el centro y se cierra de manera intuitiva simplemente al pulsar en cualquier lugar afuera (en el fondo) o mediante la tecla `Escape`. Permite rotar el móvil a horizontal (*landscape*) o inspeccionar notas técnicas y flujos densos con total libertad.
+        - *Visor Inmersivo a Pantalla Completa Inmune a Grids (`createPortal`):* Al pulsar el botón de expandir o hacer click en el diagrama (`cursor-zoom-in`), se monta un lienzo modal directamente en `document.body` mediante `createPortal`, cubriendo el $100\%$ real de la pantalla del dispositivo (`z-[999999]`) con vidrio esmerilado suave de alta fidelidad (`backdrop-blur-xl bg-black/20 dark:bg-black/40`), eliminando fondos oscuros pesados y permitiendo un efecto bokeh elegante donde el artículo de fondo se difumina sutilmente. Diseñado sin barras superiores redundantes: el SVG flota nítido a escala 1:1 en el centro y se cierra de manera intuitiva simplemente al pulsar en cualquier lugar afuera (en el fondo) o mediante la tecla `Escape`. Permite rotar el móvil a horizontal (*landscape*) o inspeccionar notas técnicas y flujos densos con total libertad. Cuenta con aislamiento estricto de identificadores SVG (`-modal`) para prevenir colisiones de IDs de marcadores y flechas en el DOM.
         - *Calibración Armónica de Secuencia (Mermaid 12):* Cajas de actores optimizadas ($140\text{px} \times 48\text{px}$), márgenes calibrados ($45\text{px}$ entre participantes, $35\text{px}$ entre mensajes) y tipografía uniforme ($13\text{px}$–$14\text{px}$).
-      * **Arquitectura Cero-RAM:** Modal ligero en React puro montado con portal nativo sin librerías externas; cero impacto en memoria en el servidor VPS de 1 GB.
+      * **Arquitectura Cero-RAM:** Modal ligero en React puro montado con portal nativo sin librerías externas; cero impacto en memoria en el servidor VPS de 1 GB. Protege de raíz los bloques de código y diagramas contra regex globales en `MarkdownRenderer`.
    2. **Bloques de Código de Alta Precisión con Cabecera Inteligente ([`CodeBlock.tsx`](/software/components/markdown/CodeBlock.tsx)):**
      * Resaltado de sintaxis profesional con `prismjs` para 13 lenguajes esenciales (`TypeScript`, `TSX`, `JavaScript`, `JSX`, `Bash`, `JSON`, `YAML`, `SQL`, `Python`, `Nginx`, `Docker`, `Markdown`, `INI`).
      * **Cabecera Inteligente Contextual y 100% Localizada:** Erradica los semáforos de colores decorativos y las etiquetas toscas de "Texto Plano". Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `📄 pm2.config.js`, `📄 nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs de error o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`.

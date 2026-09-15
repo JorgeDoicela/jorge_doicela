@@ -155,9 +155,11 @@
     "sortSmart": "Relevancia Arquitectónica",
     "sortRecent": "Más Recientes",
     "sortViews": "Más Populares",
-    "sortDifficulty": "Mayor Complejidad"
+    "sortDifficulty": "Mayor Complejidad",
+    "sortBy": "Ordenar por:"
   },
   "Detail": {
+    "diagramAlt": "Diagrama de Arquitectura — {name}",
     "stepsIndex": "Índice de Pasos ({count})",
     "nextStep": "Siguiente Paso →",
     "prevStep": "← Paso Anterior",
@@ -192,6 +194,7 @@
     "noRepliesYet": "Aún no hay respuestas en este debate. Sé el primero en aportar.",
     "joinDiscussion": "Participar en el Debate",
     "namePlaceholder": "Tu nombre o alias (ej. DevSenior)",
+    "anonymousDeveloper": "Desarrollador Anónimo",
     "replyPlaceholder": "Escribe tu análisis técnico, solución o perspectiva...",
     "publishing": "Publicando...",
     "postReplyBtn": "Publicar Respuesta →",

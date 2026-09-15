@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../components/SoftwareHeaderNav';
 import { SoftwareFooter } from '../../components/SoftwareFooter';
-import { ForumSection } from '../../features/forum/components/ForumSection';
+import { ForumSection } from '../../features/forum';
 
 export default function ForumCategoryPage() {
   const tNav = useTranslations('Nav');

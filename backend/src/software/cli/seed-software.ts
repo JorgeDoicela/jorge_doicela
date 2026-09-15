@@ -493,12 +493,15 @@ export function seedSoftware(
   ensureColumn('infrastructure_posts', 'coverImage', 'TEXT');
   ensureColumn('forum_topics', 'coverImage', 'TEXT');
 
-  let corpusDir = path.resolve(__dirname, '../corpus');
+  const srcDir = path.resolve(__dirname, '../../../src/software/corpus');
+  const distDir = path.resolve(__dirname, '../corpus');
+  const corpusDir = fs.existsSync(srcDir) ? srcDir : distDir;
+
   if (!fs.existsSync(corpusDir)) {
-    const srcDir = path.resolve(__dirname, '../../../src/software/corpus');
-    if (fs.existsSync(srcDir)) {
-      corpusDir = srcDir;
-    }
+    console.warn(
+      `[SoftwareSeeder] Directorio de corpus no encontrado en src ni en dist: ${corpusDir}`,
+    );
+    return;
   }
 
   const readJson = <T>(filename: string): T => {

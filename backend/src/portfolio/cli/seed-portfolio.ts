@@ -32,22 +32,18 @@ export function seedPortfolio(
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
 
-  const corpusDir = path.resolve(__dirname, '../corpus');
-  let projectsPath = path.join(corpusDir, 'projects.json');
+  const srcPath = path.resolve(
+    __dirname,
+    '../../../src/portfolio/corpus/projects.json',
+  );
+  const distPath = path.resolve(__dirname, '../corpus/projects.json');
+  const projectsPath = fs.existsSync(srcPath) ? srcPath : distPath;
 
   if (!fs.existsSync(projectsPath)) {
-    const srcPath = path.resolve(
-      __dirname,
-      '../../../src/portfolio/corpus/projects.json',
+    console.error(
+      `[PortfolioSeeder] ❌ Archivo de corpus no encontrado en src ni en dist: ${projectsPath}`,
     );
-    if (fs.existsSync(srcPath)) {
-      projectsPath = srcPath;
-    } else {
-      console.error(
-        `[PortfolioSeeder] ❌ Archivo de corpus no encontrado en dist ni en src: ${projectsPath}`,
-      );
-      return;
-    }
+    return;
   }
 
   const rawProjects = fs.readFileSync(projectsPath, 'utf-8');

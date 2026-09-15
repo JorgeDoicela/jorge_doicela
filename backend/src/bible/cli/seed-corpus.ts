@@ -480,7 +480,8 @@ export function seedCorpus(
     if (
       transFolder === 'historical' ||
       transFolder === 'morphology' ||
-      transFolder === 'evangelism'
+      transFolder === 'evangelism' ||
+      transFolder === 'literary'
     )
       continue;
     const transPath = path.join(corpusDir, transFolder);
@@ -489,72 +490,96 @@ export function seedCorpus(
     const files = fs.readdirSync(transPath).filter((f) => f.endsWith('.json'));
 
     for (const file of files) {
-      const filePath = path.join(transPath, file);
-      const raw = fs.readFileSync(filePath, 'utf-8');
-      const data = JSON.parse(raw) as BookCorpus;
+      try {
+        const filePath = path.join(transPath, file);
+        const raw = fs.readFileSync(filePath, 'utf-8');
+        const data = JSON.parse(raw) as BookCorpus;
 
-      console.log(
-        `[CorpusSeeder] Procesando ${data.book} (${data.bookAbbreviation}) en ${data.translationAbbreviation}...`,
-      );
-
-      // 1. Obtener o crear Book
-      const bookRow = db
-        .prepare('SELECT id FROM books WHERE abbreviation = ?')
-        .get(data.bookAbbreviation) as { id: number } | undefined;
-
-      let bookId: number;
-      if (bookRow) {
-        bookId = bookRow.id;
-      } else {
-        const isNT = ['MAT', 'MRK', 'LUK', 'JHN', 'ACT', 'ROM'].includes(
-          data.bookAbbreviation,
-        );
-        const info = db
-          .prepare(
-            'INSERT INTO books (name, abbreviation, testament) VALUES (?, ?, ?)',
-          )
-          .run(data.book, data.bookAbbreviation, isNT ? 'NT' : 'OT');
-        bookId = Number(info.lastInsertRowid);
-      }
-
-      // 2. Obtener o crear Translation
-      const transRow = db
-        .prepare('SELECT id FROM translations WHERE abbreviation = ?')
-        .get(data.translationAbbreviation) as { id: number } | undefined;
-
-      let translationId: number;
-      if (transRow) {
-        translationId = transRow.id;
-      } else {
-        const lang = data.language || 'es';
-        const info = db
-          .prepare(
-            'INSERT INTO translations (name, abbreviation, language) VALUES (?, ?, ?)',
-          )
-          .run(data.translation, data.translationAbbreviation, lang);
-        translationId = Number(info.lastInsertRowid);
-      }
-
-      // 3. Inserción Transaccional por Lotes (Batch Chunks)
-      const insertStmt = db.prepare(`
-        INSERT OR REPLACE INTO verses (bookId, translationId, chapter, verseNumber, text)
-        VALUES (?, ?, ?, ?, ?)
-      `);
-
-      const insertBatch = db.transaction((chapters: ChapterItem[]) => {
-        let count = 0;
-        for (const ch of chapters) {
-          for (const v of ch.verses) {
-            insertStmt.run(bookId, translationId, ch.chapter, v.verse, v.text);
-            count++;
-          }
+        if (
+          !data ||
+          !data.chapters ||
+          !Array.isArray(data.chapters) ||
+          !data.bookAbbreviation
+        ) {
+          continue;
         }
-        return count;
-      });
 
-      const count = insertBatch(data.chapters);
-      totalVersesInserted += count;
-      console.log(`[CorpusSeeder] -> ${count} versículos procesados en lote.`);
+        console.log(
+          `[CorpusSeeder] Procesando ${data.book} (${data.bookAbbreviation}) en ${data.translationAbbreviation}...`,
+        );
+
+        // 1. Obtener o crear Book
+        const bookRow = db
+          .prepare('SELECT id FROM books WHERE abbreviation = ?')
+          .get(data.bookAbbreviation) as { id: number } | undefined;
+
+        let bookId: number;
+        if (bookRow) {
+          bookId = bookRow.id;
+        } else {
+          const isNT = ['MAT', 'MRK', 'LUK', 'JHN', 'ACT', 'ROM'].includes(
+            data.bookAbbreviation,
+          );
+          const info = db
+            .prepare(
+              'INSERT INTO books (name, abbreviation, testament) VALUES (?, ?, ?)',
+            )
+            .run(data.book, data.bookAbbreviation, isNT ? 'NT' : 'OT');
+          bookId = Number(info.lastInsertRowid);
+        }
+
+        // 2. Obtener o crear Translation
+        const transRow = db
+          .prepare('SELECT id FROM translations WHERE abbreviation = ?')
+          .get(data.translationAbbreviation) as { id: number } | undefined;
+
+        let translationId: number;
+        if (transRow) {
+          translationId = transRow.id;
+        } else {
+          const lang = data.language || 'es';
+          const info = db
+            .prepare(
+              'INSERT INTO translations (name, abbreviation, language) VALUES (?, ?, ?)',
+            )
+            .run(data.translation, data.translationAbbreviation, lang);
+          translationId = Number(info.lastInsertRowid);
+        }
+
+        // 3. Inserción Transaccional por Lotes (Batch Chunks)
+        const insertStmt = db.prepare(`
+          INSERT OR REPLACE INTO verses (bookId, translationId, chapter, verseNumber, text)
+          VALUES (?, ?, ?, ?, ?)
+        `);
+
+        const insertBatch = db.transaction((chapters: ChapterItem[]) => {
+          let count = 0;
+          for (const ch of chapters) {
+            for (const v of ch.verses) {
+              insertStmt.run(
+                bookId,
+                translationId,
+                ch.chapter,
+                v.verse,
+                v.text,
+              );
+              count++;
+            }
+          }
+          return count;
+        });
+
+        const count = insertBatch(data.chapters);
+        totalVersesInserted += count;
+        console.log(
+          `[CorpusSeeder] -> ${count} versículos procesados en lote.`,
+        );
+      } catch (err) {
+        console.error(
+          `[CorpusSeeder] ⚠️ Error procesando archivo ${file} en ${transFolder}:`,
+          err,
+        );
+      }
     }
   }
 

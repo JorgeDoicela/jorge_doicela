@@ -9,6 +9,7 @@ import {
 
 @Entity('portfolio_projects')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'orderIndex'])
 export class PortfolioProject {
   @PrimaryGeneratedColumn()
   id: number;

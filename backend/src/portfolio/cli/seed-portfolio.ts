@@ -78,6 +78,7 @@ export function seedPortfolio(
     );
 
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_project_slug_lang ON portfolio_projects (slug, language);
+    CREATE INDEX IF NOT EXISTS IDX_portfolio_project_lang_order ON portfolio_projects (language, orderIndex);
 
     CREATE TABLE IF NOT EXISTS contact_messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,9 +86,12 @@ export function seedPortfolio(
       email TEXT NOT NULL,
       subject TEXT,
       message TEXT NOT NULL,
-      createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      read INTEGER NOT NULL DEFAULT 0
+      phone TEXT,
+      serviceType TEXT,
+      createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE INDEX IF NOT EXISTS IDX_contact_messages_created_at ON contact_messages (createdAt);
   `);
 
   // Sembrar proyectos usando INSERT OR REPLACE

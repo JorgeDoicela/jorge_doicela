@@ -348,13 +348,15 @@ new ValidationPipe({
   * `architectureHighlights`: `simple-json` → `string[]`, nullable.
   * `metrics`: `simple-json` → `{ label: string; value: string }[]`, nullable.
   * `orderIndex`: `integer`, default 0.
-  * **Índice Único Compuesto:** `(slug, language)`.
+  * **Índices:** `IDX_portfolio_project_slug_lang` (único compuesto en `slug, language`) y `IDX_portfolio_project_lang_order` (compuesto en `language, orderIndex`).
 
 * `contact_messages`:
   * `id`: PK autoincremental.
-  * `name`, `email`, `subject`, `message`: Campos del formulario.
+  * `name`, `email`, `subject`, `message`: Campos obligatorios del formulario.
+  * `phone`: Teléfono opcional (`string`, nullable).
+  * `serviceType`: Tipo de servicio solicitado opcional (`string`, nullable).
   * `createdAt`: Timestamp automático.
-  * `read`: Estado de lectura (`boolean`).
+  * **Índice:** `IDX_contact_messages_created_at` (en `createdAt` para ordenación cronológica $O(1)$).
 
 ---
 

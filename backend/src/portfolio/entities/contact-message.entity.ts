@@ -3,9 +3,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity('contact_messages')
+@Index(['createdAt'])
 export class ContactMessage {
   @PrimaryGeneratedColumn()
   id: number;

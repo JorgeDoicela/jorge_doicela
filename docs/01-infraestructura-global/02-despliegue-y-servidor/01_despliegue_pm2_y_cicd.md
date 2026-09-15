@@ -411,7 +411,7 @@ Controla el ciclo de vida, resolución determinista de rutas absolutas (`path.re
 ```bash
 # Comandos de gestión PM2:
 pm2 list
-pm2 reload pm2.config.js --update-env
+pm2 restart pm2.config.js --update-env
 pm2 logs --lines 100
 pm2 save
 ```

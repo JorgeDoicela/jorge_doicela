@@ -108,8 +108,8 @@ jobs:
             id -nG admin 2>/dev/null | grep -q docker || sudo usermod -aG docker admin 2>/dev/null || true
             sudo chmod 660 /var/run/docker.sock 2>/dev/null || true
 
-            # Reiniciar aplicaciones en PM2 con recarga limpia o iniciar si no estaban activas
-            pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js
+            # Reiniciar aplicaciones en PM2 con reinicio limpio (imprescindible para procesos en fork_mode)
+            pm2 restart pm2.config.js --update-env || pm2 start pm2.config.js
             pm2 save
 
       - name: Purgar automáticamente caché en Cloudflare

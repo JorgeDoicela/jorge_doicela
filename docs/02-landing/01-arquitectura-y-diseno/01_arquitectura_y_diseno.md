@@ -48,11 +48,11 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 ### 3.3 Internacionalización Profesional (next-intl Unificado + SSR & SEO Gold Standard)
 * **Unificación Total en next-intl:** Arquitectura 100% estandarizada con `useTranslations` de `next-intl`. Se eliminó por completo el archivo `translations.ts` manual obsoleto, erradicando duplicidades y garantizando paridad bilingüe estricta entre `src/messages/es.json` y `src/messages/en.json`.
 * **LanguageContext Desacoplado:** El proveedor de contexto de idioma gestiona exclusivamente el estado de locale ('es' | 'en'), cookies `NEXT_LOCALE` y transiciones atómicas (`useTransition`), delegando todas las cadenas de texto a los diccionarios reactivos de `next-intl`.
-* **Arquitectura de Servidor:** Configuración en `src/i18n/request.ts` integrada mediante `createNextIntlPlugin` en `next.config.ts`.
+* **Arquitectura de Servidor y Carga Determinista:** Configuración en `src/i18n/request.ts` integrada mediante `createNextIntlPlugin` en `next.config.ts`. Implementa un mapeo de importaciones estáticas y explícitas por proyecto e idioma (`loadProjectMessages`), eliminando expresiones dinámicas con plantillas de strings frágiles (`(${subdomain})`) y garantizando que Turbopack y Next.js Standalone empaqueten el 100% de los diccionarios `.json` en los chunks del servidor, erradicando fallos de `MISSING_MESSAGE` o 500 en SSR.
 * **Cero Parpadeos (SSR):** El servidor entrega el HTML ya traducido en el primer byte evitando el fenómeno *FOUC*.
 * **Detección y Negociación:** Detección automática por cookie `NEXT_LOCALE` o cabecera HTTP `Accept-Language` del visitante.
 * **Persistencia Reactiva:** El selector de idioma sincroniza la cookie `NEXT_LOCALE` y ejecuta `router.refresh()` para re-renderizado instantáneo en el servidor.
-* **Diccionarios Estructurados:** Archivos JSON organizados en `src/messages/es.json` y `src/messages/en.json`.
+* **Diccionarios Estructurados:** Archivos JSON organizados en `src/app/(subdominio)/messages/es.json` y `en.json`.
 
 ### 3.4 Progressive Web App (PWA)
 * Manifiesto W3C `manifest.json` (`#09090b`, modo `standalone`).

@@ -274,7 +274,7 @@ server {
     # Debe preceder a /api/ para evitar que sea enrutado por error al backend NestJS (Puerto 3000)
     location /api/chat {
         limit_req zone=api_limit_zone burst=15 nodelay;
-        proxy_pass http://127.0.0.1:3001;
+        proxy_pass http://[::1]:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

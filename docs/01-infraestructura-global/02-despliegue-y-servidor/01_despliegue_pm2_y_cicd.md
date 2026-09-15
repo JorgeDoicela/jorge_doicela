@@ -270,11 +270,22 @@ server {
     gzip_proxied any;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
 
+    # Upstreams locales con pooling de conexiones persistentes (Keepalive para 1 GB RAM)
+    upstream nextjs_upstream {
+        server [::1]:3001;
+        keepalive 32;
+    }
+
+    upstream nestjs_upstream {
+        server 127.0.0.1:3000;
+        keepalive 32;
+    }
+
     # 1. Chat de IA de la Landing (Route Handler Next.js en Puerto 3001)
     # Debe preceder a /api/ para evitar que sea enrutado por error al backend NestJS (Puerto 3000)
     location /api/chat {
         limit_req zone=api_limit_zone burst=15 nodelay;
-        proxy_pass http://[::1]:3001;
+        proxy_pass http://nextjs_upstream;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

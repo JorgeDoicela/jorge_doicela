@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface MatrixRainProps {
   onClose: () => void;
 }
 
 export const MatrixRain: React.FC<MatrixRainProps> = ({ onClose }) => {
+  const t = useTranslations('Terminal');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -85,11 +87,11 @@ export const MatrixRain: React.FC<MatrixRainProps> = ({ onClose }) => {
     <div
       onClick={onClose}
       className="absolute inset-0 z-30 bg-black/90 flex flex-col items-center justify-center cursor-pointer rounded-xl overflow-hidden backdrop-blur-sm"
-      title="Haz clic o presiona cualquier tecla para salir de Matrix"
+      title={t('matrixCloseHint')}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
       <div className="relative z-40 bg-black/80 px-4 py-2 rounded-full border border-emerald-500/40 text-emerald-400 text-xs font-mono tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)] animate-pulse">
-        MODO MATRIX ACTIVO • HAZ CLIC O PRESIONA CUALQUIER TECLA PARA SALIR
+        {t('matrixActiveBanner')}
       </div>
     </div>
   );

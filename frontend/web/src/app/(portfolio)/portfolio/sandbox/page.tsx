@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { SandboxTerminal } from '../../features/terminal/components/SandboxTerminal';
+import { SandboxTerminal } from '../../features/terminal';
 
 function SandboxStandaloneContent() {
   const searchParams = useSearchParams();

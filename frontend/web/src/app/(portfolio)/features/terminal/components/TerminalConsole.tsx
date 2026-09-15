@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useTransition } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTerminalSocket } from '../hooks/useTerminalSocket';
 import { TerminalHeader } from './TerminalHeader';
@@ -220,7 +220,6 @@ export const TerminalConsole: React.FC = () => {
             onNavigateHistory={(dir, curr) => navigateHistory(dir, curr, pane.id)}
             onCopyBlock={handleCopyBlock}
             copiedItemIndex={copiedItemIndex}
-            t={t}
           />
         ))}
       </div>
@@ -298,7 +297,6 @@ interface SinglePaneProps {
   onNavigateHistory: (dir: 'up' | 'down', curr: string) => string;
   onCopyBlock: (content: string, id: string) => void;
   copiedItemIndex: string | null;
-  t: (key: string) => string;
 }
 
 const SinglePane: React.FC<SinglePaneProps> = ({
@@ -316,8 +314,8 @@ const SinglePane: React.FC<SinglePaneProps> = ({
   onNavigateHistory,
   onCopyBlock,
   copiedItemIndex,
-  t,
 }) => {
+  const t = useTranslations('Terminal');
   const [input, setInput] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -424,7 +422,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
               }`}
             />
             <span className={isActive ? 'text-gold-300 font-semibold' : 'text-muted'}>
-              Consola {paneIndex + 1} • {pane.cwd || '~'}
+              {t('paneTitle', { number: String(paneIndex + 1), cwd: pane.cwd || '~' })}
             </span>
           </div>
           <button
@@ -433,7 +431,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
               onClose();
             }}
             className="text-muted hover:text-gold-200 p-0.5 rounded transition-colors"
-            title="Cerrar panel (exit)"
+            title={t('closePaneTooltip')}
           >
             <X className="w-3 h-3" />
           </button>

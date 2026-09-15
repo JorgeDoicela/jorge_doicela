@@ -447,9 +447,9 @@ graph TD
 4. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sincroniza los archivos vía rsync excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
 5. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
    * Instala dependencias de producción en `backend/` (`--prod --ignore-scripts`).
-   * **Limpieza de archivos legados:** Elimina cualquier `*.sqlite` que haya quedado en la raíz del monorepo o directamente en `backend/` (estructura anterior a la migración `backend/data/`).
+   * **Reinicio y reconstrucción limpia de SQLite:** Elimina `backend/data/*.sqlite*` y cualquier archivo legado en la raíz para garantizar un reinicio limpio y determinista en cada despliegue.
    * **Asegura el directorio canónico:** `mkdir -p backend/data` garantiza que el directorio exista incluso en clones limpios del servidor.
-   * **Siembra los 3 módulos:** Ejecuta `seed-corpus.js`, `seed-software.js` y `seed-portfolio.js`, que resolverán sus rutas deterministas a `backend/data/` mediante `resolveDatabasePath`.
+   * **Siembra limpia de los 3 módulos:** Ejecuta `seed-corpus.js`, `seed-software.js` y `seed-portfolio.js`, recreando esquemas y poblando desde cero los datos limpios de los corpus JSON hacia `backend/data/` (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`).
    * Verifica la integridad de los recursos estáticos en `standalone/`.
    * **Construcción del Docker Sandbox:** Construye `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` si existen cambios, aprovechando el caché de capas de Docker en el VPS (< 1s).
    * **Permisos del Docker Socket:** Asegura que el usuario `admin` pertenezca al grupo `docker` y ajusta permisos a `0660 /var/run/docker.sock` para que el proceso NestJS en PM2 opere contenedores sin `sudo`.

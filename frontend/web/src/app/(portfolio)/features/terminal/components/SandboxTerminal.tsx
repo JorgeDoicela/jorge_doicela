@@ -291,7 +291,7 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
                     ? 'bg-red-500/10 border-red-500/40 text-red-600 dark:text-red-300 animate-pulse'
                     : 'bg-surface border-border-gold/60 text-foreground/80'
                 }`}
-                title="Tiempo restante de la sesión"
+                title={t('remainingTime')}
               >
                 <Clock className="w-3 h-3 text-gold-500 dark:text-gold-300" />
                 <span className="tabular-nums font-medium">{formatTime(remainingSeconds)}</span>

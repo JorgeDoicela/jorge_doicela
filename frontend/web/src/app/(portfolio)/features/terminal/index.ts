@@ -8,4 +8,11 @@ export { TerminalConsole } from './components/TerminalConsole';
 export { TerminalHeader } from './components/TerminalHeader';
 export { useSandboxTerminal } from './hooks/useSandboxTerminal';
 export { useTerminalSocket } from './hooks/useTerminalSocket';
-export type { TerminalHistoryItem, TerminalPane } from './types';
+export type {
+  TerminalHistoryItem,
+  TerminalPane,
+  TerminalTab,
+  TerminalOutputPayload,
+  ConnectionStatus,
+} from './types';
+export type { SandboxStatus, RejectInfo } from './hooks/useSandboxTerminal';

@@ -2,9 +2,11 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 import { Sun, Moon } from 'lucide-react';
 
 export function ThemeToggle() {
+  const tNav = useTranslations('Nav');
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -23,7 +25,7 @@ export function ThemeToggle() {
     <button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className="flex items-center justify-center w-8 h-8 rounded-md bg-transparent text-gold-s hover:text-gold-p hover:bg-gold-b/20 transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-gold-p"
-      aria-label="Cambiar tema"
+      aria-label={tNav('toggleTheme')}
       id="portfolio-theme-toggle"
     >
       {isDark ? (

@@ -28,17 +28,21 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 ```text
 frontend/web/src/app/(portfolio)/
 ├── globals.css                # Estilos aislados del portafolio (Dark Luxury Look)
-├── layout.tsx                 # Layout raíz con ThemeProvider local
+├── layout.tsx                 # Layout raíz con ThemeProvider local y PortfolioJsonLd
 ├── theme-provider.tsx         # Proveedor de tema claro/oscuro
 ├── portfolio/
-│   └── page.tsx               # Contenedor principal de vistas
+│   ├── page.tsx               # Contenedor principal de vistas (SPA interactiva)
+│   └── sandbox/
+│       └── page.tsx           # Vista dedicada a pantalla completa para SandboxTerminal
 │
 ├── components/                # COMPONENTES COMPARTIDOS DEL SUBDOMINIO
 │   ├── BackToPortalButton.tsx # Retorno directo al portal principal (Dark Luxury, jorgedoicela.com / localhost)
 │   ├── ThemeToggle.tsx        # Conmutador de tema visual
 │   ├── LanguageToggle.tsx     # Selector de idioma (ES/EN)
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
-│   └── ValuesPhilosophySection.tsx # Sección de valores y ética
+│   ├── ValuesPhilosophySection.tsx # Sección de valores y ética
+│   ├── PortfolioFooterLinks.tsx   # Enlaces entre subdominios y llms.txt en el pie de página
+│   └── PortfolioJsonLd.tsx        # Marcado estructurado Schema.org ProfilePage
 │
 ├── features/                  # FEATURE-SLICED DESIGN (FSD)
 │   ├── projects/              # FEATURE: SHOWCASE DE PROYECTOS Y CASOS DE ESTUDIO
@@ -55,6 +59,7 @@ frontend/web/src/app/(portfolio)/
 │   │   │   ├── TerminalConsole.tsx       # Conmutador de modo y ventana interactiva
 │   │   │   ├── SandboxTerminal.tsx       # Terminal Linux Real en Vivo (xterm.js + FitAddon)
 │   │   │   ├── ServerOfflineBanner.tsx   # Banner Dark Luxury de Servidor Offline y Solicitud Telegram
+│   │   │   ├── SandboxSecurityModal.tsx  # Modal para límites de concurrencia, cooldown y traspaso
 │   │   │   ├── TerminalHeader.tsx        # Barra superior tmux y controles
 │   │   │   ├── MatrixRain.tsx            # Animación de lluvia Matrix
 │   │   │   └── MobileTerminalBanner.tsx  # Banner adaptativo para móviles
@@ -63,7 +68,7 @@ frontend/web/src/app/(portfolio)/
 │   │   │   └── useSandboxTerminal.ts     # WebSocket + xterm.js del Sandbox (/sandbox)
 │   │   ├── utils/
 │   │   │   └── ansiParser.tsx            # Renderizado de colores y secuencias ANSI
-│   │   ├── types.ts
+│   │   ├── types.ts                      # Interfaces de pestañas, paneles e historial
 │   │   └── index.ts                      # Barril de exportación pública de la feature
 │   │
 │   └── contact/               # FEATURE: FORMULARIO DE CONTACTO

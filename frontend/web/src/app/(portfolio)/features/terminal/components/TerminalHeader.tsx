@@ -118,7 +118,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
                 ? 'bg-surface-raised border-border-gold text-gold-200 font-medium'
                 : 'border-border-gold/60 text-muted hover:text-gold-200 hover:bg-surface-raised'
             }`}
-            title={isSplit ? 'Unificar paneles (exit / unsplit)' : 'Dividir panel en 2 columnas (split / Ctrl+B %)'}
+            title={isSplit ? t('unsplitTooltip') : t('splitTooltip')}
           >
             {isSplit ? 'unsplit' : 'split'}
           </button>

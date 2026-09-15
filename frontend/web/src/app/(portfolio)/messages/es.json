@@ -29,13 +29,24 @@
     "title": "Proyectos & Arquitectura",
     "subtitle": "Sistemas construidos con arquitectura limpia, alta disponibilidad y optimización extrema de recursos.",
     "filterAll": "Todos los Proyectos",
+    "filterFullstack": "Full Stack",
+    "filterCloud": "Cloud & DevSecOps",
+    "filterAi": "IA & Sistemas",
     "featuredBadge": "Destacado",
     "productionStatus": "En producción",
     "codeLabel": "Código",
     "demoLabel": "Demostración",
     "caseStudyLabel": "Caso de estudio",
     "viewRepo": "Ver repositorio en GitHub",
-    "viewDemo": "Abrir demostración en vivo"
+    "viewDemo": "Abrir demostración en vivo",
+    "modalOverviewTitle": "Visión General del Sistema",
+    "modalChallengeTitle": "El Desafío Técnico & Restricciones",
+    "modalArchitectureTitle": "Arquitectura & Decisiones de Ingeniería",
+    "modalTechStack": "Stack Tecnológico Empleado",
+    "modalTelemetry": "Especificaciones & Telemetría",
+    "modalVerifiedMetrics": "Métricas Verificadas",
+    "modalClose": "Cerrar",
+    "modalViewGithub": "Ver Código en GitHub"
   },
   "Stack": {
     "eyebrow": "Stack Principal",
@@ -58,15 +69,15 @@
     "edu1Title": "Ingeniería en Inteligencia Artificial y Ciberseguridad",
     "edu1Sub": "UB - En progreso",
     "edu2Title": "Tecnólogo Superior en Desarrollo de Software",
-    "edu2Sub": "Tecnológico Traversari - Egresado"
+    "edu2Sub": "Tecnológico Traversari - Titulado"
   },
   "Cloud": {
     "eyebrow": "Firma Técnica",
-    "title": "Nube, DevSecOps & Ciberseguridad",
+    "title": "Nube, DevSecOps & Hardening",
     "pillar1Title": "Infraestructura Cloud (1 GB RAM)",
-    "pillar1Desc": "Despliegue de arquitecturas en la nube mediante AWS Lightsail optimizadas para operar de forma estable en 1 GB de RAM con Nginx y PM2.",
-    "pillar2Title": "Automatización y CI/CD",
-    "pillar2Desc": "Pipelines automatizados con GitHub Actions para compilación, verificación de tipos y despliegue continuo determinista.",
+    "pillar1Desc": "Despliegue en AWS Lightsail optimizado para estabilidad continua bajo 1 GB de RAM mediante Nginx y PM2.",
+    "pillar2Title": "Automatización & CI/CD",
+    "pillar2Desc": "Pipelines de GitHub Actions para construcción multi-etapa, verificación de tipos y entrega determinista.",
     "pillar3Title": "Hardening & DevSecOps",
     "pillar3Desc": "Integración de mTLS Cloudflare, reglas de firewall estrictas y sanitización estricta de inputs para mitigar riesgos de seguridad."
   },
@@ -144,7 +155,13 @@
     "statusOffline": "OFFLINE",
     "modeSimulated": "Terminal Guiada",
     "modeVps": "Terminal en la Nube (AWS)",
-    "modeTunnel": "Terminal en Servidor Propio"
+    "modeTunnel": "Terminal en Servidor Propio",
+    "paneTitle": "Consola {number} • {cwd}",
+    "closePaneTooltip": "Cerrar panel (exit)",
+    "splitTooltip": "Dividir panel en 2 columnas (split / Ctrl+B %)",
+    "unsplitTooltip": "Unificar paneles (exit / unsplit)",
+    "matrixCloseHint": "Haz clic o presiona cualquier tecla para salir de Matrix",
+    "matrixActiveBanner": "MODO MATRIX ACTIVO • HAZ CLIC O PRESIONA CUALQUIER TECLA PARA SALIR"
   },
   "SandboxTerminal": {
     "statusConnected": "CONECTADO",
@@ -179,7 +196,8 @@
     "hourlyLimitNotice": "Límite horario alcanzado",
     "ipBlockedNotice": "Acceso restringido temporalmente",
     "sessionReplacedNotice": "La terminal fue transferida a otra ventana",
-    "transferring": "Transfiriendo..."
+    "transferring": "Transfiriendo...",
+    "remainingTime": "Tiempo restante de la sesión"
   },
   "SandboxStandalone": {
     "backToPortfolio": "Volver al Portafolio",
@@ -189,6 +207,7 @@
   "SandboxWakeRequest": {
     "serverOfflineTitle": "Terminal en Servidor Físico",
     "serverOfflineBadge": "SERVIDOR PRIVADO",
+    "deliveredBadge": "AVISO ENTREGADO",
     "serverOfflineDesc": "Esta consola corre en un equipo físico en mi laboratorio para desarrollo, investigación y pruebas avanzadas. Para optimizar el consumo de energía cuando no está en uso activo, permanece apagado. Puedes avisarme aquí y lo conecto enseguida.",
     "requestWakePrompt": "Pulsa el botón para avisarme. Recibiré una notificación inmediata para encender el equipo y permitirte el acceso.",
     "buttonRequestWake": "Avisar a Jorge para Conectar",
@@ -196,6 +215,11 @@
     "buttonSent": "Aviso entregado",
     "optionalName": "Tu nombre (opcional)",
     "optionalContact": "Email o medio de contacto (opcional)",
+    "optionalNote": "Nota o mensaje adicional (opcional)",
+    "hideOptionalFields": "Ocultar campos adicionales",
+    "showOptionalFields": "Añadir tu nombre o nota (opcional)",
+    "submitErrorFallback": "No se pudo registrar la solicitud. Por favor intenta más tarde.",
+    "connectionError": "Error al conectar con el servidor.",
     "successTitle": "¡Muchas gracias por tu interés!",
     "successDesc": "He recibido tu notificación con éxito. En cuanto me encuentre disponible encenderé el equipo para que puedas probar la consola. Puedes mantener esta ventana o volver más tarde para ingresar a la terminal.",
     "close": "Cerrar",
@@ -231,6 +255,8 @@
     "portalShort": "Portal",
     "landing": "Inicio",
     "software": "Software",
-    "bible": "Biblia"
+    "bible": "Biblia",
+    "toggleLang": "Cambiar idioma",
+    "toggleTheme": "Cambiar tema"
   }
 }

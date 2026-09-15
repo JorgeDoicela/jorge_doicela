@@ -25,9 +25,9 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
 
   const categories = [
     { id: 'all', label: t('filterAll') },
-    { id: 'fullstack', label: 'Full Stack' },
-    { id: 'cloud', label: 'Cloud & DevSecOps' },
-    { id: 'ai', label: 'IA & Sistemas' },
+    { id: 'fullstack', label: t('filterFullstack') },
+    { id: 'cloud', label: t('filterCloud') },
+    { id: 'ai', label: t('filterAi') },
   ];
 
   return (

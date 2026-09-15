@@ -73,7 +73,7 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
         const errorData = await response.json().catch(() => null);
         throw new Error(
           errorData?.message ||
-            'No se pudo registrar la solicitud. Por favor intenta más tarde.',
+            t('submitErrorFallback'),
         );
       }
 
@@ -85,7 +85,7 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
       }
     } catch (err: unknown) {
       const errorMsg =
-        err instanceof Error ? err.message : 'Error al conectar con el servidor.';
+        err instanceof Error ? err.message : t('connectionError');
       setSubmitError(errorMsg);
     } finally {
       setIsSubmitting(false);
@@ -137,7 +137,7 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
             <Cpu className="w-4 h-4 text-gold-300" />
           </div>
           <span className="text-gold-300 font-mono text-[11px] font-semibold tracking-wider uppercase">
-            {isSubmitted ? 'AVISO ENTREGADO' : t('serverOfflineBadge')}
+            {isSubmitted ? t('deliveredBadge') : t('serverOfflineBadge')}
           </span>
         </div>
       </div>
@@ -220,8 +220,8 @@ export const ServerOfflineBanner: React.FC<ServerOfflineBannerProps> = ({
                 )}
                 <span>
                   {showOptionalFields
-                    ? 'Ocultar campos adicionales'
-                    : 'Añadir tu nombre o nota (opcional)'}
+                    ? t('hideOptionalFields')
+                    : t('showOptionalFields')}
                 </span>
               </button>
 

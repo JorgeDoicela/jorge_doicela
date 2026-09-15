@@ -1,6 +1,6 @@
-import { TerminalConsole } from '../features/terminal/components/TerminalConsole';
-import { ProjectShowcase } from '../features/projects/components/ProjectShowcase';
-import { ContactForm } from '../features/contact/components/ContactForm';
+import { TerminalConsole } from '../features/terminal';
+import { ProjectShowcase, type PortfolioProject } from '../features/projects';
+import { ContactForm } from '../features/contact';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { LanguageToggle } from '../components/LanguageToggle';
 import { BackToPortalButton } from '../components/BackToPortalButton';
@@ -8,7 +8,6 @@ import { TypewriterRole } from '../components/TypewriterRole';
 import { ValuesPhilosophySection } from '../components/ValuesPhilosophySection';
 import { PortfolioFooterLinks } from '../components/PortfolioFooterLinks';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { PortfolioProject } from '../features/projects/types';
 import {
     Mail,
     MapPin,
@@ -20,6 +19,24 @@ import {
 
 import { API_URL } from '../../config';
 
+interface RawProjectApiItem {
+    id: number;
+    slug: string;
+    title: string;
+    description: string;
+    role: string;
+    technologies: string[] | string;
+    language: string;
+    repoUrl?: string;
+    demoUrl?: string;
+    featured: boolean;
+    overview?: string;
+    challenge?: string;
+    architectureHighlights?: string[];
+    metrics?: { label: string; value: string }[];
+    media?: { type: 'image' | 'video'; url: string; caption?: string }[];
+}
+
 async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]> {
     const res = await fetch(`${API_URL}/portfolio/projects?lang=${locale}`, {
         next: { revalidate: 60 },
@@ -28,8 +45,8 @@ async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]>
         throw new Error(`Error al obtener proyectos del portafolio desde la API (status: ${res.status})`);
     }
     const json = await res.json();
-    const rawProjects = Array.isArray(json) ? json : json.data || [];
-    return rawProjects.map((p: any) => ({
+    const rawProjects: RawProjectApiItem[] = Array.isArray(json) ? json : json.data || [];
+    return rawProjects.map((p) => ({
         ...p,
         technologies: Array.isArray(p.technologies)
             ? p.technologies

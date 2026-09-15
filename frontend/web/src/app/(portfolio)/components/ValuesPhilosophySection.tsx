@@ -39,7 +39,7 @@ export const ValuesPhilosophySection: React.FC = () => {
       <div className="flex flex-col gap-4 md:pl-6 md:border-l border-border/40 h-full justify-between">
         <div className="flex flex-col gap-3">
           <span className="text-[10px] font-mono text-gold-300 tracking-widest uppercase mb-1">
-            Colosenses 3:23
+            {t('verse')}
           </span>
           <blockquote className="text-xs md:text-sm text-foreground/90 font-light italic leading-relaxed border-l-2 border-gold-400/50 pl-3">
             {t('quote')}

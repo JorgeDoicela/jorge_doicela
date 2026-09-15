@@ -69,47 +69,54 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             
-            # Instalar dependencias del backend de forma dedicada con filtro de monorepo pnpm en producción
+            # 1. Detener procesos en PM2 para liberar los file descriptors de SQLite en memoria
+            pm2 stop pm2.config.js 2>/dev/null || true
+            
+            # 2. Instalar dependencias del backend en producción con filtro monorepo
             pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts
             
-            # Limpieza y reinicio total de las 3 bases de datos en producción (reconstrucción limpia desde cero)
-            rm -f backend/data/*.sqlite backend/data/*.sqlite-wal backend/data/*.sqlite-shm 2>/dev/null || true
-            rm -f portfolio.sqlite *.sqlite-wal *.sqlite-shm 2>/dev/null || true
-            rm -f backend/portfolio.sqlite backend/bible.sqlite backend/software.sqlite 2>/dev/null || true
-            rm -f backend/*.sqlite-wal backend/*.sqlite-shm 2>/dev/null || true
+            # 3. Limpieza física y reinicio total de las bases de datos en producción
+            rm -f backend/data/*.sqlite* 2>/dev/null || true
+            rm -f backend/*.sqlite* 2>/dev/null || true
+            rm -f *.sqlite* 2>/dev/null || true
             mkdir -p backend/data
             
-            # Reconstrucción atómica y seeding completo desde los corpus JSON
-            cd backend && node dist/bible/cli/seed-corpus.js && node dist/software/cli/seed-software.js && node dist/portfolio/cli/seed-portfolio.js && cd ..
+            # 4. Reconstrucción atómica y seeding completo desde los corpus JSON compilados
+            echo "==> [CI/CD] Sembrando base de datos: bible.sqlite..."
+            node backend/dist/bible/cli/seed-corpus.js
+            echo "==> [CI/CD] Sembrando base de datos: software.sqlite..."
+            node backend/dist/software/cli/seed-software.js
+            echo "==> [CI/CD] Sembrando base de datos: portfolio.sqlite..."
+            node backend/dist/portfolio/cli/seed-portfolio.js
             
-            # Asegurar recursos estáticos en standalone de forma limpia e idempotente
+            # 5. Asegurar recursos estáticos en standalone de forma limpia e idempotente
             rm -rf frontend/web/.next/standalone/frontend/web/public frontend/web/.next/standalone/frontend/web/.next/static
             mkdir -p frontend/web/.next/standalone/frontend/web/.next
             cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/public
             cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/static
             
-            # Garantizar permisos de lectura y ejecución para el servidor web (Nginx / www-data)
+            # 6. Garantizar permisos de lectura y ejecución para el servidor web (Nginx / www-data)
             chmod o+x /home/admin ${{ secrets.TARGET_DIR }} 2>/dev/null || true
             chmod -R o+rX frontend
             
-            # Actualizar y validar configuración de Nginx de forma automática
+            # 7. Actualizar y validar configuración de Nginx de forma automática
             if [ -f "nginx/jorgedoicela.com.conf" ]; then
               sudo cp nginx/jorgedoicela.com.conf /etc/nginx/sites-available/jorgedoicela.com
               sudo ln -sf /etc/nginx/sites-available/jorgedoicela.com /etc/nginx/sites-enabled/
               sudo nginx -t && sudo systemctl reload nginx
             fi
 
-            # Construir/actualizar imagen del sandbox efímero si existen cambios (aprovecha Docker cache)
+            # 8. Construir/actualizar imagen del sandbox efímero si existen cambios
             if [ -d "backend/src/portfolio/docker" ]; then
               docker build -t portfolio-sandbox:latest backend/src/portfolio/docker/ 2>/dev/null || true
             fi
 
-            # Garantizar acceso al socket de Docker para el proceso backend en PM2
+            # 9. Garantizar acceso al socket de Docker para el proceso backend en PM2
             id -nG admin 2>/dev/null | grep -q docker || sudo usermod -aG docker admin 2>/dev/null || true
             sudo chmod 660 /var/run/docker.sock 2>/dev/null || true
 
-            # Reiniciar aplicaciones en PM2 con reinicio limpio (imprescindible para procesos en fork_mode)
-            pm2 restart pm2.config.js --update-env || pm2 start pm2.config.js
+            # 10. Iniciar o reiniciar aplicaciones en PM2 con nuevo entorno y guardar estado
+            pm2 restart pm2.config.js --update-env || pm2 start pm2.config.js --update-env
             pm2 save
 
       - name: Purgar automáticamente caché en Cloudflare

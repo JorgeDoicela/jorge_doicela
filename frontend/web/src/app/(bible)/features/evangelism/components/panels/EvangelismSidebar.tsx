@@ -14,7 +14,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
-import { EvangelismSubSuite } from '../../types';
+import { EvangelismTab } from '../../types';
 
 export const EvangelismSidebar: React.FC = () => {
   const pathname = usePathname() || '';
@@ -26,22 +26,22 @@ export const EvangelismSidebar: React.FC = () => {
   const isOpen = passageContext?.isLeftSidebarOpen ?? true;
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
-  const subSuite = evangelism?.subSuite ?? 'pathways';
-  const setSubSuite = evangelism?.setSubSuite ?? (() => {});
+  const activeTab = evangelism?.activeTab ?? 'pathways';
+  const setActiveTab = evangelism?.setActiveTab ?? (() => {});
 
   React.useEffect(() => {
     if (pathname.includes('/objections')) {
-      setSubSuite('objections');
+      setActiveTab('objections');
     } else if (pathname.includes('/tracts')) {
-      setSubSuite('tracts');
+      setActiveTab('tracts');
     } else if (pathname.includes('/pathways')) {
-      setSubSuite('pathways');
+      setActiveTab('pathways');
     }
-  }, [pathname, setSubSuite]);
+  }, [pathname, setActiveTab]);
 
   if (!isOpen) return null;
 
-  const suites: { key: EvangelismSubSuite; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  const tabs: { key: EvangelismTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'pathways', label: 'Rutas', icon: Compass },
     { key: 'objections', label: 'Objeciones', icon: ShieldAlert },
     { key: 'tracts', label: 'Tratados', icon: FileText },
@@ -101,17 +101,17 @@ export const EvangelismSidebar: React.FC = () => {
           </button>
         </div>
 
-        {/* Selector de Sub-Suite Geist Segmented Control */}
+        {/* Selector de Pestañas Geist Segmented Control */}
         <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
           <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
-            {suites.map((s) => {
-              const active = subSuite === s.key;
-              const Icon = s.icon;
+            {tabs.map((t) => {
+              const active = activeTab === t.key;
+              const Icon = t.icon;
               return (
                 <button
-                  key={s.key}
+                  key={t.key}
                   type="button"
-                  onClick={() => setSubSuite(s.key)}
+                  onClick={() => setActiveTab(t.key)}
                   className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     active
                       ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
@@ -119,17 +119,17 @@ export const EvangelismSidebar: React.FC = () => {
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
-                  <span>{s.label}</span>
+                  <span>{t.label}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Contenido Dinámico según la Sub-Suite */}
+        {/* Contenido Dinámico según la Pestaña Activa */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
-          {/* Sub-Suite 1: Rutas de Evangelismo */}
-          {subSuite === 'pathways' && (
+          {/* Herramienta 1: Rutas de Evangelismo */}
+          {activeTab === 'pathways' && (
             <div className="space-y-1.5">
               <div className="px-1 mb-2">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
@@ -168,8 +168,8 @@ export const EvangelismSidebar: React.FC = () => {
             </div>
           )}
 
-          {/* Sub-Suite 2: Objeciones Apologéticas */}
-          {subSuite === 'objections' && (
+          {/* Herramienta 2: Objeciones Apologéticas */}
+          {activeTab === 'objections' && (
             <div className="space-y-3">
               {/* Buscador de Objeciones */}
               <div className="relative">
@@ -223,8 +223,8 @@ export const EvangelismSidebar: React.FC = () => {
             </div>
           )}
 
-          {/* Sub-Suite 3: Tratados & Bosquejos */}
-          {subSuite === 'tracts' && (
+          {/* Herramienta 3: Tratados & Bosquejos */}
+          {activeTab === 'tracts' && (
             <div className="space-y-1.5">
               <div className="px-1 mb-2">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">

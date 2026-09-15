@@ -96,7 +96,7 @@ export function BiblePurposeSection() {
                                 ? '/study/parallel'
                                 : activePurpose === 'originals'
                                 ? '/study/interlinear'
-                                : '/study/historical-context'
+                                : '/study/atlas'
                         }
                         className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-white text-black hover:bg-zinc-200 text-sm font-semibold transition-all shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
                     >
@@ -139,14 +139,14 @@ export function BiblePurposeSection() {
                                         <div className="flex items-center gap-2 text-xs">
                                             <span className="text-zinc-300 font-mono text-[11px]">18px</span>
                                             <span className="text-zinc-600">·</span>
-                                            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300 text-[11px] font-semibold">Prosa</span>
+                                            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300 text-[11px] font-semibold">{tLanding('prose')}</span>
                                         </div>
                                     </div>
 
                                     <div className="p-3 sm:p-3.5 rounded-xl bg-zinc-950/90 border border-zinc-850 space-y-1">
                                         <div className="text-[9.5px] font-mono text-zinc-500 uppercase tracking-wider flex items-center justify-between">
                                             <span>Salmos 23:2-3 · RVR1960</span>
-                                            <span className="text-[9px] text-zinc-500 font-mono">Modo Lectura</span>
+                                            <span className="text-[9px] text-zinc-500 font-mono">{tLanding('readingMode')}</span>
                                         </div>
                                         <p className="font-serif text-[12px] sm:text-[13px] text-zinc-200 leading-[1.7]">
                                             {tLanding('purposeDailyCard1Sample')}
@@ -478,15 +478,15 @@ export function BiblePurposeSection() {
                                 <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-4.5 shadow-inner mb-auto space-y-2 text-[10.5px] font-mono">
                                     <div className="flex items-center justify-between p-2 rounded bg-zinc-950 border border-zinc-800/80">
                                         <span className="text-white font-semibold">{tLanding('purposeHistoryCard2Era1')}</span>
-                                        <span className="text-zinc-500 text-[9.5px]">Monarquía</span>
+                                        <span className="text-zinc-500 text-[9.5px]">{tLanding('eraMonarchy')}</span>
                                     </div>
                                     <div className="flex items-center justify-between p-2 rounded bg-zinc-950 border border-zinc-800/80">
                                         <span className="text-white font-semibold">{tLanding('purposeHistoryCard2Era2')}</span>
-                                        <span className="text-zinc-500 text-[9.5px]">Profecía</span>
+                                        <span className="text-zinc-500 text-[9.5px]">{tLanding('eraProphecy')}</span>
                                     </div>
                                     <div className="flex items-center justify-between p-2 rounded bg-zinc-950 border border-zinc-800/80">
                                         <span className="text-white font-semibold">{tLanding('purposeHistoryCard2Era3')}</span>
-                                        <span className="text-zinc-500 text-[9.5px]">Imperio</span>
+                                        <span className="text-zinc-500 text-[9.5px]">{tLanding('eraEmpire')}</span>
                                     </div>
                                     <div className="text-[9.5px] font-mono text-zinc-500 pt-1 border-t border-zinc-800">
                                         {tLanding('purposeHistoryCard2Time')}

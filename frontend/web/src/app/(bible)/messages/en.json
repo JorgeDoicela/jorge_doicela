@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Modular Bible | Jorge Doicela",
-    "description": "Exegesis and Bible study platform featuring 10 exegesis and evangelism suites, Masoretic BHS / LXX morphology, Strong dictionaries, soteriological pathways, and historical context."
+    "description": "Exegesis and Bible study platform featuring 8 exegesis and evangelism study tools, Masoretic BHS / LXX morphology, Strong dictionaries, soteriological pathways, and historical context."
   },
   "Nav": {
     "landing": "Home",
@@ -10,8 +10,10 @@
     "portal": "Back to jorgedoicela.com",
     "portalShort": "Portal",
     "modularBible": "Modular Bible",
-    "studySuites": "Study Suites",
-    "selectSuite": "Select study suite",
+    "studyTools": "Study Tools",
+    "selectTool": "Select study tool",
+    "studySuites": "Study Tools",
+    "selectSuite": "Select study tool",
     "textExegesis": "Text & Exegesis",
     "historicalContext": "History & Context",
     "ministryApologetics": "Ministry & Apologetics",
@@ -150,6 +152,7 @@
     "openStudy": "Open Study",
     "startStudy": "Start Reading & Study",
     "exploreTools": "Explore Tools",
+    "studyTools": "Study Tools",
     "studyEngines": "Study Tools",
     "versionsAndLanguages": "Versions & Languages",
     "mobileApp": "Mobile App",
@@ -249,6 +252,11 @@
     "purposeCompare": "Compare Translations",
     "purposeOriginals": "Original Languages",
     "purposeHistory": "Maps & History",
+    "readingMode": "Reading Mode",
+    "prose": "Prose",
+    "eraMonarchy": "Monarchy",
+    "eraProphecy": "Prophecy",
+    "eraEmpire": "Empire",
 
     "purposeHistoryHeadline": "Explore the places, timelines, and archaeological heritage of Scripture",
     "purposeHistoryCta": "Explore Historical Context",
@@ -300,7 +308,7 @@
     "purposeOriginalsCard3SymC": "Theological meaning: Pastoral care of Yahweh",
 
     "purposeCompareHeadline": "Compare multiple translations verse by verse",
-    "purposeCompareCta": "Open Multi-Version Comparative Suite",
+    "purposeCompareCta": "Open Multi-Version Comparative Tool",
     "purposeCompareCard1Badge": "PARALLEL VIEW",
     "purposeCompareCard1Title": "Side-by-side translation comparison",
     "purposeCompareCard1Desc": "Examine lexical nuances between formal and thought-for-thought translations.",
@@ -814,12 +822,31 @@
     "transliteration": "Transliteration",
     "pronunciation": "Pronunciation",
     "definition": "Lexical Definition",
-    "grammarCategory": "Grammatical Category"
+    "grammarCategory": "Grammatical Category",
+    "tabDoctrines": "Doctrines",
+    "tabCitations": "Citations",
+    "loadingLexicon": "Loading lexicon...",
+    "inText": "In the text:",
+    "totalOccurrences": "Total canonical occurrences:",
+    "noDirectDefinition": "No direct definition available.",
+    "synopticComparison": "Synoptic Comparison",
+    "synopticComparisonSubtitle": "Synchronic comparison of manuscripts and translations",
+    "copyText": "Copy text",
+    "author": "Author",
+    "approxDate": "Approx Date",
+    "notableLocations": "Notable Geographic Places",
+    "ministerialFocus": "Ministerial Value",
+    "readPassageInReader": "Read {book} {chapter} in Reader",
+    "historicalCataloging": "Historical information being cataloged.",
+    "chapterShort": "Ch. {chapter}",
+    "hebrewLexiconBadge": "Hebrew Lexicon (BDB • Gesenius)",
+    "greekLexiconBadge": "Greek Lexicon (Thayer • BDAG)"
   },
   "Evangelism": {
     "tabPathways": "Biblical Pathways",
     "tabObjections": "Apologetic Answers",
     "tabTracts": "Tracts & Outlines",
+    "motto": "Preach the Gospel to every creature (Mark 16:15)",
     "suiteMotto": "Preach the Gospel to every creature (Mark 16:15)",
     "noPathways": "No evangelistic pathways available.",
     "noObjectionsFound": "No objections found matching your search criteria.",
@@ -852,7 +879,46 @@
     "generalAudience": "General Audience",
     "prayerOfFaithTitle": "Model Prayer of Faith",
     "prayerDisclaimer": "* Pastoral note: This prayer is neither a magical chant nor a ritual, but a heartfelt expression of repentance and faith in Jesus Christ.",
-    "nextStepsTitle": "First Steps of Christian Growth"
+    "nextStepsTitle": "First Steps of Christian Growth",
+    "apologeticsBannerTitle": "Faithful Biblical Apologetics (1 Pet 3:15)",
+    "apologeticsBannerQuote": "«Always be prepared to make a defense to anyone who asks you for a reason for the hope that is in you; yet do it with gentleness and respect.»",
+    "bookInEvangelism": "{book} in Evangelism",
+    "soteriologyGlossary": "Fundamental Soteriological Glossary",
+    "dialogueAdviceTitle": "Pastoral Advice for Dialogue",
+    "dialogueAdviceDesc": "Avoid winning arguments and focus on winning people for Christ. Always respond with Scripture, not personal opinions; the Word is living and active.",
+    "citationsLabel": "Citations:",
+    "doctrines": {
+      "justification": {
+        "term": "Justification",
+        "originalGreek": "dikaiōsis (δικαίωσις)",
+        "definition": "Sovereign judicial verdict wherein God declares the guilty sinner righteous, imputing the perfect righteousness of Christ through faith.",
+        "reference": "Romans 3:24, Romans 5:1"
+      },
+      "propitiation": {
+        "term": "Propitiation",
+        "originalGreek": "hilasmos (ἱλασμός)",
+        "definition": "Substitutionary sacrifice that satisfies and fully appeases the holy and righteous wrath of God against sin at the Cross.",
+        "reference": "1 John 2:2, Romans 3:25"
+      },
+      "grace": {
+        "term": "Grace",
+        "originalGreek": "charis (χάρις)",
+        "definition": "The unmerited favor and boundless lovingkindness of God freely granted to rebels deserving of condemnation.",
+        "reference": "Ephesians 2:8-9, Titus 2:11"
+      },
+      "savingFaith": {
+        "term": "Saving Faith",
+        "originalGreek": "pistis (πίστις)",
+        "definition": "Full surrender and trust of the soul in Jesus Christ as Lord and Savior, resting in His finished redemptive work.",
+        "reference": "Romans 10:9-10, Hebrews 11:1"
+      },
+      "regeneration": {
+        "term": "Regeneration",
+        "originalGreek": "palingenesia (παλιγγενεσία)",
+        "definition": "The internal spiritual resurrection wrought exclusively by the Holy Spirit, imparting a new heart alive unto God.",
+        "reference": "Titus 3:5, John 3:3-5"
+      }
+    }
   }
 }
 

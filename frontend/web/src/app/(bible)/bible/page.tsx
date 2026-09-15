@@ -22,7 +22,7 @@ export default function BibleLandingPage() {
                 {/* Hero Editorial */}
                 <BibleHeroSection studyUrl={studyUrl} />
 
-                {/* Carrusel de Motores Exegéticos */}
+                {/* Carrusel de Herramientas de Estudio */}
                 <BibleEnginesCarousel />
 
                 {/* Secciones por Propósito de Estudio */}

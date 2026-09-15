@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 import { useParallelContextSafe } from '../../context/ParallelContext';
-import { computeWordDiff, TRANSLATION_APPROACHES } from '../../../textual-diff/utils/diffEngine';
+import { computeWordDiff, TRANSLATION_APPROACHES } from '../../textual-diff';
 import { StrongMorphologyInspector } from '../../../../components/StrongMorphologyInspector';
 
 export const ParallelDiffInspector: React.FC = () => {

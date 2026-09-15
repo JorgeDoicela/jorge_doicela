@@ -31,6 +31,7 @@ export class MorphologyToken {
   @Column({ length: 100 })
   transliteration: string; // Transliteración fonética
 
+  @Index()
   @Column({ length: 10, nullable: true })
   strongCode: string; // Ej: 'H7225'
 

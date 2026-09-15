@@ -6,8 +6,9 @@ import {
   ParallelViewGrid,
   useParallelContext,
   ParallelVerseRow,
+  TextualDiffModal,
+  VerseComparisonData,
 } from '../../../features/parallel-view';
-import { TextualDiffModal, VerseComparisonData } from '../../../features/textual-diff';
 import { useBiblePassage } from '../../../context/BiblePassageContext';
 import { BiblePassageToolbar } from '../../../components/BiblePassageToolbar';
 

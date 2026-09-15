@@ -6,7 +6,14 @@ Este documento detalla el modelo de datos en `bible.sqlite`, la organización de
 
 ## 1. Modelo de Datos Relacional (`bible.sqlite`)
 
-La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rápidas mediante **`better-sqlite3` en modo WAL**:
+La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rápidas mediante **`better-sqlite3` en modo WAL** con los siguientes pragmas de producción (`prepareDatabase`):
+* `enableWAL: true`: Permite lecturas y escrituras simultáneas sin bloqueos.
+* `PRAGMA foreign_keys = ON`: Garantiza la integridad referencial y borrado en cascada en runtime.
+* `PRAGMA synchronous = NORMAL`: Minimiza I/O en disco para el entorno de 1 GB de RAM.
+* `PRAGMA busy_timeout = 5000`: Espera defensiva ante bloqueos concurrentes.
+* `PRAGMA cache_size = -32000`: Reserva 32 MB de caché en RAM para acelerar consultas frecuentes.
+* `PRAGMA temp_store = MEMORY`: Ordenamientos y subconsultas en RAM volátil.
+* `PRAGMA journal_size_limit = 67108864`: Límite de 64 MB para el WAL para no saturar el almacenamiento del VPS.
 
 ```text
 ┌──────────────┐       ┌─────────────────┐       ┌──────────────────────┐
@@ -15,10 +22,10 @@ La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rá
 │ id (PK)      │       │ id (PK)         │       │ id (PK)              │
 │ name         │       │ name            │       │ strongCode (UNIQUE)  │
 │ abbreviation │       │ abbreviation    │       │ language             │
-│ testament    │       │ language        │       │ lemma                │
-└──────┬───────┘       └────────┬────────┘       │ transliteration      │
-       │                        │                │ shortDefinition      │
-       │ 1                      │ 1              │ extendedDefinition   │
+│ order (UQ)   │       │ language        │       │ lemma                │
+│ testament    │       └────────┬────────┘       │ transliteration      │
+└──────┬───────┘                                 │ shortDefinition      │
+       │                        │                │ extendedDefinition   │
        │                        │                └──────────┬───────────┘
        │ N                      │ N                         │ 1
 ┌──────┴────────────────────────┴────────┐                  │
@@ -49,13 +56,13 @@ La base de datos física `bible.sqlite` está optimizada para lecturas ultra-rá
 │ id (PK)                │       │ id (PK)                │       │ id (PK)                │
 │ language (PK)          │       │ language (PK)          │       │ language (PK)          │
 │ name                   │       │ name                   │       │ title                  │
-│ originalName (JSON)    │       │ type (INDEX)           │       │ slug (INDEX)           │
+│ originalName (JSON)    │       │ type (INDEX)           │       │ slug                   │
 │ coordinates (JSON)     │       │ startYearBC (INDEX)    │       │ category (INDEX)       │
 │ category (INDEX)       │       │ endYearBC (INDEX)      │       │ region                 │
-│ era (JSON)             │       │ kingdom                │       │ publishDate            │
+│ era (JSON)             │       │ kingdom                │       │ publishDate (DATE)     │
 │ modernName             │       │ evaluation             │       │ summary                │
 │ description            │       │ biblicalReferences     │       │ contentMarkdown        │
-│ archaeologicalNotes    │       │ keyEvents              │       │ biblicalReferences     │
+│ archaeologicalNotes    │       │ keyEvents              │       │ UQ(slug, language)     │
 └────────────────────────┘       └────────────────────────┘       └────────────────────────┘
 
 

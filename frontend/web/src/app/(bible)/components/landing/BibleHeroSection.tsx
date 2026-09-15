@@ -39,7 +39,7 @@ export function BibleHeroSection({ studyUrl = '/study' }: BibleHeroSectionProps)
                     <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full max-h-[460px] sm:max-h-[480px]">
                         <Image
                             src="/bible/images/hero_editorial_dark.jpg"
-                            alt="Escritorio editorial de estudio bíblico con biblia abierta y suite digital"
+                            alt="Escritorio editorial de estudio bíblico con biblia abierta y herramientas digitales"
                             fill
                             priority
                             className="object-cover filter brightness-[0.92] contrast-[1.05] dark:brightness-[0.80] transition-all duration-700"

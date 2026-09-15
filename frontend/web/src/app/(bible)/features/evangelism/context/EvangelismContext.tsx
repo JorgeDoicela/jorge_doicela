@@ -6,7 +6,7 @@ import {
   EvangelismPathway,
   EvangelismObjection,
   EvangelismTract,
-  EvangelismSubSuite,
+  EvangelismTab,
 } from '../types';
 
 export type EvangelismContextValue = ReturnType<typeof useEvangelism>;

@@ -89,7 +89,7 @@ interface SeedArchaeologyArticle {
   category: string;
   region: string;
   regionLabel: string;
-  publishDate: string;
+  publishDate: string; // Formato YYYY-MM-DD
   institutionOrAuthor: string;
   readTimeMinutes: number;
   summary: string;
@@ -241,8 +241,10 @@ export function seedCorpus(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR NOT NULL,
       abbreviation VARCHAR NOT NULL UNIQUE,
+      "order" INTEGER NOT NULL UNIQUE,
       testament VARCHAR NOT NULL
     );
+    CREATE INDEX IF NOT EXISTS IDX_books_testament ON books(testament);
 
     CREATE TABLE translations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -276,6 +278,7 @@ export function seedCorpus(
       extendedDefinition TEXT
     );
     CREATE INDEX IF NOT EXISTS IDX_lexicon_strong ON lexicon_entries(strongCode);
+    CREATE INDEX IF NOT EXISTS IDX_lexicon_lang ON lexicon_entries(language);
 
     CREATE TABLE morphology_tokens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -338,7 +341,7 @@ export function seedCorpus(
       category VARCHAR(64) NOT NULL,
       region VARCHAR(64) NOT NULL,
       regionLabel VARCHAR(128) NOT NULL,
-      publishDate VARCHAR(32) NOT NULL,
+      publishDate DATE NOT NULL,
       institutionOrAuthor VARCHAR(256) NOT NULL,
       readTimeMinutes INTEGER NOT NULL,
       summary TEXT NOT NULL,
@@ -366,20 +369,7 @@ export function seedCorpus(
       steps TEXT NOT NULL,
       PRIMARY KEY (id, language)
     );
-    CREATE INDEX IF NOT EXISTS IDX_pathways_slug ON evangelism_pathways(slug);
-
-    CREATE TABLE evangelism_objections (
-      id VARCHAR(64) NOT NULL,
-      language VARCHAR(10) NOT NULL DEFAULT 'es',
-      category VARCHAR(64) NOT NULL,
-      question VARCHAR(256) NOT NULL,
-      summary TEXT NOT NULL,
-      biblicalAnswer TEXT NOT NULL,
-      keyVerses TEXT NOT NULL,
-      practicalAdvice TEXT NOT NULL,
-      PRIMARY KEY (id, language)
-    );
-    CREATE INDEX IF NOT EXISTS IDX_objections_cat ON evangelism_objections(category);
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_pathways_slug_lang ON evangelism_pathways(slug, language);
 
     CREATE TABLE evangelism_tracts (
       id VARCHAR(64) NOT NULL,
@@ -393,18 +383,31 @@ export function seedCorpus(
       nextSteps TEXT NOT NULL,
       PRIMARY KEY (id, language)
     );
-    CREATE INDEX IF NOT EXISTS IDX_tracts_slug ON evangelism_tracts(slug);
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_tracts_slug_lang ON evangelism_tracts(slug, language);
+
+    CREATE TABLE evangelism_objections (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      category VARCHAR(64) NOT NULL,
+      question VARCHAR(256) NOT NULL,
+      summary TEXT NOT NULL,
+      biblicalAnswer TEXT NOT NULL,
+      keyVerses TEXT NOT NULL,
+      practicalAdvice TEXT NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_objections_cat ON evangelism_objections(category);
   `);
 
   // Sembrar los 66 libros canónicos de forma segura
   console.log('[CorpusSeeder] Sembrando catálogo de 66 libros canónicos...');
   const seedBooksTx = db.transaction(() => {
     const insertStmt = db.prepare(
-      'INSERT INTO books (id, name, abbreviation, testament) VALUES (?, ?, ?, ?)',
+      'INSERT INTO books (id, name, abbreviation, "order", testament) VALUES (?, ?, ?, ?, ?)',
     );
 
     for (const b of CANONICAL_BOOKS) {
-      insertStmt.run(b.id, b.name, b.abbreviation, b.testament);
+      insertStmt.run(b.id, b.name, b.abbreviation, b.id, b.testament);
     }
   });
   seedBooksTx();

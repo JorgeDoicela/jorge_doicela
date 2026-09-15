@@ -11,10 +11,8 @@ import {
   Verse,
   BookInfo,
 } from '../../types';
-import { UnifiedPassagePicker } from '../../../books/components/passage-picker/UnifiedPassagePicker';
-import { getChaptersForBookId } from '../../../books/data/canonicCategories';
-import { TranslationSelector } from '../../../translations/components/translation-selector/TranslationSelector';
-import { Book } from '../../../books/hooks/useBooks';
+import { UnifiedPassagePicker, getChaptersForBookId, Book } from '../../../../entities/books';
+import { TranslationSelector } from '../../../../entities/translations';
 import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
 

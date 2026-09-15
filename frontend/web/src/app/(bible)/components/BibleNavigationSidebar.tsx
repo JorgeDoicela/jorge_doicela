@@ -15,9 +15,7 @@ import {
   Shield,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../context/BiblePassageContext';
-import { getChaptersForBookId } from '../features/books/data/canonicCategories';
-import { getBookHistoricalInfo } from '../features/books/data/bookHistoricalMetadata';
-import { Book } from '../features/books';
+import { Book, getChaptersForBookId, getBookHistoricalInfo } from '../entities/books';
 
 export interface BibleNavigationSidebarProps {
   books?: Book[];
@@ -41,7 +39,10 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
   className = '',
 }) => {
   const pathname = usePathname() || '';
-  const isHistoricalContext = pathname.includes('/historical-context');
+  const isHistoricalContext =
+    pathname.includes('/atlas') ||
+    pathname.includes('/timeline') ||
+    pathname.includes('/archaeology');
   const isEvangelism = pathname.includes('/evangelism');
 
   const tStudio = useTranslations('Studio');

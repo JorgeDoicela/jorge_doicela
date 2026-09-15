@@ -9,6 +9,7 @@ export class LexiconEntry {
   @Column({ length: 10 })
   strongCode: string; // Ej: 'H7225', 'G3056'
 
+  @Index()
   @Column({ length: 20 })
   language: 'Hebrew' | 'Aramaic' | 'Greek';
 

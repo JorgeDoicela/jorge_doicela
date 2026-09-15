@@ -14,15 +14,17 @@ export class Verse {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @ManyToOne(() => Book, (book) => book.verses, {
     onDelete: 'CASCADE',
-    eager: true,
+    eager: false,
   })
   book: Book;
 
+  @Index()
   @ManyToOne(() => Translation, (translation) => translation.verses, {
     onDelete: 'CASCADE',
-    eager: true,
+    eager: false,
   })
   translation: Translation;
 

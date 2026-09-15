@@ -147,7 +147,7 @@ export async function fetchTimelineEvents(
     if (toYearBC !== undefined) params.append('to', toYearBC.toString());
     if (lang) params.append('lang', lang);
 
-    const res = await fetch(`${API_URL}/bible/historical/timeline?${params.toString()}`);
+    const res = await fetch(`${API_URL}/bible/timeline?${params.toString()}`);
     if (!res.ok) return [];
 
     const json = await res.json();

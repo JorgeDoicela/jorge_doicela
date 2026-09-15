@@ -6,7 +6,7 @@ import { GetTimelineQueryDto } from '../dto/get-timeline-query.dto';
 export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}
 
-  @Get(['timeline', 'historical/timeline'])
+  @Get('timeline')
   async getTimeline(@Query() query: GetTimelineQueryDto) {
     return this.timelineService.getTimelineEvents(
       query.type,

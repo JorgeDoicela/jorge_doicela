@@ -108,7 +108,7 @@ El backend traduce automáticamente las abreviaciones canónicas en español a c
 
 ## 5. Avisos Oficiales de Atribución de Copyright (Frontend UI)
 
-El lector continuo ([`ContinuousReadingView.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/features/verses/components/continuous-view/ContinuousReadingView.tsx)) y el hook de versiones ([`useTranslations.ts`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/features/translations/hooks/useTranslations.ts)) muestran la nota de atribución legal requerida al pie de cada capítulo:
+El lector continuo ([`ContinuousReadingView.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/features/verses/components/continuous-view/ContinuousReadingView.tsx)) y el hook de versiones ([`useTranslations.ts`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(bible)/entities/translations/hooks/useTranslations.ts)) muestran la nota de atribución legal requerida al pie de cada capítulo:
 
 * **Nueva Biblia de las Américas (`NBLA`):**  
   > *«Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.»*

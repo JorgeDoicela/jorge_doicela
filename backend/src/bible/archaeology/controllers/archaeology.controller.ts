@@ -12,7 +12,7 @@ import { GetArticlesQueryDto } from '../dto/get-articles-query.dto';
 export class ArchaeologyController {
   constructor(private readonly archaeologyService: ArchaeologyService) {}
 
-  @Get(['archaeology/articles', 'historical/articles'])
+  @Get('archaeology/articles')
   async getArticles(@Query() query: GetArticlesQueryDto) {
     return this.archaeologyService.getArticles(
       query.category,
@@ -21,7 +21,7 @@ export class ArchaeologyController {
     );
   }
 
-  @Get(['archaeology/articles/:slug', 'historical/articles/:slug'])
+  @Get('archaeology/articles/:slug')
   async getArticleBySlug(
     @Param('slug') slug: string,
     @Query('lang') lang?: string,

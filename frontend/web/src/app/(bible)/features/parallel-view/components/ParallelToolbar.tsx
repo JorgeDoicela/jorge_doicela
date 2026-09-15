@@ -2,19 +2,17 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { Translation } from '../../translations/hooks/useTranslations';
+import { Translation } from '../../../entities/translations';
 
 export type BibleStudyMode =
   | 'standard'
   | 'parallel'
   | 'interlinear'
   | 'word-study'
-  | 'historical-context'
-  // Modos y aliases compatibles
-  | 'lexicon'
   | 'atlas'
   | 'timeline'
-  | 'archaeology';
+  | 'archaeology'
+  | 'evangelism';
 
 interface ParallelToolbarProps {
   studyMode: BibleStudyMode;
@@ -83,7 +81,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             type="button"
             onClick={() => onChangeStudyMode('word-study')}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'word-study' || studyMode === 'lexicon'
+              studyMode === 'word-study'
                 ? 'bg-background text-foreground shadow-sm font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
@@ -93,9 +91,9 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => onChangeStudyMode('historical-context')}
+            onClick={() => onChangeStudyMode('atlas')}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-              studyMode === 'historical-context' || studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology'
+              studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology'
                 ? 'bg-background text-foreground shadow-sm font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
@@ -148,14 +146,14 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
       )}
 
       {/* Indicador para vista de Análisis de Palabra */}
-      {(studyMode === 'word-study' || studyMode === 'lexicon') && (
+      {studyMode === 'word-study' && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
           {t('indicators.wordStudy')}
         </div>
       )}
 
       {/* Indicador para vista de Contexto Histórico */}
-      {(studyMode === 'historical-context' || studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology') && (
+      {(studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology') && (
         <div className="text-[11px] text-accents-4 font-mono hidden sm:block">
           {t('indicators.historical')}
         </div>

@@ -3,8 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { useBooks, Book } from '../features/books';
-import { getChaptersForBookId } from '../features/books/data/canonicCategories';
+import { useBooks, Book, getChaptersForBookId } from '../entities/books';
 import {
   useTranslations,
   Translation,
@@ -13,7 +12,7 @@ import {
   getDefaultTranslationId,
   getSavedTranslationId,
   getTranslationLanguageGroup,
-} from '../features/translations';
+} from '../entities/translations';
 import { useBibleKeybindings } from '../hooks/useBibleKeybindings';
 
 

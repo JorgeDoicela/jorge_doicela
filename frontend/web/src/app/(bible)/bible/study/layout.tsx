@@ -133,7 +133,7 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
           <BibleNavigationSidebar />
         )}
 
-        {/* Canvas Central de Contenido y Suites de Estudio con Scroll Independiente */}
+        {/* Canvas Central de Contenido y Herramientas de Estudio con Scroll Independiente */}
         <main
           ref={mainRef}
           onScroll={handleMainScroll}

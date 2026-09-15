@@ -14,7 +14,7 @@ import { StrongMorphologyInspector } from './StrongMorphologyInspector';
 import { ParallelVerseInspector } from './ParallelVerseInspector';
 import { BookHistoricalProfile } from './BookHistoricalProfile';
 import { EvangelismApologeticsProfile } from './EvangelismApologeticsProfile';
-import { Translation } from '../features/translations';
+import { Translation } from '../entities/translations';
 
 export interface BibleExegesisInspectorProps {
   isOpen?: boolean;
@@ -41,7 +41,10 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
   const pathname = usePathname() || '';
   const passageContext = useBiblePassageSafe();
 
-  const isHistoricalContext = pathname.includes('/historical-context');
+  const isHistoricalContext =
+    pathname.includes('/atlas') ||
+    pathname.includes('/timeline') ||
+    pathname.includes('/archaeology');
   const isEvangelism = pathname.includes('/evangelism');
   const isOriginalLanguages = pathname.includes('/parallel') || pathname.includes('/interlinear') || pathname.includes('/word-study');
 
@@ -115,7 +118,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
 
   return (
     <>
-      {/* Backdrop en Móviles / Tablets (< lg) */}
+      {/* Backdrop en Pantallas Móviles (< lg) */}
       <div
         onClick={handleClose}
         className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
@@ -123,14 +126,14 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
       />
       <aside
         id="bible-exegesis-inspector"
-        aria-label={tStudio('toggleInspector')}
-        className={`fixed inset-y-0 right-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 xl:w-96 flex-shrink-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden ${className}`}
+        aria-label={tStudio('inspectorTitle')}
+        className={`fixed inset-y-0 right-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 xl:w-96 flex-shrink-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none transition-all duration-300 overflow-hidden lg:overflow-visible print:hidden ${className}`}
       >
         {/* Handle de Colapso Interactivo en Borde Divisorio Izquierdo (Estilo DIITRA) */}
         <div
           className="hidden lg:flex absolute top-0 -left-3 w-6 h-full cursor-pointer z-30 group/border items-center justify-center select-none"
           onClick={handleClose}
-          title={tStudio('closeInspector') || 'Ocultar inspector'}
+          title={tStudio('closeInspector')}
         >
           {/* Línea divisoria reactiva al hover */}
           <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-transparent group-hover/border:bg-zinc-400 dark:group-hover/border:bg-zinc-500 transition-colors duration-150" />
@@ -149,26 +152,24 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
               strokeLinejoin="round"
             >
               <line x1="8" y1="2" x2="8" y2="14" />
-              <polyline points="4 6 1 8 4 10" />
-              <polyline points="12 6 15 8 12 10" />
+              <polyline points="10 4 14 8 10 12" />
+              <polyline points="4 4 0 8 4 12" />
             </svg>
           </div>
         </div>
 
-        {/* Cabecera del Inspector (visible solo en móvil como Drawer modal) */}
-        <div className="flex lg:hidden items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-zinc-800/80">
+        {/* Cabecera Móvil */}
+        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />
+            <BookMarked className="w-4 h-4 text-zinc-500" />
             <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              {tStudio('toggleInspector')}
+              {tStudio('inspectorTitle')}
             </span>
           </div>
           <button
             type="button"
             onClick={handleClose}
-            title={tStudio('closeInspector')}
-            aria-label={tStudio('closeInspector')}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
+            className="p-1 rounded-md text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -176,7 +177,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
 
         {/* Selector de Pestañas de Inspección Adaptativo (Geist / Vercel Style) */}
         <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          {/* Caso 1: Suite Historia & Contexto */}
+          {/* Caso 1: Herramientas de Historia & Contexto */}
           {isHistoricalContext && (
             <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
               <button
@@ -190,7 +191,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
                 title={tStudio('tabHistorical')}
               >
                 <Compass className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Histórico</span>
+                <span className="truncate">{tStudio('tabHistorical')}</span>
               </button>
               <button
                 type="button"
@@ -203,7 +204,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
                 title={tStudio('tabVersions')}
               >
                 <BookMarked className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Versiones</span>
+                <span className="truncate">{tStudio('tabVersions')}</span>
               </button>
               <button
                 type="button"
@@ -216,12 +217,12 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
                 title={tStudio('tabStrong')}
               >
                 <Languages className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Strong</span>
+                <span className="truncate">{tStudio('tabStrong')}</span>
               </button>
             </div>
           )}
 
-          {/* Caso 2: Suite Ministerio & Apologética */}
+          {/* Caso 2: Herramientas de Ministerio & Apologética */}
           {isEvangelism && (
             <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
               <button
@@ -235,7 +236,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
                 title={tStudio('tabApologetics')}
               >
                 <Shield className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Doctrina</span>
+                <span className="truncate">{tStudio('tabDoctrines')}</span>
               </button>
               <button
                 type="button"
@@ -248,7 +249,7 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
                 title={tStudio('tabVersions')}
               >
                 <BookMarked className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Citas</span>
+                <span className="truncate">{tStudio('tabCitations')}</span>
               </button>
               <button
                 type="button"
@@ -261,12 +262,12 @@ export const BibleExegesisInspector: React.FC<BibleExegesisInspectorProps> = ({
                 title={tStudio('tabStrong')}
               >
                 <Languages className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Strong</span>
+                <span className="truncate">{tStudio('tabStrong')}</span>
               </button>
             </div>
           )}
 
-          {/* Caso 3: Suite Texto & Exégesis */}
+          {/* Caso 3: Herramientas de Texto & Exégesis */}
           {!isHistoricalContext && !isEvangelism && (
             <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
               <button

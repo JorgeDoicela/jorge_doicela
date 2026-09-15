@@ -9,7 +9,7 @@ export default function BibleJsonLd() {
         'name': 'Biblia Modular | Plataforma de Estudio Exegético',
         'applicationCategory': 'EducationalApplication, ReferenceApplication',
         'operatingSystem': 'Web, iOS, Android',
-        'description': 'Plataforma de exégesis bíblica académica con suites de estudio modulares: Interlineal Inverso Masorético (BHS Hebreo / NA28 Griego), Léxicos Strong (BDB, Thayer, Gesenius), Atlas Bíblico WGS84, Cronología Sincrónica, Catálogo de Arqueología, Evangelización y App Móvil Expo.',
+        'description': 'Plataforma de exégesis bíblica académica con herramientas de estudio modulares: Interlineal Inverso Masorético (BHS Hebreo / NA28 Griego), Léxicos Strong (BDB, Thayer, Gesenius), Atlas Bíblico WGS84, Cronología Sincrónica, Catálogo de Arqueología, Evangelización y App Móvil Expo.',
         'inLanguage': ['es', 'en', 'he', 'grc'],
         'author': {
           '@type': 'Person',

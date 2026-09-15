@@ -26,7 +26,7 @@ export const EvangelismInspector: React.FC = () => {
 
   if (!isOpen) return null;
 
-  const subSuite = evangelism?.subSuite ?? 'pathways';
+  const activeTab = evangelism?.activeTab ?? 'pathways';
   const pathway = evangelism?.selectedPathway;
   const activeStep = pathway?.steps[evangelism?.activeStepIndex || 0];
   const totalSteps = pathway?.steps.length || 0;
@@ -94,12 +94,12 @@ export const EvangelismInspector: React.FC = () => {
             <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 dark:text-zinc-100">
               <Shield className="w-3.5 h-3.5 text-emerald-500" />
               <span>
-                {subSuite === 'pathways' && 'Guía de la Ruta Activa'}
-                {subSuite === 'objections' && 'Defensa de la Fe (1 Pe 3:15)'}
-                {subSuite === 'tracts' && 'Bosquejo del Tratado'}
+                {activeTab === 'pathways' && 'Guía de la Ruta Activa'}
+                {activeTab === 'objections' && 'Defensa de la Fe (1 Pe 3:15)'}
+                {activeTab === 'tracts' && 'Bosquejo del Tratado'}
               </span>
             </div>
-            {subSuite === 'pathways' && totalSteps > 0 && (
+            {activeTab === 'pathways' && totalSteps > 0 && (
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
                 Paso {currentStepNum} de {totalSteps}
               </span>
@@ -110,7 +110,7 @@ export const EvangelismInspector: React.FC = () => {
         {/* Contenido Contextual del Asistente */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
           {/* CASO 1: MODO RUTAS DE EVANGELISMO */}
-          {subSuite === 'pathways' && activeStep && (
+          {activeTab === 'pathways' && activeStep && (
             <div className="space-y-4">
               {/* Tarjeta del Paso Activo */}
               <div className="p-3.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xs space-y-2">
@@ -185,7 +185,7 @@ export const EvangelismInspector: React.FC = () => {
           )}
 
           {/* CASO 2: MODO OBJECIONES APOLOGÉTICAS */}
-          {subSuite === 'objections' && (
+          {activeTab === 'objections' && (
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-zinc-50/70 dark:bg-zinc-900/60 space-y-1.5">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold block">
@@ -209,7 +209,7 @@ export const EvangelismInspector: React.FC = () => {
           )}
 
           {/* CASO 3: MODO TRATADOS */}
-          {subSuite === 'tracts' && tract && (
+          {activeTab === 'tracts' && tract && (
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-zinc-50/70 dark:bg-zinc-900/60 space-y-2">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold block">

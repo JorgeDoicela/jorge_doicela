@@ -3,6 +3,7 @@ export * from './data/masoreticData';
 export * from './data/greekData';
 export * from './data/strongLexiconData';
 export * from './services/biblicalAudioService';
+export * from './services/interlinearApiService';
 export * from './components/AramaicSectionBanner';
 export * from './components/InterlinearControls';
 export * from './components/HebrewWordCard';

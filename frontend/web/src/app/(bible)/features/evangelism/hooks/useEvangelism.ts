@@ -7,6 +7,7 @@ import {
   EvangelismPathway,
   EvangelismObjection,
   EvangelismTract,
+  EvangelismTab,
   EvangelismSubSuite,
 } from '../types';
 import {
@@ -21,25 +22,25 @@ export function useEvangelism() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const urlTab = searchParams?.get('tab') as EvangelismSubSuite | null;
-  const initialSubSuite: EvangelismSubSuite =
+  const urlTab = searchParams?.get('tab') as EvangelismTab | null;
+  const initialTab: EvangelismTab =
     urlTab === 'pathways' || urlTab === 'objections' || urlTab === 'tracts'
       ? urlTab
       : 'pathways';
 
-  const [subSuite, setSubSuiteState] = useState<EvangelismSubSuite>(initialSubSuite);
+  const [activeTab, setActiveTabState] = useState<EvangelismTab>(initialTab);
 
   useEffect(() => {
     if (urlTab && (urlTab === 'pathways' || urlTab === 'objections' || urlTab === 'tracts')) {
-      setSubSuiteState(urlTab);
+      setActiveTabState(urlTab);
     }
   }, [urlTab]);
 
-  const setSubSuite = useCallback(
-    (newSuite: EvangelismSubSuite) => {
-      setSubSuiteState(newSuite);
+  const setActiveTab = useCallback(
+    (newTab: EvangelismTab) => {
+      setActiveTabState(newTab);
       const params = new URLSearchParams(searchParams?.toString() || '');
-      params.set('tab', newSuite);
+      params.set('tab', newTab);
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams]
@@ -128,8 +129,10 @@ export function useEvangelism() {
   }, []);
 
   return {
-    subSuite,
-    setSubSuite,
+    activeTab,
+    setActiveTab,
+    subSuite: activeTab, // Alias para compatibilidad
+    setSubSuite: setActiveTab, // Alias para compatibilidad
     pathways,
     selectedPathway,
     selectedPathwayId,

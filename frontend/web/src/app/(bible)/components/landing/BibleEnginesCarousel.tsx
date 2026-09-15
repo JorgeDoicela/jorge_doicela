@@ -53,21 +53,21 @@ export function BibleEnginesCarousel() {
             desc: tLanding('engine5Desc'),
         },
         {
-            href: '/study/historical-context?tab=atlas',
+            href: '/study/atlas',
             icon: MapPin,
             colorClass: 'bg-rose-500/10 border-rose-500/20 text-rose-500',
             title: tLanding('engine7Title'),
             desc: tLanding('engine7Desc'),
         },
         {
-            href: '/study/historical-context?tab=timeline',
+            href: '/study/timeline',
             icon: Clock,
             colorClass: 'bg-amber-400/10 border-amber-400/20 text-amber-500',
             title: tLanding('engine8Title'),
             desc: tLanding('engine8Desc'),
         },
         {
-            href: '/study/historical-context?tab=archaeology',
+            href: '/study/archaeology',
             icon: Landmark,
             colorClass: 'bg-teal-400/10 border-teal-400/20 text-teal-500',
             title: tLanding('engine9Title'),
@@ -136,7 +136,7 @@ export function BibleEnginesCarousel() {
     return (
         <section
             ref={enginesSectionRef}
-            id="motores"
+            id="herramientas"
             className="w-full flex flex-col gap-6 sm:gap-8 py-12 sm:py-16 md:py-20 overflow-hidden scroll-mt-16 sm:scroll-mt-24 md:scroll-mt-32 [--card-w:82vw] sm:[--card-w:84vw] md:[--card-w:min(82vw,1040px)] [--card-gap:1.5rem] sm:[--card-gap:2rem] md:[--card-gap:2.5rem] border-b border-border/40 select-none"
         >
             {/* Cabecera Equilibrada en 2 Líneas Estilo Google */}

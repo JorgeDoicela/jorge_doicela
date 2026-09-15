@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { VerseComparisonData } from '../types';
 import { TextualDiffViewer } from './TextualDiffViewer';
-import { Translation } from '../../translations/hooks/useTranslations';
-import { BibleSelect, BibleSelectOption } from '../../../components/BibleSelect';
+import { Translation } from '../../../../entities/translations';
+import { BibleSelect, BibleSelectOption } from '../../../../components/BibleSelect';
 
 interface TextualDiffModalProps {
   isOpen: boolean;

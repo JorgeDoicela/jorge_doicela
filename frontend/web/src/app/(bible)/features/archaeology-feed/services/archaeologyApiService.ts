@@ -12,7 +12,7 @@ export async function fetchArchaeologyArticles(
     if (query && query.trim()) params.append('q', query.trim());
     if (lang) params.append('lang', lang);
 
-    const res = await fetch(`${API_URL}/bible/historical/articles?${params.toString()}`);
+    const res = await fetch(`${API_URL}/bible/archaeology/articles?${params.toString()}`);
     if (!res.ok) return [];
 
     const json = await res.json();
@@ -31,7 +31,7 @@ export async function fetchArchaeologyArticleBySlug(
     const params = new URLSearchParams();
     if (lang) params.append('lang', lang);
 
-    const res = await fetch(`${API_URL}/bible/historical/articles/${slug}?${params.toString()}`);
+    const res = await fetch(`${API_URL}/bible/archaeology/articles/${slug}?${params.toString()}`);
     if (!res.ok) return null;
 
     const json = await res.json();

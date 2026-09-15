@@ -6,7 +6,7 @@ import { GetPlacesQueryDto } from '../dto/get-places-query.dto';
 export class AtlasController {
   constructor(private readonly atlasService: AtlasService) {}
 
-  @Get(['atlas/places', 'historical/atlas/places'])
+  @Get('atlas/places')
   async getPlaces(@Query() query: GetPlacesQueryDto) {
     return this.atlasService.getPlaces(query.category, query.q, query.lang);
   }

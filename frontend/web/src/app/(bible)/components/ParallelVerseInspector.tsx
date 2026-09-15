@@ -120,7 +120,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
         </div>
         <div className="space-y-1">
           <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-            Comparación Sinóptica
+            {tStudio('synopticComparison')}
           </p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-[220px] mx-auto">
             {tStudio('noVerseSelected')}
@@ -145,7 +145,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
           {localizedBookName} {verse.chapter}:{verse.verseNumber}
         </span>
         <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-0.5">
-          Comparación sincrónica de manuscritos y traducciones
+          {tStudio('synopticComparisonSubtitle')}
         </p>
       </div>
 
@@ -178,7 +178,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
                   type="button"
                   onClick={() => handleCopy(pv.text, `pv-${pv.translationId}`, pv.translationAbbr)}
                   className="p-1 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
-                  title="Copiar texto"
+                  title={tStudio('copyText')}
                 >
                   {copiedId === `pv-${pv.translationId}` ? (
                     <Check className="w-3.5 h-3.5 text-emerald-500" />

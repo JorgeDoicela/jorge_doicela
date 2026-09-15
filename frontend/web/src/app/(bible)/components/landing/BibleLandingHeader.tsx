@@ -27,8 +27,8 @@ export function BibleLandingHeader({ studyUrl = '/study' }: BibleLandingHeaderPr
                     </div>
 
                     <nav className="hidden md:flex items-center gap-6 text-xs text-accents-5 font-medium">
-                        <a href="#motores" className="hover:text-foreground transition-colors">
-                            {tLanding('studyEngines')}
+                        <a href="#herramientas" className="hover:text-foreground transition-colors">
+                            {tLanding('studyTools')}
                         </a>
                         <a href="#proposito" className="hover:text-foreground transition-colors">
                             {tLanding('purposeTitle')}

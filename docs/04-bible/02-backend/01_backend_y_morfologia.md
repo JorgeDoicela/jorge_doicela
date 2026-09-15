@@ -108,17 +108,17 @@ backend/src/bible/
 * **`GET /bible/morphology/lexicon`**: Búsqueda léxica con soporte de filtro de lengua (`?q=logos&lang=greek&limit=50`).
 * **`GET /bible/morphology/lexicon/:strong`**: Obtiene la definición académica y lema de un código Strong (ej. `H7225`, `G3056`).
 
-### 3.5 Atlas Bíblico (`/bible/atlas/*` y retrocompatible `/bible/historical/atlas/*`)
-* **`GET /bible/atlas/places`**: Catálogo de ubicaciones geográficas y yacimientos arqueológicos con coordenadas WGS84 y soporte bilingüe (`?category=city&q=jerusalen&lang=es|en`).
+### 3.5 Atlas Bíblico (`/bible/atlas/*`)
+* `GET /bible/atlas/places?category=city&q=Jeru&lang=es`: Sitios con coordenadas WGS84, nombres bilingües y notas arqueológicas.
 
-### 3.6 Cronología Sincrónica (`/bible/timeline` y retrocompatible `/bible/historical/timeline`)
-* **`GET /bible/timeline`**: Eventos sincrónicos de monarcas, profetas, imperios e hitos fechados (`?type=monarch&from=1000&to=500&lang=es|en`).
+### 3.6 Cronología Sincrónica (`/bible/timeline`)
+* `GET /bible/timeline?type=monarch&from=-1000&to=-500&lang=es`: Monarcas, profetas, imperios y eventos sincrónicos.
 
-### 3.7 Arqueología y Epigrafía (`/bible/archaeology/*` y retrocompatible `/bible/historical/articles*`)
+### 3.7 Arqueología y Epigrafía (`/bible/archaeology/*`)
 * **`GET /bible/archaeology/articles`**: Artículos de investigación arqueológica, epigrafía y manuscritos con índice compuesto `(slug, language)` (`?category=recent_discoveries&lang=es|en`).
 * **`GET /bible/archaeology/articles/:slug`**: Detalle completo de un artículo de evidencia material localizado (`?lang=es|en`).
 
-### 3.7 Evangelización y Apologética (`/bible/evangelism/*`)
+### 3.8 Evangelización y Apologética (`/bible/evangelism/*`)
 * **`GET /bible/evangelism/pathways`**: Rutas y secuencias bíblicas bilingües (Camino de Romanos, Puente a la Vida, Cuatro Verdades) (`?lang=es|en`).
 * **`GET /bible/evangelism/pathways/:slug`**: Detalle de una ruta evangelística con pasos, versículos y reflexiones (`?lang=es|en`).
 * **`GET /bible/evangelism/objections`**: Banco de objeciones comunes y respuestas apologéticas exegéticas con filtro por categoría y búsqueda textual (`?category=&q=&lang=es|en`).

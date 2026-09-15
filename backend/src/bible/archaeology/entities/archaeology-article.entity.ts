@@ -22,8 +22,8 @@ export class ArchaeologyArticleEntity {
   @Column({ length: 128 })
   regionLabel: string;
 
-  @Column({ length: 32 })
-  publishDate: string;
+  @Column({ type: 'date' })
+  publishDate: Date; // Almacenado como YYYY-MM-DD (ISO 8601)
 
   @Column({ length: 256 })
   institutionOrAuthor: string;

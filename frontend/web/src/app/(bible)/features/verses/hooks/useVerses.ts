@@ -7,7 +7,7 @@ import {
   ReaderSettings,
 } from '../types';
 import { API_URL } from '../../../../config';
-import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../translations';
+import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../../entities/translations';
 
 export function useVerses(
   externalBookId?: number | null,

@@ -8,6 +8,7 @@ export interface TractOutlinePoint {
 }
 
 @Entity('evangelism_tracts')
+@Index(['slug', 'language'], { unique: true })
 export class EvangelismTractEntity {
   @PrimaryColumn({ length: 64 })
   id: string;
@@ -15,7 +16,6 @@ export class EvangelismTractEntity {
   @PrimaryColumn({ length: 10, default: 'es' })
   language: string;
 
-  @Index()
   @Column({ length: 64 })
   slug: string;
 

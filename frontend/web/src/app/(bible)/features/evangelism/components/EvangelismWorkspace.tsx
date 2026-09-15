@@ -7,21 +7,22 @@ import { useEvangelismContextSafe } from '../context/EvangelismContext';
 import { PathwayViewer } from './PathwayViewer';
 import { ObjectionsExplorer } from './ObjectionsExplorer';
 import { TractsExplorer } from './TractsExplorer';
-import { EvangelismSubSuite } from '../types';
+import { EvangelismTab } from '../types';
 
 interface EvangelismWorkspaceProps {
-  initialSubSuite?: EvangelismSubSuite;
+  initialTab?: EvangelismTab;
+  initialSubSuite?: EvangelismTab; // Alias de compatibilidad
 }
 
-export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initialSubSuite }) => {
+export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initialTab, initialSubSuite }) => {
   const t = useTranslations('Evangelism');
   const contextState = useEvangelismContextSafe();
   const localState = useEvangelism();
   const state = contextState || localState;
 
   const {
-    subSuite,
-    setSubSuite,
+    activeTab,
+    setActiveTab,
     pathways,
     selectedPathway,
     setSelectedPathwayId,
@@ -40,13 +41,15 @@ export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initia
     isLoading,
   } = state;
 
-  React.useEffect(() => {
-    if (initialSubSuite && setSubSuite) {
-      setSubSuite(initialSubSuite);
-    }
-  }, [initialSubSuite, setSubSuite]);
+  const targetTab = initialTab || initialSubSuite;
 
-  const suites: { key: EvangelismSubSuite; label: string }[] = [
+  React.useEffect(() => {
+    if (targetTab && setActiveTab) {
+      setActiveTab(targetTab);
+    }
+  }, [targetTab, setActiveTab]);
+
+  const tabs: { key: EvangelismTab; label: string }[] = [
     { key: 'pathways', label: t('tabPathways') },
     { key: 'objections', label: t('tabObjections') },
     { key: 'tracts', label: t('tabTracts') },
@@ -54,35 +57,35 @@ export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initia
 
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-200">
-      {/* Barra de Sub-Suites Geist Minimal */}
+      {/* Barra de Pestañas Geist Minimal */}
       <div className="border-b border-accents-2 flex items-center justify-between">
         <div className="flex items-center gap-4 sm:gap-6 -mb-px">
-          {suites.map((s) => {
-            const isActive = subSuite === s.key;
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.key;
             return (
               <button
-                key={s.key}
+                key={tab.key}
                 type="button"
-                onClick={() => setSubSuite(s.key)}
+                onClick={() => setActiveTab(tab.key)}
                 className={`pb-3 pt-1 text-xs font-semibold transition-all cursor-pointer border-b-2 ${
                   isActive
                     ? 'border-foreground text-foreground'
                     : 'border-transparent text-accents-4 hover:text-foreground'
                 }`}
               >
-                {s.label}
+                {tab.label}
               </button>
             );
           })}
         </div>
 
         <div className="hidden sm:block text-[11px] font-mono text-accents-4 pb-2.5">
-          {t('suiteMotto')}
+          {t('motto')}
         </div>
       </div>
 
-      {/* Renderizado Condicional de la Sub-Suite */}
-      {subSuite === 'pathways' && (
+      {/* Renderizado Condicional de la Pestaña Activa */}
+      {activeTab === 'pathways' && (
         <PathwayViewer
           pathways={pathways}
           selectedPathway={selectedPathway}
@@ -95,7 +98,7 @@ export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initia
         />
       )}
 
-      {subSuite === 'objections' && (
+      {activeTab === 'objections' && (
         <ObjectionsExplorer
           objections={objections}
           selectedCategory={selectedCategory}
@@ -106,7 +109,7 @@ export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initia
         />
       )}
 
-      {subSuite === 'tracts' && (
+      {activeTab === 'tracts' && (
         <TractsExplorer
           tracts={tracts}
           selectedTract={selectedTract}

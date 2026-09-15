@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { LexiconView, useLexiconContextSafe } from '../../../features/lexicons';
 import { BiblePassageToolbar } from '../../../components/BiblePassageToolbar';
 import { useBiblePassage } from '../../../context/BiblePassageContext';
 
 export default function WordStudyPage() {
+  const tStudio = useTranslations('Studio');
   const { selectedBook } = useBiblePassage();
   const lexicon = useLexiconContextSafe();
   const activeLang =
@@ -16,8 +18,8 @@ export default function WordStudyPage() {
         rightBadge={
           <span className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">
             {activeLang === 'hebrew'
-              ? 'Léxico Hebreo (BDB • Gesenius)'
-              : 'Léxico Griego (Thayer • BDAG)'}
+              ? tStudio('hebrewLexiconBadge')
+              : tStudio('greekLexiconBadge')}
           </span>
         }
       />

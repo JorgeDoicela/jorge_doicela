@@ -12,7 +12,7 @@ export async function fetchAtlasPlaces(
     if (query && query.trim()) params.append('q', query.trim());
     if (lang) params.append('lang', lang);
 
-    const res = await fetch(`${API_URL}/bible/historical/atlas/places?${params.toString()}`);
+    const res = await fetch(`${API_URL}/bible/atlas/places?${params.toString()}`);
     if (!res.ok) return [];
 
     const json = await res.json();

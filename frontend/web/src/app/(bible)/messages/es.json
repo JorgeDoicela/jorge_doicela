@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Biblia Modular | Jorge Doicela",
-    "description": "Plataforma de estudio bíblico con 10 suites exegéticas y evangelísticas, análisis morfológico Masorético BHS / LXX, diccionarios Strong, rutas soteriológicas y contexto histórico."
+    "description": "Plataforma de estudio bíblico con 8 herramientas de estudio exegético y evangelístico, análisis morfológico Masorético BHS / LXX, diccionarios Strong, rutas soteriológicas y contexto histórico."
   },
   "Nav": {
     "landing": "Inicio",
@@ -10,8 +10,10 @@
     "portal": "Volver a jorgedoicela.com",
     "portalShort": "Portal",
     "modularBible": "Biblia Modular",
-    "studySuites": "Suites de Estudio",
-    "selectSuite": "Seleccionar suite de estudio",
+    "studyTools": "Herramientas de Estudio",
+    "selectTool": "Seleccionar herramienta de estudio",
+    "studySuites": "Herramientas de Estudio",
+    "selectSuite": "Seleccionar herramienta de estudio",
     "textExegesis": "Texto & Exégesis",
     "historicalContext": "Historia & Contexto",
     "ministryApologetics": "Ministerio & Apologética",
@@ -150,6 +152,7 @@
     "openStudy": "Abrir Estudio",
     "startStudy": "Comenzar Lectura y Estudio",
     "exploreTools": "Explorar Herramientas",
+    "studyTools": "Herramientas de Estudio",
     "studyEngines": "Herramientas de Estudio",
     "versionsAndLanguages": "Versiones e Idiomas",
     "mobileApp": "App Móvil",
@@ -249,6 +252,11 @@
     "purposeCompare": "Comparar Versiones",
     "purposeOriginals": "Idiomas Originales",
     "purposeHistory": "Mapas e Historia",
+    "readingMode": "Modo Lectura",
+    "prose": "Prosa",
+    "eraMonarchy": "Monarquía",
+    "eraProphecy": "Profecía",
+    "eraEmpire": "Imperio",
 
     "purposeHistoryHeadline": "Recorre los lugares, tiempos y testimonios de la Escritura",
     "purposeHistoryCta": "Explorar Contexto Histórico",
@@ -813,12 +821,31 @@
     "transliteration": "Transliteración",
     "pronunciation": "Pronunciación",
     "definition": "Definición Léxica",
-    "grammarCategory": "Categoría Gramatical"
+    "grammarCategory": "Categoría Gramatical",
+    "tabDoctrines": "Doctrina",
+    "tabCitations": "Citas",
+    "loadingLexicon": "Cargando léxico...",
+    "inText": "En el texto:",
+    "totalOccurrences": "Total de apariciones canónicas:",
+    "noDirectDefinition": "Sin definición directa disponible.",
+    "synopticComparison": "Comparación Sinóptica",
+    "synopticComparisonSubtitle": "Comparación sincrónica de manuscritos y traducciones",
+    "copyText": "Copiar texto",
+    "author": "Autor",
+    "approxDate": "Fecha Aprox.",
+    "notableLocations": "Lugares Geográficos Notables",
+    "ministerialFocus": "Valor para el Ministerio",
+    "readPassageInReader": "Leer {book} {chapter} en el Lector",
+    "historicalCataloging": "Información histórica en proceso de catalogación.",
+    "chapterShort": "Cap. {chapter}",
+    "hebrewLexiconBadge": "Léxico Hebreo (BDB • Gesenius)",
+    "greekLexiconBadge": "Léxico Griego (Thayer • BDAG)"
   },
   "Evangelism": {
     "tabPathways": "Rutas Bíblicas",
     "tabObjections": "Respuestas Apologéticas",
     "tabTracts": "Tratados & Bosquejos",
+    "motto": "Predicad el Evangelio a toda criatura (Marcos 16:15)",
     "suiteMotto": "Predicad el Evangelio a toda criatura (Marcos 16:15)",
     "noPathways": "No se encontraron rutas evangelísticas disponibles.",
     "noObjectionsFound": "No se encontraron objeciones que coincidan con los criterios de búsqueda.",
@@ -851,7 +878,46 @@
     "generalAudience": "Público General",
     "prayerOfFaithTitle": "Modelo de Oración de Fe",
     "prayerDisclaimer": "* Nota pastoral: Esta oración no es un amuleto ni un ritual mágico, sino una guía para expresar arrepentimiento genuino y fe en Cristo.",
-    "nextStepsTitle": "Primeros Pasos de Discipulado"
+    "nextStepsTitle": "Primeros Pasos de Discipulado",
+    "apologeticsBannerTitle": "Apologética Bíblica Fiel (1 Pe 3:15)",
+    "apologeticsBannerQuote": "«Estad siempre preparados para presentar defensa con mansedumbre y reverencia ante todo el que os demande razón de la esperanza que hay en vosotros.»",
+    "bookInEvangelism": "{book} en la Evangelización",
+    "soteriologyGlossary": "Glosario Soteriológico Fundamental",
+    "dialogueAdviceTitle": "Consejo Pastoral para Dialogar",
+    "dialogueAdviceDesc": "Evita ganar discusiones y enfócate en ganar personas para Cristo. Responde siempre con la Escritura, no con opiniones personales; la Palabra es viva y eficaz.",
+    "citationsLabel": "Citas:",
+    "doctrines": {
+      "justification": {
+        "term": "Justificación",
+        "originalGreek": "dikaiōsis (δικαίωσις)",
+        "definition": "Veredicto judicial soberano donde Dios declara justo al pecador culpable, imputándole la justicia perfecta de Cristo mediante la fe.",
+        "reference": "Romanos 3:24, Romanos 5:1"
+      },
+      "propitiation": {
+        "term": "Propiciación",
+        "originalGreek": "hilasmos (ἱλασμός)",
+        "definition": "Sacrificio sustitutivo que satisface y aplaca por completo la santa y justa ira de Dios contra el pecado en la cruz.",
+        "reference": "1 Juan 2:2, Romanos 3:25"
+      },
+      "grace": {
+        "term": "Gracia",
+        "originalGreek": "charis (χάρις)",
+        "definition": "El favor y la dádiva infinita de Dios otorgada libre e inmerecidamente a rebeldes que solo merecían condenación.",
+        "reference": "Efesios 2:8-9, Tito 2:11"
+      },
+      "savingFaith": {
+        "term": "Fe Salvífica",
+        "originalGreek": "pistis (πίστις)",
+        "definition": "Confianza y rendición total del alma en Jesucristo como único Salvador y Señor, descansando en Su obra consumada.",
+        "reference": "Romanos 10:9-10, Hebreos 11:1"
+      },
+      "regeneration": {
+        "term": "Regeneración",
+        "originalGreek": "palingenesia (παλιγγενεσία)",
+        "definition": "La resurrección espiritual interna operada exclusivamente por el Espíritu Santo, otorgando un corazón nuevo vivo para Dios.",
+        "reference": "Tito 3:5, Juan 3:3-5"
+      }
+    }
   }
 }
 

@@ -54,4 +54,5 @@ export interface EvangelismTract {
   nextSteps: string[];
 }
 
-export type EvangelismSubSuite = 'pathways' | 'objections' | 'tracts';
+export type EvangelismTab = 'pathways' | 'objections' | 'tracts';
+export type EvangelismSubSuite = EvangelismTab; // Alias de compatibilidad

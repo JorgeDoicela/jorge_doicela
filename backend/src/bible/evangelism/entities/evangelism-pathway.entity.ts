@@ -11,6 +11,7 @@ export interface EvangelismStepData {
 }
 
 @Entity('evangelism_pathways')
+@Index(['slug', 'language'], { unique: true })
 export class EvangelismPathwayEntity {
   @PrimaryColumn({ length: 64 })
   id: string;
@@ -18,7 +19,6 @@ export class EvangelismPathwayEntity {
   @PrimaryColumn({ length: 10, default: 'es' })
   language: string;
 
-  @Index()
   @Column({ length: 64 })
   slug: string;
 

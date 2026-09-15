@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Languages, Volume2 } from 'lucide-react';
-import { fetchStrongLexiconEntry } from '../features/interlinear/services/interlinearApiService';
-import { StrongLexiconEntry } from '../features/interlinear/types';
+import { fetchStrongLexiconEntry, StrongLexiconEntry } from '../features/interlinear';
 import { InspectedWordData } from '../context/BiblePassageContext';
 
 export interface StrongMorphologyInspectorProps {
@@ -99,7 +98,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
 
         {/* Palabra en contexto */}
         <div className="text-xs text-zinc-500 dark:text-zinc-400 text-center border-t border-zinc-100 dark:border-zinc-800/80 pt-2.5">
-          <span className="text-zinc-400">En el texto: </span>
+          <span className="text-zinc-400">{tStudio('inText')} </span>
           <strong className="text-zinc-800 dark:text-zinc-200">«{word.wordText}»</strong>
         </div>
       </div>
@@ -138,12 +137,12 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
           </h4>
           {loading ? (
             <div className="p-4 bg-zinc-50 dark:bg-[#0a0a0a] rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 text-xs text-zinc-400 animate-pulse">
-              Cargando léxico...
+              {tStudio('loadingLexicon')}
             </div>
           ) : (
             <div className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] text-xs leading-relaxed space-y-2.5">
               <p className="font-medium text-zinc-900 dark:text-zinc-100">
-                {lexiconDetails?.shortDefinition || word.definition || 'Sin definición directa disponible.'}
+                {lexiconDetails?.shortDefinition || word.definition || tStudio('noDirectDefinition')}
               </p>
               {lexiconDetails?.extendedDefinition && lexiconDetails.extendedDefinition.length > 0 && (
                 <div className="border-t border-zinc-100 dark:border-zinc-800/80 pt-2.5 space-y-1.5 text-zinc-600 dark:text-zinc-300">
@@ -157,7 +156,7 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
 
               {lexiconDetails?.occurrencesInBible !== undefined && (
                 <div className="text-[11px] text-zinc-400 dark:text-zinc-500 pt-1 border-t border-zinc-100 dark:border-zinc-800/80">
-                  Total de apariciones canónicas: <strong className="text-zinc-800 dark:text-zinc-200">{lexiconDetails.occurrencesInBible}</strong>
+                  {tStudio('totalOccurrences')} <strong className="text-zinc-800 dark:text-zinc-200">{lexiconDetails.occurrencesInBible}</strong>
                 </div>
               )}
             </div>

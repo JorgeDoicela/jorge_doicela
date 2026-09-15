@@ -1,4 +1,4 @@
-# Biblia Modular - Lector y Suite de Estudio Web (Next.js)
+# Biblia Modular - Lector y Herramientas de Estudio Web (Next.js)
 
 Este documento detalla la arquitectura macro y micro, herramientas exegéticas y componentes del subdominio de la Biblia (`bible.jorgedoicela.com`).
 
@@ -9,7 +9,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > [!IMPORTANT]
 > **Arquitectura Macro y Enrutamiento Canónico Limpio:**
 > * **Subdominio Canónico:** `bible.jorgedoicela.com` (o `http://bible.localhost:3001` en desarrollo local).
-> * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las 8 suites de estudio son rutas directas de primer nivel (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`).
+> * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las 8 herramientas de estudio son rutas directas de primer nivel (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`).
 > * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud en el subdominio con el prefijo redundante `/bible` o `/bible/*` se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/*`), eliminando URLs duplicadas en el navegador y protegiendo el SEO.
 > * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(bible)/bible/*` para evitar colisiones con los demás dominios bajo el runtime consolidado de 1 GB de RAM.
 > * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/bible` siguen respondiendo 200 OK directamente.
@@ -17,10 +17,10 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > * **Aislamiento de Dominio:** Cero dependencias de otros subdominios. Estilos aislados en `(bible)/globals.css`.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** Cada una de las herramientas exegéticas está encapsulada en su propia subcarpeta funcional dentro de `(bible)/features/` (`verses`, `books`, `translations`, `interlinear`, `parallel-view`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados.
-> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todos los motores exegéticos (Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong, Arqueología) consumen namespaces tipados sin cadenas hardcodeadas.
+> * **Feature-Sliced Design (FSD):** La arquitectura separa estrictamente la capa de entidades (`entities/books`, `entities/translations`) de las 8 herramientas exegéticas del usuario encapsuladas en `(bible)/features/` (`verses`, `parallel-view`, `interlinear`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados. Las dependencias internas de una sola herramienta (como el motor de diferencias textuales LCS) están co-localizadas dentro de su respectivo slice (`parallel-view/textual-diff`).
+> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todas las herramientas exegéticas (Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong, Arqueología) consumen namespaces tipados sin cadenas hardcodeadas.
 > * **Cero Datos Hardcodeados en Cliente:** Ningún archivo TypeScript contiene versículos, palabras, coordenadas ni textos bíblicos incrustados. Toda la data se consume asíncronamente desde los endpoints de NestJS (`GET /bible/*`).
-> * **Header Unificado y Responsivo:** `BibleHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 8 suites en pantallas móviles (`< md`).
+> * **Header Unificado y Responsivo:** `BibleHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 8 herramientas en pantallas móviles (`< md`).
 > * **Barra de Control Exegético:** `ReaderToolbar.tsx` agrupa pasaje (`UnifiedPassagePicker`), versión bíblica (`TranslationSelector`) y controles de tipografía/diseño (`ReaderLayoutMode`, `ReaderFontSize`, `ReaderFontFamily`) de forma 100% responsiva.
 > * **Estética Geist / Vercel Style:** Monocromática de alta precisión, micro-interacciones de alta densidad, bordes ultra-delgados (`border-zinc-800`), tipografía Geist y legibilidad editorial para análisis exegético.
 
@@ -52,8 +52,12 @@ frontend/web/src/app/(bible)/
 ├── context/                   # GESTIÓN DE ESTADO REACTIVO Y URL PARAMS
 │   └── BiblePassageContext.tsx # Sincroniza bookId, chapter y trans con la URL (?book=GEN&chapter=1)
 │
+├── entities/                  # CAPA DE ENTIDADES DE DOMINIO (FSD ENTITIES)
+│   ├── books/                 # data/canonicCategories + hooks/useBooks (API /bible/books)
+│   └── translations/          # hooks/useTranslations + TranslationSelector (API /bible/translations)
+│
 ├── components/                # COMPONENTES Y WIDGETS TRANSVERSALES
-│   ├── BibleHeaderNav.tsx     # Header con selector de suites móvil flotante y desktop
+│   ├── BibleHeaderNav.tsx     # Header con selector de herramientas móvil flotante y desktop
 │   ├── BackToBibleButton.tsx  # Retorno directo al inicio de la Biblia
 │   ├── BackToPortalButton.tsx # Retorno directo al portal principal (jorgedoicela.com)
 │   ├── DraggableEdgeTab.tsx   # Pestañas táctiles flotantes para reapertura de paneles laterales
@@ -69,17 +73,14 @@ frontend/web/src/app/(bible)/
 │       ├── BibleFinalCtaAndFooter.tsx     # Llamada a la acción final y pie de página institucional
 │       └── index.ts                       # Barril de exportación unificado
 │
-└── features/                  # FEATURE-SLICED DESIGN (FSD) CON SERVICIOS API
+└── features/                  # HERRAMIENTAS DE ESTUDIO EXEGÉTICO (FSD FEATURES)
     ├── verses/                # services/ + hooks/useVerses (API /bible/verses)
-    ├── books/                 # data/canonicCategories + hooks/useBooks (API /bible/books)
-    ├── translations/          # hooks/useTranslations (API /bible/translations)
-    ├── parallel-view/         # Comparador multi-columna alineado por versículo
-    ├── textual-diff/          # Algoritmo LCS para resaltar variantes textuales
+    ├── parallel-view/         # Comparador multi-columna + subdirectorio interno textual-diff (LCS)
     ├── interlinear/           # services/interlinearApiService (API /bible/morphology/passage)
     ├── lexicons/              # services/lexiconApiService (API /bible/morphology/lexicon)
-    ├── atlas/                 # services/atlasApiService (API /bible/historical/atlas/places con ?lang=)
-    ├── timeline/              # services/timelineApiService (API /bible/historical/timeline con ?lang=)
-    ├── archaeology-feed/      # services/archaeologyApiService (API /bible/historical/articles con ?lang=)
+    ├── atlas/                 # services/atlasApiService (API /bible/atlas/places con ?lang=)
+    ├── timeline/              # services/timelineApiService (API /bible/timeline con ?lang=)
+    ├── archaeology-feed/      # services/archaeologyApiService (API /bible/archaeology/articles con ?lang=)
     └── evangelism/            # services/evangelismApiService (API /bible/evangelism/*)
 ```
 
@@ -147,8 +148,8 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
      * **Panel Lateral Derecho (`InterlinearInspector`):** Ficha morfológica y léxica profunda del lema/token seleccionado en el texto (caracteres originales en gran formato, IPA, transliteración fonética, pronunciación en audio fonético en vivo mediante `biblicalAudioService`, desglose morfosintáctico de categoría/binyan/aspecto/tiempo/voz/modo/caso, y definiciones exegéticas BDB/Gesenius/Thayer con conteo de ocurrencias canónicas). Incluye pestaña secundaria para cotejo sincrónico de versículo.
      * **Gestión de Estado (`InterlinearContext`):** Proveedor de contexto (`InterlinearProvider`) que sincroniza en tiempo real la palabra inspeccionada, las capas activas, el canon lingüístico y el lienzo de lectura sin acoplamientos cruzados.
 5. **Estudio de Palabra / Léxicos (`features/lexicons/`):** Consume `GET /bible/morphology/lexicon`. Diccionarios académicos BDB / Gesenius para raíces hebreas y léxico griego.
-6. **Atlas Bíblico Georreferenciado (`features/atlas/`):** Consume `GET /bible/historical/atlas/places`. Coordenadas WGS84 proyectadas sobre canvas vectorial con filtro por épocas.
-7. **Cronología y Arqueología (`features/timeline/` y `features/archaeology-feed/`):** Conexión 100% reactiva y bilingüe con `GET /bible/historical/timeline` y `GET /bible/historical/articles`. `TimelineCanvas` y `SynchronousComparisonView` consumen los eventos históricos dinámicos tipados (`MonarchData`, `ProphetData`, `WorldEmpireData`, `ArchaeologicalMilestone`) transformados por `timelineApiService.ts` y orquestados por el hook `useBiblicalTimeline` según el idioma activo (`next-intl`), eliminando por completo cualquier dataset estático o mock local.
+6. **Atlas Bíblico Georreferenciado (`features/atlas/`):** Consume `GET /bible/atlas/places`. Coordenadas WGS84 proyectadas sobre canvas vectorial con filtro por épocas.
+7. **Cronología y Arqueología (`features/timeline/` y `features/archaeology-feed/`):** Conexión 100% reactiva y bilingüe con `GET /bible/timeline` y `GET /bible/archaeology/articles`. `TimelineCanvas` y `SynchronousComparisonView` consumen los eventos históricos dinámicos tipados (`MonarchData`, `ProphetData`, `WorldEmpireData`, `ArchaeologicalMilestone`) transformados por `timelineApiService.ts` y orquestados por el hook `useBiblicalTimeline` según el idioma activo (`next-intl`), eliminando por completo cualquier dataset estático o mock local.
 8. **Evangelización y Apologética Práctica (`features/evangelism/`):** Conexión 100% reactiva y bilingüe con `GET /bible/evangelism/*`. Integra rutas bíblicas secuenciales (Camino de Romanos, Puente hacia la Vida, Cuatro Verdades), banco interactivo de objeciones apologéticas clasificadas y tratados/bosquejos listos para predicar o compartir (`EvangelismWorkspace`, `PathwayViewer`, `ObjectionsExplorer`, `TractsExplorer`), alimentados desde `bible.sqlite` y el corpus JSON.
 
 ---
@@ -345,11 +346,7 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   * Todos los paneles especializados heredan los mismos estándares visuales Geist / Vercel: pestañas flotantes arrastrables en el eje Y ([`DraggableEdgeTab.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/DraggableEdgeTab.tsx)), tiradores interactivos de colapso en la línea divisoria (`group-hover:opacity-100` con `(←|→)` centrado verticalmente), drawers adaptativos con backdrop en pantallas móviles y sincronización fluida de estado global mediante sus contextos dedicados (`BiblePassageContext`, `ParallelContext`, `InterlinearContext`, `LexiconContext`, `AtlasContext`, `EvangelismContext`).
   * En cualquier momento, el usuario puede colapsar ambos paneles para disfrutar del canvas central de lectura, comparación, interlineal, mapas o cronología en modo libre a pantalla completa.
 
-
-
-
-
-
-
-
+* **Arquitectura Libre de Hardcoding e Internacionalización Total (`next-intl`):**
+  * Todos los perfiles contextuales (`BookHistoricalProfile`, `EvangelismApologeticsProfile`, `StrongMorphologyInspector`, `ParallelVerseInspector`, `BibleHeaderNav`, `BiblePurposeSection`, etc.) se encuentran 100% desacoplados de cadenas literales y consumen diccionarios simétricos en `messages/es.json` y `messages/en.json`.
+  * Los glosarios soteriológicos, descripciones canónicas, etiquetas de navegación y badges morfológicos son reactivos y se adaptan al idioma de estudio seleccionado en el cliente o servidor.
 

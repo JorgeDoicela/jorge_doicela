@@ -60,13 +60,6 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
         pathname.startsWith('/bible/study/standard/')
       );
     }
-    if (pathname.includes('/historical-context')) {
-      const currentSubTab = searchParams?.get('tab') || 'atlas';
-      if (tabPath === '/study/atlas' && currentSubTab === 'atlas') return true;
-      if (tabPath === '/study/timeline' && currentSubTab === 'timeline') return true;
-      if (tabPath === '/study/archaeology' && currentSubTab === 'archaeology') return true;
-    }
-
     const clean = tabPath;
     const prefixed = `/bible${tabPath}`;
 
@@ -132,7 +125,7 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
             aria-expanded={mobileMenuOpen}
-            aria-label={t('selectSuite')}
+            aria-label={t('studyMode')}
           >
             <span className="truncate">{t(activeTab.key as any)}</span>
             <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 shrink-0 transition-transform duration-200 ${mobileMenuOpen ? 'rotate-180' : ''}`} />
@@ -142,7 +135,7 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
           {mobileMenuOpen && (
             <div className="absolute top-full left-0 mt-1.5 w-60 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 px-2 py-1">
-                {t('studySuites')}
+                {t('studyMode')}
               </div>
               <div className="flex flex-col gap-0.5">
                 {NAV_TABS.map((tab) => {

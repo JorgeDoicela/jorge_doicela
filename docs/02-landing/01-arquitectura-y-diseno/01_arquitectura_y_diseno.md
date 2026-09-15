@@ -20,17 +20,18 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ## 2. Descripción y Aislamiento
 
-* **Arquitectura Server-First (Next.js App Router):** `page.tsx` opera como un **Server Component nativo asíncrono**, entregando el 100% de la semántica HTML (Hero, titulares, Bento Grid, enlaces y metadatos) en el primer byte (SSR) sin spinners bloqueantes ni anti-patrones de montaje (`if (!mounted)`).
+* **Arquitectura Server-First (Next.js App Router):** `page.tsx`, `consulta/page.tsx` y `links/page.tsx` operan como **Server Components nativos asíncronos**, entregando el 100% de la semántica HTML (Hero, titulares, Bento Grid, enlaces y metadatos con `generateMetadata()`) en el primer byte (SSR) sin spinners bloqueantes ni anti-patrones de montaje.
 * **Arquitectura de Islas de Interactividad:** Los efectos dinámicos se desacoplan en microcomponentes clientes aislados en `(landing)/components/`:
   * `LandingVisualEffects.tsx`: Fondos cinemáticos (`ParallaxBackground`, `InteractiveParticles`, `CinematicSpiralGalaxy`).
   * `QuitoClockBadge.tsx`: Reloj en vivo de Quito.
   * `LanguageToggleButton.tsx`: Selector de idioma con `useLanguage()`.
   * `AppleHighlightsCarousel.tsx`: Carrusel interactivo.
+  * `LinksAiAssistant.tsx`: Botón flotante y modal del asistente IA con atajos de teclado (`Ctrl+K`).
 * **Aislamiento de Estilos:** Posee su propio archivo independiente `frontend/web/src/app/(landing)/globals.css` que configura la estructura **Bento Grid**, fuentes (Inter y Outfit) y tokens visuales de Tailwind CSS v4.
 * **Enrutamiento y Subpáginas:**
   * `/`: Página principal de bienvenida y portal a los 3 proyectos con Bento Grid interactivo.
   * `/consulta` (y alias `/contacto`): Landing page de captura de leads y consultas técnicas optimizada para campañas publicitarias (Google Ads), conectada con despacho en tiempo real a Telegram.
-  * `/links`: Centro oficial de enlaces y conexiones con header de disponibilidad, Bento de plataformas propias, botones de acción rápida y vitrina multimedia interactiva con lightbox accesible.
+  * `/links`: Centro oficial de enlaces y conexiones con Server Component asíncrono, metadatos SEO/OpenGraph/Twitter nativos, vitrina multimedia y asistente IA desacoplado.
 * **Enrutamiento:** El middleware (`src/middleware.ts`) redirige automáticamente las peticiones sin subdominio hacia el grupo de rutas `(landing)`.
 
 ---

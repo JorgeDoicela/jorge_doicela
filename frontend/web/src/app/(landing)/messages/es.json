@@ -43,7 +43,10 @@
     "philosophyRef": "Colosenses 3:23",
     "greetingMorning": "Buenos días",
     "greetingAfternoon": "Buenas tardes",
-    "greetingEvening": "Buenas noches"
+    "greetingEvening": "Buenas noches",
+    "officialLinks": "Enlaces Oficiales & Proyectos",
+    "consultationRequest": "Solicitar Consulta & Presupuesto",
+    "consultationBadge": "Formulario"
   },
   "Consulta": {
     "badge": "Ingeniería de Software & Consultoría DevSecOps",

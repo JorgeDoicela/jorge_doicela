@@ -1,34 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useLanguage } from '../context/LanguageContext';
 import { useTranslations } from 'next-intl';
 import { ThemeToggle } from './ThemeToggle';
+import QuitoClockBadge from './QuitoClockBadge';
+import LanguageToggleButton from './LanguageToggleButton';
 
 export function ConsultaHeader() {
-  const { language, toggleLanguage } = useLanguage();
   const t = useTranslations('Consulta');
-  const [time, setTime] = useState('');
-
-  useEffect(() => {
-    const updateQuitoTime = () => {
-      const now = new Date();
-      const formatted = new Intl.DateTimeFormat(language === 'es' ? 'es-EC' : 'en-US', {
-        timeZone: 'America/Guayaquil',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      }).format(now);
-      setTime(formatted);
-    };
-
-    updateQuitoTime();
-    const timer = setInterval(updateQuitoTime, 1000);
-    return () => clearInterval(timer);
-  }, [language]);
+  const tCommon = useTranslations('Common');
 
   return (
     <header
@@ -71,30 +53,18 @@ export function ConsultaHeader() {
         >
           <span>←</span>
           <span className="hidden sm:inline">{t('backHome')}</span>
-          <span className="inline sm:hidden">{language === 'es' ? 'Volver' : 'Back'}</span>
+          <span className="inline sm:hidden">{tCommon('back')}</span>
         </Link>
       </div>
 
       {/* Controles Derecha */}
       <div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
-        {/* Reloj Quito */}
-        <div className="hidden sm:flex flex-col items-end text-right font-mono" aria-label={`Hora local en Quito: ${time || '--:--:--'}`}>
-          <span className="text-xs text-text-muted font-normal tracking-wider tabular-nums">{time || '--:--:--'}</span>
-          <span className="text-[8px] text-text-subtitle/70 uppercase tracking-widest">Quito, Ecuador</span>
-        </div>
+        <QuitoClockBadge />
 
         <div className="hidden sm:block w-px h-3.5 bg-card-border/60 mx-0.5" aria-hidden="true" />
 
-        {/* Selector de Idioma */}
-        <button
-          onClick={toggleLanguage}
-          className="px-2 py-1 rounded-md text-text-muted hover:text-foreground hover:bg-foreground/5 active:scale-95 transition-colors duration-200 cursor-pointer text-xs font-medium tracking-tight"
-          aria-label="Cambiar idioma / Change language"
-        >
-          <span>{language.toUpperCase()}</span>
-        </button>
+        <LanguageToggleButton />
 
-        {/* Selector de Tema Profesional */}
         <ThemeToggle />
       </div>
     </header>

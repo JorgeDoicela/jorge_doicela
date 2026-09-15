@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ForumTopic } from '../../features/forum/types';
-import { MarkdownRenderer } from '../../components/MarkdownRenderer';
 import { API_URL } from '../../../config';
 
 interface ForumReplyFormProps {

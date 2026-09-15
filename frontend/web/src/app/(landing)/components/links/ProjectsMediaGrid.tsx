@@ -10,18 +10,22 @@ import { useTranslations } from 'next-intl';
 
 export function ProjectsMediaGrid() {
   const t = useTranslations('Links');
-  const [isLocal, setIsLocal] = useState(false);
+  const [resolvedDomain, setResolvedDomain] = useState({ isLocal: false, protocol: 'https:', port: '' });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
-      setIsLocal(hostname.includes('localhost') || hostname.includes('127.0.0.1'));
+      const port = window.location.port ? `:${window.location.port}` : '';
+      const protocol = window.location.protocol;
+      if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+        setResolvedDomain({ isLocal: true, protocol, port });
+      }
     }
   }, []);
 
   const getSubdomainUrl = (subdomain: string) => {
-    return isLocal
-      ? `http://${subdomain}.localhost:3001`
+    return resolvedDomain.isLocal
+      ? `${resolvedDomain.protocol}//${subdomain}.localhost${resolvedDomain.port}`
       : `https://${subdomain}.jorgedoicela.com`;
   };
 
@@ -31,21 +35,18 @@ export function ProjectsMediaGrid() {
       title: t('project1Badge'),
       icon: BookOpen,
       href: getSubdomainUrl('bible'),
-      accentBg: 'group-hover:bg-blue-500/10 group-hover:border-blue-500/30 group-hover:text-blue-400',
     },
     {
       id: 'portfolio',
       title: t('project2Badge'),
       icon: Terminal,
       href: getSubdomainUrl('portfolio'),
-      accentBg: 'group-hover:bg-amber-500/10 group-hover:border-amber-500/30 group-hover:text-amber-400',
     },
     {
       id: 'software',
       title: t('project3Badge'),
       icon: Cpu,
       href: getSubdomainUrl('software'),
-      accentBg: 'group-hover:bg-purple-500/10 group-hover:border-purple-500/30 group-hover:text-purple-400',
     }
   ];
 

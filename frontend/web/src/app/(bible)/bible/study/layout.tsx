@@ -46,44 +46,44 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
   const { mainRef, handleMainScroll } = useHeaderScrollBehavior(setIsHeaderVisible);
 
   const leftTabTitle = isAtlas
-    ? (tStudio('toggleAtlasSidebar') || 'Mostrar eras, lugares y rutas')
+    ? tStudio('toggleAtlasSidebar')
     : isTimeline
-    ? 'Mostrar eras y sincronización histórica'
+    ? tStudio('toggleTimelineSidebar')
     : isArchaeology
-    ? 'Mostrar regiones y filtros arqueológicos'
+    ? tStudio('toggleArchaeologySidebar')
     : isEvangelism
     ? pathname.includes('/objections')
-      ? 'Mostrar categorías de objeciones'
+      ? tStudio('toggleObjectionsSidebar')
       : pathname.includes('/tracts')
-      ? 'Mostrar catálogo de tratados y bosquejos'
-      : (tStudio('toggleEvangelismSidebar') || 'Mostrar rutas y catálogo soteriológico')
+      ? tStudio('toggleTractsSidebar')
+      : tStudio('toggleEvangelismSidebar')
     : isParallel
-    ? 'Mostrar gestión de columnas y presets'
+    ? tStudio('toggleParallelSidebar')
     : isInterlinear
-    ? 'Mostrar corpus y capas morfológicas'
+    ? tStudio('toggleInterlinearSidebar')
     : isWordStudy
-    ? 'Mostrar léxico y términos teológicos'
-    : (tStudio('toggleSidebar') || 'Mostrar libros y capítulos');
+    ? tStudio('toggleWordStudySidebar')
+    : tStudio('toggleSidebar');
 
   const rightTabTitle = isAtlas
-    ? (tStudio('toggleAtlasInspector') || 'Mostrar telemetría y ficha arqueológica')
+    ? tStudio('toggleAtlasInspector')
     : isTimeline
-    ? 'Mostrar ficha del evento cronológico'
+    ? tStudio('toggleTimelineInspector')
     : isArchaeology
-    ? 'Mostrar ficha técnica de la excavación'
+    ? tStudio('toggleArchaeologyInspector')
     : isEvangelism
     ? pathname.includes('/objections')
-      ? 'Mostrar argumentación y defensa bíblica'
+      ? tStudio('toggleObjectionsInspector')
       : pathname.includes('/tracts')
-      ? 'Mostrar bosquejo homilético completo'
-      : (tStudio('toggleEvangelismInspector') || 'Mostrar guía ministerial y pasajes')
+      ? tStudio('toggleTractsInspector')
+      : tStudio('toggleEvangelismInspector')
     : isParallel
-    ? 'Mostrar diff textual y variantes'
+    ? tStudio('toggleParallelInspector')
     : isInterlinear
-    ? 'Mostrar ficha morfológica y léxica'
+    ? tStudio('toggleInterlinearInspector')
     : isWordStudy
-    ? 'Mostrar concordancia y exégesis'
-    : (tStudio('toggleInspector') || 'Mostrar panel de estudio');
+    ? tStudio('toggleWordStudyInspector')
+    : tStudio('toggleInspector');
 
   return (
     <div className="h-screen bg-zinc-50/60 dark:bg-black text-foreground flex flex-col overflow-hidden selection:bg-primary/10">

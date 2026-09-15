@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { MessageCircle } from 'lucide-react';
 import { LinksTopBar } from '../components/links/LinksTopBar';
 import { LinksHeader } from '../components/links/LinksHeader';
+import { ShareProfileButton } from '../components/links/ShareProfileButton';
 import { ActionLinksList } from '../components/links/ActionLinksList';
 import { ProjectsMediaGrid } from '../components/links/ProjectsMediaGrid';
 import { AiAssistantChatModal } from '../components/links/AiAssistantChatModal';
@@ -58,6 +59,9 @@ export default function LinksPage() {
       >
         {/* Cabecera con Avatar Circular, Título, Subtítulo y Redes */}
         <LinksHeader />
+
+        {/* Botón de Compartir Perfil con Web Share API y Copiar Enlace */}
+        <ShareProfileButton />
 
         {/* Botones de Enlace Limpios y Grandes */}
         <ActionLinksList />

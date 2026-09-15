@@ -8,7 +8,7 @@ export const AppleHeroIntro: React.FC = () => {
     const tLanding = useTranslations('Landing');
 
     return (
-        <section className="w-full min-h-[84vh] sm:min-h-[88vh] flex flex-col justify-center items-center text-center px-4 animate-fade-in-up relative">
+        <section className="w-full min-h-[84dvh] sm:min-h-[88dvh] flex flex-col justify-center items-center text-center px-4 animate-fade-in-up relative">
             {/* Eyebrow / Efecto Typewriter Dinámico */}
             <div className="mb-4">
                 <TypewriterRole />

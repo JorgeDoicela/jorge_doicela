@@ -2,18 +2,19 @@ import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { ForumService } from '../services/forum.service';
 import { CreateForumTopicDto } from '../dto/create-forum-topic.dto';
 import { CreateForumReplyDto } from '../dto/create-forum-reply.dto';
+import { GetForumTopicsQueryDto } from '../dto/get-forum-topics-query.dto';
 
 @Controller('software/forum')
 export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Get()
-  async findAll(
-    @Query('category') category?: string,
-    @Query('search') search?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.forumService.findAllTopics(category, search, lang);
+  async findAll(@Query() query: GetForumTopicsQueryDto) {
+    return this.forumService.findAllTopics(
+      query.category,
+      query.search,
+      query.lang,
+    );
   }
 
   @Get(':idOrSlug')

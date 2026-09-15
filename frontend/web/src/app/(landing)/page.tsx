@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import SkipToContent from './components/SkipToContent';
 import LandingVisualEffects from './components/LandingVisualEffects';
 import { AppleHeroIntro } from './components/AppleHeroShowcase';
@@ -9,9 +9,9 @@ import { AppleDetailExplorer } from './components/AppleDetailExplorer';
 import { ThemeToggle } from './components/ThemeToggle';
 import QuitoClockBadge from './components/QuitoClockBadge';
 import LanguageToggleButton from './components/LanguageToggleButton';
+import LandingFooterLinks from './components/LandingFooterLinks';
 
 export default async function LandingPage() {
-    const locale = await getLocale();
     const tLanding = await getTranslations('Landing');
     const tCommon = await getTranslations('Common');
 
@@ -108,7 +108,7 @@ export default async function LandingPage() {
                                 href="/links"
                                 className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-foreground/5 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer border border-transparent hover:border-card-border"
                             >
-                                <span>{locale === 'es' ? 'Enlaces Oficiales & Proyectos' : 'Official Links & Projects'}</span>
+                                <span>{tLanding('officialLinks')}</span>
                                 <span className="text-[11px] text-text-subtitle font-medium">Links</span>
                             </Link>
 
@@ -116,8 +116,8 @@ export default async function LandingPage() {
                                 href="/consulta"
                                 className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-foreground/5 text-xs sm:text-sm font-medium tracking-tight text-text-muted hover:text-foreground transition-all cursor-pointer border border-transparent hover:border-card-border"
                             >
-                                <span>{locale === 'es' ? 'Solicitar Consulta & Presupuesto' : 'Request Consultation & Quote'}</span>
-                                <span className="text-[11px] text-text-subtitle font-medium">{locale === 'es' ? 'Formulario' : 'Form'}</span>
+                                <span>{tLanding('consultationRequest')}</span>
+                                <span className="text-[11px] text-text-subtitle font-medium">{tLanding('consultationBadge')}</span>
                             </Link>
                         </div>
                     </div>
@@ -148,17 +148,7 @@ export default async function LandingPage() {
                 style={{ animationDelay: '800ms' }}
             >
                 <span>{tCommon('footer', { year: new Date().getFullYear().toString() })}</span>
-                <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-text-muted">
-                    <a href="https://portfolio.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Portafolio</a>
-                    <span>•</span>
-                    <a href="https://software.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Software</a>
-                    <span>•</span>
-                    <a href="https://bible.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Biblia</a>
-                    <span>•</span>
-                    <Link href="/links" className="hover:text-foreground transition-colors">Links</Link>
-                    <span>•</span>
-                    <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors font-mono">llms.txt</a>
-                </div>
+                <LandingFooterLinks />
             </footer>
 
         </div>

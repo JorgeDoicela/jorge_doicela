@@ -65,8 +65,8 @@ frontend/web/src/app/(software)/
 │       ├── page.tsx                  # Catálogo de infraestructura y guías de servidor
 │       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del nodo
 │
-└── features/                         # Features FSD
-    ├── navigation/                   # CategoryNav (selector de las 8 categorías)
+└── features/                         # Features FSD (lógica de dominio aislada)
+    ├── hub/                          # SoftwareHubFeed, useSoftwareHub, types (feed consolidado y SmartScore)
     ├── news/                         # NewsCard, NewsGrid, useNews, types
     ├── blog/                         # BlogCard, BlogGrid, useBlog, types
     ├── forum/                        # TopicCard, ForumSection, useForum, types
@@ -74,8 +74,7 @@ frontend/web/src/app/(software)/
     ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
     ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
     ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types
-    ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
-    └── os/                           # Dock, MenuBar, SpotlightModal (Cmd+K)
+    └── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
 ```
 
 ### 2.2 Las 8 Áreas Temáticas de Software

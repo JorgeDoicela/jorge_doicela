@@ -1,9 +1,8 @@
 import { useState } from 'react';
-
 import { ContactFormData } from '../types';
-export type { ContactFormData };
-
 import { API_URL } from '../../../../config';
+
+export type { ContactFormData };
 
 export function useContact() {
   const [formData, setFormData] = useState<ContactFormData>({

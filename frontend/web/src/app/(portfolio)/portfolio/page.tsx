@@ -6,6 +6,7 @@ import { LanguageToggle } from '../components/LanguageToggle';
 import { BackToPortalButton } from '../components/BackToPortalButton';
 import { TypewriterRole } from '../components/TypewriterRole';
 import { ValuesPhilosophySection } from '../components/ValuesPhilosophySection';
+import { PortfolioFooterLinks } from '../components/PortfolioFooterLinks';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { PortfolioProject } from '../features/projects/types';
 import {
@@ -435,15 +436,7 @@ export default async function PortfolioPage() {
             {/* Footer */}
             <footer className="w-full max-w-7xl mx-auto mt-20 border-t border-border/60 pt-8 pb-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
                 <span>Jorge Ismael Doicela Molina &copy; {new Date().getFullYear()}</span>
-                <div className="flex flex-wrap items-center justify-center gap-4 text-foreground/50 tracking-normal capitalize text-xs">
-                    <a href="https://jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold-300 transition-colors">Inicio</a>
-                    <span>•</span>
-                    <a href="https://software.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold-300 transition-colors">Software</a>
-                    <span>•</span>
-                    <a href="https://bible.jorgedoicela.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold-300 transition-colors">Biblia</a>
-                    <span>•</span>
-                    <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-gold-300 transition-colors lowercase font-mono">llms.txt</a>
-                </div>
+                <PortfolioFooterLinks />
             </footer>
 
         </div>

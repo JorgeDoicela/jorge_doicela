@@ -228,6 +228,9 @@
   },
   "Nav": {
     "portal": "Back to jorgedoicela.com",
-    "portalShort": "Portal"
+    "portalShort": "Portal",
+    "landing": "Home",
+    "software": "Software",
+    "bible": "Bible"
   }
 }

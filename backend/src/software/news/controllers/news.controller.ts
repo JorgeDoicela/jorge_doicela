@@ -9,18 +9,15 @@ import {
 } from '@nestjs/common';
 import { NewsService } from '../services/news.service';
 import { CreateNewsDto } from '../dto/create-news.dto';
+import { GetNewsQueryDto } from '../dto/get-news-query.dto';
 
 @Controller('software/news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
   @Get()
-  async findAll(
-    @Query('search') search?: string,
-    @Query('tag') tag?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.newsService.findAll(search, tag, lang);
+  async findAll(@Query() query: GetNewsQueryDto) {
+    return this.newsService.findAll(query.search, query.tag, query.lang);
   }
 
   @Get(':idOrSlug')

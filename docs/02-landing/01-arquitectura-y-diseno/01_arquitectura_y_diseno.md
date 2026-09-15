@@ -90,6 +90,16 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Autoplay y Controles de Accesibilidad:** Temporizador de diapositivas con pausa automática durante la interacción de arrastre, controles de reproducción (`Play`/`Pause`), indicadores de posición por puntos con aria-labels y botones de acción directa internos (`Abrir Biblia`, `Entrar a Software`, `Ver Portafolio`).
 * **Cero Dependencias Adicionales (Zero-RAM Overhead):** Diseñado sin librerías externas de carrusel (ni Swiper ni Embla), reduciendo a cero el consumo extra de memoria para la estricta cuota de 1 GB en VPS.
 
+### 3.9 Motor de Rendimiento Adaptativo Multi-Nivel (PerformanceContext & Tiers)
+* **Arquitectura de Detección Inteligente:** Administrado en `(landing)/context/PerformanceContext.tsx`, clasifica en caliente al cliente en 3 niveles de potencia física (`high`, `mid`, `low`):
+  * **Tier `high` (Desktops y Laptops Potentes):** Experiencia cinemática completa a 120-144 Hz (1,600 partículas en `InteractiveParticles.tsx`, 48 nebulosas cósmicas y 16 rayos en `CinematicSpiralGalaxy.tsx`, parallax 3D multicapa con inercia física en `ParallaxBackground.tsx`).
+  * **Tier `mid` (Smartphones y Tablets):** Optimizado para pantallas táctiles y dispositivos móviles a 60 FPS estables (350 partículas, 12 nebulosas, 6 rayos suaves, reposo inteligente de parallax), preservando la GPU y evitando el recalentamiento de la batería.
+  * **Tier `low` (Accesibilidad, Ahorro de Datos y Hardware Limitado):** Activación forzada si el usuario solicita `prefers-reduced-motion: reduce`, `saveData: true`, si la conexión es lenta (2G) o si el hardware posee $\le$ 2 núcleos o $<$ 3 GB RAM. Desmonta la galaxia espiral (0% CPU/GPU), congela las estrellas a un renderizado estático sin bucle `requestAnimationFrame` y suaviza los filtros CSS a `blur(10px)`.
+* **Estándares W3C Interaction:** Detección de dispositivos táctiles móviles mediante `window.matchMedia('(pointer: coarse) and (hover: none)')`, evitando falsos positivos en laptops o pantallas táctiles con puntero de precisión.
+* **Degradación Adaptativa de FPS en Tiempo Real (FPS Watcher):** Monitor de fotogramas durante los primeros 120 frames; si la GPU sufre caídas drásticas continuas ($<$ 28 FPS por estrangulamiento térmico o pantallas 4K con gráficos integrados), degrada suavemente de `high` a `mid` o `low`.
+* **Integración con Battery Status API:** Si el navegador reporta batería crítica ($\le 20\%$ y desconectado del cargador), escala de inmediato a un modo de bajo consumo para proteger la autonomía del visitante.
+* **Sincronización DOM:** Emite `data-tier="high|mid|low"` en `<html>` consumido reactivamente por `globals.css`.
+
 ---
 
 ## 4. Estética Visual y Bento Grid

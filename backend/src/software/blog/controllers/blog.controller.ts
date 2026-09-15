@@ -9,18 +9,15 @@ import {
 } from '@nestjs/common';
 import { BlogService } from '../services/blog.service';
 import { CreateBlogPostDto } from '../dto/create-blog-post.dto';
+import { GetBlogQueryDto } from '../dto/get-blog-query.dto';
 
 @Controller('software/blog')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  async findAll(
-    @Query('search') search?: string,
-    @Query('series') series?: string,
-    @Query('lang') lang?: string,
-  ) {
-    return this.blogService.findAll(search, series, lang);
+  async findAll(@Query() query: GetBlogQueryDto) {
+    return this.blogService.findAll(query.search, query.series, query.lang);
   }
 
   @Get(':idOrSlug')

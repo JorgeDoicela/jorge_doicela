@@ -432,10 +432,10 @@ export const AppleDetailExplorer: React.FC = () => {
                         {isExpanded ? (
                             /* Modo Detalle Abierto: Bocadillo con bordes super redondeados y flechas flotantes laterales */
                             <div className="relative w-full max-w-[380px] mx-auto animate-fade-slide">
-                                {/* Flecha Izquierda Flotante */}
+                                {/* Flecha Izquierda Flotante (Touch Target 44px - WCAG 2.5.5) */}
                                 <button
                                     onClick={handlePrev}
-                                    className="absolute -left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
+                                    className="absolute -left-3 sm:-left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
                                     aria-label="Anterior característica"
                                 >
                                     <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
@@ -449,10 +449,10 @@ export const AppleDetailExplorer: React.FC = () => {
                                     </p>
                                 </div>
 
-                                {/* Flecha Derecha Flotante */}
+                                {/* Flecha Derecha Flotante (Touch Target 44px - WCAG 2.5.5) */}
                                 <button
                                     onClick={handleNext}
-                                    className="absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
+                                    className="absolute -right-3 sm:-right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
                                     aria-label="Siguiente característica"
                                 >
                                     <ChevronRight className="w-5 h-5 stroke-[2.5]" />

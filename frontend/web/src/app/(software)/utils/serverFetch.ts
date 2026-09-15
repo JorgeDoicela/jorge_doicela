@@ -23,7 +23,8 @@ const BACKEND_URL = getBackendUrl();
  * Devuelve null si el recurso no existe (404) o en caso de error de red.
  */
 export async function serverGet<T>(path: string): Promise<T | null> {
-  const url = `${BACKEND_URL}${path}`;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const url = `${BACKEND_URL}${normalizedPath}`;
 
   try {
     const res = await fetch(url, {

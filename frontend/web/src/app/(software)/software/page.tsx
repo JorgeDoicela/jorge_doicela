@@ -10,9 +10,6 @@ import { FeaturedCarousel } from '../components/FeaturedCarousel';
 
 export default function SoftwarePage() {
   const tHome = useTranslations('Home');
-  const tCommon = useTranslations('Common');
-  const [mounted, setMounted] = useState(false);
-  const [search, setSearch] = useState<string>('');
   const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
 
   // Consulta consolidada de alto rendimiento (1 única petición HTTP)
@@ -23,10 +20,9 @@ export default function SoftwarePage() {
     loading: isLoadingCurrent,
     error: hubError,
     refetch: refetchHub,
-  } = useSoftwareHub(search);
+  } = useSoftwareHub();
 
   useEffect(() => {
-    setMounted(true);
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('spotlight') === 'true') {

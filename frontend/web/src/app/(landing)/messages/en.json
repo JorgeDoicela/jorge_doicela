@@ -43,7 +43,10 @@
     "philosophyRef": "Colossians 3:23",
     "greetingMorning": "Good morning",
     "greetingAfternoon": "Good afternoon",
-    "greetingEvening": "Good evening"
+    "greetingEvening": "Good evening",
+    "officialLinks": "Official Links & Projects",
+    "consultationRequest": "Request Consultation & Quote",
+    "consultationBadge": "Form"
   },
   "Consulta": {
     "badge": "Software Engineering & DevSecOps Consulting",

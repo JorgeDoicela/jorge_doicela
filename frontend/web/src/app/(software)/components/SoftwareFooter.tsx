@@ -6,6 +6,28 @@ import { useTranslations } from 'next-intl';
 
 export function SoftwareFooter() {
   const t = useTranslations('Footer');
+  const [isLocal, setIsLocal] = React.useState(false);
+  const [port, setPort] = React.useState('');
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      setIsLocal(hostname.includes('localhost') || hostname.includes('127.0.0.1'));
+      setPort(window.location.port ? `:${window.location.port}` : '');
+    }
+  }, []);
+
+  const getSubdomainUrl = (subdomain: string) => {
+    return isLocal
+      ? `http://${subdomain}.localhost${port || ':3001'}`
+      : `https://${subdomain}.jorgedoicela.com`;
+  };
+
+  const getLandingUrl = () => {
+    return isLocal
+      ? `http://localhost${port || ':3001'}`
+      : 'https://jorgedoicela.com';
+  };
 
   return (
     <footer className="w-full mt-auto border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-100/80 dark:bg-[#070b12] backdrop-blur-md">
@@ -40,9 +62,9 @@ export function SoftwareFooter() {
           <div className="space-y-2.5">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-mono">{t('platforms')}</p>
             <ul className="space-y-2 text-xs text-zinc-500">
-              <li><a href="https://jorgedoicela.com" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('mainPortal')}</a></li>
-              <li><a href="https://portfolio.jorgedoicela.com" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('portfolioSSH')}</a></li>
-              <li><a href="https://bible.jorgedoicela.com" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('exegesisBible')}</a></li>
+              <li><a href={getLandingUrl()} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('mainPortal')}</a></li>
+              <li><a href={getSubdomainUrl('portfolio')} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('portfolioSSH')}</a></li>
+              <li><a href={getSubdomainUrl('bible')} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('exegesisBible')}</a></li>
               <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
             </ul>
           </div>

@@ -18,7 +18,6 @@ export function AuthorSidebarCard() {
                         fill
                         sizes="80px"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        priority
                     />
                 </div>
             </div>

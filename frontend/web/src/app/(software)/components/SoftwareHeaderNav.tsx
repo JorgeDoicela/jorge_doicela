@@ -70,7 +70,6 @@ export function SoftwareHeaderNav({
             height={128}
             className="h-full w-auto object-contain hidden dark:block"
             unoptimized
-            priority
           />
           {/* Logo Negro (Modo Claro) */}
           <Image
@@ -80,7 +79,6 @@ export function SoftwareHeaderNav({
             height={128}
             className="h-full w-auto object-contain block dark:hidden"
             unoptimized
-            priority
           />
         </div>
         <div className={`${compact ? 'h-10 sm:h-10' : 'h-14 sm:h-13 md:h-16 lg:h-[72px]'} w-auto flex items-center justify-center`}>

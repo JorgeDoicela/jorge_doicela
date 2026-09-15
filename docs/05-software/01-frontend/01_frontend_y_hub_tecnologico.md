@@ -59,27 +59,35 @@ frontend/web/src/app/(software)/
 ├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
 │   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)
 │   ├── news/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/news)
 │   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
 │   │   └── [slug]/page.tsx           # Lector de noticia con fuente oficial
 │   ├── blog/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/blog)
 │   │   ├── page.tsx                  # Catálogo de artículos del blog
 │   │   └── [slug]/page.tsx           # Lector de ensayo con tabla de contenidos
 │   ├── forum/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/forum)
 │   │   ├── page.tsx                  # Lista de temas del foro con filtros de estado
 │   │   └── [slug]/page.tsx           # Hilo de discusión con árbol de respuestas y formulario
 │   ├── ai/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/ai)
 │   │   ├── page.tsx                  # Directorio de modelos IA, agentes y MCP servers con filtro por tipo
 │   │   └── [slug]/page.tsx           # Ficha técnica de modelo / agente / MCP server
 │   ├── cybersecurity/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/cybersecurity)
 │   │   ├── page.tsx                  # Matriz de avisos con filtro por severidad (LOW a CRITICAL)
 │   │   └── [slug]/page.tsx           # Aviso de seguridad con severidad y remediación
 │   ├── tutorials/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/tutorials)
 │   │   ├── page.tsx                  # Malla de tutoriales con filtro por dificultad
 │   │   └── [slug]/page.tsx           # Tutorial interactivo paso a paso (StepWizard)
 │   ├── projects/
+│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/projects)
 │   │   ├── page.tsx                  # Galería showcase con filtro por estado (activo / en desarrollo)
 │   │   └── [slug]/page.tsx           # Caso de estudio y arquitectura de proyecto
 │   └── infrastructure/
+│       ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/infrastructure)
 │       ├── page.tsx                  # Catálogo de infraestructura con selector de categorías y buscador
 │       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del servidor
 │

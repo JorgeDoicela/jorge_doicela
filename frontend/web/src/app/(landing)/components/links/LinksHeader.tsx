@@ -78,7 +78,7 @@ export function LinksHeader() {
           width={160}
           height={160}
           className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full object-cover object-top shadow-xl hover:scale-105 transition-transform duration-300"
-          priority
+          loading="eager"
         />
       </div>
 

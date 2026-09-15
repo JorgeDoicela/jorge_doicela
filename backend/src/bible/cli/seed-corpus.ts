@@ -462,12 +462,20 @@ export function seedCorpus(
   });
   seedTranslationsTx();
 
-  const corpusDir = path.resolve(__dirname, '../corpus');
-  if (!fs.existsSync(corpusDir)) {
-    console.warn(
-      `[CorpusSeeder] Directorio de corpus no encontrado en: ${corpusDir}`,
-    );
-    return;
+  let corpusDir = path.resolve(__dirname, '../corpus');
+  if (
+    !fs.existsSync(corpusDir) ||
+    !fs.existsSync(path.join(corpusDir, 'morphology'))
+  ) {
+    const srcDir = path.resolve(__dirname, '../../../src/bible/corpus');
+    if (fs.existsSync(srcDir)) {
+      corpusDir = srcDir;
+    } else if (!fs.existsSync(corpusDir)) {
+      console.warn(
+        `[CorpusSeeder] Directorio de corpus no encontrado en: ${corpusDir}`,
+      );
+      return;
+    }
   }
 
   const translations = fs.readdirSync(corpusDir);

@@ -1,32 +1,18 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useSubdomainUrl } from '../../../shared/lib';
 
 export function LandingFooterLinks() {
   const tLanding = useTranslations('Landing');
-  const [isLocal, setIsLocal] = useState(false);
-  const [port, setPort] = useState('');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      setIsLocal(hostname.includes('localhost') || hostname.includes('127.0.0.1'));
-      setPort(window.location.port ? `:${window.location.port}` : '');
-    }
-  }, []);
-
-  const getSubdomainUrl = (subdomain: string) => {
-    return isLocal
-      ? `http://${subdomain}.localhost${port || ':3001'}`
-      : `https://${subdomain}.jorgedoicela.com`;
-  };
+  const { urls } = useSubdomainUrl();
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-text-muted">
       <a
-        href={getSubdomainUrl('portfolio')}
+        href={urls.portfolio}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-foreground transition-colors"
@@ -35,7 +21,7 @@ export function LandingFooterLinks() {
       </a>
       <span>•</span>
       <a
-        href={getSubdomainUrl('software')}
+        href={urls.software}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-foreground transition-colors"
@@ -44,7 +30,7 @@ export function LandingFooterLinks() {
       </a>
       <span>•</span>
       <a
-        href={getSubdomainUrl('bible')}
+        href={urls.bible}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-foreground transition-colors"

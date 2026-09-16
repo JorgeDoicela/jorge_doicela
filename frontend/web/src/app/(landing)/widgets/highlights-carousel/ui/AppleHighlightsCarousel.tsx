@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { useLanguage } from '../../../providers/LanguageContext';
+import { useSubdomainUrl } from '../../../shared/lib';
+import { BibleSlideVisual, SoftwareSlideVisual, PortfolioSlideVisual } from './slides';
 
 interface AppleHighlightsCarouselProps {
     links?: {
@@ -12,34 +14,15 @@ interface AppleHighlightsCarouselProps {
     };
 }
 
-const DEFAULT_LINKS = {
-    portfolio: 'https://portfolio.jorgedoicela.com',
-    bible: 'https://bible.jorgedoicela.com',
-    software: 'https://software.jorgedoicela.com',
-};
-
-export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = ({ links = DEFAULT_LINKS }) => {
+export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = ({ links }) => {
     const { language } = useLanguage();
+    const { urls } = useSubdomainUrl();
+    const resolvedLinks = links || urls;
+
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [isInView, setIsInView] = useState(false);
-    const [resolvedLinks, setResolvedLinks] = useState(links);
     const sectionRef = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const hostname = window.location.hostname;
-            const port = window.location.port ? `:${window.location.port}` : '';
-            const protocol = window.location.protocol;
-            if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-                setResolvedLinks({
-                    portfolio: `${protocol}//portfolio.localhost${port}`,
-                    bible: `${protocol}//bible.localhost${port}`,
-                    software: `${protocol}//software.localhost${port}`,
-                });
-            }
-        }
-    }, [links]);
 
     const isEs = language === 'es';
     const SLIDE_DURATION = 6500;
@@ -53,37 +36,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 : '9 theological exegesis engines, Strong morphology analysis, and distraction-free reading.',
             linkUrl: resolvedLinks.bible,
             linkText: isEs ? 'Abrir Biblia' : 'Open Bible',
-            renderVisual: () => (
-                <div className="w-full flex flex-col justify-center gap-5 sm:gap-6 text-left py-1">
-                    {/* Cita Bíblica Principal */}
-                    <div className="flex flex-col gap-1.5">
-                        <p className="text-lg sm:text-2xl md:text-3xl font-light italic text-foreground leading-relaxed">
-                            &ldquo;{isEs ? 'Lámpara es a mis pies tu palabra, y lumbrera a mi camino.' : 'Your word is a lamp to my feet and a light to my path.'}&rdquo;
-                        </p>
-                        <span className="text-xs sm:text-sm text-text-subtitle font-normal">
-                            Salmos 119:105 · {isEs ? 'Texto Masorético y Septuaginta' : 'Masoretic Text and Septuagint'}
-                        </span>
-                    </div>
-
-                    {/* Desglose Morfológico con Separadores Sutiles */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
-                        <div className="flex flex-col gap-0.5 sm:pr-6 pb-2.5 sm:pb-0">
-                            <span className="text-xs sm:text-sm font-semibold text-foreground">Niyr (Strong H5216)</span>
-                            <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Lámpara y luz resplandeciente' : 'Lamp and shining light'}</span>
-                        </div>
-
-                        <div className="flex flex-col gap-0.5 sm:px-6 py-2.5 sm:py-0">
-                            <span className="text-xs sm:text-sm font-semibold text-foreground">Dabar (Strong H1697)</span>
-                            <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Palabra y mandato divino' : 'Word and divine decree'}</span>
-                        </div>
-
-                        <div className="flex flex-col gap-0.5 sm:pl-6 pt-2.5 sm:pt-0">
-                            <span className="text-xs sm:text-sm font-semibold text-foreground">Owr (Strong H216)</span>
-                            <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Lumbrera y claridad viva' : 'Luminance and bright light'}</span>
-                        </div>
-                    </div>
-                </div>
-            ),
+            renderVisual: () => <BibleSlideVisual isEs={isEs} />,
         },
         {
             id: 'software',
@@ -93,34 +46,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 : 'Cutting-edge news, reasoning model analysis, cybersecurity, and modern web tools.',
             linkUrl: resolvedLinks.software,
             linkText: isEs ? 'Entrar a Software' : 'Enter Software',
-            renderVisual: () => (
-                <div className="w-full flex flex-col justify-center text-left py-1">
-                    {/* Columnas Separadas por Línea Sutil */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
-                        <div className="flex flex-col gap-1.5 sm:pr-8 pb-4 sm:pb-0">
-                            <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                {isEs ? 'IA Generativa & Modelos de Razonamiento' : 'Generative AI & Reasoning Models'}
-                            </span>
-                            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                                {isEs
-                                    ? 'Arquitecturas de inferencia, evaluación de benchmarks, agentes autónomos y técnicas avanzadas de prompting y RAG.'
-                                    : 'Inference architectures, benchmark evaluations, autonomous agents, and advanced prompting and RAG techniques.'}
-                            </p>
-                        </div>
-
-                        <div className="flex flex-col gap-1.5 sm:pl-8 pt-4 sm:pt-0">
-                            <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                {isEs ? 'Ciberseguridad & Defensa Activa' : 'Cybersecurity & Active Defense'}
-                            </span>
-                            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                                {isEs
-                                    ? 'Análisis de vulnerabilidades, auditorías de dependencias, protección de APIs y políticas de seguridad zero-trust.'
-                                    : 'Vulnerability analysis, dependency audits, API protection, and zero-trust security policies.'}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            ),
+            renderVisual: () => <SoftwareSlideVisual isEs={isEs} />,
         },
         {
             id: 'portfolio',
@@ -130,45 +56,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 : 'High-quality software architecture, production projects, technical consulting, and engineering solutions.',
             linkUrl: resolvedLinks.portfolio,
             linkText: isEs ? 'Ver Portafolio' : 'View Portfolio',
-            renderVisual: () => (
-                <div className="w-full flex flex-col justify-center text-left py-1">
-                    {/* 3 Pilares Separados por Líneas Sutiles */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
-                        <div className="flex flex-col gap-1 sm:pr-6 pb-3 sm:pb-0">
-                            <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                {isEs ? 'Arquitectura Limpia' : 'Clean Architecture'}
-                            </span>
-                            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                                {isEs
-                                    ? 'Next.js 16, NestJS 11, TypeScript estricto y persistencia atómica aislada.'
-                                    : 'Next.js 16, NestJS 11, strict TypeScript, and isolated persistence.'}
-                            </p>
-                        </div>
-
-                        <div className="flex flex-col gap-1 sm:px-6 py-3 sm:py-0">
-                            <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                {isEs ? 'Alto Rendimiento' : 'High Performance'}
-                            </span>
-                            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                                {isEs
-                                    ? 'Optimización de recursos en 1 GB de RAM, WebSockets en tiempo real y cero latencia.'
-                                    : 'Resource optimization on 1 GB RAM, real-time WebSockets, and zero latency.'}
-                            </p>
-                        </div>
-
-                        <div className="flex flex-col gap-1 sm:pl-6 pt-3 sm:pt-0">
-                            <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                                {isEs ? 'Soluciones End-to-End' : 'End-to-End Delivery'}
-                            </span>
-                            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                                {isEs
-                                    ? 'Diseño de experiencia UX/UI, desarrollo full stack y despliegue continuo con CI/CD.'
-                                    : 'UX/UI experience design, full stack development, and continuous CI/CD deployment.'}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            ),
+            renderVisual: () => <PortfolioSlideVisual isEs={isEs} />,
         },
     ];
 

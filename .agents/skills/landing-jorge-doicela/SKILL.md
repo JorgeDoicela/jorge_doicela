@@ -39,10 +39,10 @@ frontend/web/src/app/(landing)/
 │   └── index.ts
 │
 ├── shared/                           # CAPA 6: UI Kit agnóstico, SEO, PWA y Utilidades
-│   ├── ui/                           # CustomSelect, QuitoClockBadge, SkipToContent
+│   ├── ui/                           # BentoCard, CustomSelect, QuitoClockBadge, SkipToContent
 │   ├── seo/                          # PersonJsonLd (Schema.org Person & WebSite)
 │   ├── pwa/                          # PwaRegister (Service Worker)
-│   ├── lib/                          # getSubdomainUrl (resolución local vs producción)
+│   ├── lib/                          # useSubdomainUrl (hook reactivo SSR-safe local vs producción)
 │   └── index.ts
 │
 ├── entities/                         # CAPA 5: Modelos del Dominio y Contenido Base
@@ -59,12 +59,13 @@ frontend/web/src/app/(landing)/
 │   └── index.ts
 │
 ├── widgets/                          # CAPA 3: Bloques Visuales Autónomos y Layouts
-│   ├── highlights-carousel/          # AppleHighlightsCarousel, AppleHeroShowcase
+│   ├── landing-header/               # LandingHeader (cabecera universal con badge opcional y backLink)
+│   ├── landing-footer/               # LandingFooter (variantes full y compact con LandingFooterLinks)
+│   ├── highlights-carousel/          # AppleHighlightsCarousel con slides/ (Bible, Software, Portfolio)
 │   ├── highlights-explorer/          # AppleDetailExplorer (Modal/Drawer inmersivo de proyectos)
 │   ├── cosmic-canvas/                # LandingVisualEffects, ParallaxBackground, CinematicSpiralGalaxy, InteractiveParticles
-│   ├── consulta-section/             # ConsultaForm, ConsultaHeader
-│   ├── links-showcase/               # LinksHeader, LinksTopBar, ActionLinksList, ProjectsMediaGrid
-│   ├── landing-footer/               # LandingFooterLinks
+│   ├── consulta-section/             # ConsultaForm (formulario y feedback de leads)
+│   ├── links-showcase/               # LinksHeader, ActionLinksList, ProjectsMediaGrid
 │   └── index.ts
 │
 └── (pages App Router)                # CAPAS 2 & 1: Enrutamiento Físico Next.js
@@ -75,19 +76,19 @@ frontend/web/src/app/(landing)/
     └── api/chat/route.ts             # API Route del Asistente IA
 ```
 
-
 ---
 
 ## 3. Funcionalidades Clave y Buenas Prácticas
 
-### 3.1 Resolutor Dinámico de Subdominios (Local vs Producción)
-Detecta si la petición proviene de `localhost` o producción para mapear automáticamente los enlaces hacia `http://*.localhost:3001` o `https://*.jorgedoicela.com`:
+### 3.1 Hook Reactivo SSR-Safe de Subdominios (`useSubdomainUrl`)
+Gestiona de forma unificada y segura para SSR la resolución dinámica hacia `http://*.localhost:3001` (desarrollo) o `https://*.jorgedoicela.com` (producción) sin duplicar lógica en componentes:
 ```typescript
-const isLocal = typeof window !== 'undefined' && 
-  (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1'));
+import { useSubdomainUrl } from '../shared';
 
-const getUrl = (subdomain: string) => 
-  isLocal ? `http://${subdomain}.localhost:3001` : `https://${subdomain}.jorgedoicela.com`;
+// Uso directo en cualquier componente cliente:
+const bibleUrl = useSubdomainUrl('bible');
+const softwareUrl = useSubdomainUrl('software');
+const portfolioUrl = useSubdomainUrl('portfolio');
 ```
 
 ### 3.2 Reloj en Huso Horario de Quito y Saludo Adaptativo

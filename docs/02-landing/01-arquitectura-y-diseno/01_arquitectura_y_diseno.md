@@ -16,10 +16,10 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 > * **Aislamiento de Estilos:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones, fuentes Inter y Outfit).
 > * **Feature-Sliced Design (FSD Canónico en 6 Capas):** Estructura desacoplada y escalable:
 >   * `providers/`: Contextos locales (`theme-provider`, `LanguageContext`, `PerformanceContext`).
->   * `shared/`: UI Kit agnóstico (`CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`) y utilitarios (`domain.ts`).
+>   * `shared/`: UI Kit agnóstico (`BentoCard`, `CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`) y utilitarios/hooks (`useSubdomainUrl`).
 >   * `entities/`: Modelos del dominio (`highlights`, `profile/TypewriterRole`, `links`).
 >   * `features/`: Casos de uso e interacciones (`ai-assistant`, `language-toggle`, `theme-toggle`, `share-profile`).
->   * `widgets/`: Bloques visuales complejos (`highlights-carousel`, `highlights-explorer`, `cosmic-canvas`, `consulta-section`, `links-showcase`, `landing-footer`).
+>   * `widgets/`: Bloques visuales complejos (`landing-header`, `landing-footer`, `highlights-carousel` con `slides/`, `highlights-explorer`, `cosmic-canvas`, `consulta-section`, `links-showcase`).
 >   * `(pages)`: Enrutador físico App Router (`page.tsx`, `consulta/page.tsx`, `links/page.tsx`, `contacto/page.tsx`, `api/chat/route.ts`).
 
 ---
@@ -116,4 +116,4 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Apple Highlights Carousel:** Vitrina central de proyectos con estilo oficial Apple, tarjetas centradas y asomadas en los bordes (`[--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)]`), soporte de arrastre por ratón/touch y tipografía refinada.
 * **Static & Interactive Bento Cards:** Tarjetas modulares con micro-animaciones al hacer hover (elevación sutil, iluminación de bordes y desplazamiento interactivo de flechas).
 * **Fondo de Profundidad Sutil:** Elipses degradadas con desenfoque suave (`blur-[130px]`) que aportan tridimensionalidad moderna sin penalizar el rendimiento ni la GPU.
-* **Compatibilidad de Temas (Dark & Light Mode):** Soporte integral y desacoplado para modo oscuro (`dark`, Apple Dark Slate & Deep Cosmos) y modo claro (`light`, Apple Impoluto #fafafc) mediante `ThemeProvider` local (`next-themes`) en `layout.tsx` y el componente reutilizable `ThemeToggle.tsx` en todos los encabezados (`page.tsx`, `ConsultaHeader.tsx`, `LinksTopBar.tsx`).
+* **Compatibilidad de Temas (Dark & Light Mode):** Soporte integral y desacoplado para modo oscuro (`dark`, Apple Dark Slate & Deep Cosmos) y modo claro (`light`, Apple Impoluto #fafafc) mediante `ThemeProvider` local (`next-themes`) en `layout.tsx` y el componente unificado `LandingHeader` (con `ThemeToggle` y `QuitoClockBadge`) en todas las páginas (`/`, `/consulta`, `/links`).

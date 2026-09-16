@@ -1,9 +1,11 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { ConsultaHeader, ConsultaForm } from '../widgets/consulta-section';
+import { ConsultaForm } from '../widgets/consulta-section';
+import { LandingHeader } from '../widgets/landing-header';
+import { LandingFooter } from '../widgets/landing-footer';
 import { LandingVisualEffects } from '../widgets/cosmic-canvas';
-import { SkipToContent } from '../shared';
+import { SkipToContent, BentoCard } from '../shared';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Consulta');
@@ -32,8 +34,8 @@ export default async function ConsultaPage() {
       {/* Capas de Fondo Cósmico y Parallax de la Landing */}
       <LandingVisualEffects />
 
-      {/* Barra de Navegación Superior fija a los extremos */}
-      <ConsultaHeader />
+      {/* Barra de Navegación Superior Unificada */}
+      <LandingHeader sectionBadge={t('badge')} />
 
       {/* Contenido Principal Bento con espaciado generoso */}
       <main
@@ -88,19 +90,14 @@ export default async function ConsultaPage() {
           </div>
 
           {/* Columna Derecha: Tarjeta Frosted Glass con el Formulario */}
-          <div className="lg:col-span-7 rounded-[2rem] sm:rounded-[2.6rem] md:rounded-[3rem] bg-card border border-card-border p-6 sm:p-10 md:p-12 lg:p-14 backdrop-blur-2xl transition-all duration-300 hover:border-card-hover-border shadow-2xl">
+          <BentoCard className="lg:col-span-7 p-6 sm:p-10 md:p-12 lg:p-14 shadow-2xl">
             <ConsultaForm />
-          </div>
+          </BentoCard>
         </div>
       </main>
 
       {/* Footer Minimalista de la Landing */}
-      <footer
-        className="animate-fade-in-up w-full max-w-5xl mt-10 sm:mt-16 border-t border-card-border/30 pt-6 sm:pt-8 px-2 md:px-0 flex justify-center text-center text-[11px] sm:text-xs text-text-subtitle font-normal tracking-tight"
-        style={{ animationDelay: '600ms' }}
-      >
-        <p>{t('footerText', { year: new Date().getFullYear().toString() })}</p>
-      </footer>
+      <LandingFooter variant="compact" />
     </div>
   );
 }

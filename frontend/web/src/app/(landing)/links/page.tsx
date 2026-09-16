@@ -1,7 +1,9 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { LinksTopBar, LinksHeader, ActionLinksList, ProjectsMediaGrid } from '../widgets/links-showcase';
+import { LinksHeader, ActionLinksList, ProjectsMediaGrid } from '../widgets/links-showcase';
+import { LandingHeader } from '../widgets/landing-header';
+import { LandingFooter } from '../widgets/landing-footer';
 import { ShareProfileButton } from '../features/share-profile';
 import { LinksAiAssistant } from '../features/ai-assistant';
 import { LandingVisualEffects } from '../widgets/cosmic-canvas';
@@ -30,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function LinksPage() {
-  const tCommon = await getTranslations('Common');
+  const tLinks = await getTranslations('Links');
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden p-4 sm:p-8 md:p-12">
@@ -39,8 +41,8 @@ export default async function LinksPage() {
       {/* Capas de Fondo Cósmico y Partículas Nativas */}
       <LandingVisualEffects />
 
-      {/* Barra de Navegación Superior fija a los extremos de la pantalla */}
-      <LinksTopBar />
+      {/* Barra de Navegación Superior Unificada */}
+      <LandingHeader showBackLink backLabel={tLinks('backHome')} />
 
       {/* Contenedor Principal Amplio */}
       <main
@@ -60,12 +62,8 @@ export default async function LinksPage() {
         {/* Cuadrícula 3x3 estilo Instagram de Proyectos con Modal */}
         <ProjectsMediaGrid />
 
-        {/* Footer Discreto con Geist Sans */}
-        <footer className="w-full text-center mt-8 mb-4">
-          <p className="text-xs font-medium text-text-muted">
-            {tCommon('footer', { year: new Date().getFullYear().toString() })}
-          </p>
-        </footer>
+        {/* Footer Compacto */}
+        <LandingFooter variant="compact" />
       </main>
 
       {/* Asistente de IA (Botón Flotante y Modal) */}

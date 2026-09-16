@@ -4,26 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
+import { useSubdomainUrl } from '../../../shared/lib';
+
 export function ActionLinksList() {
   const t = useTranslations('Links');
-  const [resolvedDomain, setResolvedDomain] = React.useState({ isLocal: false, protocol: 'https:', port: '' });
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      const port = window.location.port ? `:${window.location.port}` : '';
-      const protocol = window.location.protocol;
-      if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-        setResolvedDomain({ isLocal: true, protocol, port });
-      }
-    }
-  }, []);
-
-  const getSubdomainUrl = (subdomain: string) => {
-    return resolvedDomain.isLocal
-      ? `${resolvedDomain.protocol}//${subdomain}.localhost${resolvedDomain.port}`
-      : `https://${subdomain}.jorgedoicela.com`;
-  };
+  const { getSubdomainUrl } = useSubdomainUrl();
 
   const links = [
     {

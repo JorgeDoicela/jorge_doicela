@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { usePerformanceTier } from '../../../providers/PerformanceContext';
+import { usePerformanceTier } from '../../../shared';
 
 interface Particle {
     x: number;

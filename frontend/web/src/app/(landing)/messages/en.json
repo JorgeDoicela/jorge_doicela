@@ -47,7 +47,8 @@
     "greetingEvening": "Good evening",
     "officialLinks": "Official Links & Projects",
     "consultationRequest": "Request Consultation & Quote",
-    "consultationBadge": "Form"
+    "consultationBadge": "Form",
+    "highlightsTitle": "Get the highlights"
   },
   "Consulta": {
     "badge": "Software Engineering & DevSecOps Consulting",
@@ -156,7 +157,22 @@
     "project9Badge": "Colossians 3:23",
     "project9Title": "Purpose-Driven Engineering",
     "project9Desc": "Software and architectures crafted with technical excellence, integrity, and Christian devotion: 'Whatever you do, work at it with all your heart, as working for the Lord.' (Col 3:23)."
+  },
+  "AiAssistant": {
+    "headerStatus": "Online",
+    "headerSubtitle": "Official Assistant",
+    "welcomeMessage": "Hello. I am Jorge Doicela's AI Assistant. I can answer questions about his software projects, technical background (Full Stack, AI, 1 GB RAM Cloud), or help you request a custom proposal. How can I assist you today?",
+    "resetConversation": "Reset conversation",
+    "close": "Close",
+    "inputPlaceholder": "Ask a question...",
+    "inputAriaLabel": "Question for the Assistant",
+    "sendTitle": "Send (Enter)",
+    "sendAriaLabel": "Send",
+    "consultationActionText": "Request technical proposal",
+    "emptyError": "Could not get a response from the assistant.",
+    "networkError": "Connection error with the assistant. Please try again."
   }
 }
+
 
 

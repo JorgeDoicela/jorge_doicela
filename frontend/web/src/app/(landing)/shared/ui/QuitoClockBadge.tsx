@@ -1,18 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import { useLanguage } from '../../providers/LanguageContext';
+import { useTranslations, useLocale } from 'next-intl';
 
 export function QuitoClockBadge() {
     const tCommon = useTranslations('Common');
-    const { language } = useLanguage();
+    const locale = useLocale();
     const [time, setTime] = useState<string>('');
 
     useEffect(() => {
         const updateQuitoTime = () => {
             const now = new Date();
-            const formatted = new Intl.DateTimeFormat(language === 'es' ? 'es-EC' : 'en-US', {
+            const formatted = new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-EC', {
                 timeZone: 'America/Guayaquil',
                 hour: '2-digit',
                 minute: '2-digit',
@@ -25,7 +24,7 @@ export function QuitoClockBadge() {
         updateQuitoTime();
         const timer = setInterval(updateQuitoTime, 1000);
         return () => clearInterval(timer);
-    }, [language]);
+    }, [locale]);
 
     return (
         <div

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { usePerformanceTier } from '../../../providers/PerformanceContext';
+import { usePerformanceTier } from '../../../shared';
 
 interface CosmicParticle {
     armIndex: number;

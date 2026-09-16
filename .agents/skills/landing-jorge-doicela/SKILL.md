@@ -38,11 +38,12 @@ frontend/web/src/app/(landing)/
 │   ├── PerformanceContext.tsx        # Detección de hardware y aceleración GPU para 3D
 │   └── index.ts
 │
-├── shared/                           # CAPA 6: UI Kit agnóstico, SEO, PWA y Utilidades
+├── shared/                           # CAPA 6: UI Kit agnóstico, SEO, PWA, Utilidades y Contextos
 │   ├── ui/                           # BentoCard, CustomSelect, QuitoClockBadge, SkipToContent
 │   ├── seo/                          # PersonJsonLd (Schema.org Person & WebSite)
 │   ├── pwa/                          # PwaRegister (Service Worker)
-│   ├── lib/                          # useSubdomainUrl (hook reactivo SSR-safe local vs producción)
+│   ├── lib/                          # useSubdomainUrl, api (resolución local vs producción)
+│   ├── context/                      # LanguageContext (useLanguage), PerformanceContext (usePerformanceTier)
 │   └── index.ts
 │
 ├── entities/                         # CAPA 5: Modelos del Dominio y Contenido Base

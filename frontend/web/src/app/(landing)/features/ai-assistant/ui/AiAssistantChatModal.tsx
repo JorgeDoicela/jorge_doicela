@@ -11,7 +11,8 @@ import {
   ArrowRight,
   RotateCcw
 } from 'lucide-react';
-import { useLanguage } from '../../../providers/LanguageContext';
+import { useTranslations } from 'next-intl';
+import { useLanguage } from '../../../shared';
 
 interface Message {
   id: string;
@@ -157,6 +158,7 @@ function FormattedAiText({ text }: { text: string }) {
 
 export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalProps) {
   const { language } = useLanguage();
+  const tAi = useTranslations('AiAssistant');
   const isEs = language === 'es';
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -187,9 +189,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
             {
               id: 'welcome',
               sender: 'ai',
-              text: isEs
-                ? 'Hola. Soy el Asistente de IA de Jorge Doicela. Puedo responder tus dudas sobre sus proyectos de software, experiencia técnica (Full Stack, IA, Cloud 1 GB RAM) o ayudarte a solicitar una propuesta personalizada. ¿En qué te puedo ayudar hoy?'
-                : "Hello. I am Jorge Doicela's AI Assistant. I can answer questions about his software projects, technical background (Full Stack, AI, 1 GB RAM Cloud), or help you request a custom proposal. How can I assist you today?",
+              text: tAi('welcomeMessage'),
               timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
           ];
@@ -197,7 +197,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
         return prev;
       });
     }
-  }, [isOpen, isEs]);
+  }, [isOpen, tAi]);
 
   // Enfocar input al abrir
   useEffect(() => {
@@ -371,7 +371,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
                   ...msg,
                   text: accumulatedText,
                   actionUrl: accumulatedText.includes('/consulta') ? '/consulta' : undefined,
-                  actionText: accumulatedText.includes('/consulta') ? (isEs ? 'Solicitar Propuesta Técnica' : 'Request Technical Proposal') : undefined
+                  actionText: accumulatedText.includes('/consulta') ? tAi('consultationActionText') : undefined
                 }
               : msg
           )
@@ -457,8 +457,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
             <button
               onClick={handleResetChat}
               className="p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-foreground/5 transition-all cursor-pointer"
-              title={isEs ? 'Reiniciar conversación' : 'Reset conversation'}
-              aria-label={isEs ? 'Reiniciar conversación' : 'Reset conversation'}
+              title={tAi('resetConversation')}
+              aria-label={tAi('resetConversation')}
             >
               <RotateCcw size={14} />
             </button>
@@ -468,8 +468,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-foreground/5 transition-colors cursor-pointer"
-            title={isEs ? 'Cerrar' : 'Close'}
-            aria-label={isEs ? 'Cerrar' : 'Close'}
+            title={tAi('close')}
+            aria-label={tAi('close')}
           >
             <X size={15} />
           </button>
@@ -560,18 +560,18 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
               handleSendMessage();
             }
           }}
-          placeholder={isEs ? 'Escribe una pregunta...' : 'Ask a question...'}
+          placeholder={tAi('inputPlaceholder')}
           maxLength={1000}
           className="flex-1 px-3.5 py-2 rounded-2xl ai-modal-input border text-xs sm:text-sm focus:outline-none transition-all resize-none max-h-[120px] overflow-hidden leading-relaxed"
-          aria-label={isEs ? 'Pregunta para el Asistente' : 'Question for the Assistant'}
+          aria-label={tAi('inputAriaLabel')}
         />
 
         <button
           onClick={() => handleSendMessage()}
           disabled={!inputText.trim() || isTyping}
           className="p-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 disabled:opacity-20 disabled:cursor-not-allowed active:scale-90 transition-all cursor-pointer flex items-center justify-center shrink-0 mb-0.5"
-          title={isEs ? 'Enviar (Enter)' : 'Send (Enter)'}
-          aria-label={isEs ? 'Enviar' : 'Send'}
+          title={tAi('sendTitle')}
+          aria-label={tAi('sendAriaLabel')}
         >
           <Send size={18} />
         </button>

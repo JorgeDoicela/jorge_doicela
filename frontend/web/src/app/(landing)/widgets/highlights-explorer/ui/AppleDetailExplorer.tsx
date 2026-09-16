@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Plus, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useLanguage } from '../../../providers/LanguageContext';
+import { useLanguage } from '../../../shared';
 
 export const AppleDetailExplorer: React.FC = () => {
     const { language } = useLanguage();

@@ -15,8 +15,8 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 > **Arquitectura Micro:**
 > * **Aislamiento de Estilos:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones, fuentes Inter y Outfit).
 > * **Feature-Sliced Design (FSD Canónico en 6 Capas):** Estructura desacoplada y escalable:
->   * `providers/`: Contextos locales (`theme-provider`, `LanguageContext`, `PerformanceContext`).
->   * `shared/`: UI Kit agnóstico (`BentoCard`, `CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`) y utilitarios/hooks (`useSubdomainUrl`).
+>   * `providers/`: Envoltorios de montaje global en layout (`theme-provider`, `LanguageProvider`, `PerformanceProvider`).
+>   * `shared/`: UI Kit agnóstico (`BentoCard`, `CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`), utilitarios/hooks (`useSubdomainUrl`, `api`) y contextos/hooks globales (`useLanguage`, `usePerformanceTier`).
 >   * `entities/`: Modelos del dominio (`highlights`, `profile/TypewriterRole`, `links`).
 >   * `features/`: Casos de uso e interacciones (`ai-assistant`, `language-toggle`, `theme-toggle`, `share-profile`).
 >   * `widgets/`: Bloques visuales complejos (`landing-header`, `landing-footer`, `highlights-carousel` con `slides/`, `highlights-explorer`, `cosmic-canvas`, `consulta-section`, `links-showcase`).

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { CustomSelect, SelectOption } from '../../../shared/ui/CustomSelect';
-import { API_URL } from '../../../../config';
+import { API_URL } from '../../../shared';
 
 export function ConsultaForm() {
   const t = useTranslations('Consulta');

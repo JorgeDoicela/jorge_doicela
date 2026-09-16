@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { useLanguage } from '../../../providers/LanguageContext';
+import { useLanguage } from '../../../shared';
 
 export function LanguageToggleButton() {
     const { language, toggleLanguage } = useLanguage();

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { usePerformanceTier } from '../../../providers/PerformanceContext';
+import { usePerformanceTier } from '../../../shared';
 
 /**
  * ParallaxBackground Component (Adaptive Multi-Tier Deep Cosmos Engine)

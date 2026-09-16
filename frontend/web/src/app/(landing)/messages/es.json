@@ -47,7 +47,8 @@
     "greetingEvening": "Buenas noches",
     "officialLinks": "Enlaces Oficiales & Proyectos",
     "consultationRequest": "Solicitar Consulta & Presupuesto",
-    "consultationBadge": "Formulario"
+    "consultationBadge": "Formulario",
+    "highlightsTitle": "Mira lo más destacado"
   },
   "Consulta": {
     "badge": "Ingeniería de Software & Consultoría DevSecOps",
@@ -156,7 +157,22 @@
     "project9Badge": "Colosenses 3:23",
     "project9Title": "Ingeniería con Propósito",
     "project9Desc": "Software y arquitecturas creadas con excelencia técnica, honestidad y devoción cristiana. 'Y todo lo que hagáis, hacedlo de corazón, como para el Señor.' (Col 3:23)."
+  },
+  "AiAssistant": {
+    "headerStatus": "En línea",
+    "headerSubtitle": "Asistente Oficial",
+    "welcomeMessage": "Hola. Soy el Asistente de IA de Jorge Doicela. Puedo responder tus dudas sobre sus proyectos de software, experiencia técnica (Full Stack, IA, Cloud 1 GB RAM) o ayudarte a solicitar una propuesta personalizada. ¿En qué te puedo ayudar hoy?",
+    "resetConversation": "Reiniciar conversación",
+    "close": "Cerrar",
+    "inputPlaceholder": "Escribe una pregunta...",
+    "inputAriaLabel": "Pregunta para el Asistente",
+    "sendTitle": "Enviar (Enter)",
+    "sendAriaLabel": "Enviar",
+    "consultationActionText": "Solicitar propuesta técnica",
+    "emptyError": "No se pudo obtener respuesta del asistente.",
+    "networkError": "Error de conexión con el asistente. Intenta de nuevo."
   }
 }
+
 
 

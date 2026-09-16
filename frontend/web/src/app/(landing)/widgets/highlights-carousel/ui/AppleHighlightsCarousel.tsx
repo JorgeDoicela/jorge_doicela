@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause } from 'lucide-react';
-import { useLanguage } from '../../../providers/LanguageContext';
-import { useSubdomainUrl } from '../../../shared/lib';
+import { useTranslations } from 'next-intl';
+import { useLanguage, useSubdomainUrl } from '../../../shared';
 import { BibleSlideVisual, SoftwareSlideVisual, PortfolioSlideVisual } from './slides';
 
 interface AppleHighlightsCarouselProps {
@@ -16,6 +16,7 @@ interface AppleHighlightsCarouselProps {
 
 export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = ({ links }) => {
     const { language } = useLanguage();
+    const tLanding = useTranslations('Landing');
     const { urls } = useSubdomainUrl();
     const resolvedLinks = links || urls;
 
@@ -30,32 +31,26 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
     const slides = [
         {
             id: 'bible',
-            headline: isEs ? 'La Biblia Modular' : 'The Modular Bible',
-            description: isEs
-                ? '9 motores de exégesis teológica, análisis morfológico Strong y lectura pura libre de distracciones.'
-                : '9 theological exegesis engines, Strong morphology analysis, and distraction-free reading.',
+            headline: tLanding('bibleHeadline'),
+            description: tLanding('bibleDescription'),
             linkUrl: resolvedLinks.bible,
-            linkText: isEs ? 'Abrir Biblia' : 'Open Bible',
+            linkText: tLanding('bibleCta'),
             renderVisual: () => <BibleSlideVisual isEs={isEs} />,
         },
         {
             id: 'software',
-            headline: isEs ? 'Software & Inteligencia Artificial' : 'Software & Artificial Intelligence',
-            description: isEs
-                ? 'Noticias de vanguardia, análisis de modelos de razonamiento, ciberseguridad y herramientas web.'
-                : 'Cutting-edge news, reasoning model analysis, cybersecurity, and modern web tools.',
+            headline: tLanding('softwareHeadline'),
+            description: tLanding('softwareDescription'),
             linkUrl: resolvedLinks.software,
-            linkText: isEs ? 'Entrar a Software' : 'Enter Software',
+            linkText: tLanding('softwareCta'),
             renderVisual: () => <SoftwareSlideVisual isEs={isEs} />,
         },
         {
             id: 'portfolio',
-            headline: isEs ? 'Portafolio Profesional & Servicios' : 'Professional Portfolio & Services',
-            description: isEs
-                ? 'Arquitectura de software de alta calidad, proyectos de producción, consultoría y soluciones de ingeniería.'
-                : 'High-quality software architecture, production projects, technical consulting, and engineering solutions.',
+            headline: tLanding('portfolioHeadline'),
+            description: tLanding('portfolioDescription'),
             linkUrl: resolvedLinks.portfolio,
-            linkText: isEs ? 'Ver Portafolio' : 'View Portfolio',
+            linkText: tLanding('portfolioCta'),
             renderVisual: () => <PortfolioSlideVisual isEs={isEs} />,
         },
     ];
@@ -192,7 +187,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             {/* Título de Sección Estilo Oficial Apple */}
             <div className="w-full max-w-5xl mx-auto flex flex-col items-start px-5 sm:px-8">
                 <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-[-0.04em] text-foreground leading-tight">
-                    {isEs ? 'Mira lo más destacado' : 'Get the highlights'}
+                    {tLanding('highlightsTitle')}
                 </h2>
             </div>
 

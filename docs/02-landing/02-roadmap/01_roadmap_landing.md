@@ -29,6 +29,7 @@ Catálogo vivo de ideas, funcionalidades completadas y requerimientos pendientes
 ---
 
 ## 3. Funcionalidades Técnicas y Accesibilidad
+- [x] **Arquitectura Canónica FSD (6 Capas):** Reorganización modular desacoplada en `providers/`, `shared/`, `entities/`, `features/`, `widgets/` y App Router pages (`page.tsx`, `consulta/`, `links/`).
 - [x] **Internacionalización Profesional (next-intl):** Server-Side Rendering (SSR) limpio, cero parpadeos (FOUC), cookies `NEXT_LOCALE` y cabeceras `Accept-Language`.
 - [x] **Metadatos SEO Internacionales Dinámicos:** Generación bilingüe con `generateMetadata()`, Open Graph, Twitter Cards, Schema.org JSON-LD y etiquetas `hreflang` (`es-EC` y `en-US`).
 - [x] **Sitemap dinámico (`sitemap.xml`):** Generación automática desde Next.js incluyendo `/links`.

@@ -14,19 +14,26 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 >
 > **Arquitectura Micro:**
 > * **Aislamiento de Estilos:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones, fuentes Inter y Outfit).
-> * **Componentes Locales:** Modularizados dentro de `(landing)/components/` (reloj de Quito, i18n, PWA, SEO).
+> * **Feature-Sliced Design (FSD Canónico en 6 Capas):** Estructura desacoplada y escalable:
+>   * `providers/`: Contextos locales (`theme-provider`, `LanguageContext`, `PerformanceContext`).
+>   * `shared/`: UI Kit agnóstico (`CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`) y utilitarios (`domain.ts`).
+>   * `entities/`: Modelos del dominio (`highlights`, `profile/TypewriterRole`, `links`).
+>   * `features/`: Casos de uso e interacciones (`ai-assistant`, `language-toggle`, `theme-toggle`, `share-profile`).
+>   * `widgets/`: Bloques visuales complejos (`highlights-carousel`, `highlights-explorer`, `cosmic-canvas`, `consulta-section`, `links-showcase`, `landing-footer`).
+>   * `(pages)`: Enrutador físico App Router (`page.tsx`, `consulta/page.tsx`, `links/page.tsx`, `contacto/page.tsx`, `api/chat/route.ts`).
 
 ---
 
 ## 2. Descripción y Aislamiento
 
 * **Arquitectura Server-First (Next.js App Router):** `page.tsx`, `consulta/page.tsx` y `links/page.tsx` operan como **Server Components nativos asíncronos**, entregando el 100% de la semántica HTML (Hero, titulares, Bento Grid, enlaces y metadatos con `generateMetadata()`) en el primer byte (SSR) sin spinners bloqueantes ni anti-patrones de montaje.
-* **Arquitectura de Islas de Interactividad:** Los efectos dinámicos se desacoplan en microcomponentes clientes aislados en `(landing)/components/`:
-  * `LandingVisualEffects.tsx`: Fondos cinemáticos (`ParallaxBackground`, `InteractiveParticles`, `CinematicSpiralGalaxy`).
-  * `QuitoClockBadge.tsx`: Reloj en vivo de Quito.
-  * `LanguageToggleButton.tsx`: Selector de idioma con `useLanguage()`.
-  * `AppleHighlightsCarousel.tsx`: Carrusel interactivo.
-  * `LinksAiAssistant.tsx`: Botón flotante y modal del asistente IA con atajos de teclado (`Ctrl+K`).
+* **Arquitectura de Islas de Interactividad (FSD):** Los efectos dinámicos se desacoplan en componentes clientes modulares encapsulados en sus respectivas capas FSD:
+  * `widgets/cosmic-canvas`: Fondos cinemáticos ThreeJS/Canvas (`LandingVisualEffects`, `ParallaxBackground`, `InteractiveParticles`, `CinematicSpiralGalaxy`).
+  * `shared/ui/QuitoClockBadge`: Reloj en vivo de Quito.
+  * `features/language-toggle`: Selector de idioma con `useLanguage()`.
+  * `widgets/highlights-carousel`: Carrusel interactivo y Hero.
+  * `widgets/highlights-explorer`: Modal/Drawer inmersivo de proyectos.
+  * `features/ai-assistant`: Botón flotante y modal del asistente IA con streaming.
 * **Aislamiento de Estilos:** Posee su propio archivo independiente `frontend/web/src/app/(landing)/globals.css` que configura la estructura **Bento Grid**, fuentes (Inter y Outfit) y tokens visuales de Tailwind CSS v4.
 * **Enrutamiento y Subpáginas:**
   * `/`: Página principal de bienvenida y portal a los 3 proyectos con Bento Grid interactivo.

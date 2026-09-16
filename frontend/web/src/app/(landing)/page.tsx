@@ -1,15 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import SkipToContent from './components/SkipToContent';
-import LandingVisualEffects from './components/LandingVisualEffects';
-import { AppleHeroIntro } from './components/AppleHeroShowcase';
-import { AppleHighlightsCarousel } from './components/AppleHighlightsCarousel';
-import { AppleDetailExplorer } from './components/AppleDetailExplorer';
-import { ThemeToggle } from './components/ThemeToggle';
-import QuitoClockBadge from './components/QuitoClockBadge';
-import LanguageToggleButton from './components/LanguageToggleButton';
-import LandingFooterLinks from './components/LandingFooterLinks';
+import { SkipToContent } from './shared';
+import { LandingVisualEffects } from './widgets/cosmic-canvas';
+import { AppleHeroIntro, AppleHighlightsCarousel } from './widgets/highlights-carousel';
+import { AppleDetailExplorer } from './widgets/highlights-explorer';
+import { ThemeToggle } from './features/theme-toggle';
+import { QuitoClockBadge } from './shared';
+import { LanguageToggleButton } from './features/language-toggle';
+import { LandingFooterLinks } from './widgets/landing-footer';
 
 export default async function LandingPage() {
     const tLanding = await getTranslations('Landing');

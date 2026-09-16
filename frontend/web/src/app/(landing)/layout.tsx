@@ -3,11 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { LanguageProvider } from "./context/LanguageContext";
-import { PerformanceProvider } from "./context/PerformanceContext";
-import { ThemeProvider } from "./theme-provider";
-import PwaRegister from "./components/PwaRegister";
-import PersonJsonLd from "./components/PersonJsonLd";
+import { LanguageProvider } from "./providers/LanguageContext";
+import { PerformanceProvider } from "./providers/PerformanceContext";
+import { ThemeProvider } from "./providers/theme-provider";
+import { PwaRegister } from "./shared/pwa";
+import { PersonJsonLd } from "./shared/seo";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",

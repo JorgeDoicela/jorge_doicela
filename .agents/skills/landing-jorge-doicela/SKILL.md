@@ -24,33 +24,55 @@ Esta habilidad define los estándares técnicos, estéticos, de accesibilidad y 
 
 ---
 
-## 2. Estructura de Directorios del Proyecto
+## 2. Estructura de Directorios del Proyecto (FSD Canónico en 6 Capas)
 
 ```text
-frontend/web/
-├── src/
-│   ├── i18n/
-│   │   └── request.ts          # Configuración de servidor: carga dinámica de mensajes por subdominio
-│   ├── middleware.ts           # Enrutamiento de subdominios y query param ?lang=
-│   └── app/(landing)/
-│       ├── messages/           # Diccionarios locales de la Landing (es.json, en.json)
-│       ├── theme-provider.tsx  # Proveedor de tema local aislado (next-themes)
-│       ├── components/
-│       │   ├── ThemeToggle.tsx         # Selector modular reutilizable de modo claro/oscuro
-│       │   ├── AppleHighlightsCarousel.tsx # Carrusel Apple Highlights con arrastre (drag & swipe) por Pointer Events
-│       │   ├── ConsultaHeader.tsx      # Cabecera de consulta con reloj, i18n y ThemeToggle
-│       │   ├── PwaRegister.tsx         # Registro del Service Worker de la PWA
-│       │   ├── PersonJsonLd.tsx        # Datos estructurados Schema.org (SEO)
-│       │   ├── SkipToContent.tsx       # Atajo de accesibilidad por teclado (WCAG AA)
-│       │   ├── TypewriterRole.tsx      # Animación de máquina de escribir accesible (aria-live)
-│       │   ├── ParallaxBackground.tsx  # Fondo cósmico responsivo
-│       │   └── links/                  # LinksTopBar, ActionLinksList, etc.
-│       ├── context/
-│       │   ├── LanguageContext.tsx     # Adaptador reactivo conectado a next-intl y router.refresh()
-│       │   └── PerformanceContext.tsx  # Detección de rendimiento y aceleración por GPU
-│       ├── globals.css                 # Estilos específicos de la Landing Page (Apple Dark Slate / Apple Impoluto)
-│       ├── layout.tsx                  # ThemeProvider + NextIntlClientProvider + generateMetadata dinámica
-│       └── page.tsx                    # Estructura principal y resolutor de subdominios
+frontend/web/src/app/(landing)/
+├── messages/                         # Diccionarios locales de la Landing (es.json, en.json)
+├── globals.css                       # Estilos específicos de la Landing Page (Apple Dark Slate / Apple Impoluto)
+├── layout.tsx                        # ThemeProvider + NextIntlClientProvider + generateMetadata dinámica
+│
+├── providers/                        # CAPA 1 (APP): Contextos reactivos y tema local
+│   ├── theme-provider.tsx            # Wrapper local de next-themes
+│   ├── LanguageContext.tsx           # Adaptador reactivo conectado a next-intl y router.refresh()
+│   ├── PerformanceContext.tsx        # Detección de hardware y aceleración GPU para 3D
+│   └── index.ts
+│
+├── shared/                           # CAPA 6: UI Kit agnóstico, SEO, PWA y Utilidades
+│   ├── ui/                           # CustomSelect, QuitoClockBadge, SkipToContent
+│   ├── seo/                          # PersonJsonLd (Schema.org Person & WebSite)
+│   ├── pwa/                          # PwaRegister (Service Worker)
+│   ├── lib/                          # getSubdomainUrl (resolución local vs producción)
+│   └── index.ts
+│
+├── entities/                         # CAPA 5: Modelos del Dominio y Contenido Base
+│   ├── highlights/                   # Tipos y datos de los 4 proyectos de Apple Highlights
+│   ├── profile/                      # Datos del autor, biografía y TypewriterRole
+│   ├── links/                        # Estructura de enlaces de acción y medios
+│   └── index.ts
+│
+├── features/                         # CAPA 4: Casos de Uso e Interacciones del Usuario
+│   ├── ai-assistant/                 # AiAssistantChatModal, LinksAiAssistant (chat interactivo)
+│   ├── language-toggle/              # LanguageToggleButton (ES / EN reactivo)
+│   ├── theme-toggle/                 # ThemeToggle (Selector de modo claro/oscuro)
+│   ├── share-profile/                # ShareProfileButton (Web Share API + fallback)
+│   └── index.ts
+│
+├── widgets/                          # CAPA 3: Bloques Visuales Autónomos y Layouts
+│   ├── highlights-carousel/          # AppleHighlightsCarousel, AppleHeroShowcase
+│   ├── highlights-explorer/          # AppleDetailExplorer (Modal/Drawer inmersivo de proyectos)
+│   ├── cosmic-canvas/                # LandingVisualEffects, ParallaxBackground, CinematicSpiralGalaxy, InteractiveParticles
+│   ├── consulta-section/             # ConsultaForm, ConsultaHeader
+│   ├── links-showcase/               # LinksHeader, LinksTopBar, ActionLinksList, ProjectsMediaGrid
+│   ├── landing-footer/               # LandingFooterLinks
+│   └── index.ts
+│
+└── (pages App Router)                # CAPAS 2 & 1: Enrutamiento Físico Next.js
+    ├── page.tsx                      # Vista principal (Hero + Highlights + Bento Grid)
+    ├── consulta/page.tsx             # Solicitud de consultoría
+    ├── links/page.tsx                # Bio Tree y perfiles oficiales
+    ├── contacto/page.tsx             # Redirección
+    └── api/chat/route.ts             # API Route del Asistente IA
 ```
 
 
@@ -84,8 +106,8 @@ new Intl.DateTimeFormat('es-EC', {
   * `19:00` - `05:59` -> Buenas noches / Good evening
 
 ### 3.3 Modo Claro / Oscuro (Light & Dark)
-* Soporte integral desacoplado (caja negra) con `theme-provider.tsx` (`next-themes`) en `layout.tsx`.
-* Componente modular reutilizable `ThemeToggle.tsx` en `components/` consumido en `page.tsx`, `ConsultaHeader.tsx` y `LinksTopBar.tsx`.
+* Soporte integral desacoplado (caja negra) con `providers/theme-provider.tsx` (`next-themes`) en `layout.tsx`.
+* Componente modular reutilizable `ThemeToggle.tsx` en `features/theme-toggle/` consumido en `page.tsx`, `ConsultaHeader.tsx` y `LinksTopBar.tsx`.
 * Cero dependencias cruzadas entre subdominios.
 
 ### 3.4 Internacionalización Profesional (next-intl + SSR & SEO Gold Standard)
@@ -126,7 +148,7 @@ pnpm -r typecheck
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
 | Hacer llamadas fetch a endpoints de backend NestJS | La Landing es 100% estática del lado del cliente y no tiene backend. | Resolver enlaces y contenido puramente en el cliente. |
-| Importar componentes o estilos de (portfolio), (bible) o (software) | Rompe el aislamiento estético y añade dependencias innecesarias. | Mantener los componentes encapsulados en (landing)/components/. |
+| Importar componentes o estilos de (portfolio), (bible) o (software) | Rompe el aislamiento estético y añade dependencias innecesarias. | Mantener los componentes encapsulados en sus capas FSD dentro de (landing)/. |
 | Olvidar la zona horaria en el reloj de Quito | El reloj mostraría la hora local del navegador del visitante en vez de la hora de Ecuador. | Usar timeZone: 'America/Guayaquil' explícitamente en Intl.DateTimeFormat. |
 | Colocar imágenes en carpetas genéricas de public/ | Colisiona con assets de otros subproyectos. | Guardar assets exclusivamente en frontend/web/public/landing/. |
 

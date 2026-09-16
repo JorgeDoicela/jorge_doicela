@@ -1,12 +1,9 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { ConsultaHeader } from '../components/ConsultaHeader';
-import { ConsultaForm } from '../components/ConsultaForm';
-import ParallaxBackground from '../components/ParallaxBackground';
-import InteractiveParticles from '../components/InteractiveParticles';
-import CinematicSpiralGalaxy from '../components/CinematicSpiralGalaxy';
-import SkipToContent from '../components/SkipToContent';
+import { ConsultaHeader, ConsultaForm } from '../widgets/consulta-section';
+import { LandingVisualEffects } from '../widgets/cosmic-canvas';
+import { SkipToContent } from '../shared';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Consulta');
@@ -33,9 +30,7 @@ export default async function ConsultaPage() {
       <SkipToContent />
 
       {/* Capas de Fondo Cósmico y Parallax de la Landing */}
-      <ParallaxBackground />
-      <InteractiveParticles />
-      <CinematicSpiralGalaxy />
+      <LandingVisualEffects />
 
       {/* Barra de Navegación Superior fija a los extremos */}
       <ConsultaHeader />

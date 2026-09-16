@@ -41,7 +41,6 @@ export default async function ProjectDetailPage({ params }: Params) {
   const tNav = await getTranslations('Nav');
   const tDetail = await getTranslations('Detail');
   const tCard = await getTranslations('CardActions');
-  const tFilters = await getTranslations('Filters');
 
   const project = await serverGet<Project>(`/software/projects/${slug}?lang=${locale}`);
 
@@ -51,13 +50,6 @@ export default async function ProjectDetailPage({ params }: Params) {
     locale === 'es' ? 'es-ES' : 'en-US',
     { day: '2-digit', month: 'long', year: 'numeric' },
   );
-
-  const statusLabels: Record<string, { label: string; color: string }> = {
-    active: { label: tFilters('inProduction'), color: 'text-emerald-500 dark:text-emerald-400 font-bold' },
-    wip: { label: tFilters('inDevelopment'), color: 'text-amber-500 dark:text-amber-400 font-bold' },
-    archived: { label: tFilters('archived'), color: 'text-zinc-500 dark:text-zinc-400 font-medium' },
-  };
-  const statusBadge = statusLabels[project.status] || { label: project.status, color: 'text-emerald-500 dark:text-emerald-400 font-bold' };
 
   const techList = project.techStack
     ? project.techStack.split(',').map((t) => t.trim()).filter(Boolean)
@@ -72,59 +64,35 @@ export default async function ProjectDetailPage({ params }: Params) {
       subtitle={project.description}
       date={formattedDate}
       author="Jorge Doicela"
-      extraSidebarCard={
-        <div className="p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-4 shadow-xl">
-          <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-400 pb-2 border-b border-black/5 dark:border-white/5">
-            {tDetail('projectSpec')}
-          </h5>
-          <div className="space-y-2.5 text-xs font-mono">
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500 dark:text-zinc-500">{tDetail('status')}</span>
-              <span className={statusBadge.color}>
-                {statusBadge.label}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500 dark:text-zinc-500">{tDetail('stars')}</span>
-              <span className="text-amber-500 dark:text-amber-400 font-bold">★ {project.stars}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500 dark:text-zinc-500">{tDetail('views')}</span>
-              <span className="text-slate-700 dark:text-zinc-300 font-semibold">{project.views.toLocaleString(locale === 'es' ? 'es-ES' : 'en-US')}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500 dark:text-zinc-500">{tDetail('license')}</span>
-              <span className="text-slate-700 dark:text-zinc-300">{tDetail('openSourceLicense')}</span>
-            </div>
-          </div>
-
-          {(project.repoUrl || project.liveUrl) && (
-            <div className="pt-3 border-t border-black/5 dark:border-white/5 space-y-2">
-              {project.repoUrl && (
-                <a
-                  href={project.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2.5 rounded-xl glass-concave-panel text-xs font-mono font-bold text-center block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white transition-all shadow-sm cursor-pointer"
-                >
-                  {tCard('viewGithub')}
-                </a>
-              )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs text-center block transition-all shadow-md hover:shadow-blue-500/25 cursor-pointer"
-                >
-                  {tCard('openLiveApp')}
-                </a>
-              )}
-            </div>
+    >
+      {/* Botones de Acción de Enlaces Externos si existen */}
+      {(project.liveUrl || project.repoUrl) && (
+        <div className="flex flex-wrap items-center gap-3 pb-6 border-b border-black/5 dark:border-white/5">
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-md hover:shadow-blue-500/25 cursor-pointer"
+            >
+              <span>{tCard('openLiveApp')}</span>
+              <span>↗</span>
+            </a>
+          )}
+          {project.repoUrl && (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white inline-flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+            >
+              <span>{tCard('viewGithub')}</span>
+              <span>↗</span>
+            </a>
           )}
         </div>
-      }
-    >
+      )}
+
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (
         <div className="space-y-3 pb-6 border-b border-black/5 dark:border-white/5">

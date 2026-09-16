@@ -64,9 +64,6 @@ export default async function ProjectDetailPage({ params }: Params) {
       date={formattedDate}
       author="Jorge Doicela"
     >
-      {/* Botones de Acción de Enlaces Externos si existen (FSD Component) */}
-      <ProjectActions liveUrl={project.liveUrl} repoUrl={project.repoUrl} />
-
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (
         <div className="space-y-3 pb-6 border-b border-black/5 dark:border-white/5">
@@ -154,6 +151,9 @@ export default async function ProjectDetailPage({ params }: Params) {
             ? 'Las 4 aplicaciones (landing, portfolio, bible, software) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
             : 'All 4 sub-applications (landing, portfolio, bible, software) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
         </CalloutBlock>
+
+        {/* Botones de Acción de Enlaces Externos al final del artículo (CTA) */}
+        <ProjectActions liveUrl={project.liveUrl} repoUrl={project.repoUrl} />
       </div>
     </SoftwareArticleLayout>
   );

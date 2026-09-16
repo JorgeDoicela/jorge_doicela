@@ -16,7 +16,7 @@ export function ProjectActions({ liveUrl, repoUrl, className = '' }: ProjectActi
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-3 pb-6 border-b border-black/5 dark:border-white/5 ${className}`}
+      className={`flex flex-wrap items-center gap-3 pt-8 border-t border-black/5 dark:border-white/5 ${className}`}
       role="group"
       aria-label={tCard('projectLinks')}
     >
@@ -25,7 +25,7 @@ export function ProjectActions({ liveUrl, repoUrl, className = '' }: ProjectActi
           href={liveUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-md hover:shadow-blue-500/25 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-md hover:shadow-blue-500/25 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
           <span>{tCard('openLiveApp')}</span>
           <span aria-hidden="true" className="select-none font-sans text-[11px] leading-none">
@@ -38,7 +38,7 @@ export function ProjectActions({ liveUrl, repoUrl, className = '' }: ProjectActi
           href={repoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white inline-flex items-center gap-1.5 transition-all shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          className="px-5 py-2.5 rounded-xl glass-concave-panel text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white inline-flex items-center gap-1.5 transition-all shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
           <span>{tCard('viewGithub')}</span>
           <span aria-hidden="true" className="select-none font-sans text-[11px] leading-none">

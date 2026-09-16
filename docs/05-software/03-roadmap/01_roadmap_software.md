@@ -9,7 +9,7 @@ Catálogo de requerimientos completados y objetivos futuros para **Software** (`
 - [x] **Fuente de Verdad en `corpus/*.json`:** 8 datasets JSON estructurados que alimentan la base de datos de forma desacoplada.
 - [x] **Seeder Atómico Transaccional:** Script CLI (`seed-software.ts`) que recrea y siembra 9 tablas en SQLite en < 100 ms.
 - [x] **Modelo Relacional Físico (`software.sqlite`):** 10 entidades registradas bajo `softwareConnection` con relaciones foráneas e índices B-Tree especializados.
-- [x] **Frontend Web Next.js 16 (FSD):** 9 features modulares (`navigation`, `news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) con componentes, hooks y tipos desacoplados.
+- [x] **Frontend Web Next.js 16 (FSD Canónico en 4 Capas):** Capas desacopladas `shared/` (UI, suite Markdown, SEO, lib, types), `entities/` (8 dominios temáticos + hub consolidado), `features/` (spotlight-search, forum-reply, language-toggle, theme-toggle) y `widgets/` (software-header, software-footer, category-nav, featured-carousel, article-layout, page-layout).
 - [x] **Páginas de Catálogo Dedicadas:** `/software/news`, `/software/blog`, `/software/forum`, `/software/ai`, `/software/cybersecurity`, `/software/tutorials`, `/software/projects`, `/software/infrastructure`.
 - [x] **Lector Individual y Modo Interactivo `[slug]`:** Vistas individuales por categoría, incluyendo `StepWizard` interactivo para tutoriales, hilo de discusión para foros y visor de especificaciones de hardware/servidor (`specs`) para infraestructura.
 - [x] **Página Principal (`/software`):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura, spotlight command palette (`Cmd+K`) y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.

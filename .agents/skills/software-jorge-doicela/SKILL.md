@@ -28,53 +28,56 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 
 ## 2. Frontend Web (Next.js 16 + FSD)
 
-### 2.1 Estructura de Directorios
+### 2.1 Estructura de Directorios (FSD Canónico en 4 Capas)
 ```text
 frontend/web/src/app/(software)/
 ├── messages/                         # Diccionarios locales de software (es.json, en.json)
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
 ├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider + generateMetadata)
-├── components/                       # Componentes compartidos (SoftwareHeaderNav, SoftwareArticleLayout, SoftwareFooter, ScrollToTopButton, FeaturedPostsSidebarCard, ExploreTopicsSidebarCard, etc.)
-│   └── markdown/                     # Suite editorial técnica (CodeBlock con Prism, MermaidBlock, TableBlock, CalloutBlock)
-├── software/                         # Subrutas individuales
-
-│   ├── page.tsx                      # Página principal: Bento Grid + selector de 7 categorías
-│   ├── news/
-│   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
-│   │   └── [slug]/page.tsx           # Lector de noticia individual con fuente oficial
-│   ├── blog/
-│   │   ├── page.tsx                  # Catálogo de artículos del blog
-│   │   └── [slug]/page.tsx           # Lector editorial con tabla de contenidos
-│   ├── forum/
-│   │   ├── page.tsx                  # Lista de temas del foro con filtros de estado
-│   │   └── [slug]/page.tsx           # Hilo con árbol de respuestas y formulario de respuesta
-│   ├── ai/
-│   │   ├── page.tsx                  # Directorio de modelos IA, agentes y MCP servers
-│   │   └── [slug]/page.tsx           # Ficha técnica del modelo / agente
-│   ├── cybersecurity/
-│   │   ├── page.tsx                  # Matriz de avisos con filtro por severidad
-│   │   └── [slug]/page.tsx           # Aviso de seguridad con remediación
-│   ├── tutorials/
-│   │   ├── page.tsx                  # Malla de tutoriales con filtro por dificultad
-│   │   └── [slug]/page.tsx           # Tutorial interactivo paso a paso (StepWizard)
-│   ├── projects/
-│   │   ├── page.tsx                  # Galería showcase con filtro por estado
-│   │   └── [slug]/page.tsx           # Caso de estudio y arquitectura
-│   └── infrastructure/
-│       ├── page.tsx                  # Catálogo de infraestructura y guías de servidor
-│       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del nodo
 │
-└── features/                         # Features FSD (lógica de dominio aislada)
-    ├── hub/                          # SoftwareHubFeed, useSoftwareHub, types (feed consolidado y SmartScore)
-    ├── news/                         # NewsCard, NewsGrid, useNews, types
-    ├── blog/                         # BlogCard, BlogGrid, useBlog, types
-    ├── forum/                        # TopicCard, ForumSection, useForum, types
-    ├── ai/                           # AiCard, AiGrid, useAi, types
-    ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types
-    ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types
-    ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types
-    └── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types
+├── shared/                           # CAPA 6: UI Kit agnóstico, suite Markdown, SEO, Lib y Tipos
+│   ├── ui/                           # SoftwareCard, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
+│   ├── seo/                          # SoftwareJsonLd (Schema.org JSON-LD bilingüe)
+│   ├── lib/                          # serverFetch, fetchJson
+│   └── types/                        # spotlight.ts
+│
+├── entities/                         # CAPA 5: Modelos de dominio, Hooks API y Tarjetas de Entidad
+│   ├── news/                         # NewsCard, NewsGrid, useNews, types.ts, index.ts
+│   ├── blog/                         # BlogCard, BlogGrid, useBlog, types.ts, index.ts
+│   ├── forum/                        # TopicCard, useForum, types.ts, index.ts
+│   ├── ai/                           # AiCard, AiGrid, useAi, types.ts, index.ts
+│   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types.ts, index.ts
+│   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, types.ts, index.ts
+│   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types.ts, index.ts
+│   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types.ts, index.ts
+│   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
+│
+├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
+│   ├── spotlight-search/             # SpotlightModal (Cmd + K) y búsqueda interactiva
+│   ├── forum-reply/                  # ForumReplyForm, ForumSection
+│   ├── language-toggle/              # LanguageToggle (ES / EN)
+│   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
+│
+├── widgets/                          # CAPA 3: Bloques Visuales Complejos y Layouts Shell
+│   ├── software-header/              # SoftwareHeaderNav
+│   ├── software-footer/              # SoftwareFooter
+│   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
+│   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
+│   ├── article-layout/               # SoftwareArticleLayout + Sidebars (Author, ExploreTopics, FeaturedPosts, StayInformed)
+│   └── page-layout/                  # SoftwarePageLayout
+│
+└── software/                         # CAPAS 2 & 1: Enrutamiento Físico Next.js App Router
+    ├── page.tsx                      # Página principal: Bento Grid + feed editorial consolidado
+    ├── news/                         # Catálogo (/news) y lector ([slug]/page.tsx)
+    ├── blog/                         # Catálogo (/blog) y lector ([slug]/page.tsx)
+    ├── forum/                        # Catálogo (/forum) e hilo de discusión ([slug]/page.tsx)
+    ├── ai/                           # Directorio (/ai) y fichas técnicas ([slug]/page.tsx)
+    ├── cybersecurity/                # Matriz (/cybersecurity) y avisos ([slug]/page.tsx)
+    ├── tutorials/                    # Malla (/tutorials) y StepWizard ([slug]/page.tsx)
+    ├── projects/                     # Showcase (/projects) y casos de estudio ([slug]/page.tsx)
+    └── infrastructure/               # Catálogo (/infrastructure) y visor de specs ([slug]/page.tsx)
 ```
 
 ### 2.2 Las 8 Áreas Temáticas de Software
@@ -88,16 +91,16 @@ frontend/web/src/app/(software)/
 8. **Infraestructura (`infrastructure`):** Servidores Linux, topologías cloud (AWS Lightsail), arquitectura en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y CI/CD.
 
 ### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
-* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Datos Estructurados Schema.org ([`SoftwareJsonLd.tsx`](/software/shared/seo/SoftwareJsonLd.tsx)):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
 * **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
 
-### 2.4 Suite Editorial y Renderizado Técnico de Contenido (`components/markdown/`)
+### 2.4 Suite Editorial y Renderizado Técnico de Contenido (`shared/markdown/`)
 * **Modelo Arquitectónico:** Almacenamiento de Markdown puro en `software.sqlite` (`contentMarkdown TEXT`) sin procesamiento pesado en NestJS (Zero-RAM en VPS 1 GB). El frontend Next.js intercepta y enriquece los elementos sintácticos mediante componentes React modulares y 100% reutilizables en todas las categorías:
-  * **Diagramas Vectoriales Multidiagrama Adaptativos (`MermaidBlock.tsx`):** Renderizado en cliente con Mermaid 12 (`look: 'neo'`, `redux-color` / `redux-dark-color`, curvas `basis`). Detección tipificada robusta tolerante a comentarios (`%%`) y frontmatter (`---`). Cabecera técnica minimalista con solo iconos de acción (`Maximize2` y `Copy`/`Check`) con tooltips nativos. Arquitectura híbrida de primera clase: en el artículo el diagrama se ajusta de forma fluida (`max-w-full mx-auto`) sin recortes en móvil, y a escala natural 1:1 en PC (tope $1020\text{px}$). Visor modal inmersivo a pantalla completa inmune a grids montado en `document.body` vía `createPortal` con vidrio esmerilado suave (`backdrop-blur-xl bg-black/20 dark:bg-black/40`) sin barras superiores ni fondos negros densos: el SVG flota nítido a escala 1:1 en el centro y se cierra de forma natural al presionar afuera en el fondo o con `Escape`. Soporte apaisado (landscape) en móvil. Cero hacks, cero `!important` y cero impacto en RAM.
-  * **Bloques de Código con Cabecera Inteligente (`CodeBlock.tsx`):** Resaltado con `prismjs` para 13 lenguajes. Erradica semáforos de colores artificiales. Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `📄 pm2.config.js`, `📄 nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`. Incluye botón de copiado con confirmación interactiva.
-  * **Tablas Técnicas de Ingeniería (`TableBlock.tsx` — Data-Grid Pro B1):** Contenedor convexo con relieve vítreo y sombra de elevación (`glass-convex-panel shadow-lg`), cabecera `thead` con sutil desenfoque (`backdrop-blur-md`) y línea guía `border-blue-500/30`, primera columna de claves/parámetros con ancho fijo `28%`, tipografía mono seminegrita, fondo sutil contrastado y borde divisorio vertical, e iluminación interactiva por fila en hover.
-  * **Paneles de Resumen y Callouts (`CalloutBlock.tsx` — Blueprint Glass A1):** Directivas estándar de GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) con micro-iconos semánticos de Lucide y blockquotes editoriales con riel vertical iluminado (`border-l-4 border-blue-500/80`).
-* **Orquestador Universal:** Todos los lectores de artículos (`[slug]/page.tsx` de Tutoriales, Noticias, Blog, Ciberseguridad, Infraestructura, IA, Proyectos, Foros) delegan su contenido en [`MarkdownRenderer.tsx`](/software/components/MarkdownRenderer.tsx), garantizando coherencia visual idéntica y reutilización universal en todo el sistema.
+  * **Diagramas Vectoriales Multidiagrama Adaptativos ([`MermaidBlock.tsx`](/software/shared/markdown/components/MermaidBlock.tsx)):** Renderizado en cliente con Mermaid 12 (`look: 'neo'`, `redux-color` / `redux-dark-color`, curvas `basis`). Detección tipificada robusta tolerante a comentarios (`%%`) y frontmatter (`---`). Cabecera técnica minimalista con solo iconos de acción (`Maximize2` y `Copy`/`Check`) con tooltips nativos. Arquitectura híbrida de primera clase: en el artículo el diagrama se ajusta de forma fluida (`max-w-full mx-auto`) sin recortes en móvil, y a escala natural 1:1 en PC (tope $1020\text{px}$). Visor modal inmersivo a pantalla completa inmune a grids montado en `document.body` vía `createPortal` con vidrio esmerilado suave (`backdrop-blur-xl bg-black/20 dark:bg-black/40`) sin barras superiores ni fondos negros densos: el SVG flota nítido a escala 1:1 en el centro y se cierra de forma natural al presionar afuera en el fondo o con `Escape`. Soporte apaisado (landscape) en móvil. Cero hacks, cero `!important` y cero impacto en RAM.
+  * **Bloques de Código con Cabecera Inteligente ([`CodeBlock.tsx`](/software/shared/markdown/components/CodeBlock.tsx)):** Resaltado con `prismjs` para 13 lenguajes. Erradica semáforos de colores artificiales. Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `📄 pm2.config.js`, `📄 nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`. Incluye botón de copiado con confirmación interactiva.
+  * **Tablas Técnicas de Ingeniería ([`TableBlock.tsx`](/software/shared/markdown/components/TableBlock.tsx) — Data-Grid Pro B1):** Contenedor convexo con relieve vítreo y sombra de elevación (`glass-convex-panel shadow-lg`), cabecera `thead` con sutil desenfoque (`backdrop-blur-md`) y línea guía `border-blue-500/30`, primera columna de claves/parámetros con ancho fijo `28%`, tipografía mono seminegrita, fondo sutil contrastado y borde divisorio vertical, e iluminación interactiva por fila en hover.
+  * **Paneles de Resumen y Callouts ([`CalloutBlock.tsx`](/software/shared/markdown/components/CalloutBlock.tsx) — Blueprint Glass A1):** Directivas estándar de GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) con micro-iconos semánticos de Lucide y blockquotes editoriales con riel vertical iluminado (`border-l-4 border-blue-500/80`).
+* **Orquestador Universal:** Todos los lectores de artículos (`[slug]/page.tsx` de Tutoriales, Noticias, Blog, Ciberseguridad, Infraestructura, IA, Proyectos, Foros) delegan su contenido en [`MarkdownRenderer.tsx`](/software/shared/markdown/MarkdownRenderer.tsx), garantizando coherencia visual idéntica y reutilización universal en todo el sistema.
 
 ---
 

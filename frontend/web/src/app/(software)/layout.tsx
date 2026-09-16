@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { ThemeProvider } from "./theme-provider";
+import { ThemeProvider } from "./providers";
 import SoftwareJsonLd from './shared/seo/SoftwareJsonLd';
 import { ScrollToTopButton } from './shared/ui/ScrollToTopButton';
 

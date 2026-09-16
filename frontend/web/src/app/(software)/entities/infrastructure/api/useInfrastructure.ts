@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { InfrastructurePost } from '../types';
-import { API_URL } from '../../../../config';
+import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useInfrastructure(

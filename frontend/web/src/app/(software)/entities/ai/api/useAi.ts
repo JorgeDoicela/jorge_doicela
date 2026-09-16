@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { AiResource } from '../types';
-import { API_URL } from '../../../../config';
+import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useAi(type?: string, search: string = '') {

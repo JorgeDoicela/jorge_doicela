@@ -28,19 +28,22 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 
 ## 2. Frontend Web (Next.js 16 + FSD)
 
-### 2.1 Estructura de Directorios (FSD Canónico en 4 Capas)
+### 2.1 Estructura de Directorios (FSD Canónico en 6 Capas)
 ```text
 frontend/web/src/app/(software)/
 ├── messages/                         # Diccionarios locales de software (es.json, en.json)
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
-├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider + generateMetadata)
+│
+├── providers/                        # CAPA 1 (App): Proveedores globales aislados
+│   ├── theme-provider.tsx            # Proveedor de tema local aislado (next-themes)
+│   └── index.ts                      # Barrel export de providers
 │
 ├── shared/                           # CAPA 6: UI Kit agnóstico, suite Markdown, SEO, Lib y Tipos
 │   ├── ui/                           # SoftwareCard, BackToPortalButton, ScrollToTopButton, ArticleCover
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # SoftwareJsonLd (Schema.org JSON-LD bilingüe)
-│   ├── lib/                          # serverFetch, fetchJson
+│   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
 ├── entities/                         # CAPA 5: Modelos de dominio, Hooks API y Tarjetas de Entidad

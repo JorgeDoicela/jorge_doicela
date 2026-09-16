@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ForumTopic } from '../../../entities/forum/types';
-import { API_URL } from '../../../../config';
+import { API_URL } from '../../../shared';
 
 interface ForumReplyFormProps {
   topic: ForumTopic;

@@ -17,8 +17,9 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > * **Aislamiento de Dominio:** Estilos independientes en `(software)/globals.css`. Cero importaciones de otros subdominios.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD Canónico en 4 Capas):**
->   * `shared/`: UI Kit agnóstico (`SoftwareCard`, `BackToPortalButton`, `ScrollToTopButton`, `ArticleCover`), suite Markdown (`MarkdownRenderer`, bloques de código/Mermaid/tablas/callouts), SEO (`SoftwareJsonLd`), utilitarios de red (`serverFetch`, `fetchJson`) y tipos base.
+> * **Feature-Sliced Design (FSD Canónico en 6 Capas):**
+>   * `providers/`: Envoltorios de montaje global en layout (`theme-provider`).
+>   * `shared/`: UI Kit agnóstico (`SoftwareCard`, `BackToPortalButton`, `ScrollToTopButton`, `ArticleCover`), suite Markdown (`MarkdownRenderer`, bloques de código/Mermaid/tablas/callouts), SEO (`SoftwareJsonLd`), utilitarios de red (`api`, `serverFetch`, `fetchJson`) y tipos base.
 >   * `entities/`: 8 dominios temáticos (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) y feed consolidado (`hub`), cada uno con sus modelos, tipos, hooks API y componentes de presentación (`NewsCard`, etc.).
 >   * `features/`: Acciones e interactividad del usuario (`spotlight-search`, `forum-reply`, `language-toggle`, `theme-toggle`).
 >   * `widgets/`: Bloques visuales complejos y layouts (`software-header`, `software-footer`, `category-nav`, `featured-carousel`, `article-layout`, `page-layout`).
@@ -33,17 +34,20 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 ```text
 frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
-├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider)
 ├── messages/                         # Diccionarios i18n
 │   ├── es.json
 │   └── en.json
 │
+├── providers/                        # CAPA 1 (APP): Proveedores de Tema y Contexto Global
+│   ├── theme-provider.tsx            # Wrapper local de next-themes
+│   └── index.ts
+│
 ├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
 │   ├── ui/                           # SoftwareCard, BackToPortalButton, ScrollToTopButton, ArticleCover
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # SoftwareJsonLd (Schema JSON-LD)
-│   ├── lib/                          # serverFetch, fetchJson
+│   ├── lib/                          # api, serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
 ├── entities/                         # CAPA 5: Modelos, Hooks API y Tarjetas de Entidad (8 Categorías + Hub)

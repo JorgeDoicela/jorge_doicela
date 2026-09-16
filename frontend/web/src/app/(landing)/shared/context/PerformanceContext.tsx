@@ -87,7 +87,7 @@ export const PerformanceProvider: React.FC<{ children: ReactNode }> = ({ childre
         setTierState(newTier);
     }, []);
 
-    // 1. Inicialización y detección de hardware
+    // 1. Inicialización y sincronización determinista de hardware
     useEffect(() => {
         const clientCap = evaluateClientCapabilities();
         setTierState(clientCap.tier);
@@ -116,7 +116,15 @@ export const PerformanceProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         motionMediaQuery.addEventListener?.('change', handleMotionChange);
 
-        // 2. Integración con Battery Status API: degradar sutilmente si la batería es crítica (< 20% desconectado)
+        // Listener reactivo ante cambio de tamaño de ventana (redimensionamiento desktop vs mobile)
+        const handleResize = () => {
+            const isTouch = window.matchMedia('(pointer: coarse) and (hover: none)').matches;
+            const isSmall = window.innerWidth < 768;
+            setIsMobile(isTouch || isSmall);
+        };
+        window.addEventListener('resize', handleResize, { passive: true });
+
+        // 2. Integración con Battery Status API: escalar a 'mid' si la batería es crítica (< 20% desconectado)
         let batteryCleanup: (() => void) | undefined;
         if (nav?.getBattery && typeof nav.getBattery === 'function') {
             nav.getBattery().then((battery) => {
@@ -139,54 +147,12 @@ export const PerformanceProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         return () => {
             motionMediaQuery.removeEventListener?.('change', handleMotionChange);
+            window.removeEventListener('resize', handleResize);
             if (batteryCleanup) batteryCleanup();
         };
     }, []);
 
-    // 3. Monitor de rendimiento adaptativo en tiempo real (FPS Watcher con Warm-up)
-    // Espera a que termine la hidratación y carga inicial (3s) para no confundir el arranque con baja GPU.
-    useEffect(() => {
-        if (tier === 'low') return;
-
-        let rafId: number | undefined;
-
-        const timeoutId = setTimeout(() => {
-            let frameCount = 0;
-            let lastTime = performance.now();
-            let slowFrames = 0;
-            const maxSamples = 120; // ~2 segundos de muestreo estable post-carga
-
-            const checkFrame = (now: number) => {
-                const delta = now - lastTime;
-                lastTime = now;
-
-                // Si un fotograma tomó más de 40ms (equivalente a < 25 FPS)
-                if (delta > 40) {
-                    slowFrames++;
-                }
-
-                frameCount++;
-
-                if (frameCount < maxSamples) {
-                    rafId = requestAnimationFrame(checkFrame);
-                } else {
-                    // Solo si más del 35% de los fotogramas sufrieron tirones severos tras el calentamiento
-                    if (slowFrames > (maxSamples * 0.35)) {
-                        setTierState((current) => (current === 'high' ? 'mid' : current));
-                    }
-                }
-            };
-
-            rafId = requestAnimationFrame(checkFrame);
-        }, 3000);
-
-        return () => {
-            if (timeoutId) clearTimeout(timeoutId);
-            if (rafId) cancelAnimationFrame(rafId);
-        };
-    }, []);
-
-    // 4. Sincronización atómica única con el DOM para estilos CSS [data-tier="..."]
+    // 3. Sincronización atómica con el DOM para estilos CSS [data-tier="..."]
     useEffect(() => {
         document.documentElement.setAttribute('data-tier', tier);
     }, [tier]);

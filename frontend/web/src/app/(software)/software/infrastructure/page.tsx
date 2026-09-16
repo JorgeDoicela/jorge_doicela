@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { SoftwarePageLayout } from '../../components/SoftwarePageLayout';
-import { InfrastructureGrid, useInfrastructure } from '../../features/infrastructure';
+import { SoftwarePageLayout } from '../../widgets/page-layout';
+import { InfrastructureGrid, useInfrastructure } from '../../entities/infrastructure';
 
 export default function InfrastructureCategoryPage() {
   const tNav = useTranslations('Nav');

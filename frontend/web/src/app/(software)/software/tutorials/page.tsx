@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { SoftwarePageLayout } from '../../components/SoftwarePageLayout';
-import { TutorialGrid, useTutorials } from '../../features/tutorials';
+import { SoftwarePageLayout } from '../../widgets/page-layout';
+import { TutorialGrid, useTutorials } from '../../entities/tutorials';
 
 export default function TutorialsCategoryPage() {
   const tNav = useTranslations('Nav');

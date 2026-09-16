@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { BlogPost } from '../../../features/blog';
-import { serverGet } from '../../../utils/serverFetch';
-import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
-import { MarkdownRenderer } from '../../../components/MarkdownRenderer';
+import { BlogPost } from '../../../entities/blog';
+import { serverGet } from '../../../shared/lib/serverFetch';
+import { SoftwareArticleLayout } from '../../../widgets/article-layout';
+import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
 
 type Params = { params: Promise<{ slug: string }> };
 

@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { SoftwarePageLayout } from '../../components/SoftwarePageLayout';
-import { NewsGrid, useNews } from '../../features/news';
+import { SoftwarePageLayout } from '../../widgets/page-layout';
+import { NewsGrid, useNews } from '../../entities/news';
 
 export default function NewsCategoryPage() {
   const tNav = useTranslations('Nav');

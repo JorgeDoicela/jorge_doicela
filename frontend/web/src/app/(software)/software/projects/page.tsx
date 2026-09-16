@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { SoftwarePageLayout } from '../../components/SoftwarePageLayout';
-import { ProjectGrid } from '../../features/projects';
+import { SoftwarePageLayout } from '../../widgets/page-layout';
+import { ProjectGrid } from '../../entities/projects';
 
 export default function ProjectsCategoryPage() {
   const tNav = useTranslations('Nav');

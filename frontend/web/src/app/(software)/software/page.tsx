@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { useSoftwareHub, SoftwareHubFeed } from '../features/hub';
-import { SpotlightModal } from '../components/SpotlightModal';
-import { SoftwareFooter } from '../components/SoftwareFooter';
-import { SoftwareHeaderNav } from '../components/SoftwareHeaderNav';
-import { FeaturedCarousel } from '../components/FeaturedCarousel';
+import { useSoftwareHub, SoftwareHubFeed } from '../entities/hub';
+import { SpotlightModal } from '../features/spotlight-search';
+import { SoftwareFooter } from '../widgets/software-footer';
+import { SoftwareHeaderNav } from '../widgets/software-header';
+import { FeaturedCarousel } from '../widgets/featured-carousel';
 
 export default function SoftwarePage() {
   const tHome = useTranslations('Home');

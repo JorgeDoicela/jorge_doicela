@@ -19,7 +19,7 @@ export class Book {
   @Index({ unique: true })
   abbreviation: string;
 
-  @Column({ type: 'integer' })
+  @Column({ type: 'integer', default: 1 })
   @Index({ unique: true })
   order: number; // Número canónico 1–66 (Génesis=1, Apocalipsis=66)
 

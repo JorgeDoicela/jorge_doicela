@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { SoftwarePageLayout } from '../../components/SoftwarePageLayout';
-import { ForumSection } from '../../features/forum';
+import { SoftwarePageLayout } from '../../widgets/page-layout';
+import { ForumSection } from '../../features/forum-reply';
 
 export default function ForumCategoryPage() {
   const tNav = useTranslations('Nav');

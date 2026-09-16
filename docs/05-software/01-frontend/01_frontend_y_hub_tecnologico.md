@@ -24,93 +24,59 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 
 ---
 
-## 2. Estructura de Rutas y FSD
+## 2. Estructura de Rutas y FSD Canónico
 
 ```text
 frontend/web/src/app/(software)/
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
 ├── theme-provider.tsx                # Proveedor de tema local aislado (next-themes)
 ├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider)
-├── types/
-│   └── spotlight.ts                  # Interfaces para SpotlightSearchResult
-├── features/                         # DOMINIOS VERTICALES (FSD)
-│   ├── tutorials/
-│   │   ├── components/               # TutorialCard, TutorialGrid, TutorialStepWizard
-│   │   ├── hooks/                    # useTutorials
-│   │   └── types.ts                  # Tutorial, TutorialStep
-│   ├── forum/
-│   │   ├── components/               # ForumSection, TopicCard, ForumReplyForm
-│   │   ├── hooks/                    # useForum
-│   │   └── types.ts                  # ForumTopic, ForumReply
-│   └── ...                           # (news, blog, ai, cybersecurity, projects, infrastructure, hub)
-├── components/                       # COMPONENTES COMPARTIDOS DEL SUBDOMINIO (Widgets & Shared UI)
-│   ├── BackToPortalButton.tsx        # Retorno directo al portal principal (Neumorphism / Glassmorphism)
-│   ├── CategoryNav.tsx               # Selector unificado de las 8 categorías (URL-driven con pestañas de escritorio y dropdown táctil)
-│   ├── LanguageToggle.tsx            # Selector de idioma ES/EN con persistencia y refresh
-│   ├── ThemeToggle.tsx               # Alternador de tema Titanio Claro / Obsidiana Oscuro
-│   ├── SpotlightModal.tsx            # Buscador omnisciente Cmd+K multi-dominio
-│   ├── SoftwareCard.tsx              # Tarjeta atómica universal normalizada (escala exacta y neumorphism)
-│   ├── ArticleCover.tsx              # Banner de portada 16:9 con soporte SVG procedural temático
-│   ├── SoftwareHeaderNav.tsx         # Cabecera editorial y navegación unificada (reloj, idioma, tema, spotlight)
-│   ├── SoftwarePageLayout.tsx        # Shell reutilizable para páginas (herencia de header, tema, footer)
-│   ├── SoftwareArticleLayout.tsx     # Shell reutilizable para lectores de artículos individuales (Sidebar MalwareTech)
-│   ├── FeaturedPostsSidebarCard.tsx  # Tarjeta de artículos destacados con miniaturas cuadradas 1:1
-│   ├── FeaturedCarousel.tsx          # Carrusel interactivo para publicaciones destacadas (Autoplay + Neumorphic Controls)
-│   ├── ExploreTopicsSidebarCard.tsx  # Explorador de las 8 categorías con contadores vivos
-│   ├── ScrollToTopButton.tsx         # Botón flotante para retorno suave al inicio de página
-│   ├── MarkdownRenderer.tsx          # Orquestador formal de contenido técnico (react-markdown + suite markdown/)
-│   ├── markdown/                     # SUITE EDITORIAL MODULAR DE CONTENIDO TÉCNICO
-│   │   ├── CodeBlock.tsx             # Bloque de código con Prism syntax highlighting, badge y botón "Copiar"
-│   │   ├── MermaidBlock.tsx          # Renderizador dinámico de diagramas SVG vectoriales (Mermaid.js, Zero-RAM en SSR)
-│   │   ├── TableBlock.tsx            # Tablas responsivas GFM con scroll horizontal y estilo neumórfico
-│   │   ├── CalloutBlock.tsx          # Alertas tipo GitHub ([!NOTE], [!WARNING], [!TIP], [!IMPORTANT], [!CAUTION])
-│   │   └── index.ts                  # Barril de exportación
-│   └── SoftwareFooter.tsx            # Pie de página tecnológico institucional
-├── software/                         # SUBRUTAS DE PÁGINAS INDIVIDUALES
-│   ├── page.tsx                      # Vista principal de Software (Bento Grid + filtro dinámico de 7 categorías)
-│   ├── news/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/news)
-│   │   ├── page.tsx                  # Catálogo de noticias con buscador en tiempo real
-│   │   └── [slug]/page.tsx           # Lector de noticia con fuente oficial
-│   ├── blog/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/blog)
-│   │   ├── page.tsx                  # Catálogo de artículos del blog
-│   │   └── [slug]/page.tsx           # Lector de ensayo con tabla de contenidos
-│   ├── forum/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/forum)
-│   │   ├── page.tsx                  # Lista de temas del foro con filtros de estado
-│   │   └── [slug]/page.tsx           # Hilo de discusión con árbol de respuestas y formulario
-│   ├── ai/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/ai)
-│   │   ├── page.tsx                  # Directorio de modelos IA, agentes y MCP servers con filtro por tipo
-│   │   └── [slug]/page.tsx           # Ficha técnica de modelo / agente / MCP server
-│   ├── cybersecurity/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/cybersecurity)
-│   │   ├── page.tsx                  # Matriz de avisos con filtro por severidad (LOW a CRITICAL)
-│   │   └── [slug]/page.tsx           # Aviso de seguridad con severidad y remediación
-│   ├── tutorials/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/tutorials)
-│   │   ├── page.tsx                  # Malla de tutoriales con filtro por dificultad
-│   │   └── [slug]/page.tsx           # Tutorial interactivo paso a paso (StepWizard)
-│   ├── projects/
-│   │   ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/projects)
-│   │   ├── page.tsx                  # Galería showcase con filtro por estado (activo / en desarrollo)
-│   │   └── [slug]/page.tsx           # Caso de estudio y arquitectura de proyecto
-│   └── infrastructure/
-│       ├── layout.tsx                # Metadatos SEO, OpenGraph y Canonical dedicados (/infrastructure)
-│       ├── page.tsx                  # Catálogo de infraestructura con selector de categorías y buscador
-│       └── [slug]/page.tsx           # Lector técnico interactivo con visor de specs del servidor
+├── messages/                         # Diccionarios i18n
+│   ├── es.json
+│   └── en.json
 │
-└── features/                         # FEATURE-SLICED DESIGN (FSD: Features de Negocio con Barriles index.ts)
-    ├── news/                         # NewsCard, NewsGrid, useNews, types, index.ts
-    ├── blog/                         # BlogCard, BlogGrid, useBlog, types, index.ts
-    ├── forum/                        # TopicCard, ForumSection, useForum, types, index.ts
-    ├── ai/                           # AiCard, AiGrid, useAi, types, index.ts
-    ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types, index.ts
-    ├── tutorials/                    # TutorialCard, TutorialGrid, useTutorials, types, index.ts
-    ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types, index.ts
-    ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types, index.ts
-    └── hub/                          # SoftwareHubFeed, useSoftwareHub, types, index.ts (consumo consolidado GET /software/hub)
+├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
+│   ├── ui/                           # SoftwareCard, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
+│   ├── seo/                          # SoftwareJsonLd (Schema JSON-LD)
+│   ├── lib/                          # serverFetch, fetchJson
+│   └── types/                        # spotlight.ts
+│
+├── entities/                         # CAPA 5: Modelos, Hooks API y Tarjetas de Entidad (8 Categorías + Hub)
+│   ├── news/                         # NewsCard, NewsGrid, useNews, types.ts, index.ts
+│   ├── blog/                         # BlogCard, BlogGrid, useBlog, types.ts, index.ts
+│   ├── forum/                        # TopicCard, useForum, types.ts, index.ts
+│   ├── ai/                           # AiCard, AiGrid, useAi, types.ts, index.ts
+│   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types.ts, index.ts
+│   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, types.ts, index.ts
+│   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types.ts, index.ts
+│   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types.ts, index.ts
+│   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
+│
+├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
+│   ├── spotlight-search/             # SpotlightModal (Cmd + K) y lógica omnisciente
+│   ├── forum-reply/                  # ForumReplyForm, ForumSection
+│   ├── language-toggle/              # LanguageToggle (ES / EN)
+│   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
+│
+├── widgets/                          # CAPA 3: Bloques Visuales Autónomos Complejos y Shells
+│   ├── software-header/              # SoftwareHeaderNav
+│   ├── software-footer/              # SoftwareFooter
+│   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
+│   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
+│   ├── article-layout/               # SoftwareArticleLayout + Sidebars (AuthorSidebar, ExploreTopics, FeaturedPosts, StayInformed)
+│   └── page-layout/                  # SoftwarePageLayout
+│
+└── software/                         # CAPAS 2 & 1: Enrutamiento y Páginas del App Router de Next.js
+    ├── page.tsx                      # Vista principal de Software (Bento Grid + Feed Hub)
+    ├── news/                         # Catálogo y lector de noticias (/news, /news/[slug])
+    ├── blog/                         # Catálogo y lector de artículos (/blog, /blog/[slug])
+    ├── forum/                        # Catálogo e hilo de discusión (/forum, /forum/[slug])
+    ├── ai/                           # Directorio y fichas técnicas (/ai, /ai/[slug])
+    ├── cybersecurity/                # Matriz de avisos y remediación (/cybersecurity, /cybersecurity/[slug])
+    ├── tutorials/                    # Malla de tutoriales y asistente interactivo (/tutorials, /tutorials/[slug])
+    ├── projects/                     # Showcase de proyectos (/projects, /projects/[slug])
+    └── infrastructure/               # Guías y especificaciones de servidores (/infrastructure, /infrastructure/[slug])
 ```
 
 ---

@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { Project } from '../../../features/projects';
-import { serverGet } from '../../../utils/serverFetch';
-import { SoftwareArticleLayout } from '../../../components/SoftwareArticleLayout';
-import { MermaidBlock, CalloutBlock } from '../../../components/markdown';
+import { Project } from '../../../entities/projects';
+import { serverGet } from '../../../shared/lib/serverFetch';
+import { SoftwareArticleLayout } from '../../../widgets/article-layout';
+import { MermaidBlock, CalloutBlock } from '../../../shared/markdown';
 
 type Params = { params: Promise<{ slug: string }> };
 

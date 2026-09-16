@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky || true",
     "check-secrets": "node scripts/check-secrets.js",
-    "dev": "pnpm -r --parallel dev",
+    "dev": "pnpm -r --parallel --if-present dev",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "format": "pnpm -r format",

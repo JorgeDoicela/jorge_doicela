@@ -21,7 +21,6 @@ export const BibleLogo: React.FC<BibleLogoProps> = ({ size = 20, className = '' 
         width={size}
         height={size}
         className="w-full h-full object-contain block dark:hidden"
-        priority
         unoptimized
       />
       {/* Modo Oscuro: logo_blanco.png */}
@@ -31,7 +30,6 @@ export const BibleLogo: React.FC<BibleLogoProps> = ({ size = 20, className = '' 
         width={size}
         height={size}
         className="w-full h-full object-contain hidden dark:block"
-        priority
         unoptimized
       />
     </div>

@@ -143,45 +143,48 @@ export const PerformanceProvider: React.FC<{ children: ReactNode }> = ({ childre
         };
     }, []);
 
-    // 3. Monitor de rendimiento adaptativo en tiempo real (FPS Watcher inicial)
-    // Monitorea los primeros 120 fotogramas para degradar automáticamente si la GPU sufre caídas drásticas (< 28 FPS)
+    // 3. Monitor de rendimiento adaptativo en tiempo real (FPS Watcher con Warm-up)
+    // Espera a que termine la hidratación y carga inicial (3s) para no confundir el arranque con baja GPU.
     useEffect(() => {
         if (tier === 'low') return;
 
-        let frameCount = 0;
-        let lastTime = performance.now();
-        let slowFrames = 0;
-        let rafId: number;
+        let rafId: number | undefined;
 
-        const maxSamples = 120; // Aproximadamente 2 segundos de muestreo
+        const timeoutId = setTimeout(() => {
+            let frameCount = 0;
+            let lastTime = performance.now();
+            let slowFrames = 0;
+            const maxSamples = 120; // ~2 segundos de muestreo estable post-carga
 
-        const checkFrame = (now: number) => {
-            const delta = now - lastTime;
-            lastTime = now;
+            const checkFrame = (now: number) => {
+                const delta = now - lastTime;
+                lastTime = now;
 
-            // Si el fotograma tomó más de 36ms (equivalente a < 28 FPS continuos)
-            if (delta > 36) {
-                slowFrames++;
-            }
-
-            frameCount++;
-
-            if (frameCount < maxSamples) {
-                rafId = requestAnimationFrame(checkFrame);
-            } else {
-                // Si más del 25% de los fotogramas sufrieron retraso perceptible, degradar el tier
-                if (slowFrames > (maxSamples * 0.25)) {
-                    setTierState((current) => (current === 'high' ? 'mid' : 'low'));
+                // Si un fotograma tomó más de 40ms (equivalente a < 25 FPS)
+                if (delta > 40) {
+                    slowFrames++;
                 }
-            }
-        };
 
-        rafId = requestAnimationFrame(checkFrame);
+                frameCount++;
+
+                if (frameCount < maxSamples) {
+                    rafId = requestAnimationFrame(checkFrame);
+                } else {
+                    // Solo si más del 35% de los fotogramas sufrieron tirones severos tras el calentamiento
+                    if (slowFrames > (maxSamples * 0.35)) {
+                        setTierState((current) => (current === 'high' ? 'mid' : current));
+                    }
+                }
+            };
+
+            rafId = requestAnimationFrame(checkFrame);
+        }, 3000);
 
         return () => {
-            cancelAnimationFrame(rafId);
+            if (timeoutId) clearTimeout(timeoutId);
+            if (rafId) cancelAnimationFrame(rafId);
         };
-    }, [tier]);
+    }, []);
 
     // 4. Sincronización atómica única con el DOM para estilos CSS [data-tier="..."]
     useEffect(() => {

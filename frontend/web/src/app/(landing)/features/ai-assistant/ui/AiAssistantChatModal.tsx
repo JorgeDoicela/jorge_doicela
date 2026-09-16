@@ -28,6 +28,18 @@ interface AiAssistantChatModalProps {
   onClose: () => void;
 }
 
+// Helper para normalizar URLs y evitar rutas relativas rotas o brackets pegados
+function cleanExternalUrl(raw: string): { href: string; label: string; isInternal: boolean } {
+  const cleaned = raw.trim().replace(/^[<([\]+/, '').replace(/[>)\].,;:!]+$/, '');
+  if (cleaned.startsWith('/')) {
+    return { href: cleaned, label: cleaned, isInternal: true };
+  }
+  const hasProtocol = /^https?:\/\//i.test(cleaned);
+  const href = hasProtocol ? cleaned : `https://${cleaned}`;
+  const label = cleaned.replace(/^https?:\/\//i, '');
+  return { href, label, isInternal: false };
+}
+
 // Función para parsear y renderizar Markdown con alto contraste garantizado en claro y oscuro
 function FormattedAiText({ text }: { text: string }) {
   if (!text) return null;
@@ -35,40 +47,88 @@ function FormattedAiText({ text }: { text: string }) {
   const lines = text.split('\n');
 
   const parseInline = (str: string): React.ReactNode[] => {
-    // Regex para markdown links [texto](url), negritas (**texto**), código (`código`), /consulta, emails y URLs
-    const parts = str.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`|\/consulta|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|https?:\/\/[^\s)]+)/g);
+    // Regex integral: markdown links, autolinks <url>, negrita, cursiva, código, /consulta, emails, URLs completas y dominios conocidos
+    const tokenRegex = /(\[[^\]]+\]\([^)]+\)|<https?:\/\/[^>]+>|<[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}[^>]*>|\*\*[^*]+\*\*|(?<!\*)\*[^*]+\*(?!\*)|`[^`]+`|\/consulta|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|https?:\/\/[^\s<>()]+|(?:github\.com|linkedin\.com|youtube\.com|tiktok\.com|x\.com)\/[^\s<>()]+)/g;
+
+    const parts = str.split(tokenRegex);
 
     return parts.map((part, idx) => {
+      if (!part) return null;
+
       // 1. Markdown link: [Texto](url)
       const mdLinkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (mdLinkMatch) {
         const linkText = mdLinkMatch[1];
-        const linkUrl = mdLinkMatch[2];
-        const isInternal = linkUrl.startsWith('/');
+        const { href, isInternal } = cleanExternalUrl(mdLinkMatch[2]);
         if (isInternal) {
           return (
-            <Link key={idx} href={linkUrl} className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+            <Link key={idx} href={href} className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
               {linkText} ↗
             </Link>
           );
         }
         return (
-          <a key={idx} href={linkUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+          <a key={idx} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
             {linkText} ↗
           </a>
         );
       }
 
-      // 2. Negritas
+      // 2. Autolink con corchetes angulares: <url> o <https://...>
+      if (part.startsWith('<') && part.endsWith('>')) {
+        const innerUrl = part.slice(1, -1);
+        // Si contiene un email dentro de <email@dominio.com>
+        if (innerUrl.includes('@') && innerUrl.includes('.')) {
+          return (
+            <a key={idx} href={`mailto:${innerUrl}`} className="font-semibold ai-text-link hover:underline">
+              {innerUrl}
+            </a>
+          );
+        }
+        const { href, label, isInternal } = cleanExternalUrl(innerUrl);
+        if (isInternal) {
+          return (
+            <Link key={idx} href={href} className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+              {label} ↗
+            </Link>
+          );
+        }
+        return (
+          <a key={idx} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+            {label} ↗
+          </a>
+        );
+      }
+
+      // 3. Negritas (**texto**)
       if (part.startsWith('**') && part.endsWith('**')) {
+        const inner = part.slice(2, -2);
         return (
           <strong key={idx} className="ai-text-strong">
-            {part.slice(2, -2)}
+            {parseInline(inner)}
           </strong>
         );
       }
 
-      // 3. Código inline
+      // 4. Cursiva simple (*texto*)
+      if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+        const inner = part.slice(1, -1);
+        // Si lo que está en cursiva es un email:
+        if (inner.includes('@') && inner.includes('.')) {
+          return (
+            <a key={idx} href={`mailto:${inner}`} className="font-semibold italic ai-text-link hover:underline">
+              {inner}
+            </a>
+          );
+        }
+        return (
+          <em key={idx} className="italic opacity-90">
+            {parseInline(inner)}
+          </em>
+        );
+      }
+
+      // 5. Código inline (`código`)
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
           <code key={idx} className="px-1.5 py-0.5 rounded font-mono text-[11.5px] font-semibold ai-text-code">
@@ -77,7 +137,7 @@ function FormattedAiText({ text }: { text: string }) {
         );
       }
 
-      // 4. Mención de /consulta directa
+      // 6. Mención de /consulta directa
       if (part === '/consulta') {
         return (
           <Link key={idx} href="/consulta" className="inline-flex items-center gap-1 font-semibold ai-text-link hover:underline px-1 py-0.5 rounded bg-indigo-500/10 transition-colors">
@@ -86,20 +146,22 @@ function FormattedAiText({ text }: { text: string }) {
         );
       }
 
-      // 5. Correo electrónico
-      if (part.includes('@') && part.includes('.') && !part.startsWith('http')) {
+      // 7. Correo electrónico puro
+      if (part.includes('@') && part.includes('.') && !part.startsWith('http') && !part.includes('/')) {
+        const cleanEmail = part.replace(/[.,;:!]+$/, '');
         return (
-          <a key={idx} href={`mailto:${part}`} className="font-semibold ai-text-link hover:underline">
-            {part}
+          <a key={idx} href={`mailto:${cleanEmail}`} className="font-semibold ai-text-link hover:underline">
+            {cleanEmail}
           </a>
         );
       }
 
-      // 6. URLs directas (http/https)
-      if (part.startsWith('http://') || part.startsWith('https://')) {
+      // 8. URLs directas (con http/https o dominios conocidos)
+      if (part.startsWith('http://') || part.startsWith('https://') || /^(?:github\.com|linkedin\.com|youtube\.com|tiktok\.com|x\.com)\//i.test(part)) {
+        const { href, label } = cleanExternalUrl(part);
         return (
-          <a key={idx} href={part} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
-            {part.replace(/^https?:\/\//, '')} ↗
+          <a key={idx} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 font-semibold ai-text-link hover:underline">
+            {label} ↗
           </a>
         );
       }

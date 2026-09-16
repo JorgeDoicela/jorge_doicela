@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { SOCKET_URL, SANDBOX_TUNNEL_URL } from '../../../../config';
+import { SOCKET_URL, SANDBOX_TUNNEL_URL } from '../../../shared';
 
 export type SandboxStatus =
   | 'idle'

@@ -78,6 +78,12 @@ frontend/web/src/app/(portfolio)/
 │       │   └── useContact.ts         # Llamada HTTP POST al backend y estados reactivos
 │       ├── types.ts                  # DTOs y tipos del formulario de contacto
 │       └── index.ts                  # Barril de exportación pública de la feature
+│   │
+│   └── shared/                # CAPA SHARED FSD (AISLADA DEL SLICE PORTFOLIO)
+│       ├── lib/
+│       │   ├── api.ts                # Clientes y URLs base del portafolio (API_URL, SOCKET_URL, SANDBOX_TUNNEL_URL)
+│       │   └── index.ts              # Barril de utilidades y librerías shared
+│       └── index.ts                  # Exportación pública consolidada de shared
 ```
 
 ---
@@ -121,9 +127,11 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Pantalla Completa Inmersiva (`createPortal`):**
   * Teletransporta la terminal como hijo directo de `document.body` con `z-[99999]`.
   * Tecla de escape rápida (`Esc`) para salir del modo pantalla completa.
-* **Seguridad en el Frontend:**
+* **Seguridad en el Frontend y Backend:**
   * `window.open(payload, '_blank', 'noopener,noreferrer')` — aislamiento de contexto en apertura de URLs externas.
   * Ningún input del usuario se imprime en la consola del navegador (`console.log` de teclado eliminado).
+  * **Rate Limiting Deslizante por Socket (`PortfolioGateway`):** Ventana deslizante estricta de 15 comandos por segundo por conexión para impedir ataques de denegación de servicio (DoS) o agotamiento de CPU en el event loop de Node.js.
+  * **Truncado Preventivo de Comandos:** Comandos limitados estrictamente a 1024 caracteres (`cmd.slice(0, 1024)`) para evitar saturación de memoria en strings in-memory.
 
 ### 4.2 Modo 2: Terminal en la Nube — AWS Lightsail (`useSandboxTerminal.ts?mode=vps`)
 * **Namespace:** Conecta a `${API_URL}/sandbox` con `targetMode: 'vps'`.
@@ -170,6 +178,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Sincronización Multiventana Local (`BroadcastChannel`):** Canal `portfolio_sandbox_multitab` que coordina pestañas locales en tiempo real con `senderTabId` inmutable. Cuando una pestaña inicia o transfiere la terminal, las demás pestañas abiertas lo detectan inmediatamente y pasan al estado `replaced` sin generar llamadas redundantes al servidor.
 * **Modal Dark Luxury de Seguridad y Concurrencia (`SandboxSecurityModal.tsx`):** Cuando la sesión entra en un estado de seguridad (`concurrency_limit`, `replaced`, `cooldown`, `rate_limited` o `blocked`), la interfaz renderiza una tarjeta centrada con estética Dark Luxury idéntica a `ServerOfflineBanner.tsx` (resplandor ambiental dorado, badge superior, título claro, reloj regresivo en cooldown, botón de acción y enlace directo `[ ← Volver al Portafolio ]`).
 * **Handover PTY en Caliente y Replay de Scrollback:** Al confirmar la transferencia, el socket emite `{ forceReplace: true }`. El backend transfiere el stream interactivo del contenedor Docker sin destruirlo, y la nueva pestaña recibe el buffer de salida previo (`scrollback`), restaurando instantáneamente el prompt, comandos y texto sin parpadeos ni pérdidas de datos.
+* **Protección de Ingesta PTY (Buffer Flood Protection):** En `SandboxService.writeInput`, cada fragmento de entrada emitido por el socket se valida y trunca a un máximo de 4096 bytes (`chunk.slice(0, 4096)`), previniendo desbordamientos de buffer en la consola interactiva o saturación del pipe stdin del contenedor.
 * **Privacidad de input:** El evento `onData` de xterm.js **no loguea** el contenido de las pulsaciones del visitante (`console.log` eliminado) para proteger datos privados en la consola del navegador.
 * **Filtrado de secuencias de ratón:** Se ignoran secuencias `\x1b[<` y `\x1b[M` (SGR / X10 Mouse events) para evitar basura en el stream PTY al hacer clic en la terminal.
 * **Limpieza en desmontaje:** `socket.disconnect()` + `xterm.dispose()` + `channel.close()` garantizan cero fugas de memoria o listeners huérfanos.

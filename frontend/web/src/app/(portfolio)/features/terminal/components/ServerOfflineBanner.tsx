@@ -12,7 +12,7 @@ import {
   ChevronUp,
   ArrowLeft,
 } from 'lucide-react';
-import { API_URL } from '../../../../config';
+import { API_URL } from '../../../shared';
 
 interface ServerOfflineBannerProps {
   onRetry?: () => void;

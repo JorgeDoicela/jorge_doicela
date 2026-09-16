@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ContactFormData } from '../types';
-import { API_URL } from '../../../../config';
+import { API_URL } from '../../../shared';
 
 export type { ContactFormData };
 

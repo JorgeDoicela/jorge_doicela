@@ -87,9 +87,14 @@ export class PortfolioGateway
     });
   }
 
+  private readonly commandRateLimits = new Map<string, number[]>();
+  private readonly maxCommandsPerSecond = 15;
+  private readonly maxCommandLength = 1024;
+
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected from terminal: ${client.id}`);
     this.clientStates.delete(client.id);
+    this.commandRateLimits.delete(client.id);
   }
 
   @SubscribeMessage('execute-command')
@@ -98,13 +103,39 @@ export class PortfolioGateway
     payload: { command: string; tabId?: string; paneId?: string } | string,
     @ConnectedSocket() client: Socket,
   ) {
-    const rawCommand =
+    const now = Date.now();
+    let timestamps = this.commandRateLimits.get(client.id) || [];
+    timestamps = timestamps.filter((t) => now - t < 1000);
+
+    if (timestamps.length >= this.maxCommandsPerSecond) {
+      this.logger.warn(
+        `[${client.id}] Rate limit de comandos excedido (> ${this.maxCommandsPerSecond}/s)`,
+      );
+      client.emit('terminal-output', {
+        command: '',
+        output:
+          '\x1b[31m[SEGURIDAD] Límite de comandos por segundo excedido. Por favor espera un momento.\x1b[0m',
+        cwd: this.clientStates.get(client.id)?.cwd || '~',
+        prompt: `jorge@debian:${this.clientStates.get(client.id)?.cwd || '~'}$ `,
+      });
+      return;
+    }
+
+    timestamps.push(now);
+    this.commandRateLimits.set(client.id, timestamps);
+
+    let rawCommand =
       typeof payload === 'string' ? payload : payload?.command || '';
+
+    // Sanitizar longitud máxima del comando para prevenir ataques de saturación de memoria
+    if (rawCommand.length > this.maxCommandLength) {
+      rawCommand = rawCommand.slice(0, this.maxCommandLength);
+    }
+
     const tabId = typeof payload === 'object' ? payload?.tabId : undefined;
     const paneId = typeof payload === 'object' ? payload?.paneId : undefined;
 
     const state = this.clientStates.get(client.id) || { cwd: '~' };
-    // Debug en vez de log: el comando puede contener texto sensible del visitante
     this.logger.debug(
       `[${client.id}] Executing command at [${state.cwd}] — ${rawCommand.length} chars`,
     );

@@ -51,6 +51,9 @@ frontend/web/src/app/(portfolio)/
 │       ├── components/     # ContactForm.tsx
 │       ├── hooks/          # useContact.ts
 │       └── types.ts        # Tipos del formulario
+├── shared/                 # Capa Shared FSD (Aislada del slice)
+│   ├── lib/                # api.ts (API_URL, SOCKET_URL, SANDBOX_TUNNEL_URL)
+│   └── index.ts            # Barril consolidado
 ├── components/             # ThemeToggle.tsx, LanguageToggle.tsx, TypewriterRole.tsx, ValuesPhilosophySection.tsx
 ├── globals.css             # Estilos específicos del portafolio
 └── layout.tsx              # Layout independiente con NextIntlClientProvider y generateMetadata dinámico
@@ -95,9 +98,17 @@ frontend/web/src/app/(portfolio)/
   5. Ejecutar `pnpm --filter backend seed:portfolio` para reflejar en `portfolio.sqlite`.
   6. Actualizar la interfaz TypeScript en `frontend/web/src/app/(portfolio)/features/projects/types.ts` y su fallback en `page.tsx`.
 
-### 3.2 Gateways WebSockets (Socket.io)
-* **Terminal Guiada:** `PortfolioGateway` (`/terminal`) — simulación interactiva con comandos Unix preprogramados.
-* **Live Linux Sandbox:** `SandboxGateway` (`/sandbox`) — orquestación de contenedores Docker efímeros (`dockerode`) en VPS (AWS) o hardware físico propio con túnel cifrado.
+### 3.2 Gateways WebSockets (Socket.io) y Seguridad Blindada
+* **Terminal Guiada:** `PortfolioGateway` (`/terminal`)
+  * Simulación interactiva con sistema de archivos virtual in-memory en TypeScript (Cero superficie RCE).
+  * Rate limiting por socket de 15 comandos/segundo (ventana deslizante) contra saturación del event loop.
+  * Truncado de comandos a 1024 caracteres para prevenir desbordamientos de memoria.
+* **Live Linux Sandbox:** `SandboxGateway` (`/sandbox`)
+  * Orquestación de contenedores efímeros (`dockerode`) en VPS (AWS) o hardware físico propio con túnel cifrado.
+  * Aislamiento kernel estricto: `ReadonlyRootfs: true`, `CapDrop: ['ALL']`, `NetworkMode: 'none'`, `PidsLimit: 50/100`, `Tmpfs` con flags `noexec,nosuid,size=16m`.
+  * `SandboxSecurityService`: 1 sesión activa por IP, cooldown de 60s, máximo 8 sesiones/hora, jail temporal de 15m para abusadores.
+  * Transferencia PTY en caliente sin reciclado de Docker y buffer flood protection (4096 bytes max por chunk en `writeInput`).
+  * Timeout estricto de 5 minutos por sesión (`TTL`) con reap automático de contenedores.
 
 ### 3.3 Endpoints REST, Eventos y Entidades TypeORM
 * **Proyectos:**

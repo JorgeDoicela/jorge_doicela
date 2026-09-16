@@ -274,12 +274,13 @@ export class SandboxService implements OnModuleDestroy {
   writeInput(socketId: string, data: string): void {
     const session = this.sessions.get(socketId);
     if (session && session.stream) {
-      // No logear el contenido del input: puede contener credenciales o datos sensibles del usuario
+      // Limitar chunk a máximo 4096 bytes para proteger el buffer del PTY contra ataques de inundación masiva
+      const safeData = data.length > 4096 ? data.slice(0, 4096) : data;
       this.logger.debug(
-        `writeInput → sesión ${session.sessionId} (writable: ${session.stream.writable}) [${data.length} bytes]`,
+        `writeInput → sesión ${session.sessionId} (writable: ${session.stream.writable}) [${safeData.length} bytes]`,
       );
       if (session.stream.writable) {
-        session.stream.write(Buffer.from(data, 'utf-8'));
+        session.stream.write(Buffer.from(safeData, 'utf-8'));
       }
     } else {
       this.logger.warn(

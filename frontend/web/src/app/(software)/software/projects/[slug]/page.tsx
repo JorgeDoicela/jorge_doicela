@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { Project } from '../../../entities/projects';
+import { Project, ProjectActions } from '../../../entities/projects';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { SoftwareArticleLayout } from '../../../widgets/article-layout';
 import { MermaidBlock, CalloutBlock } from '../../../shared/markdown';
@@ -40,7 +40,6 @@ export default async function ProjectDetailPage({ params }: Params) {
   const locale = await getLocale();
   const tNav = await getTranslations('Nav');
   const tDetail = await getTranslations('Detail');
-  const tCard = await getTranslations('CardActions');
 
   const project = await serverGet<Project>(`/software/projects/${slug}?lang=${locale}`);
 
@@ -65,33 +64,8 @@ export default async function ProjectDetailPage({ params }: Params) {
       date={formattedDate}
       author="Jorge Doicela"
     >
-      {/* Botones de Acción de Enlaces Externos si existen */}
-      {(project.liveUrl || project.repoUrl) && (
-        <div className="flex flex-wrap items-center gap-3 pb-6 border-b border-black/5 dark:border-white/5">
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-md hover:shadow-blue-500/25 cursor-pointer"
-            >
-              <span>{tCard('openLiveApp')}</span>
-              <span>↗</span>
-            </a>
-          )}
-          {project.repoUrl && (
-            <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 rounded-xl glass-concave-panel text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white inline-flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
-            >
-              <span>{tCard('viewGithub')}</span>
-              <span>↗</span>
-            </a>
-          )}
-        </div>
-      )}
+      {/* Botones de Acción de Enlaces Externos si existen (FSD Component) */}
+      <ProjectActions liveUrl={project.liveUrl} repoUrl={project.repoUrl} />
 
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (

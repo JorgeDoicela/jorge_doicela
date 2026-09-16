@@ -53,7 +53,7 @@ frontend/web/src/app/(software)/
 │   ├── ai/                           # AiCard, AiGrid, useAi, types.ts, index.ts
 │   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types.ts, index.ts
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, types.ts, index.ts
-│   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, types.ts, index.ts
+│   ├── projects/                     # ProjectCard, ProjectGrid, ProjectActions, useProjects, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types.ts, index.ts
 │   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
 │

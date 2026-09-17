@@ -12,6 +12,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 * [01_frontend_y_hub_tecnologico.md](../../../docs/05-software/01-frontend/01_frontend_y_hub_tecnologico.md)
 * [01_backend_y_persistencia.md](../../../docs/05-software/02-backend/01_backend_y_persistencia.md)
 * [01_roadmap_software.md](../../../docs/05-software/03-roadmap/01_roadmap_software.md)
+* [01_estandares_editoriales_y_publicaciones.md](../../../docs/05-software/04-editorial/01_estandares_editoriales_y_publicaciones.md)
 
 ---
 
@@ -153,7 +154,40 @@ backend/src/software/
 
 ---
 
-## 4. Comandos de Operación
+## 4. Estándar Editorial y Enfoque Pedagógico Multinivel (Obligatorio en Publicaciones)
+
+Toda publicación elaborada para cualquiera de los 8 módulos de Software (`infrastructure`, `tutorials`, `blog`, `news`, `security`, `ai`, `projects`, `forum`) debe cumplir de forma estricta los siguientes principios editoriales:
+
+### 4.1 Prohibición Absoluta de Lenguaje Publicitario ("Hype" o Marketing)
+* **Prohibido:** Usar expresiones sensacionalistas, publicitarias o superlativos vacíos como *"el mejor"*, *"la solución definitiva"*, *"increíble"*, *"revolucionario"*, *"mágico"* o cualquier tono comercial.
+* **Obligatorio:** Emplear tono de **ingeniería rigurosa y sobria**. Describir soluciones por su nombre arquitectónico, fundamentos de diseño, métricas empíricas, ventajas y desventajas objetivas (trade-offs).
+
+### 4.2 Arquitectura Pedagógica Multinivel
+Cada publicación debe estructurarse para que tres niveles de audiencia aprendan y obtengan valor inmediato:
+1. **Principiantes y Estudiantes:**
+   * Analogías visuales e intuitivas del mundo real antes de entrar en código.
+   * Glosario de términos clave (sin asumir conocimientos previos ocultos).
+   * Explicación del "por qué" de cada comando antes de su ejecución.
+2. **Reclutadores Técnicos y Tech Leads:**
+   * Resumen ejecutivo en los primeros párrafos con el problema técnico resuelto.
+   * Métricas e indicadores medibles (ej. latencia, consumo de RAM, reducción de superficie de ataque).
+   * Checklist final de validación y competencias técnicas demostradas.
+3. **Desarrolladores Profesionales y Expertos:**
+   * Diagnóstico de bajo nivel (kernel, sockets, trazas de red, flags de comandos).
+   * Resolución de conflictos y casos de borde reales (edge cases, ej. bypass de reglas entre herramientas).
+   * Configuraciones de producción completas, auditables y reproducibles.
+
+### 4.3 Cero Meta-Etiquetas de Audiencia (Prohibido Etiquetar al Lector)
+* **Principio de Alta Gama Editorial:** El diseño multinivel es una disciplina **interna** de estructura de contenido, **jamás una etiqueta visible para el lector**. Un medio o publicación de ingeniería de clase mundial (estilo Stripe Engineering, Cloudflare Blog o ACM) no le dice a su audiencia a qué estrato pertenece.
+* **Prohibido:** Usar frases o encabezados como *"Para reclutadores"*, *"Para tech leads"*, *"Para novatos/principiantes"* o *"Para expertos"*.
+* **Obligatorio:** Utilizar encabezados de ingeniería sobrios, naturales y universales: *"Resumen Ejecutivo"*, *"Modelo Conceptual"*, *"Diagnóstico de Sockets"*, *"Arquitectura de Filtrado"*, etc. El valor para cada perfil debe ser entregado de forma orgánica y fluida a través de la calidad del contenido, sin meta-mensajes obvios.
+
+### 4.4 Estructura Bilingüe Simétrica
+* Cada publicación debe mantenerse sincronizada tanto en español (`es`) como en inglés (`en`), manteniendo idéntico rigor conceptual, diagramas y terminología profesional.
+
+---
+
+## 5. Comandos de Operación
 
 ```bash
 # 1. Sembrado atómico y recreación de software.sqlite (8 tablas desde corpus/*.json)
@@ -172,10 +206,13 @@ pnpm run lint
 
 ---
 
-## 5. Anti-Patrones Prohibidos
+## 6. Anti-Patrones Prohibidos
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
+| Usar lenguaje publicitario (*"el mejor"*, *"la definitiva"*) | Resta seriedad, rigor técnico y credibilidad profesional. | Describir los fundamentos técnicos, trade-offs y métricas objetivas. |
+| Incluir meta-etiquetas de audiencia (*"para reclutadores"*, *"para principiantes"*) | Se percibe artificial, amateur y rompe la elegancia editorial. | Usar encabezados universales (*"Resumen Ejecutivo"*, *"Modelo Conceptual"*). |
+| Redactar exclusivamente para expertos o solo para novatos | Aleja a estudiantes o aburre a ingenieros experimentados. | Aplicar el enfoque multinivel: analogía didáctica + resumen ejecutivo + bajo nivel. |
 | Crear una tabla genérica con discriminador de categoría | Crea columnas vacías y rompe el modelo relacional a medida que el dominio crece. | Mantener entidades especializadas por submódulo. |
 | Inyectar repositorios sin `'softwareConnection'` | Conecta a la base de datos equivocada. | Usar `@InjectRepository(Entity, 'softwareConnection')`. |
 | Mezclar tipos de artículos con entidades de `bible` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/software/<modulo>/entities/`. |

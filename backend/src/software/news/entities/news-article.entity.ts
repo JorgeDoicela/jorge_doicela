@@ -9,6 +9,7 @@ import {
 
 @Entity('news_articles')
 @Index(['slug', 'language'], { unique: true })
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
 @Index(['language', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 @Index(['language', 'isBreaking', 'orderPriority', 'publishedAt'])
@@ -42,6 +43,9 @@ export class NewsArticle {
 
   @Column({ default: 'Jorge Doicela' })
   author: string;
+
+  @Column({ default: 'frameworks' })
+  category: string;
 
   @Column({ default: 'news,tech' })
   tags: string;

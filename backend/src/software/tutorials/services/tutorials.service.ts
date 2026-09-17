@@ -27,13 +27,14 @@ export class TutorialsService {
       qb.andWhere('tut.language = :lang', { lang });
     }
 
-    if (difficulty) {
+    if (difficulty && difficulty !== 'all') {
       qb.andWhere('tut.difficulty = :difficulty', { difficulty });
     }
 
     if (search) {
       qb.andWhere(
         '(tut.title LIKE :search OR tut.excerpt LIKE :search OR tut.tags LIKE :search OR tut.techStack LIKE :search)',
+
         { search: `%${search}%` },
       );
     }
@@ -122,5 +123,65 @@ export class TutorialsService {
     if (!result.affected) {
       throw new NotFoundException(`Tutorial #${id} no encontrado`);
     }
+  }
+
+  async getCategories(
+    lang: string = 'es',
+  ): Promise<Array<{ id: string; label: string; count: number }>> {
+    const qb = this.tutorialRepository.createQueryBuilder('tut');
+    if (lang) {
+      qb.andWhere('tut.language = :lang', { lang });
+    }
+
+    const allTutorials = await qb.select(['tut.difficulty']).getMany();
+    const countMap = new Map<string, number>();
+
+    for (const tut of allTutorials) {
+      if (tut.difficulty) {
+        const diff = tut.difficulty.toLowerCase();
+        countMap.set(diff, (countMap.get(diff) || 0) + 1);
+      }
+    }
+
+    const labelsEs: Record<string, string> = {
+      all: 'Todos los niveles',
+      beginner: 'Principiante',
+      intermediate: 'Intermedio',
+      advanced: 'Avanzado',
+      expert: 'Experto',
+    };
+
+    const labelsEn: Record<string, string> = {
+      all: 'All Levels',
+      beginner: 'Beginner',
+      intermediate: 'Intermediate',
+      advanced: 'Advanced',
+      expert: 'Expert',
+    };
+
+    const labels = lang === 'en' ? labelsEn : labelsEs;
+
+    const result: Array<{ id: string; label: string; count: number }> = [
+      {
+        id: 'all',
+        label:
+          labels.all || (lang === 'en' ? 'All Levels' : 'Todos los niveles'),
+        count: allTutorials.length,
+      },
+    ];
+
+    const difficultyOrder = ['beginner', 'intermediate', 'advanced', 'expert'];
+    for (const diff of difficultyOrder) {
+      const count = countMap.get(diff) || 0;
+      if (count > 0) {
+        result.push({
+          id: diff,
+          label: labels[diff] || diff,
+          count,
+        });
+      }
+    }
+
+    return result;
   }
 }

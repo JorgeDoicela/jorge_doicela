@@ -3,22 +3,20 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwarePageLayout } from '../../widgets/page-layout';
-import { TutorialGrid, useTutorials } from '../../entities/tutorials';
+import {
+  TutorialGrid,
+  useTutorials,
+  useTutorialsCategories,
+} from '../../entities/tutorials';
+import { CategoryFilterBar } from '../../shared/ui';
 
 export default function TutorialsCategoryPage() {
   const tNav = useTranslations('Nav');
   const tTutorials = useTranslations('Tutorials');
-  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState('all');
+  const { categories, loading: categoriesLoading } = useTutorialsCategories();
   const { tutorials, loading, error } = useTutorials(difficulty, search);
-
-  const difficulties = [
-    { id: 'all', label: tFilters('allLevels') },
-    { id: 'beginner', label: tFilters('beginner') },
-    { id: 'intermediate', label: tFilters('intermediate') },
-    { id: 'advanced', label: tFilters('advanced') },
-  ];
 
   return (
     <SoftwarePageLayout
@@ -48,21 +46,14 @@ export default function TutorialsCategoryPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-              {difficulties.map((d) => (
-                <button
-                  key={d.id}
-                  onClick={() => setDifficulty(d.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                    difficulty === d.id
-                      ? 'glass-btn-neumorphic text-amber-600 dark:text-amber-400 font-bold'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
+            <CategoryFilterBar
+              options={categories}
+              selectedId={difficulty}
+              onSelect={setDifficulty}
+              loading={categoriesLoading}
+              accentColor="amber"
+              showCount={true}
+            />
           </div>
         </header>
 

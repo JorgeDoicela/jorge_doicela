@@ -21,6 +21,11 @@ export class NewsController {
     return this.newsService.findAll(query);
   }
 
+  @Get('categories')
+  async getCategories(@Query('lang') lang?: string) {
+    return this.newsService.getCategories(lang);
+  }
+
   @Get(':idOrSlug')
   async findOne(
     @Param('idOrSlug') idOrSlug: string,

@@ -21,6 +21,11 @@ export class BlogController {
     return this.blogService.findAll(query);
   }
 
+  @Get('categories')
+  async getCategories(@Query('lang') lang?: string) {
+    return this.blogService.getCategories(lang);
+  }
+
   @Get(':idOrSlug')
   async findOne(
     @Param('idOrSlug') idOrSlug: string,

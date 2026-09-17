@@ -5,7 +5,14 @@ import type {
   SecurityPostType,
 } from '../entities/security-post.entity';
 
-const SEVERITIES: SecuritySeverity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+const SEVERITIES: Array<SecuritySeverity | 'all'> = [
+  'all',
+  'LOW',
+  'MEDIUM',
+  'HIGH',
+  'CRITICAL',
+];
+
 const POST_TYPES: SecurityPostType[] = [
   'advisory',
   'hardening_guide',
@@ -17,7 +24,7 @@ export class GetSecurityPostsQueryDto extends SoftwareQueryDto {
   @IsIn(SEVERITIES, {
     message: 'La severidad debe ser LOW, MEDIUM, HIGH o CRITICAL',
   })
-  severity?: SecuritySeverity;
+  severity?: SecuritySeverity | 'all';
 
   @IsOptional()
   @IsIn(POST_TYPES, {

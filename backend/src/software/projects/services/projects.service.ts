@@ -24,7 +24,7 @@ export class ProjectsService {
       qb.andWhere('proj.language = :lang', { lang });
     }
 
-    if (status) {
+    if (status && status !== 'all') {
       qb.andWhere('proj.status = :status', { status });
     }
 
@@ -108,5 +108,66 @@ export class ProjectsService {
     if (!result.affected) {
       throw new NotFoundException(`Proyecto #${id} no encontrado`);
     }
+  }
+
+  async getCategories(
+    lang: string = 'es',
+  ): Promise<Array<{ id: string; label: string; count: number }>> {
+    const qb = this.projectRepository.createQueryBuilder('proj');
+    if (lang) {
+      qb.andWhere('proj.language = :lang', { lang });
+    }
+
+    const allProjects = await qb.select(['proj.status']).getMany();
+    const countMap = new Map<string, number>();
+
+    for (const proj of allProjects) {
+      if (proj.status) {
+        const s = proj.status.toLowerCase();
+        countMap.set(s, (countMap.get(s) || 0) + 1);
+      }
+    }
+
+    const labelsEs: Record<string, string> = {
+      all: 'Todos los proyectos',
+      active: 'En Producción',
+      wip: 'En Desarrollo',
+      archived: 'Archivado',
+      beta: 'Fase Beta',
+    };
+
+    const labelsEn: Record<string, string> = {
+      all: 'All Projects',
+      active: 'In Production',
+      wip: 'In Development',
+      archived: 'Archived',
+      beta: 'Beta Phase',
+    };
+
+    const labels = lang === 'en' ? labelsEn : labelsEs;
+
+    const result: Array<{ id: string; label: string; count: number }> = [
+      {
+        id: 'all',
+        label:
+          labels.all ||
+          (lang === 'en' ? 'All Projects' : 'Todos los proyectos'),
+        count: allProjects.length,
+      },
+    ];
+
+    const statusOrder = ['active', 'wip', 'beta', 'archived'];
+    for (const s of statusOrder) {
+      const count = countMap.get(s) || 0;
+      if (count > 0) {
+        result.push({
+          id: s,
+          label: labels[s] || s,
+          count,
+        });
+      }
+    }
+
+    return result;
   }
 }

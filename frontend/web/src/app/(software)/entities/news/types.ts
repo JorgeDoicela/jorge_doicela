@@ -1,3 +1,5 @@
+import { FilterOption } from '../../shared';
+
 export interface NewsArticle {
   id: number;
   slug: string;
@@ -7,6 +9,7 @@ export interface NewsArticle {
   sourceUrl?: string;
   isBreaking: boolean;
   author: string;
+  category: string;
   tags: string;
   coverImage?: string;
   readTimeMinutes: number;
@@ -18,3 +21,6 @@ export interface NewsArticle {
   createdAt: string;
   updatedAt: string;
 }
+
+export type NewsCategoryItem = FilterOption;
+

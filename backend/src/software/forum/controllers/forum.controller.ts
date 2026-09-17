@@ -21,6 +21,11 @@ export class ForumController {
     return this.forumService.findAllTopics(query);
   }
 
+  @Get('categories')
+  async getCategories(@Query('lang') lang?: string) {
+    return this.forumService.getCategories(lang);
+  }
+
   @Get(':idOrSlug')
   async findOne(
     @Param('idOrSlug') idOrSlug: string,

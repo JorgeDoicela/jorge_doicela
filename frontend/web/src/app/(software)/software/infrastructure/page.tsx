@@ -3,33 +3,20 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwarePageLayout } from '../../widgets/page-layout';
-import { InfrastructureGrid, useInfrastructure } from '../../entities/infrastructure';
+import {
+  InfrastructureGrid,
+  useInfrastructure,
+  useInfrastructureCategories,
+} from '../../entities/infrastructure';
+import { CategoryFilterBar } from '../../shared/ui';
 
 export default function InfrastructureCategoryPage() {
   const tNav = useTranslations('Nav');
   const tInfra = useTranslations('Infrastructure');
-  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
-  const [sortBy, setSortBy] = useState<'smart' | 'recent' | 'views' | 'difficulty'>('smart');
-  const { posts, loading, error } = useInfrastructure(category, undefined, undefined, search, sortBy);
-
-  const categories = [
-    { id: 'all', label: tFilters('allCategories') },
-    { id: 'servers', label: tInfra('catServers') },
-    { id: 'cloud', label: tInfra('catCloud') },
-    { id: 'containers', label: tInfra('catContainers') },
-    { id: 'networking', label: tInfra('catNetworking') },
-    { id: 'ci_cd', label: tInfra('catCiCd') },
-    { id: 'hardening', label: tInfra('catHardening') },
-  ];
-
-  const sortOptions = [
-    { id: 'smart', label: tFilters('sortSmart') },
-    { id: 'recent', label: tFilters('sortRecent') },
-    { id: 'views', label: tFilters('sortViews') },
-    { id: 'difficulty', label: tFilters('sortDifficulty') },
-  ];
+  const { categories, loading: categoriesLoading } = useInfrastructureCategories();
+  const { posts, loading, error } = useInfrastructure(category, undefined, undefined, search);
 
   return (
     <SoftwarePageLayout
@@ -60,41 +47,14 @@ export default function InfrastructureCategoryPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none max-w-full">
-              {categories.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => setCategory(c.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                    category === c.id
-                      ? 'glass-btn-neumorphic text-emerald-600 dark:text-emerald-400 font-bold'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Barra de Ordenación Inteligente Multi-Criterio */}
-          <div className="flex items-center justify-center gap-2 pt-3 flex-wrap">
-            <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 uppercase tracking-wider mr-1 font-medium">
-              {tFilters('sortBy')}
-            </span>
-            {sortOptions.map((opt) => (
-              <button
-                key={opt.id}
-                onClick={() => setSortBy(opt.id as 'smart' | 'recent' | 'views' | 'difficulty')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all duration-200 cursor-pointer ${
-                  sortBy === opt.id
-                    ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-600/30 dark:border-emerald-500/40 shadow-sm shadow-emerald-500/10 dark:shadow-[0_0_10px_rgba(16,185,129,0.15)] font-bold'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/[0.03] dark:hover:bg-white/[0.08] border border-black/10 dark:border-white/5'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+            <CategoryFilterBar
+              options={categories}
+              selectedId={category}
+              onSelect={setCategory}
+              loading={categoriesLoading}
+              accentColor="emerald"
+              showCount={true}
+            />
           </div>
         </header>
 

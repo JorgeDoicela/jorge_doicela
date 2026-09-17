@@ -17,6 +17,10 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 >   1. *Presentación:* Controladores REST (`NewsController`, `BlogController`, `ForumController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`, `InfrastructureController`).
 >   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas (`NewsService`, `BlogService`, `InfrastructureService`, etc.).
 >   3. *Acceso a Datos:* 10 entidades TypeORM en `better-sqlite3` (`NewsArticle`, `BlogPost`, `ForumTopic`, `ForumReply`, `AiResource`, `SecurityPost`, `Tutorial`, `TutorialStep`, `Project`, `InfrastructurePost`).
+> * **Motor Universal de Filtros Polimórficos:**
+>   - Todos los submódulos exponen el endpoint `GET /software/[modulo]/categories?lang=es|en` devolviendo el contrato universal `{ id: string, label: string, count: number }`.
+>   - Las agregaciones se ejecutan dinámicamente en `software.sqlite` sin sobrecarga de memoria, erradicando datos quemados y alimentando de forma homogénea a `CategoryFilterBar` en el frontend.
+
 
 ---
 
@@ -118,34 +122,44 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 
 | Dominio | Método y Ruta | Parámetros Query | Descripción |
 |---|---|---|---|
-| **Noticias** | `GET /software/news` | `search`, `tag`, `lang` | Listado filtrable por búsqueda, etiqueta e idioma |
+| **Noticias** | `GET /software/news` | `search`, `category`, `tag`, `lang` | Listado filtrable por búsqueda, categoría, etiqueta e idioma |
+| | `GET /software/news/categories` | `lang` | Taxonomías y categorías dinámicas con conteo de artículos activos |
 | | `GET /software/news/:idOrSlug` | `lang` | Detalle de la noticia por ID o slug con fallback de idioma |
 | | `POST /software/news` | - | Crear nuevo artículo de noticias |
 | | `DELETE /software/news/:id` | - | Eliminar artículo de noticias por ID |
 | **Blog** | `GET /software/blog` | `search`, `series`, `lang` | Ensayos de arquitectura filtrables por búsqueda, serie e idioma |
+| | `GET /software/blog/categories` | `lang` | Series y categorías dinámicas del blog con conteo de artículos activos |
 | | `GET /software/blog/:idOrSlug` | `lang` | Detalle del post con tabla de contenidos e idioma |
 | | `POST /software/blog` | - | Publicar nuevo post editorial de blog |
 | | `DELETE /software/blog/:id` | - | Eliminar post de blog por ID |
 | **Foros** | `GET /software/forum` | `category`, `search`, `lang` | Hilos de debate filtrables por categoría, búsqueda e idioma |
+| | `GET /software/forum/categories` | `lang` | Categorías y salas de debate activas con conteo de hilos |
 | | `GET /software/forum/:idOrSlug` | `lang` | Hilo principal con respuestas anidadas |
 | | `POST /software/forum` | - | Crear nuevo hilo de debate (`ForumTopic`) |
 | | `POST /software/forum/replies` | - | Publicar nueva respuesta a un tema (`ForumReply`) |
 | | `GET /software/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
 | **IA** | `GET /software/ai` | `type`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por tipo, búsqueda e idioma |
+| | `GET /software/ai/categories` | `lang` | Tipos y artefactos de IA activos con conteo real |
 | | `GET /software/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
+
 | | `POST /software/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
 | | `DELETE /software/ai/:id` | - | Eliminar recurso de IA por ID |
 | **Ciberseguridad** | `GET /software/cybersecurity` | `severity`, `postType`, `search`, `lang` | Avisos por severidad, tipo, búsqueda e idioma |
+| | `GET /software/cybersecurity/categories` | `lang` | Severidades de seguridad activas en base a estándar CVSS con conteo |
 | | `GET /software/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
 | | `POST /software/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
 | | `DELETE /software/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
 | **Tutoriales** | `GET /software/tutorials` | `difficulty`, `search`, `lang` | Guías paso a paso filtrables por dificultad, búsqueda e idioma |
+| | `GET /software/tutorials/categories` | `lang` | Niveles y dificultades pedagógicas activas con conteo |
 | | `GET /software/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
+
 | | `POST /software/tutorials` | - | Crear nuevo tutorial maestro |
 | | `POST /software/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
 | | `DELETE /software/tutorials/:id` | - | Eliminar tutorial por ID |
 | **Proyectos** | `GET /software/projects` | `status`, `search`, `lang` | Showcase filtrable por estado, búsqueda e idioma |
+| | `GET /software/projects/categories` | `lang` | Estados de proyectos activos con conteo |
 | | `GET /software/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
+
 | | `POST /software/projects` | - | Registrar nuevo proyecto showcase |
 | | `PATCH /software/projects/:id` | - | Actualizar campos o estado de un proyecto |
 | | `DELETE /software/projects/:id` | - | Eliminar proyecto por ID |
@@ -241,7 +255,7 @@ Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen regi
 | **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/software/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
 | **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/software/images/covers/tutorials/terminal-ssh-websockets.jpg` |
 | **Proyectos** | `projects.json` | `software-tecnologico` | `/software/images/covers/projects/software-hub-tecnologico.jpg` |
-| **Infraestructura** | `infrastructure.json` | `nextjs-multitenant-loopback-incident-resolution` | `/software/images/covers/infrastructure/incidente-p1-nextjs.jpg` |
+| **Infraestructura** | `infrastructure.json` | - | - |
 
 ### 6.1 Modo de Operación del Seeder (`seed-software.ts`)
 El script `seed-software.ts` está diseñado para reconstruir y reiniciar la base de datos limpia desde cero de forma instantánea:

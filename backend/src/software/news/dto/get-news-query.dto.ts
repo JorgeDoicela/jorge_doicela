@@ -5,4 +5,8 @@ export class GetNewsQueryDto extends SoftwareQueryDto {
   @IsOptional()
   @IsString({ message: 'El parámetro tag debe ser una cadena de texto.' })
   tag?: string;
+
+  @IsOptional()
+  @IsString({ message: 'El parámetro category debe ser una cadena de texto.' })
+  category?: string;
 }

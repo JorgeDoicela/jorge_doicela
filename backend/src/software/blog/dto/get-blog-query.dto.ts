@@ -5,4 +5,12 @@ export class GetBlogQueryDto extends SoftwareQueryDto {
   @IsOptional()
   @IsString({ message: 'El parámetro series debe ser una cadena de texto.' })
   series?: string;
+
+  @IsOptional()
+  @IsString({ message: 'El parámetro tag debe ser una cadena de texto.' })
+  tag?: string;
+
+  @IsOptional()
+  @IsString({ message: 'El parámetro category debe ser una cadena de texto.' })
+  category?: string;
 }

@@ -23,7 +23,7 @@ export class AiService {
       qb.andWhere('ai.language = :lang', { lang });
     }
 
-    if (type) {
+    if (type && type !== 'all') {
       qb.andWhere('ai.type = :type', { type });
     }
 
@@ -98,5 +98,66 @@ export class AiService {
     if (!result.affected) {
       throw new NotFoundException(`Recurso de IA #${id} no encontrado`);
     }
+  }
+
+  async getCategories(
+    lang: string = 'es',
+  ): Promise<Array<{ id: string; label: string; count: number }>> {
+    const qb = this.aiRepository.createQueryBuilder('ai');
+    if (lang) {
+      qb.andWhere('ai.language = :lang', { lang });
+    }
+
+    const allResources = await qb.select(['ai.type']).getMany();
+    const countMap = new Map<string, number>();
+
+    for (const r of allResources) {
+      if (r.type) {
+        const t = r.type.toLowerCase();
+        countMap.set(t, (countMap.get(t) || 0) + 1);
+      }
+    }
+
+    const labelsEs: Record<string, string> = {
+      all: 'Todos los recursos',
+      llm: 'Modelos LLM',
+      agent: 'Frameworks Agénticos',
+      mcp_server: 'Servidores MCP',
+      tool: 'Herramientas',
+    };
+
+    const labelsEn: Record<string, string> = {
+      all: 'All Resources',
+      llm: 'LLM Models',
+      agent: 'Agentic Frameworks',
+      mcp_server: 'MCP Servers',
+      tool: 'Tools',
+    };
+
+    const labels = lang === 'en' ? labelsEn : labelsEs;
+
+    const result: Array<{ id: string; label: string; count: number }> = [
+      {
+        id: 'all',
+        label:
+          labels.all ||
+          (lang === 'en' ? 'All Resources' : 'Todos los recursos'),
+        count: allResources.length,
+      },
+    ];
+
+    const typeOrder = ['llm', 'agent', 'mcp_server', 'tool'];
+    for (const t of typeOrder) {
+      const count = countMap.get(t) || 0;
+      if (count > 0) {
+        result.push({
+          id: t,
+          label: labels[t] || t,
+          count,
+        });
+      }
+    }
+
+    return result;
   }
 }

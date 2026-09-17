@@ -3,23 +3,16 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwarePageLayout } from '../../widgets/page-layout';
-import { AiGrid, useAi } from '../../entities/ai';
+import { AiGrid, useAi, useAiCategories } from '../../entities/ai';
+import { CategoryFilterBar } from '../../shared/ui';
 
 export default function AiCategoryPage() {
   const tNav = useTranslations('Nav');
   const t = useTranslations('Ai');
-  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [type, setType] = useState('all');
+  const { categories, loading: categoriesLoading } = useAiCategories();
   const { resources, loading, error } = useAi(type, search);
-
-  const filterTypes = [
-    { id: 'all', label: tFilters('allTypes') },
-    { id: 'llm', label: tFilters('llmModels') },
-    { id: 'agent', label: tFilters('agenticFrameworks') },
-    { id: 'mcp_server', label: tFilters('mcpServers') },
-    { id: 'tool', label: tFilters('tools') },
-  ];
 
   return (
     <SoftwarePageLayout
@@ -49,21 +42,14 @@ export default function AiCategoryPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-              {filterTypes.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setType(item.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                    type === item.id
-                      ? 'glass-btn-neumorphic text-purple-600 dark:text-purple-400 font-bold'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+            <CategoryFilterBar
+              options={categories}
+              selectedId={type}
+              onSelect={setType}
+              loading={categoriesLoading}
+              accentColor="purple"
+              showCount={true}
+            />
           </div>
         </header>
 

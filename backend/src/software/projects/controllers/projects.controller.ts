@@ -23,6 +23,11 @@ export class ProjectsController {
     return this.projectsService.findAll(query);
   }
 
+  @Get('categories')
+  async getCategories(@Query('lang') lang?: string) {
+    return this.projectsService.getCategories(lang);
+  }
+
   @Get(':idOrSlug')
   async findOne(
     @Param('idOrSlug') idOrSlug: string,

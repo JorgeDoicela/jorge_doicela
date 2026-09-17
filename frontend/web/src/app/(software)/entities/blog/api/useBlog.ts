@@ -6,7 +6,7 @@ import { BlogPost } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useBlog(search: string = '', series?: string) {
+export function useBlog(category: string = 'all', search: string = '', series?: string) {
   const locale = useLocale();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,6 +19,7 @@ export function useBlog(search: string = '', series?: string) {
 
       try {
         const params = new URLSearchParams();
+        if (category && category !== 'all') params.append('category', category);
         if (search.trim()) params.append('search', search.trim());
         if (series) params.append('series', series);
         if (locale) params.append('lang', locale);
@@ -38,7 +39,7 @@ export function useBlog(search: string = '', series?: string) {
     };
 
     fetchPosts();
-  }, [search, series, locale]);
+  }, [category, search, series, locale]);
 
   return { posts, loading, error };
 }

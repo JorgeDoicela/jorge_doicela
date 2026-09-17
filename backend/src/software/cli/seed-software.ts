@@ -11,6 +11,7 @@ interface NewsSeedItem {
   sourceUrl?: string;
   isBreaking: boolean;
   author: string;
+  category?: string;
   tags: string;
   language?: string;
   coverImage?: string;
@@ -230,6 +231,7 @@ export function seedSoftware(
       featured INTEGER NOT NULL DEFAULT 0,
       orderPriority INTEGER NOT NULL DEFAULT 0,
       author TEXT NOT NULL DEFAULT 'Jorge Doicela',
+      category TEXT NOT NULL DEFAULT 'frameworks',
       tags TEXT NOT NULL DEFAULT 'news,tech',
       language TEXT NOT NULL DEFAULT 'es',
       coverImage TEXT,
@@ -242,6 +244,7 @@ export function seedSoftware(
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_news_articles_slug_lang ON news_articles (slug, language);
     CREATE INDEX IF NOT EXISTS IDX_news_articles_feed ON news_articles (language, orderPriority DESC, publishedAt DESC);
+    CREATE INDEX IF NOT EXISTS IDX_news_articles_cat_feed ON news_articles (language, category, orderPriority DESC, publishedAt DESC);
     CREATE INDEX IF NOT EXISTS IDX_news_articles_feat_feed ON news_articles (language, featured, orderPriority DESC, publishedAt DESC);
     CREATE INDEX IF NOT EXISTS IDX_news_articles_break_feed ON news_articles (language, isBreaking, orderPriority DESC, publishedAt DESC);
 
@@ -485,6 +488,11 @@ export function seedSoftware(
   };
 
   ensureColumn('news_articles', 'coverImage', 'TEXT');
+  ensureColumn(
+    'news_articles',
+    'category',
+    "TEXT NOT NULL DEFAULT 'frameworks'",
+  );
   ensureColumn('blog_posts', 'coverImage', 'TEXT');
   ensureColumn('ai_resources', 'coverImage', 'TEXT');
   ensureColumn('security_posts', 'coverImage', 'TEXT');
@@ -514,9 +522,9 @@ export function seedSoftware(
     // 1. Noticias (news_articles) - UPSERT no destructivo preservando métricas
     const insertNews = db.prepare(`
       INSERT INTO news_articles 
-        (slug, title, excerpt, contentMarkdown, sourceUrl, isBreaking, featured, orderPriority, author, tags, language, coverImage, readTimeMinutes, views, likes, publishedAt)
+        (slug, title, excerpt, contentMarkdown, sourceUrl, isBreaking, featured, orderPriority, author, category, tags, language, coverImage, readTimeMinutes, views, likes, publishedAt)
       VALUES 
-        (@slug, @title, @excerpt, @contentMarkdown, @sourceUrl, @isBreaking, @featured, @orderPriority, @author, @tags, @language, @coverImage, @readTimeMinutes, @views, @likes, @publishedAt)
+        (@slug, @title, @excerpt, @contentMarkdown, @sourceUrl, @isBreaking, @featured, @orderPriority, @author, @category, @tags, @language, @coverImage, @readTimeMinutes, @views, @likes, @publishedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title = excluded.title,
         excerpt = excluded.excerpt,
@@ -526,6 +534,7 @@ export function seedSoftware(
         featured = excluded.featured,
         orderPriority = excluded.orderPriority,
         author = excluded.author,
+        category = excluded.category,
         tags = excluded.tags,
         coverImage = excluded.coverImage,
         readTimeMinutes = excluded.readTimeMinutes,
@@ -535,6 +544,7 @@ export function seedSoftware(
     for (const item of newsData) {
       insertNews.run({
         ...item,
+        category: item.category || 'frameworks',
         coverImage: item.coverImage ?? null,
         sourceUrl: item.sourceUrl ?? null,
         isBreaking: item.isBreaking ? 1 : 0,

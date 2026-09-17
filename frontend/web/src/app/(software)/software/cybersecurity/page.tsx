@@ -3,23 +3,20 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwarePageLayout } from '../../widgets/page-layout';
-import { SecurityGrid, useCybersecurity } from '../../entities/cybersecurity';
+import {
+  SecurityGrid,
+  useCybersecurity,
+  useCybersecurityCategories,
+} from '../../entities/cybersecurity';
+import { CategoryFilterBar } from '../../shared/ui';
 
 export default function CybersecurityCategoryPage() {
   const tNav = useTranslations('Nav');
   const tSec = useTranslations('Cybersecurity');
-  const tFilters = useTranslations('Filters');
   const [search, setSearch] = useState('');
   const [severity, setSeverity] = useState('all');
+  const { categories, loading: categoriesLoading } = useCybersecurityCategories();
   const { posts, loading, error } = useCybersecurity(severity, undefined, search);
-
-  const severities = [
-    { id: 'all', label: tFilters('allSeverities') },
-    { id: 'CRITICAL', label: tFilters('critical') },
-    { id: 'HIGH', label: tFilters('high') },
-    { id: 'MEDIUM', label: tFilters('medium') },
-    { id: 'LOW', label: tFilters('low') },
-  ];
 
   return (
     <SoftwarePageLayout
@@ -49,21 +46,14 @@ export default function CybersecurityCategoryPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-              {severities.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setSeverity(s.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                    severity === s.id
-                      ? 'glass-btn-neumorphic text-rose-600 dark:text-rose-400 font-bold'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
+            <CategoryFilterBar
+              options={categories}
+              selectedId={severity}
+              onSelect={setSeverity}
+              loading={categoriesLoading}
+              accentColor="rose"
+              showCount={true}
+            />
           </div>
         </header>
 

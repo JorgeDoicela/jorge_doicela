@@ -6,7 +6,7 @@ import { NewsArticle } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useNews(search: string = '', tag?: string) {
+export function useNews(category: string = 'all', search: string = '') {
   const locale = useLocale();
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,9 +19,12 @@ export function useNews(search: string = '', tag?: string) {
 
       try {
         const params = new URLSearchParams();
+        if (category && category !== 'all') {
+          params.append('category', category);
+        }
         if (search.trim()) params.append('search', search.trim());
-        if (tag) params.append('tag', tag);
         if (locale) params.append('lang', locale);
+
 
         const url = `${API_URL}/software/news${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<NewsArticle[] | { data: NewsArticle[] }>(url);
@@ -39,7 +42,7 @@ export function useNews(search: string = '', tag?: string) {
     };
 
     fetchNews();
-  }, [search, tag, locale]);
+  }, [category, search, locale]);
 
   return { news, loading, error };
 }

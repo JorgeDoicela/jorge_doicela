@@ -3,13 +3,16 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SoftwarePageLayout } from '../../widgets/page-layout';
-import { NewsGrid, useNews } from '../../entities/news';
+import { NewsGrid, useNews, useNewsCategories } from '../../entities/news';
+import { CategoryFilterBar } from '../../shared/ui';
 
 export default function NewsCategoryPage() {
   const tNav = useTranslations('Nav');
   const t = useTranslations('News');
   const [search, setSearch] = useState('');
-  const { news, loading, error } = useNews(search);
+  const [category, setCategory] = useState('all');
+  const { categories, loading: categoriesLoading } = useNewsCategories();
+  const { news, loading, error } = useNews(category, search);
 
   return (
     <SoftwarePageLayout
@@ -19,7 +22,7 @@ export default function NewsCategoryPage() {
     >
       {/* Contenedor Unificado Editorial Neumorphic + Glassmorphic */}
       <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 shadow-2xl space-y-8">
-        <header className="text-center space-y-3 pb-6 border-b border-black/5 dark:border-white/5">
+        <header className="text-center space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
             {t('title')}
           </h1>
@@ -28,16 +31,28 @@ export default function NewsCategoryPage() {
             {t('subtitle')}
           </p>
 
-          <div className="relative max-w-md mx-auto pt-2">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('searchPlaceholder')}
-              className="w-full px-5 py-3 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 shadow-inner"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <div className="relative w-full max-w-xs">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t('searchPlaceholder')}
+                className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 shadow-inner"
+              />
+            </div>
+
+            <CategoryFilterBar
+              options={categories}
+              selectedId={category}
+              onSelect={setCategory}
+              loading={categoriesLoading}
+              accentColor="cyan"
+              showCount={true}
             />
           </div>
         </header>
+
 
         <main>
           <NewsGrid news={news} loading={loading} error={error} />

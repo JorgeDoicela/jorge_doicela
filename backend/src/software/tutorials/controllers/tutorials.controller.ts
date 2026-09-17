@@ -22,6 +22,11 @@ export class TutorialsController {
     return this.tutorialsService.findAll(query);
   }
 
+  @Get('categories')
+  async getCategories(@Query('lang') lang?: string) {
+    return this.tutorialsService.getCategories(lang);
+  }
+
   @Get(':idOrSlug')
   async findOne(
     @Param('idOrSlug') idOrSlug: string,

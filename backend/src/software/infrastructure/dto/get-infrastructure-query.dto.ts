@@ -6,7 +6,8 @@ import type {
   InfrastructureDifficulty,
 } from '../entities/infrastructure-post.entity';
 
-const CATEGORIES: InfrastructureCategory[] = [
+const CATEGORIES: Array<InfrastructureCategory | 'all'> = [
+  'all',
   'cloud',
   'servers',
   'containers',
@@ -46,7 +47,7 @@ export class GetInfrastructureQueryDto extends SoftwareQueryDto {
     message:
       'La categoría debe ser: cloud, servers, containers, networking, ci_cd, hardening o zero_ram',
   })
-  category?: InfrastructureCategory;
+  category?: InfrastructureCategory | 'all';
 
   @IsOptional()
   @IsIn(ENVIRONMENTS, {

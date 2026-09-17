@@ -25,7 +25,7 @@ export class InfrastructureService {
       qb.andWhere('infra.language = :lang', { lang });
     }
 
-    if (category) {
+    if (category && category !== 'all') {
       qb.andWhere('infra.category = :category', { category });
     }
 
@@ -152,26 +152,76 @@ export class InfrastructureService {
   }
 
   async getCategories(
-    lang?: string,
-  ): Promise<{ category: string; count: number }[]> {
-    const qb = this.infraRepository
-      .createQueryBuilder('infra')
-      .select('infra.category', 'category')
-      .addSelect('COUNT(infra.id)', 'count');
-
+    lang: string = 'es',
+  ): Promise<Array<{ id: string; label: string; count: number }>> {
+    const qb = this.infraRepository.createQueryBuilder('infra');
     if (lang) {
-      qb.where('infra.language = :lang', { lang });
+      qb.andWhere('infra.language = :lang', { lang });
     }
 
-    qb.groupBy('infra.category');
-    const raw = await qb.getRawMany<{
-      category: string;
-      count: string | number;
-    }>();
-    return raw.map((r) => ({
-      category: String(r.category),
-      count: Number(r.count),
-    }));
+    const allPosts = await qb
+      .select(['infra.category', 'infra.tags'])
+      .getMany();
+
+    const categoryCountMap = new Map<string, number>();
+
+    for (const post of allPosts) {
+      if (post.category) {
+        const cat = post.category.trim().toLowerCase();
+        categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
+      }
+    }
+
+    const labelsEs: Record<string, string> = {
+      all: 'Toda la infraestructura',
+      servers: 'Servidores & Linux',
+      cloud: 'Cloud & VPS',
+      containers: 'Contenedores & Docker',
+      networking: 'Redes & mTLS',
+      ci_cd: 'CI/CD & Despliegues',
+      hardening: 'Bastionado & Seguridad',
+    };
+
+    const labelsEn: Record<string, string> = {
+      all: 'All Infrastructure',
+      servers: 'Servers & Linux',
+      cloud: 'Cloud & VPS',
+      containers: 'Containers & Docker',
+      networking: 'Networking & mTLS',
+      ci_cd: 'CI/CD & Deployments',
+      hardening: 'Hardening & Security',
+    };
+
+    const labels = lang === 'en' ? labelsEn : labelsEs;
+
+    const result: Array<{ id: string; label: string; count: number }> = [
+      {
+        id: 'all',
+        label:
+          labels.all ||
+          (lang === 'en' ? 'All Infrastructure' : 'Toda la infraestructura'),
+        count: allPosts.length,
+      },
+    ];
+
+    for (const [cat, count] of categoryCountMap.entries()) {
+      if (cat !== 'all') {
+        result.push({
+          id: cat,
+          label: labels[cat] || this.formatLabel(cat),
+          count,
+        });
+      }
+    }
+
+    return result;
+  }
+
+  private formatLabel(slug: string): string {
+    return slug
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   async remove(id: number): Promise<void> {

@@ -13,7 +13,7 @@ export class NewsService {
   ) {}
 
   async findAll(query: GetNewsQueryDto = {}): Promise<NewsArticle[]> {
-    const { search, tag, lang } = query;
+    const { search, tag, category, lang } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -30,7 +30,14 @@ export class NewsService {
       );
     }
 
-    if (tag) {
+    if (category && category !== 'all') {
+      qb.andWhere('(news.category = :category OR news.tags LIKE :catPattern)', {
+        category,
+        catPattern: `%${category}%`,
+      });
+    }
+
+    if (tag && tag !== 'all') {
       qb.andWhere('news.tags LIKE :tag', { tag: `%${tag}%` });
     }
 
@@ -88,6 +95,105 @@ export class NewsService {
   async create(createNewsDto: CreateNewsDto): Promise<NewsArticle> {
     const article = this.newsRepository.create(createNewsDto);
     return this.newsRepository.save(article);
+  }
+
+  async getCategories(
+    lang: string = 'es',
+  ): Promise<Array<{ id: string; label: string; count: number }>> {
+    // 1. Obtener todas las noticias del idioma correspondiente
+    const allArticles = await this.newsRepository.find({
+      where: { language: lang },
+      select: { id: true, category: true, tags: true },
+    });
+
+    const categoryCountMap = new Map<string, number>();
+    const tagCountMap = new Map<string, number>();
+
+    for (const art of allArticles) {
+      if (art.category) {
+        const cat = art.category.trim().toLowerCase();
+        categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
+      }
+      if (art.tags) {
+        const splitTags = art.tags
+          .split(',')
+          .map((t) => t.trim().toLowerCase())
+          .filter(Boolean);
+        for (const t of splitTags) {
+          tagCountMap.set(t, (tagCountMap.get(t) || 0) + 1);
+        }
+      }
+    }
+
+    const labelsEs: Record<string, string> = {
+      all: 'Todas las noticias',
+      frameworks: 'Frameworks & Web',
+      nextjs: 'Next.js & React',
+      react: 'React 19',
+      performance: 'Rendimiento',
+      devops: 'Cloud & DevOps',
+      security: 'Ciberseguridad',
+      ai: 'IA & Agentes',
+      rsc: 'Server Components',
+      turbopack: 'Turbopack',
+      web: 'Ecosistema Web',
+    };
+
+    const labelsEn: Record<string, string> = {
+      all: 'All News',
+      frameworks: 'Frameworks & Web',
+      nextjs: 'Next.js & React',
+      react: 'React 19',
+      performance: 'Performance',
+      devops: 'Cloud & DevOps',
+      security: 'Cybersecurity',
+      ai: 'AI & Agents',
+      rsc: 'Server Components',
+      turbopack: 'Turbopack',
+      web: 'Web Ecosystem',
+    };
+
+    const labels = lang === 'en' ? labelsEn : labelsEs;
+
+    const result: Array<{ id: string; label: string; count: number }> = [
+      {
+        id: 'all',
+        label:
+          labels.all || (lang === 'en' ? 'All News' : 'Todas las noticias'),
+        count: allArticles.length,
+      },
+    ];
+
+    // Categorías primarias registradas
+    for (const [cat, count] of categoryCountMap.entries()) {
+      if (cat !== 'all') {
+        result.push({
+          id: cat,
+          label: labels[cat] || this.formatLabel(cat),
+          count,
+        });
+      }
+    }
+
+    // Tags relevantes que no estén como categoría primaria
+    for (const [tag, count] of tagCountMap.entries()) {
+      if (!result.some((r) => r.id === tag)) {
+        result.push({
+          id: tag,
+          label: labels[tag] || this.formatLabel(tag),
+          count,
+        });
+      }
+    }
+
+    return result;
+  }
+
+  private formatLabel(slug: string): string {
+    return slug
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   async remove(id: number): Promise<void> {

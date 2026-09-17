@@ -44,6 +44,8 @@
 ### 8. Infraestructura, Servidores y Cloud (`/infrastructure`)
 - **Descripción:** Guías de arquitectura e ingeniería de sistemas sobre servidores Linux Debian 13, despliegue cloud en AWS Lightsail, topologías en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y pipelines CI/CD.
 - **Capacidades:** Fichas de telemetría de servidor (`specs`: RAM, CPU, OS, puertos), comandos terminal interactivos y recetas de bastionado y automatización con Systemd.
+- **Publicaciones Destacadas:**
+  - *Firewall en Linux: De Netfilter y UFW a la Seguridad Perimetral de Servidores* (`/infrastructure/firewall-linux-ufw-netfilter-seguridad-servidores`): Arquitectura de filtrado en espacio de kernel, prevención de lockout remoto, política Default Deny, mitigación con fail2ban y hardening con sysctl.
 
 ---
 

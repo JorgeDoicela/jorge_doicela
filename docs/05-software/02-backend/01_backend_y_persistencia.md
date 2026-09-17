@@ -255,7 +255,7 @@ Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen regi
 | **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/software/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
 | **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/software/images/covers/tutorials/terminal-ssh-websockets.jpg` |
 | **Proyectos** | `projects.json` | `software-tecnologico` | `/software/images/covers/projects/software-hub-tecnologico.jpg` |
-| **Infraestructura** | `infrastructure.json` | - | - |
+| **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/software/images/covers/infrastructure/guia-firewall-linux-ufw.jpg` |
 
 ### 6.1 Modo de Operación del Seeder (`seed-software.ts`)
 El script `seed-software.ts` está diseñado para reconstruir y reiniciar la base de datos limpia desde cero de forma instantánea:

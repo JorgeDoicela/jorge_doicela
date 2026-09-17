@@ -121,6 +121,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.9,
         },
+        {
+            url: 'https://software.jorgedoicela.com/infrastructure/firewall-linux-ufw-netfilter-seguridad-servidores',
+            lastModified: now,
+            changeFrequency: 'monthly',
+            priority: 0.85,
+        },
     ];
 
     // ─────────────────────────────────────────────────────────────

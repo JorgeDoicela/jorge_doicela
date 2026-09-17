@@ -13,6 +13,8 @@ Catálogo de requerimientos completados y objetivos futuros para **Software** (`
 - [x] **Páginas de Catálogo Dedicadas:** `/software/news`, `/software/blog`, `/software/forum`, `/software/ai`, `/software/cybersecurity`, `/software/tutorials`, `/software/projects`, `/software/infrastructure`.
 - [x] **Lector Individual y Modo Interactivo `[slug]`:** Vistas individuales por categoría, incluyendo `StepWizard` interactivo para tutoriales, hilo de discusión para foros y visor de especificaciones de hardware/servidor (`specs`) para infraestructura.
 - [x] **Página Principal (`/software`):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura, spotlight command palette (`Cmd+K`) y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.
+- [x] **Sistema de Borradores Markdown (`drafts/` en FSD):** Carpetas `drafts/` co-localizadas en las 8 entidades de frontend para redacción y edición nativa en Markdown puro antes de la ingesta en el corpus JSON.
+- [x] **Publicación Inaugural de Infraestructura:** Publicación bilingüe de ingeniería sobre *Firewall en Linux: De Netfilter y UFW a la Seguridad Perimetral de Servidores* (`firewall-linux-ufw-netfilter-seguridad-servidores`).
 
 ---
 

@@ -46,15 +46,15 @@ frontend/web/src/app/(software)/
 │   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
-├── entities/                         # CAPA 5: Modelos de dominio, Hooks API y Tarjetas de Entidad
-│   ├── news/                         # NewsCard, NewsGrid, useNews, types.ts, index.ts
-│   ├── blog/                         # BlogCard, BlogGrid, useBlog, types.ts, index.ts
-│   ├── forum/                        # TopicCard, useForum, types.ts, index.ts
-│   ├── ai/                           # AiCard, AiGrid, useAi, types.ts, index.ts
-│   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, types.ts, index.ts
-│   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, types.ts, index.ts
-│   ├── projects/                     # ProjectCard, ProjectGrid, ProjectActions, useProjects, types.ts, index.ts
-│   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, types.ts, index.ts
+├── entities/                         # CAPA 5: Modelos de dominio, Hooks API, Tarjetas de Entidad y Borradores Markdown (drafts/)
+│   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
+│   ├── blog/                         # BlogCard, BlogGrid, useBlog, drafts/, types.ts, index.ts
+│   ├── forum/                        # TopicCard, useForum, drafts/, types.ts, index.ts
+│   ├── ai/                           # AiCard, AiGrid, useAi, drafts/, types.ts, index.ts
+│   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, drafts/, types.ts, index.ts
+│   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
+│   ├── projects/                     # ProjectCard, ProjectGrid, ProjectActions, useProjects, drafts/, types.ts, index.ts
+│   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
 │   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario

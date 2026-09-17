@@ -11,7 +11,7 @@ import {
   ChevronRight,
   Flame,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useLexiconContextSafe, CuratedTheologicalTerm } from '../../context/LexiconContext';
 
 export const WordStudySidebar: React.FC = () => {

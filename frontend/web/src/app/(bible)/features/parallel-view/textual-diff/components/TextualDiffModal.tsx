@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { VerseComparisonData } from '../types';
 import { TextualDiffViewer } from './TextualDiffViewer';
 import { Translation } from '../../../../entities/translations';
-import { BibleSelect, BibleSelectOption } from '../../../../components/BibleSelect';
+import { BibleSelect, BibleSelectOption } from '../../../../shared/ui';
 
 interface TextualDiffModalProps {
   isOpen: boolean;

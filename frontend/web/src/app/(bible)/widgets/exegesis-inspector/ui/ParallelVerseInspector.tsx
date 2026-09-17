@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-
 import { BookMarked, Copy, Check } from 'lucide-react';
-import { InspectedVerseData } from '../context/BiblePassageContext';
-import { API_URL } from '../../config';
+import { InspectedVerseData } from '../../../shared/context';
+import { API_URL } from '../../../../config';
 
 export interface ParallelVerseData {
   translationId: number;

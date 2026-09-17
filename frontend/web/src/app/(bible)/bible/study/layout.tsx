@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { PanelLeft, PanelRight } from 'lucide-react';
-import { BiblePassageProvider, useBiblePassageSafe } from '../../context/BiblePassageContext';
-import { BibleHeaderNav } from '../../components/BibleHeaderNav';
-import { BibleNavigationSidebar } from '../../components/BibleNavigationSidebar';
-import { BibleExegesisInspector } from '../../components/BibleExegesisInspector';
-import { DraggableEdgeTab } from '../../components/DraggableEdgeTab';
+import { BiblePassageProvider, useBiblePassageSafe } from '../../shared/context';
+import { BibleHeaderNav } from '../../widgets/bible-header';
+import { BibleNavigationSidebar } from '../../widgets/bible-sidebar';
+import { BibleExegesisInspector } from '../../widgets/exegesis-inspector';
+import { DraggableEdgeTab } from '../../shared/ui';
 import { AtlasProvider, AtlasSidebar, AtlasInspector } from '../../features/atlas';
 import { TimelineSidebar, TimelineInspector } from '../../features/timeline';
 import { ArchaeologySidebar, ArchaeologyInspector } from '../../features/archaeology-feed';
@@ -17,7 +17,38 @@ import { EvangelismProvider, EvangelismSidebar, EvangelismInspector } from '../.
 import { ParallelProvider, ParallelSidebar, ParallelDiffInspector } from '../../features/parallel-view';
 import { InterlinearProvider, InterlinearSidebar, InterlinearInspector } from '../../features/interlinear';
 import { LexiconProvider, WordStudySidebar, WordStudyInspector } from '../../features/lexicons';
-import { useHeaderScrollBehavior } from '../../hooks/useHeaderScrollBehavior';
+import { useHeaderScrollBehavior } from '../../shared/hooks';
+
+function ScopedModuleProviders({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname() || '';
+
+  if (pathname.includes('/atlas')) {
+    return <AtlasProvider>{children}</AtlasProvider>;
+  }
+
+  if (
+    pathname.includes('/evangelism') ||
+    pathname.includes('/pathways') ||
+    pathname.includes('/objections') ||
+    pathname.includes('/tracts')
+  ) {
+    return <EvangelismProvider>{children}</EvangelismProvider>;
+  }
+
+  if (pathname.includes('/parallel')) {
+    return <ParallelProvider>{children}</ParallelProvider>;
+  }
+
+  if (pathname.includes('/interlinear')) {
+    return <InterlinearProvider>{children}</InterlinearProvider>;
+  }
+
+  if (pathname.includes('/word-study')) {
+    return <LexiconProvider>{children}</LexiconProvider>;
+  }
+
+  return <>{children}</>;
+}
 
 function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';
@@ -32,7 +63,6 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
     pathname.includes('/pathways') ||
     pathname.includes('/objections') ||
     pathname.includes('/tracts');
-
 
   const passageContext = useBiblePassageSafe();
   const t = useTranslations('StudyLayout');
@@ -189,17 +219,9 @@ export default function BibleStudyLayout({
   return (
     <Suspense fallback={<div className="min-h-screen bg-zinc-50/60 dark:bg-black" />}>
       <BiblePassageProvider>
-        <AtlasProvider>
-          <EvangelismProvider>
-            <ParallelProvider>
-              <InterlinearProvider>
-                <LexiconProvider>
-                  <BibleStudyWorkspace>{children}</BibleStudyWorkspace>
-                </LexiconProvider>
-              </InterlinearProvider>
-            </ParallelProvider>
-          </EvangelismProvider>
-        </AtlasProvider>
+        <ScopedModuleProviders>
+          <BibleStudyWorkspace>{children}</BibleStudyWorkspace>
+        </ScopedModuleProviders>
       </BiblePassageProvider>
     </Suspense>
   );

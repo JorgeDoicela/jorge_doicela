@@ -14,7 +14,7 @@ import { ReaderToolbar } from '../reader-toolbar/ReaderToolbar';
 import { ContinuousReadingView } from '../continuous-view/ContinuousReadingView';
 import { LineByLineReadingView } from '../line-by-line-view/LineByLineReadingView';
 import { ChapterNavigator } from '../chapter-navigator/ChapterNavigator';
-import { OngoingExpansionNotice } from '../../../../components/OngoingExpansionNotice';
+import { OngoingExpansionNotice } from '../../../../shared/ui';
 import { useReaderKeybindings } from '../../hooks/useReaderKeybindings';
 import { X, Minimize2, Sparkles, BookOpen } from 'lucide-react';
 

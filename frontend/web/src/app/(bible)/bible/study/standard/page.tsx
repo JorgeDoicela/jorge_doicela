@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { VerseList, useVerses } from '../../../features/verses';
-import { useBiblePassage } from '../../../context/BiblePassageContext';
+import { useBiblePassage } from '../../../shared/context';
 
 export default function StandardStudyPage() {
   const tBooks = useTranslations('Books');

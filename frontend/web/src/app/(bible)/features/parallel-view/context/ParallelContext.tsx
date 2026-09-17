@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { useParallelVerses } from '../hooks/useParallelVerses';
 import { ParallelColumn, ParallelVerseRow } from '../types';
-import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../shared/context';
 
 export interface ParallelPreset {
   id: string;

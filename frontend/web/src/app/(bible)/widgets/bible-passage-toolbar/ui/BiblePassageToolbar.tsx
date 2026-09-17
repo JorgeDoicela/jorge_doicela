@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { UnifiedPassagePicker } from '../entities/books';
-import { useBiblePassage } from '../context/BiblePassageContext';
+import { UnifiedPassagePicker } from '../../../entities/books';
+import { useBiblePassage } from '../../../shared/context';
 
 interface BiblePassageToolbarProps {
   rightBadge?: React.ReactNode;

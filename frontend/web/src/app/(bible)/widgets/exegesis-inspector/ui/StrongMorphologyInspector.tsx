@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-
 import { Languages, Volume2 } from 'lucide-react';
-import { fetchStrongLexiconEntry, StrongLexiconEntry } from '../features/interlinear';
-import { InspectedWordData } from '../context/BiblePassageContext';
+import { fetchStrongLexiconEntry, StrongLexiconEntry } from '../../../features/interlinear';
+import { InspectedWordData } from '../../../shared/context';
 
 export interface StrongMorphologyInspectorProps {
   word: InspectedWordData | null;
@@ -45,7 +44,6 @@ export const StrongMorphologyInspector: React.FC<StrongMorphologyInspectorProps>
       isMounted = false;
     };
   }, [word?.strongNumber]);
-
 
   if (!word) {
     return (

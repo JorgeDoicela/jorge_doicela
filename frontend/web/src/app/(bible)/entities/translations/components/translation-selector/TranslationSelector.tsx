@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslations as useI18n } from 'next-intl';
 import { useTranslations } from '../../hooks/useTranslations';
-import { BibleSelect, BibleSelectOption } from '../../../../components/BibleSelect';
+import { BibleSelect, BibleSelectOption } from '../../../../shared/ui';
 
 interface TranslationSelectorProps {
   selectedTranslationId: number | null;
@@ -38,7 +38,7 @@ export function TranslationSelector({
   return (
     <BibleSelect<number>
       value={activeId}
-      onChange={(newId) => onSelectTranslation(newId)}
+      onChange={(newId: number) => onSelectTranslation(newId)}
       options={options}
       className="w-36 sm:w-56 shrink-0"
       size="sm"

@@ -1,23 +1,22 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EvangelismService } from '../services/evangelism.service';
 import {
   GetPathwaysQueryDto,
   GetObjectionsQueryDto,
   GetTractsQueryDto,
 } from '../dto/evangelism-query.dto';
+import { EvangelismPathwayEntity } from '../entities/evangelism-pathway.entity';
+import { EvangelismObjectionEntity } from '../entities/evangelism-objection.entity';
+import { EvangelismTractEntity } from '../entities/evangelism-tract.entity';
 
 @Controller('bible/evangelism')
 export class EvangelismController {
   constructor(private readonly evangelismService: EvangelismService) {}
 
   @Get('pathways')
-  async getPathways(@Query() query: GetPathwaysQueryDto) {
+  async getPathways(
+    @Query() query: GetPathwaysQueryDto,
+  ): Promise<EvangelismPathwayEntity[]> {
     return this.evangelismService.getPathways(query.lang || 'es');
   }
 
@@ -25,21 +24,14 @@ export class EvangelismController {
   async getPathwayBySlug(
     @Param('slug') slug: string,
     @Query('lang') lang?: string,
-  ) {
-    const pathway = await this.evangelismService.getPathwayBySlug(
-      slug,
-      lang || 'es',
-    );
-    if (!pathway) {
-      throw new NotFoundException(
-        `Ruta evangelística con slug/id "${slug}" no encontrada`,
-      );
-    }
-    return pathway;
+  ): Promise<EvangelismPathwayEntity> {
+    return this.evangelismService.getPathwayBySlug(slug, lang || 'es');
   }
 
   @Get('objections')
-  async getObjections(@Query() query: GetObjectionsQueryDto) {
+  async getObjections(
+    @Query() query: GetObjectionsQueryDto,
+  ): Promise<EvangelismObjectionEntity[]> {
     return this.evangelismService.getObjections(
       query.category,
       query.q,
@@ -48,7 +40,9 @@ export class EvangelismController {
   }
 
   @Get('tracts')
-  async getTracts(@Query() query: GetTractsQueryDto) {
+  async getTracts(
+    @Query() query: GetTractsQueryDto,
+  ): Promise<EvangelismTractEntity[]> {
     return this.evangelismService.getTracts(query.audience, query.lang || 'es');
   }
 
@@ -56,16 +50,7 @@ export class EvangelismController {
   async getTractBySlug(
     @Param('slug') slug: string,
     @Query('lang') lang?: string,
-  ) {
-    const tract = await this.evangelismService.getTractBySlug(
-      slug,
-      lang || 'es',
-    );
-    if (!tract) {
-      throw new NotFoundException(
-        `Tratado con slug/id "${slug}" no encontrado`,
-      );
-    }
-    return tract;
+  ): Promise<EvangelismTractEntity> {
+    return this.evangelismService.getTractBySlug(slug, lang || 'es');
   }
 }

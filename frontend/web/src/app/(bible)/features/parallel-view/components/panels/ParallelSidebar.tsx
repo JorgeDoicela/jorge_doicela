@@ -13,7 +13,7 @@ import {
   Check,
   RotateCcw,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useParallelContextSafe, PARALLEL_PRESETS } from '../../context/ParallelContext';
 
 export const ParallelSidebar: React.FC = () => {

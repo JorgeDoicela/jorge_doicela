@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { ThemeProvider } from "./theme-provider";
-import BibleJsonLd from "./components/BibleJsonLd";
+import { ThemeProvider } from "./providers";
+import { BibleJsonLd } from "./shared/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

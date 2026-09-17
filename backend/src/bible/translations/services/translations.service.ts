@@ -16,7 +16,9 @@ export class TranslationsService {
   ) {}
 
   async findAll(): Promise<Translation[]> {
-    return this.translationRepository.find();
+    return this.translationRepository.find({
+      order: { id: 'ASC' },
+    });
   }
 
   async findOne(id: number): Promise<Translation> {

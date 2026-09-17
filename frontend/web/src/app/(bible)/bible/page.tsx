@@ -8,7 +8,7 @@ import {
     BibleStepsSection,
     BibleMobileAppSection,
     BibleFinalCtaAndFooter,
-} from '../components/landing';
+} from '../widgets/landing';
 
 export default function BibleLandingPage() {
     const studyUrl = '/study';

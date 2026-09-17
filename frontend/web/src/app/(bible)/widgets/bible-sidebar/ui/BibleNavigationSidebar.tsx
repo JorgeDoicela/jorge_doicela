@@ -11,11 +11,10 @@ import {
   ChevronDown,
   X,
   ArrowRight,
-  Compass,
-  Shield,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../context/BiblePassageContext';
-import { Book, getChaptersForBookId, getBookHistoricalInfo } from '../entities/books';
+import { useBiblePassageSafe } from '../../../shared/context';
+import { Book, getBookHistoricalInfo } from '../../../entities/books';
+import { getChaptersForBookId } from '../../../shared/data/canonData';
 
 export interface BibleNavigationSidebarProps {
   books?: Book[];
@@ -307,4 +306,3 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
     </>
   );
 };
-

@@ -3,10 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { BibleLogo } from './BibleLogo';
-import { ThemeToggle } from './ThemeToggle';
-import { LanguageToggle } from './LanguageToggle';
-import { BackToBibleButton } from './BackToBibleButton';
+import { BibleLogo, BackToBibleButton } from '../../../shared/ui';
+import { ThemeToggle } from '../../../features/theme-toggle';
+import { LanguageToggle } from '../../../features/language-toggle';
 import { ChevronDown, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

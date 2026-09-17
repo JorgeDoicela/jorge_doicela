@@ -4,6 +4,7 @@ import {
   Post,
   Delete,
   Param,
+  Query,
   Body,
   ParseIntPipe,
   HttpCode,
@@ -12,14 +13,15 @@ import {
 import { BooksService } from '../services/books.service';
 import { Book } from '../entities/book.entity';
 import { CreateBookDto } from '../dto/create-book.dto';
+import { GetBooksFilterDto } from '../dto/get-books-filter.dto';
 
 @Controller('bible/books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  async findAll(): Promise<Book[]> {
-    return this.booksService.findAll();
+  async findAll(@Query() filterDto: GetBooksFilterDto): Promise<Book[]> {
+    return this.booksService.findAll(filterDto);
   }
 
   @Get(':id')

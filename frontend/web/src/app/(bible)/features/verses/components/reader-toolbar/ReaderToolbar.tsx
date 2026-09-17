@@ -14,7 +14,7 @@ import {
 import { UnifiedPassagePicker, getChaptersForBookId, Book } from '../../../../entities/books';
 import { TranslationSelector } from '../../../../entities/translations';
 import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;

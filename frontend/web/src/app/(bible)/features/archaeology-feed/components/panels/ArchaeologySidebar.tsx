@@ -12,7 +12,7 @@ import {
   X,
   Layers,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { ArticleCategory, GeographicRegion } from '../../types';
 
 interface ArchaeologySidebarProps {

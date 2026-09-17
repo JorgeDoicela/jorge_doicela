@@ -9,8 +9,8 @@ import {
   TextualDiffModal,
   VerseComparisonData,
 } from '../../../features/parallel-view';
-import { useBiblePassage } from '../../../context/BiblePassageContext';
-import { BiblePassageToolbar } from '../../../components/BiblePassageToolbar';
+import { useBiblePassage } from '../../../shared/context';
+import { BiblePassageToolbar } from '../../../widgets/bible-passage-toolbar';
 
 export default function ParallelStudyPage() {
   const t = useTranslations('Parallel');

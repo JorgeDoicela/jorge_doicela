@@ -15,10 +15,10 @@ export class AtlasService {
     query?: string,
     lang?: string,
   ): Promise<HistoricalPlaceEntity[]> {
+    const targetLang = lang?.trim() || 'es';
     const qb = this.placesRepo.createQueryBuilder('place');
-    if (lang) {
-      qb.andWhere('place.language = :lang', { lang });
-    }
+    qb.where('place.language = :lang', { lang: targetLang });
+
     if (category && category !== 'all') {
       qb.andWhere('place.category = :category', { category });
     }
@@ -30,6 +30,7 @@ export class AtlasService {
         },
       );
     }
+    qb.orderBy('place.id', 'ASC');
     return qb.getMany();
   }
 }

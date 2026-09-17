@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Translation } from '../../../entities/translations';
-import { BibleSelect, BibleSelectOption } from '../../../components/BibleSelect';
+import { BibleSelect, BibleSelectOption } from '../../../shared/ui';
 
 interface ParallelColumnHeaderProps {
   columnId: string;

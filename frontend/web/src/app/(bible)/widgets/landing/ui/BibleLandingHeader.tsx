@@ -4,10 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { ThemeToggle } from '../ThemeToggle';
-import { LanguageToggle } from '../LanguageToggle';
-import { BibleLogo } from '../BibleLogo';
-import { BackToPortalButton } from '../BackToPortalButton';
+import { ThemeToggle } from '../../../features/theme-toggle';
+import { LanguageToggle } from '../../../features/language-toggle';
+import { BibleLogo, BackToPortalButton } from '../../../shared/ui';
 
 interface BibleLandingHeaderProps {
     studyUrl?: string;

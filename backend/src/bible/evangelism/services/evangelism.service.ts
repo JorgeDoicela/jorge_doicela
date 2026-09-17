@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { EvangelismPathwayEntity } from '../entities/evangelism-pathway.entity';
 import { EvangelismObjectionEntity } from '../entities/evangelism-objection.entity';
 import { EvangelismTractEntity } from '../entities/evangelism-tract.entity';
+import { EntityNotFoundError } from '../../../common/domain/domain-errors';
 
 @Injectable()
 export class EvangelismService {
@@ -26,13 +27,17 @@ export class EvangelismService {
   async getPathwayBySlug(
     slug: string,
     lang: string = 'es',
-  ): Promise<EvangelismPathwayEntity | null> {
-    return this.pathwaysRepo.findOne({
+  ): Promise<EvangelismPathwayEntity> {
+    const pathway = await this.pathwaysRepo.findOne({
       where: [
         { slug, language: lang },
         { id: slug, language: lang },
       ],
     });
+    if (!pathway) {
+      throw new EntityNotFoundError('EvangelismPathway', slug);
+    }
+    return pathway;
   }
 
   async getObjections(
@@ -78,12 +83,16 @@ export class EvangelismService {
   async getTractBySlug(
     slug: string,
     lang: string = 'es',
-  ): Promise<EvangelismTractEntity | null> {
-    return this.tractsRepo.findOne({
+  ): Promise<EvangelismTractEntity> {
+    const tract = await this.tractsRepo.findOne({
       where: [
         { slug, language: lang },
         { id: slug, language: lang },
       ],
     });
+    if (!tract) {
+      throw new EntityNotFoundError('EvangelismTract', slug);
+    }
+    return tract;
   }
 }

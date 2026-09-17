@@ -33,12 +33,12 @@ El subdominio cuenta con una Landing Page y 8 módulos de estudio independientes
 ```text
 frontend/web/src/app/(bible)/
 ├── globals.css                # Estilos aislados de la biblia (Geist / Vercel Style)
-├── layout.tsx                 # Layout raíz del subdominio
+├── layout.tsx                 # Layout raíz del subdominio con ThemeProvider y BibleJsonLd
 │
 ├── bible/                     # ENRUTAMIENTO (App Router)
 │   ├── page.tsx               # Landing Page de presentación y Live Preview interactivo
 │   └── study/
-│       ├── layout.tsx         # Layout compartido: Providers + BibleHeaderNav + Laterales FSD desacoplados
+│       ├── layout.tsx         # Layout compartido: ScopedModuleProviders + BibleHeaderNav + Paneles FSD
 │       ├── page.tsx           # Redirección por defecto a /study/standard
 │       ├── standard/page.tsx  # Módulo 1: Lectura Estándar Continua
 │       ├── parallel/page.tsx  # Módulo 2: Cotejo Paralelo Multi-Versión & Diff Textual
@@ -49,44 +49,46 @@ frontend/web/src/app/(bible)/
 │       ├── archaeology/page.tsx # Módulo 7: Arqueología Bíblica y Feed de Excavaciones
 │       └── evangelism/page.tsx # Módulo 8: Evangelización y Apologética (?tab=pathways | objections | tracts)
 │
-├── context/                   # GESTIÓN DE ESTADO REACTIVO Y URL PARAMS
-│   └── BiblePassageContext.tsx # Sincroniza bookId, chapter y trans con la URL (?book=GEN&chapter=1)
+├── providers/                 # CAPA DE PROVIDERS GLOBALES (FSD PROVIDERS)
+│   ├── theme-provider.tsx     # Provider next-themes aislado para el subdominio
+│   └── index.ts               # Barrel export de providers
+│
+├── shared/                    # CAPA DE ELEMENTOS COMPARTIDOS (FSD SHARED)
+│   ├── context/               # BiblePassageContext (sincroniza bookId, chapter y trans con URL)
+│   ├── data/                  # canonData.ts (categorías canónicas, recuentos de capítulos por ID y abreviación)
+│   ├── hooks/                 # useHeaderScrollBehavior, useBibleKeybindings
+│   ├── seo/                   # BibleJsonLd (Schema.org estructurado)
+│   ├── ui/                    # BackToBibleButton, BackToPortalButton, BibleLogo, BibleSelect, DraggableEdgeTab, OngoingExpansionNotice
+│   └── index.ts               # Barrel export unificado de shared
 │
 ├── entities/                  # CAPA DE ENTIDADES DE DOMINIO (FSD ENTITIES)
-│   ├── books/                 # data/canonicCategories + hooks/useBooks (API /bible/books)
-│   └── translations/          # hooks/useTranslations + TranslationSelector (API /bible/translations)
+│   ├── books/                 # useBooks, UnifiedPassagePicker, getBookHistoricalInfo (API /bible/books)
+│   └── translations/          # useTranslations, TranslationSelector (API /bible/translations)
 │
-├── components/                # COMPONENTES Y WIDGETS TRANSVERSALES
-│   ├── BibleHeaderNav.tsx     # Header con selector de herramientas móvil flotante y desktop
-│   ├── BackToBibleButton.tsx  # Retorno directo al inicio de la Biblia
-│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (jorgedoicela.com)
-│   ├── DraggableEdgeTab.tsx   # Pestañas táctiles flotantes para reapertura de paneles laterales
-│   └── landing/               # COMPONENTES MODULARES DE LA LANDING (Descomposición atómica)
-│       ├── BibleLandingHeader.tsx         # Navbar sticky con selector de tema/idioma y acceso a portal
-│       ├── BibleHeroSection.tsx           # Hero editorial masorético, tipografía y tarjeta flotante
-│       ├── BibleEnginesCarousel.tsx       # Carrusel interactivo Google-style con autoplay y HUDs
-│       ├── BiblePurposeSection.tsx        # Pestañas Geist de propósito y 12 tarjetas de estudio
-│       ├── BibleCorpusVersionsSection.tsx # 6 versiones canónicas, lenguas originales y muestras RTL
-│       ├── BibleManuscriptsSection.tsx    # Códices antiguos, Qumrán y facsímil patrimonial
-│       ├── BibleStepsSection.tsx          # 3 pasos simples de iniciación al estudio bíblico
-│       ├── BibleMobileAppSection.tsx      # App Expo offline con mockup iPhone y especificaciones
-│       ├── BibleFinalCtaAndFooter.tsx     # Llamada a la acción final y pie de página institucional
-│       └── index.ts                       # Barril de exportación unificado
+├── widgets/                   # CAPA DE COMPONENTES COMPUESTOS (FSD WIDGETS)
+│   ├── bible-header/          # BibleHeaderNav (cabecera con auto-hide de scroll y selector móvil)
+│   ├── bible-sidebar/         # BibleNavigationSidebar (navegador canónico de 66 libros con buscador)
+│   ├── bible-passage-toolbar/ # BiblePassageToolbar (barra ergonómica de pasaje activo)
+│   ├── exegesis-inspector/    # BibleExegesisInspector, StrongMorphologyInspector, ParallelVerseInspector, BookHistoricalProfile
+│   ├── landing/               # 9 secciones atómicas de la Landing Page
+│   └── index.ts               # Barrel export de widgets
 │
-└── features/                  # HERRAMIENTAS DE ESTUDIO EXEGÉTICO (FSD FEATURES)
-    ├── verses/                # services/ + hooks/useVerses (API /bible/verses)
-    ├── parallel-view/         # Comparador multi-columna + subdirectorio interno textual-diff (LCS)
-    ├── interlinear/           # services/interlinearApiService (API /bible/morphology/passage)
-    ├── lexicons/              # services/lexiconApiService (API /bible/morphology/lexicon)
-    ├── atlas/                 # services/atlasApiService (API /bible/atlas/places con ?lang=)
-    ├── timeline/              # services/timelineApiService (API /bible/timeline con ?lang=)
-    ├── archaeology-feed/      # services/archaeologyApiService (API /bible/archaeology/articles con ?lang=)
-    └── evangelism/            # services/evangelismApiService (API /bible/evangelism/*)
+└── features/                  # HERRAMIENTAS DE USUARIO Y TOGGLES (FSD FEATURES)
+    ├── language-toggle/       # LanguageToggle (selector ES / EN con cookie NEXT_LOCALE)
+    ├── theme-toggle/          # ThemeToggle (conmutador claro / oscuro OLED)
+    ├── verses/                # services/ + hooks/useVerses + vistas continuas y línea por línea
+    ├── parallel-view/         # Comparador multi-columna + subdirectorio textual-diff (LCS)
+    ├── interlinear/           # services/interlinearApiService (Hebreo Masorético BHS / Griego NA28)
+    ├── lexicons/              # services/lexiconApiService (Léxicos Strong BDB, Thayer, Gesenius)
+    ├── atlas/                 # services/atlasApiService (Atlas georreferenciado WGS84 con ?lang=)
+    ├── timeline/              # services/timelineApiService (Cronología sincrónica con ?lang=)
+    ├── archaeology-feed/      # services/archaeologyApiService (Feed de arqueología con ?lang=)
+    └── evangelism/            # services/evangelismApiService (Rutas soteriológicas y apologética)
 ```
 
 ### 2.1 Arquitectura Visual de la Landing Page (`bible/page.tsx`)
 > [!TIP]
-> **Descomposición Modular Atómica:** La Landing Page de la Biblia opera mediante un orquestador declarativo ultra-liviano (`bible/page.tsx`, < 45 líneas) que ensambla 9 subcomponentes atómicos e independientes ubicados en `components/landing/` (`BibleLandingHeader`, `BibleHeroSection`, `BibleEnginesCarousel`, `BiblePurposeSection`, `BibleCorpusVersionsSection`, `BibleManuscriptsSection`, `BibleStepsSection`, `BibleMobileAppSection`, `BibleFinalCtaAndFooter`). Cada componente encapsula su propio estado, interactividad y suscripción i18n (`BibleLanding` / `Landing`), erradicando la deuda técnica de archivos monolíticos y garantizando mantenibilidad a largo plazo.
+> **Descomposición Modular Atómica:** La Landing Page de la Biblia opera mediante un orquestador declarativo ultra-liviano (`bible/page.tsx`, < 45 líneas) que ensambla 9 subcomponentes atómicos e independientes ubicados en `widgets/landing/` (`BibleLandingHeader`, `BibleHeroSection`, `BibleEnginesCarousel`, `BiblePurposeSection`, `BibleCorpusVersionsSection`, `BibleManuscriptsSection`, `BibleStepsSection`, `BibleMobileAppSection`, `BibleFinalCtaAndFooter`). Cada componente encapsula su propio estado, interactividad y suscripción i18n (`BibleLanding` / `Landing`), erradicando la deuda técnica de archivos monolíticos y garantizando mantenibilidad a largo plazo.
 
 Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de Negocio* (inspección DevTools):
 1. **Calibración Dimensional y Escala Tipográfica:**

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { ArticleCategory, GeographicRegion } from '../types';
-import { BibleSelect } from '../../../components/BibleSelect';
+import { BibleSelect } from '../../../shared/ui';
 
 interface FeedFilterBarProps {
   selectedCategory: ArticleCategory | 'all';

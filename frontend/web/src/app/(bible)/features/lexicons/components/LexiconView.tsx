@@ -12,7 +12,7 @@ import { GREEK_LEXICONS_DATABASE } from '../data/greekLexiconsData';
 import { HebrewRootBrowser } from './HebrewRootBrowser';
 import { GreekLemmaBrowser } from './GreekLemmaBrowser';
 import { LexiconEntryDetail } from './LexiconEntryDetail';
-import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
+import { OngoingExpansionNotice } from '../../../shared/ui';
 import { searchLexiconEntries } from '../services/lexiconApiService';
 import { useLexiconContextSafe, CuratedTheologicalTerm } from '../context/LexiconContext';
 

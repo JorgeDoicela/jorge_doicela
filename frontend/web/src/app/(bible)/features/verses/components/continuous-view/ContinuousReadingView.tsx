@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 
 import { Verse, ReaderFontSize, ReaderFontFamily, ReaderTone } from '../../types';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 
 interface ContinuousReadingViewProps {
   verses: Verse[];

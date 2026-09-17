@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react';
 import { ParallelColumn, ParallelVerseRow } from '../types';
 import { ParallelColumnHeader } from './ParallelColumnHeader';
 import { Translation } from '../../../entities/translations';
-import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
+import { OngoingExpansionNotice } from '../../../shared/ui';
 
 interface ParallelViewGridProps {
   columns: ParallelColumn[];

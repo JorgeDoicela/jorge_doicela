@@ -11,7 +11,7 @@ import {
   BookOpen,
   Scroll,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { ArchaeologyArticle } from '../../types';
 
 interface ArchaeologyInspectorProps {

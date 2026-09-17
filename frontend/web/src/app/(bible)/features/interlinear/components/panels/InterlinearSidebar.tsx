@@ -14,7 +14,7 @@ import {
   ChevronRight,
   HelpCircle,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useInterlinearContextSafe } from '../../context/InterlinearContext';
 import { InterlinearViewLayout } from '../../types';
 

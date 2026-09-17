@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ArchaeologyArticleEntity } from '../entities/archaeology-article.entity';
+import { EntityNotFoundError } from '../../../common/domain/domain-errors';
 
 @Injectable()
 export class ArchaeologyService {
@@ -15,10 +16,10 @@ export class ArchaeologyService {
     query?: string,
     lang?: string,
   ): Promise<ArchaeologyArticleEntity[]> {
+    const targetLang = lang?.trim() || 'es';
     const qb = this.articlesRepo.createQueryBuilder('article');
-    if (lang) {
-      qb.andWhere('article.language = :lang', { lang });
-    }
+    qb.where('article.language = :lang', { lang: targetLang });
+
     if (category && category !== 'all') {
       qb.andWhere('article.category = :category', { category });
     }
@@ -34,11 +35,14 @@ export class ArchaeologyService {
   async getArticleBySlug(
     slug: string,
     lang?: string,
-  ): Promise<ArchaeologyArticleEntity | null> {
-    const where: FindOptionsWhere<ArchaeologyArticleEntity> = { slug };
-    if (lang) {
-      where.language = lang;
+  ): Promise<ArchaeologyArticleEntity> {
+    const targetLang = lang?.trim() || 'es';
+    const article = await this.articlesRepo.findOne({
+      where: { slug, language: targetLang },
+    });
+    if (!article) {
+      throw new EntityNotFoundError('ArchaeologyArticle', slug);
     }
-    return this.articlesRepo.findOne({ where });
+    return article;
   }
 }

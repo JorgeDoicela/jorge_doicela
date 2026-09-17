@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 import { Verse, ReaderFontSize, ReaderFontFamily, ReaderTone } from '../../types';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 
 interface LineByLineReadingViewProps {
   verses: Verse[];

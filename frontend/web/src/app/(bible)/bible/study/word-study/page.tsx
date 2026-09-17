@@ -2,8 +2,8 @@
 
 import { useTranslations } from 'next-intl';
 import { LexiconView, useLexiconContextSafe } from '../../../features/lexicons';
-import { BiblePassageToolbar } from '../../../components/BiblePassageToolbar';
-import { useBiblePassage } from '../../../context/BiblePassageContext';
+import { BiblePassageToolbar } from '../../../widgets/bible-passage-toolbar';
+import { useBiblePassage } from '../../../shared/context';
 
 export default function WordStudyPage() {
   const tStudio = useTranslations('Studio');

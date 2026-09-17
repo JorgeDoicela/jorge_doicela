@@ -9,9 +9,9 @@ import {
   Globe,
   Landmark,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useAtlasContextSafe } from '../../context/AtlasContext';
-import { BookHistoricalProfile } from '../../../../components/BookHistoricalProfile';
+import { BookHistoricalProfile } from '../../../../widgets/exegesis-inspector';
 
 export const AtlasInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();

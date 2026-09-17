@@ -12,9 +12,9 @@ import {
   Share2,
   ExternalLink,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useLexiconContextSafe } from '../../context/LexiconContext';
-import { ParallelVerseInspector } from '../../../../components/ParallelVerseInspector';
+import { ParallelVerseInspector } from '../../../../widgets/exegesis-inspector';
 
 export const WordStudyInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();

@@ -14,7 +14,7 @@ import {
   Landmark,
   Layers,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useAtlasContextSafe } from '../../context/AtlasContext';
 import { HistoricalEra, PlaceCategory } from '../../types';
 

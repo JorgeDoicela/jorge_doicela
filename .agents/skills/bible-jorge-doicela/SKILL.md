@@ -51,16 +51,34 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
    - **Suite 5: Contexto Histórico (`/bible/study/historical-context`):** Atlas Vectorial WGS84, Cronología Sincrónica y Arqueología.
    - **Suite 6: Evangelización y Apologética (`/bible/study/evangelism`):** Rutas bíblicas estructuradas (Camino de Romanos, Puente a la Vida), banco de objeciones apologéticas y tratados/bosquejos homiléticos listos para predicar.
 
-### 2.2 Catálogo de Features y Clientes API (`(bible)/features/`)
-* `verses` $\rightarrow$ `useVerses` (`GET /bible/verses`)
-* `books` $\rightarrow$ `useBooks`, `canonicCategories` (`GET /bible/books`)
-* `translations` $\rightarrow$ `useTranslations` (`GET /bible/translations`)
-* `interlinear` $\rightarrow$ `interlinearApiService` (`GET /bible/morphology/passage`)
-* `lexicons` $\rightarrow$ `lexiconApiService` (`GET /bible/morphology/lexicon`)
-* `atlas` $\rightarrow$ `atlasApiService` (`GET /bible/historical/atlas/places`)
-* `timeline` $\rightarrow$ `timelineApiService` (`GET /bible/historical/timeline`)
-* `archaeology-feed` $\rightarrow$ `archaeologyApiService` (`GET /bible/historical/articles`)
-* `evangelism` $\rightarrow$ `evangelismApiService` (`GET /bible/evangelism/*`)
+### 2.2 Capas y Catálogo Feature-Sliced Design (FSD Canónico)
+* **`providers/`**: `theme-provider.tsx` (next-themes encapsulado).
+* **`shared/`**:
+  * `context/`: `BiblePassageContext` (sincronización URL-Driven de pasaje y traducción).
+  * `data/`: `canonData.ts` (fuente única de la verdad del canon, categorías y recuentos de capítulos).
+  * `hooks/`: `useHeaderScrollBehavior`, `useBibleKeybindings`.
+  * `seo/`: `BibleJsonLd` (esquema estructurado Schema.org).
+  * `ui/`: `BackToBibleButton`, `BackToPortalButton`, `BibleLogo`, `BibleSelect`, `DraggableEdgeTab`, `OngoingExpansionNotice`.
+* **`entities/`**:
+  * `books/` $\rightarrow$ `useBooks`, `UnifiedPassagePicker`, `getBookHistoricalInfo` (`GET /bible/books`).
+  * `translations/` $\rightarrow$ `useTranslations`, `TranslationSelector` (`GET /bible/translations`).
+* **`widgets/`**:
+  * `bible-header/` $\rightarrow$ `BibleHeaderNav` (cabecera persistente con auto-hide y menú móvil).
+  * `bible-sidebar/` $\rightarrow$ `BibleNavigationSidebar` (panel canónico de 66 libros y navegación por capítulos).
+  * `bible-passage-toolbar/` $\rightarrow$ `BiblePassageToolbar` (barra de pasaje activo para estudios).
+  * `exegesis-inspector/` $\rightarrow$ `BibleExegesisInspector`, `StrongMorphologyInspector`, `ParallelVerseInspector`, `BookHistoricalProfile`.
+  * `landing/` $\rightarrow$ Las 9 secciones modulares de la Landing Page.
+* **`features/`**:
+  * `language-toggle/` $\rightarrow$ `LanguageToggle` (conmutador ES / EN).
+  * `theme-toggle/` $\rightarrow$ `ThemeToggle` (conmutador claro / oscuro).
+  * `verses/` $\rightarrow$ `useVerses` (`GET /bible/verses`), vistas continuas y línea por línea.
+  * `parallel-view/` $\rightarrow$ Comparador multiversión y módulo interno `textual-diff` (LCS).
+  * `interlinear/` $\rightarrow$ `interlinearApiService` (`GET /bible/morphology/passage`).
+  * `lexicons/` $\rightarrow$ `lexiconApiService` (`GET /bible/morphology/lexicon`).
+  * `atlas/` $\rightarrow$ `atlasApiService` (`GET /bible/historical/atlas/places`).
+  * `timeline/` $\rightarrow$ `timelineApiService` (`GET /bible/historical/timeline`).
+  * `archaeology-feed/` $\rightarrow$ `archaeologyApiService` (`GET /bible/historical/articles`).
+  * `evangelism/` $\rightarrow$ `evangelismApiService` (`GET /bible/evangelism/*`).
 
 ---
 
@@ -74,14 +92,14 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * **Septuaginta Griega (`LXX`):** Dominio Público Académico (Swete / Rahlfs).
 
 ### 3.2 Esquema Relacional de `bible.sqlite`
-* `books` (id, name, abbreviation, testament)
+* `books` (id, name, abbreviation, order, testament) $\rightarrow$ Orden canónico ascendente (1 a 66).
 * `translations` (id, name, abbreviation, language)
 * `verses` (id, bookId, translationId, chapter, verseNumber, text) $\rightarrow$ Índice único compuesto en `(bookId, translationId, chapter, verseNumber)`.
 * `morphology_tokens` (id, verseId, wordOrder, surfaceText, consonantsOnly, transliteration, strongCode, morphologyCode, gloss)
 * `lexicon_entries` (id, strongCode, language, lemma, transliteration, ipa, partOfSpeech, shortDefinition, extendedDefinition)
-* `historical_places` (id, name, originalName, coordinates, category, era, modernName, country, elevationMeters, description, biblicalReferences, archaeologicalNotes)
-* `timeline_events` (id, name, type, originalName, startYearBC, endYearBC, kingdom, evaluation, dynastyOrOrigin, contemporaryEntities, biblicalReferences, keyEvents, details)
-* `archaeology_articles` (id, title, slug, category, region, regionLabel, publishDate, institutionOrAuthor, readTimeMinutes, summary, contentMarkdown, biblicalReferences, epigraphy, museumOrLocation, keyArtifact, tags)
+* `historical_places` (id, name, originalName, coordinates, category, era, modernName, country, elevationMeters, description, biblicalReferences, archaeologicalNotes, language)
+* `timeline_events` (id, name, type, originalName, startYearBC, endYearBC, kingdom, evaluation, dynastyOrOrigin, contemporaryEntities, biblicalReferences, keyEvents, details, language)
+* `archaeology_articles` (id, title, slug, category, region, regionLabel, publishDate, institutionOrAuthor, readTimeMinutes, summary, contentMarkdown, biblicalReferences, epigraphy, museumOrLocation, keyArtifact, tags, language)
 * `evangelism_pathways` (id, language, slug, title, subtitle, description, theologicalFocus, steps)
 * `evangelism_objections` (id, language, category, question, summary, biblicalAnswer, keyVerses, practicalAdvice)
 * `evangelism_tracts` (id, language, slug, title, targetAudience, summary, fullOutline, prayerOfFaith, nextSteps)
@@ -111,6 +129,9 @@ pnpm -r typecheck
 | Hardcodear arrays de versículos, diccionarios o lugares en TypeScript | Aumenta el bundle size del cliente y rompe la fuente única de verdad con la app móvil. | Almacenar en backend/src/bible/corpus/ y sembrar en bible.sqlite. |
 | Omitir el índice único compuesto en Verse o MorphologyToken | Permite insertar duplicados del mismo versículo o palabra. | Asegurar @Index(['translation', 'book', 'chapter', 'verseNumber'], { unique: true }). |
 | Traer toda la Biblia o libros completos sin filtrar por capítulo | Bloquea el event loop de NestJS y satura el ancho de banda. | Filtrar siempre por libro (bookId) y capítulo (chapter). |
+| Lanzar excepciones HTTP (NotFoundException) en controladores | Viola la separación de 3 capas al mezclar transporte HTTP con lógica de dominio. | Lanzar EntityNotFoundError en el servicio; el GlobalExceptionFilter lo mapeará a 404. |
+| Encadenar múltiples .orWhere() con .andWhere() en TypeORM sin Brackets | El operador AND tiene mayor precedencia que OR, evaluando (A OR B OR (C AND D)) y corrompiendo los filtros. | Agrupar las condiciones disyuntivas con new Brackets((sub) => sub.where(...).orWhere(...)). |
+| Consultar tablas bilingües sin fallback de idioma por defecto | Retorna registros duplicados en español e inglés simultáneamente si no se pasa ?lang=. | Aplicar const targetLang = lang?.trim() \|\| 'es' y filtrar por place.language = :lang. |
 | Instalar librerías de Expo (expo-*) en frontend/web | Contamina el bundle web con módulos nativos incompatibles. | Usar pnpm --filter mobile add <paquete-expo>. |
 | Inyectar repositorios sin 'bibleConnection' | Falla en runtime o consulta la base de datos equivocada. | Usar @InjectRepository(Verse, 'bibleConnection'). |
 | Bandejas con falsa profundidad estilo iOS (cajas grises con pastillas blancas flotantes y sombras) | Contradice la filosofía Geist de Vercel y genera fatiga visual en pantallas de estudio editorial. | Aplicar Minimalismo Plano Geist (1 sola capa): pestañas al ras del header con línea inferior (border-b-2) y botones contiguos de 1px (divide-x). |

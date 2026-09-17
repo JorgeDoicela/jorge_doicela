@@ -13,4 +13,4 @@ export type {
 } from './types';
 export { useVerses } from './hooks/useVerses';
 export { useReaderKeybindings } from './hooks/useReaderKeybindings';
-export { BOOK_CHAPTERS, getChapterCountForBook } from './data/bookChapters';
+export { BOOK_CHAPTERS, getChapterCountForBook } from '../../shared/data/canonData';

@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { HebrewLexiconEntry, GreekLexiconEntry } from '../types';
 import { fetchLexiconEntry, searchLexiconEntries } from '../services/lexiconApiService';
-import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../shared/context';
 
 export interface CuratedTheologicalTerm {
   strong: string;

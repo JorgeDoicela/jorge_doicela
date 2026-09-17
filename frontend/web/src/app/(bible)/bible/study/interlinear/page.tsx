@@ -3,8 +3,8 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { InterlinearView } from '../../../features/interlinear';
-import { useBiblePassage } from '../../../context/BiblePassageContext';
-import { BiblePassageToolbar } from '../../../components/BiblePassageToolbar';
+import { useBiblePassage } from '../../../shared/context';
+import { BiblePassageToolbar } from '../../../widgets/bible-passage-toolbar';
 
 export default function InterlinearStudyPage() {
   const t = useTranslations('Interlinear');

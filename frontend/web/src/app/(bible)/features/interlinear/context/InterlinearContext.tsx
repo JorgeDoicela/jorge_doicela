@@ -11,7 +11,7 @@ import {
   BiblicalLanguage,
 } from '../types';
 import { fetchInterlinearPassage, fetchStrongLexiconEntry } from '../services/interlinearApiService';
-import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../shared/context';
 
 export interface InterlinearContextValue {
   settings: InterlinearDisplaySettings;

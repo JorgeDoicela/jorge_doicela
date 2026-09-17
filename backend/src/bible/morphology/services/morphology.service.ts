@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { LexiconEntry } from '../entities/lexicon-entry.entity';
 import { MorphologyToken } from '../entities/morphology-token.entity';
 import { EntityNotFoundError } from '../../../common/domain/domain-errors';
@@ -59,14 +59,21 @@ export class MorphologyService {
 
     if (query && query.trim() !== '') {
       const cleanQuery = `%${query.trim().toLowerCase()}%`;
-      qb.where('LOWER(lexicon.strongCode) LIKE :query', { query: cleanQuery })
-        .orWhere('LOWER(lexicon.lemma) LIKE :query', { query: cleanQuery })
-        .orWhere('LOWER(lexicon.transliteration) LIKE :query', {
-          query: cleanQuery,
-        })
-        .orWhere('LOWER(lexicon.shortDefinition) LIKE :query', {
-          query: cleanQuery,
-        });
+      qb.where(
+        new Brackets((sub) => {
+          sub
+            .where('LOWER(lexicon.strongCode) LIKE :query', {
+              query: cleanQuery,
+            })
+            .orWhere('LOWER(lexicon.lemma) LIKE :query', { query: cleanQuery })
+            .orWhere('LOWER(lexicon.transliteration) LIKE :query', {
+              query: cleanQuery,
+            })
+            .orWhere('LOWER(lexicon.shortDefinition) LIKE :query', {
+              query: cleanQuery,
+            });
+        }),
+      );
     }
 
     if (language && language !== 'all') {

@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   HeartHandshake,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
 
 export const EvangelismInspector: React.FC = () => {

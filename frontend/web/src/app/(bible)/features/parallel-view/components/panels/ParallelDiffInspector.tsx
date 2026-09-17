@@ -13,10 +13,10 @@ import {
   ArrowRightLeft,
   BookMarked,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useParallelContextSafe } from '../../context/ParallelContext';
 import { computeWordDiff, TRANSLATION_APPROACHES } from '../../textual-diff';
-import { StrongMorphologyInspector } from '../../../../components/StrongMorphologyInspector';
+import { StrongMorphologyInspector } from '../../../../widgets/exegesis-inspector';
 
 export const ParallelDiffInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();

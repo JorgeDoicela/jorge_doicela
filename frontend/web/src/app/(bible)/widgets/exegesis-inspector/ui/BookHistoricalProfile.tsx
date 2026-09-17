@@ -4,8 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { Calendar, User, MapPin, BookOpen, ShieldCheck, ArrowRight } from 'lucide-react';
-import { useBiblePassageSafe } from '../context/BiblePassageContext';
-import { getBookHistoricalInfo } from '../entities/books';
+import { useBiblePassageSafe } from '../../../shared/context';
+import { getBookHistoricalInfo } from '../../../entities/books';
 
 interface BookHistoricalProfileProps {
   bookId?: number | null;

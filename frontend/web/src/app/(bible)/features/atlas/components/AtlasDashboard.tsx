@@ -10,7 +10,7 @@ import { InteractiveMapCanvas } from './map/InteractiveMapCanvas';
 import { PlaceDetailsDrawer } from './map/PlaceDetailsDrawer';
 import { HistoricalRoutesPlayer } from './routes/HistoricalRoutesPlayer';
 import { Archaeological3DViewer } from './3d/Archaeological3DViewer';
-import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../shared/context';
 
 export const AtlasDashboard: React.FC = () => {
   const t = useTranslations('HistoricalContext');

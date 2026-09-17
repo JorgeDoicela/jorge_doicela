@@ -16,10 +16,9 @@ export class TimelineService {
     toYearBC?: number,
     lang?: string,
   ): Promise<TimelineEventEntity[]> {
+    const targetLang = lang?.trim() || 'es';
     const qb = this.timelineRepo.createQueryBuilder('event');
-    if (lang) {
-      qb.andWhere('event.language = :lang', { lang });
-    }
+    qb.where('event.language = :lang', { lang: targetLang });
     if (type && type !== 'all') {
       qb.andWhere('event.type = :type', { type });
     }

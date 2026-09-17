@@ -12,7 +12,7 @@ import {
   Calendar,
   Layers,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useBiblicalTimeline } from '../../hooks/useBiblicalTimeline';
 
 export const TimelineSidebar: React.FC = () => {

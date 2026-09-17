@@ -2,8 +2,8 @@
 
 import React, { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { getChapterCountForBook } from '../../data/bookChapters';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { getChapterCountForBook } from '../../../../shared/data/canonData';
+import { useBiblePassageSafe } from '../../../../shared/context';
 
 interface ChapterNavigatorProps {
   selectedBookName?: string;

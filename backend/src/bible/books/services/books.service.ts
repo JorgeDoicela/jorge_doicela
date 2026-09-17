@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Book } from '../entities/book.entity';
 import { CreateBookDto } from '../dto/create-book.dto';
+import { GetBooksFilterDto } from '../dto/get-books-filter.dto';
 import {
   EntityNotFoundError,
   EntityConflictError,
@@ -15,8 +16,15 @@ export class BooksService {
     private readonly bookRepository: Repository<Book>,
   ) {}
 
-  async findAll(): Promise<Book[]> {
-    return this.bookRepository.find();
+  async findAll(filterDto?: GetBooksFilterDto): Promise<Book[]> {
+    const where: FindOptionsWhere<Book> = {};
+    if (filterDto?.testament) {
+      where.testament = filterDto.testament;
+    }
+    return this.bookRepository.find({
+      where,
+      order: { order: 'ASC', id: 'ASC' },
+    });
   }
 
   async findOne(id: number): Promise<Book> {

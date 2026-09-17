@@ -1,9 +1,0 @@
-export { BibleLandingHeader } from './BibleLandingHeader';
-export { BibleHeroSection } from './BibleHeroSection';
-export { BibleEnginesCarousel } from './BibleEnginesCarousel';
-export { BiblePurposeSection } from './BiblePurposeSection';
-export { BibleCorpusVersionsSection } from './BibleCorpusVersionsSection';
-export { BibleManuscriptsSection } from './BibleManuscriptsSection';
-export { BibleStepsSection } from './BibleStepsSection';
-export { BibleMobileAppSection } from './BibleMobileAppSection';
-export { BibleFinalCtaAndFooter } from './BibleFinalCtaAndFooter';

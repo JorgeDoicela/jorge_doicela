@@ -22,8 +22,8 @@ import { MorphologyDetailModal } from './MorphologyDetailModal';
 import { GreekMorphologyModal } from './GreekMorphologyModal';
 import { ReverseInterlinearReader } from './ReverseInterlinearReader';
 import { StrongLexiconDrawer } from './StrongLexiconDrawer';
-import { OngoingExpansionNotice } from '../../../components/OngoingExpansionNotice';
-import { useBiblePassageSafe } from '../../../context/BiblePassageContext';
+import { OngoingExpansionNotice } from '../../../shared/ui';
+import { useBiblePassageSafe } from '../../../shared/context';
 import { useInterlinearContextSafe } from '../context/InterlinearContext';
 
 interface InterlinearViewProps {

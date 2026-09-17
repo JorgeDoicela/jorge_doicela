@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
 import { EvangelismTab } from '../../types';
 

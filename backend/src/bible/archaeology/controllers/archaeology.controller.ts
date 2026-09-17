@@ -1,19 +1,16 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Param,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import { ArchaeologyService } from '../services/archaeology.service';
 import { GetArticlesQueryDto } from '../dto/get-articles-query.dto';
+import { ArchaeologyArticleEntity } from '../entities/archaeology-article.entity';
 
-@Controller('bible')
+@Controller('bible/archaeology')
 export class ArchaeologyController {
   constructor(private readonly archaeologyService: ArchaeologyService) {}
 
-  @Get('archaeology/articles')
-  async getArticles(@Query() query: GetArticlesQueryDto) {
+  @Get('articles')
+  async getArticles(
+    @Query() query: GetArticlesQueryDto,
+  ): Promise<ArchaeologyArticleEntity[]> {
     return this.archaeologyService.getArticles(
       query.category,
       query.q,
@@ -21,15 +18,11 @@ export class ArchaeologyController {
     );
   }
 
-  @Get('archaeology/articles/:slug')
+  @Get('articles/:slug')
   async getArticleBySlug(
     @Param('slug') slug: string,
     @Query('lang') lang?: string,
-  ) {
-    const article = await this.archaeologyService.getArticleBySlug(slug, lang);
-    if (!article) {
-      throw new NotFoundException(`Artículo con slug "${slug}" no encontrado`);
-    }
-    return article;
+  ): Promise<ArchaeologyArticleEntity> {
+    return this.archaeologyService.getArticleBySlug(slug, lang);
   }
 }

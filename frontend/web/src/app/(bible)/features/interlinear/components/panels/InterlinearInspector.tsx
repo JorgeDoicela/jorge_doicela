@@ -14,10 +14,10 @@ import {
   Bookmark,
   ExternalLink,
 } from 'lucide-react';
-import { useBiblePassageSafe } from '../../../../context/BiblePassageContext';
+import { useBiblePassageSafe } from '../../../../shared/context';
 import { useInterlinearContextSafe } from '../../context/InterlinearContext';
 import { biblicalAudioService } from '../../services/biblicalAudioService';
-import { ParallelVerseInspector } from '../../../../components/ParallelVerseInspector';
+import { ParallelVerseInspector } from '../../../../widgets/exegesis-inspector';
 
 export const InterlinearInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();

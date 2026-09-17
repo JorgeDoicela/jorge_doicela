@@ -52,7 +52,6 @@ export default function TutorialsCategoryPage() {
               onSelect={setDifficulty}
               loading={categoriesLoading}
               accentColor="amber"
-              showCount={true}
             />
           </div>
         </header>

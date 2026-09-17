@@ -48,7 +48,6 @@ export default function AiCategoryPage() {
               onSelect={setType}
               loading={categoriesLoading}
               accentColor="purple"
-              showCount={true}
             />
           </div>
         </header>

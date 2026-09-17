@@ -47,7 +47,6 @@ export default function ProjectsCategoryPage() {
               onSelect={setStatus}
               loading={categoriesLoading}
               accentColor="blue"
-              showCount={true}
             />
           </div>
         </header>

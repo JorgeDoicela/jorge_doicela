@@ -52,7 +52,6 @@ export default function CybersecurityCategoryPage() {
               onSelect={setSeverity}
               loading={categoriesLoading}
               accentColor="rose"
-              showCount={true}
             />
           </div>
         </header>

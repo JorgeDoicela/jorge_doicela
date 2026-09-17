@@ -48,7 +48,6 @@ export default function BlogCategoryPage() {
               onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="blue"
-              showCount={true}
             />
           </div>
         </header>

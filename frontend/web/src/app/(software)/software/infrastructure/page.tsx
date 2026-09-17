@@ -53,7 +53,6 @@ export default function InfrastructureCategoryPage() {
               onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="emerald"
-              showCount={true}
             />
           </div>
         </header>

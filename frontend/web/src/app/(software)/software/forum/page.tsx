@@ -48,7 +48,6 @@ export default function ForumCategoryPage() {
               onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="purple"
-              showCount={true}
             />
           </div>
         </header>

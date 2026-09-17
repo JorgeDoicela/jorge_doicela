@@ -48,7 +48,6 @@ export default function NewsCategoryPage() {
               onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="cyan"
-              showCount={true}
             />
           </div>
         </header>

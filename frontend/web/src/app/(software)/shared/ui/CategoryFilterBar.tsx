@@ -49,7 +49,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
   onSelect,
   loading = false,
   accentColor = 'cyan',
-  showCount = true,
+  showCount = false,
   className = '',
 }) => {
   const styles = ACCENT_STYLES[accentColor] || ACCENT_STYLES.cyan;

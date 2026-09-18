@@ -18,6 +18,10 @@ export class CreateAiResourceDto {
   provider?: string;
 
   @IsString()
+  @IsOptional()
+  author?: string;
+
+  @IsString()
   @IsNotEmpty()
   description: string;
 

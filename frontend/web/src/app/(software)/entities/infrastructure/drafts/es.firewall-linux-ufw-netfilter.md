@@ -1,5 +1,3 @@
-# Firewall en Linux: De Netfilter y UFW a la Seguridad Perimetral de Servidores
-
 > [!IMPORTANT]
 > **Resumen Ejecutivo:**
 > Un firewall en Linux no es un software antivirus tradicional de espacio de usuario, sino un conjunto de directivas inyectadas directamente en el espacio de kernel a través de **Netfilter**. Esta arquitectura permite descartar paquetes maliciosos a una velocidad de **0 ms de CPU**, impidiendo que el tráfico ilegítimo despierte a los procesos de las aplicaciones. La implementación de una política de mínimo privilegio (*Default Deny*), mitigación dinámica con *fail2ban*, aislamiento de contenedores Docker y endurecimiento del kernel con *sysctl* reduce la superficie de ataque perimetral en más de un **99.9%** ante escaneos automatizados en internet.
@@ -172,7 +170,7 @@ Muchos administradores configuran UFW creyendo que sus reglas protegen todo el s
 Verifica la configuración en `/etc/default/ufw`:
 
 ```bash
-# 📄 /etc/default/ufw
+# /etc/default/ufw
 # Asegurar que el soporte IPv6 esté activado en 'yes'
 IPV6=yes
 ```
@@ -224,7 +222,7 @@ sudo ufw app info 'Nginx Full'
 Puedes crear un perfil declarativo para tus propios microservicios o aplicaciones NestJS:
 
 ```ini
-# 📄 /etc/ufw/applications.d/jorgedoicela-backend
+# /etc/ufw/applications.d/jorgedoicela-backend
 [JorgeDoicelaBackend]
 title=Jorge Doicela Backend API Monolith
 description=Node.js NestJS API service on internal port 3000
@@ -331,7 +329,7 @@ El firewall estático se complementa con herramientas de detección reactiva y o
 `fail2ban` audita los logs de autenticación de `sshd` e interactúa automáticamente con Netfilter para expulsar temporalmente a las direcciones IP atacantes:
 
 ```ini
-# 📄 /etc/fail2ban/jail.local
+# /etc/fail2ban/jail.local
 [DEFAULT]
 bantime  = 3600
 findtime = 600
@@ -357,7 +355,7 @@ sudo fail2ban-client status sshd
 Crea un archivo de configuración dedicado para blindar el stack de red contra ataques de inundación, manipulación de enrutamiento y spoofing:
 
 ```ini
-# 📄 /etc/sysctl.d/99-hardening.conf
+# /etc/sysctl.d/99-hardening.conf
 # Protección contra ataques de inundación TCP SYN (SYN Cookies)
 net.ipv4.tcp_syncookies = 1
 

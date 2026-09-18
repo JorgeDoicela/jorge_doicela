@@ -4,6 +4,7 @@ export interface Project {
   name: string;
   description: string;
   techStack: string;
+  author: string;
   repoUrl?: string;
   liveUrl?: string;
   status: 'active' | 'archived' | 'wip';

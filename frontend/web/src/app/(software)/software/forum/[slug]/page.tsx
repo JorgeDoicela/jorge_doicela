@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { ForumTopic, ForumReply  } from '../../../entities/forum';
-import { ForumReplyForm } from '../../../features/forum-reply';;
+import { ForumTopic, ForumReply } from '../../../entities/forum';
+import type { GlossaryTerm } from '../../../entities/glossary/types';
+import { ForumReplyForm } from '../../../features/forum-reply';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { SoftwareArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: topic.title,
       description: topic.content.slice(0, 160),
       type: 'article',
-      authors: [topic.author || 'Jorge Doicela'],
+      authors: [topic.author],
     },
     alternates: {
       canonical: `https://software.jorgedoicela.com/forum/${slug}`,
@@ -41,7 +42,10 @@ export default async function ForumTopicDetailPage({ params }: Params) {
   const tNav = await getTranslations('Nav');
   const tDetail = await getTranslations('Detail');
 
-  const topic = await serverGet<ForumTopic>(`/software/forum/${slug}?lang=${locale}`);
+  const [topic, glossary] = await Promise.all([
+    serverGet<ForumTopic>(`/software/forum/${slug}?lang=${locale}`),
+    serverGet<GlossaryTerm[]>(`/software/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+  ]);
 
   if (!topic) notFound();
 
@@ -57,10 +61,10 @@ export default async function ForumTopicDetailPage({ params }: Params) {
       categoryHref="/forum"
       title={topic.title}
       date={formattedDate}
-      author={topic.author || 'Jorge Doicela'}
+      author={topic.author}
     >
       {/* Contenido del Hilo Principal — Server */}
-      <MarkdownRenderer content={topic.content} />
+      <MarkdownRenderer content={topic.content} glossaryTerms={glossary || []} />
 
       {/* Sección de Respuestas — Server */}
       <div className="mt-12 pt-8 border-t border-black/5 dark:border-white/5 space-y-6">

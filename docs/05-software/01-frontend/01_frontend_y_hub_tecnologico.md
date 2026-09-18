@@ -190,6 +190,11 @@ frontend/web/src/app/(software)/
   * Se eliminaron por completo las estimaciones de lectura ("5 min lectura", "readingTime") tanto en la base de datos `software.sqlite` (entidades TypeORM), en los esquemas y corpus JSON, como en todos los componentes de la interfaz (`NewsCard`, `BlogCard`, `TutorialCard`, etc.). La plataforma sigue una filosofía de ingeniería y referencia directa sin métricas artificiales.
 * **Slugs Canónicos Bilingües:**
   * Cada recurso mantiene el mismo `slug` canónico para español e inglés en la base de datos (`IDX_<tabla>_slug_lang`), permitiendo alternar de idioma con `LanguageToggle` de manera instantánea sin redirecciones 404 ni roturas de navegación.
+* **Autor 100% Dinámico desde Base de Datos y Micro-Avatar Editorial:**
+  * Los 8 módulos temáticos (`infrastructure`, `tutorials`, `projects`, `cybersecurity`, `ai`, `blog`, `news`, `forum`) leen el autor estrictamente de la entidad devuelta por la base de datos (`author` en `software.sqlite`).
+  * Erradicación total de fallbacks o valores por defecto hardcodeados tanto en las páginas `[slug]/page.tsx` como en el layout maestro ([`SoftwareArticleLayout.tsx`](/software/widgets/article-layout/ui/SoftwareArticleLayout.tsx)).
+  * La cabecera editorial integra un micro-avatar circular de perfil ($20\times 20\text{px}$, `/software/logo/perfil.jpg`) a la izquierda del nombre del autor con borde suave y sombra neumórfica.
+  * En el módulo de IA (`/ai`), el proveedor tecnológico (`provider`, ej. *Anthropic*) se aísla en una insignia técnica (`badge`) independiente, distinguiéndolo claramente del autor del artículo.
 
 ---
 
@@ -211,7 +216,7 @@ frontend/web/src/app/(software)/
       * **Arquitectura Cero-RAM:** Modal ligero en React puro montado con portal nativo sin librerías externas; cero impacto en memoria en el servidor VPS de 1 GB. Protege de raíz los bloques de código y diagramas contra regex globales en `MarkdownRenderer`.
    2. **Bloques de Código de Alta Precisión con Cabecera Inteligente ([`CodeBlock.tsx`](/software/shared/markdown/components/CodeBlock.tsx)):**
      * Resaltado de sintaxis profesional con `prismjs` para 13 lenguajes esenciales (`TypeScript`, `TSX`, `JavaScript`, `JSX`, `Bash`, `JSON`, `YAML`, `SQL`, `Python`, `Nginx`, `Docker`, `Markdown`, `INI`).
-     * **Cabecera Inteligente Contextual y 100% Localizada:** Erradica los semáforos de colores decorativos y las etiquetas toscas de "Texto Plano". Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `📄 pm2.config.js`, `📄 nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs de error o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`.
+     * **Cabecera Inteligente Contextual y 100% Localizada:** Erradica los semáforos de colores decorativos y las etiquetas toscas de "Texto Plano". Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `pm2.config.js`, `nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs de error o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`.
      * **Botón Interactivo Minimalista (Solo Icono):** Muestra exclusivamente el micro-icono de Lucide (`Copy` / `Check`) con feedback mediante tooltip nativo accesible y micro-interacción táctil, eliminando etiquetas de texto redundantes y manteniendo simetría total con la cabecera de diagramas.
      * Paleta calibrada Obsidian / Dark Luxury integrada en `globals.css` (funciones en ámbar, cadenas en esmeralda, palabras clave en índigo, comentarios en cursiva).
      * Soporte para código en línea (`InlineCode`).
@@ -222,8 +227,15 @@ frontend/web/src/app/(software)/
      * Filas con transición fluida de iluminación interactiva al pasar el cursor (`hover:bg-blue-500/[0.035] dark:hover:bg-blue-400/[0.04]`).
   4. **Paneles de Resumen Técnico y Callouts Blueprint Glass ([`CalloutBlock.tsx`](/software/shared/markdown/components/CalloutBlock.tsx)):**
      * **Diseño Simétrico Neumórfico / Glassmórfico Unificado:** Todos los paneles de resumen (`post.architectureOverview`, `post.remediation`), directivas de alerta de GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) y citas se renderizan bajo la misma estructura arquitectónica limpia y simétrica: marco de cristal convexo (`glass-convex-panel`), esquinas simétricas (`rounded-2xl`), gradiente de color sutil por tipo, titular semántico en mayúsculas monospace (`text-[11px] font-mono font-bold tracking-wider uppercase`) y cuerpo de texto nítido sin forzar cursivas ni barras laterales asimétricas (`border-l-4`), erradicando cualquier inconsistencia visual en todo el subdominio.
+  5. **Glosario Terminológico Interactivo ([`GlossaryTermPopover.tsx`](/software/shared/markdown/components/GlossaryTermPopover.tsx)):**
+      * **Detección Léxica Desacoplada (100% Base de Datos):** Los artículos consumen dinámicamente los términos de `software.sqlite` (`glossary_terms`) mediante `serverGet<GlossaryTerm[]>('/software/glossary?lang=' + locale)`.
+      * **Regla de la Primera Mención (Anti-Fatiga Visual):** Para evitar sobrecarga cognitiva (*efecto árbol de navidad*), cada concepto técnico se vuelve interactivo **únicamente en su primera aparición en el artículo**. Las siguientes ocurrencias permanecen como texto o código limpio regular.
+      * **Soporte de Alias Bilingüe y Límites de Palabra (`\b`):** Reconoce variantes en inglés y español (ej. `DROP`, `REJECT`, `firewall`, `cortafuegos`, `Netfilter`) sin falsos positivos ni coincidencias parciales.
+      * **Diseño Neumorphism UI + Glassmorphism y Accesibilidad WCAG 2.1 AA:** Presenta un subrayado punteado W3C (`border-b-2 border-dotted border-blue-500/70`) tanto en texto plano como en `InlineCode`. Al hacer clic o navegar con `Tab` + `Enter`, despliega un popover flotante de cristal con pastilla de categoría, definición didáctica concisa y claves de arquitectura, con cierre suave al pulsar afuera o mediante tecla `Escape`.
 * **Orquestador Central ([`MarkdownRenderer.tsx`](/software/shared/markdown/MarkdownRenderer.tsx)):**
   * Conecta `react-markdown` y `remark-gfm` con los componentes de la suite, garantizando una experiencia editorial homogénea en todas las subrutas `[slug]/page.tsx`.
+  * **Defensa en Profundidad Semántica (WCAG 2.1 / SEO):** Dado que la cabecera editorial (`SoftwareArticleLayout`) es el único `<h1>` del documento, cualquier encabezado `h1` que provenga del cuerpo Markdown se degrada automáticamente a un `<h2>` semántico estilizado, blindando el DOM contra duplicaciones de H1.
+  * **Protección Estricta de Código:** El enriquecimiento de glosario opera exclusivamente sobre nodos de texto editorial en párrafos (`p`), listas (`li`) e inline snippets (`InlineCode`), dejando 100% intactos los bloques de código fuente (`CodeBlock`) y diagramas vectoriales (`MermaidBlock`).
 
 ---
 

@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: project.name,
       description: project.description,
       type: 'article',
-      authors: ['Jorge Doicela'],
+      authors: [project.author],
       ...(project.coverImage ? { images: [{ url: project.coverImage }] } : {}),
     },
     alternates: {
@@ -62,7 +62,7 @@ export default async function ProjectDetailPage({ params }: Params) {
       title={project.name}
       subtitle={project.description}
       date={formattedDate}
-      author="Jorge Doicela"
+      author={project.author}
     >
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (

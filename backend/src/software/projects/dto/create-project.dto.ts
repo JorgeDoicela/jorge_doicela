@@ -21,6 +21,10 @@ export class CreateProjectDto {
   description: string;
 
   @IsString()
+  @IsOptional()
+  author?: string;
+
+  @IsString()
   @IsNotEmpty()
   techStack: string;
 

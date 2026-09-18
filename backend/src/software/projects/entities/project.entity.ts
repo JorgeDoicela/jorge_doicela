@@ -27,6 +27,9 @@ export class Project {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ default: 'Jorge Doicela' })
+  author: string;
+
   @Column()
   techStack: string;
 

@@ -1,5 +1,3 @@
-# Linux Firewalls: From Netfilter and UFW to Server Perimeter Security
-
 > [!IMPORTANT]
 > **Executive Summary:**
 > A Linux firewall is not traditional user-space antivirus software, but a set of packet inspection directives compiled directly into kernel space via **Netfilter**. This architecture allows unauthorized network packets to be discarded with **0 ms CPU latency**, preventing malicious traffic from ever interrupting application processes. Implementing a least-privilege policy (*Default Deny*), dynamic intrusion mitigation with *fail2ban*, disciplined Docker socket isolation, and low-level kernel networking hardening via *sysctl* eliminates more than **99.9%** of perimeter attack surfaces against automated internet scans.
@@ -172,7 +170,7 @@ Many administrators configure UFW believing their host is fully secured, unaware
 Verify your configuration in `/etc/default/ufw`:
 
 ```bash
-# 📄 /etc/default/ufw
+# /etc/default/ufw
 # Ensure IPv6 support is enabled
 IPV6=yes
 ```
@@ -224,7 +222,7 @@ sudo ufw app info 'Nginx Full'
 You can define custom profiles for internal microservices or NestJS backends:
 
 ```ini
-# 📄 /etc/ufw/applications.d/jorgedoicela-backend
+# /etc/ufw/applications.d/jorgedoicela-backend
 [JorgeDoicelaBackend]
 title=Jorge Doicela Backend API Monolith
 description=Node.js NestJS API service on internal port 3000
@@ -331,7 +329,7 @@ Static firewall rules are reinforced through dynamic intrusion detection and low
 `fail2ban` continuously audits authentication logs from `sshd` and dynamically communicates with Netfilter to temporarily ban repeating attackers:
 
 ```ini
-# 📄 /etc/fail2ban/jail.local
+# /etc/fail2ban/jail.local
 [DEFAULT]
 bantime  = 3600
 findtime = 600
@@ -357,7 +355,7 @@ sudo fail2ban-client status sshd
 Create a custom configuration file to harden the TCP/IP stack against SYN flood attacks, packet spoofing, and routing manipulation:
 
 ```ini
-# 📄 /etc/sysctl.d/99-hardening.conf
+# /etc/sysctl.d/99-hardening.conf
 # Enable SYN flood attack protection (SYN Cookies)
 net.ipv4.tcp_syncookies = 1
 

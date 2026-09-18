@@ -1,6 +1,6 @@
 ---
 name: software-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de Software (software.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (8 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos software.sqlite (10 tablas relacionales).
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de Software (software.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (9 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos software.sqlite (11 tablas relacionales).
 ---
 # Directrices de Desarrollo: Plataforma de Software (software.jorgedoicela.com)
 
@@ -137,7 +137,7 @@ backend/src/software/
 └── infrastructure/                    # InfrastructurePost (GET|POST /software/infrastructure)
 ```
 
-### 3.2 10 Entidades TypeORM en `software.sqlite`
+### 3.2 11 Entidades TypeORM en `software.sqlite`
 
 | Tabla | Propósito |
 |---|---|
@@ -145,12 +145,13 @@ backend/src/software/
 | `blog_posts` | Ensayos con `series`, `tableOfContents`, `readTimeMinutes`, `views`, `likes` |
 | `forum_topics` | Hilos con `isSolved`, `isPinned`, `repliesCount`, `views` |
 | `forum_replies` | Respuestas con FK `topicId`, `parentId` (anidado), `isAcceptedAnswer`, `likes` |
-| `ai_resources` | Catálogo con `type` (`llm`, `agent`, `framework`, `mcp_server`, `tool`), `license` |
-| `security_posts` | Avisos con `severity` (`LOW` a `CRITICAL`), `postType`, `cveId`, `remediation` |
-| `tutorials` | Guías con `difficulty` (`beginner`/`intermediate`/`advanced`), `estimatedMinutes` |
+| `ai_resources` | Catálogo con `type` (`llm`, `agent`, `framework`, `mcp_server`, `tool`), `provider`, `author`, `license` |
+| `security_posts` | Avisos con `severity` (`LOW` a `CRITICAL`), `postType`, `cveId`, `remediation`, `author` |
+| `tutorials` | Guías con `difficulty` (`beginner`/`intermediate`/`advanced`), `estimatedMinutes`, `author` |
 | `tutorial_steps` | Pasos con FK `tutorialId`, `stepOrder`, `codeSnippet`, `codeLanguage` |
-| `projects` | Showcase con `status`, `featured`, `stars`, `repoUrl`, `liveUrl` |
-| `infrastructure_posts` | Guías de infraestructura con `category`, `environment`, `specs`, `techStack`, `views`, `likes` |
+| `projects` | Showcase con `status`, `featured`, `stars`, `author`, `repoUrl`, `liveUrl` |
+| `infrastructure_posts` | Guías de infraestructura con `category`, `environment`, `specs`, `techStack`, `author`, `views`, `likes` |
+| `glossary_terms` | Catálogo bilingüe de conceptos técnicos interactivos con `aliases`, `shortDefinition`, `keyDifference` |
 
 ---
 
@@ -216,7 +217,7 @@ pnpm run lint
 | Crear una tabla genérica con discriminador de categoría | Crea columnas vacías y rompe el modelo relacional a medida que el dominio crece. | Mantener entidades especializadas por submódulo. |
 | Inyectar repositorios sin `'softwareConnection'` | Conecta a la base de datos equivocada. | Usar `@InjectRepository(Entity, 'softwareConnection')`. |
 | Mezclar tipos de artículos con entidades de `bible` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/software/<modulo>/entities/`. |
-| Hardcodear datos en el frontend Next.js | Aumenta el bundle size del cliente y acopla datos con UI. | Consultar asíncronamente desde los endpoints de NestJS. |
+| Hardcodear datos o autores en el frontend Next.js | Aumenta el bundle size, genera inconsistencias y acopla datos con la UI. | Los autores y datos de las 8 categorías provienen 100% de `software.sqlite` a través de NestJS. |
 | Poner datos semilla dentro del archivo `seed-software.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
 | Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de Software. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
 

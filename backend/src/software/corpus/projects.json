@@ -12,7 +12,8 @@
     "featured": true,
     "orderPriority": 100,
     "stars": 120,
-    "views": 1450
+    "views": 1450,
+    "author": "Jorge Doicela"
   },
   {
     "slug": "software-tecnologico",
@@ -27,6 +28,7 @@
     "featured": true,
     "orderPriority": 100,
     "stars": 120,
-    "views": 1450
+    "views": 1450,
+    "author": "Jorge Doicela"
   }
 ]

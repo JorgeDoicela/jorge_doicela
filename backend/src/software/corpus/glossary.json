@@ -1,0 +1,200 @@
+[
+  {
+    "slug": "drop",
+    "term": "DROP",
+    "aliases": "drop, target drop",
+    "category": "networking",
+    "shortDefinition": "Acción de firewall que descarta el paquete de red en silencio absoluto, sin enviar ninguna respuesta de notificación o error al emisor.",
+    "keyDifference": "A diferencia de REJECT, no envía paquetes TCP RST ni respuestas ICMP, ocultando si el servidor existe o si la regla bloqueó el tráfico.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 100
+  },
+  {
+    "slug": "drop",
+    "term": "DROP",
+    "aliases": "drop, drop target",
+    "category": "networking",
+    "shortDefinition": "Firewall target that silently discards the network packet without returning any notification or error response to the sender.",
+    "keyDifference": "Unlike REJECT, it sends no TCP RST or ICMP unreachable packets, concealing whether the host exists or is filtering traffic.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 100
+  },
+  {
+    "slug": "reject",
+    "term": "REJECT",
+    "aliases": "reject, target reject",
+    "category": "networking",
+    "shortDefinition": "Acción de firewall que descarta el paquete y responde activamente al emisor con un paquete de rechazo explícito (TCP RST o ICMP port-unreachable).",
+    "keyDifference": "A diferencia de DROP, confirma de inmediato al cliente o atacante que el servidor está encendido y que el puerto está bloqueado deliberadamente.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 95
+  },
+  {
+    "slug": "reject",
+    "term": "REJECT",
+    "aliases": "reject, reject target",
+    "category": "networking",
+    "shortDefinition": "Firewall target that discards the packet and actively responds to the sender with an explicit rejection packet (TCP RST or ICMP unreachable).",
+    "keyDifference": "Unlike DROP, it immediately confirms to the client or scanner that the host is alive and the port is deliberately blocked.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 95
+  },
+  {
+    "slug": "netfilter",
+    "term": "Netfilter",
+    "aliases": "netfilter, subsistema netfilter",
+    "category": "linux",
+    "shortDefinition": "Subsistema interno del kernel Linux que proporciona hooks para interceptar, filtrar, alterar y redirigir paquetes de red antes de que alcancen el espacio de usuario.",
+    "keyDifference": "Es el motor de ejecución real a nivel de kernel; herramientas como iptables, nftables y UFW son interfaces de usuario para controlarlo.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 90
+  },
+  {
+    "slug": "netfilter",
+    "term": "Netfilter",
+    "aliases": "netfilter, netfilter subsystem",
+    "category": "linux",
+    "shortDefinition": "Internal Linux kernel framework that provides packet-filtering hooks to intercept, alter, and route network packets before user-space receives them.",
+    "keyDifference": "It is the actual in-kernel engine; tools like iptables, nftables, and UFW are user-space configuration frontends for it.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 90
+  },
+  {
+    "slug": "ufw",
+    "term": "UFW",
+    "aliases": "ufw, uncomplicated firewall",
+    "category": "linux",
+    "shortDefinition": "Uncomplicated Firewall: interfaz de línea de comandos simplificada diseñada para gestionar iptables/nftables en distribuciones Debian y Ubuntu sin lidiar con sintaxis complejas.",
+    "keyDifference": "No es un firewall independiente ni filtra paquetes por sí mismo; genera y traduce reglas hacia Netfilter.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 85
+  },
+  {
+    "slug": "ufw",
+    "term": "UFW",
+    "aliases": "ufw, uncomplicated firewall",
+    "category": "linux",
+    "shortDefinition": "Uncomplicated Firewall: a simplified CLI frontend designed to manage iptables/nftables in Debian and Ubuntu systems without dealing with low-level syntax.",
+    "keyDifference": "It is not a separate packet filter itself; it compiles and delegates rules down to the Netfilter kernel framework.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 85
+  },
+  {
+    "slug": "conntrack",
+    "term": "Conntrack",
+    "aliases": "conntrack, connection tracking, seguimiento de conexiones",
+    "category": "networking",
+    "shortDefinition": "Módulo del kernel Linux que realiza seguimiento de conexiones (Connection Tracking), registrando el estado de cada flujo de red (NEW, ESTABLISHED, RELATED, INVALID).",
+    "keyDifference": "Permite que un firewall sea con estado (stateful), permitiendo automáticamente el tráfico de regreso de conexiones legítimas salientes.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 80
+  },
+  {
+    "slug": "conntrack",
+    "term": "Conntrack",
+    "aliases": "conntrack, connection tracking",
+    "category": "networking",
+    "shortDefinition": "Linux kernel module providing stateful connection tracking by recording network flows into states (NEW, ESTABLISHED, RELATED, INVALID).",
+    "keyDifference": "Enables stateful inspection so that return traffic for legitimate outgoing sessions is automatically accepted.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 80
+  },
+  {
+    "slug": "stateful-firewall",
+    "term": "Firewall con Estado",
+    "aliases": "firewall con estado, stateful, stateful firewall",
+    "category": "security",
+    "shortDefinition": "Firewall inteligente que recuerda y analiza el contexto completo de las sesiones activas en memoria, en lugar de evaluar cada paquete de forma aislada.",
+    "keyDifference": "A diferencia de un firewall sin estado (stateless), previene ataques de inyección y no requiere abrir puertos de retorno manualmente.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 75
+  },
+  {
+    "slug": "stateful-firewall",
+    "term": "Stateful Firewall",
+    "aliases": "stateful firewall, stateful packet inspection",
+    "category": "security",
+    "shortDefinition": "Intelligent packet filter that tracks the state and context of active network sessions in memory rather than evaluating packets in total isolation.",
+    "keyDifference": "Unlike stateless filters, it protects against spoofing/injection attacks and avoids opening wide inbound port ranges for replies.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 75
+  },
+  {
+    "slug": "cidr",
+    "term": "CIDR",
+    "aliases": "cidr, notación cidr, classless inter-domain routing",
+    "category": "networking",
+    "shortDefinition": "Classless Inter-Domain Routing: método estándar para asignar direcciones IP y definir máscaras de subred mediante notación de prefijo de bits (ej. /24 o /32).",
+    "keyDifference": "Reemplazó el antiguo sistema rígido de clases de red (Clase A, B, C) permitiendo particiones de red flexibles y eficientes.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 70
+  },
+  {
+    "slug": "cidr",
+    "term": "CIDR",
+    "aliases": "cidr, cidr notation, classless inter-domain routing",
+    "category": "networking",
+    "shortDefinition": "Classless Inter-Domain Routing: standard method for IP address allocation and routing mask representation using bit prefix notation (e.g. /24 or /32).",
+    "keyDifference": "Replaced the legacy rigid classful network architecture (Class A, B, C) enabling flexible subnet allocation.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 70
+  },
+  {
+    "slug": "mtls",
+    "term": "mTLS",
+    "aliases": "mtls, mutual tls, tls mutuo",
+    "category": "security",
+    "shortDefinition": "Mutual TLS: protocolo de autenticación criptográfica bidireccional donde tanto el cliente como el servidor se autentican mutuamente mediante certificados X.509.",
+    "keyDifference": "En TLS convencional solo el servidor demuestra su identidad al cliente; en mTLS el servidor rechaza cualquier conexión sin certificado de cliente válido.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 65
+  },
+  {
+    "slug": "mtls",
+    "term": "mTLS",
+    "aliases": "mtls, mutual tls",
+    "category": "security",
+    "shortDefinition": "Mutual TLS: two-way cryptographic authentication protocol where both the client and server verify each other's identity using X.509 certificates.",
+    "keyDifference": "In standard TLS only the server proves identity; in mTLS the server rejects any connection lacking a valid client certificate.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 65
+  },
+  {
+    "slug": "ebpf",
+    "term": "eBPF",
+    "aliases": "ebpf, extended berkeley packet filter",
+    "category": "linux",
+    "shortDefinition": "Extended Berkeley Packet Filter: tecnología revolucionaria que permite ejecutar programas seguros y aislados dentro del kernel Linux sin modificar su código fuente.",
+    "keyDifference": "Permite filtrado de red a velocidad de hardware (XDP) y observabilidad profunda con rendimiento órdenes de magnitud superior a iptables.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 60
+  },
+  {
+    "slug": "ebpf",
+    "term": "eBPF",
+    "aliases": "ebpf, extended berkeley packet filter",
+    "category": "linux",
+    "shortDefinition": "Extended Berkeley Packet Filter: revolutionary technology enabling sandboxed programs to run directly inside the Linux kernel without kernel source patching.",
+    "keyDifference": "Enables wire-speed packet filtering (XDP) and observability with orders-of-magnitude lower overhead than legacy iptables.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 60
+  }
+]

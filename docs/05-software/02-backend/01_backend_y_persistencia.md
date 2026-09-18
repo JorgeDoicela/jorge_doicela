@@ -103,7 +103,14 @@ backend/src/software/
 │   ├── entities/infrastructure-post.entity.ts
 │   └── dto/{create-infrastructure-post.dto.ts, get-infrastructure-query.dto.ts}
 │
-└── hub/                              # 9. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
+├── glossary/                         # 9. GLOSARIO TERMINOLÓGICO Y PEDAGÓGICO
+│   ├── glossary.module.ts
+│   ├── controllers/glossary.controller.ts # /software/glossary (?lang, :slug)
+│   ├── services/glossary.service.ts
+│   ├── entities/glossary-term.entity.ts
+│   └── dto/get-glossary-query.dto.ts
+│
+└── hub/                              # 10. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
     ├── hub.module.ts
     ├── controllers/
     │   └── hub.controller.ts         # GET /software/hub con GetHubQueryDto validado
@@ -169,6 +176,8 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `GET /software/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
 | | `POST /software/infrastructure` | - | Crear nueva publicación de infraestructura |
 | | `DELETE /software/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
+| **Glosario** | `GET /software/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
+| | `GET /software/glossary/:slug` | `lang` | Definición de un término específico por slug |
 | **Hub Global** | `GET /software/hub` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
 
 ---
@@ -204,7 +213,7 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`, `FOREIGN KEY (parentId) REFERENCES forum_replies(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_forum_replies_topic (topicId)`, `IDX_forum_replies_parent (parentId)`, `IDX_forum_replies_topic_created (topicId, createdAt ASC)`.
-* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `author`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (type IN ('llm', 'agent', 'framework', 'mcp_server', 'tool'))`.  
   * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_type_feed (language, type, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, createdAt DESC)`.
 * `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
@@ -216,12 +225,14 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (tutorialId) REFERENCES tutorials(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_tutorial_steps_tut (tutorialId)`, `IDX_tutorial_steps_tut_order (tutorialId, stepOrder ASC)`.
-* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
+* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (status IN ('active', 'archived', 'wip'))`.  
   * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, stars DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, stars DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, stars DESC)`.
 * `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram'))`, `CHECK (environment IN ('production', 'edge', 'hybrid', 'vps', 'bare_metal'))`, `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced', 'expert'))`.  
   * **Índices:** `IDX_infrastructure_posts_slug_lang (slug, language) UNIQUE`, `IDX_infrastructure_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_env_feed (language, environment, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `glossary_terms`: `id`, `slug`, `term`, `aliases`, `category`, `shortDefinition`, `keyDifference`, `caseSensitive`, `language`, `orderPriority`, `createdAt`, `updatedAt`.  
+  * **Índices:** `IDX_glossary_terms_term_lang (term, language) UNIQUE`, `IDX_glossary_terms_lang_prio (language, orderPriority DESC)`.
 
 ---
 

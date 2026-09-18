@@ -12,8 +12,9 @@ import { Tutorial } from './tutorials/entities/tutorial.entity';
 import { TutorialStep } from './tutorials/entities/tutorial-step.entity';
 import { Project } from './projects/entities/project.entity';
 import { InfrastructurePost } from './infrastructure/entities/infrastructure-post.entity';
+import { GlossaryTerm } from './glossary/entities/glossary-term.entity';
 
-// 8 Submódulos Verticales Desacoplados
+// Submódulos Verticales Desacoplados
 import { NewsModule } from './news/news.module';
 import { BlogModule } from './blog/blog.module';
 import { ForumModule } from './forum/forum.module';
@@ -23,6 +24,7 @@ import { TutorialsModule } from './tutorials/tutorials.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { HubModule } from './hub/hub.module';
+import { GlossaryModule } from './glossary/glossary.module';
 import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
@@ -55,6 +57,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         TutorialStep,
         Project,
         InfrastructurePost,
+        GlossaryTerm,
       ],
       synchronize: true,
     }),
@@ -67,6 +70,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     ProjectsModule,
     InfrastructureModule,
     HubModule,
+    GlossaryModule,
   ],
 })
 export class SoftwareModule {}

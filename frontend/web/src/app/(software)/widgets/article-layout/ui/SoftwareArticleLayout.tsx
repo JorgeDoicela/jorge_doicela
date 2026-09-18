@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Home, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { SoftwareHeaderNav } from '../../software-header/ui/SoftwareHeaderNav';
@@ -25,6 +26,7 @@ interface SoftwareArticleLayoutProps {
   subtitle?: string;
   date?: string;
   author?: string;
+  authorImage?: string;
   badge?: React.ReactNode;
   callout?: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
@@ -38,7 +40,8 @@ export function SoftwareArticleLayout({
   title,
   subtitle,
   date,
-  author = 'Jorge Doicela',
+  author,
+  authorImage = '/software/logo/perfil.jpg',
   badge,
   callout,
   breadcrumbs,
@@ -133,10 +136,21 @@ export function SoftwareArticleLayout({
                 </p>
               )}
 
-              {/* Firma del Autor solo texto (sin foto redundante) */}
+              {/* Firma del Autor con micro-avatar de perfil */}
               {author && (
-                <div className="text-xs font-mono text-slate-500 dark:text-zinc-400 pt-1">
-                  <span>{author}</span>
+                <div className="flex items-center gap-2 pt-1">
+                  <div className="w-5 h-5 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
+                    <Image
+                      src={authorImage}
+                      alt={author}
+                      width={20}
+                      height={20}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-xs font-mono text-slate-600 dark:text-zinc-400 font-medium">
+                    {author}
+                  </span>
                 </div>
               )}
 

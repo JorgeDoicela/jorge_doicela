@@ -35,6 +35,9 @@ export class AiResource {
   @Column({ default: 'Open Source' })
   provider: string;
 
+  @Column({ default: 'Jorge Doicela' })
+  author: string;
+
   @Column({ type: 'text' })
   description: string;
 

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Tutorial, TutorialStepWizard } from '../../../entities/tutorials';
+import type { GlossaryTerm } from '../../../entities/glossary/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { SoftwareArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: tutorial.title,
       description: tutorial.excerpt,
       type: 'article',
-      authors: [tutorial.author || 'Jorge Doicela'],
+      authors: [tutorial.author],
       ...(tutorial.coverImage ? { images: [{ url: tutorial.coverImage }] } : {}),
     },
     alternates: {
@@ -40,7 +41,10 @@ export default async function TutorialDetailPage({ params }: Params) {
   const locale = await getLocale();
   const tNav = await getTranslations('Nav');
 
-  const tutorial = await serverGet<Tutorial>(`/software/tutorials/${slug}?lang=${locale}`);
+  const [tutorial, glossary] = await Promise.all([
+    serverGet<Tutorial>(`/software/tutorials/${slug}?lang=${locale}`),
+    serverGet<GlossaryTerm[]>(`/software/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+  ]);
 
   if (!tutorial) notFound();
 
@@ -57,12 +61,12 @@ export default async function TutorialDetailPage({ params }: Params) {
       title={tutorial.title}
       subtitle={tutorial.excerpt}
       date={formattedDate}
-      author={tutorial.author || 'Jorge Doicela'}
+      author={tutorial.author}
     >
       <div className="space-y-8">
         {tutorial.description && (
           <div className="pb-4 border-b border-black/5 dark:border-white/5">
-            <MarkdownRenderer content={tutorial.description} />
+            <MarkdownRenderer content={tutorial.description} glossaryTerms={glossary || []} />
           </div>
         )}
         <TutorialStepWizard steps={tutorial.steps || []} />

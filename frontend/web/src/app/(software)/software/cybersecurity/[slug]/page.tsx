@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { SecurityPost } from '../../../entities/cybersecurity';
+import type { GlossaryTerm } from '../../../entities/glossary/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { SoftwareArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
-  const severityLabel = post.cveId ? `[${post.cveId}] ` : '';
+  const severityLabel = post.severity ? `[${post.severity}] ` : '';
   return {
     title: `${severityLabel}${post.title} | ${tNav('cybersecurity')} — Jorge Doicela`,
     description: post.excerpt,
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: `${severityLabel}${post.title}`,
       description: post.excerpt,
       type: 'article',
-      authors: [post.author || 'Jorge Doicela'],
+      authors: [post.author],
       ...(post.coverImage ? { images: [{ url: post.coverImage }] } : {}),
     },
     alternates: {
@@ -41,7 +42,10 @@ export default async function CybersecurityDetailPage({ params }: Params) {
   const locale = await getLocale();
   const tNav = await getTranslations('Nav');
 
-  const post = await serverGet<SecurityPost>(`/software/cybersecurity/${slug}?lang=${locale}`);
+  const [post, glossary] = await Promise.all([
+    serverGet<SecurityPost>(`/software/cybersecurity/${slug}?lang=${locale}`),
+    serverGet<GlossaryTerm[]>(`/software/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+  ]);
 
   if (!post) notFound();
 
@@ -58,9 +62,9 @@ export default async function CybersecurityDetailPage({ params }: Params) {
       title={post.title}
       subtitle={post.excerpt}
       date={formattedDate}
-      author={post.author || 'Jorge Doicela'}
+      author={post.author}
     >
-      <MarkdownRenderer content={post.contentMarkdown} />
+      <MarkdownRenderer content={post.contentMarkdown} glossaryTerms={glossary || []} />
     </SoftwareArticleLayout>
   );
 }

@@ -75,6 +75,7 @@ interface AiSeedItem {
   name: string;
   type: string;
   provider: string;
+  author: string;
   description: string;
   contentMarkdown: string;
   license: string;
@@ -149,6 +150,7 @@ interface ProjectSeedItem {
   name: string;
   description: string;
   techStack: string;
+  author: string;
   language?: string;
   coverImage?: string;
   repoUrl?: string;
@@ -183,6 +185,18 @@ interface InfrastructureSeedItem {
   publishedAt?: string;
 }
 
+interface GlossarySeedItem {
+  slug: string;
+  term: string;
+  aliases?: string;
+  category?: string;
+  shortDefinition: string;
+  keyDifference?: string;
+  caseSensitive?: boolean;
+  language?: string;
+  orderPriority?: number;
+}
+
 export function seedSoftware(
   dbPath: string = resolveDatabasePath(
     'DATABASE_SOFTWARE_PATH',
@@ -206,6 +220,7 @@ export function seedSoftware(
   // Purga limpia de tablas anteriores para reinicio total instantáneo
   db.exec(`
     DROP TABLE IF EXISTS infrastructure_posts;
+    DROP TABLE IF EXISTS glossary_terms;
     DROP TABLE IF EXISTS tutorial_steps;
     DROP TABLE IF EXISTS tutorials;
     DROP TABLE IF EXISTS security_posts;
@@ -319,6 +334,7 @@ export function seedSoftware(
       name TEXT NOT NULL,
       type TEXT NOT NULL DEFAULT 'tool' CHECK (type IN ('llm', 'agent', 'framework', 'mcp_server', 'tool')),
       provider TEXT NOT NULL DEFAULT 'Open Source',
+      author TEXT NOT NULL DEFAULT 'Jorge Doicela',
       description TEXT NOT NULL,
       contentMarkdown TEXT NOT NULL,
       license TEXT NOT NULL DEFAULT 'MIT',
@@ -419,6 +435,7 @@ export function seedSoftware(
       name TEXT NOT NULL,
       description TEXT NOT NULL,
       techStack TEXT NOT NULL,
+      author TEXT NOT NULL DEFAULT 'Jorge Doicela',
       language TEXT NOT NULL DEFAULT 'es',
       coverImage TEXT,
       repoUrl TEXT,
@@ -466,6 +483,23 @@ export function seedSoftware(
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_cat_feed ON infrastructure_posts (language, category, orderPriority DESC, publishedAt DESC);
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_env_feed ON infrastructure_posts (language, environment, orderPriority DESC, publishedAt DESC);
     CREATE INDEX IF NOT EXISTS IDX_infrastructure_posts_feat_feed ON infrastructure_posts (language, featured, orderPriority DESC, publishedAt DESC);
+
+    CREATE TABLE IF NOT EXISTS glossary_terms (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL,
+      term TEXT NOT NULL,
+      aliases TEXT,
+      category TEXT NOT NULL DEFAULT 'general',
+      shortDefinition TEXT NOT NULL,
+      keyDifference TEXT,
+      caseSensitive INTEGER NOT NULL DEFAULT 0,
+      language TEXT NOT NULL DEFAULT 'es',
+      orderPriority INTEGER NOT NULL DEFAULT 0,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_glossary_terms_term_lang ON glossary_terms (term, language);
+    CREATE INDEX IF NOT EXISTS IDX_glossary_terms_lang_prio ON glossary_terms (language, orderPriority DESC);
   `);
 
   const ensureColumn = (
@@ -623,13 +657,14 @@ export function seedSoftware(
     // 4. Inteligencia Artificial (ai_resources) - UPSERT no destructivo
     const insertAi = db.prepare(`
       INSERT INTO ai_resources
-        (slug, name, type, provider, description, contentMarkdown, license, documentationUrl, paperUrl, githubUrl, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
+        (slug, name, type, provider, author, description, contentMarkdown, license, documentationUrl, paperUrl, githubUrl, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @name, @type, @provider, @description, @contentMarkdown, @license, @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
+        (@slug, @name, @type, @provider, @author, @description, @contentMarkdown, @license, @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         name = excluded.name,
         type = excluded.type,
         provider = excluded.provider,
+        author = excluded.author,
         description = excluded.description,
         contentMarkdown = excluded.contentMarkdown,
         license = excluded.license,
@@ -746,13 +781,14 @@ export function seedSoftware(
     // 7. Proyectos (projects) - UPSERT no destructivo
     const insertProj = db.prepare(`
       INSERT INTO projects
-        (slug, name, description, techStack, language, coverImage, repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl)
+        (slug, name, description, techStack, author, language, coverImage, repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl)
       VALUES
-        (@slug, @name, @description, @techStack, @language, @coverImage, @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl)
+        (@slug, @name, @description, @techStack, @author, @language, @coverImage, @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl)
       ON CONFLICT(slug, language) DO UPDATE SET
         name = excluded.name,
         description = excluded.description,
         techStack = excluded.techStack,
+        author = excluded.author,
         coverImage = excluded.coverImage,
         repoUrl = excluded.repoUrl,
         liveUrl = excluded.liveUrl,
@@ -813,6 +849,37 @@ export function seedSoftware(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         publishedAt: item.publishedAt || null,
+      });
+    }
+
+    // 9. Glosario Terminológico (glossary_terms) - UPSERT
+    const insertGlossary = db.prepare(`
+      INSERT INTO glossary_terms
+        (slug, term, aliases, category, shortDefinition, keyDifference, caseSensitive, language, orderPriority)
+      VALUES
+        (@slug, @term, @aliases, @category, @shortDefinition, @keyDifference, @caseSensitive, @language, @orderPriority)
+      ON CONFLICT(term, language) DO UPDATE SET
+        slug = excluded.slug,
+        aliases = excluded.aliases,
+        category = excluded.category,
+        shortDefinition = excluded.shortDefinition,
+        keyDifference = excluded.keyDifference,
+        caseSensitive = excluded.caseSensitive,
+        orderPriority = excluded.orderPriority,
+        updatedAt = CURRENT_TIMESTAMP
+    `);
+    const glossaryData = readJson<GlossarySeedItem[]>('glossary.json');
+    for (const item of glossaryData) {
+      insertGlossary.run({
+        slug: item.slug,
+        term: item.term,
+        aliases: item.aliases ?? null,
+        category: item.category || 'general',
+        shortDefinition: item.shortDefinition,
+        keyDifference: item.keyDifference ?? null,
+        caseSensitive: item.caseSensitive ? 1 : 0,
+        language: item.language || 'es',
+        orderPriority: item.orderPriority || 0,
       });
     }
   });

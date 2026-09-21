@@ -299,16 +299,21 @@ El componente `MarkdownRenderer` (`shared/markdown/MarkdownRenderer.tsx`) proces
    - La palabra clave interactiva dentro de párrafos `<p>` se renderiza mediante un elemento `<button>` accesible (`aria-haspopup="dialog"`).
    - El contenido flotante del popover nunca se inyecta directamente dentro del árbol `<p>`, evitando advertencias de hidratación de React por anidación inválida de bloques.
 
-### 7.2 Arquitectura Flotante Desacoplada (`GlossaryTermPopover`)
-Para garantizar que los popovers explicativos nunca se corten por límites de pantalla o propiedades CSS ancestros (`overflow: hidden`, `clip-path` en callouts o tarjetas glassmórficas):
+### 7.2 Arquitectura Flotante Desacoplada e Inmune a Colisiones (`GlossaryTermPopover`)
+Para garantizar que los popovers explicativos nunca se corten por límites de pantalla, no colisionen con el término disparador al abrirse y mantengan precisión milimétrica en cualquier resolución:
 * **React Portal (`createPortal(..., document.body)`):**
   - Desacopla físicamente el contenedor del diálogo flotante (`role="dialog"`) del contenedor padre en el DOM, montándolo directamente en la raíz del documento.
-* **Geometría Fija con Detección Bidireccional (Viewport Collision Detection):**
+* **Medición Síncrona Pre-Paint (`useIsomorphicLayoutEffect`):**
+  - Elimina el desfase de estimaciones de altura fijas (donde textos largos en anchos móviles de 320-380px generaban alturas de 320px+ pero se calculaban con fallbacks de 240px, tapando el término en el render inicial hasta que un evento de scroll forzaba el recálculo).
+  - El elemento se monta en el Portal con `visibility: hidden` en el primer ciclo y se mide de forma síncrona en el ciclo de layout antes de que el navegador realice el primer repintado (*paint*), garantizando que las coordenadas iniciales sean 100% exactas desde el primer fotograma.
+* **Geometría Bidireccional e Invariante Anticolisión:**
   - Calcula `triggerRect = triggerRef.current.getBoundingClientRect()` en tiempo real.
-  - Compara el espacio disponible superior (`spaceAbove`) e inferior (`spaceBelow`) contra la altura del popover. Si el término está cerca de la parte superior del viewport, el popover realiza un *flip* automático a `placement="bottom"`.
-  - Aplica un *clamp* defensivo en coordenadas verticales (`top`) y horizontales (`left`), manteniendo un margen mínimo de seguridad de 16px con respecto a los bordes de la pantalla.
-* **Sincronización Reactiva:**
-  - Se vincula a eventos de `scroll` (en fase de captura) y `resize` de la ventana para recalcular las coordenadas de manera fluida y continua mientras el popover esté abierto.
+  - Compara el espacio disponible superior (`spaceAbove`) e inferior (`spaceBelow`) contra la altura real (`popoverHeight`). Si no hay espacio superior suficiente, realiza *flip* automático a `placement="bottom"`.
+  - Aplica un invariante estricto donde el popover nunca puede sobrepasar la línea del término disparador: si `placement === 'top'`, la base nunca baja de `triggerRect.top - gap`; si el espacio es reducido en ambos lados, asigna dinámicamente `maxHeight` con `overflow-y-auto`.
+* **Sincronización Continua y Reactiva (`ResizeObserver` + `scroll` en fase de captura):**
+  - Vincula un `ResizeObserver` nativo al nodo del popover para reaccionar de inmediato si fuentes web o cambios de estilo alteran las dimensiones del contenido.
+  - Escucha eventos globales de `scroll` (en fase de captura) y `resize` de la ventana para mantener el anclaje perfecto durante desplazamientos táctiles o con ratón.
+
 
 
 

@@ -1,15 +1,11 @@
 'use client';
 
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock, InlineCode, TableBlock, CalloutBlock, GlossaryTermPopover } from './components';
 import type { GlossaryTerm } from '../../entities/glossary/types';
-import {
-  buildGlossaryMatchers,
-  enrichWithGlossary,
-  matchInlineCodeGlossary,
-} from './lib/glossary-matcher';
+import { createRemarkGlossary } from './lib/glossary-matcher';
 
 interface MarkdownRendererProps {
   content: string;
@@ -63,19 +59,24 @@ function normalizeMarkdownContent(raw: string): string {
 export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRendererProps) {
   const sanitizedContent = useMemo(() => normalizeMarkdownContent(content), [content]);
 
-  // Precompila matchers de expresiones regulares con límites de palabra para alto rendimiento
-  const matchers = useMemo(() => buildGlossaryMatchers(glossaryTerms), [glossaryTerms]);
+  // Mapa de búsqueda O(1) de términos por slug para renderizado determinista
+  const termsMap = useMemo(
+    () => new Map(glossaryTerms.map((t) => [t.slug, t])),
+    [glossaryTerms],
+  );
 
-  // Rastrear términos vistos por cada pasada de renderizado para aplicar la regla de primera mención
-  const seenSlugsRef = useRef<Set<string>>(new Set());
-  seenSlugsRef.current.clear();
+  // Plugin de Remark memoizado: enriquece el AST una sola vez de forma 100% pura y libre de Hydration Mismatches
+  const glossaryPlugin = useMemo(
+    () => createRemarkGlossary(glossaryTerms),
+    [glossaryTerms],
+  );
 
   if (!sanitizedContent) return null;
 
   return (
     <div className="space-y-4 text-sm sm:text-base text-slate-700 dark:text-zinc-300 font-normal dark:font-light leading-relaxed">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, glossaryPlugin]}
         components={{
           // Defensa en profundidad: La cabecera editorial (SoftwareArticleLayout) es el único H1 del documento.
           // Cualquier H1 dentro del cuerpo Markdown se degrada a H2 semántico para cumplir con WCAG 2.1 y Google SEO.
@@ -103,11 +104,27 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
               {...props}
             />
           ),
-          p: ({ node: _node, children, ...props }) => (
-            <p className="text-slate-700 dark:text-zinc-300 leading-relaxed my-3" {...props}>
-              {enrichWithGlossary(children, matchers, seenSlugsRef.current)}
-            </p>
+          p: ({ node: _node, ...props }) => (
+            <p className="text-slate-700 dark:text-zinc-300 leading-relaxed my-3" {...props} />
           ),
+          span: ({ node: _node, ...props }) => {
+            const slug = (props as any)['data-glossary-slug'];
+            if (slug) {
+              const term = termsMap.get(slug);
+              const text = (props as any)['data-glossary-text'];
+              const isCode = (props as any)['data-glossary-code'] === 'true';
+              if (term) {
+                return (
+                  <GlossaryTermPopover
+                    displayText={text || term.term}
+                    termData={term}
+                    isCode={isCode}
+                  />
+                );
+              }
+            }
+            return <span {...props} />;
+          },
           strong: ({ node: _node, ...props }) => (
             <strong className="font-semibold text-slate-900 dark:text-white" {...props} />
           ),
@@ -124,10 +141,8 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
           ol: ({ node: _node, ...props }) => (
             <ol className="my-3 space-y-2 pl-5 list-decimal text-blue-600 dark:text-blue-400 font-mono font-medium" {...props} />
           ),
-          li: ({ node: _node, children, ...props }) => (
-            <li className="text-slate-700 dark:text-zinc-300 font-sans font-normal leading-relaxed" {...props}>
-              {enrichWithGlossary(children, matchers, seenSlugsRef.current)}
-            </li>
+          li: ({ node: _node, ...props }) => (
+            <li className="text-slate-700 dark:text-zinc-300 font-sans font-normal leading-relaxed" {...props} />
           ),
           a: ({ node: _node, ...props }) => (
             <a
@@ -162,16 +177,6 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             const isInline = !match && !rawContent.includes('\n');
 
             if (isInline) {
-              const matchedTerm = matchInlineCodeGlossary(rawContent, matchers, seenSlugsRef.current);
-              if (matchedTerm) {
-                return (
-                  <GlossaryTermPopover
-                    displayText={rawContent}
-                    termData={matchedTerm}
-                    isCode
-                  />
-                );
-              }
               return <InlineCode {...props}>{children}</InlineCode>;
             }
 

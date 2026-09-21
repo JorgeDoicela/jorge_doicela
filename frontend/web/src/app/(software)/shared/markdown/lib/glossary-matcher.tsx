@@ -172,3 +172,132 @@ export function matchInlineCodeGlossary(
 
   return null;
 }
+
+/**
+ * Plugin de Remark que enriquece el AST de Markdown con los términos del glosario.
+ * Ejecuta el recorrido del árbol MDAST una sola vez de forma determinista y estática,
+ * eliminando cualquier mutación impura durante el render de React y garantizando
+ * paridad absoluta 1:1 entre el HTML del servidor (SSR) y la hidratación del cliente.
+ */
+export function createRemarkGlossary(terms: GlossaryTerm[]) {
+  return () => {
+    return (tree: any) => {
+      if (!terms || terms.length === 0) return;
+
+      const matchers = buildGlossaryMatchers(terms);
+      const seenSlugs = new Set<string>();
+
+      function walk(node: any, parent: any, index: number): number | void {
+        if (!node) return;
+
+        // Proteger encabezados, bloques de código cercados, enlaces y HTML crudo
+        if (
+          node.type === 'heading' ||
+          node.type === 'code' ||
+          node.type === 'link' ||
+          node.type === 'html'
+        ) {
+          return;
+        }
+
+        // Inspeccionar código inline (ej. `ufw`)
+        if (node.type === 'inlineCode') {
+          const trimmed = (node.value || '').trim();
+          for (const { regex, termData } of matchers) {
+            if (seenSlugs.has(termData.slug)) continue;
+            regex.lastIndex = 0;
+            const match = regex.exec(trimmed);
+            if (match && match[0] === trimmed) {
+              seenSlugs.add(termData.slug);
+              node.data = {
+                hName: 'span',
+                hProperties: {
+                  className: 'glossary-term-match',
+                  'data-glossary-slug': termData.slug,
+                  'data-glossary-text': trimmed,
+                  'data-glossary-code': 'true',
+                },
+              };
+              return;
+            }
+          }
+          return;
+        }
+
+        // Inspeccionar nodos de texto plano
+        if (node.type === 'text' && typeof node.value === 'string' && parent && Array.isArray(parent.children)) {
+          let text = node.value;
+          const newNodes: any[] = [];
+
+          while (text.length > 0) {
+            let earliestMatch: {
+              index: number;
+              length: number;
+              matchedText: string;
+              termData: GlossaryTerm;
+            } | null = null;
+
+            for (const { regex, termData } of matchers) {
+              if (seenSlugs.has(termData.slug)) continue;
+              regex.lastIndex = 0;
+              const match = regex.exec(text);
+              if (match) {
+                if (!earliestMatch || match.index < earliestMatch.index) {
+                  earliestMatch = {
+                    index: match.index,
+                    length: match[0].length,
+                    matchedText: match[0],
+                    termData,
+                  };
+                }
+              }
+            }
+
+            if (!earliestMatch) {
+              newNodes.push({ type: 'text', value: text });
+              break;
+            }
+
+            seenSlugs.add(earliestMatch.termData.slug);
+
+            if (earliestMatch.index > 0) {
+              newNodes.push({
+                type: 'text',
+                value: text.slice(0, earliestMatch.index),
+              });
+            }
+
+            newNodes.push({
+              type: 'glossaryTerm',
+              data: {
+                hName: 'span',
+                hProperties: {
+                  className: 'glossary-term-match',
+                  'data-glossary-slug': earliestMatch.termData.slug,
+                  'data-glossary-text': earliestMatch.matchedText,
+                },
+              },
+              children: [{ type: 'text', value: earliestMatch.matchedText }],
+            });
+
+            text = text.slice(earliestMatch.index + earliestMatch.length);
+          }
+
+          parent.children.splice(index, 1, ...newNodes);
+          return index + newNodes.length;
+        }
+
+        if (node.children && Array.isArray(node.children)) {
+          for (let i = 0; i < node.children.length; i++) {
+            const nextIndex = walk(node.children[i], node, i);
+            if (typeof nextIndex === 'number') {
+              i = nextIndex - 1;
+            }
+          }
+        }
+      }
+
+      walk(tree, null, 0);
+    };
+  };
+}

@@ -46,7 +46,8 @@
     "all": "All",
     "toggleThemeDark": "Switch to light mode",
     "toggleThemeLight": "Switch to dark mode",
-    "switchLang": "Switch language (current: {locale})"
+    "switchLang": "Switch language (current: {locale})",
+    "categoryFilterAria": "Category filter"
   },
   "Home": {
     "featuredPosts": "Featured Posts",
@@ -326,14 +327,16 @@
     "copy": "Copy",
     "copied": "Copied!",
     "copyCodeAria": "Copy code to clipboard",
-    "copyDiagramAria": "Copy diagram code",
     "diagram": "Architecture Diagram",
     "terminal": "Terminal / Output",
     "generatingDiagram": "Generating vector diagram...",
     "diagramError": "Error compiling Mermaid diagram",
     "expand": "Expand",
     "close": "Close",
-    "clickToExpand": "Click to inspect in full screen",
+    "clickToExpand": "Click to inspect in fullscreen",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "resetZoom": "Reset view (100%)",
     "calloutNote": "NOTE",
     "calloutTip": "TIP",
     "calloutImportant": "IMPORTANT",
@@ -352,5 +355,21 @@
       "pie": "Pie Chart",
       "generic": "Architectural Diagram"
     }
+  },
+  "Glossary": {
+    "technicalInsight": "Technical Insight",
+    "close": "Close definition",
+    "definition": "Definition: {term}",
+    "definitionOf": "Definition of {term}",
+    "catNetworking": "Networking",
+    "catLinux": "Linux",
+    "catSecurity": "Security",
+    "catDatabase": "Database",
+    "catAi": "AI",
+    "catArchitecture": "Architecture"
+  },
+  "ArticleLayout": {
+    "expandReading": "Expand reading view (hide sidebar)",
+    "restoreSidebar": "Restore sidebar"
   }
 }

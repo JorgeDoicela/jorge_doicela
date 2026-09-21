@@ -11,6 +11,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ## Documentación Técnica Oficial
 * [01_arquitectura_macro_y_hardware.md](../../../docs/01-infraestructura-global/01-arquitectura/01_arquitectura_macro_y_hardware.md)
 * [02_patrones_microarquitectura_y_fsd.md](../../../docs/01-infraestructura-global/01-arquitectura/02_patrones_microarquitectura_y_fsd.md)
+* [03_persistencia_local_y_sincronizacion_multiequipo.md](../../../docs/01-infraestructura-global/01-arquitectura/03_persistencia_local_y_sincronizacion_multiequipo.md) ← ciclo SQLite local vs CI/CD y protocolo 404
 * [01_despliegue_pm2_y_cicd.md](../../../docs/01-infraestructura-global/02-despliegue-y-servidor/01_despliegue_pm2_y_cicd.md) ← incluye Sección 2.5: Hardening de Seguridad obligatorio
 * [02_auditoria_seguridad_sep2026.md](../../../docs/01-infraestructura-global/02-despliegue-y-servidor/02_auditoria_seguridad_sep2026.md) ← registro oficial de la auditoría Sep 2026
 
@@ -104,6 +105,17 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 5. Sincronización de `nginx/jorgedoicela.com.conf` y recarga en caliente de Nginx.
 6. Reinicio de procesos en PM2.
 
+### 5.4 Ciclo de Vida de Persistencia: Local vs CI/CD (Entornos Multiequipo)
+* **Producción (Automático):** GitHub Actions borra y regenera atómicamente los archivos SQLite mediante los seeders compilados en cada `git push` a `main`. Producción siempre está sincronizada.
+* **Desarrollo Local (Manual e Imperativo):** Los archivos `.sqlite` están en `.gitignore`. Al cambiar de estación de trabajo, clonar o hacer `git pull` con cambios en datasets JSON (`corpus/*.json`) o entidades, es **mandatorio ejecutar**:
+  ```bash
+  pnpm seed:all          # Siembra las 3 bases: bible, software y portfolio
+  # O de forma granular según el dominio:
+  pnpm seed:software     # Re-siembra software.sqlite desde corpus/*.json
+  pnpm seed:bible        # Re-siembra bible.sqlite
+  ```
+* **Protocolo de Diagnóstico 404:** Ante cualquier error `404 Not Found` en rutas dinámicas de contenido (`[slug]`), **el primer paso obligatorio es verificar la persistencia local**. Queda prohibido modificar middleware o componentes sin validar si el registro existe en SQLite.
+
 ---
 
 ## 6. Seguridad Local y Validación Pre-Commit
@@ -150,6 +162,7 @@ Los siguientes archivos son transversales al proceso Next.js consolidado pero es
 | Crear paquete común @shared | Acopla el frontend y backend. | Duplicar tipos en types.ts y DTOs locales. |
 | Mezclar estilos globales en un layout raíz | Colisiona clases de Tailwind CSS entre subproyectos. | Cada subproyecto importa solo su propio globals.css. |
 | Compilar en el VPS de producción | Agota la RAM de 1 GB y tumba los servicios. | Compilar en GitHub Actions y subir artefactos con rsync. |
+| Modificar middleware o frontend ante un 404 de contenido editorial | Enmascara la causa raíz: la base SQLite local no fue sembrada tras el git pull. | Verificar primero la persistencia física local o ejecutar `pnpm seed:all`. |
 
 ---
 

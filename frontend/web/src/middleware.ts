@@ -52,7 +52,7 @@ function resolveSubdomainPath(targetPrefix: string, pathname: string): string {
  * Assets estáticos explícitamente globales compartidos en la raíz de public/.
  * Todo lo demás pertenece al espacio de nombres de cada subdominio/dominio.
  */
-const GLOBAL_ROOT_ASSETS = new Set(['/sw.js', '/favicon.ico']);
+const GLOBAL_ROOT_ASSETS = new Set(['/sw.js']);
 
 export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
@@ -90,6 +90,14 @@ export function middleware(request: NextRequest) {
 
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-project', project);
+
+    // ── RESOLUCIÓN ARQUITECTURAL DE FAVICON MULTI-TENANT ─────────────────────
+    // Paridad total 1:1 con Nginx (map $host $favicon_file).
+    // Cada subdominio recibe su propio favicon/logo oficial de forma transparente.
+    if (pathname === '/favicon.ico') {
+        url.pathname = `/${project}/logo/logo_fondo_circular_color_.png`;
+        return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+    }
 
     if (matchedSubdomain) {
         const targetPrefix = SUBDOMAIN_TARGET_MAP[matchedSubdomain];
@@ -149,8 +157,7 @@ export const config = {
          * - api (rutas de la API)
          * - _next/static (archivos estáticos compilados)
          * - _next/image (optimización de imágenes)
-         * - favicon.ico (icono de la pestaña)
          */
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        '/((?!api|_next/static|_next/image).*)',
     ],
 };

@@ -196,5 +196,181 @@
     "caseSensitive": false,
     "language": "en",
     "orderPriority": 60
+  },
+  {
+    "slug": "wal",
+    "term": "WAL",
+    "aliases": "wal, write-ahead logging, write ahead log",
+    "category": "database",
+    "shortDefinition": "Write-Ahead Logging: modo de concurrencia en bases de datos relacionales donde las modificaciones se escriben primero en un archivo de log secuencial antes de aplicarse a las páginas del archivo principal.",
+    "keyDifference": "A diferencia del modo rollback journal tradicional, permite que múltiples lectores concurrentes lean datos sin ser bloqueados por un escritor activo.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 58
+  },
+  {
+    "slug": "wal",
+    "term": "WAL",
+    "aliases": "wal, write-ahead logging, write ahead log",
+    "category": "database",
+    "shortDefinition": "Write-Ahead Logging: relational database concurrency mode where modifications are sequentially appended to a log file before committing to main database pages.",
+    "keyDifference": "Unlike standard rollback journals, WAL mode allows multiple concurrent readers to access data without being blocked by an active writer.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 58
+  },
+  {
+    "slug": "zero-trust",
+    "term": "Zero Trust",
+    "aliases": "zero trust, confianza cero, arquitectura zero trust",
+    "category": "security",
+    "shortDefinition": "Modelo de seguridad arquitectónico basado en el principio 'nunca confiar, siempre verificar', exigiendo autenticación y autorización continua para cada solicitud y conexión.",
+    "keyDifference": "Erradica el modelo de seguridad perimetral tradicional en el que cualquier dispositivo o usuario dentro de la red corporativa gozaba de confianza implícita.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 55
+  },
+  {
+    "slug": "zero-trust",
+    "term": "Zero Trust",
+    "aliases": "zero trust, zero trust architecture",
+    "category": "security",
+    "shortDefinition": "Architectural security model governed by the principle 'never trust, always verify', enforcing continuous authentication and strict authorization for every request.",
+    "keyDifference": "Eliminates the legacy perimeter network model where any device or user located inside the internal network enjoyed implicit, unchecked trust.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 55
+  },
+  {
+    "slug": "cve",
+    "term": "CVE",
+    "aliases": "cve, cve id, common vulnerabilities and exposures",
+    "category": "security",
+    "shortDefinition": "Common Vulnerabilities and Exposures: catálogo y sistema de identificación estandarizado internacional que asigna un código único a fallos de seguridad y vulnerabilidades públicas.",
+    "keyDifference": "Proporciona una nomenclatura universal que permite correlacionar alertas de seguridad, bases de datos como NVD, escáneres y parches oficiales de fabricantes.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 52
+  },
+  {
+    "slug": "cve",
+    "term": "CVE",
+    "aliases": "cve, cve id, common vulnerabilities and exposures",
+    "category": "security",
+    "shortDefinition": "Common Vulnerabilities and Exposures: standardized international catalog assigning unique identifiers to publicly disclosed cybersecurity vulnerabilities and flaws.",
+    "keyDifference": "Establishes a universal naming convention enabling seamless correlation across CVE databases (NVD), security advisories, vulnerability scanners, and vendor patches.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 52
+  },
+  {
+    "slug": "cgroups",
+    "term": "cgroups",
+    "aliases": "cgroups, control groups, cgroups v2",
+    "category": "linux",
+    "shortDefinition": "Control Groups: característica del kernel Linux que organiza los procesos en jerarquías y limita, aísla y audita su consumo de hardware (CPU, memoria, I/O y número de PIDs).",
+    "keyDifference": "Es el cimiento técnico esencial sobre el que operan los contenedores Docker y systemd para garantizar cuotas de recursos y prevenir agotamiento de memoria o forkbombs.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 50
+  },
+  {
+    "slug": "cgroups",
+    "term": "cgroups",
+    "aliases": "cgroups, control groups, cgroups v2",
+    "category": "linux",
+    "shortDefinition": "Control Groups: Linux kernel feature that organizes processes into hierarchies to allocate, meter, and restrict hardware resources (CPU, RAM, block I/O, and max PIDs).",
+    "keyDifference": "Acts as the fundamental primitive behind Docker containers and systemd slices to enforce strict resource quotas and block forkbombs.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 50
+  },
+  {
+    "slug": "systemd",
+    "term": "systemd",
+    "aliases": "systemd, systemctl, init systemd",
+    "category": "linux",
+    "shortDefinition": "Sistema de inicialización (init con PID 1) y suite de gestión para sistemas operativos Linux que administra demonios, sockets, puntos de montaje y servicios en paralelo.",
+    "keyDifference": "Reemplazó al veterano SysV init implementando arranque concurrente de servicios, gestión nativa de cgroups y registro unificado mediante journald.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 48
+  },
+  {
+    "slug": "systemd",
+    "term": "systemd",
+    "aliases": "systemd, systemctl, init systemd",
+    "category": "linux",
+    "shortDefinition": "Modern Linux init system and service supervisor running as PID 1, orchestrating system Daemons, sockets, mount points, and targets concurrently.",
+    "keyDifference": "Superseded legacy SysV init by introducing parallel service initialization, native cgroups integration, and centralized binary logging with journald.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 48
+  },
+  {
+    "slug": "rag",
+    "term": "RAG",
+    "aliases": "rag, retrieval-augmented generation, generación aumentada por recuperación",
+    "category": "ai",
+    "shortDefinition": "Retrieval-Augmented Generation: arquitectura de IA que complementa a un modelo de lenguaje recuperando pasajes relevantes desde una base de conocimiento antes de responder.",
+    "keyDifference": "A diferencia del fine-tuning (que modifica los pesos neuronales), RAG inyecta contexto verificable y actualizado en tiempo de ejecución a costo de cómputo marginal.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 45
+  },
+  {
+    "slug": "rag",
+    "term": "RAG",
+    "aliases": "rag, retrieval-augmented generation",
+    "category": "ai",
+    "shortDefinition": "Retrieval-Augmented Generation: AI architecture optimizing LLM outputs by fetching authoritative context from external databases before generating the final response.",
+    "keyDifference": "Unlike fine-tuning (which modifies neural weights), RAG dynamically injects verifiable, fresh domain ground-truth into prompt context at zero training cost.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 45
+  },
+  {
+    "slug": "mcp",
+    "term": "MCP",
+    "aliases": "mcp, model context protocol",
+    "category": "ai",
+    "shortDefinition": "Model Context Protocol: protocolo abierto y estandarizado que permite a modelos y agentes de IA conectarse e interoperar de forma segura con herramientas, APIs y datos locales o remotos.",
+    "keyDifference": "Estandariza la conexión de herramientas bajo un modelo cliente-servidor universal, evitando la fragmentación de integraciones propietarias ad-hoc de llamadas a funciones.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 42
+  },
+  {
+    "slug": "mcp",
+    "term": "MCP",
+    "aliases": "mcp, model context protocol",
+    "category": "ai",
+    "shortDefinition": "Model Context Protocol: open, standardized protocol enabling AI assistants and models to securely connect and exchange data with external tools, APIs, and file systems.",
+    "keyDifference": "Replaces fragmented and proprietary function-calling integrations with a unified, bidirectional client-server communication standard.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 42
+  },
+  {
+    "slug": "idempotency",
+    "term": "Idempotencia",
+    "aliases": "idempotencia, idempotente, idempotent",
+    "category": "architecture",
+    "shortDefinition": "Propiedad de una función o endpoint de API donde ejecutar la operación múltiples veces consecutivas produce el mismo estado del sistema que si se hubiese ejecutado una sola vez.",
+    "keyDifference": "En el estándar HTTP/REST, métodos como GET, PUT y DELETE son estrictamente idempotentes por diseño, mientras que POST no lo es ya que genera un nuevo recurso por invocación.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 40
+  },
+  {
+    "slug": "idempotency",
+    "term": "Idempotence",
+    "aliases": "idempotence, idempotent, idempotency",
+    "category": "architecture",
+    "shortDefinition": "Property of an operation or API endpoint where repeated executions with identical parameters produce the exact same system state and outcome as a single execution.",
+    "keyDifference": "In REST architectural style, HTTP methods GET, PUT, and DELETE are strictly idempotent by design, whereas POST typically creates a new record on each repeated invocation.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 40
   }
 ]

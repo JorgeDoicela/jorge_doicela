@@ -126,6 +126,7 @@ pnpm -r typecheck
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
+| Modificar componentes web o pantallas de Expo ante errores 404 en rutas dinámicas (/archaeology/[slug], /evangelism/[slug], pasajes) | Asume un error de routing o cliente cuando la causa raíz suele ser la ausencia física de bible.sqlite o la falta de ejecución del seeder tras clonar el repo. | Verificar si bible.sqlite existe y sembrar con pnpm --filter backend seed:bible antes de modificar código frontend o móvil. |
 | Hardcodear arrays de versículos, diccionarios o lugares en TypeScript | Aumenta el bundle size del cliente y rompe la fuente única de verdad con la app móvil. | Almacenar en backend/src/bible/corpus/ y sembrar en bible.sqlite. |
 | Omitir el índice único compuesto en Verse o MorphologyToken | Permite insertar duplicados del mismo versículo o palabra. | Asegurar @Index(['translation', 'book', 'chapter', 'verseNumber'], { unique: true }). |
 | Traer toda la Biblia o libros completos sin filtrar por capítulo | Bloquea el event loop de NestJS y satura el ancho de banda. | Filtrar siempre por libro (bookId) y capítulo (chapter). |

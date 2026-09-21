@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ChevronDown } from 'lucide-react';
+import { SoftwareSelect, type SelectOption } from '../../../shared/ui';
 
 export type SoftwareSection =
     | 'all'
@@ -55,8 +55,14 @@ export function CategoryNav({
     const t = useTranslations('Nav');
     const router = useRouter();
 
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const nextCat = e.target.value as SoftwareSection;
+    const categoryOptions: SelectOption<SoftwareSection>[] = React.useMemo(() => {
+        return SOFTWARE_CATEGORY_KEYS.map((cat) => ({
+            value: cat.id,
+            label: t(cat.key),
+        }));
+    }, [t]);
+
+    const handleSelectCategory = (nextCat: SoftwareSection) => {
         if (onSelectCategory) {
             onSelectCategory(nextCat);
         } else {
@@ -66,27 +72,16 @@ export function CategoryNav({
 
     return (
         <nav aria-label={t('all')} className={bare ? 'w-full' : 'w-fit max-w-full'}>
-            {/* 1. Selector Dropdown Táctil (Exclusivo para Móvil: visible en < sm, oculto en sm y superior) */}
-            <div className="sm:hidden relative w-full max-w-[170px] mx-auto">
-                <select
+            {/* 1. Selector Dropdown Táctil Reutilizable (Exclusivo para Móvil: visible en < sm, oculto en sm y superior) */}
+            <div className="sm:hidden w-full max-w-[185px] mx-auto flex justify-center">
+                <SoftwareSelect<SoftwareSection>
+                    options={categoryOptions}
                     value={selectedCategory}
-                    onChange={handleSelectChange}
-                    aria-label={t('all')}
-                    className="w-full appearance-none pl-3 pr-7 py-2 rounded-xl text-xs font-sans font-semibold text-blue-600 dark:text-blue-400 bg-white/80 dark:bg-black/30 border border-slate-300 dark:border-white/10 glass-convex-panel shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer text-center truncate"
-                >
-                    {SOFTWARE_CATEGORY_KEYS.map((cat) => (
-                        <option
-                            key={cat.id}
-                            value={cat.id}
-                            className="bg-white dark:bg-zinc-900 text-slate-900 dark:text-white py-1.5 text-xs font-medium"
-                        >
-                            {t(cat.key)}
-                        </option>
-                    ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-zinc-400">
-                    <ChevronDown className="w-3.5 h-3.5 text-blue-400" />
-                </div>
+                    onChange={handleSelectCategory}
+                    ariaLabel={t('all')}
+                    align="center"
+                    className="w-full"
+                />
             </div>
 
             {/* 2. Pestañas Horizontales Estándar (Exclusivo para Escritorio / PC: oculto en móvil, visible en sm:) */}

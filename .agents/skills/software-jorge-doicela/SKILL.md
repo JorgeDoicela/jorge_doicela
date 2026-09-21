@@ -220,6 +220,7 @@ pnpm run lint
 | Hardcodear datos o autores en el frontend Next.js | Aumenta el bundle size, genera inconsistencias y acopla datos con la UI. | Los autores y datos de las 8 categorías provienen 100% de `software.sqlite` a través de NestJS. |
 | Poner datos semilla dentro del archivo `seed-software.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
 | Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de Software. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
+| Tratar un 404 de contenido editorial como bug de Next.js/middleware | Enmascara la causa raíz: el post o término no está sembrado en `software.sqlite` local tras un `git pull`. | Correr `pnpm seed:software` o validar el slug en SQLite antes de tocar cualquier archivo de frontend. |
 
 ---
 

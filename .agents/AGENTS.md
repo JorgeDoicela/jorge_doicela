@@ -28,9 +28,11 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 
 ---
 
-## 4. Aislamiento de Tipos y Persistencia
+## 4. Aislamiento de Tipos, Persistencia y Protocolo de Diagnóstico 404
 * **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
 * **Persistencia Aislada:** Cada módulo del backend se conecta a su propia base de datos SQLite física independiente encapsulada en `backend/data/` (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`).
+* **Sincronización Local Multiequipo (SQLite no viaja en Git):** Los archivos binarios `.sqlite` están estrictamente ignorados por Git (`.gitignore`). Al cambiar de máquina, clonar o hacer `git pull` con cambios en corpus JSON (`backend/src/*/corpus/*.json`), entidades o seeders, es **obligatorio ejecutar `pnpm seed:all`** para aprovisionar las bases locales. En producción, GitHub Actions ejecuta este paso automáticamente en cada despliegue.
+* **Protocolo de Diagnóstico Obligatorio ante Errores 404:** Ante cualquier error `404 Not Found` en rutas dinámicas de contenido (`/infrastructure/[slug]`, `/tutorials/[slug]`, `/news/[slug]`, etc.) en desarrollo local, **queda terminantemente prohibido modificar middleware, routing o componentes de Next.js** sin antes haber verificado si el registro existe en la base de datos local SQLite (`SELECT COUNT(*) FROM ... WHERE slug = ...`) o haber ejecutado `pnpm seed:all`. Si el dato no existe físicamente, el 404 es la respuesta esperada y correcta del sistema.
 
 ---
 

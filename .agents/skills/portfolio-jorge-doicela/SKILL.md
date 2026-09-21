@@ -144,6 +144,7 @@ pnpm -r typecheck
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
+| Modificar componentes de Next.js o rutas dinámicas ante errores 404 o listados vacíos de proyectos | Asume erróneamente un fallo en el routing de Next.js cuando la causa raíz es que portfolio.sqlite no existe en local o no fue poblada tras clonar/hacer pull. | Verificar primero si portfolio.sqlite existe y ejecutar pnpm --filter backend seed:portfolio antes de tocar código frontend. |
 | Modificar tipos o datos en el frontend sin actualizar el corpus y seeder del backend | Desincroniza el contrato de datos; el backend SQLite responde con datos obsoletos ignorando el fallback del cliente. | Ejecutar siempre el ciclo completo de datos: `corpus/projects.json` -> `entity` -> `seed-portfolio.ts` -> `seed:portfolio`. |
 | Inyectar TypeOrmModule sin especificar 'portfolioConnection' | Conectaría a la base de datos por defecto en lugar de portfolio.sqlite. | Usar @InjectRepository(ContactMessage, 'portfolioConnection'). |
 | Poner bloques try/catch para devolver respuestas HTTP en el controlador | Duplica código y rompe el formateo estándar del filtro global. | Dejar que los errores sean capturados por GlobalExceptionFilter. |

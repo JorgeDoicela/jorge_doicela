@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { FilterOption } from '../types/filter';
+import { SoftwareSelect, type SelectOption } from './SoftwareSelect';
 
 export interface CategoryFilterBarProps {
   options: FilterOption[];
@@ -52,52 +54,80 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
   showCount = false,
   className = '',
 }) => {
+  const t = useTranslations('Common');
   const styles = ACCENT_STYLES[accentColor] || ACCENT_STYLES.cyan;
 
+  const selectOptions: SelectOption<string>[] = React.useMemo(() => {
+    return options.map((opt) => ({
+      value: opt.id,
+      label: opt.label,
+      badge: showCount && typeof opt.count === 'number' && opt.count > 0 ? opt.count : undefined,
+    }));
+  }, [options, showCount]);
+
   return (
-    <div
-      role="tablist"
-      aria-label="Filtro de categorías"
-      className={`flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none min-h-[38px] ${className}`}
-    >
-      {loading && options.length === 0 ? (
-        <div className="flex items-center gap-2">
-          <div className="w-16 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
-          <div className="w-24 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
-          <div className="w-20 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
-          <div className="w-28 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
-        </div>
-      ) : (
-        options.map((option) => {
-          const isSelected = selectedId === option.id;
-          return (
-            <button
-              key={option.id}
-              role="tab"
-              aria-selected={isSelected}
-              onClick={() => onSelect(option.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
-                isSelected
-                  ? styles.active
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'
-              }`}
-            >
-              <span>{option.label}</span>
-              {showCount && typeof option.count === 'number' && option.count > 0 && (
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
-                    isSelected
-                      ? styles.badge
-                      : 'bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-400'
-                  }`}
-                >
-                  {option.count}
-                </span>
-              )}
-            </button>
-          );
-        })
-      )}
+    <div className={`w-full ${className}`}>
+      {/* 1. Selector Dropdown Táctil Neumórfico (Exclusivo para Móvil: < sm) */}
+      <div className="sm:hidden w-full max-w-xs mx-auto flex justify-center">
+        {loading && options.length === 0 ? (
+          <div className="w-full h-9 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
+        ) : (
+          <SoftwareSelect
+            options={selectOptions}
+            value={selectedId}
+            onChange={onSelect}
+            disabled={loading}
+            align="center"
+            className="w-full"
+          />
+        )}
+      </div>
+
+      {/* 2. Pestañas Horizontales Neumórficas (Exclusivo para Escritorio: >= sm) */}
+      <div
+        role="tablist"
+        aria-label={t('categoryFilterAria')}
+        className="hidden sm:flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none min-h-[38px]"
+      >
+        {loading && options.length === 0 ? (
+          <div className="flex items-center gap-2">
+            <div className="w-16 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
+            <div className="w-24 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
+            <div className="w-20 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
+            <div className="w-28 h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse" />
+          </div>
+        ) : (
+          options.map((option) => {
+            const isSelected = selectedId === option.id;
+            return (
+              <button
+                key={option.id}
+                role="tab"
+                aria-selected={isSelected}
+                onClick={() => onSelect(option.id)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
+                  isSelected
+                    ? styles.active
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'
+                }`}
+              >
+                <span>{option.label}</span>
+                {showCount && typeof option.count === 'number' && option.count > 0 && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
+                      isSelected
+                        ? styles.badge
+                        : 'bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-400'
+                    }`}
+                  >
+                    {option.count}
+                  </span>
+                )}
+              </button>
+            );
+          })
+        )}
+      </div>
     </div>
   );
 };

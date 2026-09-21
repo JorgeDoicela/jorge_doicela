@@ -209,7 +209,7 @@ export function SoftwareHeaderNav({
         <div className="shrink-0 flex items-center justify-start sm:min-w-[110px]">
           <BackToPortalButton href={backHref} label={backLabel} />
         </div>
-        <div className="flex-1 flex justify-center min-w-0 overflow-x-auto scrollbar-none">
+        <div className="flex-1 flex justify-center min-w-0 sm:overflow-x-auto sm:scrollbar-none overflow-visible">
           <CategoryNav
             selectedCategory={activeCategory}
             onSelectCategory={onSelectCategory}

@@ -46,7 +46,8 @@
     "all": "Todos",
     "toggleThemeDark": "Cambiar a modo claro",
     "toggleThemeLight": "Cambiar a modo oscuro",
-    "switchLang": "Cambiar idioma (actual: {locale})"
+    "switchLang": "Cambiar idioma (actual: {locale})",
+    "categoryFilterAria": "Filtro de categorías"
   },
   "Home": {
     "featuredPosts": "Publicaciones Destacadas",
@@ -326,7 +327,6 @@
     "copy": "Copiar",
     "copied": "¡Copiado!",
     "copyCodeAria": "Copiar código al portapapeles",
-    "copyDiagramAria": "Copiar código del diagrama",
     "diagram": "Diagrama de Arquitectura",
     "terminal": "Terminal / Salida",
     "generatingDiagram": "Generando diagrama vectorial...",
@@ -334,6 +334,9 @@
     "expand": "Expandir",
     "close": "Cerrar",
     "clickToExpand": "Click para inspeccionar en pantalla completa",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "resetZoom": "Restablecer vista (100%)",
     "calloutNote": "NOTA",
     "calloutTip": "CONSEJO",
     "calloutImportant": "IMPORTANTE",
@@ -352,5 +355,21 @@
       "pie": "Gráfico de Sectores",
       "generic": "Diagrama Arquitectónico"
     }
+  },
+  "Glossary": {
+    "technicalInsight": "Criterio Técnico",
+    "close": "Cerrar definición",
+    "definition": "Definición: {term}",
+    "definitionOf": "Definición de {term}",
+    "catNetworking": "Redes",
+    "catLinux": "Linux",
+    "catSecurity": "Seguridad",
+    "catDatabase": "Base de Datos",
+    "catAi": "IA",
+    "catArchitecture": "Arquitectura"
+  },
+  "ArticleLayout": {
+    "expandReading": "Expandir lectura (ocultar barra lateral)",
+    "restoreSidebar": "Restaurar barra lateral"
   }
 }

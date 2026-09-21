@@ -73,9 +73,10 @@ export default async function RootLayout({
     >
       <head>
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
+        <link rel="icon" href="/software/logo/logo_fondo_circular_color_.png" />
         <SoftwareJsonLd locale={locale} />
       </head>
-      <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative">
+      <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             {children}

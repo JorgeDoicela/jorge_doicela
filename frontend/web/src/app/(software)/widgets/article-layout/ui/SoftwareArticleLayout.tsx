@@ -48,6 +48,8 @@ export function SoftwareArticleLayout({
   children,
 }: SoftwareArticleLayoutProps) {
   const tNav = useTranslations('Nav');
+  const tArticle = useTranslations('ArticleLayout');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
@@ -61,11 +63,23 @@ export function SoftwareArticleLayout({
           backLabel={categoryLabel}
         />
 
-        {/* Cuadrícula Principal (8 cols contenido unificado + 4 cols barra lateral) */}
+        {/* Cuadrícula Principal (8 cols contenido unificado + 4 cols barra lateral, o 12 cols expandido) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Columna Izquierda: Contenedor Editorial Unificado Continuo (Estilo MalwareTech) */}
-          <article className="lg:col-span-8 p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl">
+          <article
+            className={`relative p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl transition-all duration-300 ${
+              isSidebarCollapsed ? 'lg:col-span-12' : 'lg:col-span-8'
+            }`}
+          >
+            {/* Borde interactivo derecho sutil (cursor col-resize para alternar barra lateral) */}
+            <button
+              type="button"
+              onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+              className="hidden lg:block absolute top-0 -right-2 w-4 h-full cursor-col-resize z-20 focus:outline-none select-none"
+              title={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
+              aria-label={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
+            />
             
             {/* Cabecera del Artículo */}
             <header className="space-y-5">
@@ -169,19 +183,21 @@ export function SoftwareArticleLayout({
           </article>
 
           {/* Columna Derecha: Barra Lateral Fija (Sidebar con Jerarquía Editorial MalwareTech) */}
-          <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
-            {/* 1. Perfil y Biografía de Jorge Doicela */}
-            <AuthorSidebarCard />
+          {!isSidebarCollapsed && (
+            <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8 animate-in fade-in duration-300">
+              {/* 1. Perfil y Biografía de Jorge Doicela */}
+              <AuthorSidebarCard />
 
-            {/* 2. Publicaciones Destacadas con Miniaturas (Inspiración MalwareTech) */}
-            <FeaturedPostsSidebarCard />
+              {/* 2. Publicaciones Destacadas con Miniaturas (Inspiración MalwareTech) */}
+              <FeaturedPostsSidebarCard />
 
-            {/* 3. Explorador de Especialidades Técnicas con Contadores (Inspiración MalwareTech) */}
-            <ExploreTopicsSidebarCard />
+              {/* 3. Explorador de Especialidades Técnicas con Contadores (Inspiración MalwareTech) */}
+              <ExploreTopicsSidebarCard />
 
-            {/* 4. Boletín / Mantente Informado */}
-            <StayInformedCard />
-          </aside>
+              {/* 4. Boletín / Mantente Informado */}
+              <StayInformedCard />
+            </aside>
+          )}
 
         </div>
 

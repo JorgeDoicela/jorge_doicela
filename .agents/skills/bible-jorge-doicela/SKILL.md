@@ -58,7 +58,7 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
   * `data/`: `canonData.ts` (fuente única de la verdad del canon, categorías y recuentos de capítulos).
   * `hooks/`: `useHeaderScrollBehavior`, `useBibleKeybindings`.
   * `seo/`: `BibleJsonLd` (esquema estructurado Schema.org).
-  * `ui/`: `BackToBibleButton`, `BackToPortalButton`, `BibleLogo`, `BibleSelect`, `DraggableEdgeTab`, `OngoingExpansionNotice`.
+  * `ui/`: `StudySidePanel` (componente compuesto: `.Toolbar`, `.Body`, `.Footer` con persistencia `storageKey` y `defaultWidth`), `ResizeBorderHandle` (física de arrastre y autocolapso magnético `<160px`), `BackToBibleButton`, `BackToPortalButton`, `BibleLogo`, `BibleSelect`, `DraggableEdgeTab`, `OngoingExpansionNotice`.
 * **`entities/`**:
   * `books/` $\rightarrow$ `useBooks`, `UnifiedPassagePicker`, `getBookHistoricalInfo` (`GET /bible/books`).
   * `translations/` $\rightarrow$ `useTranslations`, `TranslationSelector` (`GET /bible/translations`).
@@ -140,6 +140,7 @@ pnpm -r typecheck
 | Fondos grises lavados o descoloridos (zinc-900/800) en modo oscuro ("Dark Fangoso") | Genera un contraste visualmente sucio, rompe la armonía estética y se aleja del estándar industrial de Vercel Dashboard. | Implementar el estándar **Vercel OLED Black puro**: lienzo base, cabecera y paneles laterales en `#000000` (`dark:bg-black`), divisiones arquitectónicas de 1px en `#222` (`dark:border-zinc-800/80`), tarjetas y hoja editorial de lectura en `#0a0a0a` (`dark:bg-[#0a0a0a]`), textos de lectura en `#ededed` / `#d4d4d8` y hover en `#111111` / `dark:hover:bg-zinc-900`. |
 | Encajonar el lector en anchos angostos o dejar espacios verticales muertos entre cabecera y contenido | Desperdicia el espacio en monitores amplios y crea sensación de vacío o desconexión visual. | Permitir que el lector ocupe el ancho completo (`w-full`) alineado con las demás suites y compactar el padding superior (`pt-1.5 sm:pt-2`) y márgenes editoriales. |
 | Botones estáticos invasivos en header o botones flotantes que tapen controles | Desestabiliza la simetría del header o bloquea la visibilidad del pasaje canónico. | Utilizar botones móviles estilo Messenger Chat Heads (`DraggableEdgeTab.tsx`): arrastre libre restringido al 25% del ancho de la pantalla y auto-snap magnético obligatorio a los bordes (`left: 0` / `right: 0`) al soltarlos, memorizando la posición vertical en `localStorage`. |
+| Crear paneles laterales ad-hoc o duplicar lógica de redimensión/drawers móviles en `features/*` o `widgets/*` | Genera inconsistencia visual en las suites, multiplica código muerto con cabeceras móviles repetidas y desborda el layout. | Consumir siempre el componente compuesto `StudySidePanel` (`.Toolbar`, `.Body`, `.Footer`) desde `shared/ui/StudySidePanel.tsx`, aprovechando su cabecera móvil automática, físicas de autocolapso magnético (< 160px) e independencia de ancho vía `storageKey`. |
 
 ---
 

@@ -12,69 +12,25 @@ import {
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useAtlasContextSafe } from '../../context/AtlasContext';
 import { BookHistoricalProfile } from '../../../../widgets/exegesis-inspector';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const AtlasInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const atlas = useAtlasContextSafe();
   const tStudio = useTranslations('Studio');
 
-  const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 360;
-  const setRightInspectorWidth = passageContext?.setRightInspectorWidth ?? (() => {});
-  const resetRightInspectorWidth = passageContext?.resetRightInspectorWidth ?? (() => {});
-
-  const isOpen = passageContext?.isRightInspectorOpen ?? false;
-  const handleClose = passageContext?.closeInspector ?? (() => {});
-
-  if (!isOpen) return null;
-
   const place = atlas?.selectedPlace;
 
   return (
-    <>
-      {/* Backdrop en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Inspector del Atlas Bíblico"
-        style={{ '--inspector-w': `${rightInspectorWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 right-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--inspector-w)] flex-shrink-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="right"
-          currentWidth={rightInspectorWidth}
-          onResize={setRightInspectorWidth}
-          onReset={resetRightInspectorWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
-        />
-
-        {/* Cabecera Móvil */}
-        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center gap-2">
-            <Compass className="w-4 h-4 text-rose-500" />
-            <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              Telemetría WGS84
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            aria-label={tStudio('closeInspector') || 'Cerrar inspector'}
-            className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-          >
-            <Compass className="w-4 h-4 hidden" />
-            <span className="text-xs font-mono">✕</span>
-          </button>
-        </div>
-
-        {/* Contenido con Scroll del Inspector */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <StudySidePanel
+      side="right"
+      title="Telemetría WGS84"
+      icon={<Compass className="w-4 h-4 text-rose-500" />}
+      storageKey="bible_atlas_inspector_w"
+      defaultWidth={360}
+      collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
+    >
+      <StudySidePanel.Body>
           {place ? (
             <div className="space-y-4">
               {/* Encabezado del Lugar */}
@@ -196,8 +152,7 @@ export const AtlasInspector: React.FC = () => {
               <BookHistoricalProfile />
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

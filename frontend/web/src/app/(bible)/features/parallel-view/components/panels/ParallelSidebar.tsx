@@ -15,22 +15,13 @@ import {
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useParallelContextSafe, PARALLEL_PRESETS } from '../../context/ParallelContext';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const ParallelSidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const parallel = useParallelContextSafe();
   const tStudio = useTranslations('Studio');
   const tParallel = useTranslations('Parallel');
-
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
-  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
-
-  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
-
-  if (!isOpen) return null;
 
   const translations = passageContext?.translations ?? [];
   const selectedBook = passageContext?.selectedBook;
@@ -42,56 +33,33 @@ export const ParallelSidebar: React.FC = () => {
   const availableToAdd = translations.filter((t) => !activeTranslationIds.has(t.id));
 
   return (
-    <>
-      {/* Backdrop en Pantallas Pequeñas (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Panel Lateral de Vista Paralela"
-        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="left"
-          currentWidth={leftSidebarWidth}
-          onResize={setLeftSidebarWidth}
-          onReset={resetLeftSidebarWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
-        />
-
-        {/* Cabecera del Panel Especializado */}
-        <div className="p-4 border-b border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-              <Columns3 className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
-            </div>
-            <div>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                Cotejo Paralelo
-              </h2>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                {activeColumns.length} columnas sincronizadas
-              </p>
-            </div>
+    <StudySidePanel
+      side="left"
+      title="Cotejo Paralelo"
+      icon={<Columns3 className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />}
+      storageKey="bible_parallel_sidebar_w"
+      defaultWidth={340}
+      collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
+    >
+      {/* Cabecera Desktop del Panel Especializado */}
+      <StudySidePanel.Toolbar className="hidden lg:flex items-center justify-between p-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
+            <Columns3 className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
           </div>
-
-          <button
-            type="button"
-            onClick={handleClose}
-            className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-          >
-            ✕
-          </button>
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Cotejo Paralelo
+            </h2>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+              {activeColumns.length} columnas sincronizadas
+            </p>
+          </div>
         </div>
+      </StudySidePanel.Toolbar>
 
-        {/* Contenido con Scroll Independiente */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      {/* Contenido con Scroll Independiente */}
+      <StudySidePanel.Body className="space-y-6">
           {/* SECCIÓN 1: PRESETS RÁPIDOS DE COTEJO */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
@@ -245,8 +213,7 @@ export const ParallelSidebar: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

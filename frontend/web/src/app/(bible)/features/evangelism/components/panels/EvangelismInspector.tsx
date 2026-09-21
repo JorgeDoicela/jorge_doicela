@@ -15,20 +15,11 @@ import {
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const EvangelismInspector: React.FC = () => {
-  const passageContext = useBiblePassageSafe();
   const evangelism = useEvangelismContextSafe();
   const tStudio = useTranslations('Studio');
-
-  const isOpen = passageContext?.isRightInspectorOpen ?? false;
-  const handleClose = passageContext?.closeInspector ?? (() => {});
-  const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 360;
-  const setRightInspectorWidth = passageContext?.setRightInspectorWidth ?? (() => {});
-  const resetRightInspectorWidth = passageContext?.resetRightInspectorWidth ?? (() => {});
-
-  if (!isOpen) return null;
 
   const activeTab = evangelism?.activeTab ?? 'pathways';
   const pathway = evangelism?.selectedPathway;
@@ -39,67 +30,35 @@ export const EvangelismInspector: React.FC = () => {
   const tract = evangelism?.selectedTract;
 
   return (
-    <>
-      {/* Backdrop en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Inspector de Evangelización"
-        style={{ '--inspector-w': `${rightInspectorWidth}px` } as React.CSSProperties}
-        className="fixed inset-y-0 right-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--inspector-w)] flex-shrink-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
-      >
-        {/* Handle de Colapso y Redimensionamiento Interactivo en Borde Divisorio Izquierdo */}
-        <ResizeBorderHandle
-          side="right"
-          currentWidth={rightInspectorWidth}
-          onResize={setRightInspectorWidth}
-          onReset={resetRightInspectorWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
-        />
-
-        {/* Cabecera Móvil */}
-        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-500" />
-            <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              Asistente de Evangelismo
+    <StudySidePanel
+      side="right"
+      title="Asistente de Evangelismo"
+      icon={<Sparkles className="w-4 h-4 text-emerald-500" />}
+      storageKey="bible_evangelism_inspector_w"
+      defaultWidth={360}
+      collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
+    >
+      {/* Cabecera del Inspector Especializado */}
+      <StudySidePanel.Toolbar className="bg-zinc-50/50 dark:bg-zinc-950/50">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 dark:text-zinc-100">
+            <Shield className="w-3.5 h-3.5 text-emerald-500" />
+            <span>
+              {activeTab === 'pathways' && 'Guía de la Ruta Activa'}
+              {activeTab === 'objections' && 'Defensa de la Fe (1 Pe 3:15)'}
+              {activeTab === 'tracts' && 'Bosquejo del Tratado'}
             </span>
           </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-1 rounded-md text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {activeTab === 'pathways' && totalSteps > 0 && (
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
+              Paso {currentStepNum} de {totalSteps}
+            </span>
+          )}
         </div>
+      </StudySidePanel.Toolbar>
 
-        {/* Cabecera del Inspector Especializado */}
-        <div className="p-3.5 border-b border-zinc-100 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/50">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 dark:text-zinc-100">
-              <Shield className="w-3.5 h-3.5 text-emerald-500" />
-              <span>
-                {activeTab === 'pathways' && 'Guía de la Ruta Activa'}
-                {activeTab === 'objections' && 'Defensa de la Fe (1 Pe 3:15)'}
-                {activeTab === 'tracts' && 'Bosquejo del Tratado'}
-              </span>
-            </div>
-            {activeTab === 'pathways' && totalSteps > 0 && (
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
-                Paso {currentStepNum} de {totalSteps}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Contenido Contextual del Asistente */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
+      {/* Contenido Contextual del Asistente */}
+      <StudySidePanel.Body className="space-y-4 text-sm">
           {/* CASO 1: MODO RUTAS DE EVANGELISMO */}
           {activeTab === 'pathways' && activeStep && (
             <div className="space-y-4">
@@ -250,8 +209,7 @@ export const EvangelismInspector: React.FC = () => {
               </p>
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

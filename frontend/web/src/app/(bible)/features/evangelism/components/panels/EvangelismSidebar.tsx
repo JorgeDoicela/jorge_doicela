@@ -15,20 +15,13 @@ import { usePathname } from 'next/navigation';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
 import { EvangelismTab } from '../../types';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const EvangelismSidebar: React.FC = () => {
   const pathname = usePathname() || '';
-  const passageContext = useBiblePassageSafe();
   const evangelism = useEvangelismContextSafe();
   const t = useTranslations('Evangelism');
   const tStudio = useTranslations('Studio');
-
-  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
-  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
 
   const activeTab = evangelism?.activeTab ?? 'pathways';
   const setActiveTab = evangelism?.setActiveTab ?? (() => {});
@@ -43,8 +36,6 @@ export const EvangelismSidebar: React.FC = () => {
     }
   }, [pathname, setActiveTab]);
 
-  if (!isOpen) return null;
-
   const tabs: { key: EvangelismTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'pathways', label: 'Rutas', icon: Compass },
     { key: 'objections', label: 'Objeciones', icon: ShieldAlert },
@@ -52,73 +43,41 @@ export const EvangelismSidebar: React.FC = () => {
   ];
 
   return (
-    <>
-      {/* Backdrop en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Panel de Evangelización y Apologética"
-        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
-        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-72 sm:w-80 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
-      >
-        {/* Handle de Colapso y Redimensionamiento Interactivo en Borde Divisorio estilo DIITRA */}
-        <ResizeBorderHandle
-          side="left"
-          currentWidth={leftSidebarWidth}
-          onResize={setLeftSidebarWidth}
-          onReset={resetLeftSidebarWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
-        />
-
-        {/* Cabecera Móvil */}
-        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-500" />
-            <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              Ministerio & Apologética
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-1 rounded-md text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="w-4 h-4" />
-          </button>
+    <StudySidePanel
+      side="left"
+      title="Ministerio & Apologética"
+      icon={<Sparkles className="w-4 h-4 text-emerald-500" />}
+      storageKey="bible_evangelism_sidebar_w"
+      defaultWidth={320}
+      collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
+    >
+      {/* Selector de Pestañas Geist Segmented Control */}
+      <StudySidePanel.Toolbar>
+        <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
+          {tabs.map((t) => {
+            const active = activeTab === t.key;
+            const Icon = t.icon;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                onClick={() => setActiveTab(t.key)}
+                className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  active
+                    ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                    : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 shrink-0" />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
         </div>
+      </StudySidePanel.Toolbar>
 
-        {/* Selector de Pestañas Geist Segmented Control */}
-        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
-            {tabs.map((t) => {
-              const active = activeTab === t.key;
-              const Icon = t.icon;
-              return (
-                <button
-                  key={t.key}
-                  type="button"
-                  onClick={() => setActiveTab(t.key)}
-                  className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    active
-                      ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                      : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5 shrink-0" />
-                  <span>{t.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Contenido Dinámico según la Pestaña Activa */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      {/* Contenido Dinámico según la Pestaña Activa */}
+      <StudySidePanel.Body className="p-3 space-y-2">
           {/* Herramienta 1: Rutas de Evangelismo */}
           {activeTab === 'pathways' && (
             <div className="space-y-1.5">
@@ -250,8 +209,7 @@ export const EvangelismSidebar: React.FC = () => {
               })}
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

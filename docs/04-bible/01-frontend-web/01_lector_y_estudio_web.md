@@ -58,7 +58,7 @@ frontend/web/src/app/(bible)/
 │   ├── data/                  # canonData.ts (categorías canónicas, recuentos de capítulos por ID y abreviación)
 │   ├── hooks/                 # useHeaderScrollBehavior, useBibleKeybindings
 │   ├── seo/                   # BibleJsonLd (Schema.org estructurado)
-│   ├── ui/                    # BackToBibleButton, BackToPortalButton, BibleLogo, BibleSelect, DraggableEdgeTab, OngoingExpansionNotice
+│   ├── ui/                    # BackToBibleButton, BackToPortalButton, BibleLogo, BibleSelect, DraggableEdgeTab, OngoingExpansionNotice, ResizeBorderHandle, EdgePeekStrip
 │   └── index.ts               # Barrel export unificado de shared
 │
 ├── entities/                  # CAPA DE ENTIDADES DE DOMINIO (FSD ENTITIES)
@@ -229,6 +229,38 @@ Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingres
 * **Barra de Navegación de Suites Geist Pura (`BibleHeaderNav.tsx`):**
   * Supresión definitiva de puntos circulares de colores en las pestañas de suites.
   * Estilo tipográfico monocromático Geist idéntico a Vercel Dashboard, con cápsula activa sobria (`bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs`) y botones de panel unificados (`PanelLeft` y `PanelRight`).
+
+### 6.1 Arquitectura Desacoplada de Paneles Laterales: Patrón Compuesto `StudySidePanel` (FSD & Geist)
+
+La arquitectura de paneles laterales (izquierdo y derecho) implementa un diseño estrictamente desacoplado, escalable y conforme a **Feature-Sliced Design (FSD)** a través del componente shell compuesto [`StudySidePanel.tsx`](../../../frontend/web/src/app/(bible)/shared/ui/StudySidePanel.tsx) ubicado en `shared/ui`. Este patrón garantiza coherencia visual, física y comportamental en los 16 paneles distribuidos a lo largo de los 8 módulos de la plataforma (`reader`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`, `parallel-view`, `interlinear`, `lexicons`):
+
+* **Patrón de Componente Compuesto (`StudySidePanel` en `shared/ui`):**
+  * **Estructura Declarativa FSD:**
+    * `<StudySidePanel>`: Shell contenedor (`<aside>`), Backdrop móvil con difuminado (`backdrop-blur-xs`), tirador de redimensión interactivo (`ResizeBorderHandle`), cabecera móvil automática accesible (`title`, `icon`, `badge`, `onClose`) y gestión de anchura/colapso.
+    * `<StudySidePanel.Toolbar>`: Contenedor superior para controles de acción (selectores de testamentos, motores de búsqueda, tabs de segmented control, alternadores de filtros). Presenta borde divisorio inferior sutil `border-b border-zinc-100 dark:border-zinc-800/80` y empaquetado de layout limpio.
+    * `<StudySidePanel.Body>`: Contenedor ergonómico principal con desplazamiento vertical independiente (`overflow-y-auto min-h-0 flex-1`), eliminando barras de scroll duplicadas o desbordamiento incontrolado.
+    * `<StudySidePanel.Footer>`: Contenedor inferior acoplado a la base (`border-t border-zinc-100 dark:border-zinc-800/80 p-3 bg-zinc-50/50 dark:bg-zinc-950/30`) para controles de paginación, contadores métricos o acciones secundarias.
+  * **Persistencia y Anchura Modular Independiente (`storageKey` y `defaultWidth`):** Cada módulo o panel puede especificar su propia clave de almacenamiento local (`storageKey`, ej. `bible_atlas_sidebar_w`, `bible_timeline_sidebar_w`, `bible_interlinear_inspector_w`) y su anchura por defecto (`defaultWidth`, ej. 320px, 340px, 360px), desacoplando por completo las preferencias de tamaño entre herramientas analíticas complejas y lecturas compactas. Si no se provee `storageKey`, se enlaza automáticamente como fallback al estado centralizado de `BiblePassageContext`.
+  * **Eliminación de Código Duplicado y Cabecera Móvil Integrada:** Al centralizar la barra móvil en el shell maestro a través de las propiedades `title`, `icon` y `badge`, se eliminaron 16 instancias de marcado HTML duplicado (`<div className="flex lg:hidden ...">`) y handlers de cierre huérfanos a lo largo de todas las carpetas de `features/` y `widgets/`.
+
+* **Tirador de Redimensión Reactivo (`ResizeBorderHandle.tsx` en `shared/ui`):**
+  * **Soporte Sincrónico Dual y Minimalismo Neutro:** Gestiona tanto `side="left"` como `side="right"` con una línea nítida de exactamente **1px** (`w-[1px]`), sin sombras borrosas, sin tintes rojos agresivos y con estética Geist sobria. En reposo permanece transparente sobre el borde estructural de 1px, en hover se ilumina suavemente (`bg-zinc-300 dark:bg-zinc-700`) y en arrastre activo a `bg-zinc-400 dark:bg-zinc-500`.
+  * **Zona de Pre-Aviso y Difuminado Progresivo (`AUTO_COLLAPSE_THRESHOLD = 175px`):** Al arrastrar el panel hacia la pared, si el ancho desciende por debajo de 190px, el panel se va difuminando de forma suave y proporcional (`opacity: 1.0` $\rightarrow$ `0.2`), siendo este el único y suficiente indicador visual de proximidad al colapso automático. Si el usuario suelta el ratón en esa zona difuminada, el panel se desliza y desvanece de manera sedosa (`280ms cubic-bezier(0.16, 1, 0.3, 1)` hacia `0px`), restaurando el ancho ergonómico previo para la reapertura. Si el usuario regresa el ratón hacia adentro, el panel recupera su total opacidad al instante sin cerrarse.
+  * **Límites de Contención Ergonómicos Simétricos:** Ambos paneles (izquierdo y derecho) comparten exactamente el mismo rango simétrico: desde un ancho mínimo compacto de `MIN_PANEL_WIDTH = 200px` (permitiendo comprimirlos a voluntad sin rebote) hasta un límite máximo de `MAX_PANEL_WIDTH = 480px` (hasta un 38% del viewport), garantizando paridad física idéntica y preservando `min-w-[440px]` en el lienzo central de lectura.
+  * **Discriminación Clic vs. Arrastre:** Movimientos $\le 3\text{px}$ se interpretan como clic puro, conmutando el estado del panel. Doble clic ejecuta `onReset()` restaurando el ancho de fábrica (`300px` / `360px`).
+  * **Aislamiento de Selección Global:** Durante el arrastre se desactiva `userSelect` y se fuerza `cursor: col-resize` en el documento global.
+
+* **Máscara de Recorte Desacoplada ("Curtain Reveal" Zero-Reflow & Smooth Slide):**
+  * El `<aside>` exterior transiciona su anchura de forma suave y continua (`transition: width 240ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease-out`), colapsando a `0px` sin cortes secos por desmontaje ni saltos bruscos en el lienzo central de lectura.
+  * Durante el arrastre interactivo manual con el mouse, la transición CSS se desactiva en tiempo real (`transition-none`) garantizando una respuesta instantánea a 120 FPS sin desfase.
+  * El contenedor interno mantiene su anchura base fija recortada por la máscara (`min-w-0 shrink-0 overflow-hidden`), impidiendo que los buscadores, botones o chips se compriman o salten de línea durante la animación de colapso o apertura.
+  * **Cuadrícula de Capítulos Ergonómica:** 5 columnas uniformes con botones de altura fija de `32px` (`h-8 rounded-lg font-mono text-xs`), impidiendo la distorsión o crecimiento desmesurado de los números de capítulo.
+
+* **Centrado Simétrico y Canvas Amplio de Estudio (`layout.tsx`):**
+  * El contenedor central `<main>` implementa en desktop un padding horizontal estrictamente simétrico: **`lg:px-12` (48px exactos a ambos costados)**.
+  * El espacio libre desde ambos bordes de la pantalla hasta el cuadro de estudio es **exactamente de 48px**, logrando una simetría visual y matemática perfecta y permitiendo que ambas lengüetas (`DraggableEdgeTab`, de 36px) respiren con 12px exactos de margen libre sin tocar ni invadir el cuadro.
+  * El contenido central se envuelve en un contenedor **`max-w-[1780px] mx-auto`** con espaciado simétrico `lg:px-12` (48px), aprovechando al máximo el ancho horizontal hacia afuera para acomodar las herramientas exegéticas complejas (interlineal, lectura paralela, léxicos, mapas y cronologías) de forma uniforme en todos los módulos sin sentirse encogido ni colisionar con las lengüetas laterales.
+  * **Navegación Secuencial Editorial Integrada (`ChapterNavigator.tsx`):** Se erradicaron los botones flotantes fijos en mitad de pantalla (`fixed top-1/2`) que quedaban aislados ("volando") en los márgenes exteriores. La navegación entre capítulos y libros continuos se ubica de forma elegante al final del pasaje de lectura mediante un bloque semántico `<nav>` con tarjetas de acceso directo (*«← Capítulo Anterior | Capítulo Siguiente →»*), manteniendo además intactos los listeners globales de atajos de teclado (`ArrowLeft` / `ArrowRight`).
 
 ---
 

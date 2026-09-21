@@ -139,7 +139,7 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
         title={leftTabTitle}
       />
 
-      {/* Pestaña Flotante Movible Derecha (Aparece cuando el inspector está colapsado) */}
+      {/* Pestaña Flotante Movible Derecha (Aparece a 14px a la izquierda de la barra de scroll) */}
       <DraggableEdgeTab
         side="right"
         isOpen={isRightOpen}
@@ -171,29 +171,31 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
           <BibleNavigationSidebar />
         )}
 
-        {/* Canvas Central de Contenido y Herramientas de Estudio con Scroll Independiente */}
+        {/* Canvas Central de Contenido y Herramientas de Estudio con Scroll Independiente y Centrado Simétrico */}
         <main
           ref={mainRef}
           onScroll={handleMainScroll}
-          className="flex-1 min-w-0 h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0"
+          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-12 print:p-0 print:m-0 print:pb-0"
         >
-          {children}
+          <div className="w-full max-w-[1780px] mx-auto space-y-4">
+            {children}
 
-          {/* Footer Editorial al final del Canvas de Lectura */}
-          <footer className="border-t border-zinc-200/80 dark:border-zinc-800/80 w-full py-6 mt-12 bg-transparent print:hidden">
-            <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
-              <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
-              <div className="flex gap-4">
-                <Link href="/" className="hover:text-foreground transition-colors duration-150">
-                  {t('presentation')}
-                </Link>
-                <span className="text-zinc-300 dark:text-zinc-700">|</span>
-                <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-                  {t('holyScriptures')}
-                </span>
+            {/* Footer Editorial al final del Canvas de Lectura */}
+            <footer className="border-t border-zinc-200/80 dark:border-zinc-800/80 w-full py-6 mt-12 bg-transparent print:hidden">
+              <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+                <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
+                <div className="flex gap-4">
+                  <Link href="/" className="hover:text-foreground transition-colors duration-150">
+                    {t('presentation')}
+                  </Link>
+                  <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                  <span className="hover:text-foreground transition-colors duration-150 cursor-default">
+                    {t('holyScriptures')}
+                  </span>
+                </div>
               </div>
-            </div>
-          </footer>
+            </footer>
+          </div>
         </main>
 
         {/* Panel Lateral Derecho Especializado por Módulo */}

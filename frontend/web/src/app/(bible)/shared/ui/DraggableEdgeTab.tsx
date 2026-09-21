@@ -25,17 +25,16 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
   title,
 }) => {
   const isLeft = side === 'left';
-  const BUTTON_WIDTH = 42;
-  const BUTTON_HEIGHT = 46;
+  const BUTTON_HEIGHT = 44;
 
   const [topPos, setTopPos] = useState<number>(defaultTop);
-  const [dragX, setDragX] = useState<number>(0);
+  const [dragOffsetX, setDragOffsetX] = useState<number>(0);
   const [isMounted, setIsMounted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const isDraggingRef = useRef(false);
-  const startPointerRef = useRef({ x: 0, y: 0 });
-  const startPosRef = useRef({ x: 0, y: 0 });
+  const startPointerRef = useRef<{ x: number; y: number } | null>(null);
+  const startPosRef = useRef({ y: 0 });
   const hasMovedRef = useRef(false);
 
   // Cargar posición vertical guardada desde localStorage
@@ -57,12 +56,8 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
       // fallback
     }
 
-    // Inicializar dragX en el borde correspondiente
-    setDragX(isLeft ? 0 : window.innerWidth - BUTTON_WIDTH);
-
     const handleResize = () => {
       if (!isDraggingRef.current) {
-        setDragX(isLeft ? 0 : window.innerWidth - BUTTON_WIDTH);
         setTopPos((prev) => {
           const maxY = Math.max(64, window.innerHeight - BUTTON_HEIGHT - 16);
           return Math.min(prev, maxY);
@@ -72,97 +67,106 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isLeft, storageKey]);
+  }, [storageKey]);
 
-  // Manejo de puntero para arrastre con restricción al 25% de pantalla y auto-snap al borde estilo Messenger
-  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
-    if (e.button !== 0) return;
+  // Manejo de puntero: discriminación estricta entre clic (apertura instantánea) y arrastre deliberado (> 8px)
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      if (e.button !== 0) return;
 
-    isDraggingRef.current = true;
-    setIsDragging(true);
-    hasMovedRef.current = false;
+      isDraggingRef.current = false;
+      hasMovedRef.current = false;
 
-    startPointerRef.current = { x: e.clientX, y: e.clientY };
-    startPosRef.current = {
-      x: isLeft ? 0 : window.innerWidth - BUTTON_WIDTH,
-      y: topPos,
-    };
+      startPointerRef.current = { x: e.clientX, y: e.clientY };
+      startPosRef.current = { y: topPos };
+      setDragOffsetX(0);
 
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // fallback
-    }
-  }, [isLeft, topPos]);
-
-  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
-    if (!isDraggingRef.current) return;
-
-    const deltaX = e.clientX - startPointerRef.current.x;
-    const deltaY = e.clientY - startPointerRef.current.y;
-
-    if (Math.hypot(deltaX, deltaY) > 5) {
-      hasMovedRef.current = true;
-    }
-
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
-
-    // Restricción: No puede pasar del 25% de la pantalla hacia el centro
-    let newX = 0;
-    if (isLeft) {
-      const maxLeftX = Math.max(BUTTON_WIDTH, screenW * 0.25 - BUTTON_WIDTH);
-      newX = Math.max(0, Math.min(maxLeftX, startPosRef.current.x + deltaX));
-    } else {
-      const minRightX = Math.min(screenW - BUTTON_WIDTH, screenW * 0.75);
-      newX = Math.max(minRightX, Math.min(screenW - BUTTON_WIDTH, startPosRef.current.x + deltaX));
-    }
-
-    // Límites verticales
-    const minY = 64; // Debajo del header
-    const maxY = Math.max(minY, screenH - BUTTON_HEIGHT - 16);
-    const newY = Math.max(minY, Math.min(maxY, startPosRef.current.y + deltaY));
-
-    setDragX(newX);
-    setTopPos(newY);
-  }, [isLeft]);
-
-  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    setIsDragging(false);
-
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {
-      // fallback
-    }
-
-    // Snap obligatorio al borde estilo Messenger (siempre pegado al borde al soltarlo)
-    const edgeX = isLeft ? 0 : window.innerWidth - BUTTON_WIDTH;
-    setDragX(edgeX);
-
-    if (hasMovedRef.current) {
-      // Guardar posición vertical definitiva en localStorage
       try {
-        localStorage.setItem(`${storageKey}_y`, topPos.toString());
-        localStorage.setItem(storageKey, topPos.toString());
+        e.currentTarget.setPointerCapture(e.pointerId);
       } catch {
-        // storage fallback
+        // fallback
       }
-    } else {
-      // Clic simple sin arrastre: abrir el panel
-      onOpen();
-    }
-  }, [isLeft, onOpen, storageKey, topPos]);
+    },
+    [topPos]
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      if (!startPointerRef.current) return;
+
+      const deltaX = e.clientX - startPointerRef.current.x;
+      const deltaY = e.clientY - startPointerRef.current.y;
+      const distance = Math.hypot(deltaX, deltaY);
+
+      // Solo si el desplazamiento supera 8px se entra en modo arrastre
+      if (!hasMovedRef.current) {
+        if (distance <= 8) return;
+        hasMovedRef.current = true;
+        isDraggingRef.current = true;
+        setIsDragging(true);
+      }
+
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+
+      // Movimiento libre en X hacia adentro de la pantalla (hasta 45% del ancho de pantalla)
+      const maxInward = Math.max(120, screenW * 0.45);
+      const inwardX = isLeft
+        ? Math.max(0, Math.min(maxInward, deltaX))
+        : Math.min(0, Math.max(-maxInward, deltaX));
+
+      // Movimiento libre en Y acotado a la altura visible
+      const minY = 64; // Debajo del header de estudio
+      const maxY = Math.max(minY, screenH - BUTTON_HEIGHT - 16);
+      const newY = Math.max(minY, Math.min(maxY, startPosRef.current.y + deltaY));
+
+      setDragOffsetX(inwardX);
+      setTopPos(newY);
+    },
+    [isLeft]
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      const wasDragging = hasMovedRef.current;
+
+      startPointerRef.current = null;
+      isDraggingRef.current = false;
+      setIsDragging(false);
+
+      // Snap-back magnético al borde: vuelve a translateX(0)
+      setDragOffsetX(0);
+
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {
+        // fallback
+      }
+
+      if (wasDragging) {
+        // Solo si realmente hubo arrastre deliberado, persistir posición
+        try {
+          localStorage.setItem(`${storageKey}_y`, topPos.toString());
+          localStorage.setItem(storageKey, topPos.toString());
+        } catch {
+          // storage fallback
+        }
+      } else {
+        // Clic limpio: abrir inmediatamente el panel
+        onOpen();
+      }
+    },
+    [onOpen, storageKey, topPos]
+  );
 
   const handlePointerCancel = useCallback(() => {
+    startPointerRef.current = null;
     isDraggingRef.current = false;
     setIsDragging(false);
-    setDragX(isLeft ? 0 : window.innerWidth - BUTTON_WIDTH);
-  }, [isLeft]);
+    setDragOffsetX(0);
+  }, []);
 
-  if (isOpen || !isMounted) return null;
+  if (!isMounted) return null;
 
   const computedTitle = title || (label ? `Abrir (${label})` : 'Abrir panel');
 
@@ -174,23 +178,39 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
       style={{
-        left: isLeft && !isDragging ? 0 : isLeft ? `${dragX}px` : undefined,
-        right: !isLeft && !isDragging ? 0 : !isLeft ? `${window.innerWidth - dragX - BUTTON_WIDTH}px` : undefined,
+        left: isLeft ? 0 : undefined,
+        right: !isLeft ? 0 : undefined,
         top: `${topPos}px`,
+        transform:
+          isDragging && dragOffsetX !== 0
+            ? `translate3d(${dragOffsetX}px, 0, 0)`
+            : 'translate3d(0, 0, 0)',
       }}
       title={computedTitle}
       aria-label={computedTitle}
-      className={`fixed z-40 flex items-center justify-center select-none group touch-none print:hidden ${
+      className={`fixed z-40 flex items-center justify-center select-none group touch-none print:hidden border ${
         isDragging
-          ? 'w-12 h-12 rounded-2xl border border-zinc-300 dark:border-zinc-700 ring-2 ring-primary/40 shadow-2xl scale-105 cursor-grabbing bg-white dark:bg-[#0a0a0a]'
+          ? 'transition-none'
+          : 'transition-[opacity,transform,background-color,border-color,color,border-radius,box-shadow] duration-280 ease-[cubic-bezier(0.16,1,0.3,1)]'
+      } ${
+        isOpen
+          ? `opacity-0 pointer-events-none ${isLeft ? '-translate-x-full' : 'translate-x-full'}`
+          : 'opacity-100 pointer-events-auto'
+      } ${
+        isDragging
+          ? 'w-11 h-11 rounded-2xl border-zinc-300 dark:border-zinc-600 shadow-xl cursor-grabbing bg-white dark:bg-[#18181b] text-zinc-900 dark:text-white scale-105'
           : isLeft
-          ? 'w-11 h-12 left-0 -translate-x-[30%] hover:translate-x-0 rounded-r-2xl border-y border-r border-l-0 border-zinc-200/90 dark:border-zinc-800/90 shadow-md hover:shadow-lg cursor-grab active:cursor-grabbing bg-white dark:bg-[#0a0a0a] transition-all'
-          : 'w-11 h-12 right-0 translate-x-[30%] hover:translate-x-0 rounded-l-2xl border-y border-l border-r-0 border-zinc-200/90 dark:border-zinc-800/90 shadow-md hover:shadow-lg cursor-grab active:cursor-grabbing bg-white dark:bg-[#0a0a0a] transition-all'
-      } text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white ${
-        !isDragging ? 'transition-[transform,top,border-radius,background-color,box-shadow] duration-200 ease-out' : ''
+          ? 'w-9 h-11 rounded-r-xl border-l-0 border-r border-y pl-1 shadow-xs border-zinc-200/90 dark:border-zinc-800/90 cursor-grab active:cursor-grabbing bg-white/95 dark:bg-[#121214]/95 backdrop-blur-md hover:border-zinc-400/80 dark:hover:border-zinc-600/80 hover:bg-zinc-50 dark:hover:bg-zinc-800/90 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:shadow-sm'
+          : 'w-9 h-11 rounded-l-xl border-r-0 border-l border-y pr-1 shadow-xs border-zinc-200/90 dark:border-zinc-800/90 cursor-grab active:cursor-grabbing bg-white/95 dark:bg-[#121214]/95 backdrop-blur-md hover:border-zinc-400/80 dark:hover:border-zinc-600/80 hover:bg-zinc-50 dark:hover:bg-zinc-800/90 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:shadow-sm'
       }`}
     >
-      <Icon className={`w-5 h-5 shrink-0 transition-transform ${isLeft ? 'translate-x-0.5 group-hover:translate-x-0' : '-translate-x-0.5 group-hover:translate-x-0'}`} />
+      <Icon
+        className={`shrink-0 transition-transform duration-200 ${
+          isDragging
+            ? 'w-4.5 h-4.5'
+            : 'w-4 h-4 group-hover:scale-110'
+        }`}
+      />
     </button>
   );
 };

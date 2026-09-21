@@ -18,23 +18,16 @@ import { useBiblePassageSafe } from '../../../../shared/context';
 import { useInterlinearContextSafe } from '../../context/InterlinearContext';
 import { biblicalAudioService } from '../../services/biblicalAudioService';
 import { ParallelVerseInspector } from '../../../../widgets/exegesis-inspector';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const InterlinearInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const interlinear = useInterlinearContextSafe();
   const tStudio = useTranslations('Studio');
 
-  const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 360;
-  const setRightInspectorWidth = passageContext?.setRightInspectorWidth ?? (() => {});
-  const resetRightInspectorWidth = passageContext?.resetRightInspectorWidth ?? (() => {});
-
   const [activeTab, setActiveTab] = useState<'morphology' | 'verse'>('morphology');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  const isOpen = passageContext?.isRightInspectorOpen ?? false;
-  const handleClose = passageContext?.closeInspector ?? (() => {});
 
   const token = interlinear?.selectedToken;
   const entry = interlinear?.selectedStrongEntry;
@@ -93,90 +86,48 @@ export const InterlinearInspector: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <>
-      {/* Backdrop en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Inspector de Morfología e Idiomas Originales"
-        style={{ '--inspector-w': `${rightInspectorWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 right-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--inspector-w)] flex-shrink-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="right"
-          currentWidth={rightInspectorWidth}
-          onResize={setRightInspectorWidth}
-          onReset={resetRightInspectorWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
-        />
-
-        {/* Cabecera del Inspector */}
-        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center justify-between pb-2.5">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-                <Languages className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-foreground block">
-                  Ficha Morfológica & Léxica
-                </span>
-                <span className="text-[10px] font-mono text-zinc-400">
-                  {strongCode} • {activeCanon === 'NT' ? 'Griego Koiné' : 'Hebreo Masorético'}
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleClose}
-              className="lg:hidden p-1 rounded-md text-zinc-400 hover:text-foreground"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Selector de Pestañas: Morfología vs Versículo Completo */}
-          <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setActiveTab('morphology')}
-              className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === 'morphology'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Morfología</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('verse')}
-              className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === 'verse'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Versiones</span>
-            </button>
-          </div>
+    <StudySidePanel
+      side="right"
+      title="Ficha Morfológica & Léxica"
+      icon={<Languages className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />}
+      badge={`${strongCode} • ${activeCanon === 'NT' ? 'Griego Koiné' : 'Hebreo Masorético'}`}
+      storageKey="bible_interlinear_inspector_w"
+      defaultWidth={360}
+      ariaLabel="Inspector de Morfología e Idiomas Originales"
+      collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
+    >
+      <StudySidePanel.Toolbar>
+        <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setActiveTab('morphology')}
+            className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              activeTab === 'morphology'
+                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Morfología</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('verse')}
+            className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              activeTab === 'verse'
+                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Versiones</span>
+          </button>
         </div>
+      </StudySidePanel.Toolbar>
 
-        {/* CONTENIDO CON SCROLL */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-5">
-          {activeTab === 'morphology' && (
+      <StudySidePanel.Body className="p-4 space-y-5">
+        {activeTab === 'morphology' && (
             <>
               {token || entry ? (
                 <div className="space-y-4">
@@ -382,8 +333,7 @@ export const InterlinearInspector: React.FC = () => {
               <ParallelVerseInspector verse={passageContext?.inspectedVerse ?? null} />
             </div>
           )}
-        </div>
-      </aside>
-    </>
+        </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

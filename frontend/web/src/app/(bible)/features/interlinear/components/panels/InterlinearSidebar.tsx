@@ -17,7 +17,7 @@ import {
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useInterlinearContextSafe } from '../../context/InterlinearContext';
 import { InterlinearViewLayout } from '../../types';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 interface CanonicalGroup {
   id: string;
@@ -103,16 +103,7 @@ export const InterlinearSidebar: React.FC = () => {
   const interlinear = useInterlinearContextSafe();
   const tStudio = useTranslations('Studio');
 
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
-  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
-
   const [activeSubTab, setActiveSubTab] = useState<'corpus' | 'layers'>('corpus');
-
-  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
-
-  if (!isOpen) return null;
 
   const activeCanon = interlinear?.activeCanon ?? 'OT';
   const settings = interlinear?.settings;
@@ -123,54 +114,29 @@ export const InterlinearSidebar: React.FC = () => {
   const currentGroups = CANONICAL_GROUPS.filter((g) => g.canon === activeCanon);
 
   return (
-    <>
-      {/* Backdrop móvil */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Panel Lateral de Interlineal Inverso"
-        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="left"
-          currentWidth={leftSidebarWidth}
-          onResize={setLeftSidebarWidth}
-          onReset={resetLeftSidebarWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
-        />
-
-        {/* Cabecera del Panel */}
-        <div className="p-4 border-b border-zinc-100 dark:border-zinc-800/80 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-                <Scroll className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
-              </div>
-              <div>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  Corpus Interlineal
-                </h2>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                  {activeCanon === 'OT' ? 'Texto Masorético BHS' : 'Texto Griego NA28'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleClose}
-              className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-foreground"
-            >
-              ✕
-            </button>
+    <StudySidePanel
+      side="left"
+      title="Corpus Interlineal"
+      icon={<Scroll className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />}
+      storageKey="bible_interlinear_sidebar_w"
+      defaultWidth={340}
+      collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
+    >
+      {/* Cabecera del Panel */}
+      <StudySidePanel.Toolbar className="space-y-3">
+        <div className="hidden lg:flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
+            <Scroll className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
           </div>
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Corpus Interlineal
+            </h2>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+              {activeCanon === 'OT' ? 'Texto Masorético BHS' : 'Texto Griego NA28'}
+            </p>
+          </div>
+        </div>
 
           {/* Selector de Tradición Lingüística (Hebreo AT vs Griego NT) */}
           <div className="grid grid-cols-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200/60 dark:border-zinc-800/60">
@@ -223,10 +189,10 @@ export const InterlinearSidebar: React.FC = () => {
               Capas & Ajustes
             </button>
           </div>
-        </div>
+      </StudySidePanel.Toolbar>
 
-        {/* CONTENIDO CON SCROLL */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      {/* CONTENIDO CON SCROLL */}
+      <StudySidePanel.Body className="space-y-5">
           {activeSubTab === 'corpus' && (
             <div className="space-y-4">
               {currentGroups.map((group) => (
@@ -386,8 +352,7 @@ export const InterlinearSidebar: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

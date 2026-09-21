@@ -22,12 +22,11 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   onNextChapter,
 }) => {
   const tToolbar = useTranslations('Toolbar');
+  const tPassage = useTranslations('PassagePicker');
   const maxChapters = getChapterCountForBook(selectedBookAbbr);
   const currentChapter = selectedChapter || 1;
 
   const passageContext = useBiblePassageSafe();
-  const isLeftOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const isRightOpen = passageContext?.isRightInspectorOpen ?? false;
 
   const books = passageContext?.books ?? [];
   const currentBookIdx = passageContext?.selectedBookId
@@ -68,73 +67,82 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
     return null;
   }
 
-  const prevLabel = currentChapter > 1 ? (currentChapter - 1).toString() : (prevBook?.abbreviation || prevBook?.name || '');
-  const prevTitle = currentChapter > 1
-    ? tToolbar('chapterNumber', { chapter: (currentChapter - 1).toString() })
+  const prevSubtitle = currentChapter > 1
+    ? tPassage('prevChapterTooltip').replace(' (←)', '')
+    : 'Libro anterior';
+  const prevLabel = currentChapter > 1
+    ? `${selectedBookName} ${currentChapter - 1}`
     : (prevBook?.name || '');
 
-  const nextLabel = currentChapter < maxChapters ? (currentChapter + 1).toString() : (nextBook?.abbreviation || nextBook?.name || '');
-  const nextTitle = currentChapter < maxChapters
-    ? tToolbar('chapterNumber', { chapter: (currentChapter + 1).toString() })
+  const nextSubtitle = currentChapter < maxChapters
+    ? tPassage('nextChapterTooltip').replace(' (→)', '')
+    : 'Libro siguiente';
+  const nextLabel = currentChapter < maxChapters
+    ? `${selectedBookName} ${currentChapter + 1}`
     : (nextBook?.name || '');
 
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 360;
-
   return (
-    <>
-      {/* Botones Flotantes Laterales Fijos y Adaptables al estado de los paneles laterales y móvil */}
-      {canGoPrev && (
+    <nav
+      aria-label="Navegación de capítulos"
+      className="w-full flex items-center justify-between gap-4 pt-4 pb-2 print:hidden select-none"
+    >
+      {canGoPrev ? (
         <button
           type="button"
           onClick={onPrevChapter}
-          title={prevTitle}
-          aria-label={prevTitle}
-          style={
-            isLeftOpen
-              ? ({
-                  '--desktop-left': `${leftSidebarWidth + 16}px`,
-                } as React.CSSProperties)
-              : undefined
-          }
-          className={`fixed top-1/2 -translate-y-1/2 z-35 flex items-center gap-1 sm:gap-1.5 h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xs text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-[left,right,transform,background-color,border-color,box-shadow] duration-200 ease-out cursor-pointer print:hidden group select-none left-2 sm:left-4 ${
-            isLeftOpen ? 'lg:left-[var(--desktop-left)]' : ''
-          }`}
+          title={prevLabel}
+          aria-label={prevLabel}
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xs text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-400 dark:hover:border-zinc-600 shadow-xs hover:shadow-md active:scale-98 transition-all cursor-pointer group"
         >
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:-translate-x-0.5 text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4 transition-transform group-hover:-translate-x-0.5 text-zinc-400 group-hover:text-foreground shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-tight">
-            {prevLabel}
-          </span>
+          <div className="flex flex-col items-start text-left">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+              {prevSubtitle}
+            </span>
+            <span className="text-xs font-semibold text-foreground">
+              {prevLabel}
+            </span>
+          </div>
         </button>
+      ) : (
+        <div />
       )}
 
-      {canGoNext && (
+      {canGoNext ? (
         <button
           type="button"
           onClick={() => onNextChapter(maxChapters)}
-          title={nextTitle}
-          aria-label={nextTitle}
-          style={
-            isRightOpen
-              ? ({
-                  '--desktop-right': `${rightInspectorWidth + 16}px`,
-                } as React.CSSProperties)
-              : undefined
-          }
-          className={`fixed top-1/2 -translate-y-1/2 z-35 flex items-center gap-1 sm:gap-1.5 h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xs text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-[left,right,transform,background-color,border-color,box-shadow] duration-200 ease-out cursor-pointer print:hidden group select-none right-2 sm:right-4 ${
-            isRightOpen ? 'lg:right-[var(--desktop-right)]' : ''
-          }`}
+          title={nextLabel}
+          aria-label={nextLabel}
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xs text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-400 dark:hover:border-zinc-600 shadow-xs hover:shadow-md active:scale-98 transition-all cursor-pointer group ml-auto"
         >
-          <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-tight">
-            {nextLabel}
-          </span>
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-0.5 text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex flex-col items-end text-right">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+              {nextSubtitle}
+            </span>
+            <span className="text-xs font-semibold text-foreground">
+              {nextLabel}
+            </span>
+          </div>
+          <svg
+            className="w-4 h-4 transition-transform group-hover:translate-x-0.5 text-zinc-400 group-hover:text-foreground shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
+      ) : (
+        <div />
       )}
-    </>
+    </nav>
   );
 };

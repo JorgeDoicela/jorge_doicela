@@ -17,22 +17,15 @@ import { useBiblePassageSafe } from '../../../../shared/context';
 import { useParallelContextSafe } from '../../context/ParallelContext';
 import { computeWordDiff, TRANSLATION_APPROACHES } from '../../textual-diff';
 import { StrongMorphologyInspector } from '../../../../widgets/exegesis-inspector';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const ParallelDiffInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const parallel = useParallelContextSafe();
   const tStudio = useTranslations('Studio');
 
-  const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 360;
-  const setRightInspectorWidth = passageContext?.setRightInspectorWidth ?? (() => {});
-  const resetRightInspectorWidth = passageContext?.resetRightInspectorWidth ?? (() => {});
-
   const [activeTab, setActiveTab] = useState<'diff' | 'strong'>('diff');
   const [copied, setCopied] = useState(false);
-
-  const isOpen = passageContext?.isRightInspectorOpen ?? false;
-  const handleClose = passageContext?.closeInspector ?? (() => {});
 
   const selectedBook = passageContext?.selectedBook;
   const selectedChapter = passageContext?.selectedChapter ?? 1;
@@ -88,108 +81,84 @@ export const ParallelDiffInspector: React.FC = () => {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <>
-      {/* Backdrop en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Inspector de Diff Textual y Variantes"
-        style={{ '--inspector-w': `${rightInspectorWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 right-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--inspector-w)] flex-shrink-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="right"
-          currentWidth={rightInspectorWidth}
-          onResize={setRightInspectorWidth}
-          onReset={resetRightInspectorWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
-        />
-
-        {/* Cabecera del Inspector */}
-        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center justify-between pb-2.5">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-                <GitCompare className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-foreground block">
-                  {selectedBook?.name || 'Génesis'} {selectedChapter}:{selectedVerseNumber}
-                </span>
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
-                  Análisis diferencial sincronizado
-                </span>
-              </div>
+    <StudySidePanel
+      side="right"
+      title={`${selectedBook?.name || 'Génesis'} ${selectedChapter}:${selectedVerseNumber}`}
+      icon={<GitCompare className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />}
+      storageKey="bible_parallel_inspector_w"
+      defaultWidth={360}
+      collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
+    >
+      {/* Cabecera del Inspector */}
+      <StudySidePanel.Toolbar>
+        <div className="flex items-center justify-between pb-2.5">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
+              <GitCompare className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
             </div>
-
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={handlePrevVerse}
-                disabled={selectedVerseNumber <= 1}
-                className="p-1 rounded-md text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 disabled:opacity-30 cursor-pointer"
-                title="Versículo anterior"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNextVerse}
-                className="p-1 rounded-md text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
-                title="Versículo siguiente"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleClose}
-                className="lg:hidden p-1 rounded-md text-zinc-400 hover:text-foreground"
-              >
-                ✕
-              </button>
+            <div>
+              <span className="text-xs font-bold text-foreground block">
+                {selectedBook?.name || 'Génesis'} {selectedChapter}:{selectedVerseNumber}
+              </span>
+              <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
+                Análisis diferencial sincronizado
+              </span>
             </div>
           </div>
 
-          {/* Selector de Pestañas: Diff Textual vs Morfología Strong */}
-          <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+          <div className="flex items-center gap-1">
             <button
               type="button"
-              onClick={() => setActiveTab('diff')}
-              className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === 'diff'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
+              onClick={handlePrevVerse}
+              disabled={selectedVerseNumber <= 1}
+              className="p-1 rounded-md text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 disabled:opacity-30 cursor-pointer"
+              title="Versículo anterior"
             >
-              <ArrowRightLeft className="w-3.5 h-3.5" />
-              <span>Diff Textual</span>
+              <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('strong')}
-              className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === 'strong'
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
+              onClick={handleNextVerse}
+              className="p-1 rounded-md text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
+              title="Versículo siguiente"
             >
-              <Languages className="w-3.5 h-3.5" />
-              <span>Morfología</span>
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* CONTENIDO CON SCROLL */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* Selector de Pestañas: Diff Textual vs Morfología Strong */}
+        <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setActiveTab('diff')}
+            className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              activeTab === 'diff'
+                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+            }`}
+          >
+            <ArrowRightLeft className="w-3.5 h-3.5" />
+            <span>Diff Textual</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('strong')}
+            className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              activeTab === 'strong'
+                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+            }`}
+          >
+            <Languages className="w-3.5 h-3.5" />
+            <span>Morfología</span>
+          </button>
+        </div>
+      </StudySidePanel.Toolbar>
+
+      {/* CONTENIDO CON SCROLL */}
+      <StudySidePanel.Body className="space-y-4">
           {activeTab === 'diff' && (
             <>
               {/* SELECTORES DE LAS DOS VERSIONES A COMPARAR */}
@@ -358,8 +327,7 @@ export const ParallelDiffInspector: React.FC = () => {
               <StrongMorphologyInspector word={passageContext?.inspectedWord ?? null} />
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

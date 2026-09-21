@@ -17,7 +17,7 @@ import {
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useAtlasContextSafe } from '../../context/AtlasContext';
 import { HistoricalEra, PlaceCategory } from '../../types';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const AtlasSidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
@@ -25,16 +25,7 @@ export const AtlasSidebar: React.FC = () => {
   const tStudio = useTranslations('Studio');
   const tAtlas = useTranslations('Atlas');
 
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
-  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
-
   const [activeTab, setActiveTab] = useState<'places' | 'eras' | 'categories'>('places');
-
-  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
-
-  if (!isOpen) return null;
 
   const eras: { id: HistoricalEra; label: string; range: string }[] = [
     { id: 'all', label: 'Todas las Épocas', range: 'Cánon Completo' },
@@ -55,51 +46,19 @@ export const AtlasSidebar: React.FC = () => {
   ];
 
   const places = atlas?.filteredPlaces || [];
+  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
   return (
-    <>
-      {/* Cortina oscura en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Navegación del Atlas Bíblico"
-        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-84 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="left"
-          currentWidth={leftSidebarWidth}
-          onResize={setLeftSidebarWidth}
-          onReset={resetLeftSidebarWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('closeSidebar') || 'Ocultar panel'}
-        />
-
-        {/* Cabecera Móvil */}
-        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center gap-2">
-            <Compass className="w-4 h-4 text-rose-500" />
-            <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              Atlas Bíblico WGS84
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            aria-label={tStudio('closeSidebar') || 'Cerrar panel'}
-            className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Barra de Sub-Pestañas del Atlas */}
-        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80 shrink-0 space-y-2.5">
+    <StudySidePanel
+      side="left"
+      title="Atlas Bíblico WGS84"
+      icon={<Compass className="w-4 h-4 text-rose-500" />}
+      storageKey="bible_atlas_sidebar_w"
+      defaultWidth={340}
+      collapseTitle={tStudio('closeSidebar') || 'Ocultar panel'}
+    >
+      {/* Barra de Sub-Pestañas del Atlas */}
+      <StudySidePanel.Toolbar className="space-y-2.5">
           <div className="grid grid-cols-3 gap-1 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-[11px]">
             <button
               type="button"
@@ -161,10 +120,10 @@ export const AtlasSidebar: React.FC = () => {
               )}
             </div>
           )}
-        </div>
+      </StudySidePanel.Toolbar>
 
-        {/* Contenido con Scroll de la Pestaña Activa */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      {/* Contenido con Scroll de la Pestaña Activa */}
+      <StudySidePanel.Body className="p-3 space-y-2">
           {/* SUB-PESTAÑA 1: LUGARES BÍBLICOS */}
           {activeTab === 'places' && (
             <div className="space-y-2">
@@ -283,8 +242,7 @@ export const AtlasSidebar: React.FC = () => {
               })}
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

@@ -79,10 +79,13 @@ interface BiblePassageContextValue {
   closeInspector: () => void;
 }
 
-export const DEFAULT_LEFT_SIDEBAR_WIDTH = 320;
-export const DEFAULT_RIGHT_INSPECTOR_WIDTH = 360;
-export const MIN_LEFT_SIDEBAR_WIDTH = 260;
-export const MIN_RIGHT_INSPECTOR_WIDTH = 280;
+export const DEFAULT_LEFT_SIDEBAR_WIDTH = 280;
+export const DEFAULT_RIGHT_INSPECTOR_WIDTH = 340;
+export const MIN_LEFT_SIDEBAR_WIDTH = 200;
+export const MAX_LEFT_SIDEBAR_WIDTH = 480;
+export const MIN_RIGHT_INSPECTOR_WIDTH = 200;
+export const MAX_RIGHT_INSPECTOR_WIDTH = 480;
+export const AUTO_COLLAPSE_THRESHOLD = 175;
 
 const BiblePassageContext = createContext<BiblePassageContextValue | undefined>(undefined);
 
@@ -149,10 +152,11 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   const [rightInspectorWidth, setRightInspectorWidthState] = useState<number>(DEFAULT_RIGHT_INSPECTOR_WIDTH);
 
   const setLeftSidebarWidth = useCallback((width: number) => {
-    const max = typeof window !== 'undefined' ? Math.max(MIN_LEFT_SIDEBAR_WIDTH + 60, Math.round(window.innerWidth * 0.45)) : 560;
-    const clamped = Math.max(MIN_LEFT_SIDEBAR_WIDTH, Math.min(width, max));
+    const max = typeof window !== 'undefined' ? Math.min(MAX_LEFT_SIDEBAR_WIDTH, Math.max(MIN_LEFT_SIDEBAR_WIDTH, Math.round(window.innerWidth * 0.38))) : MAX_LEFT_SIDEBAR_WIDTH;
+    const clamped = Math.max(120, Math.min(width, max));
     setLeftSidebarWidthState(clamped);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+    // Solo persistir si está por encima del ancho mínimo de diseño para que nunca abra comprimido
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024 && clamped >= MIN_LEFT_SIDEBAR_WIDTH) {
       safeStorage.setItem('bible_left_sidebar_width', String(clamped));
     }
   }, []);
@@ -165,10 +169,11 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   }, []);
 
   const setRightInspectorWidth = useCallback((width: number) => {
-    const max = typeof window !== 'undefined' ? Math.max(MIN_RIGHT_INSPECTOR_WIDTH + 60, Math.round(window.innerWidth * 0.48)) : 640;
-    const clamped = Math.max(MIN_RIGHT_INSPECTOR_WIDTH, Math.min(width, max));
+    const max = typeof window !== 'undefined' ? Math.min(MAX_RIGHT_INSPECTOR_WIDTH, Math.max(MIN_RIGHT_INSPECTOR_WIDTH, Math.round(window.innerWidth * 0.38))) : MAX_RIGHT_INSPECTOR_WIDTH;
+    const clamped = Math.max(120, Math.min(width, max));
     setRightInspectorWidthState(clamped);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+    // Solo persistir si está por encima del ancho mínimo de diseño
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024 && clamped >= MIN_RIGHT_INSPECTOR_WIDTH) {
       safeStorage.setItem('bible_right_inspector_width', String(clamped));
     }
   }, []);
@@ -189,11 +194,15 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
       setIsLeftSidebarOpen(safeStorage.getBoolean('bible_left_sidebar_open', true));
       setIsRightInspectorOpen(safeStorage.getBoolean('bible_right_inspector_open', true));
 
-      const savedLeftW = safeStorage.getNumber('bible_left_sidebar_width', MIN_LEFT_SIDEBAR_WIDTH);
-      if (savedLeftW) setLeftSidebarWidthState(savedLeftW);
+      const savedLeftW = safeStorage.getNumber('bible_left_sidebar_width', DEFAULT_LEFT_SIDEBAR_WIDTH);
+      if (savedLeftW) {
+        setLeftSidebarWidthState(Math.min(MAX_LEFT_SIDEBAR_WIDTH, Math.max(MIN_LEFT_SIDEBAR_WIDTH, savedLeftW)));
+      }
 
-      const savedRightW = safeStorage.getNumber('bible_right_inspector_width', MIN_RIGHT_INSPECTOR_WIDTH);
-      if (savedRightW) setRightInspectorWidthState(savedRightW);
+      const savedRightW = safeStorage.getNumber('bible_right_inspector_width', DEFAULT_RIGHT_INSPECTOR_WIDTH);
+      if (savedRightW) {
+        setRightInspectorWidthState(Math.min(MAX_RIGHT_INSPECTOR_WIDTH, Math.max(MIN_RIGHT_INSPECTOR_WIDTH, savedRightW)));
+      }
     } else {
       // En Móvil (< 1024px): Por defecto ambos laterales CERRADOS
       setIsLeftSidebarOpen(false);

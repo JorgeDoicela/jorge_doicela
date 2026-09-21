@@ -13,21 +13,14 @@ import {
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useLexiconContextSafe, CuratedTheologicalTerm } from '../../context/LexiconContext';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 export const WordStudySidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const lexicon = useLexiconContextSafe();
   const tStudio = useTranslations('Studio');
 
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
-  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
-
   const [filterQuery, setFilterQuery] = useState('');
-
-  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
   const activeLanguage = lexicon?.activeLanguage ?? 'hebrew';
   const setActiveLanguage = lexicon?.setActiveLanguage ?? (() => {});
@@ -47,99 +40,58 @@ export const WordStudySidebar: React.FC = () => {
     );
   }, [theologicalTerms, filterQuery]);
 
-  if (!isOpen) return null;
-
   return (
-    <>
-      {/* Backdrop móvil */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Panel Lateral de Análisis de Palabra"
-        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
-        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
-      >
-        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
-        <ResizeBorderHandle
-          side="left"
-          currentWidth={leftSidebarWidth}
-          onResize={setLeftSidebarWidth}
-          onReset={resetLeftSidebarWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
-        />
-
-        {/* Cabecera del Panel */}
-        <div className="p-4 border-b border-zinc-100 dark:border-zinc-800/80 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-                <Languages className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
-              </div>
-              <div>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  Explorador Léxico
-                </h2>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                  {activeLanguage === 'hebrew' ? 'Léxico Hebreo BDB' : 'Léxico Griego Thayer'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleClose}
-              className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-foreground"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Selector de Lengua */}
-          <div className="grid grid-cols-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200/60 dark:border-zinc-800/60">
-            <button
-              type="button"
-              onClick={() => setActiveLanguage('hebrew')}
-              className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
-                activeLanguage === 'hebrew'
-                  ? 'bg-background text-foreground shadow-xs font-semibold'
-                  : 'text-zinc-500 hover:text-foreground'
-              }`}
-            >
-              Hebreo (AT)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveLanguage('greek')}
-              className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
-                activeLanguage === 'greek'
-                  ? 'bg-background text-foreground shadow-xs font-semibold'
-                  : 'text-zinc-500 hover:text-foreground'
-              }`}
-            >
-              Griego (NT)
-            </button>
-          </div>
-
-          {/* Buscador de Vocablos */}
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={filterQuery}
-              onChange={(e) => setFilterQuery(e.target.value)}
-              placeholder="Buscar por Strong, lema o glosa..."
-              className="w-full text-xs pl-8.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-background text-foreground placeholder:text-zinc-400 focus:outline-hidden focus:border-foreground transition-colors"
-            />
-          </div>
+    <StudySidePanel
+      side="left"
+      title="Explorador Léxico"
+      icon={<Languages className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />}
+      badge={activeLanguage === 'hebrew' ? 'Léxico Hebreo BDB' : 'Léxico Griego Thayer'}
+      storageKey="bible_lexicon_sidebar_w"
+      defaultWidth={320}
+      ariaLabel="Panel Lateral de Análisis de Palabra"
+      collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
+    >
+      <StudySidePanel.Toolbar className="p-4 space-y-3">
+        {/* Selector de Lengua */}
+        <div className="grid grid-cols-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200/60 dark:border-zinc-800/60">
+          <button
+            type="button"
+            onClick={() => setActiveLanguage('hebrew')}
+            className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              activeLanguage === 'hebrew'
+                ? 'bg-background text-foreground shadow-xs font-semibold'
+                : 'text-zinc-500 hover:text-foreground'
+            }`}
+          >
+            Hebreo (AT)
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveLanguage('greek')}
+            className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              activeLanguage === 'greek'
+                ? 'bg-background text-foreground shadow-xs font-semibold'
+                : 'text-zinc-500 hover:text-foreground'
+            }`}
+          >
+            Griego (NT)
+          </button>
         </div>
 
-        {/* CONTENIDO CON SCROLL */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* Buscador de Vocablos */}
+        <div className="relative">
+          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={filterQuery}
+            onChange={(e) => setFilterQuery(e.target.value)}
+            placeholder="Buscar por Strong, lema o glosa..."
+            className="w-full text-xs pl-8.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-background text-foreground placeholder:text-zinc-400 focus:outline-hidden focus:border-foreground transition-colors"
+          />
+        </div>
+      </StudySidePanel.Toolbar>
+
+      <StudySidePanel.Body className="p-4 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
               <Sparkles className="w-3 h-3 text-amber-500" />
@@ -192,8 +144,7 @@ export const WordStudySidebar: React.FC = () => {
               );
             })}
           </div>
-        </div>
-      </aside>
-    </>
+        </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

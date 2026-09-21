@@ -15,7 +15,7 @@ import {
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { ArticleCategory, GeographicRegion } from '../../types';
 import { useArchaeologyContextSafe } from '../../context/ArchaeologyContext';
-import { ResizeBorderHandle } from '../../../../shared/ui';
+import { StudySidePanel } from '../../../../shared/ui';
 
 interface ArchaeologySidebarProps {
   selectedCategory?: ArticleCategory | 'all';
@@ -38,16 +38,9 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
   const onSelectCategory = propOnSelectCategory ?? archContext?.setSelectedCategory ?? (() => {});
   const selectedRegion = propRegion ?? archContext?.selectedRegion ?? 'all';
   const onSelectRegion = propOnSelectRegion ?? archContext?.setSelectedRegion ?? (() => {});
+  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
   const [activeTab, setActiveTab] = useState<'categories' | 'regions'>('categories');
-
-  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
-  const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
-  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
-  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
-  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
-
-  if (!isOpen) return null;
 
   const categories: { id: ArticleCategory | 'all'; label: string; icon: React.ComponentType<{ className?: string }>; count: string }[] = [
     { id: 'all', label: 'Todos los Registros', icon: Layers, count: 'Total' },
@@ -67,79 +60,46 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
   ];
 
   return (
-    <>
-      {/* Cortina oscura en Móviles (< lg) */}
-      <div
-        onClick={handleClose}
-        className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-        aria-hidden="true"
-      />
-
-      <aside
-        aria-label="Filtros de Arqueología Bíblica"
-        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
-        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-84 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
-      >
-        {/* Handle de Colapso y Redimensionamiento Interactivo en Borde Divisorio Derecho */}
-        <ResizeBorderHandle
-          side="left"
-          currentWidth={leftSidebarWidth}
-          onResize={setLeftSidebarWidth}
-          onReset={resetLeftSidebarWidth}
-          onCollapse={handleClose}
-          collapseTitle={tStudio('closeSidebar') || 'Ocultar panel'}
-        />
-
-        {/* Cabecera Móvil */}
-        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
-          <div className="flex items-center gap-2">
-            <Compass className="w-4 h-4 text-emerald-500" />
-            <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
-              Arqueología y Evidencias
-            </span>
-          </div>
+    <StudySidePanel
+      side="left"
+      title="Arqueología y Evidencias"
+      icon={<Compass className="w-4 h-4 text-emerald-500" />}
+      storageKey="bible_archaeology_sidebar_w"
+      defaultWidth={320}
+      collapseTitle={tStudio('closeSidebar') || 'Ocultar panel'}
+    >
+      {/* Barra de Pestañas del Panel de Arqueología */}
+      <StudySidePanel.Toolbar>
+        <div className="grid grid-cols-2 gap-1 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-xs">
           <button
             type="button"
-            onClick={handleClose}
-            aria-label={tStudio('closeSidebar') || 'Cerrar panel'}
-            className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+            onClick={() => setActiveTab('categories')}
+            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
+              activeTab === 'categories'
+                ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+            }`}
           >
-            <X className="w-4 h-4" />
+            <FileText className="w-3.5 h-3.5 text-emerald-500" />
+            <span>Categorías</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('regions')}
+            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
+              activeTab === 'regions'
+                ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+            }`}
+          >
+            <MapPin className="w-3.5 h-3.5 text-blue-500" />
+            <span>Regiones</span>
           </button>
         </div>
+      </StudySidePanel.Toolbar>
 
-        {/* Barra de Pestañas del Panel de Arqueología */}
-        <div className="p-3 border-b border-zinc-100 dark:border-zinc-800/80 shrink-0">
-          <div className="grid grid-cols-2 gap-1 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-xs">
-            <button
-              type="button"
-              onClick={() => setActiveTab('categories')}
-              className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
-                activeTab === 'categories'
-                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                  : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Categorías</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('regions')}
-              className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
-                activeTab === 'regions'
-                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                  : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
-              }`}
-            >
-              <MapPin className="w-3.5 h-3.5 text-blue-500" />
-              <span>Regiones</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Contenido con Scroll */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      {/* Contenido con Scroll */}
+      <StudySidePanel.Body className="p-3 space-y-2">
           {activeTab === 'categories' && (
             <div className="space-y-1.5">
               <div className="px-1 mb-2">
@@ -218,8 +178,7 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
               })}
             </div>
           )}
-        </div>
-      </aside>
-    </>
+      </StudySidePanel.Body>
+    </StudySidePanel>
   );
 };

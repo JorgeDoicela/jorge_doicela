@@ -155,60 +155,24 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
     const max = typeof window !== 'undefined' ? Math.min(MAX_LEFT_SIDEBAR_WIDTH, Math.max(MIN_LEFT_SIDEBAR_WIDTH, Math.round(window.innerWidth * 0.38))) : MAX_LEFT_SIDEBAR_WIDTH;
     const clamped = Math.max(120, Math.min(width, max));
     setLeftSidebarWidthState(clamped);
-    // Solo persistir si está por encima del ancho mínimo de diseño para que nunca abra comprimido
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024 && clamped >= MIN_LEFT_SIDEBAR_WIDTH) {
-      safeStorage.setItem('bible_left_sidebar_width', String(clamped));
-    }
   }, []);
 
   const resetLeftSidebarWidth = useCallback(() => {
     setLeftSidebarWidthState(DEFAULT_LEFT_SIDEBAR_WIDTH);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      safeStorage.removeItem('bible_left_sidebar_width');
-    }
   }, []);
 
   const setRightInspectorWidth = useCallback((width: number) => {
     const max = typeof window !== 'undefined' ? Math.min(MAX_RIGHT_INSPECTOR_WIDTH, Math.max(MIN_RIGHT_INSPECTOR_WIDTH, Math.round(window.innerWidth * 0.38))) : MAX_RIGHT_INSPECTOR_WIDTH;
     const clamped = Math.max(120, Math.min(width, max));
     setRightInspectorWidthState(clamped);
-    // Solo persistir si está por encima del ancho mínimo de diseño
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024 && clamped >= MIN_RIGHT_INSPECTOR_WIDTH) {
-      safeStorage.setItem('bible_right_inspector_width', String(clamped));
-    }
   }, []);
 
   const resetRightInspectorWidth = useCallback(() => {
     setRightInspectorWidthState(DEFAULT_RIGHT_INSPECTOR_WIDTH);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      safeStorage.removeItem('bible_right_inspector_width');
-    }
   }, []);
 
-  // Sincronización post-montaje con viewport y preferencias guardadas
+  // Sincronización post-montaje con la traducción contextual
   useEffect(() => {
-    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
-
-    if (isDesktop) {
-      // En PC (>= 1024px): Por defecto ambos laterales ABIERTOS
-      setIsLeftSidebarOpen(safeStorage.getBoolean('bible_left_sidebar_open', true));
-      setIsRightInspectorOpen(safeStorage.getBoolean('bible_right_inspector_open', true));
-
-      const savedLeftW = safeStorage.getNumber('bible_left_sidebar_width', DEFAULT_LEFT_SIDEBAR_WIDTH);
-      if (savedLeftW) {
-        setLeftSidebarWidthState(Math.min(MAX_LEFT_SIDEBAR_WIDTH, Math.max(MIN_LEFT_SIDEBAR_WIDTH, savedLeftW)));
-      }
-
-      const savedRightW = safeStorage.getNumber('bible_right_inspector_width', DEFAULT_RIGHT_INSPECTOR_WIDTH);
-      if (savedRightW) {
-        setRightInspectorWidthState(Math.min(MAX_RIGHT_INSPECTOR_WIDTH, Math.max(MIN_RIGHT_INSPECTOR_WIDTH, savedRightW)));
-      }
-    } else {
-      // En Móvil (< 1024px): Por defecto ambos laterales CERRADOS
-      setIsLeftSidebarOpen(false);
-      setIsRightInspectorOpen(false);
-    }
-
     // Si no hubo ?trans= en la URL, verificar si el usuario tiene una traducción guardada
     if (!initialTransParam) {
       const savedTrans = getSavedTranslationId(locale);
@@ -231,18 +195,6 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
         // Al pasar de PC a móvil, colapsar ambos laterales para despejar la lectura
         setIsLeftSidebarOpen(false);
         setIsRightInspectorOpen(false);
-      } else if (!wasDesktop && isDesktop) {
-        // Al pasar de móvil a PC, restaurar ambos abiertos por defecto (o según preferencia)
-        try {
-          const savedLeft = window.localStorage.getItem('bible_left_sidebar_open');
-          setIsLeftSidebarOpen(savedLeft !== null ? savedLeft === 'true' : true);
-
-          const savedRight = window.localStorage.getItem('bible_right_inspector_open');
-          setIsRightInspectorOpen(savedRight !== null ? savedRight === 'true' : true);
-        } catch {
-          setIsLeftSidebarOpen(true);
-          setIsRightInspectorOpen(true);
-        }
       }
 
       prevWidth = currentWidth;
@@ -253,28 +205,11 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   }, []);
 
   const toggleLeftSidebar = useCallback(() => {
-    setIsLeftSidebarOpen((prev) => {
-      const next = !prev;
-      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-        try {
-          window.localStorage.setItem('bible_left_sidebar_open', String(next));
-        } catch {
-          // Ignorar si localStorage está restringido en el navegador
-        }
-      }
-      return next;
-    });
+    setIsLeftSidebarOpen((prev) => !prev);
   }, []);
 
   const setLeftSidebarOpen = useCallback((open: boolean) => {
     setIsLeftSidebarOpen(open);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      try {
-        window.localStorage.setItem('bible_left_sidebar_open', String(open));
-      } catch {
-        // Ignorar si localStorage está restringido en el navegador
-      }
-    }
   }, []);
 
   const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>('versions');
@@ -304,38 +239,23 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
   }, [selectedBookId, selectedChapter, selectedBook?.name]);
 
   const toggleRightInspector = useCallback(() => {
-    setIsRightInspectorOpen((prev) => {
-      const next = !prev;
-      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-        safeStorage.setItem('bible_right_inspector_open', String(next));
-      }
-      return next;
-    });
+    setIsRightInspectorOpen((prev) => !prev);
   }, []);
 
   const openInspectorWithWord = useCallback((word: InspectedWordData) => {
     setInspectedWord(word);
     setActiveInspectorTab('strong');
     setIsRightInspectorOpen(true);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      safeStorage.setItem('bible_right_inspector_open', 'true');
-    }
   }, []);
 
   const openInspectorWithVerse = useCallback((verse: InspectedVerseData) => {
     setInspectedVerse(verse);
     setActiveInspectorTab('versions');
     setIsRightInspectorOpen(true);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      safeStorage.setItem('bible_right_inspector_open', 'true');
-    }
   }, []);
 
   const setRightInspectorOpen = useCallback((open: boolean) => {
     setIsRightInspectorOpen(open);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      safeStorage.setItem('bible_right_inspector_open', String(open));
-    }
   }, []);
 
   // Control de visibilidad del Header Superior sincronizado con el scroll
@@ -343,9 +263,6 @@ export const BiblePassageProvider: React.FC<BiblePassageProviderProps> = ({ chil
 
   const closeInspector = useCallback(() => {
     setIsRightInspectorOpen(false);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      safeStorage.setItem('bible_right_inspector_open', 'false');
-    }
   }, []);
 
   // Reaccionar al cambio de idioma de la interfaz (ES <-> EN) de manera inmediata y fluida

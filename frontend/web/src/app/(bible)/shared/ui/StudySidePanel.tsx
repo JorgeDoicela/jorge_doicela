@@ -103,56 +103,10 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
 
   const [independentWidth, setIndependentWidth] = useState<number>(initialWidth);
 
-  // Sincronización post-montaje con localStorage para evitar Hydration Mismatch en SSR
+  // Sincronizar limpiamente si cambia el ancho base por defecto del módulo (cambio de ruta o props)
   useEffect(() => {
-    if (storageKey && typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-          const parsed = Number(saved);
-          const min = isLeft ? MIN_LEFT_SIDEBAR_WIDTH : MIN_RIGHT_INSPECTOR_WIDTH;
-          const max = isLeft ? MAX_LEFT_SIDEBAR_WIDTH : MAX_RIGHT_INSPECTOR_WIDTH;
-          if (!isNaN(parsed) && parsed >= min) {
-            setIndependentWidth(Math.min(max, parsed));
-          }
-        }
-      } catch {
-        // Fallback en modo privado
-      }
-    }
-  }, [storageKey, isLeft]);
-
-  const handleIndependentResize = useCallback(
-    (newW: number) => {
-      const min = isLeft ? MIN_LEFT_SIDEBAR_WIDTH : MIN_RIGHT_INSPECTOR_WIDTH;
-      const max = isLeft ? MAX_LEFT_SIDEBAR_WIDTH : MAX_RIGHT_INSPECTOR_WIDTH;
-      const clamped = Math.min(max, Math.max(120, newW));
-      setIndependentWidth(clamped);
-      if (storageKey && typeof window !== 'undefined') {
-        try {
-          if (clamped >= min) {
-            localStorage.setItem(storageKey, String(clamped));
-          }
-        } catch {
-          // Ignorar cuota o privacidad
-        }
-      }
-      propOnResize?.(clamped);
-    },
-    [isLeft, storageKey, propOnResize],
-  );
-
-  const handleIndependentReset = useCallback(() => {
     setIndependentWidth(initialWidth);
-    if (storageKey && typeof window !== 'undefined') {
-      try {
-        localStorage.removeItem(storageKey);
-      } catch {
-        // Ignorar
-      }
-    }
-    propOnReset?.();
-  }, [initialWidth, storageKey, propOnReset]);
+  }, [initialWidth]);
 
   // Resolución de Visibilidad
   const isOpen =
@@ -167,30 +121,28 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
     (isLeft ? passageContext?.toggleLeftSidebar : passageContext?.closeInspector) ??
     (() => {});
 
-  // Resolución de Ancho y Handlers
-  const currentWidth =
-    propWidth ??
-    (storageKey
-      ? independentWidth
-      : isLeft
-      ? passageContext?.leftSidebarWidth ?? 280
-      : passageContext?.rightInspectorWidth ?? 340);
+  // Patrón estándar de React: Controlado vs Autónomo (Controlled vs Uncontrolled)
+  const isControlledWidth = propWidth !== undefined;
+  const currentWidth = isControlledWidth ? propWidth : independentWidth;
 
-  const handleResize = storageKey
-    ? handleIndependentResize
-    : propOnResize ??
-      (isLeft
-        ? passageContext?.setLeftSidebarWidth
-        : passageContext?.setRightInspectorWidth) ??
-      (() => {});
+  const handleResize = useCallback(
+    (newW: number) => {
+      const max = isLeft ? MAX_LEFT_SIDEBAR_WIDTH : MAX_RIGHT_INSPECTOR_WIDTH;
+      const clamped = Math.min(max, Math.max(120, newW));
+      if (!isControlledWidth) {
+        setIndependentWidth(clamped);
+      }
+      propOnResize?.(clamped);
+    },
+    [isLeft, isControlledWidth, propOnResize],
+  );
 
-  const handleReset = storageKey
-    ? handleIndependentReset
-    : propOnReset ??
-      (isLeft
-        ? passageContext?.resetLeftSidebarWidth
-        : passageContext?.resetRightInspectorWidth) ??
-      (() => {});
+  const handleReset = useCallback(() => {
+    if (!isControlledWidth) {
+      setIndependentWidth(initialWidth);
+    }
+    propOnReset?.();
+  }, [isControlledWidth, initialWidth, propOnReset]);
 
   const [isDragging, setIsDragging] = useState(false);
 

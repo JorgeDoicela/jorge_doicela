@@ -81,11 +81,11 @@ export function SoftwareArticleLayout({
               aria-label={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
             />
             
-            {/* Cabecera del Artículo */}
-            <header className="space-y-5">
+            {/* Cabecera Editorial del Artículo (Hero Centrado con Divisor) */}
+            <header className="space-y-6 text-center border-b border-black/5 dark:border-white/5 pb-8">
               
-              {/* Barra Jerárquica y Metadatos Contextuales (Propuesta 1: Integración Editorial) */}
-              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs select-none">
+              {/* Barra Jerárquica de Navegación Centrada */}
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-xs select-none">
                 {/* Migas de Pan (Breadcrumbs) Embebidas */}
                 <nav aria-label="Breadcrumb" className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400">
                   <Link
@@ -120,57 +120,61 @@ export function SoftwareArticleLayout({
                   ))}
                 </nav>
 
-                {/* Separador de Metadatos y Fecha */}
-                {date && (
-                  <>
-                    <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
-                    <time dateTime={date} className="font-mono text-slate-500 dark:text-zinc-400">
-                      {date}
-                    </time>
-                  </>
-                )}
-
                 {/* Badge contextual opcional */}
                 {badge && (
-                  <div className="ml-auto">
+                  <div className="inline-flex items-center ml-1">
                     {badge}
                   </div>
                 )}
               </div>
 
-              {/* Título Principal H1 */}
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] leading-[1.15] tracking-tight">
+              {/* Título Principal H1 Centrado */}
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] leading-[1.15] tracking-tight max-w-4xl mx-auto">
                 {title}
               </h1>
 
-              {/* Subtítulo / Extracto Destacado */}
+              {/* Subtítulo / Extracto Destacado Centrado */}
               {subtitle && (
-                <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed max-w-2xl mx-auto">
                   {subtitle}
                 </p>
               )}
 
-              {/* Firma del Autor con micro-avatar de perfil */}
-              {author && (
-                <div className="flex items-center gap-2 pt-1">
-                  <div className="w-5 h-5 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
-                    <Image
-                      src={authorImage}
-                      alt={author}
-                      width={20}
-                      height={20}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-xs font-mono text-slate-600 dark:text-zinc-400 font-medium">
-                    {author}
-                  </span>
+              {/* Byline Editorial Centrado: Autor, Avatar y Fecha */}
+              {(author || date) && (
+                <div className="flex items-center justify-center gap-3 pt-1 text-xs select-none">
+                  {author && (
+                    <div className="inline-flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
+                        <Image
+                          src={authorImage}
+                          alt={author}
+                          width={24}
+                          height={24}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="font-mono text-xs font-semibold text-slate-900 dark:text-zinc-200">
+                        {author}
+                      </span>
+                    </div>
+                  )}
+
+                  {author && date && (
+                    <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
+                  )}
+
+                  {date && (
+                    <time dateTime={date} className="font-mono text-slate-500 dark:text-zinc-400">
+                      {date}
+                    </time>
+                  )}
                 </div>
               )}
 
               {/* Callout opcional (Avisos de seguridad, notas, CVE) */}
               {callout && (
-                <div className="pt-2">
+                <div className="pt-2 text-left">
                   {callout}
                 </div>
               )}

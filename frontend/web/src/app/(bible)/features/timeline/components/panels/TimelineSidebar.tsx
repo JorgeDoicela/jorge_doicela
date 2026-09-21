@@ -13,17 +13,24 @@ import {
   Layers,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
+import { useTimelineContextSafe } from '../../context/TimelineContext';
 import { useBiblicalTimeline } from '../../hooks/useBiblicalTimeline';
+import { ResizeBorderHandle } from '../../../../shared/ui';
 
 export const TimelineSidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
-  const timeline = useBiblicalTimeline();
+  const timelineContext = useTimelineContextSafe();
+  const localTimeline = useBiblicalTimeline();
+  const timeline = timelineContext || localTimeline;
   const tStudio = useTranslations('Studio');
 
   const [activeTab, setActiveTab] = useState<'eras' | 'tracks'>('eras');
 
-  const isOpen = passageContext?.isLeftSidebarOpen ?? true;
+  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
+  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
+  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
+  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
 
   if (!isOpen) return null;
 
@@ -39,12 +46,12 @@ export const TimelineSidebar: React.FC = () => {
   ];
 
   const tracks = [
-    { id: 'kings_judah', label: 'Reyes de Judá', icon: Crown, color: 'text-amber-500' },
-    { id: 'kings_israel', label: 'Reyes de Israel', icon: Crown, color: 'text-blue-500' },
-    { id: 'prophets', label: 'Profetas Bíblicos', icon: ScrollText, color: 'text-emerald-500' },
-    { id: 'empires', label: 'Imperios Mundiales', icon: Globe, color: 'text-purple-500' },
-    { id: 'milestones', label: 'Hitos Arqueológicos', icon: Sparkles, color: 'text-rose-500' },
-  ] as const;
+    { id: 'judah' as const, label: 'Reyes de Judá', icon: Crown, color: 'text-amber-500' },
+    { id: 'israel' as const, label: 'Reyes de Israel', icon: Crown, color: 'text-blue-500' },
+    { id: 'prophets' as const, label: 'Profetas Bíblicos', icon: ScrollText, color: 'text-emerald-500' },
+    { id: 'empires' as const, label: 'Imperios Mundiales', icon: Globe, color: 'text-purple-500' },
+    { id: 'milestones' as const, label: 'Hitos Arqueológicos', icon: Sparkles, color: 'text-rose-500' },
+  ];
 
   return (
     <>
@@ -57,31 +64,18 @@ export const TimelineSidebar: React.FC = () => {
 
       <aside
         aria-label="Navegación de la Cronología Sincrónica"
-        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-84 xl:w-92 flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
+        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
+        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-84 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
       >
-        {/* Handle de Colapso Interactivo en Borde Divisorio Derecho (Estilo DIITRA) */}
-        <div
-          className="hidden lg:flex absolute top-0 -right-3 w-6 h-full cursor-pointer z-30 group/border items-center justify-center select-none"
-          onClick={handleClose}
-          title={tStudio('closeSidebar') || 'Ocultar panel'}
-        >
-          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-transparent group-hover/border:bg-zinc-400 dark:group-hover/border:bg-zinc-500 transition-colors duration-150" />
-          <div className="relative z-10 w-6 h-7 rounded-md bg-white dark:bg-[#0a0a0a] border border-zinc-300 dark:border-zinc-700 shadow-sm opacity-0 group-hover/border:opacity-100 hover:scale-110 hover:border-zinc-500 dark:hover:border-zinc-400 transition-all duration-150 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100">
-            <svg
-              className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-200"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="8" y1="2" x2="8" y2="14" />
-              <polyline points="4 6 1 8 4 10" />
-              <polyline points="12 6 15 8 12 10" />
-            </svg>
-          </div>
-        </div>
+        {/* Handle de Colapso y Redimensionamiento Interactivo en Borde Divisorio Derecho */}
+        <ResizeBorderHandle
+          side="left"
+          currentWidth={leftSidebarWidth}
+          onResize={setLeftSidebarWidth}
+          onReset={resetLeftSidebarWidth}
+          onCollapse={handleClose}
+          collapseTitle={tStudio('closeSidebar') || 'Ocultar panel'}
+        />
 
         {/* Cabecera Móvil */}
         <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80">
@@ -92,7 +86,9 @@ export const TimelineSidebar: React.FC = () => {
             </span>
           </div>
           <button
+            type="button"
             onClick={handleClose}
+            aria-label={tStudio('closeSidebar') || 'Cerrar panel'}
             className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
           >
             <X className="w-4 h-4" />
@@ -151,7 +147,7 @@ export const TimelineSidebar: React.FC = () => {
                   className="w-full text-left p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-amber-400 dark:hover:border-amber-600 transition-all cursor-pointer flex flex-col gap-0.5 group"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                       {era.label}
                     </span>
                     <span className="text-[10px] font-mono text-zinc-400">
@@ -174,13 +170,13 @@ export const TimelineSidebar: React.FC = () => {
                 </span>
               </div>
               {tracks.map((track) => {
-                const isVisible = timeline.visibleTracks[track.id as keyof typeof timeline.visibleTracks];
+                const isVisible = timeline.visibleTracks[track.id];
                 const Icon = track.icon;
                 return (
                   <button
                     key={track.id}
                     type="button"
-                    onClick={() => timeline.toggleTrack(track.id as any)}
+                    onClick={() => timeline.toggleTrack(track.id)}
                     className={`w-full text-left px-3 py-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                       isVisible
                         ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-100/90 dark:bg-zinc-900/90 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'

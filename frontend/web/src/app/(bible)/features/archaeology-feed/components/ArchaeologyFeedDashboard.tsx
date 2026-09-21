@@ -3,11 +3,14 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useArchaeologyFeed } from '../hooks/useArchaeologyFeed';
+import { useArchaeologyContextSafe } from '../context/ArchaeologyContext';
 import { FeedFilterBar } from './FeedFilterBar';
 import { ArticleCard } from './ArticleCard';
 import { ArticleReaderModal } from './ArticleReaderModal';
 
 export const ArchaeologyFeedDashboard: React.FC = () => {
+  const archContext = useArchaeologyContextSafe();
+  const localFeed = useArchaeologyFeed();
   const {
     articles,
     allArticlesCount,
@@ -23,7 +26,7 @@ export const ArchaeologyFeedDashboard: React.FC = () => {
     activeArticle,
     feedViewMode,
     setFeedViewMode,
-  } = useArchaeologyFeed();
+  } = archContext || localFeed;
   const t = useTranslations('ArchaeologyFeed');
 
   return (

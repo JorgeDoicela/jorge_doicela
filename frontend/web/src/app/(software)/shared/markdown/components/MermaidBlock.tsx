@@ -139,12 +139,21 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
   const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isInteracting, setIsInteracting] = useState<boolean>(false);
   const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const hasMovedRef = useRef<boolean>(false);
   const startClickPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const viewportRef = useRef<HTMLDivElement>(null);
-  const touchStartRef = useRef<{ x: number; y: number; dist?: number }>({ x: 0, y: 0 });
+  const scaleRef = useRef<number>(scale);
+  const positionRef = useRef<{ x: number; y: number }>(position);
+
+  useEffect(() => {
+    scaleRef.current = scale;
+  }, [scale]);
+
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
 
   const diagramCategory = useMemo(() => detectDiagramType(chart), [chart]);
   const DiagramIcon = useMemo(() => getDiagramIcon(diagramCategory), [diagramCategory]);
@@ -336,10 +345,10 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
     };
   }, [isExpanded, closeModal, handleZoomIn, handleZoomOut, handleReset]);
 
-  // Manejadores de arrastre con ratón (Pan)
+  // Manejadores de arrastre con ratón (Pan en Desktop)
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    setIsDragging(true);
+    setIsInteracting(true);
     hasMovedRef.current = false;
     startClickPosRef.current = { x: e.clientX, y: e.clientY };
     dragStartRef.current = {
@@ -349,7 +358,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
+    if (!isInteracting) return;
     const dist = Math.hypot(
       e.clientX - startClickPosRef.current.x,
       e.clientY - startClickPosRef.current.y
@@ -364,57 +373,154 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
+    setIsInteracting(false);
   };
 
-  // Manejadores táctiles para smartphones y tablets (Touch Pan & Pinch Zoom)
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      const touch = e.touches[0];
-      setIsDragging(true);
-      hasMovedRef.current = false;
-      startClickPosRef.current = { x: touch.clientX, y: touch.clientY };
-      touchStartRef.current = {
-        x: touch.clientX - position.x,
-        y: touch.clientY - position.y,
-      };
-    } else if (e.touches.length === 2) {
-      hasMovedRef.current = true;
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      touchStartRef.current.dist = Math.hypot(dx, dy);
-    }
-  };
+  // Manejadores táctiles nativos con passive: false para smartphones y tablets (Touch Pan & Pinch Zoom fluido)
+  useEffect(() => {
+    if (!isExpanded) return;
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (e.touches.length === 1 && isDragging) {
-      const touch = e.touches[0];
-      const dist = Math.hypot(
-        touch.clientX - startClickPosRef.current.x,
-        touch.clientY - startClickPosRef.current.y
-      );
-      if (dist > 8) {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    let touchGesture = {
+      mode: 'none' as 'none' | 'pan' | 'pinch',
+      startDist: 0,
+      baseScale: 1,
+      startMidX: 0,
+      startMidY: 0,
+      basePosX: 0,
+      basePosY: 0,
+      lastTouchX: 0,
+      lastTouchY: 0,
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        hasMovedRef.current = false;
+        startClickPosRef.current = { x: t.clientX, y: t.clientY };
+        touchGesture = {
+          mode: 'pan',
+          startDist: 0,
+          baseScale: scaleRef.current,
+          startMidX: t.clientX,
+          startMidY: t.clientY,
+          basePosX: positionRef.current.x,
+          basePosY: positionRef.current.y,
+          lastTouchX: t.clientX,
+          lastTouchY: t.clientY,
+        };
+        setIsInteracting(true);
+      } else if (e.touches.length === 2) {
         hasMovedRef.current = true;
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+        const midX = (t1.clientX + t2.clientX) / 2;
+        const midY = (t1.clientY + t2.clientY) / 2;
+        touchGesture = {
+          mode: 'pinch',
+          startDist: Math.max(dist, 1),
+          baseScale: scaleRef.current,
+          startMidX: midX,
+          startMidY: midY,
+          basePosX: positionRef.current.x,
+          basePosY: positionRef.current.y,
+          lastTouchX: midX,
+          lastTouchY: midY,
+        };
+        setIsInteracting(true);
       }
-      setPosition({
-        x: touch.clientX - touchStartRef.current.x,
-        y: touch.clientY - touchStartRef.current.y,
-      });
-    } else if (e.touches.length === 2 && touchStartRef.current.dist) {
-      hasMovedRef.current = true;
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const dist = Math.hypot(dx, dy);
-      const factor = dist / touchStartRef.current.dist;
-      touchStartRef.current.dist = dist;
-      setScale((prev) => Math.min(5, Math.max(0.3, Number((prev * factor).toFixed(2)))));
-    }
-  };
+    };
 
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    touchStartRef.current.dist = undefined;
-  };
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+
+      if (e.touches.length === 1 && touchGesture.mode === 'pan') {
+        const t = e.touches[0];
+        const distFromStart = Math.hypot(
+          t.clientX - startClickPosRef.current.x,
+          t.clientY - startClickPosRef.current.y
+        );
+        if (distFromStart > 5) {
+          hasMovedRef.current = true;
+        }
+        const deltaX = t.clientX - touchGesture.lastTouchX;
+        const deltaY = t.clientY - touchGesture.lastTouchY;
+        touchGesture.lastTouchX = t.clientX;
+        touchGesture.lastTouchY = t.clientY;
+        setPosition((prev) => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
+      } else if (e.touches.length === 2) {
+        hasMovedRef.current = true;
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+        const midX = (t1.clientX + t2.clientX) / 2;
+        const midY = (t1.clientY + t2.clientY) / 2;
+
+        if (touchGesture.mode !== 'pinch') {
+          touchGesture = {
+            mode: 'pinch',
+            startDist: Math.max(dist, 1),
+            baseScale: scaleRef.current,
+            startMidX: midX,
+            startMidY: midY,
+            basePosX: positionRef.current.x,
+            basePosY: positionRef.current.y,
+            lastTouchX: midX,
+            lastTouchY: midY,
+          };
+        } else {
+          const factor = dist / touchGesture.startDist;
+          const nextScale = Math.min(5, Math.max(0.3, touchGesture.baseScale * factor));
+          setScale(nextScale);
+
+          const deltaMidX = midX - touchGesture.startMidX;
+          const deltaMidY = midY - touchGesture.startMidY;
+          setPosition({
+            x: touchGesture.basePosX + deltaMidX,
+            y: touchGesture.basePosY + deltaMidY,
+          });
+        }
+      }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        touchGesture = {
+          mode: 'pan',
+          startDist: 0,
+          baseScale: scaleRef.current,
+          startMidX: t.clientX,
+          startMidY: t.clientY,
+          basePosX: positionRef.current.x,
+          basePosY: positionRef.current.y,
+          lastTouchX: t.clientX,
+          lastTouchY: t.clientY,
+        };
+        startClickPosRef.current = { x: t.clientX, y: t.clientY };
+      } else if (e.touches.length === 0) {
+        touchGesture.mode = 'none';
+        setIsInteracting(false);
+      }
+    };
+
+    viewport.addEventListener('touchstart', onTouchStart, { passive: false });
+    viewport.addEventListener('touchmove', onTouchMove, { passive: false });
+    viewport.addEventListener('touchend', onTouchEnd, { passive: false });
+    viewport.addEventListener('touchcancel', onTouchEnd, { passive: false });
+
+    return () => {
+      viewport.removeEventListener('touchstart', onTouchStart);
+      viewport.removeEventListener('touchmove', onTouchMove);
+      viewport.removeEventListener('touchend', onTouchEnd);
+      viewport.removeEventListener('touchcancel', onTouchEnd);
+    };
+  }, [isExpanded]);
 
   // Cierre limpio al hacer clic afuera del diagrama (en el fondo)
   const handleBackdropClick = () => {
@@ -584,12 +690,9 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
               onDoubleClick={handleReset}
-              className={`w-full h-full flex items-center justify-center overflow-hidden ${
-                isDragging ? 'cursor-grabbing' : 'cursor-default'
+              className={`w-full h-full flex items-center justify-center overflow-hidden touch-none select-none ${
+                isInteracting ? 'cursor-grabbing' : 'cursor-default'
               }`}
             >
               <div
@@ -598,11 +701,11 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
                   width: `${Math.max(dimensions?.width || 800, 720)}px`,
                   transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
                   transformOrigin: 'center center',
-                  transition: isDragging ? 'none' : 'transform 120ms cubic-bezier(0, 0, 0.2, 1)',
+                  transition: isInteracting ? 'none' : 'transform 180ms cubic-bezier(0, 0, 0.2, 1)',
                 }}
-                className={`inline-block p-6 sm:p-10 md:p-12 rounded-3xl bg-white dark:bg-[#12161f] shadow-2xl border border-black/10 dark:border-white/10 select-none pointer-events-auto ${
-                  isDragging ? 'cursor-grabbing' : 'cursor-grab'
-                } [&_*]:cursor-inherit [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-none [&_svg]:block`}
+                className={`inline-block p-6 sm:p-10 md:p-12 rounded-3xl bg-white dark:bg-[#12161f] shadow-2xl border border-black/10 dark:border-white/10 select-none pointer-events-auto touch-none ${
+                  isInteracting ? 'cursor-grabbing' : 'cursor-grab'
+                } [&_*]:cursor-inherit [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-none [&_svg]:block [&_svg]:pointer-events-none [&_svg_*]:pointer-events-none`}
                 dangerouslySetInnerHTML={{ __html: svgContent }}
               />
             </div>

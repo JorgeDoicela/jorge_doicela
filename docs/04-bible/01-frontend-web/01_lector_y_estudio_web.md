@@ -268,7 +268,17 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
 * **Alineación Superior al Ras (`pt-0`):** Se eliminó el padding superior del contenedor principal (`pt-0`) y se acortó el espaciado vertical (`space-y-2`), situando la barra de herramientas directamente debajo de la cabecera sin holguras vacías.
 * **Presencia Editorial del Capítulo:** Con `pt-8` y `pb-6 mb-6`, el título del libro y el capítulo destacan con elegancia editorial completa y nunca son ocluidos ni cortados.
 
-### 7.7 Arquitectura Desacoplada App Shell y Auto-Hide Inteligente (`layout.tsx`, `BibleHeaderNav.tsx`)
+### 7.7 Comportamiento Predeterminado de Laterales en PC y Móvil (*Workspace Layout Engine*)
+* **Gestión Centralizada en `BiblePassageContext`:** El estado de apertura del panel lateral izquierdo (`isLeftSidebarOpen`) y del inspector exegético derecho (`isRightInspectorOpen`) se orquesta de forma centralizada y uniforme para los 8 módulos del Workspace Studio (`standard`, `parallel`, `interlinear`, `word-study`, `atlas`, `timeline`, `archaeology`, `evangelism`).
+* **Regla Canónica por Factor de Forma:**
+  * **En PC / Desktop (`>= 1024px` / `lg:`):** Por defecto, **ambos paneles laterales inician ABIERTOS** simultáneamente. El usuario dispone de inmediato del selector canónico de libros/capítulos a la izquierda, el lienzo editorial o interactivo al centro, y el inspector exegético/analítico a la derecha, aprovechando todo el ancho de monitores de escritorio y laptops sin clics previos.
+  * **En Móvil / Tablet (`< 1024px`):** Por defecto, **ambos paneles inician CERRADOS**. Esto garantiza un lienzo de lectura limpio, accesible y libre de sobreposiciones modales o cortinas oscuras al cargar la página.
+* **Transiciones Reactivas de Redimensionamiento (Resize Listener):**
+  * Al transicionar la ventana de PC a móvil (`< 1024px`), ambos laterales se colapsan automáticamente para prevenir que drawers fijos cubran la pantalla.
+  * Al transicionar de móvil a PC (`>= 1024px`), el sistema restaura fluidamente la vista de 3 columnas abierta por defecto (o según la preferencia guardada en `localStorage`).
+* **Aislamiento de Persistencia:** Los toggles manuales solo escriben en `localStorage` (`bible_left_sidebar_open` y `bible_right_inspector_open`) cuando el usuario opera en desktop (`>= 1024px`), evitando que aperturas efímeras en móviles sobreescriban la configuración de escritorio.
+
+### 7.8 Arquitectura Desacoplada App Shell y Auto-Hide Inteligente (`layout.tsx`, `BibleHeaderNav.tsx`)
 * **Patrón App Shell de Estudio Profesional (Cero Layout Shifts - CLS = 0):** El workspace de estudio adopta la arquitectura canónica de IDEs y suites profesionales (Geist, Linear, VS Code):
   * **Marco Raíz Inamovible:** `h-screen flex flex-col overflow-hidden`. La ventana del navegador nunca produce scroll global ni desacomoda los paneles laterales.
   * **Auto-Hide Inteligente de Cabecera (`BibleHeaderNav.tsx`):** La barra de 56px (`h-14`) cuenta con transición fluida de altura y opacidad (`transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden`).
@@ -280,7 +290,7 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   * **Canvas Central de Lectura (`<main>`):** Ocupa el espacio central (`flex-1 h-full overflow-y-auto`). La lectura de versículos se desplaza a 120 FPS sin colisiones y dispara los eventos de intención de forma nativa.
   * **Footer Editorial Integrado:** El pie de página con información legal y enlaces canónicos se aloja al final del canvas de lectura (`<main>`).
 
-### 7.8 Botones Flotantes Laterales de Cambio de Capítulo Adaptables (`ChapterNavigator.tsx`)
+### 7.9 Botones Flotantes Laterales de Cambio de Capítulo Adaptables (`ChapterNavigator.tsx`)
 * **Visibilidad Continua sin Oclusión:** Los botones de navegación de capítulos flotan a media altura (`top-1/2 -translate-y-1/2`) en los flancos de la lectura. Se sincronizan reactivamente con el estado de apertura de los paneles (`isLeftSidebarOpen` e `isRightInspectorOpen` de `BiblePassageContext`), ajustando sus posiciones con `transition-[left,right] duration-300`:
   * **Con panel izquierdo abierto:** Se desplaza automáticamente a `lg:left-[calc(20rem+1rem)]`, manteniéndose visible al ras del margen del sidebar sin quedar tapado.
   * **Con inspector derecho abierto:** Se desplaza automáticamente a `lg:right-[calc(22rem+1rem)] xl:right-[calc(24rem+1rem)]`, manteniéndose visible al margen del inspector sin ocultarse.
@@ -328,27 +338,46 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   4. **Módulo 4: Análisis de Palabra / Léxicos (`/study/word-study`):**
      * **Panel Izquierdo (`WordStudySidebar.tsx`):** Selector de corpus idiomático (Hebreo AT vs Griego NT), explorador de términos teológicos vertebrales (*Jesed, Shalom, Bara, Shuv, Kadosh, Berit, Logos, Agape, Charis, Koinonia, Pneuma, Dikaiosyne*) con conteo de ocurrencias, y buscador reactivo por código Strong, lema o glosa.
      * **Inspector Derecho (`WordStudyInspector.tsx`):** Ficha exegética del vocablo activo con lema, transliteración, glosa formal, concepto teológico central, lista interactiva de pasajes clave en el canon bíblico con enlaces directos y botón de copia formateada.
-  5. **Módulo 5: Atlas Bíblico Vectorial (`/study/atlas`):**
-     * **Panel Izquierdo (`HistoricalSidebar.tsx` en Lugares):** Catálogo exhaustivo de lugares bíblicos agrupados por categorías (*Ciudades, Montes, Ríos y Mares, Yacimientos arqueológicos*), buscador reactivo con telemetría WGS84 y capas cartográficas.
-     * **Inspector Derecho (`HistoricalInspector.tsx`):** Telemetría georreferenciada WGS84 del lugar seleccionado, nombres originales, hallazgos y referencias bíblicas.
+  5. **Módulo 5: Atlas Bíblico Cartográfico (`/study/atlas`):**
+     * **Contexto:** `AtlasProvider` / `useAtlasContextSafe()`.
+     * **Panel Izquierdo (`AtlasSidebar.tsx`):** Catálogo de lugares bíblicos agrupados por épocas y categorías (*Ciudades, Montes, Ríos y Mares, Yacimientos arqueológicos*), buscador reactivo con telemetría WGS84 y capas cartográficas.
+     * **Inspector Derecho (`AtlasInspector.tsx`):** Telemetría georreferenciada WGS84 del lugar seleccionado, nombres originales (hebreo/griego), coordenadas, altitud y referencias bíblicas.
   6. **Módulo 6: Cronología Sincrónica (`/study/timeline`):**
-     * **Panel Izquierdo (`HistoricalSidebar.tsx` en Épocas):** Explorador de las 6 Grandes Épocas Bíblicas (*Patriarcas, Éxodo, Monarquía, Exilio, Segundo Templo, Apostólica*), filtrado por imperios contemporáneos.
-     * **Inspector Derecho (`HistoricalInspector.tsx`):** Ficha técnica del evento cronológico activo, sincronización de fechas a.C./d.C. e interconexión con reyes de Judá e Israel.
+     * **Contexto:** `TimelineProvider` / `useTimelineContextSafe()`.
+     * **Panel Izquierdo (`TimelineSidebar.tsx`):** Explorador de las 8 Grandes Épocas Bíblicas (*Patriarcas, Éxodo, Monarquía Unida, Monarquía Dividida, Exilio, Segundo Templo, Apostólica*) y alternador de carriles sincrónicos (Reyes de Judá, Reyes de Israel, Profetas, Imperios Mundiales, Hitos).
+     * **Inspector Derecho (`TimelineInspector.tsx`):** Ficha histórica sincrónica: fechas a.C./d.C., gobernantes contemporáneos, pasajes asociados y correlaciones políticas.
   7. **Módulo 7: Arqueología Bíblica (`/study/archaeology`):**
-     * **Panel Izquierdo (`HistoricalSidebar.tsx` en Categorías):** Filtro por regiones de excavación, instituciones arqueológicas, museos y tipos de artefactos epigráficos.
-     * **Inspector Derecho (`HistoricalInspector.tsx`):** Ficha técnica de la excavación y hallazgo, transcripción epigráfica y confirmación arqueológica del texto bíblico.
+     * **Contexto:** `ArchaeologyProvider` / `useArchaeologyContextSafe()`.
+     * **Panel Izquierdo (`ArchaeologySidebar.tsx`):** Filtro por tipos de registro (*Excavaciones Recientes, Manuscritos y Epigrafía, Confiabilidad Histórica*) y cuencas geográficas (*Jerusalén, Galilea, Jordán, Egipto, Asia Menor, Roma*).
+     * **Inspector Derecho (`ArchaeologyInspector.tsx`):** Ficha arqueológica completa del hallazgo activo: datación, institución responsable, transcripción epigráfica y confirmación arqueológica del texto bíblico.
   8. **Módulo 8: Evangelización y Apologética (`/study/evangelism`):**
+     * **Contexto:** `EvangelismProvider` / `useEvangelismContextSafe()`.
      * **Panel Izquierdo (`EvangelismSidebar.tsx`):** Conmutación contextual adaptada al sub-eje activo (`?tab=`):
-       - *Rutas (`pathways`):* Catálogo de rutas soteriológicas secuenciales (*Camino de Romanos, Puente a la Vida, Cuatro Verdades*) con indicador de pasos.
+       - *Rutas (`pathways`):* Catálogo de rutas soteriológicas secuenciales (*El Puente hacia la Vida, Las Cuatro Verdades, El Camino de Romanos*) con indicador de pasos.
        - *Objeciones (`objections`):* Filtro por categorías apologéticas temáticas (*Existencia de Dios, Confiabilidad de las Escrituras, El Problema del Mal, La Resurrección, Moralidad*) y buscador en vivo.
        - *Tratados (`tracts`):* Catálogo de tratados por público objetivo (*Jóvenes, Universitarios, Buscadores, Familia*) y bosquejos homiléticos.
      * **Inspector Derecho (`EvangelismInspector.tsx`):** Detalle exegético del paso activo, argumentación apologética rigurosa con consejos prácticos para el diálogo o bosquejo homilético completo con oración de fe y discipulado inicial.
 
-* **Ergonomía Unificada y Control Total:**
-  * Todos los paneles especializados heredan los mismos estándares visuales Geist / Vercel: pestañas flotantes arrastrables en el eje Y ([`DraggableEdgeTab.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28bible%29/components/DraggableEdgeTab.tsx)), tiradores interactivos de colapso en la línea divisoria (`group-hover:opacity-100` con `(←|→)` centrado verticalmente), drawers adaptativos con backdrop en pantallas móviles y sincronización fluida de estado global mediante sus contextos dedicados (`BiblePassageContext`, `ParallelContext`, `InterlinearContext`, `LexiconContext`, `AtlasContext`, `EvangelismContext`).
-  * En cualquier momento, el usuario puede colapsar ambos paneles para disfrutar del canvas central de lectura, comparación, interlineal, mapas o cronología en modo libre a pantalla completa.
+* **Ergonomía Unificada, Redimensionamiento Interactivo Profesional y Control Total:**
+  * **Sistema de Redimensionamiento Dinámico (`ResizeBorderHandle.tsx`):** Todos los módulos de estudio (los 8 entornos: Estándar, Paralelo, Interlineal, Lexicón de Palabras, Atlas Cartográfico, Cronología Sincrónica, Registro Arqueológico y Evangelización) cuentan con un divisor inteligente con soporte completo de captura de puntero (`pointer capture`, `cursor-col-resize`), permitiendo arrastrar fluidamente el ancho de los paneles laterales hacia afuera y hacia adentro en escritorio sin recortes ni latencias.
+  * **Puntos de Anclaje y Protección del Canvas:** Límites elásticos protegidos mediante funciones `clamp`: el panel lateral izquierdo admite un rango entre 260px y el 45% del viewport, mientras que el inspector derecho admite entre 280px y el 48% del viewport, garantizando que el canvas central de lectura nunca colapse ni pierda legibilidad.
+  * **Persistencia y Restablecimiento Rápido:** Los anchos personalizados se persisten automáticamente en `localStorage` (`bible_left_sidebar_width`, `bible_right_inspector_width`) de forma asíncrona tras el primer render para evitar desajustes de hidratación SSR. Un doble clic rápido en la zona de arrastre restablece instantáneamente el panel a su tamaño estándar de diseño (320px izquierda, 360px derecha).
+  * **Sincronización Cinemática de Elementos Flotantes:** El navegador flotante de capítulos (`ChapterNavigator.tsx`) traslada dinámicamente sus botones de paginación `< Anterior` y `Siguiente >` mediante variables CSS vivas (`--desktop-left`, `--desktop-right`), manteniendo siempre una separación limpia de 20px respecto al borde visible del panel redimensionado.
+  * **Coexistencia Dual de Colapso Rápido y Redimensionamiento:** La barra divisoria interactiva integra de forma limpia y sin conflictos ambos comportamientos mediante detección del delta de puntero: un clic directo (sin desplazamiento) en cualquier punto de la línea divisoria vertical o sobre el botón central estilo DIITRA `(→|←)` colapsa u oculta el panel inmediatamente; mientras que presionar y mover el cursor arrastra y redimensiona suavemente el ancho del panel.
 
 * **Arquitectura Libre de Hardcoding e Internacionalización Total (`next-intl`):**
   * Todos los perfiles contextuales (`BookHistoricalProfile`, `EvangelismApologeticsProfile`, `StrongMorphologyInspector`, `ParallelVerseInspector`, `BibleHeaderNav`, `BiblePurposeSection`, etc.) se encuentran 100% desacoplados de cadenas literales y consumen diccionarios simétricos en `messages/es.json` y `messages/en.json`.
   * Los glosarios soteriológicos, descripciones canónicas, etiquetas de navegación y badges morfológicos son reactivos y se adaptan al idioma de estudio seleccionado en el cliente o servidor.
+
+* **Auditoría de Calidad y Buenas Prácticas en las 8 Suites de Estudio (Cero Parches):**
+  * **Tipado Estricto sin Casts Inseguros (`as any`):** Todas las suites (`Standard`, `Parallel`, `Interlinear`, `Word Study`, `Atlas`, `Timeline`, `Archaeology`, `Evangelism`) cuentan con interfaces TypeScript unívocas en sus contextos, hooks y paneles. Las claves de filtros históricos sincronizan exactamente con el estado visible (`judah`, `israel`, `prophets`, `empires`, `milestones`), eliminando desalineaciones y casts arbitrarios.
+  * **Eliminación Total de Estados Iniciales Quemados (*Hardcoding*):** Se erradicaron las inicializaciones estáticas forzadas (como `'H2617'` o `'romans-road'`) en los hooks y contextos de `Evangelism` y `LexiconContext`. La selección de términos y rutas es 100% determinística y dinámica: al cargar el catálogo o cambiar de idioma bíblico (hebreo vs griego), el estado sincroniza reactivamente con el primer elemento del corpus correspondiente.
+  * **Unificación de Contexto Compartido en Canvas y Paneles:** Se aseguró que los lienzos centrales (ej. `TimelineDashboard`) consuman el contexto global provisto (`TimelineContextSafe`) en lugar de instanciar copias locales redundantes del hook, garantizando reactividad instantánea entre los controles del lienzo, el sidebar y el inspector.
+  * **Jerarquía Canónica y Ergonomía de Filtros:** En los selectores de modo (ej. `TimelineControls`), la opción panorámica global (`Todo Sincronizado`) se ubica siempre en la primera posición a la izquierda (`[Todo Sincronizado | Reyes vs Profetas | Biblia y Arqueología]`), manteniendo coherencia con el estándar de diseño del monorepo.
+  * **Tipografía Dinámica y Contención de Desbordamiento (Diff Textual):** En el inspector de diferencias textuales (`ParallelDiffInspector`), los tokens de comparación morfológica y divergencia léxica se estructuran en un contenedor multilínea `flex flex-wrap gap-x-1 gap-y-1.5 break-words items-baseline max-w-full`, garantizando que cotejos con diferencias completas (como español vs inglés) ajusten y envuelvan naturalmente cada palabra sin desbordar los límites físicos de la tarjeta.
+  * **Persistencia Resiliente y Desacoplada (`safeStorage`):** Se eliminó la duplicación dispersa de bloques `try ... catch` sobre `window.localStorage` en `BiblePassageContext`, encapsulando toda la interacción con el almacenamiento del navegador en el módulo puro `shared/utils/safeStorage.ts`. Provee tipado estricto (`getNumber`, `getBoolean`, `setItem`, `removeItem`), protección SSR automática y tolerancia a fallos en entornos de navegación privada o cuota restringida.
+  * **Accesibilidad (a11y) y Semántica Web:** Todos los botones interactivos definen explícitamente su atributo `type="button"`, etiquetas descriptivas `aria-label` y roles de navegación semántica `<aside aria-label="...">` tanto en escritorio como en drawers móviles táctiles.
+  * **Resiliencia ante Estados Nulos o Vacíos (Empty States):** Ningún inspector o panel lateral produce desbordamientos o lienzos en blanco cuando la selección es nula; cada entorno despliega una ficha técnica con instrucciones de uso y diseño Geist unificado cuando no hay versículo, término léxico, evento histórico, hallazgo arqueológico o ruta de evangelismo activa.
+
+
 

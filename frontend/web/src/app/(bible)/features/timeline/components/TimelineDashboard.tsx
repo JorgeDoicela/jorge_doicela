@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useBiblicalTimeline } from '../hooks/useBiblicalTimeline';
+import { useTimelineContextSafe } from '../context/TimelineContext';
 import { TimelineControls } from './TimelineControls';
 import { TimelineCanvas } from './TimelineCanvas';
 import { SynchronousComparisonView } from './SynchronousComparisonView';
@@ -11,6 +12,8 @@ export const TimelineDashboard: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const timelineContext = useTimelineContextSafe();
+  const localTimeline = useBiblicalTimeline();
   const {
     centerYearBC,
     zoomLevel,
@@ -41,7 +44,7 @@ export const TimelineDashboard: React.FC = () => {
     empires,
     milestones,
     isLoadingTimeline,
-  } = useBiblicalTimeline();
+  } = timelineContext || localTimeline;
 
   const toggleExpanded = () => {
     setIsExpanded((prev) => !prev);

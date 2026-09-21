@@ -7,4 +7,5 @@ export * from './components/EpigraphyViewer';
 export * from './components/panels/ArchaeologySidebar';
 export * from './components/panels/ArchaeologyInspector';
 export * from './hooks/useArchaeologyFeed';
+export * from './context/ArchaeologyContext';
 

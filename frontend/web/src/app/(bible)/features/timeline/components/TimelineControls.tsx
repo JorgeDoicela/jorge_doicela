@@ -68,6 +68,18 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             <span className="text-[10px] font-mono text-accents-4 uppercase px-1.5 hidden md:inline">{t('mode')}</span>
             <button
               type="button"
+              onClick={() => onSetPresetMode('all')}
+              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                isAllVisible
+                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  : 'text-accents-5 hover:text-foreground'
+              }`}
+              title={t('allSyncedTooltip')}
+            >
+              {t('allSynced')}
+            </button>
+            <button
+              type="button"
               onClick={() => onSetPresetMode('kings_prophets')}
               className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
                 isKingsProphetsOnly
@@ -89,18 +101,6 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
               title={t('bibleArchaeologyTooltip')}
             >
               {t('bibleArchaeology')}
-            </button>
-            <button
-              type="button"
-              onClick={() => onSetPresetMode('all')}
-              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
-                isAllVisible
-                  ? 'bg-background text-foreground font-semibold shadow-xs'
-                  : 'text-accents-5 hover:text-foreground'
-              }`}
-              title={t('allSyncedTooltip')}
-            >
-              {t('allSynced')}
             </button>
           </div>
         )}

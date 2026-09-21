@@ -17,90 +17,83 @@ import {
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useInterlinearContextSafe } from '../../context/InterlinearContext';
 import { InterlinearViewLayout } from '../../types';
+import { ResizeBorderHandle } from '../../../../shared/ui';
 
 interface CanonicalGroup {
   id: string;
   name: string;
   canon: 'OT' | 'NT';
-  books: { id: number; abbr: string; name: string; isAramaic?: boolean }[];
+  sub: string;
+  books: { id: number; abbr: string; name: string; lang: 'hebrew' | 'greek'; isAramaic?: boolean }[];
 }
 
 const CANONICAL_GROUPS: CanonicalGroup[] = [
-  // ANTIGUO TESTAMENTO (HEBREO / ARAMEO)
   {
-    id: 'torah',
-    name: 'Torá (Ley Masorética)',
+    id: 'tora',
+    name: 'Torá Masorética (Pentateuco)',
     canon: 'OT',
+    sub: 'Hebreo Masorético con Nikkud y Cantilación Tiberiana',
     books: [
-      { id: 1, abbr: 'GEN', name: 'Génesis' },
-      { id: 2, abbr: 'EXO', name: 'Éxodo' },
-      { id: 3, abbr: 'LEV', name: 'Levítico' },
-      { id: 4, abbr: 'NUM', name: 'Números' },
-      { id: 5, abbr: 'DEU', name: 'Deuteronomio' },
+      { id: 1, abbr: 'GEN', name: 'Génesis (Bereshit)', lang: 'hebrew' },
+      { id: 2, abbr: 'EXO', name: 'Éxodo (Shemot)', lang: 'hebrew' },
+      { id: 3, abbr: 'LEV', name: 'Levítico (Vayikra)', lang: 'hebrew' },
+      { id: 4, abbr: 'NUM', name: 'Números (Bamidbar)', lang: 'hebrew' },
+      { id: 5, abbr: 'DEU', name: 'Deuteronomio (Devarim)', lang: 'hebrew' },
     ],
   },
   {
-    id: 'prophets',
-    name: 'Nevi’im (Profetas)',
+    id: 'neviim',
+    name: 'Nevi\'im (Profetas Anteriores y Posteriores)',
     canon: 'OT',
+    sub: 'Hebreo Bíblico Clásico',
     books: [
-      { id: 6, abbr: 'JOS', name: 'Josué' },
-      { id: 7, abbr: 'JUE', name: 'Jueces' },
-      { id: 9, abbr: '1SA', name: '1 Samuel' },
-      { id: 10, abbr: '2SA', name: '2 Samuel' },
-      { id: 11, abbr: '1RE', name: '1 Reyes' },
-      { id: 12, abbr: '2RE', name: '2 Reyes' },
-      { id: 23, abbr: 'ISA', name: 'Isaías' },
-      { id: 24, abbr: 'JER', name: 'Jeremías' },
-      { id: 26, abbr: 'EZE', name: 'Ezequiel' },
-      { id: 27, abbr: 'DAN', name: 'Daniel', isAramaic: true },
+      { id: 6, abbr: 'JOS', name: 'Josué (Yehoshua)', lang: 'hebrew' },
+      { id: 7, abbr: 'JUE', name: 'Jueces (Shoftim)', lang: 'hebrew' },
+      { id: 9, abbr: '1SA', name: '1 Samuel (Shemuel Alef)', lang: 'hebrew' },
+      { id: 11, abbr: '1RE', name: '1 Reyes (Melajim Alef)', lang: 'hebrew' },
+      { id: 23, abbr: 'ISA', name: 'Isaías (Yeshayahu)', lang: 'hebrew' },
+      { id: 24, abbr: 'JER', name: 'Jeremías (Yirmeyahu)', lang: 'hebrew' },
+      { id: 26, abbr: 'EZE', name: 'Ezequiel (Yejezkel)', lang: 'hebrew' },
     ],
   },
   {
-    id: 'writings',
-    name: 'Ketuvim (Escritos & Poesía)',
+    id: 'ketuvim',
+    name: 'Ketuvim (Escritos & Secciones Arameas)',
     canon: 'OT',
+    sub: 'Hebreo y Arameo Imperial (Daniel/Esdras)',
     books: [
-      { id: 19, abbr: 'SAL', name: 'Salmos' },
-      { id: 20, abbr: 'PRO', name: 'Proverbios' },
-      { id: 18, abbr: 'JOB', name: 'Job' },
-      { id: 21, abbr: 'ECC', name: 'Eclesiastés' },
-      { id: 22, abbr: 'CNT', name: 'Cantares' },
-      { id: 15, abbr: 'ESD', name: 'Esdras', isAramaic: true },
-      { id: 16, abbr: 'NEH', name: 'Nehemías' },
-      { id: 13, abbr: '1CR', name: '1 Crónicas' },
-      { id: 14, abbr: '2CR', name: '2 Crónicas' },
+      { id: 19, abbr: 'SAL', name: 'Salmos (Tehilim)', lang: 'hebrew' },
+      { id: 20, abbr: 'PRO', name: 'Proverbios (Mishlei)', lang: 'hebrew' },
+      { id: 27, abbr: 'DAN', name: 'Daniel (Arameo/Hebreo)', lang: 'hebrew', isAramaic: true },
+      { id: 15, abbr: 'ESD', name: 'Esdras (Ezra)', lang: 'hebrew', isAramaic: true },
+      { id: 18, abbr: 'JOB', name: 'Job (Iyyov)', lang: 'hebrew' },
     ],
   },
-  // NUEVO TESTAMENTO (GRIEGO KOINÉ)
   {
-    id: 'gospels',
-    name: 'Evangelios & Hechos',
+    id: 'evangelios',
+    name: 'Evangelios Sinópticos y Juan',
     canon: 'NT',
+    sub: 'Griego Koiné Alejandrino (NA28 / UBS5)',
     books: [
-      { id: 40, abbr: 'MAT', name: 'Mateo' },
-      { id: 41, abbr: 'MAR', name: 'Marcos' },
-      { id: 42, abbr: 'LUC', name: 'Lucas' },
-      { id: 43, abbr: 'JUA', name: 'Juan' },
-      { id: 44, abbr: 'HEC', name: 'Hechos' },
+      { id: 40, abbr: 'MAT', name: 'Mateo (Kata Matthaion)', lang: 'greek' },
+      { id: 41, abbr: 'MAR', name: 'Marcos (Kata Markon)', lang: 'greek' },
+      { id: 42, abbr: 'LUC', name: 'Lucas (Kata Loukan)', lang: 'greek' },
+      { id: 43, abbr: 'JUA', name: 'Juan (Kata Ioannen)', lang: 'greek' },
+      { id: 44, abbr: 'HEC', name: 'Hechos de los Apóstoles (Praxeis)', lang: 'greek' },
     ],
   },
   {
-    id: 'epistles',
-    name: 'Corpus Paulino & Epístolas',
+    id: 'epistolas',
+    name: 'Corpus Paulino & Epístolas Generales',
     canon: 'NT',
+    sub: 'Griego Koiné Epistolar y Apocalipsis',
     books: [
-      { id: 45, abbr: 'ROM', name: 'Romanos' },
-      { id: 46, abbr: '1CO', name: '1 Corintios' },
-      { id: 47, abbr: '2CO', name: '2 Corintios' },
-      { id: 48, abbr: 'GAL', name: 'Gálatas' },
-      { id: 49, abbr: 'EFE', name: 'Efesios' },
-      { id: 50, abbr: 'FIL', name: 'Filipenses' },
-      { id: 51, abbr: 'COL', name: 'Colosenses' },
-      { id: 58, abbr: 'HEB', name: 'Hebreos' },
-      { id: 59, abbr: 'SNT', name: 'Santiago' },
-      { id: 60, abbr: '1PE', name: '1 Pedro' },
-      { id: 66, abbr: 'APO', name: 'Apocalipsis' },
+      { id: 45, abbr: 'ROM', name: 'Romanos (Pros Romaious)', lang: 'greek' },
+      { id: 46, abbr: '1CO', name: '1 Corintios (Pros Korinthious A)', lang: 'greek' },
+      { id: 48, abbr: 'GAL', name: 'Gálatas (Pros Galatas)', lang: 'greek' },
+      { id: 49, abbr: 'EFE', name: 'Efesios (Pros Ephesious)', lang: 'greek' },
+      { id: 58, abbr: 'HEB', name: 'Hebreos (Pros Hebraious)', lang: 'greek' },
+      { id: 66, abbr: 'APO', name: 'Apocalipsis (Apokalypsis)', lang: 'greek' },
     ],
   },
 ];
@@ -110,9 +103,13 @@ export const InterlinearSidebar: React.FC = () => {
   const interlinear = useInterlinearContextSafe();
   const tStudio = useTranslations('Studio');
 
+  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 320;
+  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
+  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
+
   const [activeSubTab, setActiveSubTab] = useState<'corpus' | 'layers'>('corpus');
 
-  const isOpen = passageContext?.isLeftSidebarOpen ?? true;
+  const isOpen = passageContext?.isLeftSidebarOpen ?? false;
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
   if (!isOpen) return null;
@@ -136,31 +133,18 @@ export const InterlinearSidebar: React.FC = () => {
 
       <aside
         aria-label="Panel Lateral de Interlineal Inverso"
-        className="fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 xl:w-96 flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden"
+        style={{ '--sidebar-w': `${leftSidebarWidth}px` } as React.CSSProperties}
+        className={`fixed inset-y-0 left-0 z-50 h-screen lg:h-full lg:relative lg:z-20 w-80 sm:w-88 lg:w-[var(--sidebar-w)] flex-shrink-0 border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md flex flex-col shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible print:hidden`}
       >
-        {/* Handle de Colapso Interactivo en Borde Divisorio Derecho (Estilo DIITRA) */}
-        <div
-          className="hidden lg:flex absolute top-0 -right-3 w-6 h-full cursor-pointer z-30 group/border items-center justify-center select-none"
-          onClick={handleClose}
-          title={tStudio('collapseSidebar') || 'Ocultar panel'}
-        >
-          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-transparent group-hover/border:bg-zinc-400 dark:group-hover/border:bg-zinc-500 transition-colors duration-150" />
-          <div className="relative z-10 w-6 h-7 rounded-md bg-white dark:bg-[#0a0a0a] border border-zinc-300 dark:border-zinc-700 shadow-sm opacity-0 group-hover/border:opacity-100 hover:scale-110 hover:border-zinc-500 dark:hover:border-zinc-400 transition-all duration-150 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100">
-            <svg
-              className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-200"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="8" y1="2" x2="8" y2="14" />
-              <polyline points="4 6 1 8 4 10" />
-              <polyline points="12 6 15 8 12 10" />
-            </svg>
-          </div>
-        </div>
+        {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (Estilo Geist / DIITRA) */}
+        <ResizeBorderHandle
+          side="left"
+          currentWidth={leftSidebarWidth}
+          onResize={setLeftSidebarWidth}
+          onReset={resetLeftSidebarWidth}
+          onCollapse={handleClose}
+          collapseTitle={tStudio('collapseSidebar') || 'Ocultar panel'}
+        />
 
         {/* Cabecera del Panel */}
         <div className="p-4 border-b border-zinc-100 dark:border-zinc-800/80 space-y-3">

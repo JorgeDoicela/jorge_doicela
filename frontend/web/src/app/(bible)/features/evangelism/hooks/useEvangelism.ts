@@ -23,6 +23,9 @@ export function useEvangelism() {
   const searchParams = useSearchParams();
 
   const urlTab = searchParams?.get('tab') as EvangelismTab | null;
+  const urlPathway = searchParams?.get('pathway');
+  const urlTract = searchParams?.get('tract');
+
   const initialTab: EvangelismTab =
     urlTab === 'pathways' || urlTab === 'objections' || urlTab === 'tracts'
       ? urlTab
@@ -47,7 +50,7 @@ export function useEvangelism() {
   );
 
   const [pathways, setPathways] = useState<EvangelismPathway[]>([]);
-  const [selectedPathwayId, setSelectedPathwayId] = useState<string>('romans-road');
+  const [selectedPathwayId, setSelectedPathwayId] = useState<string>(urlPathway || '');
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
   const [objections, setObjections] = useState<EvangelismObjection[]>([]);
@@ -55,7 +58,7 @@ export function useEvangelism() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [tracts, setTracts] = useState<EvangelismTract[]>([]);
-  const [selectedTractId, setSelectedTractId] = useState<string>('the-great-exchange');
+  const [selectedTractId, setSelectedTractId] = useState<string>(urlTract || '');
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -75,12 +78,24 @@ export function useEvangelism() {
         setObjections(objectionsData);
         setTracts(tractsData);
 
-        // Si la ruta seleccionada no está disponible, seleccionar la primera
-        if (pathwaysData.length > 0 && !pathwaysData.some((p) => p.id === selectedPathwayId)) {
-          setSelectedPathwayId(pathwaysData[0].id);
+        // Seleccionar determinísticamente la primera ruta del catálogo si no hay una previa válida
+        if (pathwaysData.length > 0) {
+          setSelectedPathwayId((prev) => {
+            if (prev && pathwaysData.some((p) => p.id === prev)) {
+              return prev;
+            }
+            return pathwaysData[0].id;
+          });
         }
-        if (tractsData.length > 0 && !tractsData.some((t) => t.id === selectedTractId)) {
-          setSelectedTractId(tractsData[0].id);
+
+        // Seleccionar determinísticamente el primer tratado del catálogo si no hay uno previo válido
+        if (tractsData.length > 0) {
+          setSelectedTractId((prev) => {
+            if (prev && tractsData.some((t) => t.id === prev)) {
+              return prev;
+            }
+            return tractsData[0].id;
+          });
         }
       })
       .finally(() => {

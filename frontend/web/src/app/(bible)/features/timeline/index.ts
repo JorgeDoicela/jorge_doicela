@@ -8,4 +8,5 @@ export * from './components/panels/TimelineSidebar';
 export * from './components/panels/TimelineInspector';
 export * from './hooks/useBiblicalTimeline';
 export * from './hooks/useSyncFilter';
+export * from './context/TimelineContext';
 

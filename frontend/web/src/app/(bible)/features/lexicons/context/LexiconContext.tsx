@@ -161,22 +161,37 @@ const LexiconContext = createContext<LexiconContextValue | undefined>(undefined)
 
 export const LexiconProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const passageContext = useBiblePassageSafe();
-  const [activeLanguage, setActiveLanguage] = useState<'hebrew' | 'greek'>('hebrew');
+  const [activeLanguage, setActiveLanguageState] = useState<'hebrew' | 'greek'>('hebrew');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedStrongCode, setSelectedStrongCode] = useState<string>('H2617');
+  const [selectedStrongCode, setSelectedStrongCode] = useState<string>(() => {
+    return CURATED_THEOLOGICAL_TERMS.find((t) => t.language === 'hebrew')?.strong || '';
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const setActiveLanguage = useCallback((lang: 'hebrew' | 'greek') => {
+    setActiveLanguageState(lang);
+    const firstTermForLang = CURATED_THEOLOGICAL_TERMS.find((t) => t.language === lang);
+    if (firstTermForLang) {
+      setSelectedStrongCode(firstTermForLang.strong);
+    }
+  }, []);
+
+  const theologicalTerms = useMemo(() => {
+    return CURATED_THEOLOGICAL_TERMS.filter((t) => t.language === activeLanguage);
+  }, [activeLanguage]);
 
   const activeTerm = useMemo(() => {
     return (
-      CURATED_THEOLOGICAL_TERMS.find((t) => t.strong === selectedStrongCode) ||
-      CURATED_THEOLOGICAL_TERMS[0]
+      theologicalTerms.find((t) => t.strong === selectedStrongCode) ||
+      theologicalTerms[0] ||
+      null
     );
-  }, [selectedStrongCode]);
+  }, [theologicalTerms, selectedStrongCode]);
 
   const selectTerm = useCallback(
     (term: CuratedTheologicalTerm) => {
       setSelectedStrongCode(term.strong);
-      setActiveLanguage(term.language);
+      setActiveLanguageState(term.language);
 
       if (passageContext) {
         passageContext.openInspectorWithWord({
@@ -191,10 +206,6 @@ export const LexiconProvider: React.FC<{ children: React.ReactNode }> = ({ child
     },
     [passageContext],
   );
-
-  const theologicalTerms = useMemo(() => {
-    return CURATED_THEOLOGICAL_TERMS.filter((t) => t.language === activeLanguage);
-  }, [activeLanguage]);
 
   const value: LexiconContextValue = {
     activeLanguage,

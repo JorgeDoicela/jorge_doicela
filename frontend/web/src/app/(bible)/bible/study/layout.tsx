@@ -11,8 +11,8 @@ import { BibleNavigationSidebar } from '../../widgets/bible-sidebar';
 import { BibleExegesisInspector } from '../../widgets/exegesis-inspector';
 import { DraggableEdgeTab } from '../../shared/ui';
 import { AtlasProvider, AtlasSidebar, AtlasInspector } from '../../features/atlas';
-import { TimelineSidebar, TimelineInspector } from '../../features/timeline';
-import { ArchaeologySidebar, ArchaeologyInspector } from '../../features/archaeology-feed';
+import { TimelineProvider, TimelineSidebar, TimelineInspector } from '../../features/timeline';
+import { ArchaeologyProvider, ArchaeologySidebar, ArchaeologyInspector } from '../../features/archaeology-feed';
 import { EvangelismProvider, EvangelismSidebar, EvangelismInspector } from '../../features/evangelism';
 import { ParallelProvider, ParallelSidebar, ParallelDiffInspector } from '../../features/parallel-view';
 import { InterlinearProvider, InterlinearSidebar, InterlinearInspector } from '../../features/interlinear';
@@ -45,6 +45,14 @@ function ScopedModuleProviders({ children }: { children: React.ReactNode }) {
 
   if (pathname.includes('/word-study')) {
     return <LexiconProvider>{children}</LexiconProvider>;
+  }
+
+  if (pathname.includes('/timeline')) {
+    return <TimelineProvider>{children}</TimelineProvider>;
+  }
+
+  if (pathname.includes('/archaeology')) {
+    return <ArchaeologyProvider>{children}</ArchaeologyProvider>;
   }
 
   return <>{children}</>;

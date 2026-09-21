@@ -162,6 +162,34 @@ class BiblicalAudioService {
       if (options.onEnd) options.onEnd();
     }, 500);
   }
+
+  /**
+   * Pronunciación directa de palabra en Hebreo Masorético Tiberiano
+   */
+  public speakHebrewWord(text: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.play({
+        text,
+        language: 'Hebrew',
+        onEnd: () => resolve(),
+        onError: (err) => reject(err),
+      });
+    });
+  }
+
+  /**
+   * Pronunciación directa de palabra en Griego Koiné del Siglo I
+   */
+  public speakGreekWord(text: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.play({
+        text,
+        language: 'Greek',
+        onEnd: () => resolve(),
+        onError: (err) => reject(err),
+      });
+    });
+  }
 }
 
 export const biblicalAudioService = new BiblicalAudioService();

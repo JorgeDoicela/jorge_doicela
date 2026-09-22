@@ -414,5 +414,34 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   * **Accesibilidad (a11y) y Semántica Web:** Todos los botones interactivos definen explícitamente su atributo `type="button"`, etiquetas descriptivas `aria-label` y roles de navegación semántica `<aside aria-label="...">` tanto en escritorio como en drawers móviles táctiles.
   * **Resiliencia ante Estados Nulos o Vacíos (Empty States):** Ningún inspector o panel lateral produce desbordamientos o lienzos en blanco cuando la selección es nula; cada entorno despliega una ficha técnica con instrucciones de uso y diseño Geist unificado cuando no hay versículo, término léxico, evento histórico, hallazgo arqueológico o ruta de evangelismo activa.
 
+* **Sistema de Ergonomía Espacial, Medida Tipográfica y Calibración de Canvas (Spatial Grid & Line Measure):**
+  * **Unificación de Cuadrícula Exterior y Centrado Geométrico Absoluto (*Grid Drift Zero*):** Se estandarizó el padding horizontal simétrico en `layout.tsx` a `px-3 sm:px-6 lg:px-8`, alineándose en el píxel exacto con la cabecera `BibleHeaderNav.tsx` (`32px` desktop, `24px` tablet, `12px` móvil). Además, en pantallas de escritorio (`lg:` en adelante) las 8 pestañas de navegación operan con **centrado geométrico absoluto** (`absolute left-1/2 -translate-x-1/2`), garantizando que el menú se posicione exactamente sobre el eje X del 50% de la pantalla sin verse afectado por la asimetría dimensional de los botones laterales (`Atrás/Logo` vs `Idioma/Tema`), con fallback elástico para resoluciones intermedias de tablet.
+  * **Lector Estándar (`/study/standard`):** Contención central en `max-w-4xl mx-auto` (`896px`), erradicando el "efecto sábana" en pantallas panorámicas y manteniendo el ritmo áureo de 70 a 80 caracteres por línea en prosa continua y versículo a versículo.
+  * **Cotejo Paralelo Adaptativo (`/study/parallel`):** El ancho del contenedor responde proporcionalmente a la cantidad de columnas activas (`columns.length`):
+    - *1 versión:* `max-w-3xl mx-auto` (~768px, lectura enfocada).
+    - *2 versiones:* `max-w-5xl mx-auto` (~1024px, ~500px por columna, eliminando el vacío central y optimizando el cotejo visual).
+    - *3 versiones:* `max-w-7xl mx-auto` (~1280px).
+    - *4 versiones:* `max-w-full` (aprovecha los 1780px del layout general).
+  * **Interlineal Inverso (`/study/interlinear`):** Contención en `max-w-5xl mx-auto` (`1024px`), eliminando el vacío asimétrico lateral en modo hebreo masorético (RTL) y unificando el campo focal con la traducción fluida en español.
+  * **Diccionario Léxico Teológico (`/study/word-study`):** Contención en `max-w-6xl mx-auto` (`1152px`), balanceando la proporción del navegador de raíces (`~360px`) y el cuerpo monográfico de exégesis filológica BDB/Gesenius (`~750px`).
+  * **Arqueología Bíblica (`/study/archaeology`):** Contención en `max-w-6xl mx-auto` (`1152px`), garantizando densidad óptima de lectura tanto en artículos (`grid-cols-2`) como en el catálogo de manuscritos antiguos (`grid-cols-3`).
+  * **Evangelismo y Apologética (`/study/evangelism`):** Contención en `max-w-5xl mx-auto` (`1024px`), facilitando una lectura íntima y concentrada para las rutas de versículos, diálogos apologéticos y folletos impresos.
+  * **Lienzos Cartográficos y Cronográficos (`/study/atlas` y `/study/timeline`):** Mantienen el ancho total del viewport (`max-w-[1780px]`) para maximizar la telemetría espacial del mapa interactivo y el eje cronológico de imperios, profetas y reyes sin recortes.
+
+* **Arquitectura de Paneles Laterales de Adaptación Contextual por Contenido (`Content-Adaptive Sidebars & Inspectors`):**
+  * **Principio de Eficiencia Espacial Adaptada:** Los paneles no son forzados a un ancho estático rígido universal, sino que se adaptan con precisión milimétrica a la densidad y complejidad del contenido que albergan:
+    - **Paneles Laterales Izquierdos (Navegación y Árboles Canónicos):**
+      * *Lector Estándar (`BibleNavigationSidebar`):* `280px` (`defaultWidth`). Ancho áureo de Fitts' Law para listas de texto y cuadrícula de 5 columnas de capítulos, liberando el 100% de aire al folio de lectura.
+      * *Léxicos, Arqueología y Evangelismo (`WordStudySidebar`, `ArchaeologySidebar`, `EvangelismSidebar`):* `320px` (`defaultWidth`). Espacio balanceado para buscadores semánticos, badges de categorías y conmutadores segmentados de 2 a 3 pestañas.
+      * *Paralelo, Interlineal, Atlas y Cronología (`ParallelSidebar`, `InterlinearSidebar`, `AtlasSidebar`, `TimelineSidebar`):* `340px` (`defaultWidth`). Ancho expandido para fichas de presets, conmutadores de capas morfológicas (Nikkud, transliteración, glosas), selectores de 8 épocas y 5 carriles sincrónicos.
+    - **Inspectores Laterales Derechos (Lectura, Fichas de Exégesis y Análisis):**
+      * *Lector Estándar (`BibleExegesisInspector`):* `340px` (`defaultWidth`). Diseñado para tarjetas de versículos de comparación rápida y morfología lematizada.
+      * *Módulos Avanzados (7 restantes):* `360px` (`defaultWidth`). Espacio idóneo para el motor de diff textual (`ParallelDiffInspector`), fichas léxicas completas con audio y gramática (`InterlinearInspector`), concordancia BDB (`WordStudyInspector`), telemetría WGS84 (`AtlasInspector`), biografías históricas (`TimelineInspector`), registros de excavaciones (`ArchaeologyInspector`) y asistentes de diálogo apologético (`EvangelismInspector`).
+  * **Persistencia Aislada por Módulo (`storageKey`):** Cada panel almacena su dimensión redimensionada de forma estrictamente desacoplada en `localStorage` (`safeStorage.ts`), impidiendo que el ajuste manual de una herramienta afecte a las demás (`bible_parallel_sidebar_w`, `bible_interlinear_inspector_w`, etc.).
+  * **Límites de Seguridad Físicos (`clamp`):** Todos los paneles operan bajo límites elásticos entre `200px` (mínimo) y `480px` (máximo) para salvaguardar la visibilidad y ergonomía del canvas central en cualquier resolución.
+  * **Restablecimiento Instantáneo:** Soporte de doble clic sobre la manija de redimensionamiento (`ResizeBorderHandle`) para revertir inmediatamente cualquier panel a su valor de fábrica predeterminado.
+
+
+
 
 

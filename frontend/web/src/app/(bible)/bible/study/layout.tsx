@@ -175,7 +175,7 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
         <main
           ref={mainRef}
           onScroll={handleMainScroll}
-          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-12 print:p-0 print:m-0 print:pb-0"
+          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0"
         >
           <div className="w-full max-w-[1780px] mx-auto space-y-4">
             {children}

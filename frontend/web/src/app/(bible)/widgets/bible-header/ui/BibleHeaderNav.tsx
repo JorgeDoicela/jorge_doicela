@@ -160,9 +160,9 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
           )}
         </div>
 
-        {/* Desktop: Pestañas de Navegación Geist Planas (Estilo Vercel Dashboard Puro) */}
-        <div className="hidden md:flex flex-1 justify-center items-center h-full min-w-0 px-2 select-none">
-          <nav className="flex items-center h-full gap-0.5 overflow-x-auto scrollbar-none">
+        {/* Desktop: Pestañas de Navegación Geist Planas (Centrado Geométrico Absoluto en Desktop) */}
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center h-full select-none pointer-events-auto">
+          <nav className="flex items-center h-full gap-0.5">
             {NAV_TABS.map((tab) => {
               const active = isCurrentTab(tab.path);
               return (
@@ -178,6 +178,31 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
                   <span>{t(tab.key as any)}</span>
                   {active && (
                     <span className="absolute -bottom-[1px] inset-x-1.5 h-[2px] bg-zinc-900 dark:bg-zinc-100 rounded-t-sm z-10" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Tablet (< lg y >= md): Fallback elástico para pantallas intermedias sin desborde */}
+        <div className="hidden md:flex lg:hidden flex-1 justify-center items-center h-full min-w-0 px-2 select-none">
+          <nav className="flex items-center h-full gap-0.5 overflow-x-auto scrollbar-none">
+            {NAV_TABS.map((tab) => {
+              const active = isCurrentTab(tab.path);
+              return (
+                <Link
+                  key={tab.path}
+                  href={`${tab.path}${queryString}`}
+                  className={`relative flex items-center h-full px-2 text-xs font-medium whitespace-nowrap transition-colors duration-150 cursor-pointer shrink-0 ${
+                    active
+                      ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
+                      : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200'
+                  }`}
+                >
+                  <span>{t(tab.key as any)}</span>
+                  {active && (
+                    <span className="absolute -bottom-[1px] inset-x-1 h-[2px] bg-zinc-900 dark:bg-zinc-100 rounded-t-sm z-10" />
                   )}
                 </Link>
               );

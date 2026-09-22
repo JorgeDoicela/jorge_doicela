@@ -138,19 +138,38 @@ pnpm -r typecheck
 | Bandejas con falsa profundidad estilo iOS (cajas grises con pastillas blancas flotantes y sombras) | Contradice la filosofía Geist de Vercel y genera fatiga visual en pantallas de estudio editorial. | Aplicar Minimalismo Plano Geist (1 sola capa): pestañas al ras del header con línea inferior (border-b-2) y botones contiguos de 1px (divide-x). |
 | Rodear controles secundarios con marcos o bordes permanentes ("Efecto Cajitas Enjauladas") | Sobrecarga la interfaz con ruido de líneas de 1px innecesarias y rompe la fluidez visual de la cabecera. | Emplear Ghost Controls (planos y transparentes en reposo con micro-hover sutil); reservar bordes únicamente para divisiones estructurales mayores (header border-b, paneles border-r/l, hoja editorial e inputs). |
 | Fondos grises lavados o descoloridos (zinc-900/800) en modo oscuro ("Dark Fangoso") | Genera un contraste visualmente sucio, rompe la armonía estética y se aleja del estándar industrial de Vercel Dashboard. | Implementar el estándar **Vercel OLED Black puro**: lienzo base, cabecera y paneles laterales en `#000000` (`dark:bg-black`), divisiones arquitectónicas de 1px en `#222` (`dark:border-zinc-800/80`), tarjetas y hoja editorial de lectura en `#0a0a0a` (`dark:bg-[#0a0a0a]`), textos de lectura en `#ededed` / `#d4d4d8` y hover en `#111111` / `dark:hover:bg-zinc-900`. |
-| Encajonar el lector en anchos angostos o dejar espacios verticales muertos entre cabecera y contenido | Desperdicia el espacio en monitores amplios y crea sensación de vacío o desconexión visual. | Permitir que el lector ocupe el ancho completo (`w-full`) alineado con las demás suites y compactar el padding superior (`pt-1.5 sm:pt-2`) y márgenes editoriales. |
-| Botones estáticos invasivos en header o botones flotantes que tapen controles | Desestabiliza la simetría del header o bloquea la visibilidad del pasaje canónico. | Utilizar botones móviles estilo Messenger Chat Heads (`DraggableEdgeTab.tsx`): arrastre libre restringido al 25% del ancho de la pantalla y auto-snap magnético obligatorio a los bordes (`left: 0` / `right: 0`) al soltarlos, memorizando la posición vertical en `localStorage`. |
+| Desparramar la lectura bíblica en anchos gigantescos ("Efecto Sábana" > 80 caracteres por línea) | Destruye la ergonomía de lectura, causa fatiga ocular e imposibilita el salto sacádico del ojo en pantallas panorámicas. | Aplicar contención tipográfica central `max-w-4xl mx-auto` (896px) en `VerseList.tsx`, garantizando la medida áurea de 70 a 80 caracteres por línea en prosa continua y versículo a versículo. |
+| Forzar a todos los paneles laterales a un ancho rígido idéntico o acoplarlos entre sí | Rompe la adaptabilidad contextual (ej. un menú de libros se infla o una ficha compleja de morfología se corta) e impide evolucionar una herramienta individual. | Respetar la arquitectura desacoplada de paneles (`StudySidePanel`): cada módulo define su propio `defaultWidth` (280px-340px izquierda, 340px-360px derecha) y su propia clave de persistencia `storageKey`, permitiendo agrandar o modificar cualquier lateral individual sin efectos secundarios en los demás. |
 | Crear paneles laterales ad-hoc o duplicar lógica de redimensión/drawers móviles en `features/*` o `widgets/*` | Genera inconsistencia visual en las suites, multiplica código muerto con cabeceras móviles repetidas y desborda el layout. | Consumir siempre el componente compuesto `StudySidePanel` (`.Toolbar`, `.Body`, `.Footer`) desde `shared/ui/StudySidePanel.tsx`, aprovechando su cabecera móvil automática, físicas de autocolapso magnético (< 160px) e independencia de ancho vía `storageKey`. |
 
 ---
 
-## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+## 6. Estándares de Ergonomía Espacial, Medida Tipográfica y Paneles Desacoplados
+
+### 6.1 Calibración Dimensional del Canvas
+* **Unificación de Cuadrícula Exterior y Centrado Geométrico Absoluto (`Grid Drift Zero`):** El elemento `<main>` en `layout.tsx` comparte el padding horizontal simétrico `px-3 sm:px-6 lg:px-8` con `BibleHeaderNav.tsx`. Además, en pantallas de escritorio (`lg:`), las 8 pestañas de navegación se anclan en el centro geométrico absoluto del monitor (`absolute left-1/2 -translate-x-1/2`), eliminando cualquier desviación provocada por la asimetría dimensional de los botones de los extremos (`Atrás/Logo` vs `Idioma/Tema`).
+* **Escala por Naturaleza de Contenido:**
+  * *Lectura Estándar (`/study/standard`):* `max-w-4xl mx-auto` (`896px` / 70–80ch).
+  * *Cotejo Paralelo (`/study/parallel`):* Adaptativo dinámico según `columns.length` (`max-w-3xl`, `max-w-5xl`, `max-w-7xl`, `max-w-full`).
+  * *Interlineal Inverso (`/study/interlinear`):* `max-w-5xl mx-auto` (`1024px`), eliminando el vacío asimétrico RTL en hebreo masorético.
+  * *Diccionarios Léxicos y Arqueología (`/study/word-study`, `/study/archaeology`):* `max-w-6xl mx-auto` (`1152px`).
+  * *Evangelismo y Apologética (`/study/evangelism`):* `max-w-5xl mx-auto` (`1024px`).
+  * *Lienzos Cartográficos y Cronográficos (`/study/atlas`, `/study/timeline`):* Full Canvas `max-w-[1780px]`.
+
+### 6.2 Desacoplamiento Total de Paneles Laterales
+* **Autonomía por Módulo:** Los 16 paneles laterales (8 izquierdos y 8 derechos) están 100% desacoplados. Para cambiar o ampliar el tamaño de un panel en cualquier herramienta, basta con ajustar el prop `defaultWidth` en su respectivo componente, sin tocar ningún otro archivo del sistema.
+* **Persistencia Aislada:** Cada panel almacena su redimensión manual en su propio `storageKey` en `localStorage` (`safeStorage.ts`), evitando contaminación entre herramientas.
+
+
+---
+
+## 7. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
 
 * **Actualización Mandatoria ante Cambios:** Cada vez que se incorporen o modifiquen motores exegéticos, esquemas de morfología, fuentes en `corpus/`, endpoints REST, tablas en `bible.sqlite`, pantallas de Next.js o módulos de la app móvil Expo, es **obligatorio actualizar la documentación técnica correspondiente en `docs/04-bible/`**.
 * **Gestión Documental Proactiva:** Se autoriza crear nuevos archivos `.md`, estructurar nuevas subcarpetas en `docs/04-bible/` o depurar especificaciones obsoletas, manteniendo siempre la precisión exegética, orden riguroso y exactitud arquitectónica.
 
 ---
 
-## 7. Combinar con
+## 8. Combinar con
 * **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para reglas de monorepo, backend en 3 capas, FSD y pipeline CI/CD).
 

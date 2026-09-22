@@ -102,8 +102,17 @@ export default function ParallelStudyPage() {
     setDiffModalOpen(true);
   };
 
+  const containerMaxWidthClass =
+    columns.length === 1
+      ? 'max-w-3xl'
+      : columns.length === 2
+      ? 'max-w-5xl'
+      : columns.length === 3
+      ? 'max-w-7xl'
+      : 'max-w-full';
+
   return (
-    <div className="space-y-4 animate-in fade-in duration-200">
+    <div className={`w-full ${containerMaxWidthClass} mx-auto space-y-4 animate-in fade-in duration-200 transition-all`}>
       {/* Barra de Pasaje y Acciones de Paralelo */}
       <BiblePassageToolbar
         rightBadge={

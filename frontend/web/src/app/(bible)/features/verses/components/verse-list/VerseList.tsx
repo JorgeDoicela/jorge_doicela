@@ -235,7 +235,7 @@ export const VerseList: React.FC<VerseListProps> = ({
 
   // MODO ESTÁNDAR INTEGRADO EN EL WORKSPACE
   return (
-    <div className="w-full space-y-2">
+    <div className="w-full max-w-4xl mx-auto space-y-4">
       {/* Barra de herramientas integrada del lector */}
       <ReaderToolbar
         readerSettings={readerSettings}

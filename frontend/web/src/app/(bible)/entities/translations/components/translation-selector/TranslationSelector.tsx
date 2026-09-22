@@ -40,7 +40,8 @@ export function TranslationSelector({
       value={activeId}
       onChange={(newId: number) => onSelectTranslation(newId)}
       options={options}
-      className="w-36 sm:w-56 shrink-0"
+      className="w-fit sm:w-56 shrink-0"
+      hideLabelOnMobile={true}
       size="sm"
       title={t('selectTranslation')}
       ariaLabel={t('selectTranslation')}

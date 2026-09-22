@@ -187,7 +187,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
             : 'border-accents-2 bg-background hover:border-foreground text-foreground'
         } ${size === 'sm' ? 'text-xs' : 'text-xs sm:text-sm font-semibold'}`}
       >
-        <span className="font-bold tracking-tight">
+        <span className="font-bold tracking-tight truncate max-w-[140px] sm:max-w-none">
           {currentBook ? `${getBookDisplayName(currentBook)} ${selectedChapter || 1}` : t('selectPassage')}
         </span>
 

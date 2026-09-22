@@ -212,9 +212,11 @@ Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingres
   * Números de versículos en tipografía mono de precisión (`font-mono text-[11px] font-bold text-zinc-400 dark:text-zinc-500`) integrados en línea para no deformar el ritmo de lectura.
 * **Progressive Disclosure en Barra de Control (`ReaderToolbar.tsx`):**
   * Condensación de 11 controles ruidosos en 3 bloques equilibrados:
-    * **Izquierda:** Pasaje canónico (`UnifiedPassagePicker`) y selector de versión (`TranslationSelector`).
-    * **Centro / Derecha:** Segmented control Geist de modo (`Prosa` vs `Versículo`), Popover flotante Geist (`Aa`) que agrupa selección de familia tipográfica (`Serif` / `Sans`), escala de tamaño (`A-` a `A++`) y alternador de numeración (`123`).
-    * **Extremo Derecho:** Botones discretos de copiado de capítulo e impresión a PDF.
+    * **Distribución Biescalar Justificada en Móvil (`< sm`):** La barra se organiza en dos niveles simétricos con una línea divisoria horizontal sutil (`divide-y divide-zinc-100 dark:divide-zinc-800/60`):
+      * *Fila Superior (Canónica):* Pasaje canónico a la izquierda (`< Génesis 1 ⌄ >`) y selector de versión compacto a la derecha (`[NBLA] ⌄`), extendidos con `justify-between` sin huecos muertos.
+      * *Fila Inferior (Herramientas):* Alternador de modo Geist a la izquierda (`≡` / `::`) y herramientas de tipografía/acciones a la derecha (`T Aa` | `⤢` `❐` `🖶`), también distribuidos de extremo a extremo con `justify-between`.
+    * **En Tablet y Desktop (`sm:`):** Se consolida en una sola línea horizontal compacta y continua.
+  * **Canvas Móvil Simétrico con Scrollbar Overlay (`layout.tsx`):** El contenedor `<main>` implementa `[scrollbar-width:none] [&::-webkit-scrollbar]:hidden` en móvil, eliminando la barra de desplazamiento gris tosca de 16px de navegadores de escritorio que ladeaba el contenido respecto a la cabecera. En tablet/desktop (`md:`), activa un scrollbar ultra-delgado Geist de 6px (`w-1.5 rounded-full`).
 * **Navegación Canónica y Chips Ergonómicos (`BibleNavigationSidebar.tsx`):**
   * Integración visual continua: en desktop (`lg:`), se eliminó la cabecera redundante con título y botón de cierre para evitar el efecto de "doble barra horizontal rota". El panel arranca directamente con su buscador y selector de testamentos al ras.
   * Segmented control Geist encapsulado para testamentos (`Todos | AT (39) | NT (27)`).
@@ -227,8 +229,9 @@ Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingres
   * **Sincronización Contextual y Botón ✨:** Al pulsar el botón de acción ✨ de cualquier versículo (en vista continua o versículo por versículo), el inspector se abre o enfoca automáticamente la pestaña de versiones paralelas con ese versículo específico. Al transitar entre libros o capítulos, el versículo por defecto se sincroniza automáticamente al versículo 1 del nuevo pasaje canónico.
   * Componentes internos puros y desacoplados (`StrongMorphologyInspector` y `ParallelVerseInspector`).
 * **Barra de Navegación de Suites Geist Pura (`BibleHeaderNav.tsx`):**
-  * Supresión definitiva de puntos circulares de colores en las pestañas de suites.
+  * Supresión definitiva de puntos circulares de colores en las pestañas de suites y líneas divisorias verticales ruidosas en el bloque de identidad (`Atrás` y `Logo`), logrando un flujo visual continuo e integrado.
   * Estilo tipográfico monocromático Geist idéntico a Vercel Dashboard, con cápsula activa sobria (`bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs`) y botones de panel unificados (`PanelLeft` y `PanelRight`).
+  * **Centrado Geométrico Simétrico Absoluto Móvil (`Grid Drift Zero`):** El selector de modo de estudio móvil (`< md`) y su menú desplegable flotante se anclan en el centro horizontal exacto de la pantalla mediante `absolute left-1/2 -translate-x-1/2`, erradicando el desfase lateral asimétrico ("de lado") y garantizando márgenes equidistantes hacia ambos extremos de la cabecera.
 
 ### 6.1 Arquitectura Desacoplada de Paneles Laterales: Patrón Compuesto `StudySidePanel` (FSD & Geist)
 
@@ -245,6 +248,7 @@ La arquitectura de paneles laterales (izquierdo y derecho) implementa un diseño
     * **Modo Autónomo:** Si no se pasa `width` (como en los paneles modulares de `atlas`, `timeline`, `archaeology`, `evangelism`, `interlinear`), el panel gestiona su propio estado local en memoria inicializado en `initialWidth` (`defaultWidth ?? 280px / 340px`).
     * **Cero Efectos Secundarios:** Se eliminó cualquier persistencia en `localStorage`, escuchas residuales en listeners de `resize` o limpiezas artificiales en `useEffect`. Al recargar la página (F5) o reiniciar la aplicación, todos los paneles en todos los módulos se montan síncronamente en su estado original de fábrica (laterales cerrados y anchos exactos de diseño).
   * **Eliminación de Código Duplicado y Cabecera Móvil Integrada:** Al centralizar la barra móvil en el shell maestro a través de las propiedades `title`, `icon` y `badge`, se eliminaron 16 instancias de marcado HTML duplicado (`<div className="flex lg:hidden ...">`) y handlers de cierre huérfanos a lo largo de todas las carpetas de `features/` y `widgets/`.
+  * **Gobernanza de Accesibilidad y Foco WAI-ARIA (`inert` & `blur`):** Al colapsar el panel lateral (`isOpen === false`), el shell aplica el atributo estándar HTML `inert` y libera preventivamente el foco del teclado de cualquier elemento descendiente (`document.activeElement.blur()`). Esto previene que botones o enlaces cerrados retengan foco oculto, garantizando cumplimiento estricto con la especificación W3C WAI-ARIA y eliminando bloqueos de navegación para tecnologías de asistencia.
 
 * **Tirador de Redimensión Reactivo (`ResizeBorderHandle.tsx` en `shared/ui`):**
   * **Soporte Sincrónico Dual y Minimalismo Neutro:** Gestiona tanto `side="left"` como `side="right"` con una línea nítida de exactamente **1px** (`w-[1px]`), sin sombras borrosas, sin tintes rojos agresivos y con estética Geist sobria. En reposo permanece transparente sobre el borde estructural de 1px, en hover se ilumina suavemente (`bg-zinc-300 dark:bg-zinc-700`) y en arrastre activo a `bg-zinc-400 dark:bg-zinc-500`.
@@ -253,15 +257,17 @@ La arquitectura de paneles laterales (izquierdo y derecho) implementa un diseño
   * **Discriminación Clic vs. Arrastre:** Movimientos $\le 3\text{px}$ se interpretan como clic puro, conmutando el estado del panel. Doble clic ejecuta `onReset()` restaurando el ancho de fábrica (`300px` / `360px`).
   * **Aislamiento de Selección Global:** Durante el arrastre se desactiva `userSelect` y se fuerza `cursor: col-resize` en el documento global.
 
-* **Máscara de Recorte Desacoplada ("Curtain Reveal" Zero-Reflow & Smooth Slide):**
-  * El `<aside>` exterior transiciona su anchura de forma suave y continua (`transition: width 240ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease-out`), colapsando a `0px` sin cortes secos por desmontaje ni saltos bruscos en el lienzo central de lectura.
-  * Durante el arrastre interactivo manual con el mouse, la transición CSS se desactiva en tiempo real (`transition-none`) garantizando una respuesta instantánea a 120 FPS sin desfase.
-  * El contenedor interno mantiene su anchura base fija recortada por la máscara (`min-w-0 shrink-0 overflow-hidden`), impidiendo que los buscadores, botones o chips se compriman o salten de línea durante la animación de colapso o apertura.
+* **Máscara de Recorte Desacoplada ("Curtain Reveal" & Cinemática Adaptativa):**
+  * **Cinemática Diferenciada por Dispositivo:**
+    * **En Móvil (`< lg`):** El panel opera como un Drawer nativo de pantalla completa con deslizamiento físico completo (`translate-x-0` $\leftrightarrow$ `±translate-x-full`) mediante **aceleración por GPU** en 300ms con curva de desaceleración Geist `cubic-bezier(0.32, 0.72, 0, 1)`, fondo 100% sólido permanente (`bg-white dark:bg-[#121214]`) y sombra envolvente (`shadow-[0_0_50px_rgba(0,0,0,0.2)]`). Al estar el fondo anclado de forma fija a la estructura del `<aside>`, toda la unidad (fondo, bordes, cabecera y elementos hijos) se traslada como un único bloque sólido, erradicando desincronizaciones donde el fondo se vuelva transparente antes de que los elementos abandonen la pantalla. El *backdrop* difuso (`bg-black/40 backdrop-blur-[2px]`) se funde en armonía.
+    * **En Desktop (`lg:`):** Se mantiene la cinemática **Linear / Notion**: el panel exterior modula su anchura (`lg:w-[var(--active-panel-w)]`) en 250ms mientras el contenedor interior acompaña la apertura con un micro-deslizamiento sutil de 16px (`translate-x-4` / `-translate-x-4` hacia `translate-x-0`) con desvanecimiento gradual, logrando que el lienzo de estudio se acomode suavemente.
+  * Durante el arrastre manual con el mouse en el tirador, la transición CSS se desactiva instantáneamente (`transition-none`) permitiendo seguimiento de puntero a 120 FPS.
+  * El contenedor interno mantiene su anchura base recortada por la máscara (`min-w-0 shrink-0 overflow-hidden`), impidiendo que los buscadores, botones o chips se compriman o salten de línea durante la animación de colapso o apertura.
   * **Cuadrícula de Capítulos Ergonómica:** 5 columnas uniformes con botones de altura fija de `32px` (`h-8 rounded-lg font-mono text-xs`), impidiendo la distorsión o crecimiento desmesurado de los números de capítulo.
 
 * **Centrado Simétrico y Canvas Amplio de Estudio (`layout.tsx`):**
   * El contenedor central `<main>` implementa en desktop un padding horizontal estrictamente simétrico: **`lg:px-12` (48px exactos a ambos costados)**.
-  * El espacio libre desde ambos bordes de la pantalla hasta el cuadro de estudio es **exactamente de 48px**, logrando una simetría visual y matemática perfecta y permitiendo que ambas lengüetas (`DraggableEdgeTab`, de 36px) respiren con 12px exactos de margen libre sin tocar ni invadir el cuadro.
+  * El espacio libre desde ambos bordes de la pantalla hasta el cuadro de estudio es **exactamente de 48px**, logrando una simetría visual y matemática perfecta y permitiendo que ambas lengüetas (`DraggableEdgeTab`, tirador vertical esbelto de `w-5 h-24` / 96px de altura con chevrones direccionales) respiren con margen libre sin invadir el cuadro de lectura.
   * El contenido central se envuelve en un contenedor **`max-w-[1780px] mx-auto`** con espaciado simétrico `lg:px-12` (48px), aprovechando al máximo el ancho horizontal hacia afuera para acomodar las herramientas exegéticas complejas (interlineal, lectura paralela, léxicos, mapas y cronologías) de forma uniforme en todos los módulos sin sentirse encogido ni colisionar con las lengüetas laterales.
   * **Navegación Secuencial Editorial Integrada (`ChapterNavigator.tsx`):** Se erradicaron los botones flotantes fijos en mitad de pantalla (`fixed top-1/2`) que quedaban aislados ("volando") en los márgenes exteriores. La navegación entre capítulos y libros continuos se ubica de forma elegante al final del pasaje de lectura mediante un bloque semántico `<nav>` con tarjetas de acceso directo (*«← Capítulo Anterior | Capítulo Siguiente →»*), manteniendo además intactos los listeners globales de atajos de teclado (`ArrowLeft` / `ArrowRight`).
 
@@ -277,8 +283,15 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
 * `Escape` $\rightarrow$ Cerrar el inspector exegético o deseleccionar texto.
 * *Aislamiento de Inputs:* Los atajos de navegación y paneles se desactivan automáticamente cuando el foco está sobre elementos de texto (`input`, `textarea`, `select`, `isContentEditable`) para permitir escribir normalmente en los buscadores.
 
-### 7.2 Barra de Lectura Sticky Flotante (`ReaderToolbar.tsx`)
-* Anclaje permanente `sticky top-14 z-30` con fondo `bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md` y borde sutil.
+### 7.2 Barra de Lectura y Control Exegético (`ReaderToolbar.tsx`)
+* **Arquitectura de Fila Única Unificada (Single-Row Streamlined):**
+  * **En Móvil (`< sm` / `< 640px`):** Estructura horizontal compacta en una sola fila (`h-8`, altura total del card ~44px), eliminando el doble piso y los espacios en blanco artificiales:
+    * *Extremo Izquierdo:* Navegación completa `< Génesis 1 ⌄ >` (`UnifiedPassagePicker`) seguida directamente de la versión `[NBLA ⌄]` (`TranslationSelector` + `BibleSelect` sin cuadro interno).
+    * *Extremo Derecho:* Popover de apariencia editorial `Aa` (que integra de forma centralizada el conmutador de modo continuo/versículo `[ ≡ | 1 2 ]`, familias tipográficas, tamaños y tonos) y menú compacto de acciones `···` (`MoreHorizontal`) que agrupa:
+      - Copiar Capítulo (`❐`)
+      - Modo Enfoque Inmersivo (`⤢`)
+      - Imprimir / Exportar a PDF (`🖶`)
+  * **En Desktop (`>= 640px` / `sm:`):** Flujo horizontal extendido donde los botones de acción (`⤢`, `❐`, `🖶`) se despliegan directamente en la barra con separador vertical, el selector de versión se expande a `w-56`, y el modo de lectura se mantiene unificado exclusivamente dentro de `Aa` para eliminar redundancias visuales.
 * Popover `Aa` desacoplado con cierre automático en click exterior (`useRef` y evento `mousedown`).
 
 ### 7.3 Modo Impresión y Exportación Limpia (*Print / Pulpit Mode*)
@@ -288,11 +301,27 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   * Protección contra saltos de página partidos en versículos (`page-break-inside: avoid`).
   * Botón directo de **Imprimir / Exportar a PDF** en [`ReaderToolbar.tsx`](../../../frontend/web/src/app/(bible)/features/verses/components/reader-toolbar/ReaderToolbar.tsx).
 
-### 7.4 Botones Flotantes con Auto-Snap a Bordes estilo Messenger (`DraggableEdgeTab.tsx`)
-* **Auto-Snap Obligatorio al Borde:** Los botones emergen cuando los paneles están cerrados. Mientras se arrastran flotan libremente, pero al soltarlos (`pointerup`), se acoplan automáticamente contra el borde correspondiente (`left: 0` para el panel izquierdo, `right: 0` para el inspector derecho). Esto garantiza que nunca se queden flotando sobre los selectores de pasaje ni tapen el texto bíblico.
-* **Restricción de Desplazamiento (Máximo 25% de Pantalla):** El botón izquierdo no puede ser arrastrado más allá del 25% del ancho de la pantalla hacia el centro, y el botón derecho no puede sobrepasar el 75%, blindando el área central de lectura contra cualquier obstrucción.
-* **Geometría Adaptativa:** En reposo se presentan como pestañas acopladas al marco (`rounded-r-2xl` a la izquierda, `rounded-l-2xl` a la derecha, `w-11 h-12`), y durante el arrastre se transforman con fluidez en squircles flotantes (`rounded-2xl`, elevación `shadow-2xl` y micro-escala).
-* **Persistencia Vertical:** Memoriza la altura exacta (`top`) en `localStorage` (`bible_drag_tab_left_y` y `bible_drag_tab_right_y`).
+### 7.4 Arquitectura Ergonómica Adaptativa: Pestañas Laterales Discretas en PC y Círculos Flotantes en Móvil (`DraggableEdgeTab.tsx` & `BibleHeaderNav.tsx`)
+* **Arquitectura Dual por Factor de Forma:**
+  * **En Desktop (`>= 1024px` / `lg:`): Pestañas de Borde Ultra-Discretas y Cabecera Pura:**
+    * **Pureza Arquitectónica de la Cabecera:** Se eliminaron los botones de panel de la barra superior, devolviéndole su función macro de identidad y navegación entre suites (`← Atrás | Logo` a la izquierda, 8 suites con centrado geométrico absoluto, y selector de idioma/tema a la derecha), con estilo monocromático Geist idéntico a Vercel Dashboard.
+    * **Tiradores Verticales Esbeltos en los Marcos (Proporción Áurea 1:3):** Las pestañas de borde flotan en los marcos exteriores (`left: 0` y `right: 0`), donde existen más de 400px de margen libre sin obstruir la lectura. Presentan un diseño estilizado de tan solo 20px de saliente horizontal por 56px de alto (`w-5 h-14 rounded-r-md` / `rounded-l-md`), reduciendo a más de la mitad el saliente visual previo y adoptando **chevrons direccionales finos** (`ChevronRight` a la izquierda y `ChevronLeft` a la derecha) con micro-animación en hover (`translate-x-0.5`). Cuentan con borde nítido `border-zinc-200 dark:border-zinc-800`, fondo 100% sólido y opaco (`bg-white dark:bg-[#121214]` sin transparencias), y persistencia de posición vertical en `localStorage`.
+    * **Atajos de Teclado Profesionales:** Se mantiene la alternancia instantánea mediante las teclas **`[`** (selector de libros) y **`]`** (inspector exegético).
+  * **En Móvil (`< 1024px` / `< lg`): Dos Botones Circulares Ergonómicos con Iconografía Semántica Dinámica:**
+    * Botones circulares flotantes de 48px (`w-12 h-12 rounded-full`) ubicados en la zona natural del pulgar (`bottom: calc(20px + env(safe-area-inset-bottom, 0px))`).
+    * **Iconografía Contextual por Módulo (Cero Disonancia Cognitiva):** En lugar de iconos genéricos estáticos, cada botón exhibe dinámicamente el icono exacto de la herramienta que va a abrir:
+      * *Lector Estándar:* Izquierda `BookOpen` (Libros canónicos) | Derecha `Languages` (Cotejo de versiones y Morfología Strong).
+      * *Comparador Paralelo:* Izquierda `Columns3` (Gestor de columnas) | Derecha `GitCompare` (Diff LCS).
+      * *Interlineal Inverso:* Izquierda `Scroll` (Manuscrito y capas) | Derecha `Languages` (Morfología Strong).
+      * *Léxicos y Diccionarios:* Izquierda `BookA` (Índice léxico) | Derecha `BarChart3` (Ocurrencias y distribución).
+      * *Atlas Bíblico:* Izquierda `Map` (Lugares y rutas) | Derecha `Compass` (Ficha georreferenciada).
+      * *Cronología Histórica:* Izquierda `History` (Línea de tiempo) | Derecha `Clock` (Ficha del monarca/imperio).
+      * *Arqueología Bíblica:* Izquierda `ScrollText` (Feed de hallazgos) | Derecha `Landmark` (Ficha del artefacto/sitio).
+      * *Evangelización:* Izquierda `Compass` (Rutas bíblicas) | Derecha `Sparkles` (Bosquejos y apologética).
+    * **Interacción Táctil Directa y Cero Fallos:** Enlace `onClick={onOpen}` nativo del navegador con micro-feedback `active:scale-90`, eliminando bloqueos por puntero o interferencias con gestos del sistema operativo.
+    * **Estética Sólida Geist:** Acabado con borde nítido `border-zinc-200 dark:border-zinc-800` y fondo 100% sólido opaco (`bg-white dark:bg-[#121214]` sin transparencias), asegurando legibilidad y contraste óptimo.
+    * **Auto-Ocultamiento:** Al desplegarse el drawer lateral (`isOpen === true`), los botones se desvanecen suavemente (`opacity-0 pointer-events-none scale-75`) para despejar la vista.
+    * **Despliegue Asimétrico y Respeto Absoluto del Header en `StudySidePanel`:** En móvil (`< lg`), el shell (`<aside>`) y el backdrop operan mediante posicionamiento `absolute inset-y-0` anclado al contenedor del workspace (`relative`), confinados exactamente bajo la cabecera superior (`BibleHeaderNav`, `h-14`, `z-50`). Esto garantiza que la barra superior (`Atrás | Logo | Modo | Idioma | Tema`) permanezca siempre visible y 100% accesible sin ser tapada ni oscurecida por el drawer. El panel izquierdo emerge desde la izquierda (`-translate-x-full` $\rightarrow$ `translate-x-0`) y el inspector derecho desde la derecha (`translate-x-full` $\rightarrow$ `translate-x-0`), con contención responsive `max-w-[85vw]`.
 
 ### 7.5 Aprovechamiento Integral del Ancho de Pantalla (*Full-Width Canvas*)
 * **Eliminación de Restricciones Artificiales:** Se retiraron las limitaciones rígidas (`max-w-4xl`, `max-w-5xl` y `max-w-7xl`) tanto en el Lector Estándar (`VerseList`, `ContinuousReadingView`, `LineByLineReadingView`) como en la Landing Page principal (`/bible` - `bible/page.tsx`).
@@ -440,6 +469,15 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   * **Persistencia Aislada por Módulo (`storageKey`):** Cada panel almacena su dimensión redimensionada de forma estrictamente desacoplada en `localStorage` (`safeStorage.ts`), impidiendo que el ajuste manual de una herramienta afecte a las demás (`bible_parallel_sidebar_w`, `bible_interlinear_inspector_w`, etc.).
   * **Límites de Seguridad Físicos (`clamp`):** Todos los paneles operan bajo límites elásticos entre `200px` (mínimo) y `480px` (máximo) para salvaguardar la visibilidad y ergonomía del canvas central en cualquier resolución.
   * **Restablecimiento Instantáneo:** Soporte de doble clic sobre la manija de redimensionamiento (`ResizeBorderHandle`) para revertir inmediatamente cualquier panel a su valor de fábrica predeterminado.
+
+* **Botones Flotantes de Acceso Rápido y Ergonómicos en Móvil (`DraggableEdgeTab.tsx`):**
+  - **Transformación Responsiva Contextual:** En pantallas móviles (`< lg`), las lengüetas laterales a media altura se convierten en **dos botones circulares flotantes** (`w-12 h-12 rounded-full`, sombra flotante difusa, borde sutil y fondo translúcido con blur OLED) ubicados en las esquinas inferiores (`bottom: 20px left: 16px` para el panel izquierdo y `bottom: 20px right: 16px` para el inspector derecho).
+  - **Física de Arrastre 2D Libre:** El usuario puede tocar y arrastrar libremente el círculo en cualquier dirección si necesita despejar u observar una línea de texto situada debajo.
+  - **Snap-Back Magnético Obligatorio hacia la Base Inferior:** Al soltar el puntero (`handlePointerUp` / `handlePointerCancel`), el botón ejecuta una transición elástica suave (`320ms cubic-bezier(0.16, 1, 0.3, 1)`), **regresando siempre y de forma obligatoria a su anclaje inferior**. No se queda flotando en medio del texto bíblico.
+  - **Discriminación de Tap vs Arrastre:** Un toque limpio sin desplazamiento (< 6px) abre instantáneamente el panel/drawer correspondiente. Si hubo arrastre, se ignora la apertura y solo se ejecuta el snap-back.
+  - **Auto-Ocultamiento al Abrir:** Cuando el panel lateral correspondiente se encuentra abierto (`isOpen`), el botón circular se oculta con una micro-animación de escala y desvanecimiento (`opacity-0 scale-75 pointer-events-none`).
+  - **Escritorio (`lg:`):** En pantallas grandes, mantiene el comportamiento de lengüeta lateral en el borde de la pantalla con persistencia de posición vertical en `localStorage`.
+
 
 
 

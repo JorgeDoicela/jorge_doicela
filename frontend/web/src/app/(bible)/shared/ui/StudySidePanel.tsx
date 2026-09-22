@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { useBiblePassageSafe } from '../context';
 import { ResizeBorderHandle } from './ResizeBorderHandle';
@@ -116,10 +116,25 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
       ? passageContext?.isLeftSidebarOpen ?? false
       : passageContext?.isRightInspectorOpen ?? false;
 
-  const handleClose =
-    propOnClose ??
-    (isLeft ? passageContext?.toggleLeftSidebar : passageContext?.closeInspector) ??
-    (() => {});
+  const panelRef = useRef<HTMLElement | null>(null);
+
+  const handleClose = useCallback(() => {
+    // Desenfocar elementos activos dentro del panel antes de ocultarlo para cumplir W3C WAI-ARIA
+    if (panelRef.current && typeof document !== 'undefined' && panelRef.current.contains(document.activeElement)) {
+      (document.activeElement as HTMLElement)?.blur();
+    }
+    const closeFn =
+      propOnClose ??
+      (isLeft ? passageContext?.toggleLeftSidebar : passageContext?.closeInspector);
+    closeFn?.();
+  }, [propOnClose, isLeft, passageContext]);
+
+  // Si el panel se cierra por cualquier vía externa, asegurar que ningún elemento hijo retenga el foco
+  useEffect(() => {
+    if (!isOpen && panelRef.current && typeof document !== 'undefined' && panelRef.current.contains(document.activeElement)) {
+      (document.activeElement as HTMLElement)?.blur();
+    }
+  }, [isOpen]);
 
   // Patrón estándar de React: Controlado vs Autónomo (Controlled vs Uncontrolled)
   const isControlledWidth = propWidth !== undefined;
@@ -151,47 +166,46 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
 
   const effectiveAriaLabel = ariaLabel || title || (isLeft ? 'Panel lateral' : 'Inspector');
 
-  // Transición suave activada solo cuando no hay arrastre manual
+  // Transición: En móvil deslizamiento físico completo de Drawer (300ms con inercia Geist); en PC micro-slide + fade Linear (250ms)
   const transitionClass = isDragging
     ? 'transition-none'
-    : 'transition-[width,opacity,border-color] duration-280 ease-[cubic-bezier(0.16,1,0.3,1)]';
+    : 'transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] lg:transition-[width,opacity,border-color] lg:duration-250 lg:ease-[cubic-bezier(0.16,1,0.3,1)]';
 
-  // Difuminado progresivo elegante cuando el usuario arrastra hacia el borde de colapso (< 190px)
+  // Difuminado progresivo elegante cuando el usuario arrastra hacia el borde de colapso en escritorio (< 190px)
   const dragOpacity = isDragging && currentWidth < 190
     ? Math.max(0.2, Math.min(1, (currentWidth - 100) / 90))
-    : isOpen
-    ? 1
-    : 0;
+    : undefined;
 
   return (
     <>
-      {/* Cortina oscura backdrop en Móviles (< lg) cuando está abierto */}
-      {isOpen && (
-        <div
-          onClick={handleClose}
-          className="fixed inset-0 bg-background/80 backdrop-blur-xs z-40 lg:hidden print:hidden"
-          aria-hidden="true"
-        />
-      )}
+      {/* Cortina oscura backdrop en Móviles (< lg) con transición gradual suave */}
+      <div
+        onClick={handleClose}
+        aria-hidden="true"
+        className={`absolute inset-0 bg-black/40 backdrop-blur-[2px] z-30 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      />
 
       <aside
+        ref={panelRef}
         id={isLeft ? 'bible-study-left-sidebar' : 'bible-study-right-inspector'}
         aria-label={effectiveAriaLabel}
-        aria-hidden={!isOpen}
+        aria-hidden={!isOpen ? true : undefined}
+        inert={!isOpen ? true : undefined}
         style={
           {
             [cssVar]: `${currentWidth}px`,
-            width: isOpen ? `var(${cssVar})` : '0px',
-            opacity: isOpen ? dragOpacity : 0,
+            '--active-panel-w': isOpen ? `${currentWidth}px` : '0px',
+            opacity: dragOpacity,
           } as React.CSSProperties
         }
-        className={`fixed inset-y-0 ${borderClass} z-50 h-screen lg:h-full lg:relative lg:z-20 flex-shrink-0 flex flex-col print:hidden ${transitionClass} ${
+        className={`absolute inset-y-0 ${borderClass} z-40 h-full lg:relative lg:inset-auto lg:z-20 w-[88vw] max-w-[380px] sm:max-w-[420px] lg:w-[var(--active-panel-w)] lg:max-w-none flex-shrink-0 flex flex-col print:hidden bg-white dark:bg-[#121214] border-zinc-200 dark:border-zinc-800 lg:shadow-none overflow-hidden ${transitionClass} ${
           isOpen
-            ? 'border-zinc-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-black backdrop-blur-md pointer-events-auto shadow-xl lg:shadow-none overflow-hidden lg:overflow-visible'
-            : 'w-0 !min-w-0 !max-w-0 border-transparent pointer-events-none overflow-hidden'
-        } ${
-          // En móvil (< lg): deslizamiento translate si está cerrado
-          !isOpen ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'
+            ? 'pointer-events-auto lg:overflow-visible translate-x-0 opacity-100 visible shadow-[0_0_50px_rgba(0,0,0,0.2)] dark:shadow-[0_0_60px_rgba(0,0,0,0.7)]'
+            : isLeft
+            ? '-translate-x-full lg:translate-x-0 pointer-events-none opacity-0 invisible lg:visible shadow-none lg:border-transparent'
+            : 'translate-x-full lg:translate-x-0 pointer-events-none opacity-0 invisible lg:visible shadow-none lg:border-transparent'
         } ${className}`}
       >
         {/* Tirador Redimensionable Interactivo con Arrastre y Colapso (visible cuando está abierto) */}
@@ -207,10 +221,16 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
           />
         )}
 
-        {/* Contenedor Interior Desacoplado para Cortina Visual Cero-Jitter (Curtain Reveal) */}
+        {/* Contenedor Interior: En desktop mantiene el micro-slide de 16px con fade; en móvil permanece al 100% */}
         <div
-          style={{ width: `${currentWidth}px` }}
-          className="h-full min-w-0 flex flex-col overflow-hidden shrink-0"
+          style={{ width: undefined }}
+          className={`h-full w-full lg:w-[var(--sidebar-w,340px)] min-w-0 flex flex-col overflow-hidden shrink-0 lg:transition-[transform,opacity] lg:duration-250 lg:ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isOpen
+              ? 'opacity-100 translate-x-0'
+              : isLeft
+              ? 'lg:opacity-0 lg:-translate-x-4'
+              : 'lg:opacity-0 lg:translate-x-4'
+          }`}
         >
           {/* Cabecera Móvil Unificada (si se define title y showMobileHeader está activo) */}
           {title && showMobileHeader && (
@@ -226,7 +246,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                 type="button"
                 onClick={handleClose}
                 aria-label={collapseTitle || 'Cerrar panel'}
-                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 active:scale-95"
               >
                 <X className="w-4 h-4" />
               </button>

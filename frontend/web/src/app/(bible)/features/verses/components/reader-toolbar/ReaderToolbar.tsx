@@ -13,7 +13,7 @@ import {
 } from '../../types';
 import { UnifiedPassagePicker, getChaptersForBookId, Book } from '../../../../entities/books';
 import { TranslationSelector } from '../../../../entities/translations';
-import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2 } from 'lucide-react';
+import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2, MoreHorizontal } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 
 interface ReaderToolbarProps {
@@ -69,22 +69,27 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   const isLeftOpen = passageContext?.isLeftSidebarOpen ?? false;
   const [copied, setCopied] = useState(false);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const [moreOptionsOpen, setMoreOptionsOpen] = useState(false);
   const appearanceRef = useRef<HTMLDivElement>(null);
+  const moreOptionsRef = useRef<HTMLDivElement>(null);
 
-  // Cerrar popover de apariencia al hacer clic afuera
+  // Cerrar popovers al hacer clic afuera
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (appearanceRef.current && !appearanceRef.current.contains(e.target as Node)) {
         setAppearanceOpen(false);
       }
+      if (moreOptionsRef.current && !moreOptionsRef.current.contains(e.target as Node)) {
+        setMoreOptionsOpen(false);
+      }
     };
-    if (appearanceOpen) {
+    if (appearanceOpen || moreOptionsOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [appearanceOpen]);
+  }, [appearanceOpen, moreOptionsOpen]);
 
   const totalChapters = useMemo(() => {
     if (!selectedBookId) return 50;
@@ -127,10 +132,10 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   }));
 
   return (
-    <div className="relative z-30 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl bg-white/95 dark:bg-black/90 backdrop-blur-md px-3 py-2 shadow-xs transition-all print:hidden">
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-        {/* Izquierda: Pasaje Principal y Versión */}
-        <div className="flex items-center gap-2 min-w-0">
+    <div className="relative z-30 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl bg-white/95 dark:bg-black/90 backdrop-blur-md px-2.5 sm:px-3 py-1.5 sm:py-2 shadow-xs transition-all print:hidden">
+      <div className="flex items-center justify-between gap-1.5 sm:gap-2.5 w-full">
+        {/* Lado Izquierdo: Pasaje Principal y Versión Bíblica */}
+        <div className="flex items-center gap-1 sm:gap-2 min-w-0">
           {/* Selector de pasaje: se oculta en desktop cuando el panel lateral está abierto para evitar duplicidad */}
           <div className={isLeftOpen ? 'lg:hidden' : 'flex items-center animate-in fade-in duration-200'}>
             <UnifiedPassagePicker
@@ -152,39 +157,8 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
           )}
         </div>
 
-        {/* Derecha: Selector de Modo, Apariencia Tipográfica y Acciones */}
-        <div className="flex items-center gap-2 shrink-0 justify-end flex-wrap">
-          {/* Alternador de Modo de Lectura Geist Segmented Control */}
-          <div className="flex items-center rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
-            <button
-              type="button"
-              onClick={() => onLayoutModeChange('continuous')}
-              className={`px-2.5 py-1 text-xs rounded-md transition-all cursor-pointer flex items-center gap-1.5 font-medium ${
-                readerSettings.layoutMode === 'continuous'
-                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                  : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
-              title={t('continuousTooltip')}
-            >
-              <AlignLeft className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">{t('continuous')}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onLayoutModeChange('verse-by-verse')}
-              className={`px-2.5 py-1 text-xs rounded-md transition-all cursor-pointer flex items-center gap-1.5 font-medium ${
-                readerSettings.layoutMode === 'verse-by-verse'
-                  ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                  : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
-              }`}
-              title={t('verseByVerseTooltip')}
-            >
-              <ListOrdered className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">{t('verseByVerse')}</span>
-            </button>
-          </div>
-
+        {/* Lado Derecho: Apariencia Tipográfica y Acciones */}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           {/* Menú Flotante de Apariencia Tipográfica (Popover Geist Aa) */}
           <div className={`relative ${appearanceOpen ? 'z-50' : ''}`} ref={appearanceRef}>
             <button
@@ -204,6 +178,39 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             {/* Panel Popover Desplegable */}
             {appearanceOpen && (
               <div className="absolute right-0 top-full mt-1.5 w-64 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
+                {/* Modo de Lectura (Especialmente accesible en móvil) */}
+                <div>
+                  <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
+                    Modo de Lectura
+                  </span>
+                  <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => onLayoutModeChange('continuous')}
+                      className={`py-1.5 text-xs transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5 ${
+                        readerSettings.layoutMode === 'continuous'
+                          ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                      }`}
+                    >
+                      <AlignLeft className="w-3.5 h-3.5" />
+                      <span>{t('continuous')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onLayoutModeChange('verse-by-verse')}
+                      className={`py-1.5 text-xs transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5 ${
+                        readerSettings.layoutMode === 'verse-by-verse'
+                          ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                          : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                      }`}
+                    >
+                      <ListOrdered className="w-3.5 h-3.5" />
+                      <span>{t('verseByVerse')}</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Familia Tipográfica */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
@@ -337,14 +344,14 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             )}
           </div>
 
-          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none mx-0.5" />
+          <div className="hidden sm:block h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none mx-0.5" />
 
-          {/* Modo Enfoque Inmersivo */}
+          {/* Desktop-only: Modo Enfoque Inmersivo */}
           {onToggleFocusMode && (
             <button
               type="button"
               onClick={onToggleFocusMode}
-              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+              className={`hidden sm:flex p-1.5 rounded-lg transition-colors cursor-pointer ${
                 readerSettings.focusMode
                   ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
@@ -355,29 +362,90 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             </button>
           )}
 
-          {/* Copiar Capítulo */}
+          {/* Desktop-only: Copiar Capítulo */}
           {verses.length > 0 && (
             <button
               type="button"
               onClick={handleCopyChapter}
-              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
+              className="hidden sm:flex p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
               title={copied ? t('copied') : t('copyTooltip')}
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           )}
 
-          {/* Imprimir / Exportar Pasaje */}
+          {/* Desktop-only: Imprimir / Exportar Pasaje */}
           <button
             type="button"
             onClick={() => {
               if (typeof window !== 'undefined') window.print();
             }}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
+            className="hidden sm:flex p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
             title="Imprimir o exportar pasaje a PDF"
           >
             <Printer className="w-3.5 h-3.5" />
           </button>
+
+          {/* Mobile-only: Menú Compacto de Acciones Adicionales (...) */}
+          <div className={`relative sm:hidden ${moreOptionsOpen ? 'z-50' : ''}`} ref={moreOptionsRef}>
+            <button
+              type="button"
+              onClick={() => setMoreOptionsOpen(!moreOptionsOpen)}
+              className={`p-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center justify-center ${
+                moreOptionsOpen
+                  ? 'bg-zinc-200/80 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                  : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+              }`}
+              title="Más acciones"
+              aria-label="Más acciones"
+            >
+              <MoreHorizontal className="w-3.5 h-3.5" />
+            </button>
+
+            {moreOptionsOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-48 p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-0.5">
+                {verses.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleCopyChapter();
+                      setMoreOptionsOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-2.5 py-2 text-xs rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-left font-medium"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? t('copied') : t('copyTooltip')}</span>
+                  </button>
+                )}
+
+                {onToggleFocusMode && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onToggleFocusMode();
+                      setMoreOptionsOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-2.5 py-2 text-xs rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-left font-medium"
+                  >
+                    {readerSettings.focusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+                    <span>{readerSettings.focusMode ? 'Salir de Enfoque' : 'Modo Enfoque'}</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMoreOptionsOpen(false);
+                    if (typeof window !== 'undefined') window.print();
+                  }}
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 text-xs rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-left font-medium"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Imprimir / PDF</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

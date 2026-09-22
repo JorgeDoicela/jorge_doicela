@@ -24,6 +24,7 @@ export interface BibleSelectProps<T extends string | number = string | number> {
   size?: 'xs' | 'sm' | 'md';
   align?: 'left' | 'right';
   icon?: React.ReactNode;
+  hideLabelOnMobile?: boolean;
 }
 
 export function BibleSelect<T extends string | number = string | number>({
@@ -39,6 +40,7 @@ export function BibleSelect<T extends string | number = string | number>({
   size = 'sm',
   align = 'left',
   icon,
+  hideLabelOnMobile = false,
 }: BibleSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -155,7 +157,7 @@ export function BibleSelect<T extends string | number = string | number>({
   return (
     <div
       ref={containerRef}
-      className={`relative block w-full text-left select-none ${className}`}
+      className={`relative text-left select-none ${className || 'w-full'}`}
       title={title}
     >
       {/* Botón Trigger con Estética Geist Vercel OLED */}
@@ -185,11 +187,19 @@ export function BibleSelect<T extends string | number = string | number>({
           {selectedOption ? (
             <>
               {selectedOption.badge && (
-                <span className="shrink-0 px-1 py-0.2 font-mono text-[10px] font-semibold uppercase rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200/70 dark:border-zinc-700/60">
+                <span className="shrink-0 font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                   {selectedOption.badge}
                 </span>
               )}
-              <span className="truncate block">{selectedOption.label}</span>
+              <span
+                className={`truncate ${
+                  hideLabelOnMobile && selectedOption.badge
+                    ? 'hidden sm:inline text-zinc-500 dark:text-zinc-400 font-normal'
+                    : 'block'
+                }`}
+              >
+                {selectedOption.label}
+              </span>
             </>
           ) : (
             <span className="text-zinc-400 dark:text-zinc-500 truncate block">{placeholder}</span>

@@ -1,10 +1,25 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { PanelLeft, PanelRight } from 'lucide-react';
+import {
+  BookOpen,
+  Languages,
+  Map,
+  Compass,
+  History,
+  Clock,
+  ScrollText,
+  Landmark,
+  Sparkles,
+  Columns3,
+  GitCompare,
+  Scroll,
+  BookA,
+  BarChart3,
+} from 'lucide-react';
 import { BiblePassageProvider, useBiblePassageSafe } from '../../shared/context';
 import { BibleHeaderNav } from '../../widgets/bible-header';
 import { BibleNavigationSidebar } from '../../widgets/bible-sidebar';
@@ -83,6 +98,13 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
 
   const { mainRef, handleMainScroll } = useHeaderScrollBehavior(setIsHeaderVisible);
 
+  // Al abrir cualquiera de los paneles laterales en móvil o desktop, asegurar que la cabecera superior permanezca visible
+  useEffect(() => {
+    if (isLeftOpen || isRightOpen) {
+      setIsHeaderVisible?.(true);
+    }
+  }, [isLeftOpen, isRightOpen, setIsHeaderVisible]);
+
   const leftTabTitle = isAtlas
     ? tStudio('toggleAtlasSidebar')
     : isTimeline
@@ -102,6 +124,22 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
     : isWordStudy
     ? tStudio('toggleWordStudySidebar')
     : tStudio('toggleSidebar');
+
+  const leftTabIcon = isAtlas
+    ? Map
+    : isTimeline
+    ? History
+    : isArchaeology
+    ? ScrollText
+    : isEvangelism
+    ? Compass
+    : isParallel
+    ? Columns3
+    : isInterlinear
+    ? Scroll
+    : isWordStudy
+    ? BookA
+    : BookOpen;
 
   const rightTabTitle = isAtlas
     ? tStudio('toggleAtlasInspector')
@@ -123,28 +161,44 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? tStudio('toggleWordStudyInspector')
     : tStudio('toggleInspector');
 
+  const rightTabIcon = isAtlas
+    ? Compass
+    : isTimeline
+    ? Clock
+    : isArchaeology
+    ? Landmark
+    : isEvangelism
+    ? Sparkles
+    : isParallel
+    ? GitCompare
+    : isInterlinear
+    ? Languages
+    : isWordStudy
+    ? BarChart3
+    : Languages;
+
   return (
     <div className="h-screen bg-zinc-50/60 dark:bg-black text-foreground flex flex-col overflow-hidden selection:bg-primary/10">
       {/* Header Superior con Auto-Hide Inteligente y Suave */}
       <BibleHeaderNav isVisible={isHeaderVisible} />
 
-      {/* Pestaña Flotante Movible Izquierda (Aparece cuando el sidebar está colapsado) */}
+      {/* Pestaña Lateral Izquierda Discreta en Borde (Aparece al colapsar el selector de libros) */}
       <DraggableEdgeTab
         side="left"
         isOpen={isLeftOpen}
-        onOpen={() => passageContext?.toggleLeftSidebar()}
-        icon={PanelLeft}
+        onOpen={() => passageContext?.setLeftSidebarOpen(true)}
+        icon={leftTabIcon}
         storageKey="bible_drag_tab_left_y"
         defaultTop={200}
         title={leftTabTitle}
       />
 
-      {/* Pestaña Flotante Movible Derecha (Aparece a 14px a la izquierda de la barra de scroll) */}
+      {/* Pestaña Lateral Derecha Discreta en Borde (Aparece al colapsar el inspector exegético) */}
       <DraggableEdgeTab
         side="right"
         isOpen={isRightOpen}
-        onOpen={() => passageContext?.toggleRightInspector()}
-        icon={PanelRight}
+        onOpen={() => passageContext?.setRightInspectorOpen(true)}
+        icon={rightTabIcon}
         storageKey="bible_drag_tab_right_y"
         defaultTop={260}
         title={rightTabTitle}
@@ -175,7 +229,7 @@ function BibleStudyWorkspace({ children }: { children: React.ReactNode }) {
         <main
           ref={mainRef}
           onScroll={handleMainScroll}
-          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0"
+          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:[scrollbar-width:thin] md:[&::-webkit-scrollbar]:block md:[&::-webkit-scrollbar]:w-1.5 md:[&::-webkit-scrollbar-thumb]:bg-zinc-300 md:dark:[&::-webkit-scrollbar-thumb]:bg-zinc-800 md:[&::-webkit-scrollbar-thumb]:rounded-full"
         >
           <div className="w-full max-w-[1780px] mx-auto space-y-4">
             {children}

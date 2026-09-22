@@ -157,11 +157,12 @@ pnpm -r typecheck
   * *Lienzos Cartográficos y Cronográficos (`/study/atlas`, `/study/timeline`):* Full Canvas `max-w-[1780px]`.
 
 ### 6.2 Desacoplamiento Total de Paneles Laterales
-* **Autonomía por Módulo:** Los 16 paneles laterales (8 izquierdos y 8 derechos) están 100% desacoplados. Para cambiar o ampliar el tamaño de un panel en cualquier herramienta, basta con ajustar el prop `defaultWidth` en su respectivo componente, sin tocar ningún otro archivo del sistema.
-* **Persistencia Aislada:** Cada panel almacena su redimensión manual en su propio `storageKey` en `localStorage` (`safeStorage.ts`), evitando contaminación entre herramientas.
-
+### 6.3 Gobernanza Adaptativa de Paneles (Tiradores Esbeltos en PC y Círculos en Móvil)
+* **En Desktop (`>= lg`): Tiradores de Borde Verticales Esbeltos (1:3) y Cabecera Pura:** Cabecera superior 100% limpia para identidad y navegación macro entre suites. Los paneles laterales se despliegan mediante tiradores estilizados de tan solo 20px de saliente horizontal por 56px de alto (`w-5 h-14 rounded-r-md` / `rounded-l-md`, fondo 100% sólido opaco `bg-white dark:bg-[#121214]`) equipados con chevrons direccionales (`ChevronRight` a la izquierda y `ChevronLeft` a la derecha) con micro-animación en hover, complementados por los atajos de teclado (`[` y `]`).
+* **En Móvil (`< lg`): Dos Círculos Ergonómicos con Iconografía Semántica Dinámica:** Dos botones circulares de 48px (`w-12 h-12 rounded-full`) anclados en la base (`bottom: 20px`), fondo 100% sólido opaco (`bg-white dark:bg-[#121214]` sin transparencias) con apertura táctil directa (`onClick={onOpen}`) e **iconografía semántica contextual por módulo** (Lector: `BookOpen` y `Languages`; Paralelo: `Columns3` y `GitCompare`; Interlineal: `Scroll` y `Languages`; Atlas: `Map` y `Compass`, etc.). Los paneles laterales y el backdrop operan mediante posicionamiento relativo al Workspace (`absolute inset-y-0`), confinándose bajo la barra superior (`BibleHeaderNav`, `h-14`, `z-50`) para que la cabecera (`Atrás | Logo | Modo | Idioma | Tema`) permanezca 100% visible, limpia y accesible sin ser tapada.
 
 ---
+
 
 ## 7. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
 

@@ -70,11 +70,11 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
     );
   };
 
-  const activeTab = NAV_TABS.find((t) => isCurrentTab(t.path)) || NAV_TABS[0];
+  const activeTab = NAV_TABS.find((tab) => isCurrentTab(tab.path)) || NAV_TABS[0];
 
-  // Cerrar el menú móvil al hacer clic afuera
+  // Cerrar el menú flotante móvil al hacer clic fuera
   useEffect(() => {
-    const handleClickOutside = (event: Event) => {
+    const handleClickOutside = (event: MouseEvent | PointerEvent) => {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setMobileMenuOpen(false);
       }
@@ -105,9 +105,8 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
 
         {/* Izquierda: Retorno al Inicio de la Biblia y Logotipo */}
-        <div className="shrink-0 flex items-center gap-2 sm:gap-3">
+        <div className="shrink-0 flex items-center gap-2 sm:gap-2.5">
           <BackToBibleButton />
-          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none" />
           <Link
             href={homeUrl}
             className="shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity p-0.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 group"
@@ -118,8 +117,8 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
           </Link>
         </div>
 
-        {/* Móvil: Menú Desplegable Flotante Elegante (< md) */}
-        <div className="relative md:hidden shrink min-w-0 z-50" ref={mobileMenuRef}>
+        {/* Móvil: Menú Desplegable Flotante Elegante (< md) Centrado Simétricamente */}
+        <div className="md:hidden absolute left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-auto" ref={mobileMenuRef}>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
@@ -130,9 +129,9 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
             <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 shrink-0 transition-transform duration-200 ${mobileMenuOpen ? 'rotate-180' : ''}`} />
           </button>
 
-          {/* Menú Flotante Móvil */}
+          {/* Menú Flotante Móvil Centrado */}
           {mobileMenuOpen && (
-            <div className="absolute top-full left-0 mt-1.5 w-60 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 w-60 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 px-2 py-1">
                 {t('studyMode')}
               </div>

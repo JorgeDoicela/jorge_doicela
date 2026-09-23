@@ -3,9 +3,6 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import {
-  Compass,
-  ShieldAlert,
-  FileText,
   Search,
   X,
   ChevronRight,
@@ -36,10 +33,10 @@ export const EvangelismSidebar: React.FC = () => {
     }
   }, [pathname, setActiveTab]);
 
-  const tabs: { key: EvangelismTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { key: 'pathways', label: 'Rutas', icon: Compass },
-    { key: 'objections', label: 'Objeciones', icon: ShieldAlert },
-    { key: 'tracts', label: 'Tratados', icon: FileText },
+  const tabs: { key: EvangelismTab; label: string }[] = [
+    { key: 'pathways', label: 'Rutas' },
+    { key: 'objections', label: 'Objeciones' },
+    { key: 'tracts', label: 'Tratados' },
   ];
 
   return (
@@ -56,19 +53,17 @@ export const EvangelismSidebar: React.FC = () => {
         <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-100/80 dark:bg-zinc-900/80">
           {tabs.map((t) => {
             const active = activeTab === t.key;
-            const Icon = t.icon;
             return (
               <button
                 key={t.key}
                 type="button"
                 onClick={() => setActiveTab(t.key)}
-                className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`py-1.5 text-xs rounded-md font-medium transition-all flex items-center justify-center cursor-pointer ${
                   active
                     ? 'bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                     : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
                 <span>{t.label}</span>
               </button>
             );
@@ -103,7 +98,7 @@ export const EvangelismSidebar: React.FC = () => {
                       <span className="text-xs font-bold leading-tight line-clamp-1">
                         {pathway.title}
                       </span>
-                      <span className="text-[10px] font-mono shrink-0 px-1.5 py-0.5 rounded bg-zinc-200/60 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                      <span className="text-[10px] font-mono shrink-0 text-zinc-500 dark:text-zinc-400">
                         {pathway.steps.length} pasos
                       </span>
                     </div>

@@ -3,15 +3,10 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import {
-  X,
-  BookOpen,
   Sparkles,
-  Shield,
-  HelpCircle,
   MessageSquare,
   ArrowRight,
   ArrowLeft,
-  HeartHandshake,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useEvangelismContextSafe } from '../../context/EvangelismContext';
@@ -25,7 +20,6 @@ export const EvangelismInspector: React.FC = () => {
   const pathway = evangelism?.selectedPathway;
   const activeStep = pathway?.steps[evangelism?.activeStepIndex || 0];
   const totalSteps = pathway?.steps.length || 0;
-  const currentStepNum = (evangelism?.activeStepIndex || 0) + 1;
 
   const tract = evangelism?.selectedTract;
 
@@ -41,19 +35,13 @@ export const EvangelismInspector: React.FC = () => {
       {/* Cabecera del Inspector Especializado */}
       <StudySidePanel.Toolbar className="bg-zinc-50/50 dark:bg-zinc-950/50">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 dark:text-zinc-100">
-            <Shield className="w-3.5 h-3.5 text-emerald-500" />
+          <div className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
             <span>
               {activeTab === 'pathways' && 'Guía de la Ruta Activa'}
               {activeTab === 'objections' && 'Defensa de la Fe (1 Pe 3:15)'}
               {activeTab === 'tracts' && 'Bosquejo del Tratado'}
             </span>
           </div>
-          {activeTab === 'pathways' && totalSteps > 0 && (
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
-              Paso {currentStepNum} de {totalSteps}
-            </span>
-          )}
         </div>
       </StudySidePanel.Toolbar>
 
@@ -77,8 +65,7 @@ export const EvangelismInspector: React.FC = () => {
 
               {/* Exposición Teológica del Paso */}
               <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/70 dark:bg-black/60 space-y-1.5">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-                  <BookOpen className="w-3.5 h-3.5 text-blue-500" />
+                <div className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
                   <span>Exposición Teológica</span>
                 </div>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -88,8 +75,7 @@ export const EvangelismInspector: React.FC = () => {
 
               {/* Pregunta para el Diálogo */}
               <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-amber-500/5 dark:bg-amber-500/10 border-amber-500/20 space-y-1.5">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
-                  <HelpCircle className="w-3.5 h-3.5" />
+                <div className="text-xs font-semibold text-amber-700 dark:text-amber-400">
                   <span>Pregunta de Reflexión</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed italic">
@@ -100,8 +86,7 @@ export const EvangelismInspector: React.FC = () => {
               {/* Desafío o Llamado a la Acción */}
               {activeStep.actionCall && (
                 <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-emerald-500/5 dark:bg-emerald-500/10 border-emerald-500/20 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
-                    <HeartHandshake className="w-3.5 h-3.5" />
+                  <div className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     <span>Llamado a la Fe</span>
                   </div>
                   <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed font-medium">
@@ -136,7 +121,7 @@ export const EvangelismInspector: React.FC = () => {
 
           {activeTab === 'pathways' && !activeStep && (
             <div className="p-6 text-center border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-2">
-              <Sparkles className="w-8 h-8 text-emerald-500/60 mx-auto" />
+              <Sparkles className="w-8 h-8 text-zinc-400 mx-auto" />
               <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                 Selecciona una ruta bíblica
               </h4>
@@ -200,7 +185,7 @@ export const EvangelismInspector: React.FC = () => {
 
           {activeTab === 'tracts' && !tract && (
             <div className="p-6 text-center border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-2">
-              <Sparkles className="w-8 h-8 text-emerald-500/60 mx-auto" />
+              <Sparkles className="w-8 h-8 text-zinc-400 mx-auto" />
               <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                 Selecciona un tratado
               </h4>

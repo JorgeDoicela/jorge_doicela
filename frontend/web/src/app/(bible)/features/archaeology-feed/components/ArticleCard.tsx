@@ -12,12 +12,12 @@ interface ArticleCardProps {
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onReadArticle }) => {
   const t = useTranslations('ArchaeologyFeed');
 
-  const categoryBadgeClass =
+  const categoryTextColor =
     article.category === 'recent_discoveries'
-      ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
+      ? 'text-blue-600 dark:text-blue-400'
       : article.category === 'manuscripts_epigraphy'
-      ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
-      : 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20';
+      ? 'text-amber-600 dark:text-amber-400'
+      : 'text-purple-600 dark:text-purple-400';
 
   const categoryLabel =
     article.category === 'recent_discoveries'
@@ -36,7 +36,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onReadArticle
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span
-              className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-semibold border ${categoryBadgeClass}`}
+              className={`text-[10px] font-mono uppercase font-semibold tracking-wider ${categoryTextColor}`}
             >
               {categoryLabel}
             </span>

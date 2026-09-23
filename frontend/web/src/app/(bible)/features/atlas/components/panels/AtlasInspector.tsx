@@ -6,8 +6,6 @@ import {
   MapPin,
   Sparkles,
   Compass,
-  Globe,
-  Landmark,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useAtlasContextSafe } from '../../context/AtlasContext';
@@ -36,7 +34,7 @@ export const AtlasInspector: React.FC = () => {
               {/* Encabezado del Lugar */}
               <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold uppercase border border-rose-500/20">
+                  <span className="text-[10px] font-mono text-rose-600 dark:text-rose-400 font-bold uppercase tracking-wider">
                     {place.category}
                   </span>
                   <span className="text-[10px] font-mono text-zinc-400">
@@ -59,8 +57,7 @@ export const AtlasInspector: React.FC = () => {
 
               {/* Telemetría WGS84 */}
               <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                  <Globe className="w-3.5 h-3.5 text-blue-500" />
+                <div className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   <span>Coordenadas Geográficas WGS84</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
@@ -85,12 +82,11 @@ export const AtlasInspector: React.FC = () => {
               {place.archaeologicalNotes && (
                 <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-amber-500/5 dark:bg-amber-500/10 border-amber-500/20 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
-                      <Landmark className="w-3.5 h-3.5" />
+                    <div className="text-xs font-bold text-amber-600 dark:text-amber-400">
                       <span>Evidencia Arqueológica</span>
                     </div>
                     {place.archaeologicalNotes.verifiedByBiblicalArchaeology && (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold">
+                      <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-semibold">
                         Verificado
                       </span>
                     )}

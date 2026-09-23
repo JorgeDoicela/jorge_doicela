@@ -6,12 +6,7 @@ import {
   Columns3,
   Plus,
   Trash2,
-  Sparkles,
-  BookOpen,
-  ChevronRight,
-  Layers,
   Check,
-  RotateCcw,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useParallelContextSafe, PARALLEL_PRESETS } from '../../context/ParallelContext';
@@ -43,18 +38,13 @@ export const ParallelSidebar: React.FC = () => {
     >
       {/* Cabecera Desktop del Panel Especializado */}
       <StudySidePanel.Toolbar className="hidden lg:flex items-center justify-between p-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-            <Columns3 className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
-          </div>
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Cotejo Paralelo
-            </h2>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              {activeColumns.length} columnas sincronizadas
-            </p>
-          </div>
+        <div>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
+            Cotejo Paralelo
+          </h2>
+          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            {activeColumns.length} columnas sincronizadas
+          </p>
         </div>
       </StudySidePanel.Toolbar>
 
@@ -63,8 +53,7 @@ export const ParallelSidebar: React.FC = () => {
           {/* SECCIÓN 1: PRESETS RÁPIDOS DE COTEJO */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3 text-amber-500" />
+              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 Presets de Comparación
               </span>
             </div>
@@ -88,7 +77,7 @@ export const ParallelSidebar: React.FC = () => {
                         {preset.name}
                         {isActive && <Check className="w-3.5 h-3.5 text-foreground" />}
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-zinc-200/60 dark:bg-zinc-800/70 text-zinc-700 dark:text-zinc-300">
+                      <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 font-medium">
                         {preset.badge}
                       </span>
                     </div>
@@ -104,8 +93,7 @@ export const ParallelSidebar: React.FC = () => {
           {/* SECCIÓN 2: GESTOR DE COLUMNAS ACTIVAS */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
-                <Layers className="w-3 h-3" />
+              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 Columnas en el Lienzo ({activeColumns.length}/4)
               </span>
             </div>
@@ -179,8 +167,7 @@ export const ParallelSidebar: React.FC = () => {
 
           {/* SECCIÓN 3: PASAJE ACTIVO Y NAVEGACIÓN RÁPIDA */}
           <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800/80 space-y-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
-              <BookOpen className="w-3 h-3" />
+            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               Pasaje Sincronizado
             </span>
 
@@ -189,7 +176,7 @@ export const ParallelSidebar: React.FC = () => {
                 <span className="text-xs font-semibold text-foreground">
                   {selectedBook?.name || 'Génesis'} {selectedChapter}
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
+                <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400">
                   {selectedBook?.testament === 'NT' ? 'Nuevo Testamento' : 'Antiguo Testamento'}
                 </span>
               </div>

@@ -79,7 +79,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
         </span>
 
         <div className="flex items-center gap-1">
-          <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-1 py-0.2 rounded border border-emerald-500/20">
+          <span className="text-[9px] font-bold text-emerald-500">
             {t('greekBadge')}
           </span>
 

@@ -82,7 +82,7 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
 
         <div className="flex items-center gap-1">
           {token.language === 'Aramaic' && (
-            <span className="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-1 py-0.2 rounded border border-amber-500/20">
+            <span className="text-[9px] font-bold text-amber-500">
               {t('aramaicBadge')}
             </span>
           )}

@@ -124,18 +124,13 @@ export const InterlinearSidebar: React.FC = () => {
     >
       {/* Cabecera del Panel */}
       <StudySidePanel.Toolbar className="space-y-3">
-        <div className="hidden lg:flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-            <Scroll className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
-          </div>
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Corpus Interlineal
-            </h2>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              {activeCanon === 'OT' ? 'Texto Masorético BHS' : 'Texto Griego NA28'}
-            </p>
-          </div>
+        <div className="hidden lg:block">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
+            Corpus Interlineal
+          </h2>
+          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            {activeCanon === 'OT' ? 'Texto Masorético BHS' : 'Texto Griego NA28'}
+          </p>
         </div>
 
           {/* Selector de Tradición Lingüística (Hebreo AT vs Griego NT) */}
@@ -229,7 +224,7 @@ export const InterlinearSidebar: React.FC = () => {
                           <div className="flex items-center gap-1.5">
                             {b.isAramaic && (
                               <span
-                                className="text-[9px] font-mono px-1.5 py-0.2 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                className="text-[9px] font-mono font-semibold text-amber-600 dark:text-amber-400"
                                 title="Contiene secciones en Arameo Imperial"
                               >
                                 Arameo

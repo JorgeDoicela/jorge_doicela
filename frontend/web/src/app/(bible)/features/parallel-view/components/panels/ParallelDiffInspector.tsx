@@ -93,18 +93,13 @@ export const ParallelDiffInspector: React.FC = () => {
       {/* Cabecera del Inspector */}
       <StudySidePanel.Toolbar>
         <div className="flex items-center justify-between pb-2.5">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-foreground">
-              <GitCompare className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-foreground block">
-                {selectedBook?.name || 'Génesis'} {selectedChapter}:{selectedVerseNumber}
-              </span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
-                Análisis diferencial sincronizado
-              </span>
-            </div>
+          <div>
+            <span className="text-xs font-bold text-foreground block">
+              {selectedBook?.name || 'Génesis'} {selectedChapter}:{selectedVerseNumber}
+            </span>
+            <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
+              Análisis diferencial sincronizado
+            </span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -252,7 +247,7 @@ export const ParallelDiffInspector: React.FC = () => {
                         {abbrA}
                       </span>
                       {approachA && (
-                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${approachA.badgeColor}`}>
+                        <span className={`text-[10px] font-mono font-semibold tracking-wider ${approachA.badgeColor}`}>
                           {approachA.philosophy}
                         </span>
                       )}
@@ -286,7 +281,7 @@ export const ParallelDiffInspector: React.FC = () => {
                         {abbrB}
                       </span>
                       {approachB && (
-                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${approachB.badgeColor}`}>
+                        <span className={`text-[10px] font-mono font-semibold tracking-wider ${approachB.badgeColor}`}>
                           {approachB.philosophy}
                         </span>
                       )}

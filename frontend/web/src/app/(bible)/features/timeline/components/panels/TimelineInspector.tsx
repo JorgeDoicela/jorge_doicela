@@ -70,7 +70,7 @@ export const TimelineInspector: React.FC = () => {
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold uppercase border border-amber-500/20">
+                  <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-bold uppercase tracking-wider">
                     {item.type}
                   </span>
                   <span className="text-[10px] font-mono text-zinc-400">
@@ -197,7 +197,7 @@ export const TimelineInspector: React.FC = () => {
             </div>
           ) : (
             <div className="p-6 text-center border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-2">
-              <Clock className="w-8 h-8 text-amber-500/60 mx-auto" />
+              <Clock className="w-8 h-8 text-zinc-400 mx-auto" />
               <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                 Ningún evento seleccionado
               </h4>

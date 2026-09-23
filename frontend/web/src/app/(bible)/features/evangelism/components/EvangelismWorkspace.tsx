@@ -78,10 +78,6 @@ export const EvangelismWorkspace: React.FC<EvangelismWorkspaceProps> = ({ initia
             );
           })}
         </div>
-
-        <div className="hidden sm:block text-[11px] font-mono text-accents-4 pb-2.5">
-          {t('motto')}
-        </div>
       </div>
 
       {/* Renderizado Condicional de la Pestaña Activa */}

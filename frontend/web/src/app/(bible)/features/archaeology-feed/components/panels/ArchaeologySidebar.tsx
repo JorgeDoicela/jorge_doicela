@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Compass,
-  FileText,
   MapPin,
   ShieldCheck,
   Sparkles,
@@ -74,25 +73,23 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('categories')}
-            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
+            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
               activeTab === 'categories'
                 ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <FileText className="w-3.5 h-3.5 text-emerald-500" />
             <span>Categorías</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('regions')}
-            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
+            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
               activeTab === 'regions'
                 ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <MapPin className="w-3.5 h-3.5 text-blue-500" />
             <span>Regiones</span>
           </button>
         </div>

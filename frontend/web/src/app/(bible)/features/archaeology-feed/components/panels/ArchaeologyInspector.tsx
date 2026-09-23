@@ -42,7 +42,7 @@ export const ArchaeologyInspector: React.FC<ArchaeologyInspectorProps> = ({
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold uppercase border border-emerald-500/20">
+                  <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
                     {article.category.replace('_', ' ')}
                   </span>
                   <span className="text-[10px] font-mono text-zinc-400">
@@ -125,7 +125,7 @@ export const ArchaeologyInspector: React.FC<ArchaeologyInspectorProps> = ({
             </div>
           ) : (
             <div className="p-6 text-center border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-2">
-              <Compass className="w-8 h-8 text-emerald-500/60 mx-auto" />
+              <Compass className="w-8 h-8 text-zinc-400 mx-auto" />
               <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                 Ficha Técnica de Excavación
               </h4>

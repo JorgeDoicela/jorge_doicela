@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   MapPin,
-  Clock,
   Compass,
   Search,
   X,
@@ -63,37 +62,34 @@ export const AtlasSidebar: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveTab('places')}
-              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1 ${
+              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
                 activeTab === 'places'
                   ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <MapPin className="w-3 h-3 text-rose-500" />
               <span>Lugares</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('eras')}
-              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1 ${
+              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
                 activeTab === 'eras'
                   ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <Clock className="w-3 h-3 text-amber-500" />
               <span>Épocas</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('categories')}
-              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1 ${
+              className={`py-1.5 px-2 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
                 activeTab === 'categories'
                   ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <Layers className="w-3 h-3 text-blue-500" />
               <span>Tipos</span>
             </button>
           </div>

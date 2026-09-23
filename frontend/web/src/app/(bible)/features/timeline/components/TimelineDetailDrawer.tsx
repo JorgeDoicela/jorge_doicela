@@ -97,12 +97,12 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
             <div className="flex items-center justify-between pt-1 border-t border-accents-2">
               <span className="text-accents-5 font-mono">{t('biblicalEvaluation')}</span>
               <span
-                className={`font-semibold px-2 py-0.5 rounded text-[10px] ${
+                className={`font-semibold text-xs ${
                   selectedItem.data.evaluation === 'good'
-                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20'
+                    ? 'text-emerald-600 dark:text-emerald-400'
                     : selectedItem.data.evaluation === 'bad'
-                    ? 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20'
-                    : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20'
+                    ? 'text-rose-600 dark:text-rose-400'
+                    : 'text-amber-600 dark:text-amber-400'
                 }`}
               >
                 {selectedItem.data.evaluation === 'good'
@@ -135,11 +135,11 @@ export const TimelineDetailDrawer: React.FC<TimelineDetailDrawerProps> = ({
               <h4 className="text-[10px] font-mono uppercase tracking-wider text-accents-4">
                 {t('contemporaryProphets')}
               </h4>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2 text-xs">
                 {selectedItem.data.prophetsContemporary.map((prof, i) => (
                   <span
                     key={i}
-                    className="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-medium"
+                    className="text-emerald-600 dark:text-emerald-400 font-medium"
                   >
                     {prof}
                   </span>

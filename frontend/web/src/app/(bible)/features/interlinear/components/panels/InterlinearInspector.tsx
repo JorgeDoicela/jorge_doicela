@@ -134,7 +134,7 @@ export const InterlinearInspector: React.FC = () => {
                   {/* TARJETA DE LA PALABRA HERO */}
                   <div className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/40 space-y-3 shadow-2xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-zinc-200/80 dark:bg-zinc-800 text-foreground font-bold">
+                      <span className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 font-bold">
                         {strongCode}
                       </span>
 

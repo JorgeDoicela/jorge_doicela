@@ -76,7 +76,7 @@ export const ArchaeologyFeedDashboard: React.FC = () => {
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-semibold">
+                  <span className="text-[10px] font-mono uppercase text-amber-600 dark:text-amber-400 font-semibold tracking-wider">
                     {ms.classification}
                   </span>
                   <span className="text-[10px] font-mono text-accents-4">

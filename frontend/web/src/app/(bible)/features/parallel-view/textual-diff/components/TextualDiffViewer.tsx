@@ -119,7 +119,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
               </div>
               {approachA && (
                 <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${approachA.badgeColor}`}
+                  className={`text-[10px] font-mono font-semibold tracking-wider ${approachA.badgeColor}`}
                 >
                   {getPhilosophyLabel(approachA.philosophy)}
                 </span>
@@ -161,7 +161,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
               </div>
               {approachB && (
                 <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${approachB.badgeColor}`}
+                  className={`text-[10px] font-mono font-semibold tracking-wider ${approachB.badgeColor}`}
                 >
                   {getPhilosophyLabel(approachB.philosophy)}
                 </span>

@@ -4,12 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Search,
-  BookOpen,
-  Sparkles,
   Languages,
-  Check,
-  ChevronRight,
-  Flame,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useLexiconContextSafe, CuratedTheologicalTerm } from '../../context/LexiconContext';
@@ -93,8 +88,7 @@ export const WordStudySidebar: React.FC = () => {
 
       <StudySidePanel.Body className="p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-amber-500" />
+            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               Términos Teológicos Clave ({filteredTerms.length})
             </span>
           </div>
@@ -115,7 +109,7 @@ export const WordStudySidebar: React.FC = () => {
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-200/70 dark:bg-zinc-800 text-foreground font-bold">
+                      <span className="text-[10px] font-mono font-bold text-zinc-500 dark:text-zinc-400">
                         {term.strong}
                       </span>
                       <span

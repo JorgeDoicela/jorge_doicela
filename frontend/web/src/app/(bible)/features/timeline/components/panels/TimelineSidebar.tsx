@@ -8,8 +8,6 @@ import {
   ScrollText,
   Globe,
   Sparkles,
-  Calendar,
-  Layers,
 } from 'lucide-react';
 import { useBiblePassageSafe } from '../../../../shared/context';
 import { useTimelineContextSafe } from '../../context/TimelineContext';
@@ -59,25 +57,23 @@ export const TimelineSidebar: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('eras')}
-            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
+            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
               activeTab === 'eras'
                 ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <Calendar className="w-3.5 h-3.5 text-amber-500" />
             <span>Épocas Bíblicas</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('tracks')}
-            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center gap-1.5 ${
+            className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
               activeTab === 'tracks'
                 ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <Layers className="w-3.5 h-3.5 text-blue-500" />
             <span>Líneas Históricas</span>
           </button>
         </div>

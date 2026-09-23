@@ -14,7 +14,7 @@ export default function InterlinearStudyPage() {
     <div className="w-full max-w-5xl mx-auto space-y-4 animate-in fade-in duration-200">
       <BiblePassageToolbar
         rightBadge={
-          <span className="text-[11px] font-mono text-amber-500/90 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
+          <span className="text-[11px] font-mono text-amber-500/90 font-semibold">
             {selectedBook?.testament === 'NT' ? t('activeOriginalBadgeNt') : t('activeOriginalBadgeOt')}
           </span>
         }

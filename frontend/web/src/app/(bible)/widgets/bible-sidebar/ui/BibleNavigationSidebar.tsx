@@ -191,7 +191,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
 
                     {/* Insignia Contextual de Época en Historia */}
                     {isHistoricalContext && histInfo && (
-                      <span className="hidden sm:inline text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 truncate max-w-[90px]">
+                      <span className="hidden sm:inline text-[9px] font-mono font-semibold text-amber-600 dark:text-amber-400 truncate max-w-[90px]">
                         {histInfo.era.split(' ')[0]}
                       </span>
                     )}

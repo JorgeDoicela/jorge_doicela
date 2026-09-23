@@ -213,7 +213,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
                 {/* Acordeón de Capítulos en Cuadrícula Ergonómica DIITRA Style */}
                 {isExpanded && (
                   <div className="p-3 bg-zinc-50/80 dark:bg-black border-y border-zinc-100 dark:border-zinc-800/80 my-1 rounded-xl">
-                    <div className="grid grid-cols-5 gap-1.5 max-h-48 overflow-y-auto pr-1">
+                    <div className="grid grid-cols-5 gap-1.5">
                       {Array.from({ length: totalChapters }, (_, i) => i + 1).map((chap) => {
                         const isCurrentChapter = isSelected && selectedChapter === chap;
                         return (

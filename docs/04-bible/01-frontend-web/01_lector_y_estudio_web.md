@@ -345,11 +345,11 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
 ### 7.8 Arquitectura Desacoplada App Shell y Auto-Hide Inteligente (`layout.tsx`, `BibleHeaderNav.tsx`)
 * **Patrón App Shell de Estudio Profesional (Cero Layout Shifts - CLS = 0):** El workspace de estudio adopta la arquitectura canónica de IDEs y suites profesionales (Geist, Linear, VS Code):
   * **Marco Raíz Inamovible:** `h-screen flex flex-col overflow-hidden`. La ventana del navegador nunca produce scroll global ni desacomoda los paneles laterales.
-  * **Auto-Hide Inteligente de Cabecera (`BibleHeaderNav.tsx`):** La barra de 56px (`h-14`) cuenta con transición fluida de altura y opacidad (`transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden`).
+  * **Auto-Hide Inteligente de Cabecera Acelerado por GPU (`BibleHeaderNav.tsx`):** La barra de 56px (`h-14`) cuenta con animación de deslizamiento inercial suave mediante traslación por hardware y margen inferior sincronizado (`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] -translate-y-full -mb-14 opacity-0`), erradicando el desfase de velocidades, el recorte de contenido y los recálculos de layout forzados (*layout reflow*). Al retornar (`translate-y-0 mb-0 opacity-100`), incorpora cristal esmerilado translúcido (*backdrop-blur-xl* al 85%), borde refinado y sombra ligera flotante.
     * **Zona de Reposo Serena (`scrollTop <= 200px`):** Los primeros 200px permanecen fijos para que el lector examine el título, la barra de herramientas o el pasaje sin que nada desaparezca.
-    * **Ocultamiento por Intención Real (`>= 80px` continuos hacia abajo):** Solo al rebasar la zona de reposo y demostrar lectura continuada, la barra colapsa suavemente a `h-0 opacity-0`.
+    * **Ocultamiento por Intención Real (`>= 80px` continuos hacia abajo):** Solo al rebasar la zona de reposo y demostrar lectura continuada, la barra se desliza fluidamente hacia arriba fuera del viewport.
     * **Reaparición Inmediata (`>= 25px` hacia arriba):** Cualquier retroceso o gesto ascendente restaura la cabecera al instante.
-  * **Expansión Automática del Workspace:** Al retraerse la cabecera, la fila del workspace (`flex-1 min-h-0 overflow-hidden`) se expande naturalmente a pantalla completa (`100vh`).
+  * **Expansión Automática del Workspace:** Al retraerse la cabecera, la fila del workspace (`flex-1 min-h-0 overflow-hidden`) asciende suavemente a pantalla completa (`100vh`) sin saltos de lectura.
   * **Blindaje Total de Paneles Laterales (`BibleNavigationSidebar.tsx` e `Inspector`):** En desktop (`lg:`), actúan como columnas fijas acopladas (`lg:static lg:h-full`). Sus cabeceras (`[Todos | AT | NT]` y `[Morfología Strong]`) son `shrink-0` y residen siempre al tope de la fila, por lo que **jamás se cortan ni se empujan fuera de pantalla**.
   * **Canvas Central de Lectura (`<main>`):** Ocupa el espacio central (`flex-1 h-full overflow-y-auto`). La lectura de versículos se desplaza a 120 FPS sin colisiones y dispara los eventos de intención de forma nativa.
   * **Footer Editorial Integrado:** El pie de página con información legal y enlaces canónicos se aloja al final del canvas de lectura (`<main>`).
@@ -476,10 +476,14 @@ Integrado a través del hook [`useBibleKeybindings.ts`](../../../frontend/web/sr
   - **Snap-Back Magnético Obligatorio hacia la Base Inferior:** Al soltar el puntero (`handlePointerUp` / `handlePointerCancel`), el botón ejecuta una transición elástica suave (`320ms cubic-bezier(0.16, 1, 0.3, 1)`), **regresando siempre y de forma obligatoria a su anclaje inferior**. No se queda flotando en medio del texto bíblico.
   - **Discriminación de Tap vs Arrastre:** Un toque limpio sin desplazamiento (< 6px) abre instantáneamente el panel/drawer correspondiente. Si hubo arrastre, se ignora la apertura y solo se ejecuta el snap-back.
   - **Auto-Ocultamiento al Abrir:** Cuando el panel lateral correspondiente se encuentra abierto (`isOpen`), el botón circular se oculta con una micro-animación de escala y desvanecimiento (`opacity-0 scale-75 pointer-events-none`).
-  - **Escritorio (`lg:`):** En pantallas grandes, mantiene el comportamiento de lengüeta lateral en el borde de la pantalla con persistencia de posición vertical en `localStorage`.
-
-
-
-
+* **Sistema de Desplazamiento Ultrafino y Erradicación de Scroll Anidado (Scrollbar Architecture & Zero Nested Scroll):**
+  - **Erradicación del Antipatrón de Scroll Anidado (`BibleNavigationSidebar.tsx`):** Se eliminó la contención artificial de altura fija (`max-h-48 overflow-y-auto`) dentro del acordeón de capítulos. Al expandirse cualquier libro (como Génesis o Salmos), la cuadrícula de 5 columnas fluye de manera natural dentro del contenedor padre `StudySidePanelBody`, eliminando el efecto de doble barra de desplazamiento y trampas de puntero.
+  - **Utilidad Reutilizable de Calibre Hairline (`.bible-scrollbar-slim` en `globals.css`):**
+    * **Espesor Minimalista (2px):** Se configuró en `2px` de espesor (`width: 2px; height: 2px;`), proporcionando una referencia visual discreta, elegante y no invasiva para la lectura prolongada acorde a la estética Geist.
+    * **Riel y Cápsula:** Riel 100% transparente (`background: transparent`) con cápsula redondeada (`rounded-full`) calibrada en reposo (`rgba(161, 161, 170, 0.6)`) y acentuada en estado interactivo (`:hover` a `0.95`).
+    * **Compatibilidad Multiplataforma Desacoplada (WebKit vs Firefox):**
+      - *Chromium / WebKit (Chrome, Edge, Safari):* Se evitó declarar `scrollbar-width` de forma directa en el selector principal, resolviendo el conflicto de la especificación *W3C CSS Scrollbars Level 1* donde Chromium ignora `::-webkit-scrollbar` y renderiza la barra nativa gruesa de Windows (~12px).
+      - *Firefox:* Reglas aisladas bajo la condición `@supports not selector(::-webkit-scrollbar)` con `scrollbar-width: thin` y `scrollbar-color`.
+    * **Implementación Sistémica:** Integrado directamente en el contenedor central de lectura `<main>` en `study/layout.tsx` y en el contenedor base `StudySidePanelBody` en `StudySidePanel.tsx`, garantizando que todos los paneles laterales (los 8 módulos de estudio) y los inspectores exegéticos compartan de forma homogénea el mismo estándar visual.
 
 

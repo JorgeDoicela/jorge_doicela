@@ -767,9 +767,9 @@
     "copyTextOnly": "Copy text only",
     "copyWithCitation": "Copy with Citation",
     "legalNotices": {
-      "NBLA": "New American Bible / NBLA ® © 2005 by The Lockman Foundation. Connected via authorized API.",
-      "NTV": "Holy Bible, New Living Translation / NTV, © Tyndale House Foundation, 2010. Connected via authorized API.",
-      "NIV": "Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Connected via authorized API.",
+      "NBLA": "New American Bible / NBLA ® © 2005 by The Lockman Foundation. All rights reserved.",
+      "NTV": "Holy Bible, New Living Translation / NTV, © Tyndale House Foundation, 2010. All rights reserved.",
+      "NIV": "Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® All rights reserved.",
       "BHS": "Masoretic Hebrew Text (Biblia Hebraica Stuttgartensia / WLC). Public Domain / Open Academic License.",
       "NA28": "Critical Greek Text (Novum Testamentum Graece — NA28 / UBS 5). Academic Public Domain.",
       "RV1909": "Holy Bible, Reina-Valera (1909). Universal Public Domain.",

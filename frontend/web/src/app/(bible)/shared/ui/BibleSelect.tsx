@@ -182,7 +182,7 @@ export function BibleSelect<T extends string | number = string | number>({
           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
           ${sizeClasses}`}
       >
-        <span className="flex items-center gap-1.5 min-w-0 flex-1 overflow-hidden">
+        <span className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
           {icon && <span className="shrink-0 text-zinc-400 dark:text-zinc-500">{icon}</span>}
           {selectedOption ? (
             <>
@@ -229,7 +229,7 @@ export function BibleSelect<T extends string | number = string | number>({
             border border-zinc-200/90 dark:border-zinc-800/90
             shadow-2xl shadow-black/15 dark:shadow-black/70
             animate-in fade-in zoom-in-[0.98] duration-150
-            scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800
+            bible-scrollbar-slim
             ${menuClassName}`}
         >
           {options.map((option, idx) => {
@@ -260,15 +260,9 @@ export function BibleSelect<T extends string | number = string | number>({
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/60'
                   }`}
               >
-                <div className="flex items-center gap-2 min-w-0 truncate">
+                <div className="flex items-center gap-3 min-w-0 truncate">
                   {option.badge && (
-                    <span
-                      className={`shrink-0 px-1 py-0.2 font-mono text-[10px] font-semibold uppercase rounded border ${
-                        isSelected
-                          ? 'bg-zinc-200/90 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border-zinc-300 dark:border-zinc-700'
-                          : 'bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 border-zinc-200/70 dark:border-zinc-800'
-                      }`}
-                    >
+                    <span className="shrink-0 font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                       {option.badge}
                     </span>
                   )}

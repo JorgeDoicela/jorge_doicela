@@ -26,7 +26,7 @@ export const CANONICAL_TRANSLATIONS: Translation[] = [
     abbreviation: 'NBLA',
     language: 'Español',
     copyrightOwner: 'The Lockman Foundation',
-    copyrightNotice: 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.',
+    copyrightNotice: 'Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Todos los derechos reservados.',
   },
   {
     id: 4,
@@ -34,7 +34,7 @@ export const CANONICAL_TRANSLATIONS: Translation[] = [
     abbreviation: 'NTV',
     language: 'Español',
     copyrightOwner: 'Tyndale House Foundation',
-    copyrightNotice: 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.',
+    copyrightNotice: 'Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Todos los derechos reservados.',
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ export const CANONICAL_TRANSLATIONS: Translation[] = [
     abbreviation: 'NIV',
     language: 'Inglés',
     copyrightOwner: 'Biblica, Inc.',
-    copyrightNotice: 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.',
+    copyrightNotice: 'Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® All rights reserved.',
   },
   {
     id: 6,

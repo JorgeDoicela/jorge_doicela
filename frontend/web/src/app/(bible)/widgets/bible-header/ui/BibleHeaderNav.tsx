@@ -96,10 +96,10 @@ export const BibleHeaderNav: React.FC<BibleHeaderNavProps> = ({ isVisible = true
 
   return (
     <header
-      className={`relative shrink-0 w-full border-b bg-white dark:bg-[#0a0a0a] z-50 transition-[height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] print:hidden ${
+      className={`relative shrink-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] print:hidden ${
         isVisible
-          ? 'h-14 opacity-100 border-zinc-200/80 dark:border-zinc-800/80 shadow-xs overflow-visible'
-          : 'h-0 opacity-0 pointer-events-none border-transparent shadow-none overflow-hidden'
+          ? 'h-14 mb-0 opacity-100 translate-y-0 border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl shadow-xs'
+          : 'h-14 -mb-14 opacity-0 -translate-y-full pointer-events-none border-b border-transparent shadow-none'
       }`}
     >
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">

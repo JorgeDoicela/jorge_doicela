@@ -55,7 +55,7 @@ const StudySidePanelBody: React.FC<StudySidePanelBodyProps> = ({
   children,
 }) => {
   return (
-    <div className={`flex-1 overflow-y-auto p-4 space-y-4 min-w-0 ${className}`}>
+    <div className={`flex-1 overflow-y-auto p-4 space-y-4 min-w-0 bible-scrollbar-slim ${className}`}>
       {children}
     </div>
   );

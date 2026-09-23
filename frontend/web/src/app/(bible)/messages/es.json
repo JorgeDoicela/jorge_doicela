@@ -766,9 +766,9 @@
     "copyTextOnly": "Copiar solo texto",
     "copyWithCitation": "Copiar con Cita",
     "legalNotices": {
-      "NBLA": "Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Conectada vía API autorizada.",
-      "NTV": "Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Conectada vía API autorizada.",
-      "NIV": "Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Conectada vía API autorizada.",
+      "NBLA": "Nueva Biblia de las Américas ® © 2005 por The Lockman Foundation. Todos los derechos reservados.",
+      "NTV": "Santa Biblia, Nueva Traducción Viviente, © Tyndale House Foundation, 2010. Todos los derechos reservados.",
+      "NIV": "Holy Bible, NEW INTERNATIONAL VERSION ® NIV ® © 1973, 1978, 1984, 2011 by Biblica, Inc. ® Todos los derechos reservados.",
       "BHS": "Texto Hebreo Masorético (Biblia Hebraica Stuttgartensia / WLC). Dominio Público / Licencia Académica Abierta.",
       "NA28": "Texto Crítico Griego (Novum Testamentum Graece — NA28 / UBS 5). Dominio Público Académico.",
       "RV1909": "Santa Biblia, Versión Reina-Valera (1909). Dominio Público Universal.",

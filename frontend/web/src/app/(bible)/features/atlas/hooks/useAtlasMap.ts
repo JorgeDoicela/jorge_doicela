@@ -5,12 +5,12 @@ import { useLocale } from 'next-intl';
 import { AncientPlace, HistoricalEra, MapLayerType, PlaceCategory } from '../types';
 import { fetchAtlasPlaces } from '../services/atlasApiService';
 
-// Límites geográficos del Oriente Próximo y Mediterráneo Bíblico
+// Límites geográficos calibrados con precisión para la cartografía bíblica
 export const MAP_BOUNDS = {
-  minLat: 26.5, // Sur del Sinaí y Egipto
-  maxLat: 43.5, // Norte de Roma y Macedonia
-  minLng: 11.5, // Oeste de Roma
-  maxLng: 44.5, // Este del Éufrates y Mesopotamia
+  minLat: 25.37, // Sur del Sinaí y Alto Egipto
+  maxLat: 40.89, // Norte de Grecia, Macedonia y Anatolia
+  minLng: 9.26,  // Mar Tirreno y Mediterráneo Central
+  maxLng: 63.19, // Mesopotamia, Zagros y Golfo Pérsico
 };
 
 /**
@@ -132,15 +132,15 @@ export function useAtlasMap() {
     switch (region) {
       case 'holyland':
         setZoomLevel(2.4);
-        setPanOffset({ x: -660, y: -260 });
+        setPanOffset({ x: -655, y: -595 });
         break;
       case 'greece_asia':
         setZoomLevel(1.8);
-        setPanOffset({ x: 40, y: 140 });
+        setPanOffset({ x: -145, y: -70 });
         break;
       case 'egypt_sinai':
         setZoomLevel(1.9);
-        setPanOffset({ x: -280, y: -360 });
+        setPanOffset({ x: -320, y: -660 });
         break;
       case 'all':
       default:

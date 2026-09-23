@@ -63,22 +63,17 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
     };
   }, [onZoomDelta]);
 
-  // Colores dinámicos precisos para renderizado SVG según el tema
-  const waterColor1 = isDark ? '#0b162c' : '#dbeafe';
-  const waterColor2 = isDark ? '#050c1a' : '#bfdbfe';
-  const landColor = isDark ? '#161f30' : '#ffffff';
-  const landStroke = isDark ? '#283955' : '#94a3b8';
-  const gridColor = isDark ? '#22324d' : '#94a3b8';
+  // Colores dinámicos para elementos interactivos SVG sobre la cartografía
+  const gridColor = isDark ? '#334155' : '#cbd5e1';
   const textColor = isDark ? '#f1f5f9' : '#0f172a';
-  const textMutedColor = isDark ? '#64748b' : '#64748b';
-  const textStrokeHalo = isDark ? '#050c1a' : '#ffffff';
+  const textMutedColor = isDark ? '#94a3b8' : '#64748b';
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-[540px] rounded-xl overflow-hidden border border-accents-2 shadow-inner select-none transition-colors duration-200 touch-none ${
-        isDark ? 'bg-[#050c1a]' : 'bg-[#dbeafe]'
-      } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+      className={`relative w-full h-[540px] rounded-xl overflow-hidden border border-accents-2 shadow-inner select-none transition-colors duration-200 touch-none bg-background ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      }`}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
@@ -100,13 +95,7 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         }}
       >
         <defs>
-          {/* Gradiente para masa de agua adaptable a claro y oscuro */}
-          <linearGradient id="mediterraneanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={waterColor1} stopOpacity="1" />
-            <stop offset="100%" stopColor={waterColor2} stopOpacity="1" />
-          </linearGradient>
-
-          {/* Patrón de cuadrícula de coordenadas náuticas */}
+          {/* Patrón de cuadrícula de coordenadas náuticas sutil */}
           <pattern id="gridPattern" width="100" height="100" patternUnits="userSpaceOnUse">
             <path
               d="M 100 0 L 0 0 0 100"
@@ -119,129 +108,67 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
           </pattern>
         </defs>
 
-        {/* Fondo del mar / masa oceánica */}
-        <rect width="1000" height="650" fill="url(#mediterraneanGrad)" />
+        {/* Capa Cartográfica Realista de Alta Definición */}
+        <image
+          href={
+            activeLayer === 'satellite'
+              ? '/bible/images/atlas/map_satellite.jpg'
+              : activeLayer === 'historical'
+              ? '/bible/images/atlas/map_parchment.jpg'
+              : isDark
+              ? '/bible/images/atlas/map_satellite.jpg'
+              : '/bible/images/atlas/map_parchment.jpg'
+          }
+          x="0"
+          y="0"
+          width="1000"
+          height="650"
+          preserveAspectRatio="none"
+        />
 
-        {/* Cuadrícula de coordenadas */}
+        {/* Cuadrícula de coordenadas náuticas sutil */}
         <rect width="1000" height="650" fill="url(#gridPattern)" />
 
-        {/* Tierras emergidas vectoriales aproximadas del Mediterráneo Oriental y Cercano Oriente */}
-        <g fill={landColor} stroke={landStroke} strokeWidth="1" opacity="0.98">
-          {/* Península Itálica (Roma) */}
-          <path d="M 30,50 Q 80,110 120,200 L 140,230 L 100,260 L 70,210 Z" />
+        {/* Regiones y Etiquetas Geográficas Bíblicas en Modo Oscuro / Satélite */}
+        {(activeLayer === 'satellite' || isDark) && (
+          <g fill={textMutedColor} opacity={0.7} fontSize="10" fontWeight="600" fontFamily="monospace" textAnchor="middle">
+            <text x="280" y="360" transform="rotate(-15, 280, 360)">
+              MARE INTERNUM (MEDITERRÁNEO)
+            </text>
+            <text x="540" y="180">ASIA MENOR</text>
+            <text x="210" y="180">MACEDONIA & AQUEA</text>
+            <text x="630" y="260">SIRIA</text>
+            <text x="488" y="340">GALILEA</text>
+            <text x="484" y="365">SAMARIA</text>
+            <text x="480" y="405">JUDEA</text>
+            <text x="458" y="555">PENÍNSULA DEL SINAÍ</text>
+            <text x="360" y="520">EGIPTO (GOSÉN)</text>
+            <text x="640" y="440">ARABIA / MOAB</text>
+          </g>
+        )}
 
-          {/* Grecia y Macedonia (Atenas, Corinto, Filipos, Tesalónica) */}
-          <path d="M 280,60 L 370,80 L 390,140 L 340,190 L 350,230 L 310,240 L 290,180 Z" />
-
-          {/* Creta */}
-          <path d="M 330,300 L 410,295 L 420,310 L 340,315 Z" />
-
-          {/* Asia Menor / Anatolia (Éfeso, Tróade, Antioquía Pisidia, Galacia) */}
-          <path d="M 420,70 L 680,60 L 740,120 L 730,220 L 640,240 L 460,220 L 420,160 Z" />
-
-          {/* Chipre */}
-          <path d="M 640,270 L 710,260 L 715,280 L 650,290 Z" />
-
-          {/* Levante / Canaán / Siria / Palestina / Jordania */}
-          <path d="M 730,190 L 790,200 L 820,260 L 790,320 L 760,370 L 740,430 L 730,510 L 680,520 L 640,470 L 680,420 L 720,360 L 720,270 L 710,220 Z" />
-
-          {/* Egipto y Costa del Norte de África */}
-          <path d="M 10,290 L 200,290 L 340,360 L 480,360 L 530,420 L 630,480 L 670,540 L 630,620 L 450,620 L 380,540 L 200,530 L 10,500 Z" />
-        </g>
-
-        {/* Golfo de Suez y Mar Rojo */}
-        <path
-          d="M 660,540 L 645,640"
-          stroke={waterColor2}
-          strokeWidth="6"
-          strokeLinecap="round"
-        />
-
-        {/* Cuerpos de agua bíblicos interiores */}
-        {/* Mar de Galilea (Kinneret) */}
-        <ellipse
-          cx="730"
-          cy="325"
-          rx="5.5"
-          ry="8"
-          fill="#38bdf8"
-          stroke="#0284c7"
-          strokeWidth="1.2"
-          className="animate-pulse"
-        />
-
-        {/* Río Jordán */}
-        <path
-          d="M 730,333 Q 731,350 729,370 Q 730,390 728,405"
-          fill="none"
-          stroke="#38bdf8"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-
-        {/* Mar Muerto (Yam HaMelaj) */}
-        <path
-          d="M 728,405 C 725,415 723,440 727,455 C 730,465 726,480 724,485 C 721,480 720,440 723,405 Z"
-          fill="#0ea5e9"
-          stroke="#0369a1"
-          strokeWidth="1.5"
-        />
-
-        {/* Río Nilo y Delta */}
-        <path
-          d="M 570,440 L 580,470 L 590,560 L 585,650"
-          fill="none"
-          stroke="#0284c7"
-          strokeWidth="3.5"
-          opacity="0.8"
-        />
-
-        {/* Ríos Éufrates y Tigris (Mesopotamia) */}
-        <path
-          d="M 780,120 Q 860,180 920,290 Q 980,410 990,500"
-          fill="none"
-          stroke="#0284c7"
-          strokeWidth="2"
-          strokeDasharray="4,2"
-          opacity="0.6"
-        />
-
-        {/* Regiones y Etiquetas Geográficas Bíblicas Tenues */}
-        <g fill={textMutedColor} opacity={isDark ? '0.45' : '0.7'} fontSize="10" fontWeight="600" fontFamily="monospace" textAnchor="middle">
-          <text x="200" y="240" transform="rotate(-15, 200, 240)">
-            MARE INTERNUM (MEDITERRÁNEO)
-          </text>
-          <text x="540" y="150">ASIA MENOR</text>
-          <text x="330" y="110">MACEDONIA & AQUEA</text>
-          <text x="800" y="220">SIRIA</text>
-          <text x="765" y="360">GALILEA</text>
-          <text x="765" y="410">SAMARIA</text>
-          <text x="765" y="460">JUDEA</text>
-          <text x="640" y="550">PENÍNSULA DEL SINAÍ</text>
-          <text x="540" y="500">EGIPTO (GOSÉN)</text>
-          <text x="860" y="450">ARABIA / MOAB</text>
-        </g>
-
-        {/* Rosa de los Vientos Náutica Bíblica */}
-        <g transform="translate(80, 560)" opacity={isDark ? '0.65' : '0.85'}>
-          <circle r="32" fill="none" stroke={textColor} strokeWidth="0.8" strokeDasharray="2,3" />
-          <path d="M 0,-30 L 5,-8 L 0,0 L -5,-8 Z" fill="#ef4444" />
-          <path d="M 0,30 L 5,8 L 0,0 L -5,8 Z" fill={textColor} />
-          <path d="M -30,0 L -8,5 L 0,0 L -8,-5 Z" fill={textColor} />
-          <path d="M 30,0 L 8,5 L 0,0 L 8,-5 Z" fill={textColor} />
-          <text x="0" y="-34" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#ef4444">
-            N
-          </text>
-          <text x="0" y="42" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
-            S
-          </text>
-          <text x="38" y="3" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
-            E
-          </text>
-          <text x="-38" y="3" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
-            O
-          </text>
-        </g>
+        {/* Rosa de los Vientos Náutica Bíblica (visible en modo satélite / oscuro) */}
+        {(activeLayer === 'satellite' || isDark) && (
+          <g transform="translate(80, 560)" opacity={0.85}>
+            <circle r="32" fill="none" stroke={textColor} strokeWidth="0.8" strokeDasharray="2,3" />
+            <path d="M 0,-30 L 5,-8 L 0,0 L -5,-8 Z" fill="#ef4444" />
+            <path d="M 0,30 L 5,8 L 0,0 L -5,8 Z" fill={textColor} />
+            <path d="M -30,0 L -8,5 L 0,0 L -8,-5 Z" fill={textColor} />
+            <path d="M 30,0 L 8,5 L 0,0 L 8,-5 Z" fill={textColor} />
+            <text x="0" y="-34" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#ef4444">
+              N
+            </text>
+            <text x="0" y="42" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
+              S
+            </text>
+            <text x="38" y="3" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
+              E
+            </text>
+            <text x="-38" y="3" fontSize="8" fontWeight="bold" textAnchor="middle" fill={textColor}>
+              O
+            </text>
+          </g>
+        )}
 
         {/* Renderizado de Lugares Bíblicos */}
         {places.map((place) => {
@@ -357,7 +284,7 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
                   fontSize={isSelected ? '10' : isHovered ? '9.5' : '8.5'}
                   fontWeight={isSelected || isHovered ? 'bold' : '600'}
                   fill={isSelected ? (isDark ? '#ffffff' : '#000000') : isHovered ? '#2563eb' : textColor}
-                  stroke={textStrokeHalo}
+                  stroke={isDark ? '#050c1a' : '#ffffff'}
                   strokeWidth={isDark ? '0.4' : '0.8'}
                   paintOrder="stroke fill"
                   className="select-none font-sans transition-opacity duration-150"

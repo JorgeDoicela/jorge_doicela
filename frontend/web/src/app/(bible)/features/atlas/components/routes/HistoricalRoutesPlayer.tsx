@@ -47,10 +47,6 @@ export const HistoricalRoutesPlayer: React.FC = () => {
     return index === 0 ? `M ${point.x},${point.y}` : `${acc} L ${point.x},${point.y}`;
   }, '');
 
-  const seaColor = isDark ? '#0c192c' : '#dbeafe';
-  const landColor = isDark ? '#151c2d' : '#ffffff';
-  const landStroke = isDark ? '#232f48' : '#94a3b8';
-
   return (
     <div className="space-y-4">
       {/* Selector de Ruta Histórica */}
@@ -81,11 +77,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
       {/* Grid: Canvas de la Ruta + Panel de Parada Activa */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Canvas de Trazado de Ruta Adaptable */}
-        <div
-          className={`lg:col-span-8 relative h-[480px] rounded-xl border border-accents-2 overflow-hidden shadow-inner flex flex-col justify-between transition-colors duration-200 ${
-            isDark ? 'bg-[#070b14]' : 'bg-[#dbeafe]'
-          }`}
-        >
+        <div className="lg:col-span-8 relative h-[480px] rounded-xl border border-accents-2 overflow-hidden shadow-inner flex flex-col justify-between transition-colors duration-200 bg-background">
           <svg viewBox="0 0 1000 650" className="w-full h-full">
             <defs>
               <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -94,18 +86,15 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               </linearGradient>
             </defs>
 
-            {/* Mar y fondo cartográfico adaptable */}
-            <rect width="1000" height="650" fill={seaColor} />
-
-            {/* Tierra firme */}
-            <g fill={landColor} stroke={landStroke} strokeWidth="1" opacity="0.98">
-              <path d="M 30,50 Q 80,110 120,200 L 140,230 L 100,260 L 70,210 Z" />
-              <path d="M 280,60 L 370,80 L 390,140 L 340,190 L 350,230 L 310,240 L 290,180 Z" />
-              <path d="M 330,300 L 410,295 L 420,310 L 340,315 Z" />
-              <path d="M 420,70 L 680,60 L 740,120 L 730,220 L 640,240 L 460,220 L 420,160 Z" />
-              <path d="M 640,270 L 710,260 L 715,280 L 650,290 Z" />
-              <path d="M 730,170 L 820,180 L 890,260 L 980,300 L 980,650 L 520,650 L 520,440 L 600,430 L 680,480 L 710,480 L 735,390 L 725,270 Z" />
-            </g>
+            {/* Imagen Cartográfica Histórica / Satelital de Fondo */}
+            <image
+              href={isDark ? '/bible/images/atlas/map_satellite.jpg' : '/bible/images/atlas/map_parchment.jpg'}
+              x="0"
+              y="0"
+              width="1000"
+              height="650"
+              preserveAspectRatio="none"
+            />
 
             {/* Trazado completo de la ruta con línea discontinua */}
             <path

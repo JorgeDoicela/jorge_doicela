@@ -14,6 +14,7 @@ Catálogo de ideas, funcionalidades completadas y requerimientos pendientes excl
 - [x] **Semáforo visual de conexión:** Indicador en tiempo real del estado de WebSocket (verde/amarillo/rojo).
 - [ ] **Múltiples sesiones/pestañas:** Interfaz estilo tmux para alternar terminales.
 - [ ] **Modo espejo de lectura:** Generar enlace único para compartir una sesión en tiempo real.
+- [ ] **[Showcase DevSecOps y Laboratorio Interactivo](05_showcase_devsecops_y_laboratorio_interactivo.md):** Auditoría CIS Benchmark, telemetría cgroups v2 en vivo, Chaos Engineering (OOM), inspector mTLS y retos prácticos de seguridad (Mini-CTF).
 
 ---
 

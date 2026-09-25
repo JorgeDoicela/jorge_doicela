@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AiResource, AiResourceType } from '../entities/ai-resource.entity';
+import { AiResource, AiCategory } from '../entities/ai-resource.entity';
 import { CreateAiResourceDto } from '../dto/create-ai-resource.dto';
 import { GetAiResourcesQueryDto } from '../dto/get-ai-resources-query.dto';
 
@@ -13,7 +13,7 @@ export class AiService {
   ) {}
 
   async findAll(query: GetAiResourcesQueryDto = {}): Promise<AiResource[]> {
-    const { type, search, lang } = query;
+    const { category, search, lang } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -23,8 +23,8 @@ export class AiService {
       qb.andWhere('ai.language = :lang', { lang });
     }
 
-    if (type && type !== 'all') {
-      qb.andWhere('ai.type = :type', { type });
+    if (category && category !== 'all') {
+      qb.andWhere('ai.category = :category', { category });
     }
 
     if (search) {
@@ -88,7 +88,7 @@ export class AiService {
   async create(createAiResourceDto: CreateAiResourceDto): Promise<AiResource> {
     const resource = this.aiRepository.create({
       ...createAiResourceDto,
-      type: (createAiResourceDto.type || 'tool') as AiResourceType,
+      category: (createAiResourceDto.category || 'tool') as AiCategory,
     });
     return this.aiRepository.save(resource);
   }
@@ -108,13 +108,13 @@ export class AiService {
       qb.andWhere('ai.language = :lang', { lang });
     }
 
-    const allResources = await qb.select(['ai.type']).getMany();
+    const allResources = await qb.select(['ai.category']).getMany();
     const countMap = new Map<string, number>();
 
     for (const r of allResources) {
-      if (r.type) {
-        const t = r.type.toLowerCase();
-        countMap.set(t, (countMap.get(t) || 0) + 1);
+      if (r.category) {
+        const c = r.category.toLowerCase();
+        countMap.set(c, (countMap.get(c) || 0) + 1);
       }
     }
 
@@ -124,6 +124,9 @@ export class AiService {
       agent: 'Frameworks Agénticos',
       mcp_server: 'Servidores MCP',
       tool: 'Herramientas',
+      dataset: 'Datasets',
+      platform: 'Plataformas',
+      framework: 'Frameworks',
     };
 
     const labelsEn: Record<string, string> = {
@@ -132,6 +135,9 @@ export class AiService {
       agent: 'Agentic Frameworks',
       mcp_server: 'MCP Servers',
       tool: 'Tools',
+      dataset: 'Datasets',
+      platform: 'Platforms',
+      framework: 'Frameworks',
     };
 
     const labels = lang === 'en' ? labelsEn : labelsEs;
@@ -146,13 +152,21 @@ export class AiService {
       },
     ];
 
-    const typeOrder = ['llm', 'agent', 'mcp_server', 'tool'];
-    for (const t of typeOrder) {
-      const count = countMap.get(t) || 0;
+    const categoryOrder: AiCategory[] = [
+      'llm',
+      'agent',
+      'mcp_server',
+      'tool',
+      'framework',
+      'dataset',
+      'platform',
+    ];
+    for (const c of categoryOrder) {
+      const count = countMap.get(c) || 0;
       if (count > 0) {
         result.push({
-          id: t,
-          label: labels[t] || t,
+          id: c,
+          label: labels[c] || c,
           count,
         });
       }

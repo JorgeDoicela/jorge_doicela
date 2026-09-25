@@ -8,13 +8,18 @@ import {
 } from 'typeorm';
 
 export type SecuritySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-export type SecurityPostType = 'advisory' | 'hardening_guide' | 'writeup';
+export type SecurityCategory =
+  | 'advisory'
+  | 'hardening_guide'
+  | 'writeup'
+  | 'cve_analysis'
+  | 'pentest';
 
 @Entity('security_posts')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'publishedAt'])
 @Index(['language', 'severity', 'orderPriority', 'publishedAt'])
-@Index(['language', 'postType', 'orderPriority', 'publishedAt'])
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class SecurityPost {
   @PrimaryGeneratedColumn()
@@ -30,7 +35,7 @@ export class SecurityPost {
   severity: SecuritySeverity;
 
   @Column({ default: 'advisory' })
-  postType: SecurityPostType;
+  category: SecurityCategory;
 
   @Column({ nullable: true })
   cveId?: string;

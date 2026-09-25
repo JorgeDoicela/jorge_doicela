@@ -17,7 +17,7 @@ export function InfrastructureCard({ post }: InfrastructureCardProps) {
       coverImage={post.coverImage}
       subCategory={post.category}
       tag={post.environment.toUpperCase()}
-      categoryMeta={`${post.category}, ${post.environment}`}
+      categoryMeta={[post.category, post.environment, post.difficulty].filter(Boolean).join(' • ')}
       excerpt={post.subtitle || post.architectureOverview}
       accentHoverColor="group-hover:text-cyan-300"
     />

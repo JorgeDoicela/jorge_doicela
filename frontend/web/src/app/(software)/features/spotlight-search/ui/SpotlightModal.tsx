@@ -108,7 +108,7 @@ export function SpotlightModal({
         categoryLabel: tNav('ai'),
         snippet: a.description,
         href: `/ai/${a.slug}`,
-        tag: a.type.toUpperCase(),
+        tag: a.category.toUpperCase(),
       });
     });
 

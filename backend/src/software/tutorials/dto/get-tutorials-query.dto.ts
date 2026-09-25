@@ -1,4 +1,4 @@
-import { IsOptional, IsIn } from 'class-validator';
+import { IsOptional, IsIn, IsString } from 'class-validator';
 import { SoftwareQueryDto } from '../../common/dto/software-query.dto';
 import type { TutorialDifficulty } from '../entities/tutorial.entity';
 
@@ -15,4 +15,8 @@ export class GetTutorialsQueryDto extends SoftwareQueryDto {
     message: 'La dificultad debe ser beginner, intermediate o advanced',
   })
   difficulty?: TutorialDifficulty | 'all';
+
+  @IsOptional()
+  @IsString({ message: 'El parámetro category debe ser una cadena de texto.' })
+  category?: string;
 }

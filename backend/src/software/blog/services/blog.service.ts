@@ -39,9 +39,13 @@ export class BlogService {
     }
 
     if (category && category !== 'all') {
-      qb.andWhere('(blog.tags LIKE :category OR blog.series LIKE :category)', {
-        category: `%${category}%`,
-      });
+      qb.andWhere(
+        '(blog.category = :category OR blog.tags LIKE :catPattern OR blog.series LIKE :catPattern)',
+        {
+          category,
+          catPattern: `%${category}%`,
+        },
+      );
     }
 
     // Algoritmo de Inteligencia Editorial (SmartScore)
@@ -96,7 +100,9 @@ export class BlogService {
   }
 
   async create(createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
-    const post = this.blogRepository.create(createBlogPostDto);
+    const post = this.blogRepository.create(
+      createBlogPostDto as Partial<BlogPost>,
+    );
     return this.blogRepository.save(post);
   }
 

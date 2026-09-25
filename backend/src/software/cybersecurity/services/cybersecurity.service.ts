@@ -13,7 +13,7 @@ export class CybersecurityService {
   ) {}
 
   async findAll(query: GetSecurityPostsQueryDto = {}): Promise<SecurityPost[]> {
-    const { severity, postType, search, lang } = query;
+    const { severity, category, search, lang } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -27,8 +27,8 @@ export class CybersecurityService {
       qb.andWhere('sec.severity = :severity', { severity });
     }
 
-    if (postType) {
-      qb.andWhere('sec.postType = :postType', { postType });
+    if (category && category !== 'all') {
+      qb.andWhere('sec.category = :category', { category });
     }
 
     if (search) {
@@ -97,7 +97,7 @@ export class CybersecurityService {
     const post = this.securityRepository.create({
       ...createSecurityPostDto,
       severity: createSecurityPostDto.severity || 'MEDIUM',
-      postType: createSecurityPostDto.postType || 'advisory',
+      category: createSecurityPostDto.category || 'advisory',
     });
     return this.securityRepository.save(post);
   }

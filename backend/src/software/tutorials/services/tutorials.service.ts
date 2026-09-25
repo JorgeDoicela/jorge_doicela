@@ -17,7 +17,7 @@ export class TutorialsService {
   ) {}
 
   async findAll(query: GetTutorialsQueryDto = {}): Promise<Tutorial[]> {
-    const { difficulty, search, lang } = query;
+    const { difficulty, category, search, lang } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -29,6 +29,10 @@ export class TutorialsService {
 
     if (difficulty && difficulty !== 'all') {
       qb.andWhere('tut.difficulty = :difficulty', { difficulty });
+    }
+
+    if (category && category !== 'all') {
+      qb.andWhere('tut.category = :category', { category });
     }
 
     if (search) {

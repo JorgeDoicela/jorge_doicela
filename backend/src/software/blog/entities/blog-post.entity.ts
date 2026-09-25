@@ -7,9 +7,20 @@ import {
   Index,
 } from 'typeorm';
 
+export type BlogCategory =
+  | 'architecture'
+  | 'devops'
+  | 'ai'
+  | 'frontend'
+  | 'backend'
+  | 'career'
+  | 'opinion'
+  | 'databases';
+
 @Entity('blog_posts')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
 @Index(['language', 'series', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class BlogPost {
@@ -34,6 +45,9 @@ export class BlogPost {
   @Column({ default: 'Jorge Doicela' })
   author: string;
 
+  @Column({ default: 'architecture' })
+  category: BlogCategory;
+
   @Column({ default: 'architecture,clean-code' })
   tags: string;
 
@@ -48,9 +62,6 @@ export class BlogPost {
 
   @Column({ nullable: true })
   coverImage?: string;
-
-  @Column({ default: 8 })
-  readTimeMinutes: number;
 
   @Column({ default: 0 })
   views: number;

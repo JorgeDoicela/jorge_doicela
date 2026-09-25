@@ -12,7 +12,6 @@ export interface NewsArticle {
   category: string;
   tags: string;
   coverImage?: string;
-  readTimeMinutes: number;
   views: number;
   likes: number;
   featured?: boolean;

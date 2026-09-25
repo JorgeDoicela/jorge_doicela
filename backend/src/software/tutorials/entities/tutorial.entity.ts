@@ -10,10 +10,20 @@ import {
 import { TutorialStep } from './tutorial-step.entity';
 
 export type TutorialDifficulty = 'beginner' | 'intermediate' | 'advanced';
+export type TutorialCategory =
+  | 'web'
+  | 'backend'
+  | 'devops'
+  | 'mobile'
+  | 'ai'
+  | 'databases'
+  | 'security'
+  | 'architecture';
 
 @Entity('tutorials')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
 @Index(['language', 'difficulty', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class Tutorial {
@@ -35,8 +45,8 @@ export class Tutorial {
   @Column({ default: 'intermediate' })
   difficulty: TutorialDifficulty;
 
-  @Column({ default: 15 })
-  estimatedMinutes: number;
+  @Column({ default: 'backend' })
+  category: TutorialCategory;
 
   @Column({ nullable: true })
   prerequisites?: string;

@@ -2,7 +2,7 @@ import { IsOptional, IsIn } from 'class-validator';
 import { SoftwareQueryDto } from '../../common/dto/software-query.dto';
 import type {
   SecuritySeverity,
-  SecurityPostType,
+  SecurityCategory,
 } from '../entities/security-post.entity';
 
 const SEVERITIES: Array<SecuritySeverity | 'all'> = [
@@ -13,10 +13,13 @@ const SEVERITIES: Array<SecuritySeverity | 'all'> = [
   'CRITICAL',
 ];
 
-const POST_TYPES: SecurityPostType[] = [
+const SECURITY_CATEGORIES: Array<SecurityCategory | 'all'> = [
+  'all',
   'advisory',
   'hardening_guide',
   'writeup',
+  'cve_analysis',
+  'pentest',
 ];
 
 export class GetSecurityPostsQueryDto extends SoftwareQueryDto {
@@ -27,8 +30,9 @@ export class GetSecurityPostsQueryDto extends SoftwareQueryDto {
   severity?: SecuritySeverity | 'all';
 
   @IsOptional()
-  @IsIn(POST_TYPES, {
-    message: 'El tipo debe ser advisory, hardening_guide o writeup',
+  @IsIn(SECURITY_CATEGORIES, {
+    message:
+      'La categoría debe ser: advisory, hardening_guide, writeup, cve_analysis o pentest',
   })
-  postType?: SecurityPostType;
+  category?: SecurityCategory | 'all';
 }

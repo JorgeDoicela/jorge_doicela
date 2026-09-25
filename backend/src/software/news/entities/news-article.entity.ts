@@ -56,9 +56,6 @@ export class NewsArticle {
   @Column({ nullable: true })
   coverImage?: string;
 
-  @Column({ default: 4 })
-  readTimeMinutes: number;
-
   @Column({ default: 0 })
   views: number;
 

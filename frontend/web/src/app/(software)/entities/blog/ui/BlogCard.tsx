@@ -22,8 +22,13 @@ export function BlogCard({ post }: BlogCardProps) {
     }
   );
 
-  const seriesOrBlog = post.series || tNav('blog');
-  const metaText = `${seriesOrBlog} • ${formattedDate}`;
+  const metaParts = [
+    post.series,
+    post.tags?.split(',')[0]?.trim(),
+    formattedDate,
+  ].filter(Boolean);
+
+  const metaText = metaParts.join(' • ');
 
   return (
     <SoftwareCard

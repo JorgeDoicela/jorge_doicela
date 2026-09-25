@@ -1,3 +1,14 @@
+export type TutorialDifficulty = 'beginner' | 'intermediate' | 'advanced';
+export type TutorialCategory =
+  | 'web'
+  | 'backend'
+  | 'devops'
+  | 'mobile'
+  | 'ai'
+  | 'databases'
+  | 'security'
+  | 'architecture';
+
 export interface TutorialStep {
   id: number;
   tutorialId: number;
@@ -15,8 +26,8 @@ export interface Tutorial {
   title: string;
   excerpt: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  estimatedMinutes: number;
+  category: TutorialCategory;
+  difficulty: TutorialDifficulty;
   prerequisites?: string;
   techStack: string;
   author: string;

@@ -1,20 +1,23 @@
 import { IsOptional, IsIn } from 'class-validator';
 import { SoftwareQueryDto } from '../../common/dto/software-query.dto';
-import type { AiResourceType } from '../entities/ai-resource.entity';
+import type { AiCategory } from '../entities/ai-resource.entity';
 
-const AI_RESOURCE_TYPES: Array<AiResourceType | 'all'> = [
+const AI_CATEGORIES: Array<AiCategory | 'all'> = [
   'all',
   'llm',
   'agent',
   'framework',
   'mcp_server',
   'tool',
+  'dataset',
+  'platform',
 ];
 
 export class GetAiResourcesQueryDto extends SoftwareQueryDto {
   @IsOptional()
-  @IsIn(AI_RESOURCE_TYPES, {
-    message: 'El tipo debe ser: llm, agent, framework, mcp_server o tool',
+  @IsIn(AI_CATEGORIES, {
+    message:
+      'La categoría debe ser: llm, agent, framework, mcp_server, tool, dataset o platform',
   })
-  type?: AiResourceType | 'all';
+  category?: AiCategory | 'all';
 }

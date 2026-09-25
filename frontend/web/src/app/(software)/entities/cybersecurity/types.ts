@@ -1,9 +1,17 @@
+export type SecuritySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export type SecurityCategory =
+  | 'advisory'
+  | 'hardening_guide'
+  | 'writeup'
+  | 'cve_analysis'
+  | 'pentest';
+
 export interface SecurityPost {
   id: number;
   slug: string;
   title: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  postType: 'advisory' | 'hardening_guide' | 'writeup';
+  severity: SecuritySeverity;
+  category: SecurityCategory;
   cveId?: string;
   affectedSystems?: string;
   remediation?: string;

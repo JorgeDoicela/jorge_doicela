@@ -1,3 +1,13 @@
+export type BlogCategory =
+  | 'architecture'
+  | 'devops'
+  | 'ai'
+  | 'frontend'
+  | 'backend'
+  | 'career'
+  | 'opinion'
+  | 'databases';
+
 export interface BlogPost {
   id: number;
   slug: string;
@@ -6,11 +16,11 @@ export interface BlogPost {
   excerpt: string;
   contentMarkdown: string;
   author: string;
+  category: BlogCategory;
   tags: string;
   series?: string;
   tableOfContents?: string;
   coverImage?: string;
-  readTimeMinutes: number;
   views: number;
   likes: number;
   featured?: boolean;

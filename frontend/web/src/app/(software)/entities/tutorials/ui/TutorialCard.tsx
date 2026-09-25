@@ -12,7 +12,11 @@ interface TutorialCardProps {
 export function TutorialCard({ tutorial }: TutorialCardProps) {
   const tFilters = useTranslations('Filters');
   const difficultyLabel = tFilters(tutorial.difficulty as any) || tutorial.difficulty;
-  const metaText = `${difficultyLabel} • ${tutorial.techStack}`;
+  const metaParts = [
+    difficultyLabel,
+    tutorial.techStack,
+  ].filter(Boolean);
+  const metaText = metaParts.join(' • ');
 
   return (
     <SoftwareCard

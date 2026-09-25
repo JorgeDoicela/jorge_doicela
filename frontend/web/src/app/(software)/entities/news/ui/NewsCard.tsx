@@ -22,7 +22,14 @@ export function NewsCard({ article }: NewsCardProps) {
     }
   );
 
-  const metaText = `${article.isBreaking ? 'BREAKING • ' : ''}${tNav('news')} • ${formattedDate}`;
+  const metaParts = [
+    article.isBreaking ? 'BREAKING' : null,
+    article.category,
+    article.tags?.split(',')[0]?.trim(),
+    formattedDate,
+  ].filter(Boolean);
+
+  const metaText = metaParts.join(' • ');
 
   return (
     <SoftwareCard

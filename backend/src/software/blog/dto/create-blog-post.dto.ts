@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateBlogPostDto {
   @IsString()
@@ -27,6 +27,10 @@ export class CreateBlogPostDto {
 
   @IsString()
   @IsOptional()
+  category?: string;
+
+  @IsString()
+  @IsOptional()
   tags?: string;
 
   @IsString()
@@ -40,8 +44,4 @@ export class CreateBlogPostDto {
   @IsString()
   @IsOptional()
   coverImage?: string;
-
-  @IsNumber()
-  @IsOptional()
-  readTimeMinutes?: number;
 }

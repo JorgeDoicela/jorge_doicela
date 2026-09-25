@@ -14,7 +14,7 @@ export class ProjectsService {
   ) {}
 
   async findAll(query: GetProjectsQueryDto = {}): Promise<Project[]> {
-    const { status, search, lang } = query;
+    const { status, category, search, lang } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -26,6 +26,10 @@ export class ProjectsService {
 
     if (status && status !== 'all') {
       qb.andWhere('proj.status = :status', { status });
+    }
+
+    if (category && category !== 'all') {
+      qb.andWhere('proj.category = :category', { category });
     }
 
     if (search) {

@@ -8,10 +8,19 @@ import {
 } from 'typeorm';
 
 export type ProjectStatus = 'active' | 'archived' | 'wip';
+export type ProjectCategory =
+  | 'web'
+  | 'backend'
+  | 'mobile'
+  | 'devops'
+  | 'ai'
+  | 'open_source'
+  | 'tool';
 
 @Entity('projects')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'stars'])
+@Index(['language', 'category', 'orderPriority', 'stars'])
 @Index(['language', 'status', 'orderPriority', 'stars'])
 @Index(['language', 'featured', 'orderPriority', 'stars'])
 export class Project {
@@ -29,6 +38,9 @@ export class Project {
 
   @Column({ default: 'Jorge Doicela' })
   author: string;
+
+  @Column({ default: 'web' })
+  category: ProjectCategory;
 
   @Column()
   techStack: string;

@@ -134,7 +134,7 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `GET /software/news/:idOrSlug` | `lang` | Detalle de la noticia por ID o slug con fallback de idioma |
 | | `POST /software/news` | - | Crear nuevo artículo de noticias |
 | | `DELETE /software/news/:id` | - | Eliminar artículo de noticias por ID |
-| **Blog** | `GET /software/blog` | `search`, `series`, `lang` | Ensayos de arquitectura filtrables por búsqueda, serie e idioma |
+| **Blog** | `GET /software/blog` | `search`, `category`, `tag`, `series`, `lang` | Ensayos de arquitectura filtrables por categoría, búsqueda, serie, etiqueta e idioma |
 | | `GET /software/blog/categories` | `lang` | Series y categorías dinámicas del blog con conteo de artículos activos |
 | | `GET /software/blog/:idOrSlug` | `lang` | Detalle del post con tabla de contenidos e idioma |
 | | `POST /software/blog` | - | Publicar nuevo post editorial de blog |
@@ -145,25 +145,25 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `POST /software/forum` | - | Crear nuevo hilo de debate (`ForumTopic`) |
 | | `POST /software/forum/replies` | - | Publicar nueva respuesta a un tema (`ForumReply`) |
 | | `GET /software/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
-| **IA** | `GET /software/ai` | `type`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por tipo, búsqueda e idioma |
-| | `GET /software/ai/categories` | `lang` | Tipos y artefactos de IA activos con conteo real |
+| **IA** | `GET /software/ai` | `category`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, búsqueda e idioma |
+| | `GET /software/ai/categories` | `lang` | Categorías y artefactos de IA activos con conteo real |
 | | `GET /software/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
 
 | | `POST /software/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
 | | `DELETE /software/ai/:id` | - | Eliminar recurso de IA por ID |
-| **Ciberseguridad** | `GET /software/cybersecurity` | `severity`, `postType`, `search`, `lang` | Avisos por severidad, tipo, búsqueda e idioma |
+| **Ciberseguridad** | `GET /software/cybersecurity` | `severity`, `category`, `search`, `lang` | Avisos por severidad, categoría, búsqueda e idioma |
 | | `GET /software/cybersecurity/categories` | `lang` | Severidades de seguridad activas en base a estándar CVSS con conteo |
 | | `GET /software/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
 | | `POST /software/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
 | | `DELETE /software/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
-| **Tutoriales** | `GET /software/tutorials` | `difficulty`, `search`, `lang` | Guías paso a paso filtrables por dificultad, búsqueda e idioma |
+| **Tutoriales** | `GET /software/tutorials` | `category`, `difficulty`, `search`, `lang` | Guías paso a paso filtrables por categoría temática, dificultad, búsqueda e idioma |
 | | `GET /software/tutorials/categories` | `lang` | Niveles y dificultades pedagógicas activas con conteo |
 | | `GET /software/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
 
 | | `POST /software/tutorials` | - | Crear nuevo tutorial maestro |
 | | `POST /software/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
 | | `DELETE /software/tutorials/:id` | - | Eliminar tutorial por ID |
-| **Proyectos** | `GET /software/projects` | `status`, `search`, `lang` | Showcase filtrable por estado, búsqueda e idioma |
+| **Proyectos** | `GET /software/projects` | `category`, `status`, `search`, `lang` | Showcase filtrable por categoría temática, estado, búsqueda e idioma |
 | | `GET /software/projects/categories` | `lang` | Estados de proyectos activos con conteo |
 | | `GET /software/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
 
@@ -186,9 +186,9 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 
 La persistencia implementa soporte multiidioma nativo mediante la columna `language TEXT NOT NULL DEFAULT 'es'` e índices únicos compuestos `(slug, language)` para permitir registros homólogos en español e inglés sin colisión:
 
-* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `tags`, `language`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`.  
+* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `publishedAt`.  
   * **Índice Único:** `IDX_news_articles_slug_lang (slug, language)`.
-* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_blog_posts_slug_lang (slug, language)`.
 ### 4.1 Pragmas de Conexión SQLite (`better-sqlite3`)
 En `backend/src/software/software.module.ts` y en `seed-software.ts`, la base de datos `software.sqlite` está configurada con los siguientes pragmas de alto rendimiento y blindaje de memoria:
@@ -204,34 +204,42 @@ En `backend/src/software/software.module.ts` y en `seed-software.ts`, la base de
 
 Todas las tablas cuentan con índices compuestos cubrientes alineados con los filtros y ordenamientos reales de las consultas (`language`, filtros de dominio, `orderPriority DESC`, `publishedAt DESC`), eliminando el costo de ordenamiento en memoria RAM (*B-Tree Filesort*):
 
-* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `tags`, `language`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `publishedAt`, `createdAt`, `updatedAt`.  
+* `tags`: `id`, `slug` (UNIQUE), `label`. Registro canónico centralizado del vocabulario técnico controlado.
+  * **Índice:** `IDX_tags_slug (slug)`.
+* `content_tags`: `content_type`, `content_id`, `tag_id` (FK). Tabla de unión polimórfica para taxonomía transversal indexada.
+  * **Integridad:** `FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE`.
+  * **Índices:** `IDX_content_tags_tag (tag_id)`, `IDX_content_tags_content (content_type, content_id)`.
+* `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `category`, `tags`, `language`, `coverImage`, `views`, `likes`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (category IN ('frameworks', 'security', 'ai', 'cloud', 'architecture', 'devops', 'standards', 'general'))`.
   * **Índices:** `IDX_news_articles_slug_lang (slug, language) UNIQUE`, `IDX_news_articles_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_break_feed (language, isBreaking, orderPriority DESC, publishedAt DESC)`.
-* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `readTimeMinutes`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `category`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (category IN ('architecture', 'devops', 'ai', 'frontend', 'backend', 'career', 'opinion', 'databases'))`.
   * **Índices:** `IDX_blog_posts_slug_lang (slug, language) UNIQUE`, `IDX_blog_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_series_feed (language, series, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `coverImage`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
   * **Índices:** `IDX_forum_topics_slug_lang (slug, language) UNIQUE`, `IDX_forum_topics_feed (language, isPinned DESC, orderPriority DESC, createdAt DESC)`, `IDX_forum_topics_cat_feed (language, category, isPinned DESC, orderPriority DESC, createdAt DESC)`.
 * `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`, `FOREIGN KEY (parentId) REFERENCES forum_replies(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_forum_replies_topic (topicId)`, `IDX_forum_replies_parent (parentId)`, `IDX_forum_replies_topic_created (topicId, createdAt ASC)`.
-* `ai_resources`: `id`, `slug`, `name`, `type`, `provider`, `author`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricción:** `CHECK (type IN ('llm', 'agent', 'framework', 'mcp_server', 'tool'))`.  
-  * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_type_feed (language, type, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, createdAt DESC)`.
-* `security_posts`: `id`, `slug`, `title`, `severity`, `postType`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricciones:** `CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL'))`, `CHECK (postType IN ('advisory', 'hardening_guide', 'writeup'))`.  
-  * **Índices:** `IDX_security_posts_slug_lang (slug, language) UNIQUE`, `IDX_security_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_sev_feed (language, severity, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_type_feed (language, postType, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
-* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `estimatedMinutes`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricción:** `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced'))`.  
+* `ai_resources`: `id`, `slug`, `name`, `category`, `provider`, `author`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (category IN ('llm', 'agent', 'framework', 'mcp_server', 'tool', 'dataset', 'platform'))`.  
+  * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_cat_feed (language, category, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, createdAt DESC)`.
+* `security_posts`: `id`, `slug`, `title`, `severity`, `category`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL'))`, `CHECK (category IN ('advisory', 'hardening_guide', 'writeup', 'cve_analysis', 'pentest'))`.  
+  * **Índices:** `IDX_security_posts_slug_lang (slug, language) UNIQUE`, `IDX_security_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_sev_feed (language, severity, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `category`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced'))`, `CHECK (category IN ('web', 'backend', 'devops', 'mobile', 'ai', 'databases', 'security', 'architecture'))`.  
   * **Índices:** `IDX_tutorials_slug_lang (slug, language) UNIQUE`, `IDX_tutorials_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_diff_feed (language, difficulty, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (tutorialId) REFERENCES tutorials(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_tutorial_steps_tut (tutorialId)`, `IDX_tutorial_steps_tut_order (tutorialId, stepOrder ASC)`.
-* `projects`: `id`, `slug`, `name`, `description`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
-  * **Restricción:** `CHECK (status IN ('active', 'archived', 'wip'))`.  
+* `projects`: `id`, `slug`, `name`, `description`, `category`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (status IN ('active', 'archived', 'wip'))`, `CHECK (category IN ('web', 'backend', 'mobile', 'devops', 'tools', 'ai', 'security', 'open_source'))`.  
   * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, stars DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, stars DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, stars DESC)`.
 * `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram'))`, `CHECK (environment IN ('production', 'edge', 'hybrid', 'vps', 'bare_metal'))`, `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced', 'expert'))`.  
   * **Índices:** `IDX_infrastructure_posts_slug_lang (slug, language) UNIQUE`, `IDX_infrastructure_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_env_feed (language, environment, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `glossary_terms`: `id`, `slug`, `term`, `aliases`, `category`, `shortDefinition`, `keyDifference`, `caseSensitive`, `language`, `orderPriority`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram', 'security', 'ai', 'architecture', 'general', 'database', 'linux'))`.  
   * **Índices:** `IDX_glossary_terms_term_lang (term, language) UNIQUE`, `IDX_glossary_terms_lang_prio (language, orderPriority DESC)`.
 
 ---

@@ -6,7 +6,7 @@ import { SecurityPost } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useCybersecurity(severity?: string, postType?: string, search: string = '') {
+export function useCybersecurity(severity?: string, category?: string, search: string = '') {
   const locale = useLocale();
   const [posts, setPosts] = useState<SecurityPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,7 +20,7 @@ export function useCybersecurity(severity?: string, postType?: string, search: s
       try {
         const params = new URLSearchParams();
         if (severity && severity !== 'all') params.append('severity', severity);
-        if (postType && postType !== 'all') params.append('postType', postType);
+        if (category && category !== 'all') params.append('category', category);
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
 
@@ -39,7 +39,7 @@ export function useCybersecurity(severity?: string, postType?: string, search: s
     };
 
     fetchSecurity();
-  }, [severity, postType, search, locale]);
+  }, [severity, category, search, locale]);
 
   return { posts, loading, error };
 }

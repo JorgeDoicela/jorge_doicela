@@ -11,7 +11,7 @@ export class CreateAiResourceDto {
 
   @IsString()
   @IsNotEmpty()
-  type: string;
+  category: string;
 
   @IsString()
   @IsOptional()

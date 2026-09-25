@@ -90,14 +90,17 @@ export class HubService {
       const dateStr = new Date(
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
+      const module = isEn ? 'NEWS' : 'NOTICIAS';
+      const sub = item.category?.toUpperCase() || '';
+
       return {
         id: `news-${item.id}`,
         href: `/news/${item.slug}`,
         title: item.title,
         category: 'news',
         coverImage: item.coverImage,
-        tag: item.tags?.split(',')[0]?.trim() || (isEn ? 'NEWS' : 'NOTICIAS'),
-        categoryMeta: isEn ? 'News, Frontend' : 'Noticias, Frontend',
+        tag: item.isBreaking ? (isEn ? 'BREAKING' : 'URGENTE') : sub || module,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: item.excerpt,
         accentHoverColor: 'group-hover:text-cyan-300',
         date: dateStr,
@@ -115,16 +118,17 @@ export class HubService {
       const dateStr = new Date(
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
+      const module = isEn ? 'BLOG' : 'BLOG';
+      const sub = item.category?.toUpperCase() || '';
+
       return {
         id: `blog-${item.id}`,
         href: `/blog/${item.slug}`,
         title: item.title,
         category: 'blog',
         coverImage: item.coverImage,
-        tag:
-          item.tags?.split(',')[0]?.trim() ||
-          (isEn ? 'ARCHITECTURE' : 'ARQUITECTURA'),
-        categoryMeta: isEn ? 'Architecture, Backend' : 'Arquitectura, Backend',
+        tag: sub || module,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: item.excerpt,
         accentHoverColor: 'group-hover:text-blue-300',
         date: dateStr,
@@ -141,16 +145,17 @@ export class HubService {
       const dateStr = new Date(
         sec.publishedAt || sec.createdAt || Date.now(),
       ).toISOString();
+      const module = isEn ? 'SECURITY' : 'SEGURIDAD';
+      const sub = sec.category?.toUpperCase() || sec.severity || '';
+
       return {
         id: `sec-${sec.id}`,
         href: `/cybersecurity/${sec.slug}`,
         title: sec.title,
         category: 'cybersecurity',
         coverImage: sec.coverImage,
-        tag: sec.cveId || 'CVE',
-        categoryMeta: isEn
-          ? `Advisory ${sec.severity} — Cybersecurity, Linux`
-          : `Aviso ${sec.severity} — Ciberseguridad, Linux`,
+        tag: sec.cveId || sec.severity,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: sec.excerpt,
         accentHoverColor: 'group-hover:text-rose-300',
         date: dateStr,
@@ -172,14 +177,20 @@ export class HubService {
       const dateStr = new Date(
         tut.publishedAt || tut.createdAt || Date.now(),
       ).toISOString();
+      const module = isEn ? 'TUTORIALS' : 'TUTORIALES';
+      const sub = tut.category?.toUpperCase() || '';
+      const diff = tut.difficulty?.toUpperCase() || '';
+
       return {
         id: `tut-${tut.id}`,
         href: `/tutorials/${tut.slug}`,
         title: tut.title,
         category: 'tutorials',
         coverImage: tut.coverImage,
-        tag: tut.difficulty?.toUpperCase() || (isEn ? 'GUIDE' : 'GUÍA'),
-        categoryMeta: isEn ? 'Hands-on Tutorial' : 'Tutorial Práctico',
+        tag: diff || (isEn ? 'GUIDE' : 'GUÍA'),
+        categoryMeta: sub
+          ? `${module} • ${sub} • ${diff}`
+          : `${module} • ${diff}`,
         excerpt: tut.excerpt,
         accentHoverColor: 'group-hover:text-amber-300',
         date: dateStr,
@@ -196,6 +207,9 @@ export class HubService {
       const dateStr = new Date(
         inf.publishedAt || inf.createdAt || Date.now(),
       ).toISOString();
+      const module = isEn ? 'INFRASTRUCTURE' : 'INFRAESTRUCTURA';
+      const sub = inf.category?.toUpperCase() || '';
+
       return {
         id: `infra-${inf.id}`,
         href: `/infrastructure/${inf.slug}`,
@@ -203,8 +217,8 @@ export class HubService {
         category: 'infrastructure',
         coverImage: inf.coverImage,
         subCategory: inf.category,
-        tag: inf.environment.toUpperCase(),
-        categoryMeta: `${inf.category}, ${inf.environment}`,
+        tag: inf.environment?.toUpperCase() || module,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: inf.subtitle || inf.architectureOverview,
         accentHoverColor: 'group-hover:text-emerald-300',
         date: dateStr,
@@ -221,14 +235,17 @@ export class HubService {
       const dateStr = new Date(
         res.publishedAt || res.createdAt || Date.now(),
       ).toISOString();
+      const module = isEn ? 'AI' : 'IA';
+      const sub = res.category?.toUpperCase() || '';
+
       return {
         id: `ai-${res.id}`,
         href: `/ai/${res.slug}`,
         title: res.name,
         category: 'ai',
         coverImage: res.coverImage,
-        tag: res.type.toUpperCase(),
-        categoryMeta: `${res.provider} — ${res.type.toUpperCase()}`,
+        tag: sub || module,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: res.description,
         accentHoverColor: 'group-hover:text-indigo-300',
         date: dateStr,
@@ -243,16 +260,17 @@ export class HubService {
 
     const projItems: HubFeedItem[] = projects.map((proj) => {
       const dateStr = new Date(proj.createdAt || Date.now()).toISOString();
+      const module = isEn ? 'PROJECTS' : 'PROYECTOS';
+      const sub = proj.category?.toUpperCase() || '';
+
       return {
         id: `proj-${proj.id}`,
         href: `/projects/${proj.slug}`,
         title: proj.name,
         category: 'projects',
         coverImage: proj.coverImage,
-        tag: isEn ? 'PROJECT' : 'PROYECTO',
-        categoryMeta: isEn
-          ? `${proj.stars || 0} GitHub stars`
-          : `${proj.stars || 0} estrellas GitHub`,
+        tag: proj.status?.toUpperCase() || (isEn ? 'PROJECT' : 'PROYECTO'),
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: proj.description,
         accentHoverColor: 'group-hover:text-blue-300',
         date: dateStr,
@@ -267,6 +285,9 @@ export class HubService {
 
     const forumItems: HubFeedItem[] = topics.map((top) => {
       const dateStr = new Date(top.createdAt || Date.now()).toISOString();
+      const module = isEn ? 'FORUM' : 'FORO';
+      const sub = top.category?.toUpperCase() || '';
+
       return {
         id: `topic-${top.id}`,
         href: `/forum/${top.slug}`,
@@ -274,9 +295,7 @@ export class HubService {
         category: 'forum',
         coverImage: top.coverImage,
         tag: isEn ? 'DISCUSSION' : 'DEBATE',
-        categoryMeta: isEn
-          ? `${top.repliesCount || 0} replies`
-          : `${top.repliesCount || 0} respuestas`,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: top.content,
         accentHoverColor: 'group-hover:text-sky-300',
         date: dateStr,

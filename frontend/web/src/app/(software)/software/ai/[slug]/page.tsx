@@ -58,7 +58,7 @@ export default async function AiDetailPage({ params }: Params) {
       author={resource.author}
       badge={
         <span className="font-mono text-[11px] px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-medium">
-          {resource.provider} • {resource.type.toUpperCase()}
+          {resource.provider} • {resource.category.toUpperCase()}
         </span>
       }
     >

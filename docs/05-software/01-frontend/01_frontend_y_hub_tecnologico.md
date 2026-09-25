@@ -146,11 +146,18 @@ frontend/web/src/app/(software)/
   * **Feed de Últimas Publicaciones:** Unifica todas las publicaciones restantes en una lista polimórfica ordenada estrictamente por fecha de publicación descendente (`publishedAt DESC`), garantizando un flujo vivo, orgánico y fresco donde cada nueva publicación (sea tutorial, aviso de seguridad, servidor o noticia) aparece de inmediato en la parte superior.
 * **Normalización Arquitectónica Universal de 3 Secciones (`SoftwareCard.tsx`):**
   * Para garantizar simetría visual absoluta, sobriedad y máxima elegancia entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura), todas las tarjetas especializadas (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`, `InfrastructureCard`) delegan como componentes de presentación en la tarjeta atómica unificada `SoftwareCard`.
-  * Toda tarjeta bajo la portada 16:9 (`<ArticleCover />`) implementa **única y estrictamente 3 secciones verticales limpias**:
-    * **1. Metadatos / Contexto:** Una sola línea mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate font-medium`).
-    * **2. Titular Principal:** `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
-    * **3. Extracto Descriptivo:** `text-xs` (12px, `text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5`).
-  * **Cero Ruido Visual (Prohibición de Footers):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas y botones redundantes de acción (`Iniciar guía →`, `Leer más →`, `Ver proyecto →`), asegurando una experiencia visual limpia, consistente y simétrica en todas las cuadrículas y el carrusel.
+    * **1. Metadatos Técnicos / Contexto (100% Dinámico desde SQLite/Corpus):** Una sola línea mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate font-medium`) generada a partir de los campos reales de la base de datos concatenados con viñetas (`•`), sin tiempos de lectura ni cadenas quemadas:
+      * *Tutoriales:* `[difficulty, techStack]`
+      * *Infraestructura:* `[category, environment, difficulty]`
+      * *IA:* `[provider, category, license]`
+      * *Proyectos:* `[stars ★, status, techStack]`
+      * *Ciberseguridad:* `[cveId, severity, category, affectedSystems]`
+      * *Noticias:* `[isBreaking, category, tags, date]`
+      * *Blog:* `[series, tags, date]`
+      * *Foro:* `[category, repliesCount, views]`
+    * **2. Titular Principal:** Campo `title` o `name` puro de la base de datos en `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
+    * **3. Extracto Descriptivo:** Campo `excerpt`, `subtitle` o `description` puro de la base de datos en `text-xs` (12px, `text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5`).
+  * **Cero Ruido Visual (Prohibición de Footers, Tiempos de Lectura y Datos Quemados):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas, estimaciones de tiempo de lectura y textos estáticos artificiales, garantizando que el 100% de la información provenga directamente de la base de datos SQLite y los corpus JSON bilingües.
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
   * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`SoftwareHeaderNav`](/software/widgets/software-header/ui/SoftwareHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`SoftwareFooter`](/software/widgets/software-footer/ui/SoftwareFooter.tsx).
   * **Motor Universal de Filtros Polimórficos (`CategoryFilterBar.tsx` en `shared/ui`):**

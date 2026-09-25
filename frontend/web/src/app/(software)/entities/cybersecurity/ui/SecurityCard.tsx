@@ -9,7 +9,9 @@ interface SecurityCardProps {
 }
 
 export function SecurityCard({ post }: SecurityCardProps) {
-  const metaText = `${post.severity} • ${post.postType} • ${post.affectedSystems || 'Linux / Web'}`;
+  const module = 'SEGURIDAD';
+  const sub = post.category?.toUpperCase() || post.severity || '';
+  const metaText = sub ? `${module} • ${sub}` : module;
 
   return (
     <SoftwareCard

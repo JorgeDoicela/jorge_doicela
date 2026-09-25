@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsBoolean,
-  IsNumber,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateNewsDto {
   @IsString()
@@ -42,8 +36,4 @@ export class CreateNewsDto {
   @IsString()
   @IsOptional()
   coverImage?: string;
-
-  @IsNumber()
-  @IsOptional()
-  readTimeMinutes?: number;
 }

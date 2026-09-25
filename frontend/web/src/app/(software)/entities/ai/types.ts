@@ -1,8 +1,17 @@
+export type AiCategory =
+  | 'llm'
+  | 'agent'
+  | 'framework'
+  | 'mcp_server'
+  | 'tool'
+  | 'dataset'
+  | 'platform';
+
 export interface AiResource {
   id: number;
   slug: string;
   name: string;
-  type: 'llm' | 'agent' | 'framework' | 'mcp_server' | 'tool';
+  category: AiCategory;
   provider: string;
   description: string;
   contentMarkdown: string;

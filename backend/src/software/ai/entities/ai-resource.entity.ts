@@ -7,17 +7,19 @@ import {
   Index,
 } from 'typeorm';
 
-export type AiResourceType =
+export type AiCategory =
   | 'llm'
   | 'agent'
   | 'framework'
   | 'mcp_server'
-  | 'tool';
+  | 'tool'
+  | 'dataset'
+  | 'platform';
 
 @Entity('ai_resources')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'createdAt'])
-@Index(['language', 'type', 'orderPriority', 'createdAt'])
+@Index(['language', 'category', 'orderPriority', 'createdAt'])
 @Index(['language', 'featured', 'orderPriority', 'createdAt'])
 export class AiResource {
   @PrimaryGeneratedColumn()
@@ -30,7 +32,7 @@ export class AiResource {
   name: string;
 
   @Column({ default: 'tool' })
-  type: AiResourceType;
+  category: AiCategory;
 
   @Column({ default: 'Open Source' })
   provider: string;

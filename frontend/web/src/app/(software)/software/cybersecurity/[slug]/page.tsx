@@ -20,12 +20,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
   }
 
-  const severityLabel = post.severity ? `[${post.severity}] ` : '';
   return {
-    title: `${severityLabel}${post.title} | ${tNav('cybersecurity')} — Jorge Doicela`,
+    title: `${post.title} | ${tNav('cybersecurity')} — Jorge Doicela`,
     description: post.excerpt,
     openGraph: {
-      title: `${severityLabel}${post.title}`,
+      title: post.title,
       description: post.excerpt,
       type: 'article',
       authors: [post.author],

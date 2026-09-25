@@ -153,6 +153,20 @@ backend/src/software/
 | `infrastructure_posts` | Guías de infraestructura con `category`, `environment`, `specs`, `techStack`, `author`, `views`, `likes` |
 | `glossary_terms` | Catálogo bilingüe de conceptos técnicos interactivos con `aliases`, `shortDefinition`, `keyDifference` |
 
+### 3.3 Arquitectura Taxonómica Oficial y Regla de Presentación de Metadatos
+Toda publicación, recurso o registro técnico dentro del ecosistema de Software opera estrictamente bajo las siguientes fuentes de datos físicas en `software.sqlite`:
+
+1. **Nivel 1 (Módulo / Especialidad):** Tabla física TypeORM (`tutorials`, `security_posts`, `projects`, etc.). Determina la subruta URL (`/tutorials`, `/projects`).
+2. **Nivel 2 (Categoría Temática):** Columna física `category` con restricción `CHECK` e índice en SQLite. **Gobierna de forma exclusiva la barra de filtros (`CategoryFilterBar`)** en los 8 módulos (`web`, `backend`, `devops`, `hardening`, `servers`, etc.).
+3. **Nivel 3 (Tags / Etiquetas):** Columna física `tags TEXT` + tablas `tags` y `content_tags`. Vocabulario universal para indexación y Spotlight `⌘K`.
+4. **Nivel 4 (Atributo Específico de Dominio):** Columnas físicas especializadas en SQLite (`tutorials.difficulty`, `security_posts.severity`, `projects.status`, `infrastructure_posts.environment`).
+
+* **Regla Inviolable de UI en Tarjetas (`SoftwareCard.tsx`):**
+  La línea de metadatos técnicos superior se renderiza siempre de forma 100% dinámica desde SQLite sin cadenas quemadas:
+  $$\text{Nivel 1 (Módulo)} \bullet \text{Nivel 2 (Categoría)} \bullet \text{Nivel 4 (Atributo de Dominio)}$$
+  Ejemplo: `TUTORIALES • WEB • INTERMEDIO`, `SEGURIDAD • HARDENING_GUIDE • CRÍTICO`, `PROYECTOS • WEB • EN PRODUCCIÓN`.
+* **Prohibición de "Subcategorías":** No existe la columna ni el concepto `subCategory`. Cualquier intento de crear o consumir `subCategory` está estrictamente prohibido.
+
 ---
 
 ## 4. Estándar Editorial y Enfoque Pedagógico Multinivel (Obligatorio en Publicaciones)
@@ -221,16 +235,18 @@ pnpm run lint
 | Poner datos semilla dentro del archivo `seed-software.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
 | Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de Software. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
 | Tratar un 404 de contenido editorial como bug de Next.js/middleware | Enmascara la causa raíz: el post o término no está sembrado en `software.sqlite` local tras un `git pull`. | Correr `pnpm seed:software` o validar el slug en SQLite antes de tocar cualquier archivo de frontend. |
+| Usar o inventar el campo `subCategory` | Introduce conceptos fantasma que no existen en el esquema físico relacional de SQLite. | La taxonomía solo tiene Nivel 1 (Módulo) y Nivel 2 (Categoría `category`). |
+| Filtrar la barra `CategoryFilterBar` por atributos de Nivel 4 (dificultad/severidad) | Rompe la simetría entre módulos y degrada la experiencia de navegación. | La barra filtra exclusivamente por el Nivel 2 (Categoría). El Nivel 4 se muestra en la línea de metadatos o como badge. |
 
 ---
 
-## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
+## 7. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
 
 * **Actualización Mandatoria ante Cambios:** Cada vez que se agreguen, modifiquen, refactoricen o eliminen submódulos, controladores, servicios, endpoints REST, entidades TypeORM, esquemas en `software.sqlite`, datasets en `corpus/*.json` o componentes/rutas de Next.js, es **obligatorio actualizar la documentación técnica correspondiente en `docs/05-software/`**.
 * **Gestión Documental Proactiva:** Se autoriza crear nuevos archivos `.md`, estructurar nuevas subcarpetas en `docs/05-software/` o podar contenido obsoleto, asegurando siempre que la documentación represente con exactitud y profesionalismo el estado real de la plataforma.
 
 ---
 
-## 7. Combinar con
+## 8. Combinar con
 * **Infraestructura Global:** `infraestructura-global-jorge-doicela` (para monorepo, pnpm --filter, FSD, proxy Nginx y despliegues).
 

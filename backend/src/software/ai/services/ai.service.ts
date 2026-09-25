@@ -118,36 +118,10 @@ export class AiService {
       }
     }
 
-    const labelsEs: Record<string, string> = {
-      all: 'Todos los recursos',
-      llm: 'Modelos LLM',
-      agent: 'Frameworks Agénticos',
-      mcp_server: 'Servidores MCP',
-      tool: 'Herramientas',
-      dataset: 'Datasets',
-      platform: 'Plataformas',
-      framework: 'Frameworks',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Resources',
-      llm: 'LLM Models',
-      agent: 'Agentic Frameworks',
-      mcp_server: 'MCP Servers',
-      tool: 'Tools',
-      dataset: 'Datasets',
-      platform: 'Platforms',
-      framework: 'Frameworks',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
-
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all ||
-          (lang === 'en' ? 'All Resources' : 'Todos los recursos'),
+        label: 'all',
         count: allResources.length,
       },
     ];
@@ -166,7 +140,17 @@ export class AiService {
       if (count > 0) {
         result.push({
           id: c,
-          label: labels[c] || c,
+          label: c,
+          count,
+        });
+      }
+    }
+
+    for (const [c, count] of countMap.entries()) {
+      if (!result.some((r) => r.id === c)) {
+        result.push({
+          id: c,
+          label: c,
           count,
         });
       }

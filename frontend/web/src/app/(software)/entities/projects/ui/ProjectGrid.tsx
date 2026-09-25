@@ -6,13 +6,14 @@ import { useProjects } from '../api/useProjects';
 import { ProjectCard } from './ProjectCard';
 
 interface ProjectGridProps {
+  category?: string;
   status?: string;
   search?: string;
 }
 
-export function ProjectGrid({ status, search }: ProjectGridProps) {
+export function ProjectGrid({ category, status, search }: ProjectGridProps) {
   const t = useTranslations('Projects');
-  const { projects, loading, error } = useProjects(status, search);
+  const { projects, loading, error } = useProjects(category, search, status);
 
   if (loading) {
     return (
@@ -42,7 +43,7 @@ export function ProjectGrid({ status, search }: ProjectGridProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {projects.map((proj: any) => (
+      {projects.map((proj) => (
         <ProjectCard key={proj.id} project={proj} />
       ))}
     </div>

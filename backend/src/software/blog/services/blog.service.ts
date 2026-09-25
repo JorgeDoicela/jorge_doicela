@@ -135,36 +135,10 @@ export class BlogService {
       }
     }
 
-    const labelsEs: Record<string, string> = {
-      all: 'Todos los artículos',
-      architecture: 'Arquitectura de Software',
-      'clean-code': 'Código Limpio',
-      nestjs: 'NestJS & Microservicios',
-      database: 'Bases de Datos & SQL',
-      devsecops: 'DevSecOps & Linux',
-      microservices: 'Microservicios',
-      performance: 'Alto Rendimiento',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Articles',
-      architecture: 'Software Architecture',
-      'clean-code': 'Clean Code',
-      nestjs: 'NestJS & Microservices',
-      database: 'Databases & SQL',
-      devsecops: 'DevSecOps & Linux',
-      microservices: 'Microservices',
-      performance: 'High Performance',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
-
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all ||
-          (lang === 'en' ? 'All Articles' : 'Todos los artículos'),
+        label: 'all',
         count: allPosts.length,
       },
     ];
@@ -174,7 +148,7 @@ export class BlogService {
       if (s !== 'all') {
         result.push({
           id: s,
-          label: labels[s] || this.formatLabel(s),
+          label: s,
           count,
         });
       }
@@ -185,20 +159,13 @@ export class BlogService {
       if (!result.some((r) => r.id === tag)) {
         result.push({
           id: tag,
-          label: labels[tag] || this.formatLabel(tag),
+          label: tag,
           count,
         });
       }
     }
 
     return result;
-  }
-
-  private formatLabel(slug: string): string {
-    return slug
-      .split(/[-_]/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
   }
 
   async remove(id: number): Promise<void> {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
+import { HubFeedItem } from '../../../entities/hub/types';
 import { useSoftwareHub } from '../../../entities/hub/api/useSoftwareHub';
 
 interface FeaturedPostsSidebarCardProps {
@@ -22,7 +23,7 @@ export function FeaturedPostsSidebarCard({
   const { featured, feed, loading } = useSoftwareHub();
 
   // Filtrar el post actual para que no aparezca el artículo que ya se está leyendo
-  const availablePosts = (featured.length > 0 ? featured : feed).filter((item: any) => {
+  const availablePosts = (featured.length > 0 ? featured : feed).filter((item: HubFeedItem) => {
     if (!pathname) return true;
     const cleanPath = pathname.replace(/\/$/, '');
     const cleanHref = item.href.replace(/\/$/, '');
@@ -61,8 +62,8 @@ export function FeaturedPostsSidebarCard({
             </div>
           ))
         ) : displayPosts.length > 0 ? (
-          displayPosts.map((item: any) => {
-            const metaText = item.categoryMeta || item.tag;
+          displayPosts.map((item: HubFeedItem) => {
+            const moduleLabel = item.category ? tNav(item.category).toUpperCase() : '';
 
             return (
               <Link
@@ -72,9 +73,9 @@ export function FeaturedPostsSidebarCard({
               >
                 {/* Título y metadatos */}
                 <div className="flex-1 min-w-0 space-y-1">
-                  {metaText && (
-                    <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate">
-                      {metaText}
+                  {moduleLabel && (
+                    <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate uppercase tracking-wider">
+                      {moduleLabel}
                     </span>
                   )}
                   <h6 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">

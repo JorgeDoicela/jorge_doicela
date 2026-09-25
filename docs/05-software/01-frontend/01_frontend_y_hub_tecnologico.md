@@ -89,7 +89,9 @@ frontend/web/src/app/(software)/
 
 ---
 
-## 3. Las 8 Categorías de Software
+## 3. Las 8 Especialidades de Software (Nivel 1 de la Taxonomía)
+
+Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del sistema. En tarjetas y catálogos, la línea superior de metadatos (`categoryMeta`) combina estrictamente el **Nivel 1 (Módulo)** con el **Nivel 2 (Categoría)**:
 
 1. **Tutoriales y Guías (`tutorials`):** Manuales paso a paso con código reproducible y asistente StepWizard.
 2. **Noticias (`news`):** Novedades y actualidad del desarrollo de software y tecnología con alertas breaking.
@@ -99,6 +101,8 @@ frontend/web/src/app/(software)/
 6. **Proyectos (`projects`):** Catálogo de sistemas, librerías y herramientas desarrolladas por Jorge con enlaces demo/repo.
 7. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software, patrones de diseño y buenas prácticas.
 8. **Foros (`forum`):** Espacio comunitario para debates técnicos, preguntas y respuestas anidadas.
+
+> **Regla Universal de Metadatos (`categoryMeta`):** Todas las tarjetas muestran exclusivamente `[MÓDULO] • [CATEGORÍA]` (ej. `TUTORIALES • WEB`, `PROYECTOS • WEB`, `INFRAESTRUCTURA • CONTAINERS`). Atributos específicos del Nivel 4 (dificultad, severidad) se reservan para badges complementarios (`tag`), y queda prohibido el uso de términos ambiguos como "subcategorías".
 
 ---
 
@@ -128,7 +132,7 @@ frontend/web/src/app/(software)/
       * **Centro:** Menú de categorías ([`CategoryNav`](/software/widgets/category-nav/ui/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 8 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`, `infrastructure`). Funciona bajo **arquitectura canónica URL-driven**: cada pestaña enlaza directamente a su módulo dedicado (`/news`, `/blog`, `/infrastructure`, etc.), permitiendo que el usuario experimente el módulo completo con sus propios filtros, buscadores y controles avanzados sin estados efímeros en memoria que oculten las rutas.
       * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/language-toggle/ui/LanguageToggle.tsx) ES/EN).
 * **Portadas Visuales de Alta Precisión e Inteligencia Temática (`ArticleCover.tsx` en 16:9):**
-  * Soporta imágenes estáticas con `next/image` y fallback procedural dinámico por subcategoría técnica (`subCategory`):
+  * Soporta imágenes estáticas con `next/image` y fallback procedural dinámico por categoría temática (`category` / `topicCategory`):
     * **Servidores (`servers`):** Nodos bare-metal y topologías físicas en gradientes esmeralda (`from-emerald-950/70`).
     * **Redes y mTLS (`networking`):** Topologías de red mallada y perímetros en gradientes cian (`from-teal-950/70 via-slate-900 to-cyan-950`).
     * **Contenedores (`containers`):** Arquitectura de micro-contenedores y cgroups en gradientes índigo/azul cobalto.
@@ -146,25 +150,18 @@ frontend/web/src/app/(software)/
   * **Feed de Últimas Publicaciones:** Unifica todas las publicaciones restantes en una lista polimórfica ordenada estrictamente por fecha de publicación descendente (`publishedAt DESC`), garantizando un flujo vivo, orgánico y fresco donde cada nueva publicación (sea tutorial, aviso de seguridad, servidor o noticia) aparece de inmediato en la parte superior.
 * **Normalización Arquitectónica Universal de 3 Secciones (`SoftwareCard.tsx`):**
   * Para garantizar simetría visual absoluta, sobriedad y máxima elegancia entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura), todas las tarjetas especializadas (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`, `InfrastructureCard`) delegan como componentes de presentación en la tarjeta atómica unificada `SoftwareCard`.
-    * **1. Metadatos Técnicos / Contexto (100% Dinámico desde SQLite/Corpus):** Una sola línea mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate font-medium`) generada a partir de los campos reales de la base de datos concatenados con viñetas (`•`), sin tiempos de lectura ni cadenas quemadas:
-      * *Tutoriales:* `[difficulty, techStack]`
-      * *Infraestructura:* `[category, environment, difficulty]`
-      * *IA:* `[provider, category, license]`
-      * *Proyectos:* `[stars ★, status, techStack]`
-      * *Ciberseguridad:* `[cveId, severity, category, affectedSystems]`
-      * *Noticias:* `[isBreaking, category, tags, date]`
-      * *Blog:* `[series, tags, date]`
-      * *Foro:* `[category, repliesCount, views]`
+    * **1. Metadatos Técnicos / Jerarquía Taxonómica (Nivel 1 • Nivel 2):** Una sola línea mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate font-medium`) estructurada bajo la regla universal **Nivel 1 (Módulo) • Nivel 2 (Categoría Temática)** (ej. `TUTORIALES • WEB`, `PROYECTOS • DEVOPS`, `INFRAESTRUCTURA • SERVERS`, `CIBERSEGURIDAD • HARDENING`), con internacionalización reactiva (`tNav(module).toUpperCase() • post.category.toUpperCase()`). Los atributos de Nivel 4 (ej. severidad, dificultad) se reservan para sus respectivos badges dedicados.
     * **2. Titular Principal:** Campo `title` o `name` puro de la base de datos en `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
     * **3. Extracto Descriptivo:** Campo `excerpt`, `subtitle` o `description` puro de la base de datos en `text-xs` (12px, `text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5`).
   * **Cero Ruido Visual (Prohibición de Footers, Tiempos de Lectura y Datos Quemados):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas, estimaciones de tiempo de lectura y textos estáticos artificiales, garantizando que el 100% de la información provenga directamente de la base de datos SQLite y los corpus JSON bilingües.
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
   * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`SoftwareHeaderNav`](/software/widgets/software-header/ui/SoftwareHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`SoftwareFooter`](/software/widgets/software-footer/ui/SoftwareFooter.tsx).
   * **Motor Universal de Filtros Polimórficos (`CategoryFilterBar.tsx` en `shared/ui`):**
-    * Erradicación total de categorías quemadas en cliente TSX. Todo el catálogo delega en el componente transversal reutilizable [`CategoryFilterBar`](/software/shared/ui/CategoryFilterBar.tsx) basado en el contrato único `FilterOption: { id: string, label: string, count?: number }`.
-    * Consulta reactiva en tiempo real al backend NestJS (`GET /software/[modulo]/categories?lang=es|en`) con hooks desacoplados en la capa `entities/*` (`useNewsCategories`, `useBlogCategories`, `useForumCategories`, `useInfrastructureCategories`, `useCybersecurityCategories`, `useTutorialsCategories`, `useProjectsCategories`, `useAiCategories`).
+    * Erradicación total de categorías quemadas en cliente TSX y en controladores del backend. Todo el catálogo delega en el componente transversal reutilizable [`CategoryFilterBar`](/software/shared/ui/CategoryFilterBar.tsx) basado en el contrato único `FilterOption: { id: string, label: string, count?: number }`.
+    * El backend NestJS actúa como proveedor puro de datos y conteos desde SQLite (`GET /software/[modulo]/categories?lang=es|en`), mientras que la internacionalización reside de forma reactiva y limpia en los archivos JSON de mensajes del frontend (`messages/es.json` y `messages/en.json` bajo la clave `"Filters"`), eliminando diccionarios de strings duplicados en memoria en el servidor.
+    * Consulta reactiva en tiempo real al backend NestJS con hooks desacoplados en la capa `entities/*` (`useNewsCategories`, `useBlogCategories`, `useForumCategories`, `useInfrastructureCategories`, `useCybersecurityCategories`, `useTutorialsCategories`, `useProjectsCategories`, `useAiCategories`).
     * **Identidad Neumórfica UI + Glassmorphic:** Pastillas con relieve extruido activo (`glass-btn-neumorphic`), skeletons pulsantes automáticos mientras SQLite calcula los conteos, badges numéricos discretos con la cantidad de publicaciones vivas, accesibilidad WCAG (`tablist`, `tab`, `aria-selected`) y paleta de acentos visuales por módulo (`cyan`, `blue`, `purple`, `emerald`, `amber`, `rose`).
-    * **Arquitectura Adaptativa Responsive (Móvil vs Escritorio):** Para erradicar el desbordamiento horizontal en pantallas estrechas (`< 640px`), delega automáticamente en [`SoftwareSelect`](/software/shared/ui/SoftwareSelect.tsx) centrado con ancho uniforme `max-w-xs` (alineado simétricamente con el buscador), desplegando verticalmente todas las subcategorías con sus conteos; en pantallas de escritorio (`>= 640px`) despliega la fila horizontal de pastillas neumórficas completas. Esta mejora beneficia de forma unificada a las 8 páginas de catálogo de la plataforma.
+    * **Arquitectura Adaptativa Responsive (Móvil vs Escritorio):** Para erradicar el desbordamiento horizontal en pantallas estrechas (`< 640px`), delega automáticamente en [`SoftwareSelect`](/software/shared/ui/SoftwareSelect.tsx) centrado con ancho uniforme `max-w-xs` (alineado simétricamente con el buscador), desplegando verticalmente todas las opciones de filtro con sus conteos; en pantallas de escritorio (`>= 640px`) despliega la fila horizontal de pastillas neumórficas completas. Esta mejora beneficia de forma unificada a las 8 páginas de catálogo de la plataforma.
   * **Selector Dropdown Táctil Neumórfico Reutilizable ([`SoftwareSelect.tsx`](/software/shared/ui/SoftwareSelect.tsx)):**
     * Componente atómico de presentación desacoplado en la Capa 6 (`shared/ui`) que sustituye de raíz los elementos `<select>` nativos del navegador por un popover flotante calibrado con **Neumorphism UI + Glassmorphism**.
     * **Gatillo Táctil (Trigger):** Botón con pastilla convexa (`glass-convex-panel`), micro-chevron `ChevronDown` animado que rota $180^\circ$ suavemente al desplegar, feedback táctil (`active:scale-[0.98]`) y borde vítreo fino.
@@ -183,7 +180,7 @@ frontend/web/src/app/(software)/
   * Diseño Neumórfico UI + Glassmorphic (`.glass-convex-panel`), micro-interacciones táctiles al hover/active, icono `ArrowUp` de Lucide y soporte bilingüe (`Nav.scrollToTop`). Se integra a nivel global en el layout raíz `(software)/layout.tsx` para todas las páginas y subrutas de Software.
 * **Barra Lateral de Recirculación Editorial ([`FeaturedPostsSidebarCard.tsx`](/software/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):**
   * Inspirado en la arquitectura editorial de **Marcus Hutchins (MalwareTech)** y alineado 100% con la estética **Neumorphism UI + Glassmorphism** de Software, sustituye las fichas estáticas de hardware por un widget dinámico de publicaciones destacadas de alta retención.
-  * **Diseño Tipográfico Puro y Ultraligero:** Cada fila presenta metadatos contextuales ricos (`categoryMeta` o `tag`, ej. *95 estrellas GitHub*, *Anthropic — MCP_SERVER*, *Aviso HIGH — Ciberseguridad, Linux*) en tipografía mono (`text-[11px] font-mono text-slate-500 dark:text-zinc-400`) y titular en negrita con micro-transición cromática en hover, eliminando imágenes miniaturas pesadas o decorativas para priorizar la velocidad de lectura, el enfoque tipográfico y la sobriedad ejecutiva en todo el ancho del componente.
+  * **Diseño Tipográfico Puro y Ultraligero:** Cada fila presenta exclusivamente la especialidad o módulo correspondiente (Nivel 1, ej. *PROYECTOS*, *IA*, *TUTORIALES*, *CIBERSEGURIDAD*) en tipografía mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider`) y titular en negrita con micro-transición cromática en hover, mientras que las tarjetas del feed principal y catálogos estandarizan su línea de metadatos estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)**. Elimina imágenes miniaturas pesadas o decorativas para priorizar la velocidad de lectura, el enfoque tipográfico y la sobriedad ejecutiva en todo el ancho del componente.
   * Integra filtrado contextual automático (`usePathname`) para nunca recomendar el artículo actualmente abierto y skeletons de carga fluidos integrados.
 * **Directorio Tipográfico con Acordeón por Especialidad ([`ExploreTopicsSidebarCard.tsx`](/software/widgets/article-layout/ui/ExploreTopicsSidebarCard.tsx)):**
   * Inspirado en la navegación técnica de **Marcus Hutchins (MalwareTech)** y optimizado para la ergonomía del sidebar fijo (`sticky`), implementa un **árbol interactivo multi-apertura por cada especialidad**:

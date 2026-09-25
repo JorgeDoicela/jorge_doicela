@@ -145,34 +145,10 @@ export class ForumService {
       }
     }
 
-    const labelsEs: Record<string, string> = {
-      all: 'Todos los debates',
-      frontend: 'Frontend & UI',
-      devops: 'DevOps & VPS',
-      cybersecurity: 'Ciberseguridad',
-      ai: 'IA & Agentes',
-      backend: 'Backend & APIs',
-      general: 'Comunidad General',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Discussions',
-      frontend: 'Frontend & UI',
-      devops: 'DevOps & VPS',
-      cybersecurity: 'Cybersecurity',
-      ai: 'AI & Agents',
-      backend: 'Backend & APIs',
-      general: 'General Community',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
-
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all ||
-          (lang === 'en' ? 'All Discussions' : 'Todos los debates'),
+        label: 'all',
         count: allTopics.length,
       },
     ];
@@ -181,19 +157,12 @@ export class ForumService {
       if (cat !== 'all') {
         result.push({
           id: cat,
-          label: labels[cat] || this.formatLabel(cat),
+          label: cat,
           count,
         });
       }
     }
 
     return result;
-  }
-
-  private formatLabel(slug: string): string {
-    return slug
-      .split(/[-_]/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
   }
 }

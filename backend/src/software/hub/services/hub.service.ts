@@ -74,6 +74,29 @@ export class HubService {
 
     const isEn = lang === 'en';
 
+    // Función pura para normalizar subcategorías sin dejar slugs técnicos con guiones bajos
+    const formatSub = (cat?: string): string => {
+      if (!cat) return '';
+      const map: Record<string, { es: string; en: string }> = {
+        hardening_guide: { es: 'GUÍAS DE BASTIONADO', en: 'HARDENING GUIDES' },
+        advisory: { es: 'AVISOS DE SEGURIDAD', en: 'SECURITY ADVISORIES' },
+        cve_analysis: { es: 'ANÁLISIS CVE', en: 'CVE ANALYSIS' },
+        writeup: { es: 'WRITEUPS TÉCNICOS', en: 'TECHNICAL WRITEUPS' },
+        pentest: { es: 'PENTESTING', en: 'PENTESTING' },
+        mcp_server: { es: 'SERVIDORES MCP', en: 'MCP SERVERS' },
+        llm: { es: 'MODELOS LLM', en: 'LLM MODELS' },
+        agent: { es: 'FRAMEWORKS AGÉNTICOS', en: 'AGENTIC FRAMEWORKS' },
+        ci_cd: { es: 'CI/CD & DESPLIEGUES', en: 'CI/CD & DEPLOYMENTS' },
+        bare_metal: { es: 'BARE METAL', en: 'BARE METAL' },
+        servers: { es: 'SERVIDORES & LINUX', en: 'SERVERS & LINUX' },
+        containers: { es: 'CONTENEDORES', en: 'CONTAINERS' },
+        clean_code: { es: 'CÓDIGO LIMPIO', en: 'CLEAN CODE' },
+      };
+      const found = map[cat.toLowerCase()];
+      if (found) return isEn ? found.en : found.es;
+      return cat.replace(/_/g, ' ').toUpperCase();
+    };
+
     // Función pura para calcular el impulso de frescura / recency decay
     const calculateRecencyBoost = (dateStr: string): number => {
       const pubTime = new Date(dateStr).getTime();
@@ -91,7 +114,7 @@ export class HubService {
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
       const module = isEn ? 'NEWS' : 'NOTICIAS';
-      const sub = item.category?.toUpperCase() || '';
+      const sub = formatSub(item.category);
 
       return {
         id: `news-${item.id}`,
@@ -119,7 +142,7 @@ export class HubService {
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
       const module = isEn ? 'BLOG' : 'BLOG';
-      const sub = item.category?.toUpperCase() || '';
+      const sub = formatSub(item.category);
 
       return {
         id: `blog-${item.id}`,
@@ -146,7 +169,16 @@ export class HubService {
         sec.publishedAt || sec.createdAt || Date.now(),
       ).toISOString();
       const module = isEn ? 'SECURITY' : 'SEGURIDAD';
-      const sub = sec.category?.toUpperCase() || sec.severity || '';
+      const sub = formatSub(sec.category);
+      const sevMap: Record<string, string> = {
+        CRITICAL: isEn ? 'CRITICAL' : 'CRÍTICO',
+        HIGH: isEn ? 'HIGH' : 'ALTO',
+        MEDIUM: isEn ? 'MEDIUM' : 'MEDIO',
+        LOW: isEn ? 'LOW' : 'BAJO',
+      };
+      const sev = sec.severity
+        ? sevMap[sec.severity.toUpperCase()] || sec.severity
+        : '';
 
       return {
         id: `sec-${sec.id}`,
@@ -154,7 +186,7 @@ export class HubService {
         title: sec.title,
         category: 'cybersecurity',
         coverImage: sec.coverImage,
-        tag: sec.cveId || sec.severity,
+        tag: sec.cveId || sev,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: sec.excerpt,
         accentHoverColor: 'group-hover:text-rose-300',
@@ -178,8 +210,15 @@ export class HubService {
         tut.publishedAt || tut.createdAt || Date.now(),
       ).toISOString();
       const module = isEn ? 'TUTORIALS' : 'TUTORIALES';
-      const sub = tut.category?.toUpperCase() || '';
-      const diff = tut.difficulty?.toUpperCase() || '';
+      const sub = formatSub(tut.category);
+      const diffMap: Record<string, string> = {
+        beginner: isEn ? 'BEGINNER' : 'PRINCIPIANTE',
+        intermediate: isEn ? 'INTERMEDIATE' : 'INTERMEDIO',
+        advanced: isEn ? 'ADVANCED' : 'AVANZADO',
+      };
+      const diff = tut.difficulty
+        ? diffMap[tut.difficulty.toLowerCase()] || tut.difficulty.toUpperCase()
+        : '';
 
       return {
         id: `tut-${tut.id}`,
@@ -187,10 +226,8 @@ export class HubService {
         title: tut.title,
         category: 'tutorials',
         coverImage: tut.coverImage,
-        tag: diff || (isEn ? 'GUIDE' : 'GUÍA'),
-        categoryMeta: sub
-          ? `${module} • ${sub} • ${diff}`
-          : `${module} • ${diff}`,
+        tag: diff,
+        categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: tut.excerpt,
         accentHoverColor: 'group-hover:text-amber-300',
         date: dateStr,
@@ -208,7 +245,17 @@ export class HubService {
         inf.publishedAt || inf.createdAt || Date.now(),
       ).toISOString();
       const module = isEn ? 'INFRASTRUCTURE' : 'INFRAESTRUCTURA';
-      const sub = inf.category?.toUpperCase() || '';
+      const sub = formatSub(inf.category);
+      const envMap: Record<string, string> = {
+        production: isEn ? 'PRODUCTION' : 'PRODUCCIÓN',
+        staging: isEn ? 'STAGING' : 'STAGING',
+        homelab: isEn ? 'HOMELAB' : 'HOMELAB',
+        bare_metal: isEn ? 'BARE METAL' : 'BARE METAL',
+      };
+      const env = inf.environment
+        ? envMap[inf.environment.toLowerCase()] ||
+          inf.environment.replace(/_/g, ' ').toUpperCase()
+        : '';
 
       return {
         id: `infra-${inf.id}`,
@@ -216,8 +263,7 @@ export class HubService {
         title: inf.title,
         category: 'infrastructure',
         coverImage: inf.coverImage,
-        subCategory: inf.category,
-        tag: inf.environment?.toUpperCase() || module,
+        tag: env,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: inf.subtitle || inf.architectureOverview,
         accentHoverColor: 'group-hover:text-emerald-300',
@@ -236,7 +282,7 @@ export class HubService {
         res.publishedAt || res.createdAt || Date.now(),
       ).toISOString();
       const module = isEn ? 'AI' : 'IA';
-      const sub = res.category?.toUpperCase() || '';
+      const sub = formatSub(res.category);
 
       return {
         id: `ai-${res.id}`,
@@ -244,7 +290,7 @@ export class HubService {
         title: res.name,
         category: 'ai',
         coverImage: res.coverImage,
-        tag: sub || module,
+        tag: res.license?.toUpperCase() || '',
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: res.description,
         accentHoverColor: 'group-hover:text-indigo-300',
@@ -261,7 +307,15 @@ export class HubService {
     const projItems: HubFeedItem[] = projects.map((proj) => {
       const dateStr = new Date(proj.createdAt || Date.now()).toISOString();
       const module = isEn ? 'PROJECTS' : 'PROYECTOS';
-      const sub = proj.category?.toUpperCase() || '';
+      const sub = formatSub(proj.category);
+      const statusMap: Record<string, string> = {
+        active: isEn ? 'IN PRODUCTION' : 'EN PRODUCCIÓN',
+        wip: isEn ? 'IN DEVELOPMENT' : 'EN DESARROLLO',
+        archived: isEn ? 'ARCHIVED' : 'ARCHIVADO',
+      };
+      const stat = proj.status
+        ? statusMap[proj.status.toLowerCase()] || proj.status.toUpperCase()
+        : '';
 
       return {
         id: `proj-${proj.id}`,
@@ -269,7 +323,7 @@ export class HubService {
         title: proj.name,
         category: 'projects',
         coverImage: proj.coverImage,
-        tag: proj.status?.toUpperCase() || (isEn ? 'PROJECT' : 'PROYECTO'),
+        tag: stat,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: proj.description,
         accentHoverColor: 'group-hover:text-blue-300',
@@ -286,7 +340,7 @@ export class HubService {
     const forumItems: HubFeedItem[] = topics.map((top) => {
       const dateStr = new Date(top.createdAt || Date.now()).toISOString();
       const module = isEn ? 'FORUM' : 'FORO';
-      const sub = top.category?.toUpperCase() || '';
+      const sub = formatSub(top.category);
 
       return {
         id: `topic-${top.id}`,

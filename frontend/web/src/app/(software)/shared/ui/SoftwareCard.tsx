@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { ArticleCover, SoftwareArticleCategory } from './ArticleCover';
 
 export interface SoftwareCardProps {
@@ -12,7 +13,7 @@ export interface SoftwareCardProps {
   excerpt?: string | null;
   coverImage?: string;
   tag?: string;
-  subCategory?: string;
+  topicCategory?: string;
   priority?: boolean;
   accentHoverColor?: string;
 }
@@ -34,10 +35,55 @@ export function SoftwareCard({
   excerpt,
   coverImage,
   tag,
-  subCategory,
+  topicCategory,
   priority = false,
   accentHoverColor = 'group-hover:text-cyan-300',
 }: SoftwareCardProps) {
+  const tFilters = useTranslations('Filters');
+
+  // Normalización e internacionalización de cada segmento de metadatos
+  const formatMetadataSegment = React.useCallback(
+    (segment: string): string => {
+      const trimmed = segment.trim();
+      if (!trimmed) return '';
+      const lower = trimmed.toLowerCase();
+      if (tFilters.has(lower as any)) {
+        return tFilters(lower as any).toUpperCase();
+      }
+      if (tFilters.has(trimmed as any)) {
+        return tFilters(trimmed as any).toUpperCase();
+      }
+      return trimmed.replace(/_/g, ' ');
+    },
+    [tFilters]
+  );
+
+  const formattedCategoryMeta = React.useMemo(() => {
+    if (typeof categoryMeta === 'string') {
+      return categoryMeta
+        .split('•')
+        .map((part) => formatMetadataSegment(part))
+        .join(' • ');
+    }
+    return categoryMeta;
+  }, [categoryMeta, formatMetadataSegment]);
+
+  const formattedTag = React.useMemo(() => {
+    if (!tag) return undefined;
+    const trimmed = tag.trim();
+    const lower = trimmed.toLowerCase();
+    if (tFilters.has(lower as any)) {
+      return tFilters(lower as any).toUpperCase();
+    }
+    if (tFilters.has(trimmed as any)) {
+      return tFilters(trimmed as any).toUpperCase();
+    }
+    return trimmed.replace(/_/g, ' ');
+  }, [tag, tFilters]);
+
+  const metaString = typeof formattedCategoryMeta === 'string' ? formattedCategoryMeta.toUpperCase() : '';
+  const showTag = formattedTag && (!metaString || !metaString.includes(formattedTag.toUpperCase()));
+
   return (
     <Link
       href={href}
@@ -48,14 +94,20 @@ export function SoftwareCard({
           title={title}
           category={category}
           coverImage={coverImage}
-          tag={tag}
-          subCategory={subCategory}
+          tag={formattedTag}
+          topicCategory={topicCategory}
           priority={priority}
         />
 
         <div>
-          <p className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 capitalize truncate font-medium">
-            {categoryMeta}
+          <p className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium">
+            {formattedCategoryMeta}
+            {showTag && (
+              <>
+                <span className="mx-1 opacity-60">•</span>
+                <span>{formattedTag}</span>
+              </>
+            )}
           </p>
 
           <h3 className={`text-base font-bold text-slate-900 dark:text-[var(--header-title)] group-hover:text-blue-600 dark:${accentHoverColor} transition-colors leading-snug line-clamp-2 mt-1.5`}>

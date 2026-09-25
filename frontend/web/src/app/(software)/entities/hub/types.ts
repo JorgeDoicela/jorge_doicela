@@ -13,7 +13,6 @@ export interface HubFeedItem {
   href: string;
   title: string;
   category: SoftwareArticleCategory;
-  subCategory?: string;
   coverImage?: string;
   tag?: string;
   categoryMeta: string;

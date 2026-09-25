@@ -6,7 +6,7 @@ import { AiResource } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useAi(type?: string, search: string = '') {
+export function useAi(category?: string, search: string = '') {
   const locale = useLocale();
   const [resources, setResources] = useState<AiResource[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,7 +19,7 @@ export function useAi(type?: string, search: string = '') {
 
       try {
         const params = new URLSearchParams();
-        if (type && type !== 'all') params.append('type', type);
+        if (category && category !== 'all') params.append('category', category);
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
 
@@ -38,7 +38,7 @@ export function useAi(type?: string, search: string = '') {
     };
 
     fetchAi();
-  }, [type, search, locale]);
+  }, [category, search, locale]);
 
   return { resources, loading, error };
 }

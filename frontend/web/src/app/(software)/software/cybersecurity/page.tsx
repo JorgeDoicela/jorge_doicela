@@ -14,9 +14,9 @@ export default function CybersecurityCategoryPage() {
   const tNav = useTranslations('Nav');
   const tSec = useTranslations('Cybersecurity');
   const [search, setSearch] = useState('');
-  const [severity, setSeverity] = useState('all');
+  const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useCybersecurityCategories();
-  const { posts, loading, error } = useCybersecurity(severity, undefined, search);
+  const { posts, loading, error } = useCybersecurity(category, undefined, search);
 
   return (
     <SoftwarePageLayout
@@ -48,8 +48,8 @@ export default function CybersecurityCategoryPage() {
 
             <CategoryFilterBar
               options={categories}
-              selectedId={severity}
-              onSelect={setSeverity}
+              selectedId={category}
+              onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="rose"
             />

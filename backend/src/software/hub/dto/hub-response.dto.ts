@@ -20,7 +20,6 @@ export interface HubFeedItem {
     | 'projects'
     | 'infrastructure'
     | 'forum';
-  subCategory?: string;
   coverImage?: string;
   tag?: string;
   categoryMeta: string;

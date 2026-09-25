@@ -12,6 +12,7 @@ interface NewsCardProps {
 export function NewsCard({ article }: NewsCardProps) {
   const locale = useLocale();
   const tNav = useTranslations('Nav');
+  const tFilters = useTranslations('Filters');
 
   const formattedDate = new Date(article.publishedAt || article.createdAt).toLocaleDateString(
     locale === 'es' ? 'es-ES' : 'en-US',
@@ -22,14 +23,13 @@ export function NewsCard({ article }: NewsCardProps) {
     }
   );
 
-  const metaParts = [
-    article.isBreaking ? 'BREAKING' : null,
-    article.category,
-    article.tags?.split(',')[0]?.trim(),
-    formattedDate,
-  ].filter(Boolean);
-
-  const metaText = metaParts.join(' • ');
+  const moduleLabel = tNav('news').toUpperCase();
+  const catKey = article.category?.toLowerCase() || '';
+  const catLabel = catKey
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    : '';
+  const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
+  const breakingTag = article.isBreaking ? (locale === 'es' ? 'URGENTE' : 'BREAKING') : undefined;
 
   return (
     <SoftwareCard
@@ -37,7 +37,7 @@ export function NewsCard({ article }: NewsCardProps) {
       title={article.title}
       category="news"
       coverImage={article.coverImage}
-      tag={article.isBreaking ? 'BREAKING' : undefined}
+      tag={breakingTag}
       categoryMeta={metaText}
       excerpt={article.excerpt}
       accentHoverColor="group-hover:text-cyan-300"

@@ -10,8 +10,8 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
-  const tCard = useTranslations('CardActions');
 
   const statusLabels: Record<string, string> = {
     active: tFilters('inProduction'),
@@ -20,8 +20,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
   };
 
   const statusText = statusLabels[project.status] || project.status;
-  const starsText = tCard('starsCount', { count: project.stars });
-  const metaText = `${statusText} • ${starsText} • ${project.techStack}`;
+  const moduleLabel = tNav('projects').toUpperCase();
+  const catKey = project.category?.toLowerCase() || '';
+  const catLabel = catKey
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    : '';
+  const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 
   return (
     <SoftwareCard

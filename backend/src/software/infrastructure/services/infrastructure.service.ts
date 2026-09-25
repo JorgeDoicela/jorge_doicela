@@ -172,34 +172,10 @@ export class InfrastructureService {
       }
     }
 
-    const labelsEs: Record<string, string> = {
-      all: 'Toda la infraestructura',
-      servers: 'Servidores & Linux',
-      cloud: 'Cloud & VPS',
-      containers: 'Contenedores & Docker',
-      networking: 'Redes & mTLS',
-      ci_cd: 'CI/CD & Despliegues',
-      hardening: 'Bastionado & Seguridad',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Infrastructure',
-      servers: 'Servers & Linux',
-      cloud: 'Cloud & VPS',
-      containers: 'Containers & Docker',
-      networking: 'Networking & mTLS',
-      ci_cd: 'CI/CD & Deployments',
-      hardening: 'Hardening & Security',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
-
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all ||
-          (lang === 'en' ? 'All Infrastructure' : 'Toda la infraestructura'),
+        label: 'all',
         count: allPosts.length,
       },
     ];
@@ -208,20 +184,13 @@ export class InfrastructureService {
       if (cat !== 'all') {
         result.push({
           id: cat,
-          label: labels[cat] || this.formatLabel(cat),
+          label: cat,
           count,
         });
       }
     }
 
     return result;
-  }
-
-  private formatLabel(slug: string): string {
-    return slug
-      .split(/[-_]/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
   }
 
   async remove(id: number): Promise<void> {

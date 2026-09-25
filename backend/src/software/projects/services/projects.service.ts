@@ -122,51 +122,50 @@ export class ProjectsService {
       qb.andWhere('proj.language = :lang', { lang });
     }
 
-    const allProjects = await qb.select(['proj.status']).getMany();
+    const allProjects = await qb.select(['proj.category']).getMany();
     const countMap = new Map<string, number>();
 
     for (const proj of allProjects) {
-      if (proj.status) {
-        const s = proj.status.toLowerCase();
-        countMap.set(s, (countMap.get(s) || 0) + 1);
+      if (proj.category) {
+        const c = proj.category.toLowerCase();
+        countMap.set(c, (countMap.get(c) || 0) + 1);
       }
     }
-
-    const labelsEs: Record<string, string> = {
-      all: 'Todos los proyectos',
-      active: 'En Producción',
-      wip: 'En Desarrollo',
-      archived: 'Archivado',
-      beta: 'Fase Beta',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Projects',
-      active: 'In Production',
-      wip: 'In Development',
-      archived: 'Archived',
-      beta: 'Beta Phase',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
 
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all ||
-          (lang === 'en' ? 'All Projects' : 'Todos los proyectos'),
+        label: 'all',
         count: allProjects.length,
       },
     ];
 
-    const statusOrder = ['active', 'wip', 'beta', 'archived'];
-    for (const s of statusOrder) {
-      const count = countMap.get(s) || 0;
+    const categoryOrder = [
+      'web',
+      'backend',
+      'devops',
+      'tools',
+      'tool',
+      'open_source',
+      'ai',
+      'mobile',
+    ];
+    for (const c of categoryOrder) {
+      const count = countMap.get(c) || 0;
       if (count > 0) {
         result.push({
-          id: s,
-          label: labels[s] || s,
+          id: c,
+          label: c,
+          count,
+        });
+      }
+    }
+
+    for (const [c, count] of countMap.entries()) {
+      if (!result.some((r) => r.id === c)) {
+        result.push({
+          id: c,
+          label: c,
           count,
         });
       }

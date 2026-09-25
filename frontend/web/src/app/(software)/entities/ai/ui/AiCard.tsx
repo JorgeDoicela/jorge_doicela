@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { AiResource } from '../types';
 import { SoftwareCard } from '../../../shared/ui/SoftwareCard';
 
@@ -9,23 +10,16 @@ interface AiCardProps {
 }
 
 export function AiCard({ resource }: AiCardProps) {
-  const categoryLabels: Record<string, string> = {
-    llm: 'LLM Reasoning',
-    agent: 'Agentic Framework',
-    mcp_server: 'MCP Server',
-    framework: 'Framework',
-    tool: 'AI Tool',
-    dataset: 'Dataset',
-    platform: 'Platform',
-  };
+  const tNav = useTranslations('Nav');
+  const tFilters = useTranslations('Filters');
 
-  const categoryLabel = categoryLabels[resource.category] || resource.category.toUpperCase();
-  const metaParts = [
-    resource.provider,
-    categoryLabel,
-    resource.license,
-  ].filter(Boolean);
-  const metaText = metaParts.join(' • ');
+  const catKey = resource.category?.toLowerCase() || '';
+  const categoryLabel = catKey
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    : '';
+
+  const moduleLabel = tNav('ai').toUpperCase();
+  const metaText = categoryLabel ? `${moduleLabel} • ${categoryLabel}` : moduleLabel;
 
   return (
     <SoftwareCard
@@ -33,7 +27,7 @@ export function AiCard({ resource }: AiCardProps) {
       title={resource.name}
       category="ai"
       coverImage={resource.coverImage}
-      tag={categoryLabel}
+      tag={resource.license?.toUpperCase() || categoryLabel}
       categoryMeta={metaText}
       excerpt={resource.description}
       accentHoverColor="group-hover:text-purple-300"

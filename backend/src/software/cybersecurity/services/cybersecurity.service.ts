@@ -119,54 +119,47 @@ export class CybersecurityService {
       qb.andWhere('sec.language = :lang', { lang });
     }
 
-    const allPosts = await qb.select(['sec.severity']).getMany();
+    const allPosts = await qb.select(['sec.category']).getMany();
     const countMap = new Map<string, number>();
 
     for (const post of allPosts) {
-      if (post.severity) {
-        const sev = post.severity.toUpperCase();
-        countMap.set(sev, (countMap.get(sev) || 0) + 1);
+      if (post.category) {
+        const cat = post.category.toLowerCase();
+        countMap.set(cat, (countMap.get(cat) || 0) + 1);
       }
     }
-
-    const labelsEs: Record<string, string> = {
-      all: 'Todas las severidades',
-      CRITICAL: 'Crítico',
-      HIGH: 'Alto',
-      MEDIUM: 'Medio',
-      LOW: 'Bajo',
-      INFO: 'Informativo',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Severities',
-      CRITICAL: 'Critical',
-      HIGH: 'High',
-      MEDIUM: 'Medium',
-      LOW: 'Low',
-      INFO: 'Informational',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
 
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all ||
-          (lang === 'en' ? 'All Severities' : 'Todas las severidades'),
+        label: 'all',
         count: allPosts.length,
       },
     ];
 
-    // Severidades ordenadas por criticidad CVSS estándar
-    const cvssOrder = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFO'];
-    for (const sev of cvssOrder) {
-      const count = countMap.get(sev) || 0;
+    const categoryOrder = [
+      'advisory',
+      'hardening_guide',
+      'cve_analysis',
+      'writeup',
+      'pentest',
+    ];
+    for (const cat of categoryOrder) {
+      const count = countMap.get(cat) || 0;
       if (count > 0) {
         result.push({
-          id: sev,
-          label: labels[sev] || sev,
+          id: cat,
+          label: cat,
+          count,
+        });
+      }
+    }
+
+    for (const [cat, count] of countMap.entries()) {
+      if (!result.some((r) => r.id === cat)) {
+        result.push({
+          id: cat,
+          label: cat,
           count,
         });
       }

@@ -6,7 +6,11 @@ import { Project } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useProjects(status?: string, search: string = '') {
+export function useProjects(
+  category?: string,
+  search: string = '',
+  status?: string,
+) {
   const locale = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,6 +23,7 @@ export function useProjects(status?: string, search: string = '') {
 
       try {
         const params = new URLSearchParams();
+        if (category && category !== 'all') params.append('category', category);
         if (status && status !== 'all') params.append('status', status);
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
@@ -38,7 +43,7 @@ export function useProjects(status?: string, search: string = '') {
     };
 
     fetchProjects();
-  }, [status, search, locale]);
+  }, [category, status, search, locale]);
 
   return { projects, loading, error };
 }

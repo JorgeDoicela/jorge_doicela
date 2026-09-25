@@ -125,41 +125,10 @@ export class NewsService {
       }
     }
 
-    const labelsEs: Record<string, string> = {
-      all: 'Todas las noticias',
-      frameworks: 'Frameworks & Web',
-      nextjs: 'Next.js & React',
-      react: 'React 19',
-      performance: 'Rendimiento',
-      devops: 'Cloud & DevOps',
-      security: 'Ciberseguridad',
-      ai: 'IA & Agentes',
-      rsc: 'Server Components',
-      turbopack: 'Turbopack',
-      web: 'Ecosistema Web',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All News',
-      frameworks: 'Frameworks & Web',
-      nextjs: 'Next.js & React',
-      react: 'React 19',
-      performance: 'Performance',
-      devops: 'Cloud & DevOps',
-      security: 'Cybersecurity',
-      ai: 'AI & Agents',
-      rsc: 'Server Components',
-      turbopack: 'Turbopack',
-      web: 'Web Ecosystem',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
-
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all || (lang === 'en' ? 'All News' : 'Todas las noticias'),
+        label: 'all',
         count: allArticles.length,
       },
     ];
@@ -169,7 +138,7 @@ export class NewsService {
       if (cat !== 'all') {
         result.push({
           id: cat,
-          label: labels[cat] || this.formatLabel(cat),
+          label: cat,
           count,
         });
       }
@@ -180,20 +149,13 @@ export class NewsService {
       if (!result.some((r) => r.id === tag)) {
         result.push({
           id: tag,
-          label: labels[tag] || this.formatLabel(tag),
+          label: tag,
           count,
         });
       }
     }
 
     return result;
-  }
-
-  private formatLabel(slug: string): string {
-    return slug
-      .split(/[-_]/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
   }
 
   async remove(id: number): Promise<void> {

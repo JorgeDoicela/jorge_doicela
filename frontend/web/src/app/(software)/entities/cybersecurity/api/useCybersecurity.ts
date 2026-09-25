@@ -6,7 +6,11 @@ import { SecurityPost } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useCybersecurity(severity?: string, category?: string, search: string = '') {
+export function useCybersecurity(
+  category?: string,
+  severity?: string,
+  search: string = '',
+) {
   const locale = useLocale();
   const [posts, setPosts] = useState<SecurityPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

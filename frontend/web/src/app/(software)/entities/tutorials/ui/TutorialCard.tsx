@@ -10,13 +10,18 @@ interface TutorialCardProps {
 }
 
 export function TutorialCard({ tutorial }: TutorialCardProps) {
+  const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
-  const difficultyLabel = tFilters(tutorial.difficulty as any) || tutorial.difficulty;
-  const metaParts = [
-    difficultyLabel,
-    tutorial.techStack,
-  ].filter(Boolean);
-  const metaText = metaParts.join(' • ');
+  const diffKey = tutorial.difficulty?.toLowerCase() || '';
+  const difficultyLabel = diffKey
+    ? (tFilters.has(diffKey as any) ? tFilters(diffKey as any) : tutorial.difficulty)
+    : '';
+  const moduleLabel = tNav('tutorials').toUpperCase();
+  const catKey = tutorial.category?.toLowerCase() || '';
+  const catLabel = catKey
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    : '';
+  const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 
   return (
     <SoftwareCard

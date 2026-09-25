@@ -291,4 +291,31 @@ El script `seed-software.ts` está diseñado para reconstruir y reiniciar la bas
   * **En Español (`es`):** Actores humanos, subgraphs y estados traducidos al español profesional (`Usuario / Navegador`, `Proxy Inverso Nginx`, `Gestor de Comandos`, `Módulo`, `Modo WAL`), preservando intactos los nombres literales de código, variables, APIs, llamadas POSIX y directivas de red (`stdout`, `socket.emit()`, `child_process.spawn()`, `resolve-routes.js`, `proxy_pass`).
   * **En Inglés (`en`):** 100% en terminología técnica internacional (`Browser Client`, `Nginx Reverse Proxy`, `Command Handler`, `WAL Mode`).
 
+---
+
+## 7. Arquitectura Taxonómica Oficial de 4 Niveles
+
+Toda publicación, recurso o registro técnico dentro del ecosistema de Software se clasifica rigurosamente bajo una **jerarquía taxonómica estricta de 4 niveles**. Esta estructura elimina la ambigüedad, previene el acoplamiento cruzado de dominios y garantiza indexación atómica en `software.sqlite`:
+
+| Nivel | Dimensión Taxonómica | Ámbito / Gobernanza | Mecanismo en SQLite | Propósito Técnico |
+| :--- | :--- | :--- | :--- | :--- |
+| **Nivel 1** | **Módulo / Especialidad** | 100% Propio (Vertical) | Tabla física TypeORM (`news_articles`, `blog_posts`, `tutorials`, etc.) | Define el formato físico del contenido, el submódulo backend y la subruta URL canónica (`/tutorials`, `/projects`, `/news`). |
+| **Nivel 2** | **Categoría Temática** | Estructural / Canónico | Columna `category` con restricción `CHECK` e índice | Clasifica el área funcional de la publicación (ej. `web`, `devops`, `ai`, `security`). Cada módulo posee su catálogo temático controlado. |
+| **Nivel 3** | **Tags / Etiquetas** | 100% Cruzado (Universal) | Tabla `tags` + tabla puente `content_tags` + columna `tags TEXT` | Vocabulario técnico controlado universal (ej. `#docker`, `#react`, `#linux`). Conecta transversalmente publicaciones de distintos módulos. |
+| **Nivel 4** | **Atributo Específico** | 100% Propio (Aislado) | Columnas especializadas por entidad | Atributos técnicos exclusivos del dominio: `difficulty` en tutoriales, `severity` en ciberseguridad, `status` en proyectos, `environment` en infraestructura. |
+
+### 7.1 Regla Universal de Presentación en UI (Frontend)
+Para garantizar una jerarquía visual sobria, limpia y predecible en todo el sistema:
+1. **Línea de Metadatos de Tarjetas (`categoryMeta`):** Se restringe estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)** (ej. `PROYECTOS • WEB`, `TUTORIALES • WEB`, `INFRAESTRUCTURA • CONTAINERS`).
+2. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/software/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra exclusivamente el **Nivel 1 (Módulo)** en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
+3. **Badges Visuales Complementarios (`tag`):** Reservados para el Nivel 4 cuando aporta valor operativo inmediato (ej. badge `CRITICAL` en avisos de ciberseguridad, badge `INTERMEDIATE` en tutoriales o `BREAKING` en noticias).
+4. **Prohibición de "Subcategorías":** No existe ninguna columna, tabla o entidad llamada `subCategory` ni en persistencia ni en contratos de API; cualquier concepto secundario corresponde estrictamente al Nivel 2 (`category`) o Nivel 4 (atributo de entidad).
+5. **Estandarización Unificada de la Barra de Filtros (`CategoryFilterBar`):** En los 8 módulos de la plataforma, la barra de pastillas neumórficas filtra unívocamente por el **Nivel 2 (Categoría Temática)** (`web`, `backend`, `devops`, `hardening`, `servers`, `llm`, `frameworks`, etc.), garantizando una experiencia de usuario perfectamente simétrica y predecible. Los atributos de Nivel 4 (dificultad, severidad, estado) residen como badges informativos en las tarjetas.
+
+### 7.2 Desacoplamiento de Internacionalización en Filtros de API (`/categories`)
+Para garantizar un servidor ultra-eficiente en el VPS de 1 GB de RAM y evitar duplicación de strings en memoria:
+* **El Backend como Proveedor Canónico Puro:** Los endpoints `GET /software/[modulo]/categories` consultan agregaciones SQL directas en `software.sqlite` y retornan exclusivamente el contrato canónico `{ id: string, label: string, count: number }` sin diccionarios de traducción embebidos en código TypeScript (`labelsEs` / `labelsEn` eliminados).
+* **Internacionalización Delegada en el Cliente:** El componente transversal [`CategoryFilterBar`](/software/shared/ui/CategoryFilterBar.tsx) resuelve los textos localizados mediante `useTranslations('Filters')` contra los diccionarios JSON del frontend (`messages/es.json` y `messages/en.json`). Si una categoría técnica no requiere traducción (ej. `mcp_server`, `turbopack`), se formatea automáticamente en tiempo de renderizado con preservación de mayúsculas y acrónimos.
+
+
 

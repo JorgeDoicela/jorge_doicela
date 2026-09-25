@@ -16,20 +16,20 @@ export type SoftwareArticleCategory =
 interface ArticleCoverProps {
   title: string;
   category: SoftwareArticleCategory;
-  subCategory?: string;
+  topicCategory?: string;
   coverImage?: string;
   tag?: string;
   priority?: boolean;
 }
 
-export function ArticleCover({ title, category, subCategory, coverImage, priority = false }: ArticleCoverProps) {
+export function ArticleCover({ title, category, topicCategory, coverImage, priority = false }: ArticleCoverProps) {
   const [imageError, setImageError] = useState(false);
 
   // Paletas y gradientes temáticos para fallback procedural
   const getThemeDetails = () => {
     switch (category) {
       case 'infrastructure':
-        switch (subCategory) {
+        switch (topicCategory) {
           case 'networking':
             return {
               gradient: 'from-teal-100/80 via-slate-100/90 to-cyan-100/80 dark:from-teal-950/70 dark:via-slate-900/80 dark:to-cyan-950/70',

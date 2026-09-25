@@ -55,15 +55,55 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
   className = '',
 }) => {
   const t = useTranslations('Common');
+  const tFilters = useTranslations('Filters');
   const styles = ACCENT_STYLES[accentColor] || ACCENT_STYLES.cyan;
+
+  const getOptionLabel = React.useCallback(
+    (opt: FilterOption): string => {
+      const id = String(opt.id || '').trim();
+      const label = String(opt.label || '').trim();
+
+      // 1. Caso canónico de 'all'
+      if (id.toLowerCase() === 'all') {
+        if (tFilters.has('all' as any)) return tFilters('all' as any);
+        if (t.has('all' as any)) return t('all' as any);
+        return 'Todos';
+      }
+
+      // 2. Probar coincidencia exacta y en minúsculas por id
+      if (tFilters.has(id as any)) {
+        return tFilters(id as any);
+      }
+      const lowerId = id.toLowerCase();
+      if (tFilters.has(lowerId as any)) {
+        return tFilters(lowerId as any);
+      }
+
+      // 3. Probar coincidencia por label si difiere
+      if (label && tFilters.has(label as any)) {
+        return tFilters(label as any);
+      }
+      const lowerLabel = label.toLowerCase();
+      if (lowerLabel && tFilters.has(lowerLabel as any)) {
+        return tFilters(lowerLabel as any);
+      }
+
+      // 4. Fallback cosmético premium: nunca mostrar guiones bajos ni cadenas técnicas crudas
+      const rawText = label || id;
+      return rawText
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    },
+    [t, tFilters]
+  );
 
   const selectOptions: SelectOption<string>[] = React.useMemo(() => {
     return options.map((opt) => ({
       value: opt.id,
-      label: opt.label,
+      label: getOptionLabel(opt),
       badge: showCount && typeof opt.count === 'number' && opt.count > 0 ? opt.count : undefined,
     }));
-  }, [options, showCount]);
+  }, [options, showCount, getOptionLabel]);
 
   return (
     <div className={`w-full ${className}`}>
@@ -111,7 +151,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
-                <span>{option.label}</span>
+                <span>{getOptionLabel(option)}</span>
                 {showCount && typeof option.count === 'number' && option.count > 0 && (
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-medium ${

@@ -12,6 +12,7 @@ interface BlogCardProps {
 export function BlogCard({ post }: BlogCardProps) {
   const locale = useLocale();
   const tNav = useTranslations('Nav');
+  const tFilters = useTranslations('Filters');
 
   const formattedDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString(
     locale === 'es' ? 'es-ES' : 'en-US',
@@ -22,13 +23,12 @@ export function BlogCard({ post }: BlogCardProps) {
     }
   );
 
-  const metaParts = [
-    post.series,
-    post.tags?.split(',')[0]?.trim(),
-    formattedDate,
-  ].filter(Boolean);
-
-  const metaText = metaParts.join(' • ');
+  const moduleLabel = tNav('blog').toUpperCase();
+  const catKey = post.category?.toLowerCase() || '';
+  const catLabel = catKey
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    : '';
+  const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 
   return (
     <SoftwareCard

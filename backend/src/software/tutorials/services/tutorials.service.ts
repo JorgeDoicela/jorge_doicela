@@ -137,50 +137,50 @@ export class TutorialsService {
       qb.andWhere('tut.language = :lang', { lang });
     }
 
-    const allTutorials = await qb.select(['tut.difficulty']).getMany();
+    const allTutorials = await qb.select(['tut.category']).getMany();
     const countMap = new Map<string, number>();
 
     for (const tut of allTutorials) {
-      if (tut.difficulty) {
-        const diff = tut.difficulty.toLowerCase();
-        countMap.set(diff, (countMap.get(diff) || 0) + 1);
+      if (tut.category) {
+        const cat = tut.category.toLowerCase();
+        countMap.set(cat, (countMap.get(cat) || 0) + 1);
       }
     }
-
-    const labelsEs: Record<string, string> = {
-      all: 'Todos los niveles',
-      beginner: 'Principiante',
-      intermediate: 'Intermedio',
-      advanced: 'Avanzado',
-      expert: 'Experto',
-    };
-
-    const labelsEn: Record<string, string> = {
-      all: 'All Levels',
-      beginner: 'Beginner',
-      intermediate: 'Intermediate',
-      advanced: 'Advanced',
-      expert: 'Expert',
-    };
-
-    const labels = lang === 'en' ? labelsEn : labelsEs;
 
     const result: Array<{ id: string; label: string; count: number }> = [
       {
         id: 'all',
-        label:
-          labels.all || (lang === 'en' ? 'All Levels' : 'Todos los niveles'),
+        label: 'all',
         count: allTutorials.length,
       },
     ];
 
-    const difficultyOrder = ['beginner', 'intermediate', 'advanced', 'expert'];
-    for (const diff of difficultyOrder) {
-      const count = countMap.get(diff) || 0;
+    const categoryOrder = [
+      'web',
+      'backend',
+      'devops',
+      'security',
+      'architecture',
+      'databases',
+      'ai',
+      'mobile',
+    ];
+    for (const cat of categoryOrder) {
+      const count = countMap.get(cat) || 0;
       if (count > 0) {
         result.push({
-          id: diff,
-          label: labels[diff] || diff,
+          id: cat,
+          label: cat,
+          count,
+        });
+      }
+    }
+
+    for (const [cat, count] of countMap.entries()) {
+      if (!result.some((r) => r.id === cat)) {
+        result.push({
+          id: cat,
+          label: cat,
           count,
         });
       }

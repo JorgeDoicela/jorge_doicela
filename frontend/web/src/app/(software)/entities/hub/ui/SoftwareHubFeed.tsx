@@ -77,7 +77,6 @@ export function SoftwareHubFeed({
               href={item.href}
               title={item.title}
               category={item.category}
-              subCategory={item.subCategory}
               coverImage={item.coverImage}
               tag={item.tag}
               categoryMeta={item.categoryMeta}

@@ -10,9 +10,9 @@ export default function AiCategoryPage() {
   const tNav = useTranslations('Nav');
   const t = useTranslations('Ai');
   const [search, setSearch] = useState('');
-  const [type, setType] = useState('all');
+  const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useAiCategories();
-  const { resources, loading, error } = useAi(type, search);
+  const { resources, loading, error } = useAi(category, search);
 
   return (
     <SoftwarePageLayout
@@ -44,8 +44,8 @@ export default function AiCategoryPage() {
 
             <CategoryFilterBar
               options={categories}
-              selectedId={type}
-              onSelect={setType}
+              selectedId={category}
+              onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="purple"
             />

@@ -14,9 +14,9 @@ export default function TutorialsCategoryPage() {
   const tNav = useTranslations('Nav');
   const tTutorials = useTranslations('Tutorials');
   const [search, setSearch] = useState('');
-  const [difficulty, setDifficulty] = useState('all');
+  const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useTutorialsCategories();
-  const { tutorials, loading, error } = useTutorials(difficulty, search);
+  const { tutorials, loading, error } = useTutorials(category, search);
 
   return (
     <SoftwarePageLayout
@@ -48,8 +48,8 @@ export default function TutorialsCategoryPage() {
 
             <CategoryFilterBar
               options={categories}
-              selectedId={difficulty}
-              onSelect={setDifficulty}
+              selectedId={category}
+              onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="amber"
             />

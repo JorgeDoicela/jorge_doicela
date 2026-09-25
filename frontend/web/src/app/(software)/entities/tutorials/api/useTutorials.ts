@@ -6,7 +6,11 @@ import { Tutorial } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useTutorials(difficulty?: string, search: string = '') {
+export function useTutorials(
+  category?: string,
+  search: string = '',
+  difficulty?: string,
+) {
   const locale = useLocale();
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,6 +23,7 @@ export function useTutorials(difficulty?: string, search: string = '') {
 
       try {
         const params = new URLSearchParams();
+        if (category && category !== 'all') params.append('category', category);
         if (difficulty && difficulty !== 'all') params.append('difficulty', difficulty);
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
@@ -38,7 +43,7 @@ export function useTutorials(difficulty?: string, search: string = '') {
     };
 
     fetchTutorials();
-  }, [difficulty, search, locale]);
+  }, [category, difficulty, search, locale]);
 
   return { tutorials, loading, error };
 }

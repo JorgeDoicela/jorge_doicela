@@ -10,7 +10,7 @@ export default function ProjectsCategoryPage() {
   const tNav = useTranslations('Nav');
   const tProjects = useTranslations('Projects');
   const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('all');
+  const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useProjectsCategories();
 
   return (
@@ -43,8 +43,8 @@ export default function ProjectsCategoryPage() {
 
             <CategoryFilterBar
               options={categories}
-              selectedId={status}
-              onSelect={setStatus}
+              selectedId={category}
+              onSelect={setCategory}
               loading={categoriesLoading}
               accentColor="blue"
             />
@@ -52,7 +52,7 @@ export default function ProjectsCategoryPage() {
         </header>
 
         <main>
-          <ProjectGrid status={status} search={search} />
+          <ProjectGrid category={category} search={search} />
         </main>
       </div>
     </SoftwarePageLayout>

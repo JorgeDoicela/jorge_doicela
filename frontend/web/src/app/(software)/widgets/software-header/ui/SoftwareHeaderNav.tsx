@@ -8,6 +8,7 @@ import { BackToPortalButton } from '../../../shared/ui/BackToPortalButton';
 import { CategoryNav, SoftwareSection } from '../../category-nav/ui/CategoryNav';
 import { LanguageToggle } from '../../../features/language-toggle/ui/LanguageToggle';
 import { ThemeToggle } from '../../../features/theme-toggle/ui/ThemeToggle';
+import { useSpotlight } from '../../../features/spotlight-search';
 
 interface SoftwareHeaderNavProps {
   activeCategory?: SoftwareSection;
@@ -26,6 +27,7 @@ export function SoftwareHeaderNav({
   backHref,
   backLabel,
 }: SoftwareHeaderNavProps) {
+  const { openSpotlight } = useSpotlight();
   const tSpotlight = useTranslations('Spotlight');
   const tNav = useTranslations('Nav');
   const [softwareUrl, setSoftwareUrl] = useState('/');
@@ -218,11 +220,12 @@ export function SoftwareHeaderNav({
         </div>
         <div className="shrink-0 flex items-center justify-end gap-1 sm:gap-1.5 sm:min-w-[110px]">
           <button
+            type="button"
             onClick={() => {
               if (onOpenSpotlight) {
                 onOpenSpotlight();
-              } else if (typeof window !== 'undefined') {
-                window.location.href = '/software?spotlight=true';
+              } else {
+                openSpotlight();
               }
             }}
             className="w-9 h-9 rounded-xl flex items-center justify-center text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer shrink-0"

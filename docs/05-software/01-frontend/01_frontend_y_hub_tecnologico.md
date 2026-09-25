@@ -62,17 +62,17 @@ frontend/web/src/app/(software)/
 │   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
-│   ├── spotlight-search/             # SpotlightModal (Cmd + K) y lógica omnisciente
+│   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
 │   ├── forum-reply/                  # ForumReplyForm, ForumSection
 │   ├── language-toggle/              # LanguageToggle (ES / EN)
 │   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
 │
 ├── widgets/                          # CAPA 3: Bloques Visuales Autónomos Complejos y Shells
-│   ├── software-header/              # SoftwareHeaderNav
+│   ├── software-header/              # SoftwareHeaderNav (Lupa conectada a useSpotlight)
 │   ├── software-footer/              # SoftwareFooter
 │   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
 │   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
-│   ├── article-layout/               # SoftwareArticleLayout + Sidebars (AuthorSidebar, ExploreTopics, FeaturedPosts, StayInformed)
+│   ├── article-layout/               # SoftwareArticleLayout + Sidebars (Author, ExploreTopics, PopularTags con useSpotlight, FeaturedPosts, StayInformed)
 │   └── page-layout/                  # SoftwarePageLayout
 │
 └── software/                         # CAPAS 2 & 1: Enrutamiento y Páginas del App Router de Next.js
@@ -187,7 +187,11 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
     * **Despliegue Multi-Apertura Concurrente (Sin Cierre Automático):** Al pulsar sobre cualquiera de las 8 especialidades (Ciberseguridad, Infraestructura, IA, Tutoriales, Proyectos, Blog, Noticias, Foros), la fila se expande suavemente revelando sus publicaciones sin colapsar ni cerrar automáticamente las demás especialidades previamente abiertas, permitiendo navegación y comparación simultánea fluida.
     * **Minimalismo Visual Sobrio:** Erradica iconos temáticos SVG innecesarios en la lista de categorías, conservando una presentación limpia y monocromática con el chevron indicador `ChevronRight` rotativo, el label de la categoría y la pastilla cóncava neumórfica (`glass-concave-panel px-2.5 py-0.5 rounded-md text-[11px] font-mono`) con conteo dinámico de artículos.
     * **Estética de Rama Técnica Centrada en Títulos (Tree / Branch View):** Al expandir una categoría, despliega un riel vertical con línea guía (`border-l-2 border-blue-500/25`) y **únicamente el título limpio de cada publicación** (alineado directamente sin puntos, viñetas ni metadatos intermedios para una lectura minimalista inmediata), finalizando con el enlace terminal limpio `Todo el Contenido ↗` (sin números redundantes, ya que el conteo vive exclusivamente en la pastilla cóncava superior).
-  * Consolida la jerarquía editorial de 4 niveles en la barra lateral fija ([`SoftwareArticleLayout.tsx`](/software/widgets/article-layout/ui/SoftwareArticleLayout.tsx)): **1. Autor (`AuthorSidebarCard`) → 2. Publicaciones Destacadas (`FeaturedPostsSidebarCard`) → 3. Explorador de Especialidades (`ExploreTopicsSidebarCard`) → 4. Mantente Informado (`StayInformedCard`)**.
+  * Consolida la jerarquía editorial de 5 bloques en la barra lateral fija ([`SoftwareArticleLayout.tsx`](/software/widgets/article-layout/ui/SoftwareArticleLayout.tsx)): **1. Autor (`AuthorSidebarCard`) → 2. Publicaciones Destacadas (`FeaturedPostsSidebarCard`) → 3. Explorador de Especialidades (`ExploreTopicsSidebarCard`) → 4. Etiquetas Populares (`PopularTagsSidebarCard`) → 5. Mantente Informado (`StayInformedCard`)**.
+* **Directorio de Etiquetas Populares del Dominio ([`PopularTagsSidebarCard.tsx`](/software/widgets/article-layout/ui/PopularTagsSidebarCard.tsx)):**
+  * Materializa la visibilidad del **Nivel 3 (Tags / Etiquetas)** de forma limpia y desacoplada del catálogo principal.
+  * **Diseño Homogéneo en Lista Vertical:** Sustituye la dispersión de píldoras aglomeradas por una lista vertical minimalista en armonía con las demás tarjetas del sidebar. Su cabecera erradica el símbolo `#` del título (`ETIQUETAS POPULARES` en mayúsculas mono sobrias), mientras que cada fila preserva el identificador `#` en el término técnico (`# typescript`, `# architecture`), el nombre tipográfico mono y su contador de publicaciones en pastilla cóncava neumórfica a la derecha.
+  * **Interacción Instantánea con Spotlight:** Cada fila es un botón interactivo y accesible conectado a `useSpotlight(name)`: al pulsar sobre una etiqueta, abre inmediatamente el buscador modal Spotlight (`Cmd + K`) prefiltrado con ese término, mostrando en tiempo real todas las publicaciones asociadas con su correspondiente badge destacado `#[tag]` sin recargas de página ni pérdida del contexto de lectura.
 
 ---
 

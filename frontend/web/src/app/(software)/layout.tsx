@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./providers";
 import SoftwareJsonLd from './shared/seo/SoftwareJsonLd';
 import { ScrollToTopButton } from './shared/ui/ScrollToTopButton';
+import { SpotlightProvider } from './features/spotlight-search';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -79,7 +80,9 @@ export default async function RootLayout({
       <body className="font-sans min-h-full theme-software bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-            {children}
+            <SpotlightProvider>
+              {children}
+            </SpotlightProvider>
             <ScrollToTopButton />
           </ThemeProvider>
         </NextIntlClientProvider>

@@ -16,6 +16,7 @@ import { InfrastructurePost } from '../../../entities/infrastructure';
 interface SpotlightModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialQuery?: string;
   news: NewsArticle[];
   posts: BlogPost[];
   topics: ForumTopic[];
@@ -29,6 +30,7 @@ interface SpotlightModalProps {
 export function SpotlightModal({
   isOpen,
   onClose,
+  initialQuery = '',
   news,
   posts,
   topics,
@@ -42,7 +44,7 @@ export function SpotlightModal({
   const tNav = useTranslations('Nav');
   const tSearch = useTranslations('Search');
   const tCard = useTranslations('CardActions');
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Escuchar tecla escape y Cmd+K globalmente
@@ -62,18 +64,31 @@ export function SpotlightModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Autofoco al abrir
+  // Autofoco y sincronización de query al abrir
   useEffect(() => {
     if (isOpen) {
+      setQuery(initialQuery || '');
       setTimeout(() => {
         inputRef.current?.focus();
+        if (initialQuery) {
+          inputRef.current?.select();
+        }
       }, 50);
     } else {
       setQuery('');
     }
-  }, [isOpen]);
+  }, [isOpen, initialQuery]);
 
-  // Indexar todo el contenido de los 7 dominios
+  // Helper puro para parsear etiquetas CSV de SQLite
+  const parseTags = (raw?: string): string[] => {
+    if (!raw || typeof raw !== 'string') return [];
+    return raw
+      .split(',')
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean);
+  };
+
+  // Indexar todo el contenido de los 8 dominios con sus tags correspondientes
   const allSearchableItems: SpotlightSearchResult[] = useMemo(() => {
     const items: SpotlightSearchResult[] = [];
 
@@ -86,6 +101,7 @@ export function SpotlightModal({
         snippet: n.excerpt,
         href: `/news/${n.slug}`,
         tag: n.isBreaking ? 'BREAKING' : undefined,
+        tags: parseTags(n.tags),
       });
     });
 
@@ -97,6 +113,7 @@ export function SpotlightModal({
         categoryLabel: tNav('blog'),
         snippet: p.excerpt,
         href: `/blog/${p.slug}`,
+        tags: parseTags(p.tags),
       });
     });
 
@@ -109,6 +126,7 @@ export function SpotlightModal({
         snippet: a.description,
         href: `/ai/${a.slug}`,
         tag: a.category.toUpperCase(),
+        tags: parseTags(a.tags),
       });
     });
 
@@ -121,6 +139,7 @@ export function SpotlightModal({
         snippet: s.excerpt,
         href: `/cybersecurity/${s.slug}`,
         tag: s.severity.toUpperCase(),
+        tags: parseTags(s.tags),
       });
     });
 
@@ -133,6 +152,7 @@ export function SpotlightModal({
         snippet: t.description,
         href: `/tutorials/${t.slug}`,
         tag: t.difficulty.toUpperCase(),
+        tags: parseTags(t.tags),
       });
     });
 
@@ -145,6 +165,7 @@ export function SpotlightModal({
         snippet: top.content.slice(0, 100) + '...',
         href: `/forum/${top.slug}`,
         tag: tCard('repliesCount', { count: top.repliesCount }),
+        tags: parseTags(top.category),
       });
     });
 
@@ -157,6 +178,7 @@ export function SpotlightModal({
         snippet: prj.description,
         href: `/projects/${prj.slug}`,
         tag: prj.status.toUpperCase(),
+        tags: parseTags(prj.techStack),
       });
     });
 
@@ -169,6 +191,7 @@ export function SpotlightModal({
         snippet: inf.subtitle || inf.architectureOverview || inf.contentMarkdown.slice(0, 100),
         href: `/infrastructure/${inf.slug}`,
         tag: inf.environment.toUpperCase(),
+        tags: parseTags(inf.tags),
       });
     });
 
@@ -179,12 +202,13 @@ export function SpotlightModal({
     if (!query.trim()) {
       return allSearchableItems.slice(0, 8); // Mostrar sugerencias iniciales
     }
-    const cleanQuery = query.toLowerCase();
+    const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
     return allSearchableItems.filter(
       (item) =>
         item.title.toLowerCase().includes(cleanQuery) ||
         item.snippet.toLowerCase().includes(cleanQuery) ||
-        item.categoryLabel.toLowerCase().includes(cleanQuery)
+        item.categoryLabel.toLowerCase().includes(cleanQuery) ||
+        (item.tags && item.tags.some((t) => t.includes(cleanQuery)))
     );
   }, [allSearchableItems, query]);
 
@@ -253,6 +277,18 @@ export function SpotlightModal({
                         {item.tag}
                       </span>
                     )}
+                    {(() => {
+                      const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
+                      if (!cleanQuery) return null;
+                      const matchedTag = item.tags?.find((t) => t.includes(cleanQuery));
+                      if (!matchedTag) return null;
+                      return (
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 font-semibold flex items-center gap-0.5">
+                          <span>#</span>
+                          <span>{matchedTag}</span>
+                        </span>
+                      );
+                    })()}
                   </div>
                   <p className="text-xs md:text-sm font-bold text-[var(--header-title)] truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     {item.title}

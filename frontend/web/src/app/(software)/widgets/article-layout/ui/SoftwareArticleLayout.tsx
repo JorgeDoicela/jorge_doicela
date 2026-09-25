@@ -11,6 +11,7 @@ import { AuthorSidebarCard } from './AuthorSidebarCard';
 import { StayInformedCard } from './StayInformedCard';
 import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
 import { ExploreTopicsSidebarCard } from './ExploreTopicsSidebarCard';
+import { PopularTagsSidebarCard } from './PopularTagsSidebarCard';
 import { SoftwareSection } from '../../category-nav/ui/CategoryNav';
 
 export interface BreadcrumbItem {
@@ -198,7 +199,10 @@ export function SoftwareArticleLayout({
               {/* 3. Explorador de Especialidades Técnicas con Contadores (Inspiración MalwareTech) */}
               <ExploreTopicsSidebarCard />
 
-              {/* 4. Boletín / Mantente Informado */}
+              {/* 4. Etiquetas Populares / Temas Técnicos (Nivel 3) */}
+              <PopularTagsSidebarCard />
+
+              {/* 5. Boletín / Mantente Informado */}
               <StayInformedCard />
             </aside>
           )}

@@ -6,4 +6,5 @@ export interface SpotlightSearchResult {
   snippet: string;
   href: string;
   tag?: string;
+  tags?: string[];
 }

@@ -432,6 +432,7 @@
   },
   "ArticleLayout": {
     "expandReading": "Expandir lectura (ocultar barra lateral)",
-    "restoreSidebar": "Restaurar barra lateral"
+    "restoreSidebar": "Restaurar barra lateral",
+    "popularTags": "Etiquetas Populares"
   }
 }

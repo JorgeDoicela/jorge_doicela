@@ -432,6 +432,7 @@
   },
   "ArticleLayout": {
     "expandReading": "Expand reading view (hide sidebar)",
-    "restoreSidebar": "Restore sidebar"
+    "restoreSidebar": "Restore sidebar",
+    "popularTags": "Popular Tags"
   }
 }

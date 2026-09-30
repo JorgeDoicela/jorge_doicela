@@ -54,4 +54,5 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 ## 6. Sincronización y Mantenimiento Continuo de la Documentación (`docs/`)
 * **Obligación de Sincronización:** Cada vez que se realicen cambios en el código (nuevas funcionalidades, refactorizaciones, cambios de contratos, adición/eliminación de endpoints, entidades o componentes), es **obligatorio actualizar la documentación técnica correspondiente en `docs/`** para reflejar siempre la realidad exacta del sistema.
 * **Autonomía Estructurada:** Si un cambio arquitectónico lo requiere, se autoriza plenamente crear nuevos archivos `.md`, reorganizar subcarpetas dentro de `docs/` o eliminar/depurar secciones obsoletas, manteniendo siempre un tono profesional, orden impecable y fidelidad técnica absoluta.
+* **Inmutabilidad de Skills:** La autonomía estructurada aplica única y exclusivamente al directorio de documentación técnica `docs/`. Queda terminantemente prohibido modificar, alterar o eliminar archivos de directrices o habilidades dentro de `.agents/skills/`.
 

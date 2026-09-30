@@ -35,7 +35,7 @@ export const AppleDetailExplorer: React.FC = () => {
                     <div className="grid grid-cols-3 divide-x divide-card-border pt-3 md:pt-4 border-t border-card-border my-auto">
                         <div className="flex flex-col gap-0.5 sm:gap-1 pr-2 sm:pr-4">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'La Biblia' : 'The Bible'}
+                                {isEs ? 'Biblia' : 'Bible'}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
                                 {isEs ? 'Estudio bíblico y exégesis teológica.' : 'Bible study & theological exegesis.'}
@@ -297,7 +297,7 @@ export const AppleDetailExplorer: React.FC = () => {
             </div>
 
             {/* Tarjeta Inspector Amplia Estilo Apple */}
-            <div className="w-full rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-4 sm:p-8 md:p-12 backdrop-blur-2xl relative overflow-hidden flex flex-col justify-between min-h-0 sm:min-h-[480px] md:min-h-[560px]">
+            <div className="w-full rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-5 sm:p-8 md:p-10 lg:p-12 backdrop-blur-2xl relative overflow-hidden flex flex-col justify-center min-h-0 sm:min-h-[500px] md:min-h-[580px]">
                 {/* Botón de Cerrar / Reset en Esquina Superior Derecha (Solo visible si hay un detalle activo) */}
                 {isExpanded && (
                     <button
@@ -312,7 +312,7 @@ export const AppleDetailExplorer: React.FC = () => {
                 {/* ========================================================================= */}
                 {/* 1. VISTA ESCRITORIO (>= lg): Lado a lado (Píldoras a la izquierda, Laptop a la derecha) */}
                 {/* ========================================================================= */}
-                <div className="hidden lg:grid grid-cols-12 gap-8 md:gap-12 items-center flex-grow">
+                <div className="hidden lg:grid grid-cols-12 gap-8 md:gap-12 items-center w-full my-auto">
                     {/* COLUMNA IZQUIERDA: Píldoras de Navegación + Bocadillo Expandido estilo Apple */}
                     <div className="col-span-5 flex items-start gap-3">
                         {/* Flechas Arriba / Abajo */}
@@ -375,8 +375,8 @@ export const AppleDetailExplorer: React.FC = () => {
                     </div>
 
                     {/* COLUMNA DERECHA: MacBook Pro con Transición Cinemática */}
-                    <div className="col-span-7 w-full flex items-center justify-center py-4">
-                        <div className="w-full max-w-[580px] flex flex-col items-center">
+                    <div className="col-span-7 w-full flex items-center justify-center py-2">
+                        <div className="w-full max-w-[530px] xl:max-w-[560px] flex flex-col items-center">
                             {/* Tapa / Bisel Superior de la Pantalla (Negro en Modo Claro, Blanco Neutro en Modo Oscuro) */}
                             <div className="w-full aspect-[16/10] rounded-t-2xl sm:rounded-t-3xl bg-[#18181b] border-[6px] sm:border-[8px] border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] relative overflow-hidden shadow-md flex flex-col transition-colors duration-300">
                                 {/* Cámara Notch Sutil */}

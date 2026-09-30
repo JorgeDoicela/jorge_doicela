@@ -605,7 +605,7 @@ export default function InteractiveParticles() {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 -z-5 pointer-events-none select-none block"
+            className="fixed inset-0 -z-5 pointer-events-none select-none hidden dark:block"
             aria-hidden="true"
         />
     );

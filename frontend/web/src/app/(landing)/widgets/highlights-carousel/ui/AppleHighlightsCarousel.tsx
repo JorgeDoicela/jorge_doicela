@@ -265,8 +265,8 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                     {slide.renderVisual()}
                                 </div>
 
-                                {/* Botón de Enlace Directo Simple */}
-                                <div className="flex items-center justify-end pt-3 border-t border-card-border">
+                                {/* Botón de Enlace Directo Simple Centrado Calibrado */}
+                                <div className="flex items-center justify-center pt-2 sm:pt-3">
                                     <a
                                         href={slide.linkUrl}
                                         onClick={(e) => {
@@ -275,7 +275,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                                 goToSlide(idx);
                                             }
                                         }}
-                                        className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-foreground text-background font-medium text-xs sm:text-sm tracking-tight group-hover:opacity-90 active:scale-95 transition-all cursor-pointer select-none"
+                                        className="inline-flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-3 w-full max-w-[210px] sm:max-w-[250px] rounded-full bg-foreground text-background font-medium text-xs sm:text-sm tracking-tight group-hover:opacity-90 active:scale-95 transition-all cursor-pointer select-none"
                                     >
                                         {slide.linkText}
                                     </a>

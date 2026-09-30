@@ -71,3 +71,24 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Se configuró el cursor como elemento `inline-block align-middle` dentro del flujo tipográfico natural, garantizando que el cursor se mantenga siempre al final inmediato del texto mecanografiado, incluso con saltos de línea multirrenglón.
 * **Homologación de Botón de Retorno en Navbar (`LandingHeader.tsx`, `es.json`, `en.json`):**
   - Se simplificó la etiqueta `backHome` en `/consulta` y `/links`: ahora muestra concisamente `← Volver` en español y `← Back` en inglés, eliminando el texto redundante "Volver a la página principal".
+
+* **Erradicación del Destello (Flash/FOUC) en Efectos Cósmicos (`cosmic-canvas`):**
+  - Causa raíz identificada: `CinematicSpiralGalaxy`, `InteractiveParticles` y `ParallaxBackground` inicializaban un estado de React `useState(false)` para `isLight`. Durante el render inicial y hasta que terminaba la hidratación de React (~1s), se montaba el canvas de la galaxia y los gradientes oscuros de nebulosas saturadas antes de que `useEffect` detectara el modo claro.
+  - Solución arquitectónica: se desacopló el control de visibilidad del estado de React y se delegó 100% al motor CSS del navegador mediante clases `hidden dark:block` y capas duales sincronizadas con `block dark:hidden` / `hidden dark:block`. De este modo, en modo claro la galaxia y las partículas tienen `display: none` instantáneo en 0 ms desde el primer frame de renderizado del navegador, sin destellos ni cambios tardíos de color.
+
+* **Centrado y Calibración de Botones en Carrusel (`AppleHighlightsCarousel.tsx`):**
+  - Se eliminó el borde superior separador (`border-t border-card-border`) que dividía el cuerpo de las tarjetas del carrusel con respecto a los botones de acción ("Abrir Biblia", "Entrar a Software", "Explorar Portafolio").
+  - Se sustituyó la alineación a la derecha (`justify-end`) por centrado simétrico horizontal (`justify-center pt-2 sm:pt-3`).
+  - Se calibró la amplitud horizontal a una escala equilibrada y ergonómica (`w-full max-w-[210px] sm:max-w-[250px] px-6 sm:px-8 py-2.5 sm:py-3 justify-center`), evitando que el botón se extienda en exceso pero conservando suficiente peso visual.
+
+* **Prevención de Recorte Vertical en MacBook (`AppleDetailExplorer.tsx`):**
+  - Causa raíz identificada: el contenedor del inspector usaba `justify-between` con `min-h-[560px]` y la columna de la MacBook usaba `items-center` con `py-4` y `max-w-[580px]`. En viewports más compactos (o con zoom de navegador), la altura de la laptop empujaba el borde superior hacia coordenadas negativas dentro de un contenedor con `overflow-hidden`, recortando la curvatura y el bisel superior del marco.
+  - Solución: se incrementó la altura mínima base (`min-h-[580px]`), se ajustó la alineación a `my-auto` en el grid, se optimizó el padding (`py-2`) y se ajustó el ancho máximo a `max-w-[530px] xl:max-w-[560px]`, garantizando un margen de respiración superior continuo en cualquier resolución o escala.
+
+* **Homologación de Nomenclatura en Enlaces y Tarjetas (`es.json`, `en.json`, `AppleDetailExplorer.tsx`):**
+  - Se simplificó la denominación del subdominio bíblico: sustituyendo "La Biblia" por "Biblia" en español y "The Bible" por "Bible" en inglés en botones de acción (`bibleTitle`), insignias de proyecto (`project1Badge`, `project1Title`) y en el explorador Apple.
+  - Esto garantiza simetría y balance con las plataformas homólogas ("Software" y "Portafolio" / "Portfolio"), eliminando artículos gramaticales superfluos.
+  - En la lista de accesos directos (`actionCv`), se eliminó la sigla entre paréntesis `(CV)`, dejando limpiamente `"Descargar Currículum Vitae"` en español y `"Download Curriculum Vitae"` en inglés.
+
+
+

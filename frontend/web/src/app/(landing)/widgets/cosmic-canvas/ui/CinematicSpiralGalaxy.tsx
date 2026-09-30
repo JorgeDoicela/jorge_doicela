@@ -56,7 +56,8 @@ export default function CinematicSpiralGalaxy() {
 
     useEffect(() => {
         // En modo 'low' o Modo Claro se desmonta para 0% consumo
-        if (tier === 'low' || isLight) return;
+        const isCurrentLight = typeof document !== 'undefined' && document.documentElement.classList.contains('light');
+        if (tier === 'low' || isCurrentLight || isLight) return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -421,7 +422,7 @@ export default function CinematicSpiralGalaxy() {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 -z-8 pointer-events-none select-none block opacity-90"
+            className="fixed inset-0 -z-8 pointer-events-none select-none hidden dark:block opacity-90"
             aria-hidden="true"
         />
     );

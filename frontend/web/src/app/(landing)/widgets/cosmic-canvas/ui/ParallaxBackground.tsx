@@ -15,7 +15,6 @@ import { usePerformanceTier } from '../../../shared';
  */
 export default function ParallaxBackground() {
     const { tier } = usePerformanceTier();
-    const [isLight, setIsLight] = useState(false);
 
     const cloud1Ref = useRef<HTMLDivElement>(null);
     const cloud2Ref = useRef<HTMLDivElement>(null);
@@ -23,17 +22,6 @@ export default function ParallaxBackground() {
     const cloud4Ref = useRef<HTMLDivElement>(null);
     const cloud5Ref = useRef<HTMLDivElement>(null);
     const coreGlowRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const updateTheme = () => {
-            setIsLight(document.documentElement.classList.contains('light'));
-        };
-        updateTheme();
-        const observer = new MutationObserver(updateTheme);
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
-
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         // En nivel 'low', la animación se delega 100% al compositor CSS de la GPU
@@ -176,70 +164,76 @@ export default function ParallaxBackground() {
     return (
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden select-none">
             {/* 1. Núcleo Central de Profundidad */}
-            <div
-                ref={coreGlowRef}
-                className={`${layerClass} ${isLight ? 'opacity-60' : 'opacity-70'}`}
-                style={{
-                    background: isLight
-                        ? 'radial-gradient(ellipse 65% 65% at 50% 35%, rgba(168, 85, 247, 0.07) 0%, rgba(99, 102, 241, 0.04) 40%, transparent 70%)'
-                        : 'radial-gradient(ellipse 65% 65% at 45% 40%, rgba(129, 140, 248, 0.22) 0%, rgba(99, 102, 241, 0.12) 28%, rgba(67, 56, 202, 0.04) 55%, transparent 75%)'
-                }}
-            />
+            <div ref={coreGlowRef} className={layerClass}>
+                <div
+                    className="w-full h-full block dark:hidden opacity-60"
+                    style={{ background: 'radial-gradient(ellipse 65% 65% at 50% 35%, rgba(168, 85, 247, 0.07) 0%, rgba(99, 102, 241, 0.04) 40%, transparent 70%)' }}
+                />
+                <div
+                    className="w-full h-full hidden dark:block opacity-70"
+                    style={{ background: 'radial-gradient(ellipse 65% 65% at 45% 40%, rgba(129, 140, 248, 0.22) 0%, rgba(99, 102, 241, 0.12) 28%, rgba(67, 56, 202, 0.04) 55%, transparent 75%)' }}
+                />
+            </div>
 
             {/* 2. Atmósfera Superior Izquierda (Cian Celestial & Cielo) */}
-            <div
-                ref={cloud1Ref}
-                className={`${layerClass} ${isLight ? 'opacity-70' : 'opacity-80'}`}
-                style={{
-                    background: isLight
-                        ? 'radial-gradient(ellipse 70% 65% at 15% 15%, rgba(56, 189, 248, 0.11) 0%, rgba(99, 102, 241, 0.05) 35%, transparent 70%)'
-                        : 'radial-gradient(ellipse 70% 65% at 15% 15%, rgba(168, 85, 247, 0.28) 0%, rgba(217, 70, 239, 0.16) 25%, rgba(147, 51, 234, 0.05) 55%, transparent 75%)'
-                }}
-            />
+            <div ref={cloud1Ref} className={layerClass}>
+                <div
+                    className="w-full h-full block dark:hidden opacity-70"
+                    style={{ background: 'radial-gradient(ellipse 70% 65% at 15% 15%, rgba(56, 189, 248, 0.11) 0%, rgba(99, 102, 241, 0.05) 35%, transparent 70%)' }}
+                />
+                <div
+                    className="w-full h-full hidden dark:block opacity-80"
+                    style={{ background: 'radial-gradient(ellipse 70% 65% at 15% 15%, rgba(168, 85, 247, 0.28) 0%, rgba(217, 70, 239, 0.16) 25%, rgba(147, 51, 234, 0.05) 55%, transparent 75%)' }}
+                />
+            </div>
 
             {/* 3. Atmósfera Superior Derecha (Magenta & Lavanda Eetérea) */}
-            <div
-                ref={cloud4Ref}
-                className={`${layerClass} ${isLight ? 'opacity-65' : 'opacity-75'}`}
-                style={{
-                    background: isLight
-                        ? 'radial-gradient(ellipse 65% 60% at 85% 20%, rgba(217, 70, 239, 0.08) 0%, rgba(168, 85, 247, 0.04) 35%, transparent 70%)'
-                        : 'radial-gradient(ellipse 60% 55% at 80% 20%, rgba(236, 72, 153, 0.24) 0%, rgba(192, 38, 211, 0.12) 28%, transparent 70%)'
-                }}
-            />
+            <div ref={cloud4Ref} className={layerClass}>
+                <div
+                    className="w-full h-full block dark:hidden opacity-65"
+                    style={{ background: 'radial-gradient(ellipse 65% 60% at 85% 20%, rgba(217, 70, 239, 0.08) 0%, rgba(168, 85, 247, 0.04) 35%, transparent 70%)' }}
+                />
+                <div
+                    className="w-full h-full hidden dark:block opacity-75"
+                    style={{ background: 'radial-gradient(ellipse 60% 55% at 80% 20%, rgba(236, 72, 153, 0.24) 0%, rgba(192, 38, 211, 0.12) 28%, transparent 70%)' }}
+                />
+            </div>
 
             {/* 4. Resplandor Central (Índigo & Vía Láctea) */}
-            <div
-                ref={cloud3Ref}
-                className={`${layerClass} ${isLight ? 'opacity-60' : 'opacity-75'}`}
-                style={{
-                    background: isLight
-                        ? 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(99, 102, 241, 0.08) 0%, rgba(56, 189, 248, 0.03) 40%, transparent 68%)'
-                        : 'radial-gradient(ellipse 60% 55% at 20% 55%, rgba(56, 189, 248, 0.24) 0%, rgba(14, 165, 233, 0.12) 28%, rgba(30, 27, 75, 0.03) 55%, transparent 75%)'
-                }}
-            />
+            <div ref={cloud3Ref} className={layerClass}>
+                <div
+                    className="w-full h-full block dark:hidden opacity-60"
+                    style={{ background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(99, 102, 241, 0.08) 0%, rgba(56, 189, 248, 0.03) 40%, transparent 68%)' }}
+                />
+                <div
+                    className="w-full h-full hidden dark:block opacity-75"
+                    style={{ background: 'radial-gradient(ellipse 60% 55% at 20% 55%, rgba(56, 189, 248, 0.24) 0%, rgba(14, 165, 233, 0.12) 28%, rgba(30, 27, 75, 0.03) 55%, transparent 75%)' }}
+                />
+            </div>
 
             {/* 5. Atmósfera Inferior Izquierda (Destellos de Polvo Solar Ámbar) */}
-            <div
-                ref={cloud5Ref}
-                className={`${layerClass} ${isLight ? 'opacity-55' : 'opacity-65'}`}
-                style={{
-                    background: isLight
-                        ? 'radial-gradient(ellipse 55% 50% at 25% 85%, rgba(251, 191, 36, 0.06) 0%, rgba(245, 158, 11, 0.02) 35%, transparent 65%)'
-                        : 'radial-gradient(ellipse 55% 50% at 30% 85%, rgba(251, 191, 36, 0.16) 0%, rgba(245, 158, 11, 0.06) 28%, transparent 65%)'
-                }}
-            />
+            <div ref={cloud5Ref} className={layerClass}>
+                <div
+                    className="w-full h-full block dark:hidden opacity-55"
+                    style={{ background: 'radial-gradient(ellipse 55% 50% at 25% 85%, rgba(251, 191, 36, 0.06) 0%, rgba(245, 158, 11, 0.02) 35%, transparent 65%)' }}
+                />
+                <div
+                    className="w-full h-full hidden dark:block opacity-65"
+                    style={{ background: 'radial-gradient(ellipse 55% 50% at 30% 85%, rgba(251, 191, 36, 0.16) 0%, rgba(245, 158, 11, 0.06) 28%, transparent 65%)' }}
+                />
+            </div>
 
             {/* 6. Atmósfera Inferior Derecha (Profundidad Índigo / Zafiro) */}
-            <div
-                ref={cloud2Ref}
-                className={`${layerClass} ${isLight ? 'opacity-60' : 'opacity-80'}`}
-                style={{
-                    background: isLight
-                        ? 'radial-gradient(ellipse 75% 70% at 85% 85%, rgba(129, 140, 248, 0.07) 0%, rgba(99, 102, 241, 0.03) 35%, transparent 65%)'
-                        : 'radial-gradient(ellipse 75% 70% at 85% 85%, rgba(99, 102, 241, 0.30) 0%, rgba(79, 70, 229, 0.16) 30%, rgba(30, 27, 75, 0.05) 60%, transparent 80%)'
-                }}
-            />
+            <div ref={cloud2Ref} className={layerClass}>
+                <div
+                    className="w-full h-full block dark:hidden opacity-60"
+                    style={{ background: 'radial-gradient(ellipse 75% 70% at 85% 85%, rgba(129, 140, 248, 0.07) 0%, rgba(99, 102, 241, 0.03) 35%, transparent 65%)' }}
+                />
+                <div
+                    className="w-full h-full hidden dark:block opacity-80"
+                    style={{ background: 'radial-gradient(ellipse 75% 70% at 85% 85%, rgba(99, 102, 241, 0.30) 0%, rgba(79, 70, 229, 0.16) 30%, rgba(30, 27, 75, 0.05) 60%, transparent 80%)' }}
+                />
+            </div>
         </div>
     );
 }

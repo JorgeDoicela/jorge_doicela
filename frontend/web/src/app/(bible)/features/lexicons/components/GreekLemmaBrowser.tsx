@@ -53,7 +53,7 @@ export const GreekLemmaBrowser: React.FC<GreekLemmaBrowserProps> = ({
                   <span
                     lang="el"
                     className="text-lg font-serif font-bold"
-                    style={{ fontFamily: '"Gentium Plus", "SBL Greek", serif' }}
+                    style={{ fontFamily: 'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif' }}
                   >
                     {entry.lemma}
                   </span>

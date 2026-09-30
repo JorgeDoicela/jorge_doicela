@@ -46,7 +46,7 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
                 dir="rtl"
                 lang="he"
                 className="text-4xl font-serif font-bold text-foreground"
-                style={{ fontFamily: '"SBL Hebrew", "Ezra SIL", serif' }}
+                style={{ fontFamily: 'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif' }}
               >
                 {heb.lemma}
               </div>
@@ -285,7 +285,7 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
                     dir="rtl"
                     lang="he"
                     className="text-lg font-serif font-bold text-foreground"
-                    style={{ fontFamily: '"SBL Hebrew", "Ezra SIL", serif' }}
+                    style={{ fontFamily: 'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif' }}
                   >
                     {word.wordHebrew}
                   </span>
@@ -322,7 +322,7 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
             <div
               lang="el"
               className="text-4xl font-serif font-bold text-foreground"
-              style={{ fontFamily: '"Gentium Plus", "SBL Greek", serif' }}
+              style={{ fontFamily: 'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif' }}
             >
               {grk.lemma}
             </div>

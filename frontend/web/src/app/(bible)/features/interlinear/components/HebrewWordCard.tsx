@@ -116,7 +116,7 @@ export const HebrewWordCard: React.FC<HebrewWordCardProps> = ({
         className={`w-full font-serif font-medium tracking-normal text-foreground my-1 leading-snug select-text ${getFontSizeClass()}`}
         style={{
           fontFamily:
-            '"SBL Hebrew", "Ezra SIL", "Frank Ruehl CLM", "David CLM", "Times New Roman", serif',
+            'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif',
         }}
       >
         {displayText}

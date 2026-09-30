@@ -98,8 +98,8 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
                 className="text-4xl font-serif font-bold text-foreground tracking-wide"
                 style={{
                   fontFamily: isHebrewSemitic
-                    ? '"SBL Hebrew", "Ezra SIL", serif'
-                    : '"SBL Greek", "Gentium Plus", serif',
+                    ? 'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif'
+                    : 'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif',
                 }}
               >
                 {entry.lemma}

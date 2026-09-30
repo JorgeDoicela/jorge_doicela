@@ -58,7 +58,7 @@ export const HebrewRootBrowser: React.FC<HebrewRootBrowserProps> = ({
                     dir="rtl"
                     lang="he"
                     className="text-lg font-serif font-bold"
-                    style={{ fontFamily: '"SBL Hebrew", "Ezra SIL", serif' }}
+                    style={{ fontFamily: 'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif' }}
                   >
                     {entry.root}
                   </span>

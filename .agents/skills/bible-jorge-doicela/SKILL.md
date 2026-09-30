@@ -26,7 +26,13 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * **Backend:** Módulo aislado `backend/src/bible/`.
 * **Persistencia:** Base de datos SQLite física independiente `bible.sqlite` conectada mediante `'bibleConnection'` en TypeORM.
 * **Cero Datos Hardcodeados en TypeScript:** Ningún archivo `.ts` o `.tsx` en el frontend contiene versículos, palabras, coordenadas geográficas ni artículos incrustados. Toda la data reside en archivos `.json` bajo `backend/src/bible/corpus/` y se consulta asíncronamente desde los endpoints de NestJS.
-* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(bible)/globals.css` (estética **Geist / Vercel Style** monocromática de precisión, micro-interacciones de alta densidad, bordes ultra-delgados, tipografía Geist y legibilidad editorial para exégesis) y assets en `frontend/web/public/bible/`.
+* **Aislamiento de Estilos y Tipografías Exegéticas Locales:** Utiliza exclusivamente su propio archivo `(bible)/globals.css` (estética **Geist / Vercel Style** monocromática de precisión, micro-interacciones de alta densidad y bordes ultra-delgados) y su suite completa de 6 tipografías locales bajo `(bible)/fonts/` con licencia **SIL OFL 1.1**:
+  - `Geist-Variable.woff2` (`--font-geist-sans`): UI Chrome y navegación.
+  - `GeistMono-Variable.woff2` (`--font-geist-mono`): Códigos Strong y metadatos léxicos.
+  - `Lora-Variable.ttf` y `Lora-Italic-Variable.ttf` (`--font-lora`): Lectura continua editorial y devocional.
+  - `FrankRuhlLibre-Variable.ttf` (`--font-hebrew`): Hebreo y Arameo bíblico con soporte tipográfico completo de puntos vocálicos masoréticos (*niqud*).
+  - `Cardo-Regular.ttf` (`--font-greek`): Griego Koiné politónico con acentos, espíritus y ligaduras clásicas (Septuaginta y Nuevo Testamento).
+  - **Zero-External Network Fonts:** Prohibido depender de fuentes del sistema operativo del cliente o de Google Fonts/CDNs.
 * **Internacionalización y SEO (next-intl):** Diccionarios encapsulados en `(bible)/messages/es.json` y `en.json`. Layout raíz `(bible)/layout.tsx` integrado con `NextIntlClientProvider` y `generateMetadata()` dinámico con etiquetas `hreflang`. Soporte de base de datos bilingüe (`language: 'es' | 'en'`) en tablas explicativas (`archaeology_articles`, `timeline_events`, `historical_places`).
 * **Datos Estructurados Schema.org (`BibleJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus bíblico y los 9 motores exegéticos ante motores de búsqueda e IA.
 * **Sincronización con IA:** Cuando se agreguen nuevos motores de exégesis o traducciones oficiales, reflejarlos en `public/bible/llms.txt` y en `public/landing/llms.txt`.

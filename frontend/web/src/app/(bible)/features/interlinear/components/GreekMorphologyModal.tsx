@@ -58,7 +58,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
               className="text-4xl font-serif text-foreground"
               style={{
                 fontFamily:
-                  '"Gentium Plus", "SBL Greek", "Cardo", "Georgia", "Times New Roman", serif',
+                  'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif',
               }}
             >
               {token.greek}

@@ -32,6 +32,18 @@ Este documento define la política legal, el catálogo de fuentes textuales de d
 | **Hebreo Masorético (AT)** | `BHS` | **Códice de Leningrado (WLC / BHS, 1008 d.C.)** | **Dominio Público Universal** | *J. Alan Groves Center* / *Open Scriptures* |
 | **Griego Nuevo Testamento** | `NA28` | **Texto Crítico Griego (Nestle-Aland 28 / UBS 5 / Nestle 1904)** | **Dominio Público Universal** | *Internet Archive* / SBLGNT |
 
+### 2.3 Tipografías Académicas y Licenciamiento Open Font (SIL OFL 1.1)
+
+Todas las fuentes tipográficas integradas en la plataforma residen encapsuladas localmente en `src/app/(bible)/fonts/` (Zero-External Network Fonts) bajo la **SIL Open Font License 1.1**, garantizando legalidad absoluta, libertad comercial y cero regalías:
+
+| Tipografía | Función Exegética | Diseñador / Fundición | Licencia | Estado Local |
+|---|---|---|---|---|
+| **Frank Ruhl Libre** | Hebreo y Arameo Bíblico con puntos vocálicos (*niqud*) y cantilación | Yanek Itegka (basada en Rafael Frank, 1908) | **SIL OFL 1.1** | `FrankRuhlLibre-Variable.ttf` (Local) |
+| **Cardo Regular** | Griego Koiné Politónico con espíritus, acentos y ligaduras clásicas | David J. Perry (Medieval Unicode Font Initiative) | **SIL OFL 1.1** | `Cardo-Regular.ttf` (Local) |
+| **Lora** | Lectura editorial continua y glosas devocionales | Cyreal (Olga Karpushina, Alexei Vanyashin) | **SIL OFL 1.1** | `Lora-Variable.ttf` & `Italic` (Local) |
+| **Geist Sans** | UI Chrome Vercel Style, controles y navegación | Vercel & Basement Studio | **SIL OFL 1.1** | `Geist-Variable.woff2` (Local) |
+| **Geist Mono** | Códigos Strong, IDs morfológicos y lemas concordantes | Vercel & Basement Studio | **SIL OFL 1.1** | `GeistMono-Variable.woff2` (Local) |
+
 ---
 
 ## 3. Fuentes Académicas de los 4 Motores de Estudio

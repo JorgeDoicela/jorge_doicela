@@ -62,7 +62,7 @@ export const MorphologyDetailModal: React.FC<MorphologyDetailModalProps> = ({
               className="text-4xl font-serif text-foreground"
               style={{
                 fontFamily:
-                  '"SBL Hebrew", "Ezra SIL", "Frank Ruehl CLM", "David CLM", serif',
+                  'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif',
               }}
             >
               {token.hebrew}

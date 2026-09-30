@@ -79,7 +79,11 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * **Obligación de Sincronización:** Cuando se cree, modifique o elimine cualquier proyecto, submódulo o categoría principal en el ecosistema, es **obligatorio actualizar el `llms.txt` de su subcarpeta, su `manifest.json`, su componente `*JsonLd.tsx` y `sitemap.ts`**.
 * **Manifiestos PWA Independientes (`public/<proyecto>/manifest.json`):** Cada subdominio tiene su propia identidad de aplicación instalable (nombre, tema, ícono, ruta de inicio).
 * **Entrega Estática "Zero-RAM" en Nginx:** `llms.txt`, `manifest.json` y `favicon.ico` son resueltos por los mapas `$llms_file`, `$manifest_file` y `$favicon_file` según `$host`, entregando en < 1 ms con **0 MB de consumo de RAM en Node.js**.
-* **Protección Quirúrgica en `robots.ts`:** Permite explícitamente los User-Agents oficiales de IA sobre contenido público y bloquea rutas de backend (`/api/`, `/_next/`, `/socket.io/`) para evitar sobrecargas de CPU y memoria.
+### 4.5 Tipografías Auto-Hospedadas, Portabilidad de Cajas Negras y Licenciamiento Legal (Zero-External Network Fonts)
+* **Prohibición Estricta de CDNs y Google Fonts:** Queda terminantemente prohibido importar fuentes desde servidores externos (`fonts.googleapis.com`, `fonts.gstatic.com`, CDNs) o usar `next/font/google` en tiempo de compilación o ejecución.
+* **Encapsulación por Dominio (Cajas Negras):** Todas las fuentes `.woff2` y `.ttf` residen físicamente dentro de la carpeta `fonts/` de cada subproyecto (`src/app/(subproyecto)/fonts/`) y se importan mediante `next/font/local` con ruta relativa `./fonts/...`. No existen fuentes globales compartidas para garantizar que cualquier subproyecto pueda extraerse a otro VPS de forma inmediata.
+* **Licenciamiento 100% Legal para Producción:** Toda tipografía integrada en el repositorio debe operar bajo la **SIL Open Font License (OFL 1.1)**, permitiendo auto-hospedaje, uso comercial ilimitado, empaquetado en binarios y cero regalías por visitas o dominios.
+* **Entrega de Alto Rendimiento en Nginx:** Los archivos de fuentes procesados por Next.js son cacheados de forma inmutable por Nginx mediante `location ^~ /_next/static/` con `Cache-Control: public, max-age=31536000, immutable`, descargándose con cero overhead de CPU y 0 MB de consumo de RAM en Node.js.
 
 ---
 
@@ -163,6 +167,7 @@ Los siguientes archivos son transversales al proceso Next.js consolidado pero es
 | Mezclar estilos globales en un layout raíz | Colisiona clases de Tailwind CSS entre subproyectos. | Cada subproyecto importa solo su propio globals.css. |
 | Compilar en el VPS de producción | Agota la RAM de 1 GB y tumba los servicios. | Compilar en GitHub Actions y subir artefactos con rsync. |
 | Modificar middleware o frontend ante un 404 de contenido editorial | Enmascara la causa raíz: la base SQLite local no fue sembrada tras el git pull. | Verificar primero la persistencia física local o ejecutar `pnpm seed:all`. |
+| Cargar fuentes desde Google Fonts, CDNs o carpetas globales compartidas | Introduce latencia de red externa, vulnera privacidad/GDPR y rompe la portabilidad independiente de los subproyectos. | Descargar binarios `.woff2` locales bajo `src/app/(subproyecto)/fonts/` con licencia SIL OFL 1.1 e importar con `next/font/local`. |
 
 ---
 

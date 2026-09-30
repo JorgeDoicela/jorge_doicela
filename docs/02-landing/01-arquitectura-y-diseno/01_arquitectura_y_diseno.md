@@ -13,7 +13,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 > * **Aislamiento:** Proyecto 100% independiente del lado del cliente. No se comunica con bases de datos ni posee backend dedicado en NestJS.
 >
 > **Arquitectura Micro:**
-> * **Aislamiento de Estilos:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones, fuentes Inter y Outfit).
+> * **Aislamiento de Estilos y Tipografías:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones) y fuentes locales auto-hospedadas bajo `(landing)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` bajo licencia **SIL OFL 1.1** (Zero-External Network Fonts).
 > * **Feature-Sliced Design (FSD Canónico en 6 Capas):** Estructura desacoplada y escalable:
 >   * `providers/`: Envoltorios de montaje global en layout (`theme-provider`, `LanguageProvider`, `PerformanceProvider`).
 >   * `shared/`: UI Kit agnóstico (`BentoCard`, `CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`), utilitarios/hooks (`useSubdomainUrl`, `api`) y contextos/hooks globales (`useLanguage`, `usePerformanceTier`).
@@ -80,7 +80,13 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * Botón de atajo `SkipToContent.tsx` para saltar al contenido principal con la tecla Tab.
 * Anillos de enfoque visibles y soporte de lectores de pantalla.
 
-### 3.7 Asistente de Inteligencia Artificial Oficial (Route Handler & Guardrails)
+### 3.7 Tipografías Locales Auto-Hospedadas (Zero-External Network Fonts)
+* **Encapsulación Física:** Binarios `Geist-Variable.woff2` y `GeistMono-Variable.woff2` alojados dentro de `src/app/(landing)/fonts/`.
+* **Carga Relativa con Next.js:** Inyectadas en `(landing)/layout.tsx` mediante `next/font/local({ src: "./fonts/..." })` con `--font-geist-sans` y `--font-geist-mono`.
+* **Licenciamiento para Producción:** Licencia **SIL Open Font License 1.1** (código abierto, uso comercial ilimitado y sin pago de licencias).
+* **Independencia de Caja Negra:** Cero consultas a servidores de Google Fonts o CDNs externos; la Landing Page puede migrarse a cualquier VPS sin alterar la configuración de fuentes.
+
+### 3.8 Asistente de Inteligencia Artificial Oficial (Route Handler & Guardrails)
 * **Arquitectura:** Endpoint servidor en `(landing)/api/chat/route.ts` con streaming en tiempo real vía Groq LPU (modelos OSS de alta velocidad).
 * **Frontera de Dominio Estricta:** Acotado 100% a la representación de Jorge Doicela, sus plataformas en producción (`bible`, `software`, `portfolio`, `landing`), su arquitectura en 1 GB de RAM y propuestas técnicas en `/consulta`.
 * **Protección contra Consultas Fuera de Alcance:** Rechazo sistemático y profesional ante temas ajenos (cursos desde cero, tareas, cocina, entretenimiento, política) redirigiendo al [Formulario de Consulta](/consulta).

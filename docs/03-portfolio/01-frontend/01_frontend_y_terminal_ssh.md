@@ -19,7 +19,7 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD):** El código se organiza en `features/terminal/` (consola SSH) y `features/contact/` (formulario).
 > * **Jerarquía de Componentes:** Componentes compartidos del subdominio en `(portfolio)/components/` vs componentes específicos en `features/<feature>/components/`.
-> * **Estética Dark Luxury:** Fondos oscuros premium, acentos metálicos y dorados sutiles, tipografía Geist/Mono y alto contraste elegante.
+> * **Estética Dark Luxury y Tipografías Locales:** Fondos oscuros premium, acentos metálicos y dorados sutiles, tipografías auto-hospedadas bajo `(portfolio)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1** (Zero-External Network Fonts). La fuente monoespaciada se inyecta directamente a la emulación `@xterm/xterm` vía `var(--font-geist-mono)`.
 
 ---
 
@@ -27,8 +27,9 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 
 ```text
 frontend/web/src/app/(portfolio)/
+├── fonts/                     # Tipografías locales autocontenidas (Geist-Variable, GeistMono-Variable)
 ├── globals.css                # Estilos aislados del portafolio (Dark Luxury Look)
-├── layout.tsx                 # Layout raíz con ThemeProvider local y PortfolioJsonLd
+├── layout.tsx                 # Layout raíz con localFont(), ThemeProvider local y PortfolioJsonLd
 ├── theme-provider.tsx         # Proveedor de tema claro/oscuro
 ├── portfolio/
 │   ├── page.tsx               # Contenedor principal de vistas (SPA interactiva)

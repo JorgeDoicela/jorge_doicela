@@ -25,7 +25,7 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 * **Backend:** Módulo modular aislado `backend/src/portfolio/`.
 * **Sandbox Docker Encapsulado:** `backend/src/portfolio/docker/` (`Dockerfile` Alpine 3.20 hardened, `sandbox_profile.sh` y `welcome.txt`).
 * **Persistencia:** Base de datos SQLite física independiente `portfolio.sqlite` conectada mediante `'portfolioConnection'` en TypeORM.
-* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(portfolio)/globals.css` (estética **Dark Luxury** con fondos oscuros profundos, toques metálicos/dorados refinados, tipografía Geist/Mono de alta gama y contrastes de lujo).
+* **Aislamiento de Estilos y Tipografías Locales:** Utiliza exclusivamente su propio archivo `(portfolio)/globals.css` (estética **Dark Luxury** con fondos oscuros profundos, toques metálicos/dorados refinados y contrastes de lujo) y sus tipografías locales en `(portfolio)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1**. La fuente monoespaciada se inyecta dinámicamente a la terminal emulada `@xterm/xterm` vía `var(--font-geist-mono)`.
 * **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/portfolio/`.
 
 ---
@@ -35,6 +35,7 @@ Esta habilidad define los estándares y la arquitectura completa para el subproy
 ### Estructura de Directorios (Feature-Sliced Design)
 ```text
 frontend/web/src/app/(portfolio)/
+├── fonts/                  # Tipografías locales autocontenidas (Geist-Variable, GeistMono-Variable)
 ├── messages/               # Diccionarios locales del portafolio (es.json, en.json)
 ├── portfolio/
 │   └── page.tsx            # Página principal del portafolio (9 secciones editoriales + SSR fallback)
@@ -150,6 +151,7 @@ pnpm -r typecheck
 | Poner bloques try/catch para devolver respuestas HTTP en el controlador | Duplica código y rompe el formateo estándar del filtro global. | Dejar que los errores sean capturados por GlobalExceptionFilter. |
 | Forzar la apertura de la terminal interactiva en pantallas móviles | En móviles no hay flechas, Tab ni secuencias ANSI; degrada la experiencia. | Mostrar vista adaptada de tarjetas en viewports móviles. |
 | Importar entidades de software o bible en el módulo portfolio | Viola la independencia estricta entre dominios. | Mantener las entidades dentro de backend/src/portfolio/entities/. |
+| Cargar fuentes desde Google Fonts o depender de la fuente monoespaciada del SO para xterm | Degrada el renderizado de la consola interactiva en clientes sin fuentes modernas y rompe el aislamiento. | Alojar `Geist-Variable.woff2` y `GeistMono-Variable.woff2` en `(portfolio)/fonts/` (SIL OFL 1.1) e inyectar `var(--font-geist-mono)` en el hook de xterm. |
 
 ---
 

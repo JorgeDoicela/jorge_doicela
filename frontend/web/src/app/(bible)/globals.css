@@ -2,6 +2,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --font-serif: var(--font-lora), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-hebrew: var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif;
+  --font-greek: var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #000000;
@@ -116,6 +122,9 @@
   --color-btn-s-fg: var(--button-secondary-fg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-lora);
+  --font-hebrew: var(--font-hebrew);
+  --font-greek: var(--font-greek);
 }
 
 

@@ -138,7 +138,7 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
       cursorBlink: true,
       cursorStyle: 'block',
       fontSize: isSmallScreen ? 11 : 13,
-      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+      fontFamily: 'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
       lineHeight: 1.25,
       scrollback: 1000,
       theme: {

@@ -1,19 +1,53 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./providers";
 import { BibleJsonLd } from "./shared/seo";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "./fonts/Geist-Variable.woff2",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  display: "swap",
+  weight: "100 900",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMono-Variable.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
+  weight: "100 900",
+});
+
+const lora = localFont({
+  src: [
+    {
+      path: "./fonts/Lora-Variable.ttf",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Lora-Italic-Variable.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-lora",
+  display: "swap",
+  weight: "400 700",
+});
+
+const frankRuhl = localFont({
+  src: "./fonts/FrankRuhlLibre-Variable.ttf",
+  variable: "--font-hebrew",
+  display: "swap",
+  weight: "300 900",
+});
+
+const cardo = localFont({
+  src: "./fonts/Cardo-Regular.ttf",
+  variable: "--font-greek",
+  display: "swap",
+  weight: "400",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,7 +106,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased overflow-x-clip`}
+      className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} ${frankRuhl.variable} ${cardo.variable} h-full antialiased overflow-x-clip`}
       suppressHydrationWarning
     >
       <head>

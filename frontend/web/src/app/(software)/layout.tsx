@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
@@ -8,9 +8,27 @@ import SoftwareJsonLd from './shared/seo/SoftwareJsonLd';
 import { ScrollToTopButton } from './shared/ui/ScrollToTopButton';
 import { SpotlightProvider } from './features/spotlight-search';
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const plusJakartaSans = localFont({
+  src: [
+    {
+      path: "./fonts/PlusJakartaSans-Variable.woff2",
+      style: "normal",
+    },
+    {
+      path: "./fonts/PlusJakartaSans-Italic-Variable.woff2",
+      style: "italic",
+    },
+  ],
   variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
+  display: "swap",
+  weight: "200 800",
+});
+
+const geistMono = localFont({
+  src: "./fonts/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
+  display: "swap",
+  weight: "100 900",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -69,7 +87,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       data-scroll-behavior="smooth"
-      className={`${plusJakartaSans.variable} h-full scroll-smooth theme-software`}
+      className={`${plusJakartaSans.variable} ${geistMono.variable} h-full scroll-smooth theme-software`}
       suppressHydrationWarning
     >
       <head>

@@ -11,6 +11,7 @@
 
 @theme {
   --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
 .theme-software {

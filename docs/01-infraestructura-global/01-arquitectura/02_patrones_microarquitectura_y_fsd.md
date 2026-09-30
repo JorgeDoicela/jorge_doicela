@@ -59,6 +59,28 @@ frontend/web/src/app/(subproyecto)/
 2. **Aislamiento Estricto de Estilos:** Cada subproyecto tiene su propio archivo `globals.css`. Nunca se importan estilos globales en un layout raíz compartido para evitar colisiones de Tailwind CSS.
 3. **Cero importaciones cruzadas entre subdominios:** `(bible)` jamás debe importar componentes, hooks o utilidades de `(portfolio)` o `(software)`.
 4. **Consumo de Assets:** Toda imagen o video en `public/` debe consumirse con el prefijo de la carpeta del subdominio (`/portfolio/images/...`, `/bible/images/...`).
+5. **Tipografías Auto-Hospedadas y Portabilidad de Cajas Negras (Zero-External Network Fonts):** Queda estrictamente prohibido cargar fuentes desde CDNs externos o Google Fonts en tiempo de ejecución o build (`next/font/google`). Para garantizar la **extracción inmediata de cualquier subproyecto a otro servidor o VPS sin tocar código**, todas las fuentes `.woff2` residen encapsuladas dentro del propio subproyecto en `src/app/(subproyecto)/fonts/` y se consumen mediante `next/font/local` con ruta relativa `./fonts/...`.
+
+```text
+frontend/web/src/app/
+├── (landing)/fonts/
+│   ├── Geist-Variable.woff2                    # Sans principal
+│   └── GeistMono-Variable.woff2                # Monoespaciada
+├── (portfolio)/fonts/
+│   ├── Geist-Variable.woff2                    # Sans Dark Luxury
+│   └── GeistMono-Variable.woff2                # Terminal SSH interactiva
+├── (bible)/fonts/
+│   ├── Geist-Variable.woff2                    # UI Chrome / Geist Vercel Style
+│   ├── GeistMono-Variable.woff2                # Monoespaciada técnica
+│   ├── Lora-Variable.ttf                       # Modo de lectura bíblica Serif regular
+│   ├── Lora-Italic-Variable.ttf                # Modo de lectura bíblica Serif itálico
+│   ├── FrankRuhlLibre-Variable.ttf             # Hebreo bíblico y arameo masorético (niqud)
+│   └── Cardo-Regular.ttf                       # Griego bíblico koiné (LXX y NT)
+└── (software)/fonts/
+    ├── PlusJakartaSans-Variable.woff2          # Sans Neumorphic regular
+    ├── PlusJakartaSans-Italic-Variable.woff2   # Sans Neumorphic itálico
+    └── GeistMono-Variable.woff2                # Terminal y snippets de código
+```
 
 ---
 

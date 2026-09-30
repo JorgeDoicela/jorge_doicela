@@ -19,7 +19,7 @@ Esta habilidad define los estándares técnicos, estéticos, de accesibilidad y 
 * **Dominio:** `jorgedoicela.com` (en desarrollo: `localhost:3001` sin subdominio).
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(landing)/`.
 * **100% Frontend del lado del Cliente (Next.js):** La Landing es completamente estática y autónoma. **No realiza consultas a NestJS ni posee backend o base de datos**.
-* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(landing)/globals.css` (diseño estructurado en **Bento Grid** asimétrico, micro-animaciones interactivas, fuentes Inter y Outfit, elipses de profundidad sutil y soporte de temas claro/oscuro).
+* **Aislamiento de Estilos y Tipografías Locales:** Utiliza exclusivamente su propio archivo `(landing)/globals.css` (diseño estructurado en **Bento Grid** asimétrico, micro-animaciones interactivas, elipses de profundidad sutil y soporte de temas claro/oscuro) y sus tipografías locales autocontenidas bajo `(landing)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1**. Prohibido cualquier enlace a Google Fonts o CDNs externos.
 * **Aislamiento de Assets Estáticos:** Todos los assets, iconos e imágenes deben residir exclusivamente bajo `frontend/web/public/landing/`.
 
 ---
@@ -28,9 +28,10 @@ Esta habilidad define los estándares técnicos, estéticos, de accesibilidad y 
 
 ```text
 frontend/web/src/app/(landing)/
+├── fonts/                            # Tipografías locales autocontenidas (Geist-Variable, GeistMono-Variable)
 ├── messages/                         # Diccionarios locales de la Landing (es.json, en.json)
 ├── globals.css                       # Estilos específicos de la Landing Page (Apple Dark Slate / Apple Impoluto)
-├── layout.tsx                        # ThemeProvider + NextIntlClientProvider + generateMetadata dinámica
+├── layout.tsx                        # localFont() relativo + ThemeProvider + NextIntlClientProvider + generateMetadata
 │
 ├── providers/                        # CAPA 1 (APP): Contextos reactivos y tema local
 │   ├── theme-provider.tsx            # Wrapper local de next-themes
@@ -153,6 +154,7 @@ pnpm -r typecheck
 | Importar componentes o estilos de (portfolio), (bible) o (software) | Rompe el aislamiento estético y añade dependencias innecesarias. | Mantener los componentes encapsulados en sus capas FSD dentro de (landing)/. |
 | Olvidar la zona horaria en el reloj de Quito | El reloj mostraría la hora local del navegador del visitante en vez de la hora de Ecuador. | Usar timeZone: 'America/Guayaquil' explícitamente en Intl.DateTimeFormat. |
 | Colocar imágenes en carpetas genéricas de public/ | Colisiona con assets de otros subproyectos. | Guardar assets exclusivamente en frontend/web/public/landing/. |
+| Cargar fuentes desde Google Fonts o CDNs | Rompe el principio de caja negra, crea dependencia de red externa y viola GDPR. | Alojar las fuentes `.woff2` locales en `src/app/(landing)/fonts/` con licencia SIL OFL 1.1 e importar con `next/font/local`. |
 
 ---
 

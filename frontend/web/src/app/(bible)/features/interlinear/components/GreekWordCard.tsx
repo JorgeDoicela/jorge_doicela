@@ -111,7 +111,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
         className={`w-full font-serif font-medium tracking-normal text-foreground my-1 leading-snug select-text ${getFontSizeClass()}`}
         style={{
           fontFamily:
-            '"Gentium Plus", "SBL Greek", "Cardo", "Georgia", "Times New Roman", serif',
+            'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif',
         }}
       >
         {token.greek}

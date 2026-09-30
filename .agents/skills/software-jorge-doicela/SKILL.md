@@ -22,7 +22,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(software)/`.
 * **Backend:** Módulo orquestador `backend/src/software/software.module.ts` compuesto por 7 submódulos verticales.
 * **Persistencia:** Base de datos SQLite física independiente `software.sqlite` conectada mediante `'softwareConnection'` en TypeORM.
-* **Aislamiento de Estilos y Diseño:** Utiliza exclusivamente su propio archivo `(software)/globals.css` (estética **Neumorphism UI + Glassmorphism**, combinando paneles táctiles cóncavos/convexos con desenfoques vítreos, reflejos esmerilados y sombras suaves superpuestas).
+* **Aislamiento de Estilos y Tipografías Locales:** Utiliza exclusivamente su propio archivo `(software)/globals.css` (estética **Neumorphism UI + Glassmorphism**, combinando paneles táctiles cóncavos/convexos con desenfoques vítreos, reflejos esmerilados y sombras suaves superpuestas) y sus tipografías locales en `(software)/fonts/` (`PlusJakartaSans-Variable.woff2`, `PlusJakartaSans-Italic-Variable.woff2`, `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1**. Prohibido cualquier enlace a Google Fonts o CDNs externos.
 * **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/software/`.
 
 ---
@@ -32,9 +32,10 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 ### 2.1 Estructura de Directorios (FSD Canónico en 6 Capas)
 ```text
 frontend/web/src/app/(software)/
+├── fonts/                            # Tipografías locales autocontenidas (Plus Jakarta Sans y Geist Mono)
 ├── messages/                         # Diccionarios locales de software (es.json, en.json)
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
-├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider + generateMetadata)
+├── layout.tsx                        # Layout raíz del subdominio (localFont + ThemeProvider + NextIntlClientProvider + generateMetadata)
 │
 ├── providers/                        # CAPA 1 (App): Proveedores globales aislados
 │   ├── theme-provider.tsx            # Proveedor de tema local aislado (next-themes)
@@ -237,6 +238,7 @@ pnpm run lint
 | Tratar un 404 de contenido editorial como bug de Next.js/middleware | Enmascara la causa raíz: el post o término no está sembrado en `software.sqlite` local tras un `git pull`. | Correr `pnpm seed:software` o validar el slug en SQLite antes de tocar cualquier archivo de frontend. |
 | Usar o inventar el campo `subCategory` | Introduce conceptos fantasma que no existen en el esquema físico relacional de SQLite. | La taxonomía solo tiene Nivel 1 (Módulo) y Nivel 2 (Categoría `category`). |
 | Filtrar la barra `CategoryFilterBar` por atributos de Nivel 4 (dificultad/severidad) | Rompe la simetría entre módulos y degrada la experiencia de navegación. | La barra filtra exclusivamente por el Nivel 2 (Categoría). El Nivel 4 se muestra en la línea de metadatos o como badge. |
+| Cargar fuentes desde Google Fonts o CDNs externos | Genera llamadas de red innecesarias, bloquea la renderización neumórfica y viola la autonomía de caja negra. | Mantener las tipografías variables locales en `(software)/fonts/` (SIL OFL 1.1) e importar vía `next/font/local`. |
 
 ---
 

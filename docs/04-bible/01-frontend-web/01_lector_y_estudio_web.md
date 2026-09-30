@@ -22,7 +22,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > * **Cero Datos Hardcodeados en Cliente:** Ningún archivo TypeScript contiene versículos, palabras, coordenadas ni textos bíblicos incrustados. Toda la data se consume asíncronamente desde los endpoints de NestJS (`GET /bible/*`).
 > * **Header Unificado y Responsivo:** `BibleHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 8 herramientas en pantallas móviles (`< md`).
 > * **Barra de Control Exegético:** `ReaderToolbar.tsx` agrupa pasaje (`UnifiedPassagePicker`), versión bíblica (`TranslationSelector`) y controles de tipografía/diseño (`ReaderLayoutMode`, `ReaderFontSize`, `ReaderFontFamily`) de forma 100% responsiva.
-> * **Estética Geist / Vercel Style:** Monocromática de alta precisión, micro-interacciones de alta densidad, bordes ultra-delgados (`border-zinc-800`), tipografía Geist y legibilidad editorial para análisis exegético.
+> * **Estética Geist / Vercel Style y Suite Tipográfica Exegética Local:** Monocromática de alta precisión, micro-interacciones de alta densidad, bordes ultra-delgados (`border-zinc-800`) y 6 fuentes auto-hospedadas bajo `(bible)/fonts/` con licencia **SIL OFL 1.1** (Geist Sans, Geist Mono, Lora, Frank Ruhl Libre para hebreo masorético con *niqud* y Cardo para griego koiné politónico). Cero dependencias de fuentes de red externas.
 
 ---
 
@@ -32,8 +32,9 @@ El subdominio cuenta con una Landing Page y 8 módulos de estudio independientes
 
 ```text
 frontend/web/src/app/(bible)/
+├── fonts/                     # Tipografías locales autocontenidas (Geist, GeistMono, Lora, FrankRuhlLibre, Cardo)
 ├── globals.css                # Estilos aislados de la biblia (Geist / Vercel Style)
-├── layout.tsx                 # Layout raíz del subdominio con ThemeProvider y BibleJsonLd
+├── layout.tsx                 # Layout raíz con localFont() múltiple, ThemeProvider y BibleJsonLd
 │
 ├── bible/                     # ENRUTAMIENTO (App Router)
 │   ├── page.tsx               # Landing Page de presentación y Live Preview interactivo

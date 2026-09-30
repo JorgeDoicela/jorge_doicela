@@ -25,7 +25,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 >   * `widgets/`: Bloques visuales complejos y layouts (`software-header`, `software-footer`, `category-nav`, `featured-carousel`, `article-layout`, `page-layout`).
 > * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, cabecera `SoftwareHeaderNav`, badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
-> * **Estética Neumorphism UI + Glassmorphism:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas.
+> * **Estética Neumorphism UI + Glassmorphism y Tipografías Locales:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas. Utiliza exclusivamente sus tipografías locales auto-hospedadas bajo `(software)/fonts/` (`PlusJakartaSans-Variable.woff2`, `PlusJakartaSans-Italic-Variable.woff2`, `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` bajo licencia **SIL OFL 1.1** (Zero-External Network Fonts). Cero consultas a Google Fonts o CDNs.
 
 ---
 
@@ -33,8 +33,9 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 
 ```text
 frontend/web/src/app/(software)/
+├── fonts/                            # Tipografías locales autocontenidas (Plus Jakarta Sans y Geist Mono)
 ├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
-├── layout.tsx                        # Layout raíz del subdominio (ThemeProvider + NextIntlClientProvider)
+├── layout.tsx                        # Layout raíz del subdominio (localFont + ThemeProvider + NextIntlClientProvider)
 ├── messages/                         # Diccionarios i18n
 │   ├── es.json
 │   └── en.json

@@ -23,4 +23,13 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 ## 2. Historial de Decisiones y Lecciones Aprendidas
 
-* *(El agente registrará aquí automáticamente las decisiones técnicas tomadas durante futuras sesiones)*.
+* **Tipografías Auto-Hospedadas y Portabilidad de Cajas Negras (Zero-External Network Fonts):**
+  - Se eliminó la dependencia de Google Fonts en tiempo de compilación y ejecución (`next/font/google`).
+  - Las tipografías residen 100% encapsuladas dentro de la carpeta de cada subproyecto en `frontend/web/src/app/(subproyecto)/fonts/`:
+    - `src/app/(landing)/fonts/` (Geist Sans y Geist Mono)
+    - `src/app/(portfolio)/fonts/` (Geist Sans y Geist Mono)
+    - `src/app/(bible)/fonts/` (Geist Sans, Geist Mono, Lora Regular/Itálico, Frank Ruhl Libre para hebreo y Cardo para griego)
+    - `src/app/(software)/fonts/` (Plus Jakarta Sans Regular/Itálico y Geist Mono para terminal y snippets)
+  - Se cargan mediante `next/font/local` con ruta relativa `./fonts/...` en cada layout, inyectando las variables CSS (`--font-geist-sans`, `--font-geist-mono`, `--font-plus-jakarta-sans`, `--font-lora`, `--font-hebrew`, `--font-greek`).
+  - Todas las fuentes operan bajo la **SIL Open Font License (OFL 1.1)**: 100% legal, código abierto, libre para uso comercial y auto-hospedaje sin pago de regalías ni telemetría de terceros.
+  - Esto garantiza que si en el futuro se traslada cualquier subproyecto a su propio VPS o repositorio independiente, el subproyecto es 100% portable y autónomo sin requerir refactorizaciones.

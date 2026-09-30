@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Software | Jorge Doicela",
+    "title": "DoicelaDev | Software & Engineering Platform",
     "description": "Technology platform featuring 8 categories: News, Architecture Blog, Technical Forums, Artificial Intelligence, Cybersecurity, Tutorials, Projects Showcase, and Infrastructure, Servers & Cloud."
   },
   "Nav": {
@@ -14,15 +14,15 @@
     "blog": "Blog",
     "forum": "Forum",
     "home": "Home",
-    "backToSoftware": "← Back to Software",
+    "backToSoftware": "← Back to doiceladev",
     "portal": "Back to jorgedoicela.com",
     "portalShort": "Portal",
     "scrollToTop": "Back to top",
     "exploreTopics": "Explore Topics",
     "viewAllInCategory": "View all in {category} →",
     "noPostsInCategory": "No publications yet",
-    "headerSrTitle": "Software | Jorge Doicela - DevSecOps Specialist",
-    "headerLogoAlt": "Jorge Doicela - DevSecOps Specialist"
+    "headerSrTitle": "DoicelaDev | Jorge Doicela - DevSecOps Specialist",
+    "headerLogoAlt": "DoicelaDev - Jorge Doicela"
   },
   "Search": {
     "placeholder": "Search news, articles, advisories or projects...",
@@ -66,7 +66,7 @@
     "guideTag": "Guide",
     "forumTag": "Forum",
     "projectTag": "Project",
-    "syncError": "Could not synchronize software feed",
+    "syncError": "Could not synchronize doiceladev feed",
     "retryConnection": "Retry connection",
     "prevFeatured": "Previous post",
     "nextFeatured": "Next post",
@@ -88,7 +88,7 @@
     "success": "✓ Thank you for subscribing."
   },
   "Footer": {
-    "platformDesc": "Software engineering platform, system architecture, and AI laboratory by Jorge Doicela.",
+    "platformDesc": "DoicelaDev — Software engineering platform, system architecture, and AI laboratory by Jorge Doicela.",
     "contents": "Contents",
     "specialties": "Specialties",
     "platforms": "Platforms",
@@ -102,7 +102,7 @@
     "mainPortal": "Main Portal",
     "portfolioSSH": "SSH Portfolio",
     "exegesisBible": "Exegetical Bible",
-    "copyright": "Jorge Doicela © {year} — Software & Engineering Platform."
+    "copyright": "DoicelaDev © {year} — Jorge Doicela."
   },
   "Spotlight": {
     "clear": "Clear",

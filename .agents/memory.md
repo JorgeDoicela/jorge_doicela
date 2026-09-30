@@ -108,6 +108,9 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - **Noticias / Next.js 16:** Laptop moderna de aluminio oscuro mostrando código TypeScript y arquitectura de streaming en pantalla.
     - **Ciberseguridad / Bastionado SSH:** Llave criptográfica física de titanio y candado de alta seguridad de acero forjado.
     - **Infraestructura / Firewall Linux (Original):** Chasis rack 1U con escudo perimetral translúcido Netfilter.
-  - Cero texto tipográfico promocional en las imágenes; estética sobria, madura y de alta ingeniería.
+* **Transición de Identidad Visual a DoicelaDev (`frontend/web/src/app/(software)`, `(landing)` & `(portfolio)`):**
+  - Se actualizó formalmente el nombre visible del subproyecto de Software a la marca personal de desarrollo **`DoicelaDev`** (para títulos de página, metadatos SEO, OpenGraph, JSON-LD, encabezados y pie de página) y **`doiceladev`** (para botones de navegación, badges de categoría e identificadores de acción).
+  - Principio de estabilidad de infraestructura: la actualización es 100% visual y a nivel de diccionarios de presentación (`messages/es.json` y `en.json`). Se preservan intactas las rutas físicas, subdirectorios `(software)`, backend NestJS y base de datos `software.sqlite`.
+
 
 

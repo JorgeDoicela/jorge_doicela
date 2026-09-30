@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Software | Jorge Doicela",
+    "title": "DoicelaDev | Plataforma de Ingeniería y Software",
     "description": "Plataforma tecnológica con 8 categorías: Noticias, Blog de Arquitectura, Foros, Inteligencia Artificial, Ciberseguridad, Tutoriales, Proyectos Showcase e Infraestructura, Servidores y Cloud."
   },
   "Nav": {
@@ -14,15 +14,15 @@
     "blog": "Blog",
     "forum": "Foro",
     "home": "Inicio",
-    "backToSoftware": "← Volver a Software",
+    "backToSoftware": "← Volver a doiceladev",
     "portal": "Volver a jorgedoicela.com",
     "portalShort": "Portal",
     "scrollToTop": "Volver arriba",
     "exploreTopics": "Explorar Especialidades",
     "viewAllInCategory": "Ver todo en {category} →",
     "noPostsInCategory": "Sin publicaciones aún",
-    "headerSrTitle": "Software | Jorge Doicela - Especialista en DevSecOps",
-    "headerLogoAlt": "Jorge Doicela - Especialista en DevSecOps"
+    "headerSrTitle": "DoicelaDev | Jorge Doicela - Especialista en DevSecOps",
+    "headerLogoAlt": "DoicelaDev - Jorge Doicela"
   },
   "Search": {
     "placeholder": "Buscar noticias, artículos, avisos o proyectos...",
@@ -66,7 +66,7 @@
     "guideTag": "Guía",
     "forumTag": "Foro",
     "projectTag": "Proyecto",
-    "syncError": "No se pudo sincronizar el feed de software",
+    "syncError": "No se pudo sincronizar el feed de doiceladev",
     "retryConnection": "Reintentar conexión",
     "prevFeatured": "Publicación anterior",
     "nextFeatured": "Publicación siguiente",
@@ -88,7 +88,7 @@
     "success": "✓ Gracias por suscribirte."
   },
   "Footer": {
-    "platformDesc": "Plataforma de software, arquitectura de sistemas y laboratorio de IA de Jorge Doicela.",
+    "platformDesc": "DoicelaDev — Plataforma de ingeniería de software, arquitectura de sistemas y laboratorio de IA por Jorge Doicela.",
     "contents": "Contenidos",
     "specialties": "Especialidades",
     "platforms": "Plataformas",
@@ -102,7 +102,7 @@
     "mainPortal": "Portal Principal",
     "portfolioSSH": "Portafolio SSH",
     "exegesisBible": "Biblia Exegética",
-    "copyright": "Jorge Doicela © {year} — Plataforma de Software e Ingeniería."
+    "copyright": "DoicelaDev © {year} — Jorge Doicela."
   },
   "Spotlight": {
     "clear": "Limpiar",

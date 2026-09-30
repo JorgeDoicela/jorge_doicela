@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: t("title"),
       description: t("description"),
       url: "https://software.jorgedoicela.com",
-      siteName: "Software | Jorge Doicela",
+      siteName: "DoicelaDev",
       locale: locale === "es" ? "es_EC" : "en_US",
       type: "website",
       images: [
@@ -55,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/software/logo/logo_fondo_circular_color_.png",
           width: 512,
           height: 512,
-          alt: "Software - Jorge Doicela",
+          alt: "DoicelaDev - Jorge Doicela",
         },
       ],
     },

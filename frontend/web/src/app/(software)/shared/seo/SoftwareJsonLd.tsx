@@ -12,7 +12,7 @@ export default function SoftwareJsonLd({ locale = 'es' }: SoftwareJsonLdProps) {
         '@type': ['WebSite', 'SoftwareApplication'],
         '@id': 'https://software.jorgedoicela.com/#software-hub',
         'url': 'https://software.jorgedoicela.com',
-        'name': 'Software | Jorge Doicela',
+        'name': 'DoicelaDev | Jorge Doicela',
         'applicationCategory': 'DeveloperApplication, EducationalApplication',
         'operatingSystem': 'Web, Linux, Windows, macOS',
         'description': isEn

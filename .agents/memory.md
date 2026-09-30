@@ -97,3 +97,17 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 * **Homologación Visual de Accesibilidad (`SkipToContent.tsx`):**
   - Se eliminaron las clases desfasadas y genéricas (`bg-indigo-600`, `font-mono`, `ring-white`), integrando el componente al sistema de diseño oficial de la landing.
   - Cuando recibe foco de teclado, ahora se presenta como una cápsula flotante elegante y pulida (`rounded-full bg-foreground text-background font-medium text-xs border border-card-border shadow-2xl`), manteniendo 100% el cumplimiento de accesibilidad WCAG 2.1 con estética de producto de alta gama.
+
+* **Estandarización y Sobriedad Visual en Portadas de Software Hub (`frontend/web/public/software/images/covers/`):**
+  - Se erradicaron los renders 3D con tipografía publicitaria gigante flotante ("MODEL CONTEXT PROTOCOL", "TERMINAL WEB", "MONOLITO MODULAR", "NODE.JS EN 1 GB RAM").
+  - Se homologó el estándar de sobriedad tomando la sencillez y el realismo de la portada de Infraestructura (`guia-firewall-linux-ufw.jpg`) como pauta conceptual, pero asignando a cada publicación un sujeto y entorno fotográfico único, tangible y directamente representativo de su temática:
+    - **IA / MCP:** Macrofotografía de procesador neural de silicio montado en placa de ingeniería con osciloscopio de laboratorio desenfocado.
+    - **Tutoriales / Terminal:** Monitor sin marcos en escritorio de madera nocturno con consola interactiva y teclado mecánico.
+    - **Blog / Monolito Modular:** Tres cajas negras geométricas escultóricas de aluminio y cristal ahumado sobre concreto pulido.
+    - **Foro / Optimización RAM:** Módulo de memoria RAM física con disipador negro mate y unidad M.2 NVMe sobre grafito cepillado.
+    - **Noticias / Next.js 16:** Laptop moderna de aluminio oscuro mostrando código TypeScript y arquitectura de streaming en pantalla.
+    - **Ciberseguridad / Bastionado SSH:** Llave criptográfica física de titanio y candado de alta seguridad de acero forjado.
+    - **Infraestructura / Firewall Linux (Original):** Chasis rack 1U con escudo perimetral translúcido Netfilter.
+  - Cero texto tipográfico promocional en las imágenes; estética sobria, madura y de alta ingeniería.
+
+

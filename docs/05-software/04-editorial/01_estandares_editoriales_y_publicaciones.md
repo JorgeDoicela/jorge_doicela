@@ -102,3 +102,22 @@ Toda publicación en cualquiera de las 8 categorías (`infrastructure`, `tutoria
 * **Cuerpo Markdown Puro (`contentMarkdown`):** Los archivos de borrador `.md` y el campo `contentMarkdown` en el corpus **nunca deben comenzar con `# Título`**, ya que el componente de cabecera de la página (`SoftwareArticleLayout`) es el dueño canónico del `<h1>`.
 * **Estructura de Encabezados Interna:** El cuerpo del artículo debe arrancar directamente con el bloque de introducción o resumen ejecutivo (`> [!IMPORTANT]`), y todas las secciones principales deben emplear exclusivamente nivel 2 (`## Título de Sección`), subsecciones nivel 3 (`### Paso o Concepto`) y sub-bloques nivel 4 (`#### Detalle`).
 
+---
+
+## 6. Estándar Visual de Portadas y Recursos Gráficos
+
+Las imágenes de portada de cada publicación (`coverImage` en `frontend/web/public/software/images/covers/`) deben respetar la misma sobriedad que el texto escrito:
+
+* **Directriz Maestra (Modelo Infraestructura):** La portada de la guía de firewall Linux (`guia-firewall-linux-ufw.jpg`) define el estándar de sobriedad, realismo tangible y ausencia de hype publicitario.
+* **Prohibición de Tipografía Publicitaria en la Imagen:** Queda terminantemente prohibido incluir títulos flotantes gigantes en 3D ("MODEL CONTEXT PROTOCOL", "MONOLITO MODULAR", etc.) dentro del arte gráfico. Los títulos, etiquetas y autores son gestionados semánticamente por los componentes web de Next.js en HTML/CSS.
+* **Diferenciación Temática con Sujetos Tangibles Únicos:** Cada publicación debe tener su propio encuadre, entorno y sujeto físico representativo de su tema, evitando repetir la misma composición:
+  * *IA / Model Context Protocol:* Macrofotografía de procesador neural de silicio sobre placa de circuito con osciloscopio de laboratorio.
+  * *Tutoriales / Consola Interactiva:* Monitor sin marcos en escritorio de desarrollo nocturno con consola interactiva y teclado mecánico.
+  * *Blog / Monolitos Modulares:* Escultura geométrica de cajas negras modulares en aluminio y cristal ahumado sobre concreto pulido.
+  * *Foro / Optimización de RAM VPS:* Módulo de memoria RAM física y disco SSD NVMe sobre grafito cepillado.
+  * *Noticias / Next.js 16 & RSC:* Laptop de ingeniería abierta en ángulo con código y diagrama de flujo de datos en pantalla.
+  * *Ciberseguridad / Acceso SSH:* Llave física de seguridad criptográfica de titanio y candado industrial de acero endurecido.
+  * *Infraestructura / Perímetro Linux:* Servidor rack 1U con escudo perimetral translúcido Netfilter.
+
+
+

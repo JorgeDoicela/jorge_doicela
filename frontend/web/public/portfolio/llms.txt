@@ -42,7 +42,7 @@
 ## Enlaces Oficiales
 - **Portafolio:** https://portfolio.jorgedoicela.com
 - **Portal Maestro:** https://jorgedoicela.com
-- **Software:** https://software.jorgedoicela.com
+- **DoicelaDev:** https://doiceladev.jorgedoicela.com
 - **Biblia Modular:** https://bible.jorgedoicela.com
 - **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
 - **GitHub:** https://github.com/JorgeDoicela

@@ -1,10 +1,10 @@
-# Portafolio, Biblia y Software
+# Portafolio, Biblia y DoicelaDev
 
-Este repositorio contiene la arquitectura modular para el desarrollo del Portafolio, Biblia y Software de Jorge Doicela. Está diseñado como un monorepo puro que prioriza el desacoplamiento total de sus componentes, con miras a un despliegue optimizado en un entorno de bajos recursos (VPS de 1 GB de RAM) y preparado para una futura transición a servicios independientes.
+Este repositorio contiene la arquitectura modular para el desarrollo del Portafolio, Biblia y DoicelaDev de Jorge Doicela. Está diseñado como un monorepo puro que prioriza el desacoplamiento total de sus componentes, con miras a un despliegue optimizado en un entorno de bajos recursos (VPS de 1 GB de RAM) y preparado para una futura transición a servicios independientes.
 
 > [!IMPORTANT]
 > **Justificación de Infraestructura y Aislamiento Estricto:**
-> Las aplicaciones (Landing, Portfolio, Biblia, Software) son **proyectos totalmente separados que no deben conocerse en nada**. 
+> Las aplicaciones (Landing, Portfolio, Biblia, DoicelaDev) son **proyectos totalmente separados que no deben conocerse en nada**. 
 > La única razón por la que el backend NestJS corre consolidado en un solo proceso (puerto 3000) y el frontend Next.js corre unificado (puerto 3001) es porque el servidor de producción (VPS) está limitado a **1 GB de RAM**. Correr procesos individuales de Node.js para cada aplicación consumiría la RAM por completo, provocando inestabilidad. Se agrupan bajo el mismo runtime por optimización de recursos físicos, pero el aislamiento lógico, de estilos y de datos se mantiene absoluto para permitir su separación instantánea en el futuro.
 
 ---
@@ -30,10 +30,10 @@ La documentación del repositorio se encuentra modularizada verticalmente por pr
   * [03-base-de-datos/01_base_datos_y_seeder.md](docs/04-bible/03-base-de-datos/01_base_datos_y_seeder.md): `bible.sqlite`, catálogo canónico, corpus por lotes y seeder transaccional.
   * [04-mobile-expo/01_app_movil_expo.md](docs/04-bible/04-mobile-expo/01_app_movil_expo.md): App nativa React Native / Expo, modo Offline-First y FlashList.
   * [05-roadmap/01_roadmap_bible.md](docs/04-bible/05-roadmap/01_roadmap_bible.md): Requerimientos e ideas de la Biblia.
-* **[05-software/](docs/05-software/)**:
-  * [01-frontend/01_frontend_y_hub_tecnologico.md](docs/05-software/01-frontend/01_frontend_y_hub_tecnologico.md): Frontend web (`software.*`), las 7 categorías, buscador y foros.
-  * [02-backend/01_backend_y_persistencia.md](docs/05-software/02-backend/01_backend_y_persistencia.md): NestJS REST, foros, artículos, proyectos y `software.sqlite`.
-  * [03-roadmap/01_roadmap_software.md](docs/05-software/03-roadmap/01_roadmap_software.md): Requerimientos e ideas de Software.
+* **[05-doiceladev/](docs/05-doiceladev/)**:
+  * [01-frontend/01_frontend_y_hub_tecnologico.md](docs/05-doiceladev/01-frontend/01_frontend_y_hub_tecnologico.md): Frontend web (`doiceladev.*`), las 8 categorías, buscador y foros.
+  * [02-backend/01_backend_y_persistencia.md](docs/05-doiceladev/02-backend/01_backend_y_persistencia.md): NestJS REST, foros, artículos, proyectos y `doiceladev.sqlite`.
+  * [03-roadmap/01_roadmap_doiceladev.md](docs/05-doiceladev/03-roadmap/01_roadmap_doiceladev.md): Requerimientos e ideas de DoicelaDev.
 
 ---
 
@@ -42,7 +42,7 @@ La documentación del repositorio se encuentra modularizada verticalmente por pr
 Para asegurar que cada módulo sea extraíble a su propio servidor de forma independiente en el futuro (desacoplamiento total), se aplican de forma estricta las siguientes reglas de oro, teniendo en cuenta que la unificación de los procesos físicos en un solo runtime de NestJS y Next.js responde exclusivamente a la restricción de **1 GB de RAM** en el VPS:
 
 1. **Aislamiento de Código (Cero Acoplamiento)**: No existen importaciones cruzadas de código entre módulos ni entre subproyectos del frontend. Cada aplicación opera como una caja negra; en el backend, si se requiere comunicación interna, se simula de forma orientada a eventos usando `@nestjs/event-emitter`.
-2. **Aislamiento de Datos (Persistencia Independiente)**: Cada módulo interactúa únicamente con su propia base de datos física encapsulada en `backend/data/` (`bible.sqlite`, `software.sqlite` y `portfolio.sqlite`) para asegurar que sigan siendo proyectos independientes a nivel de almacenamiento y mantener la raíz limpia.
+2. **Aislamiento de Datos (Persistencia Independiente)**: Cada módulo interactúa únicamente con su propia base de datos física encapsulada en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite` y `portfolio.sqlite`) para asegurar que sigan siendo proyectos independientes a nivel de almacenamiento y mantener la raíz limpia.
 3. **Interfaces Duplicadas**: No se comparten paquetes de tipado comunes entre backend y frontend. Las interfaces de datos se definen manualmente y por duplicado en cada proyecto para mantener su portabilidad absoluta.
 4. **Feature-Sliced Design (FSD)**: En los frontends, el código se agrupa por contexto funcional (funcionalidades) en lugar de separar por tipo de archivo técnico, aislando interfaces, lógica (hooks) y estilos por funcionalidad.
 5. **Aislamiento de Estilos en Frontend**: Cada subproyecto de Next.js cuenta con su propio archivo `globals.css` independiente, evitando la colisión de clases de estilos globales.
@@ -137,7 +137,7 @@ Este comando levantará los servidores en los siguientes puertos:
   * Subdominios de prueba (resueltos localmente):
     * `http://portfolio.localhost:3001`
     * `http://bible.localhost:3001`
-    * `http://software.localhost:3001`
+    * `http://doiceladev.localhost:3001`
     * `http://localhost:3001` (Landing)
 
 ### Control de Calidad y Estandarización

@@ -18,9 +18,9 @@ export function ActionLinksList() {
       isExternal: true,
     },
     {
-      id: 'software',
-      text: t('softwareTitle'),
-      href: getSubdomainUrl('software'),
+      id: 'doiceladev',
+      text: t('doiceladevTitle'),
+      href: getSubdomainUrl('doiceladev'),
       isExternal: true,
     },
     {

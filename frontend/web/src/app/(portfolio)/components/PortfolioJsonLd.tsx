@@ -30,7 +30,7 @@ export default function PortfolioJsonLd() {
             'https://github.com/JorgeDoicela',
             'https://www.tiktok.com/@jorge.doicela',
             'https://jorgedoicela.com',
-            'https://software.jorgedoicela.com',
+            'https://doiceladev.jorgedoicela.com',
             'https://bible.jorgedoicela.com'
           ]
         }

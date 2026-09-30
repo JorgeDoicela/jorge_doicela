@@ -23,7 +23,7 @@ import { SandboxSecurityService } from '../services/sandbox-security.service';
         ? [
             'http://localhost:3001',
             'http://portfolio.localhost:3001',
-            'http://software.localhost:3001',
+            'http://doiceladev.localhost:3001',
             'http://bible.localhost:3001',
             'http://127.0.0.1:3001',
             'http://localhost:3000',

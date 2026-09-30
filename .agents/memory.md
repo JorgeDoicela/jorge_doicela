@@ -9,12 +9,12 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 * **Infraestructura y Restricción de 1 GB RAM:**
   - Servidor VPS en AWS Lightsail limitado a 1 GB de RAM.
   - Runtime consolidado: Backend corre en un solo proceso NestJS (puerto `3000`), frontend corre consolidado en un solo proceso Next.js (puerto `3001`) con `middleware.ts` para resolución de subdominios.
-  - Aislamiento de Cajas Negras: las 4 aplicaciones (`landing`, `portfolio`, `bible`, `software`) son 100% independientes, prohibidas las importaciones cruzadas entre dominios.
+  - Aislamiento de Cajas Negras: las 4 aplicaciones (`landing`, `portfolio`, `bible`, `doiceladev`) son 100% independientes, prohibidas las importaciones cruzadas entre dominios.
 * **Gestión de Paquetes y Tipos:**
   - Monorepo pnpm: instalación obligatoria con filtro (`pnpm --filter backend add ...`, `pnpm --filter web add ...`).
   - Cero paquetes `@shared`: cada subproyecto define sus propias interfaces y tipos localmente.
 * **Persistencia Aislada (SQLite):**
-  - Bases independientes en `backend/data/` (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`).
+  - Bases independientes en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`).
   - Los archivos `.sqlite` están en `.gitignore`. Al cambiar de máquina o hacer `git pull` con cambios en corpus o entidades, es obligatorio ejecutar `pnpm seed:all`.
 * **Protocolo de Diagnóstico 404:**
   - Ante errores 404 en rutas dinámicas (`/infrastructure/[slug]`, `/tutorials/[slug]`, etc.) en local, verificar primero si el registro existe en la base SQLite o ejecutar `pnpm seed:all` antes de tocar routing o middleware.
@@ -98,19 +98,16 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Se eliminaron las clases desfasadas y genéricas (`bg-indigo-600`, `font-mono`, `ring-white`), integrando el componente al sistema de diseño oficial de la landing.
   - Cuando recibe foco de teclado, ahora se presenta como una cápsula flotante elegante y pulida (`rounded-full bg-foreground text-background font-medium text-xs border border-card-border shadow-2xl`), manteniendo 100% el cumplimiento de accesibilidad WCAG 2.1 con estética de producto de alta gama.
 
-* **Estandarización y Sobriedad Visual en Portadas de Software Hub (`frontend/web/public/software/images/covers/`):**
-  - Se erradicaron los renders 3D con tipografía publicitaria gigante flotante ("MODEL CONTEXT PROTOCOL", "TERMINAL WEB", "MONOLITO MODULAR", "NODE.JS EN 1 GB RAM").
-  - Se homologó el estándar de sobriedad tomando la sencillez y el realismo de la portada de Infraestructura (`guia-firewall-linux-ufw.jpg`) como pauta conceptual, pero asignando a cada publicación un sujeto y entorno fotográfico único, tangible y directamente representativo de su temática:
-    - **IA / MCP:** Macrofotografía de procesador neural de silicio montado en placa de ingeniería con osciloscopio de laboratorio desenfocado.
-    - **Tutoriales / Terminal:** Monitor sin marcos en escritorio de madera nocturno con consola interactiva y teclado mecánico.
-    - **Blog / Monolito Modular:** Tres cajas negras geométricas escultóricas de aluminio y cristal ahumado sobre concreto pulido.
-    - **Foro / Optimización RAM:** Módulo de memoria RAM física con disipador negro mate y unidad M.2 NVMe sobre grafito cepillado.
-    - **Noticias / Next.js 16:** Laptop moderna de aluminio oscuro mostrando código TypeScript y arquitectura de streaming en pantalla.
-    - **Ciberseguridad / Bastionado SSH:** Llave criptográfica física de titanio y candado de alta seguridad de acero forjado.
-    - **Infraestructura / Firewall Linux (Original):** Chasis rack 1U con escudo perimetral translúcido Netfilter.
-* **Transición de Identidad Visual a DoicelaDev (`frontend/web/src/app/(software)`, `(landing)` & `(portfolio)`):**
-  - Se actualizó formalmente el nombre visible del subproyecto de Software a la marca personal de desarrollo **`DoicelaDev`** (para títulos de página, metadatos SEO, OpenGraph, JSON-LD, encabezados y pie de página) y **`doiceladev`** (para botones de navegación, badges de categoría e identificadores de acción).
-  - Principio de estabilidad de infraestructura: la actualización es 100% visual y a nivel de diccionarios de presentación (`messages/es.json` y `en.json`). Se preservan intactas las rutas físicas, subdirectorios `(software)`, backend NestJS y base de datos `software.sqlite`.
+* **Estandarización y Sobriedad Visual en Portadas de DoicelaDev (`frontend/web/public/doiceladev/images/covers/`):**
+  - Se erradicaron los renders 3D con tipografía publicitaria gigante flotante.
+  - Se homologó el estándar de sobriedad tomando la sencillez y el realismo de la portada de Infraestructura (`guia-firewall-linux-ufw.jpg`) como pauta conceptual, asignando a cada publicación un sujeto y entorno fotográfico único, tangible y directamente representativo de su temática.
+* **Migración Integral, Física y Estructural a DoicelaDev (`doiceladev` / `DoicelaDev`):**
+  - Renombrado físico completo en frontend (`frontend/web/src/app/(doiceladev)/`, `frontend/web/public/doiceladev/`, `DoiceladevHeaderNav`, `DoiceladevFooter`, `DoiceladevCard`, `DoiceladevSelect`, `DoiceladevJsonLd`, `DoiceladevSlideVisual`).
+  - Renombrado físico en backend (`backend/src/doiceladev/`, `DoiceladevModule`, `DoiceladevQueryDto`, `doiceladev.sqlite`, `seed:doiceladev`).
+  - Nginx, PM2, GitHub Actions CI/CD y scripts de la raíz actualizados formalmente a `doiceladev`.
+  - Habilidades locales (`.agents/skills/doiceladev-jorge-doicela`) y documentación técnica (`docs/05-doiceladev/`) 100% sincronizadas.
+  - Compilación validada con `pnpm --filter web typecheck` (0 errores) y `pnpm run build` (31 rutas optimizadas con Turbopack).
+
 
 
 

@@ -28,10 +28,10 @@ export function ProjectsMediaGrid() {
       href: getSubdomainUrl('portfolio'),
     },
     {
-      id: 'software',
+      id: 'doiceladev',
       title: t('project3Badge'),
       icon: Cpu,
-      href: getSubdomainUrl('software'),
+      href: getSubdomainUrl('doiceladev'),
     }
   ];
 

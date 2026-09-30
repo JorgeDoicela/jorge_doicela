@@ -21,12 +21,12 @@ export function LandingFooterLinks() {
       </a>
       <span>•</span>
       <a
-        href={urls.software}
+        href={urls.doiceladev}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-foreground transition-colors"
       >
-        {tLanding('softwareHeadline')}
+        {tLanding('doiceladevHeadline')}
       </a>
       <span>•</span>
       <a

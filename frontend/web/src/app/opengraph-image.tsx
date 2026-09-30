@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Jorge Doicela — Software Developer & AI Engineer';
+export const alt = 'Jorge Doicela — Full Stack Developer & AI Engineer';
 export const size = {
   width: 1200,
   height: 630,
@@ -152,7 +152,7 @@ export default async function Image() {
               fontWeight: 500,
             }}
           >
-            Software
+            DoicelaDev
           </div>
           <div
             style={{

@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
             "Quito",
             "Portafolio",
             "Biblia",
-            "Software",
+            "DoicelaDev",
         ],
         authors: [{ name: "Jorge Doicela", url: "https://jorgedoicela.com" }],
         creator: "Jorge Doicela",

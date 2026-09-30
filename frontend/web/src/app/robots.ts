@@ -20,8 +20,8 @@ export default function robots(): MetadataRoute.Robots {
     // crea un robots.ts con las mismas reglas de aiBots y rutas
     // protegidas, ajustando solo el 'sitemap' a la URL correcta.
     //
-    // Ejemplo para software.jorgedoicela.com independiente:
-    //   sitemap: 'https://software.jorgedoicela.com/sitemap.xml'
+    // Ejemplo para doiceladev.jorgedoicela.com independiente:
+    //   sitemap: 'https://doiceladev.jorgedoicela.com/sitemap.xml'
     // ─────────────────────────────────────────────────────────────
     return {
         rules: [
@@ -41,7 +41,7 @@ export default function robots(): MetadataRoute.Robots {
         // Sitemap unificado del servidor consolidado actual (1 GB RAM).
         // Al migrar un proyecto a servidor propio, apuntar a su sitemap individual:
         //   'https://portfolio.jorgedoicela.com/sitemap.xml'
-        //   'https://software.jorgedoicela.com/sitemap.xml'
+        //   'https://doiceladev.jorgedoicela.com/sitemap.xml'
         //   'https://bible.jorgedoicela.com/sitemap.xml'
         sitemap: 'https://jorgedoicela.com/sitemap.xml',
     };

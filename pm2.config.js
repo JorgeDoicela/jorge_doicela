@@ -44,7 +44,7 @@ module.exports = {
         HOST: '127.0.0.1',
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
         DATABASE_BIBLE_PATH: './data/bible.sqlite',
-        DATABASE_SOFTWARE_PATH: './data/software.sqlite',
+        DATABASE_DOICELADEV_PATH: './data/doiceladev.sqlite',
       },
     },
     {

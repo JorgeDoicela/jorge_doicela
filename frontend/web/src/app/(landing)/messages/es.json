@@ -3,7 +3,7 @@
     "title": "Jorge Doicela — Software Developer & AI Engineer",
     "description": "Sitio web oficial y portal de proyectos de Jorge Doicela: Desarrollador de Software, Estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad en Quito, Ecuador.",
     "ogTitle": "Jorge Doicela — Software Developer & AI Engineer",
-    "ogDescription": "Desarrollador de software y estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad. Explora mis proyectos: Portafolio, Biblia y doiceladev."
+    "ogDescription": "Desarrollador de software y estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad. Explora mis proyectos: Portafolio, Biblia y DoicelaDev."
   },
   "Common": {
     "location": "Quito, Ecuador",
@@ -30,8 +30,11 @@
     "bibleCta": "Abrir Biblia",
     "bibleQuote": "Lámpara es a mis pies tu palabra, y lumbrera a mi camino.",
     "bibleRef": "Salmos 119:105 · Texto Masorético y Septuaginta",
+    "doiceladevHeadline": "DoicelaDev",
     "softwareHeadline": "DoicelaDev",
+    "doiceladevDescription": "Hub tecnológico de divulgación técnica en IA, Ciberseguridad, Tutoriales, Noticias y Foros.",
     "softwareDescription": "Plataforma con 7 áreas de contenido, modelos de IA, guías de ciberseguridad, tutoriales prácticos y foros.",
+    "doiceladevCta": "Explorar DoicelaDev",
     "softwareCta": "Entrar a doiceladev",
     "portfolioHeadline": "Portafolio & Terminal SSH",
     "portfolioDescription": "Consola interactiva virtual sobre WebSockets, arquitectura de proyectos y experiencia profesional.",
@@ -106,8 +109,10 @@
     "bibleTitle": "Biblia",
     "bibleDesc": "9 motores de exégesis teológica, análisis morfológico Strong, léxicos BDB/Thayer y atlas WGS84.",
     "bibleCta": "Abrir Biblia",
-    "softwareTitle": "DoicelaDev",
+    "doiceladevTitle": "DoicelaDev",
+      "softwareTitle": "DoicelaDev",
     "softwareDesc": "Plataforma con 7 categorías tecnológicas, noticias, blog, modelos de IA, ciberseguridad y foros.",
+    "doiceladevCta": "Explorar DoicelaDev",
     "softwareCta": "Entrar a doiceladev",
     "consultaTitle": "Solicitar Propuesta de Software",
     "consultaDesc": "Cotización y propuesta técnica para desarrollo web, móvil o arquitectura en menos de 24 horas.",

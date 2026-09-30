@@ -14,7 +14,7 @@ export const AppleDetailExplorer: React.FC = () => {
     const details = [
         {
             id: 'platforms',
-            navTitle: isEs ? '3 Plataformas de Software' : '3 Software Platforms',
+            navTitle: isEs ? '3 Plataformas Digitales' : '3 Digital Platforms',
             title: isEs ? '3 Plataformas en Producción' : '3 Live Platforms',
             description: isEs
                 ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: estudio bíblico profundo, software con IA y servicios de ingeniería.'
@@ -23,7 +23,7 @@ export const AppleDetailExplorer: React.FC = () => {
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Plataformas de Software Propias' : 'Proprietary Software Platforms'}
+                            {isEs ? 'Plataformas Digitales Propias' : 'Proprietary Digital Platforms'}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
                             {isEs
@@ -69,8 +69,8 @@ export const AppleDetailExplorer: React.FC = () => {
         },
         {
             id: 'innovation',
-            navTitle: isEs ? 'Inteligencia Artificial & Software' : 'AI & Software Innovation',
-            title: isEs ? 'Inteligencia Artificial & Software' : 'AI & Software Innovation',
+            navTitle: isEs ? 'Inteligencia Artificial & Software' : 'AI & DoicelaDev Innovation',
+            title: isEs ? 'Inteligencia Artificial & Software' : 'AI & DoicelaDev Innovation',
             description: isEs
                 ? 'Herramientas interactivas, modelos de lenguaje de última generación y arquitecturas de razonamiento construidas para potenciar el aprendizaje y la productividad.'
                 : 'Interactive tools, state-of-the-art LLM architectures, and reasoning models engineered to boost learning and productivity.',
@@ -78,7 +78,7 @@ export const AppleDetailExplorer: React.FC = () => {
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Software & Inteligencia Artificial' : 'Software & Artificial Intelligence'}
+                            {isEs ? 'DoicelaDev & Inteligencia Artificial' : 'DoicelaDev & Artificial Intelligence'}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
                             {isEs

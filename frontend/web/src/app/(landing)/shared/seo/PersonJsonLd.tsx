@@ -46,7 +46,7 @@ export default function PersonJsonLd() {
           'https://www.youtube.com/@jorge.doicela',
           'https://www.tiktok.com/@jorge.doicela',
           'https://portfolio.jorgedoicela.com',
-          'https://software.jorgedoicela.com',
+          'https://doiceladev.jorgedoicela.com',
           'https://bible.jorgedoicela.com'
         ]
       },

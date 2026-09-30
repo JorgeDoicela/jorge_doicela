@@ -8,7 +8,7 @@ Este documento establece las directrices de ingeniería para la gestión de base
 
 El ecosistema Jorge Doicela implementa persistencia desacoplada mediante tres bases de datos físicas independientes ubicadas en `backend/data/`:
 * `backend/data/bible.sqlite` (`'bibleConnection'`)
-* `backend/data/software.sqlite` (`'softwareConnection'`)
+* `backend/data/doiceladev.sqlite` (`'doiceladevConnection'`)
 * `backend/data/portfolio.sqlite` (`'portfolioConnection'`)
 
 ### 1.1 Exclusión Obligatoria de Control de Versiones
@@ -61,7 +61,7 @@ rm -f backend/data/*.sqlite* 2>/dev/null || true
 
 # 2. Reconstrucción atómica y seeding desde los corpus JSON compilados
 node backend/dist/bible/cli/seed-corpus.js
-node backend/dist/software/cli/seed-software.js
+node backend/dist/software/cli/seed-doiceladev.js
 node backend/dist/portfolio/cli/seed-portfolio.js
 ```
 Por este motivo físico, el servidor de producción **siempre cuenta con todas las tablas, columnas, artículos y términos de glosario actualizados**.
@@ -86,7 +86,7 @@ pnpm install
 pnpm seed:all
 
 # 3. O de forma granular según el dominio en desarrollo:
-pnpm seed:software     # Sincroniza software.sqlite (8 módulos + glosario)
+pnpm seed:doiceladev     # Sincroniza doiceladev.sqlite (8 módulos + glosario)
 pnpm seed:bible        # Sincroniza bible.sqlite (versiones y lemas Strong)
 pnpm --filter backend seed:portfolio # Sincroniza portfolio.sqlite
 
@@ -98,7 +98,7 @@ pnpm dev
 
 ## 4. Protocolo Profesional de Diagnóstico ante Errores 404
 
-Cuando una ruta dinámica de contenido (ej. `http://software.localhost:3001/infrastructure/[slug]`) devuelva `404 Not Found` en un entorno de desarrollo local, todo ingeniero o agente de IA debe aplicar de forma rigurosa el siguiente árbol de decisión:
+Cuando una ruta dinámica de contenido (ej. `http://doiceladev.localhost:3001/infrastructure/[slug]`) devuelva `404 Not Found` en un entorno de desarrollo local, todo ingeniero o agente de IA debe aplicar de forma rigurosa el siguiente árbol de decisión:
 
 ```text
                                 [ Error 404 Not Found en Navegador ]
@@ -116,7 +116,7 @@ Cuando una ruta dinámica de contenido (ej. `http://software.localhost:3001/infr
                                  │                               │
                                  v                       ┌───────┴───────┐
                      Ejecutar:                           │ NO            │ SÍ
-                     pnpm seed:software                  v               v
+                     pnpm seed:doiceladev                  v               v
                      (PROBLEMA RESUELTO)         Revisar Controller /   Revisar ServerFetch
                                                  Query en NestJS        o Server Component
 ```

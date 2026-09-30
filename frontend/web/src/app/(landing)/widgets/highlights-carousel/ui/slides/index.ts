@@ -1,3 +1,3 @@
 export * from './BibleSlideVisual';
-export * from './SoftwareSlideVisual';
+export * from './DoiceladevSlideVisual';
 export * from './PortfolioSlideVisual';

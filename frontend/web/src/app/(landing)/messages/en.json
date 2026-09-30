@@ -3,7 +3,7 @@
     "title": "Jorge Doicela — Software Developer & AI Engineer",
     "description": "Official website and projects portal of Jorge Doicela: Software Developer, AI & Cybersecurity Engineering student based in Quito, Ecuador.",
     "ogTitle": "Jorge Doicela — Software Developer & AI Engineer",
-    "ogDescription": "Software developer and Artificial Intelligence & Cybersecurity Engineering student. Explore my projects: Portfolio, Bible, and doiceladev."
+    "ogDescription": "Software developer and Artificial Intelligence & Cybersecurity Engineering student. Explore my projects: Portfolio, Bible, and DoicelaDev."
   },
   "Common": {
     "location": "Quito, Ecuador",
@@ -30,8 +30,11 @@
     "bibleCta": "Open Bible",
     "bibleQuote": "Your word is a lamp to my feet and a light to my path.",
     "bibleRef": "Psalms 119:105 · Masoretic Text & Septuagint",
+    "doiceladevHeadline": "DoicelaDev",
     "softwareHeadline": "DoicelaDev",
+    "doiceladevDescription": "Technology hub for software engineering, AI, Cybersecurity, Tutorials, News and Forums.",
     "softwareDescription": "Technology platform featuring 7 content categories: cybersecurity advisories, AI showcase, practical tutorials, and developer forums.",
+    "doiceladevCta": "Explore DoicelaDev",
     "softwareCta": "Enter doiceladev",
     "portfolioHeadline": "Portfolio & SSH Terminal",
     "portfolioDescription": "Virtual interactive console over WebSockets, project architecture showcase, and professional career.",
@@ -106,8 +109,10 @@
     "bibleTitle": "Bible",
     "bibleDesc": "9 theological exegesis engines, Strong morphology, BDB/Thayer lexicons, and WGS84 biblical atlas.",
     "bibleCta": "Open Bible",
-    "softwareTitle": "DoicelaDev",
+    "doiceladevTitle": "DoicelaDev",
+      "softwareTitle": "DoicelaDev",
     "softwareDesc": "Platform spanning 7 tech categories: news, blog, AI models, cybersecurity advisories, and forums.",
+    "doiceladevCta": "Explore DoicelaDev",
     "softwareCta": "Enter doiceladev",
     "consultaTitle": "Request Software Proposal",
     "consultaDesc": "Estimate and technical proposal for web, mobile, or cloud development within 24 hours.",

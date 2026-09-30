@@ -10,7 +10,7 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 1. **Landing Page** (`jorgedoicela.com`): Portal de bienvenida y presentación general.
 2. **Portafolio Profesional** (`portfolio.jorgedoicela.com`): Portafolio interactivo con terminal SSH virtual en tiempo real.
 3. **Biblia Modular** (`bible.jorgedoicela.com`): Lector y suite exegética con análisis morfológico y multiversión.
-4. **Software** (`software.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
+4. **DoicelaDev / Software** (`doiceladev.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
 
 ### 1.1 La Regla de Oro: Aislamiento Lógico vs. Consolidación Física
 > [!IMPORTANT]
@@ -43,8 +43,8 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
      (Enrutador de Subdominios)                                (Monolito Modular)
         ├── (landing)   -> jorgedoicela.com                       ├── /portfolio -> data/portfolio.sqlite
         ├── (portfolio) -> portfolio.*                            ├── /bible     -> data/bible.sqlite
-        ├── (bible)     -> bible.*                                └── /software  -> data/software.sqlite
-        └── (software)  -> software.*
+        ├── (bible)     -> bible.*                                └── /software  -> data/doiceladev.sqlite
+        └── (doiceladev)  -> software.*
 ```
 
 ### 2.1 Flujo de Peticiones y Seguridad Perimetral
@@ -58,7 +58,7 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
    * Recursos estáticos clave (`/llms.txt`, `/manifest.json`, `/_next/static/`) $\rightarrow$ Servidos directamente por Nginx desde disco en < 1 ms con caché, garantizando 0 MB de consumo de RAM en Node.js frente a crawlers de IA (GEO / Generative Engine Optimization).
 6. **Rate Limiting Perimetral y Protección Anti-Scraping (Zero-RAM):**
    * **Detección por IP Real:** Nginx extrae `$http_cf_connecting_ip` para aplicar los límites al cliente real y no al proxy de Cloudflare.
-   * **Zona API (`limit_req_zone $real_client_ip zone=api_limit_zone rate=15r/s burst=25 nodelay`):** Protege las bases de datos SQLite (`bible.sqlite`, `software.sqlite`) y el backend NestJS contra scraping agresivo devolviendo `HTTP 429 Too Many Requests` en microsegundos.
+   * **Zona API (`limit_req_zone $real_client_ip zone=api_limit_zone rate=15r/s burst=25 nodelay`):** Protege las bases de datos SQLite (`bible.sqlite`, `doiceladev.sqlite`) y el backend NestJS contra scraping agresivo devolviendo `HTTP 429 Too Many Requests` en microsegundos.
    * **Zona Web (`limit_req_zone $real_client_ip zone=web_limit_zone rate=35r/s burst=50 nodelay`):** Protege el SSR de Next.js de ataques de denegación de servicio sin penalizar a usuarios humanos navegando rápido.
 
 
@@ -77,7 +77,7 @@ jorge_doicela/ (Monorepo)
 │   ├── 02-landing/
 │   ├── 03-portfolio/
 │   ├── 04-bible/
-│   └── 05-software/
+│   └── 05-doiceladev/
 │
 ├── backend/                  # Servidor consolidado NestJS 11 (Puerto 3000)
 ├── frontend/
@@ -120,7 +120,7 @@ Cada proyecto define sus propias rutas en una constante independiente (`landingR
 
 ### 5.2 `src/app/robots.ts` — Guía de Migración Inline
 
-Las reglas de bots son universales y comparte configuración. El comentario inline documenta exactamente qué cambiar en la propiedad `sitemap` para apuntar al nuevo servidor (`https://software.jorgedoicela.com/sitemap.xml`).
+Las reglas de bots son universales y comparte configuración. El comentario inline documenta exactamente qué cambiar en la propiedad `sitemap` para apuntar al nuevo servidor (`https://doiceladev.jorgedoicela.com/sitemap.xml`).
 
 ### 5.3 `src/middleware.ts` — Enrutamiento Declarativo por Subdominio
 
@@ -130,7 +130,7 @@ El middleware opera mediante una **tabla declarativa de rutas** (`SUBDOMAIN_TARG
 const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
     portfolio: '/portfolio',
     bible: '/bible',
-    software: '/software',
+    doiceladev: '/software',
 };
 ```
 
@@ -139,4 +139,4 @@ Adicionalmente, implementa una **resolución multi-tenant unificada de rutas y a
 Al migrar un subproyecto a su propio servidor físico independiente, simplemente se **remueve su clave del diccionario** `SUBDOMAIN_TARGET_MAP`. La landing no requiere entrada porque opera como ruta raíz por defecto.
 
 > [!TIP]
-> La estructura de **assets públicos** (`public/landing/`, `public/portfolio/`, etc.) y las **bases de datos SQLite** (`portfolio.sqlite`, `bible.sqlite`, `software.sqlite`) ya son 100% portables sin modificación alguna.
+> La estructura de **assets públicos** (`public/landing/`, `public/portfolio/`, etc.) y las **bases de datos SQLite** (`portfolio.sqlite`, `bible.sqlite`, `doiceladev.sqlite`) ya son 100% portables sin modificación alguna.

@@ -10,7 +10,7 @@ Este documento detalla la investigación forense, el análisis técnico de causa
 | :--- | :--- |
 | **Fecha del Incidente** | 8 – 9 de Septiembre de 2026 |
 | **Severidad** | P1 (Crítico) — Subdominios inaccesibles |
-| **Servicios Afectados** | `bible.jorgedoicela.com`, `portfolio.jorgedoicela.com`, `software.jorgedoicela.com` |
+| **Servicios Afectados** | `bible.jorgedoicela.com`, `portfolio.jorgedoicela.com`, `doiceladev.jorgedoicela.com` |
 | **Servicio No Afectado** | `jorgedoicela.com` (Landing page / Dominio raíz) |
 | **Síntoma Visible** | HTTP 500 (Internal Server Error) en navegador y llamadas cURL |
 | **Error en Logs de Next.js** | `Error: write EPROTO: SSL routines: WRONG_VERSION_NUMBER` en `proxy-request.js` |
@@ -175,7 +175,7 @@ module.exports = {
         HOST: '127.0.0.1', // IPv4 loopback estricto para APIs y SQLite
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
         DATABASE_BIBLE_PATH: './data/bible.sqlite',
-        DATABASE_SOFTWARE_PATH: './data/software.sqlite',
+        DATABASE_DOICELADEV_PATH: './data/doiceladev.sqlite',
       },
     },
     {
@@ -253,7 +253,7 @@ Comprobación empírica ejecutada directamente contra el servidor web de producc
 ```bash
 curl -s -o /dev/null -w "público bible: %{http_code}\n" https://bible.jorgedoicela.com/
 curl -s -o /dev/null -w "público landing: %{http_code}\n" https://jorgedoicela.com/
-curl -s -o /dev/null -w "público software: %{http_code}\n" https://software.jorgedoicela.com/
+curl -s -o /dev/null -w "público doiceladev: %{http_code}\n" https://doiceladev.jorgedoicela.com/
 curl -s -o /dev/null -w "público portfolio: %{http_code}\n" https://portfolio.jorgedoicela.com/
 ```
 
@@ -261,7 +261,7 @@ curl -s -o /dev/null -w "público portfolio: %{http_code}\n" https://portfolio.j
 ```text
 público bible: 200
 público landing: 200
-público software: 200
+público doiceladev: 200
 público portfolio: 200
 ```
 

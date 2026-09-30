@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server';
 //   El servidor consolidado (1 GB RAM) aloja 4 proyectos en un único proceso
 //   Next.js (puerto 3001). Este middleware detecta el subdominio del host y
 //   reescribe la URL internamente hacia el grupo de rutas correspondiente
-//   (route groups: (landing), (portfolio), (software), (bible)).
+//   (route groups: (landing), (portfolio), (doiceladev), (bible)).
 //
 // GUÍA DE MIGRACIÓN POR PROYECTO:
 //   Al mover un proyecto a su propio servidor Next.js independiente,
@@ -22,7 +22,7 @@ import type { NextRequest } from 'next/server';
 const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
     portfolio: '/portfolio',
     bible: '/bible',
-    software: '/software',
+    doiceladev: '/doiceladev',
 };
 
 /**
@@ -82,7 +82,7 @@ export function middleware(request: NextRequest) {
     // Identificar el proyecto (subdominio o ruta canónica en localhost)
     let project = matchedSubdomain;
     if (!project) {
-        if (pathname.startsWith('/software')) project = 'software';
+        if (pathname.startsWith('/doiceladev')) project = 'doiceladev';
         else if (pathname.startsWith('/portfolio')) project = 'portfolio';
         else if (pathname.startsWith('/bible')) project = 'bible';
         else project = 'landing';
@@ -105,8 +105,8 @@ export function middleware(request: NextRequest) {
         const prefixWithoutSlash = targetPrefix.replace(/^\/+/, '');
 
         // 1. Redirección canónica 308 si se solicita la ruta redundante en el subdominio
-        // (ej. software.jorgedoicela.com/software -> software.jorgedoicela.com/)
-        // (ej. software.jorgedoicela.com/software/tutorials -> software.jorgedoicela.com/tutorials)
+        // (ej. doiceladev.jorgedoicela.com/doiceladev -> doiceladev.jorgedoicela.com/)
+        // (ej. doiceladev.jorgedoicela.com/doiceladev/tutorials -> doiceladev.jorgedoicela.com/tutorials)
         if (cleanPath === prefixWithoutSlash) {
             url.pathname = '/';
             return NextResponse.redirect(url, 308);

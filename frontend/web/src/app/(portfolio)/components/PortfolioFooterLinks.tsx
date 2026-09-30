@@ -40,12 +40,12 @@ export function PortfolioFooterLinks() {
       </a>
       <span>•</span>
       <a
-        href={getSubdomainUrl('software')}
+        href={getSubdomainUrl('doiceladev')}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-gold-300 transition-colors"
       >
-        {tNav('software')}
+        {tNav('doiceladev')}
       </a>
       <span>•</span>
       <a

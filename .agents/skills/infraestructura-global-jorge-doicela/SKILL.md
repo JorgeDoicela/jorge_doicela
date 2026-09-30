@@ -47,7 +47,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ## 3. Aislamiento de Tipos y Contratos (Cero `@shared`)
 
 * **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
-* **Persistencia Aislada:** Cada módulo del backend interactúa con su propia base de datos SQLite física encapsulada en `backend/data/` (`bible.sqlite`, `software.sqlite`, `portfolio.sqlite`) bajo conexiones nombradas (`'bibleConnection'`, `'softwareConnection'`, `'portfolioConnection'`).
+* **Persistencia Aislada:** Cada módulo del backend interactúa con su propia base de datos SQLite física encapsulada en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`) bajo conexiones nombradas (`'bibleConnection'`, `'softwareConnection'`, `'portfolioConnection'`).
 
 ---
 
@@ -68,13 +68,13 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * **Carga Perezosa en Memoria (1 GB RAM):** `src/i18n/request.ts` detecta el `host` y carga en memoria únicamente el diccionario del subdominio activo.
 * **Cero Parpadeos (SSR):** El servidor entrega el HTML ya traducido con `<html lang={locale}>` dinámico según la cookie `NEXT_LOCALE` o cabecera `Accept-Language`.
 * **SEO Internacional Dinámico:** Cada layout de subdominio implementa `generateMetadata()` y emite etiquetas `hreflang` (`es-EC` y `en-US`).
-* **Doble Nivel de i18n:** UI Chrome mediante `useTranslations()` y datos dinámicos en SQLite (`software.sqlite` y `bible.sqlite`) mediante columna `language: 'es' | 'en'` y filtros `?lang=`.
+* **Doble Nivel de i18n:** UI Chrome mediante `useTranslations()` y datos dinámicos en SQLite (`doiceladev.sqlite` y `bible.sqlite`) mediante columna `language: 'es' | 'en'` y filtros `?lang=`.
 
 ### 4.4 Visibilidad en Inteligencia Artificial (GEO) y Arquitectura "Zero-RAM"
 * **Arquitectura Multicanal `public/<proyecto>/llms.txt`:** Cada uno de los 4 proyectos tiene su propio dossier especializado servido directamente por Nginx sin tocar Node.js:
   * `public/landing/llms.txt` $\rightarrow$ `https://jorgedoicela.com/llms.txt` (Perfil general del creador)
   * `public/portfolio/llms.txt` $\rightarrow$ `https://portfolio.jorgedoicela.com/llms.txt` (Terminal SSH, proyectos)
-  * `public/software/llms.txt` $\rightarrow$ `https://software.jorgedoicela.com/llms.txt` (7 categorías tecnológicas)
+  * `public/software/llms.txt` $\rightarrow$ `https://doiceladev.jorgedoicela.com/llms.txt` (7 categorías tecnológicas)
   * `public/bible/llms.txt` $\rightarrow$ `https://bible.jorgedoicela.com/llms.txt` (9 motores exegéticos)
 * **Obligación de Sincronización:** Cuando se cree, modifique o elimine cualquier proyecto, submódulo o categoría principal en el ecosistema, es **obligatorio actualizar el `llms.txt` de su subcarpeta, su `manifest.json`, su componente `*JsonLd.tsx` y `sitemap.ts`**.
 * **Manifiestos PWA Independientes (`public/<proyecto>/manifest.json`):** Cada subdominio tiene su propia identidad de aplicación instalable (nombre, tema, ícono, ruta de inicio).
@@ -115,7 +115,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
   ```bash
   pnpm seed:all          # Siembra las 3 bases: bible, software y portfolio
   # O de forma granular según el dominio:
-  pnpm seed:software     # Re-siembra software.sqlite desde corpus/*.json
+  pnpm seed:software     # Re-siembra doiceladev.sqlite desde corpus/*.json
   pnpm seed:bible        # Re-siembra bible.sqlite
   ```
 * **Protocolo de Diagnóstico 404:** Ante cualquier error `404 Not Found` en rutas dinámicas de contenido (`[slug]`), **el primer paso obligatorio es verificar la persistencia local**. Queda prohibido modificar middleware o componentes sin validar si el registro existe en SQLite.
@@ -184,5 +184,5 @@ Según el dominio específico en el que trabajes:
 * **Landing Page:** `landing-jorge-doicela`
 * **Portafolio Profesional:** `portfolio-jorge-doicela`
 * **Biblia Modular (Web y Móvil):** `bible-jorge-doicela`
-* **Software:** `software-jorge-doicela`
+* **Software:** `doiceladev-jorge-doicela`
 

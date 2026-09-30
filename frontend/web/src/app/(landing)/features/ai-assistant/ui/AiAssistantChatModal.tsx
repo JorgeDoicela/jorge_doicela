@@ -291,8 +291,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     if (['hola', 'buenas', 'buenos dias', 'buenas tardes', 'buenas noches', 'saludos', 'que tal', 'hi', 'hello', 'hey'].some(s => q === s || q.startsWith(s + ' '))) {
       return {
         text: isEs
-          ? 'Hola. Es un gusto saludarte. Soy el asistente de IA de Jorge Doicela. Puedo responder tus consultas sobre sus plataformas en producción (La Biblia, Software, Portafolio), su experiencia Full Stack / Cloud en 1 GB de RAM, o ayudarte a solicitar una propuesta técnica.'
-          : "Hello. Nice to meet you. I am Jorge Doicela's AI assistant. I can answer your questions about his live platforms (The Bible, Software, Portfolio), his Full Stack / 1 GB RAM Cloud experience, or help you request a technical proposal."
+          ? 'Hola. Es un gusto saludarte. Soy el asistente de IA de Jorge Doicela. Puedo responder tus consultas sobre sus plataformas en producción (La Biblia, DoicelaDev, Portafolio), su experiencia Full Stack / Cloud en 1 GB de RAM, o ayudarte a solicitar una propuesta técnica.'
+          : "Hello. Nice to meet you. I am Jorge Doicela's AI assistant. I can answer your questions about his live platforms (The Bible, DoicelaDev, Portfolio), his Full Stack / 1 GB RAM Cloud experience, or help you request a technical proposal."
       };
     }
 
@@ -307,8 +307,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     if (q.includes('proyecto') || q.includes('plataforma') || q.includes('produccion') || q.includes('project')) {
       return {
         text: isEs
-          ? 'Jorge ha desarrollado 3 plataformas propias en producción:\n\n1. **La Biblia:** Sistema exegético con 9 motores de estudio bíblico, morfología hebrea/griega y códigos Strong (`bible.jorgedoicela.com`).\n2. **Software:** Plataforma con 7 áreas de contenido tecnológico, noticias, modelos de IA y avisos de ciberseguridad (`software.jorgedoicela.com`).\n3. **Portafolio:** Terminal interactiva SSH en tiempo real conectada con WebSockets (`portfolio.jorgedoicela.com`).'
-          : "Jorge has built 3 proprietary live platforms in production:\n\n1. **The Bible:** Biblical exegesis engine with 9 study modules, Hebrew/Greek morphology, and Strong codes (`bible.jorgedoicela.com`).\n2. **Software:** Tech outreach platform covering 7 categories, news, AI directory, and security CVEs (`software.jorgedoicela.com`).\n3. **Portfolio:** Real-time interactive SSH terminal (`portfolio.jorgedoicela.com`)."
+          ? 'Jorge ha desarrollado 3 plataformas propias en producción:\n\n1. **La Biblia:** Sistema exegético con 9 motores de estudio bíblico, morfología hebrea/griega y códigos Strong (`bible.jorgedoicela.com`).\n2. **DoicelaDev:** Plataforma con 8 áreas de contenido tecnológico, noticias, modelos de IA y avisos de ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Terminal interactiva SSH en tiempo real conectada con WebSockets (`portfolio.jorgedoicela.com`).'
+          : "Jorge has built 3 proprietary live platforms in production:\n\n1. **The Bible:** Biblical exegesis engine with 9 study modules, Hebrew/Greek morphology, and Strong codes (`bible.jorgedoicela.com`).\n2. **DoicelaDev:** Tech outreach platform covering 8 categories, news, AI directory, and security CVEs (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Real-time interactive SSH terminal (`portfolio.jorgedoicela.com`)."
       };
     }
 
@@ -357,8 +357,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     // Respuesta predeterminada restrictiva ante consultas fuera de dominio
     return {
       text: isEs
-        ? 'Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, plataformas en producción (La Biblia, Software, Portafolio), arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas evaluar un proyecto, puedes ingresar al Formulario de Consulta:'
-        : "As Jorge Doicela's official assistant, my role is strictly limited to providing information about his professional profile, production platforms (The Bible, Software, Portfolio), 1 GB RAM cloud architecture, and technical proposals. I do not answer general inquiries unrelated to Jorge's engineering work. If you wish to discuss a project, feel free to open the Consultation Form:",
+        ? 'Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, plataformas en producción (La Biblia, DoicelaDev, Portafolio), arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas evaluar un proyecto, puedes ingresar al Formulario de Consulta:'
+        : "As Jorge Doicela's official assistant, my role is strictly limited to providing information about his professional profile, production platforms (The Bible, DoicelaDev, Portfolio), 1 GB RAM cloud architecture, and technical proposals. I do not answer general inquiries unrelated to Jorge's engineering work. If you wish to discuss a project, feel free to open the Consultation Form:",
       actionUrl: '/consulta',
       actionText: isEs ? 'Abrir Formulario de Consulta' : 'Open Consultation Form'
     };

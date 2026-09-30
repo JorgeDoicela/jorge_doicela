@@ -1,0 +1,49 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
+import { SecurityPost } from '../types';
+import { API_URL } from '../../../shared';
+import { safeFetchJson } from '../../../shared/lib/fetchJson';
+
+export function useCybersecurity(
+  category?: string,
+  severity?: string,
+  search: string = '',
+) {
+  const locale = useLocale();
+  const [posts, setPosts] = useState<SecurityPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSecurity = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const params = new URLSearchParams();
+        if (severity && severity !== 'all') params.append('severity', severity);
+        if (category && category !== 'all') params.append('category', category);
+        if (search.trim()) params.append('search', search.trim());
+        if (locale) params.append('lang', locale);
+
+        const url = `${API_URL}/doiceladev/cybersecurity${params.toString() ? `?${params.toString()}` : ''}`;
+        const data = await safeFetchJson<SecurityPost[] | { data: SecurityPost[] }>(url);
+
+        const list = Array.isArray(data) ? data : data.data || [];
+        setPosts(list);
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('Error al obtener posts de ciberseguridad:', msg);
+        setError(msg || (locale === 'es' ? 'No se pudieron cargar los avisos de seguridad' : 'Failed to load security advisories'));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSecurity();
+  }, [severity, category, search, locale]);
+
+  return { posts, loading, error };
+}

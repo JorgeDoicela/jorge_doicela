@@ -28,7 +28,7 @@ import { AppService } from './app.service';
  */
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { BibleModule } from './bible/bible.module';
-import { SoftwareModule } from './software/software.module';
+import { DoiceladevModule } from './doiceladev/doiceladev.module';
 
 function getPinoTransport() {
   if (process.env.NODE_ENV === 'production') {
@@ -66,7 +66,7 @@ function getPinoTransport() {
     }),
     PortfolioModule,
     BibleModule,
-    SoftwareModule,
+    DoiceladevModule,
   ],
   controllers: [AppController],
   providers: [AppService],

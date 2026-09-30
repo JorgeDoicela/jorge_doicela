@@ -13,7 +13,7 @@
     "format": "pnpm -r format",
     "build": "pnpm -r --if-present build",
     "seed:bible": "pnpm --filter backend seed:bible",
-    "seed:software": "pnpm --filter backend seed:software",
+    "seed:doiceladev": "pnpm --filter backend seed:doiceladev",
     "seed:all": "pnpm --filter backend seed:all"
   },
   "keywords": [],

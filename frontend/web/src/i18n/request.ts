@@ -18,10 +18,11 @@ async function loadProjectMessages(project: string, locale: Locale): Promise<Rec
           ? (await import('../app/(portfolio)/messages/en.json')).default
           : (await import('../app/(portfolio)/messages/es.json')).default;
 
+      case 'doiceladev':
       case 'software':
         return locale === 'en'
-          ? (await import('../app/(software)/messages/en.json')).default
-          : (await import('../app/(software)/messages/es.json')).default;
+          ? (await import('../app/(doiceladev)/messages/en.json')).default
+          : (await import('../app/(doiceladev)/messages/es.json')).default;
 
       case 'bible':
         return locale === 'en'
@@ -76,8 +77,8 @@ export default getRequestConfig(async () => {
     const normalizedHost = host.toLowerCase();
     if (normalizedHost.includes('portfolio.') || normalizedHost.startsWith('portfolio')) {
       subdomain = 'portfolio';
-    } else if (normalizedHost.includes('software.') || normalizedHost.startsWith('software')) {
-      subdomain = 'software';
+    } else if (normalizedHost.includes('doiceladev.') || normalizedHost.startsWith('doiceladev')) {
+      subdomain = 'doiceladev';
     } else if (normalizedHost.includes('bible.') || normalizedHost.startsWith('bible')) {
       subdomain = 'bible';
     }

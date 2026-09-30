@@ -56,73 +56,73 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────────────────────
-    // 3. SOFTWARE (software.jorgedoicela.com) — 8 Áreas
+    // 3. DOICELADEV (doiceladev.jorgedoicela.com) — 8 Áreas
     // Al migrar a servidor independiente: copiar solo este bloque
     // en el sitemap.ts de la nueva app Next.js y borrar los demás.
     // ─────────────────────────────────────────────────────────────
-    const softwareRoutes: MetadataRoute.Sitemap = [
+    const doiceladevRoutes: MetadataRoute.Sitemap = [
         {
-            url: 'https://software.jorgedoicela.com',
+            url: 'https://doiceladev.jorgedoicela.com',
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.95,
         },
         {
-            url: 'https://software.jorgedoicela.com/llms.txt',
+            url: 'https://doiceladev.jorgedoicela.com/llms.txt',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.7,
         },
         {
-            url: 'https://software.jorgedoicela.com/news',
+            url: 'https://doiceladev.jorgedoicela.com/news',
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.9,
         },
         {
-            url: 'https://software.jorgedoicela.com/blog',
+            url: 'https://doiceladev.jorgedoicela.com/blog',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://software.jorgedoicela.com/forum',
+            url: 'https://doiceladev.jorgedoicela.com/forum',
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.85,
         },
         {
-            url: 'https://software.jorgedoicela.com/ai',
+            url: 'https://doiceladev.jorgedoicela.com/ai',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://software.jorgedoicela.com/cybersecurity',
+            url: 'https://doiceladev.jorgedoicela.com/cybersecurity',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://software.jorgedoicela.com/tutorials',
+            url: 'https://doiceladev.jorgedoicela.com/tutorials',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://software.jorgedoicela.com/projects',
+            url: 'https://doiceladev.jorgedoicela.com/projects',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.85,
         },
         {
-            url: 'https://software.jorgedoicela.com/infrastructure',
+            url: 'https://doiceladev.jorgedoicela.com/infrastructure',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://software.jorgedoicela.com/infrastructure/firewall-linux-ufw-netfilter-seguridad-servidores',
+            url: 'https://doiceladev.jorgedoicela.com/infrastructure/firewall-linux-ufw-netfilter-seguridad-servidores',
             lastModified: now,
             changeFrequency: 'monthly',
             priority: 0.85,
@@ -187,5 +187,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Servidor consolidado actual (1 GB RAM): todas las rutas juntas.
     // Al migrar, cada servidor retorna solo su bloque correspondiente.
-    return [...landingRoutes, ...portfolioRoutes, ...softwareRoutes, ...bibleRoutes];
+    return [...landingRoutes, ...portfolioRoutes, ...doiceladevRoutes, ...bibleRoutes];
 }

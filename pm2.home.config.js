@@ -38,7 +38,7 @@ module.exports = {
         SANDBOX_MAX_SESSIONS: '5',
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
         DATABASE_BIBLE_PATH: './data/bible.sqlite',
-        DATABASE_SOFTWARE_PATH: './data/software.sqlite',
+        DATABASE_DOICELADEV_PATH: './data/doiceladev.sqlite',
         ...loadEnvFile(path.resolve(__dirname, 'backend/.env')),
       },
     },

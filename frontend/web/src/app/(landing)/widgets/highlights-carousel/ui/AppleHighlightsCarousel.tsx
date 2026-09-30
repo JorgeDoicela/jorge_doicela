@@ -4,13 +4,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useLanguage, useSubdomainUrl } from '../../../shared';
-import { BibleSlideVisual, SoftwareSlideVisual, PortfolioSlideVisual } from './slides';
+import { BibleSlideVisual, DoiceladevSlideVisual, PortfolioSlideVisual } from './slides';
 
 interface AppleHighlightsCarouselProps {
     links?: {
         portfolio: string;
         bible: string;
-        software: string;
+        doiceladev: string;
     };
 }
 
@@ -38,12 +38,12 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             renderVisual: () => <BibleSlideVisual isEs={isEs} />,
         },
         {
-            id: 'software',
-            headline: tLanding('softwareHeadline'),
-            description: tLanding('softwareDescription'),
-            linkUrl: resolvedLinks.software,
-            linkText: tLanding('softwareCta'),
-            renderVisual: () => <SoftwareSlideVisual isEs={isEs} />,
+            id: 'doiceladev',
+            headline: tLanding('doiceladevHeadline'),
+            description: tLanding('doiceladevDescription'),
+            linkUrl: resolvedLinks.doiceladev,
+            linkText: tLanding('doiceladevCta'),
+            renderVisual: () => <DoiceladevSlideVisual isEs={isEs} />,
         },
         {
             id: 'portfolio',

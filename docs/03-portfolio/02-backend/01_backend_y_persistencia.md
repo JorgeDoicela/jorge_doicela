@@ -279,7 +279,7 @@ Esto impide que un visitante la sobreescriba desde la terminal con `SANDBOX_MODE
   https://jorgedoicela.com
   https://portfolio.jorgedoicela.com
   https://bible.jorgedoicela.com
-  https://software.jorgedoicela.com
+  https://doiceladev.jorgedoicela.com
   + localhost:3000/3001/3002 solo si NODE_ENV !== 'production'
   ```
 * **Variable de entorno:** `CORS_ORIGINS` (CSV) permite override en producción sin redeploy.

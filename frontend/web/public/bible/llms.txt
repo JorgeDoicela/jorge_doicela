@@ -44,6 +44,6 @@
 ## Enlaces Oficiales
 - **Biblia Modular:** https://bible.jorgedoicela.com
 - **Portal Maestro:** https://jorgedoicela.com
-- **Software:** https://software.jorgedoicela.com
+- **DoicelaDev:** https://doiceladev.jorgedoicela.com
 - **Portafolio:** https://portfolio.jorgedoicela.com
 - **GitHub:** https://github.com/JorgeDoicela

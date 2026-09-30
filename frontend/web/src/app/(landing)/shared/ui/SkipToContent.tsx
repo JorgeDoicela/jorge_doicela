@@ -8,7 +8,7 @@ export default function SkipToContent() {
     return (
         <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:font-mono focus:text-xs focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white transition-all duration-200"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:inline-flex focus:items-center focus:justify-center focus:px-5 focus:py-2.5 focus:rounded-full focus:bg-foreground focus:text-background focus:font-medium focus:text-xs focus:tracking-tight focus:shadow-2xl focus:border focus:border-card-border focus:outline-none focus:ring-2 focus:ring-foreground/20 active:scale-95 transition-all duration-200 cursor-pointer select-none"
         >
             {t('skipToContent')}
         </a>

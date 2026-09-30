@@ -78,7 +78,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 * **Alineación y Estilo de Botones en Carrusel (`AppleHighlightsCarousel.tsx`):**
   - Se eliminó el borde superior separador (`border-t border-card-border`) que dividía el cuerpo de las tarjetas del carrusel respecto a los botones de acción ("Abrir Biblia", "Entrar a Software", "Explorar Portafolio").
-  - Los botones de acción se alinean a la derecha (`justify-end pt-2 sm:pt-3`) conservando sus dimensiones calibradas (`px-6 sm:px-8 py-2.5 sm:py-3 w-full max-w-[210px] sm:max-w-[250px]`).
+  - Los botones de acción se alinean a la derecha (`justify-end pt-2 sm:pt-3`). En móvil operan con escala intermedia calibrada (`w-full max-w-[175px] px-5 py-2.5`), logrando presencia visual equilibrada sin dominar la tarjeta, mientras que en desktop (`sm:`) mantienen sus dimensiones completas (`sm:max-w-[250px] sm:px-8 sm:py-3`).
 
 * **Prevención de Recorte Vertical en MacBook (`AppleDetailExplorer.tsx`):**
   - Causa raíz identificada: el contenedor del inspector usaba `justify-between` con `min-h-[560px]` y la columna de la MacBook usaba `items-center` con `py-4` y `max-w-[580px]`. En viewports más compactos (o con zoom de navegador), la altura de la laptop empujaba el borde superior hacia coordenadas negativas dentro de un contenedor con `overflow-hidden`, recortando la curvatura y el bisel superior del marco.
@@ -91,4 +91,9 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 * **Calibración Visual y Espaciado en Carrusel (`BibleSlideVisual.tsx`, `PortfolioSlideVisual.tsx`, `SoftwareSlideVisual.tsx`):**
   - Se eliminaron las líneas divisorias superiores (`border-t border-card-border`) en los bloques de columnas de las tres diapositivas del carrusel de destacados.
-  - En `BibleSlideVisual.tsx`, se elevó directamente el bloque del versículo con margen superior negativo (`-mt-6 sm:-mt-8 md:-mt-10`) y un margen inferior generoso (`mb-8 sm:mb-10 md:mb-12`), separándolo sustancialmente del desglose morfológico inferior y eliminando cualquier sensación de saturación visual.
+  - Se corrigió la causa raíz del exceso de espacio muerto en móvil ajustando la altura de las tarjetas en `AppleHighlightsCarousel.tsx` a una escala ergonómica progresiva (`h-[480px] sm:h-[500px] md:h-[520px]`), eliminando los 530 px heredados que inflaban artificialmente la tarjeta móvil.
+  - En `SoftwareSlideVisual.tsx` y `PortfolioSlideVisual.tsx`, se unificó la densidad visual y legibilidad en desktop adoptando tipografía editorial destacada en Title Case (`md:text-[17px] font-semibold sm:normal-case tracking-tight`) con separación de `sm:gap-2` y elevación simétrica (`-mt-0 sm:-mt-3 md:-mt-5`), equilibrando los espacios libres (~80 px arriba y ~80 px abajo) y logrando consistencia perceptual con `BibleSlideVisual.tsx` (desglose morfológico calibrado a `md:text-[15px]` / `md:text-[13px]`).
+  - En `BibleSlideVisual.tsx`, se sincronizó el margen vertical (`-mt-3 sm:-mt-8 mb-6 sm:mb-10`) para armonizar equilibradamente con la nueva altura de 480 px.
+* **Homologación Visual de Accesibilidad (`SkipToContent.tsx`):**
+  - Se eliminaron las clases desfasadas y genéricas (`bg-indigo-600`, `font-mono`, `ring-white`), integrando el componente al sistema de diseño oficial de la landing.
+  - Cuando recibe foco de teclado, ahora se presenta como una cápsula flotante elegante y pulida (`rounded-full bg-foreground text-background font-medium text-xs border border-card-border shadow-2xl`), manteniendo 100% el cumplimiento de accesibilidad WCAG 2.1 con estética de producto de alta gama.

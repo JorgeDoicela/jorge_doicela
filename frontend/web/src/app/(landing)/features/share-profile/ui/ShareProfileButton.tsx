@@ -4,7 +4,15 @@ import React, { useState } from 'react';
 import { Share2, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-export function ShareProfileButton() {
+export interface ShareProfileButtonProps {
+  size?: number;
+  className?: string;
+}
+
+export function ShareProfileButton({
+  size = 22,
+  className = '',
+}: ShareProfileButtonProps) {
   const t = useTranslations('Links');
   const [copied, setCopied] = useState(false);
 
@@ -39,24 +47,17 @@ export function ShareProfileButton() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 mb-8 flex justify-center">
-      <button
-        onClick={handleShare}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/80 border border-card-border hover:border-card-hover-border text-text-muted hover:text-foreground text-xs font-mono font-medium shadow-md backdrop-blur-xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
-        aria-label={t('shareProfile')}
-      >
-        {copied ? (
-          <>
-            <Check size={14} className="text-emerald-400" />
-            <span className="text-emerald-400 font-semibold">{t('linkCopied')}</span>
-          </>
-        ) : (
-          <>
-            <Share2 size={14} />
-            <span>{t('shareProfile')}</span>
-          </>
-        )}
-      </button>
-    </div>
+    <button
+      onClick={handleShare}
+      className={`text-text-muted hover:text-foreground p-2 sm:p-2.5 rounded-xl hover:bg-foreground/5 active:scale-95 transition-all duration-200 cursor-pointer ${className}`.trim()}
+      aria-label={copied ? t('linkCopied') : t('shareProfile')}
+      title={copied ? t('linkCopied') : t('shareProfile')}
+    >
+      {copied ? (
+        <Check size={size} className="text-emerald-400 stroke-[2.2]" />
+      ) : (
+        <Share2 size={size} className="stroke-[2]" />
+      )}
+    </button>
   );
 }

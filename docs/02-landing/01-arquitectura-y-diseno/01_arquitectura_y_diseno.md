@@ -112,7 +112,20 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Estándares W3C Interaction:** Detección de dispositivos táctiles móviles mediante `window.matchMedia('(pointer: coarse) and (hover: none)')`, evitando falsos positivos en laptops o pantallas táctiles con puntero de precisión.
 * **Estabilidad sin Penalizaciones de Pestaña:** Se erradicó el monitor de fotogramas artificial que penalizaba al usuario por cambiar de ventana o durante la hidratación inicial. La adaptación es 100% determinista basada en capacidades del dispositivo.
 * **Integración con Battery Status API:** Si el navegador reporta batería crítica ($\le 20\%$ y desconectado del cargador), escala de inmediato a `mid` para proteger la autonomía del visitante.
-* **Sincronización DOM:** Emite `data-tier="high|mid|low"` en `<html>` consumido reactivamente por `globals.css`.
+### 3.10 Cabecera Dinámica Auto-Hide con Aceleración GPU (LandingHeader & useLandingHeaderScroll)
+* **Objetivo de UX y Lectura Limpia:** Evita la superposición fija constante de la cabecera sobre el contenido Bento Grid durante la lectura descendente, ocultándola con fluidez y haciéndola reaparecer de inmediato ante cualquier intención de retorno ascendente.
+* **Hook Especializado FSD (`useLandingHeaderScroll`):** Encapsulado en `widgets/landing-header/hooks/useLandingHeaderScroll.ts`:
+  * **Zona de Reposo Superior (`reposeZonePx: 80`):** En el tope de la página (`scrollY <= 80px`), la cabecera permanece fija y visible de forma incondicional, protegiendo la lectura inicial del Hero.
+  * **Inmunidad contra Rebotes y Jitter:** Filtra micro-vibraciones menores a 2 px e ignora efectos elásticos negativos de iOS Rubber-Banding (`Math.max(0, window.scrollY)`).
+  * **Histéresis Asimétrica Calibrada:** Exige un desplazamiento descendente continuo de al menos 100 px (`hideIntentPx`) para evitar desapariciones prematuras o involuntarias, mientras que reaparece de forma ágil ante 25 px de desplazamiento ascendente (`revealIntentPx`).
+  * **Rendimiento a 60/120 FPS:** Event listener nativo `{ passive: true }` coordinado con `window.requestAnimationFrame`, erradicando cualquier recálculo de diseño o repintado forzado (*layout thrashing*).
+* **Renderizado GPU y Cinemática de Profundidad en `LandingHeader`:**
+  * Transición cinematográfica con `transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]`, `transform-gpu` y `will-change-[transform,opacity,filter]`.
+  * Efecto de profundidad:
+    * Estado visible: `translate-y-0 opacity-100 scale-100 blur-none`.
+    * Estado oculto: `-translate-y-12 sm:-translate-y-14 opacity-0 scale-[0.98] blur-[4px]` con `pointer-events-none`.
+  * Inmunidad contra clics fantasma: desactiva `pointer-events` en los controles laterales durante el estado oculto.
+  * Sincronización ARIA: atributo `aria-hidden={!isVisible}` para lectores de pantalla.
 
 ---
 

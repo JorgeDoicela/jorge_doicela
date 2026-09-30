@@ -1,2 +1,3 @@
 export * from './ui/LandingHeader';
 export { default as LandingHeader } from './ui/LandingHeader';
+export * from './hooks/useLandingHeaderScroll';

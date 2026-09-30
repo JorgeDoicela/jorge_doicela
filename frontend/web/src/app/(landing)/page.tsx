@@ -89,7 +89,7 @@ export default async function LandingPage() {
                             </blockquote>
                         </div>
 
-                        <div className="pt-6 border-t border-card-border flex items-center justify-between text-xs text-text-subtitle">
+                        <div className="pt-6 flex items-center justify-between text-xs text-text-subtitle">
                             <span>{tLanding('philosophySub')}</span>
                             <span className="font-semibold text-foreground">{tLanding('philosophyRef')}</span>
                         </div>

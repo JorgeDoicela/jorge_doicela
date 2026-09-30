@@ -34,8 +34,8 @@ export default async function ConsultaPage() {
       {/* Capas de Fondo Cósmico y Parallax de la Landing */}
       <LandingVisualEffects />
 
-      {/* Barra de Navegación Superior Unificada */}
-      <LandingHeader sectionBadge={t('badge')} />
+      {/* Barra de Navegación Superior Unificada con botón de volver */}
+      <LandingHeader showBackLink backLabel={t('backHome')} />
 
       {/* Contenido Principal Bento con espaciado generoso */}
       <main

@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ShareProfileButton } from '../../../features/share-profile';
 
 function GithubIcon({ size = 26, className = '' }: { size?: number; className?: string }) {
   return (
@@ -97,7 +98,7 @@ export function LinksHeader() {
         <span>Quito, Ecuador</span>
       </p>
 
-      {/* Iconos Sociales en Fila Equilibrada */}
+      {/* Iconos Sociales y Acción de Compartir en Fila Equilibrada */}
       <div className="flex items-center justify-center gap-2 sm:gap-3 text-text-muted">
         {socialLinks.map((social) => {
           const Icon = social.icon;
@@ -115,6 +116,7 @@ export function LinksHeader() {
             </a>
           );
         })}
+        <ShareProfileButton size={22} />
       </div>
     </header>
   );

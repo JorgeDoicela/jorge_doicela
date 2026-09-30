@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server';
 import { LinksHeader, ActionLinksList, ProjectsMediaGrid } from '../widgets/links-showcase';
 import { LandingHeader } from '../widgets/landing-header';
 import { LandingFooter } from '../widgets/landing-footer';
-import { ShareProfileButton } from '../features/share-profile';
 import { LinksAiAssistant } from '../features/ai-assistant';
 import { LandingVisualEffects } from '../widgets/cosmic-canvas';
 import { SkipToContent } from '../shared';
@@ -50,11 +49,8 @@ export default async function LinksPage() {
         className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 z-10 flex-grow flex flex-col items-center outline-none focus:outline-none pt-24 sm:pt-28 md:pt-32 pb-12"
         tabIndex={-1}
       >
-        {/* Cabecera con Avatar Circular, Título, Subtítulo y Redes */}
+        {/* Cabecera con Avatar Circular, Título, Subtítulo, Redes y Acción de Compartir */}
         <LinksHeader />
-
-        {/* Botón de Compartir Perfil con Web Share API y Copiar Enlace */}
-        <ShareProfileButton />
 
         {/* Botones de Enlace Limpios y Grandes */}
         <ActionLinksList />

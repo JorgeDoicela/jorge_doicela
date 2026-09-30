@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { QuitoClockBadge } from '../../../shared';
 import { LanguageToggleButton } from '../../../features/language-toggle';
 import { ThemeToggle } from '../../../features/theme-toggle';
+import { useLandingHeaderScroll } from '../hooks/useLandingHeaderScroll';
 
 export interface LandingHeaderProps {
   sectionBadge?: string;
@@ -24,15 +25,20 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
   logoHref,
   className = '',
 }) => {
+  const isVisible = useLandingHeaderScroll();
   const targetHref = logoHref || (sectionBadge || showBackLink ? backHref : '#');
 
   return (
     <header
-      className={`animate-fade-in-up fixed top-5 left-5 right-5 sm:top-6 sm:left-8 sm:right-8 md:top-7 md:left-10 md:right-10 z-50 flex items-center justify-between pointer-events-none ${className}`.trim()}
-      style={{ animationDelay: '0ms' }}
+      aria-hidden={!isVisible}
+      className={`fixed top-5 left-5 right-5 sm:top-6 sm:left-8 sm:right-8 md:top-7 md:left-10 md:right-10 z-50 flex items-center justify-between pointer-events-none transform-gpu transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity,filter] ${
+        isVisible
+          ? 'translate-y-0 opacity-100 scale-100 blur-none'
+          : '-translate-y-12 sm:-translate-y-14 opacity-0 scale-[0.98] blur-[4px] pointer-events-none'
+      } ${className}`.trim()}
     >
       {/* Controles Izquierda: Logotipo y Sección Opcional */}
-      <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2.5">
+      <div className={`flex items-center gap-1.5 sm:gap-2.5 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
         <Link
           href={targetHref}
           className="flex items-center gap-2 outline-none focus:outline-none hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
@@ -81,7 +87,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
       </div>
 
       {/* Controles Derecha: Reloj de Quito, Selector de Idioma y Modo Claro/Oscuro */}
-      <div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
+      <div className={`flex items-center gap-2 sm:gap-3 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
         <QuitoClockBadge />
         <div className="hidden sm:block w-px h-3.5 bg-card-border/60 mx-0.5" aria-hidden="true" />
         <LanguageToggleButton />

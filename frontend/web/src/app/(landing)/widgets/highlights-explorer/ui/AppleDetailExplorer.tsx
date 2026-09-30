@@ -297,7 +297,7 @@ export const AppleDetailExplorer: React.FC = () => {
             </div>
 
             {/* Tarjeta Inspector Amplia Estilo Apple */}
-            <div className="w-full rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-5 sm:p-8 md:p-12 backdrop-blur-2xl relative overflow-hidden flex flex-col justify-between min-h-[520px] md:min-h-[560px]">
+            <div className="w-full rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-4 sm:p-8 md:p-12 backdrop-blur-2xl relative overflow-hidden flex flex-col justify-between min-h-0 sm:min-h-[480px] md:min-h-[560px]">
                 {/* Botón de Cerrar / Reset en Esquina Superior Derecha */}
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
@@ -401,10 +401,10 @@ export const AppleDetailExplorer: React.FC = () => {
                 {/* ========================================================================= */}
                 {/* 2. VISTA MÓVIL (< lg): Apple Official Mobile Layout */}
                 {/* ========================================================================= */}
-                <div className="flex lg:hidden flex-col justify-between gap-6 flex-grow pt-2">
+                <div className="flex lg:hidden flex-col items-center justify-center gap-7 sm:gap-8 flex-grow py-3">
                     {/* Laptop Centrada en la parte superior */}
-                    <div className="w-full flex items-center justify-center pt-2 pb-1">
-                        <div className="w-full max-w-[360px] flex flex-col items-center">
+                    <div className="w-full flex items-center justify-center">
+                        <div className="w-full max-w-[340px] sm:max-w-[360px] flex flex-col items-center">
                             {/* Pantalla Laptop */}
                             <div className="w-full aspect-[16/10] rounded-t-2xl bg-card border-[5px] border-card-border relative overflow-hidden shadow-sm flex flex-col transition-colors duration-300">
                                 {/* Cámara Notch */}
@@ -428,34 +428,34 @@ export const AppleDetailExplorer: React.FC = () => {
                     </div>
 
                     {/* Área Inferior: Alternancia entre Bocadillo con Flechas Flotantes (< >) o Barra de Píldoras */}
-                    <div className="w-full min-h-[100px] flex items-center justify-center px-4">
+                    <div className="w-full flex items-center justify-center px-1 sm:px-4">
                         {isExpanded ? (
                             /* Modo Detalle Abierto: Bocadillo con bordes super redondeados y flechas flotantes laterales */
-                            <div className="relative w-full max-w-[380px] mx-auto animate-fade-slide">
-                                {/* Flecha Izquierda Flotante (Touch Target 44px - WCAG 2.5.5) */}
+                            <div className="relative w-full max-w-[390px] mx-auto animate-fade-slide px-5 sm:px-6">
+                                {/* Flecha Izquierda Flotante (Touch Target 40px) */}
                                 <button
                                     onClick={handlePrev}
-                                    className="absolute -left-3 sm:-left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
                                     aria-label="Anterior característica"
                                 >
-                                    <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+                                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                                 </button>
 
                                 {/* Bocadillo Descriptivo Apple Style */}
-                                <div className="w-full rounded-[1.8rem] bg-btn-sec border border-card-border p-5 sm:p-6 text-left shadow-sm backdrop-blur-2xl">
+                                <div className="w-full rounded-[1.6rem] sm:rounded-[1.8rem] bg-btn-sec border border-card-border p-4 sm:p-5 text-left shadow-sm backdrop-blur-2xl">
                                     <p className="text-xs sm:text-sm text-foreground leading-relaxed">
                                         <span className="font-semibold">{current.title}. </span>
                                         <span className="text-text-muted font-normal">{current.description}</span>
                                     </p>
                                 </div>
 
-                                {/* Flecha Derecha Flotante (Touch Target 44px - WCAG 2.5.5) */}
+                                {/* Flecha Derecha Flotante (Touch Target 40px) */}
                                 <button
                                     onClick={handleNext}
-                                    className="absolute -right-3 sm:-right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
                                     aria-label="Siguiente característica"
                                 >
-                                    <ChevronRight className="w-5 h-5 stroke-[2.5]" />
+                                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                                 </button>
                             </div>
                         ) : (

@@ -265,8 +265,8 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                     {slide.renderVisual()}
                                 </div>
 
-                                {/* Botón de Enlace Directo Simple Centrado Calibrado */}
-                                <div className="flex items-center justify-center pt-2 sm:pt-3">
+                                {/* Botón de Enlace Directo Simple Alineado a la Derecha */}
+                                <div className="flex items-center justify-end pt-2 sm:pt-3">
                                     <a
                                         href={slide.linkUrl}
                                         onClick={(e) => {

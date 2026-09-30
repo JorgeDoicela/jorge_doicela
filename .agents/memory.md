@@ -76,10 +76,9 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Causa raíz identificada: `CinematicSpiralGalaxy`, `InteractiveParticles` y `ParallaxBackground` inicializaban un estado de React `useState(false)` para `isLight`. Durante el render inicial y hasta que terminaba la hidratación de React (~1s), se montaba el canvas de la galaxia y los gradientes oscuros de nebulosas saturadas antes de que `useEffect` detectara el modo claro.
   - Solución arquitectónica: se desacopló el control de visibilidad del estado de React y se delegó 100% al motor CSS del navegador mediante clases `hidden dark:block` y capas duales sincronizadas con `block dark:hidden` / `hidden dark:block`. De este modo, en modo claro la galaxia y las partículas tienen `display: none` instantáneo en 0 ms desde el primer frame de renderizado del navegador, sin destellos ni cambios tardíos de color.
 
-* **Centrado y Calibración de Botones en Carrusel (`AppleHighlightsCarousel.tsx`):**
-  - Se eliminó el borde superior separador (`border-t border-card-border`) que dividía el cuerpo de las tarjetas del carrusel con respecto a los botones de acción ("Abrir Biblia", "Entrar a Software", "Explorar Portafolio").
-  - Se sustituyó la alineación a la derecha (`justify-end`) por centrado simétrico horizontal (`justify-center pt-2 sm:pt-3`).
-  - Se calibró la amplitud horizontal a una escala equilibrada y ergonómica (`w-full max-w-[210px] sm:max-w-[250px] px-6 sm:px-8 py-2.5 sm:py-3 justify-center`), evitando que el botón se extienda en exceso pero conservando suficiente peso visual.
+* **Alineación y Estilo de Botones en Carrusel (`AppleHighlightsCarousel.tsx`):**
+  - Se eliminó el borde superior separador (`border-t border-card-border`) que dividía el cuerpo de las tarjetas del carrusel respecto a los botones de acción ("Abrir Biblia", "Entrar a Software", "Explorar Portafolio").
+  - Los botones de acción se alinean a la derecha (`justify-end pt-2 sm:pt-3`) conservando sus dimensiones calibradas (`px-6 sm:px-8 py-2.5 sm:py-3 w-full max-w-[210px] sm:max-w-[250px]`).
 
 * **Prevención de Recorte Vertical en MacBook (`AppleDetailExplorer.tsx`):**
   - Causa raíz identificada: el contenedor del inspector usaba `justify-between` con `min-h-[560px]` y la columna de la MacBook usaba `items-center` con `py-4` y `max-w-[580px]`. En viewports más compactos (o con zoom de navegador), la altura de la laptop empujaba el borde superior hacia coordenadas negativas dentro de un contenedor con `overflow-hidden`, recortando la curvatura y el bisel superior del marco.
@@ -90,5 +89,6 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Esto garantiza simetría y balance con las plataformas homólogas ("Software" y "Portafolio" / "Portfolio"), eliminando artículos gramaticales superfluos.
   - En la lista de accesos directos (`actionCv`), se eliminó la sigla entre paréntesis `(CV)`, dejando limpiamente `"Descargar Currículum Vitae"` en español y `"Download Curriculum Vitae"` en inglés.
 
-
-
+* **Calibración Visual y Espaciado en Carrusel (`BibleSlideVisual.tsx`, `PortfolioSlideVisual.tsx`, `SoftwareSlideVisual.tsx`):**
+  - Se eliminaron las líneas divisorias superiores (`border-t border-card-border`) en los bloques de columnas de las tres diapositivas del carrusel de destacados.
+  - En `BibleSlideVisual.tsx`, se elevó directamente el bloque del versículo con margen superior negativo (`-mt-6 sm:-mt-8 md:-mt-10`) y un margen inferior generoso (`mb-8 sm:mb-10 md:mb-12`), separándolo sustancialmente del desglose morfológico inferior y eliminando cualquier sensación de saturación visual.

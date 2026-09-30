@@ -212,8 +212,8 @@ export const AppleDetailExplorer: React.FC = () => {
             navTitle: isEs ? 'Seguridad & Privacidad' : 'Security & Privacy',
             title: isEs ? 'Seguridad & Privacidad' : 'Security & Privacy',
             description: isEs
-                ? 'Plataformas construidas con altos estándares de ciberseguridad, arquitectura en 1 GB de RAM, Cloudflare mTLS y privacidad estricta.'
-                : 'Platforms engineered with high cybersecurity standards, 1 GB RAM architecture, Cloudflare mTLS, and privacy by design.',
+                ? 'Plataformas construidas con altos estándares de ciberseguridad, arquitectura de alto rendimiento, Cloudflare mTLS y privacidad estricta.'
+                : 'Platforms engineered with high cybersecurity standards, high-performance architecture, Cloudflare mTLS, and privacy by design.',
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
@@ -298,14 +298,16 @@ export const AppleDetailExplorer: React.FC = () => {
 
             {/* Tarjeta Inspector Amplia Estilo Apple */}
             <div className="w-full rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-4 sm:p-8 md:p-12 backdrop-blur-2xl relative overflow-hidden flex flex-col justify-between min-h-0 sm:min-h-[480px] md:min-h-[560px]">
-                {/* Botón de Cerrar / Reset en Esquina Superior Derecha */}
-                <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer z-20"
-                    aria-label={isExpanded ? 'Cerrar detalle' : 'Abrir detalle'}
-                >
-                    <X className="w-4 h-4" />
-                </button>
+                {/* Botón de Cerrar / Reset en Esquina Superior Derecha (Solo visible si hay un detalle activo) */}
+                {isExpanded && (
+                    <button
+                        onClick={() => setIsExpanded(false)}
+                        className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer z-20 animate-fade-slide"
+                        aria-label={isEs ? 'Cerrar detalle' : 'Close detail'}
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                )}
 
                 {/* ========================================================================= */}
                 {/* 1. VISTA ESCRITORIO (>= lg): Lado a lado (Píldoras a la izquierda, Laptop a la derecha) */}
@@ -354,8 +356,8 @@ export const AppleDetailExplorer: React.FC = () => {
                                     <button
                                         key={item.id}
                                         onClick={() => {
-                                            setActiveItem(idx);
-                                            setIsExpanded(true);
+                                             setActiveItem(idx);
+                                             setIsExpanded(true);
                                         }}
                                         className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 text-left w-fit cursor-pointer ${isActive
                                             ? 'bg-foreground text-background shadow-sm'
@@ -375,15 +377,15 @@ export const AppleDetailExplorer: React.FC = () => {
                     {/* COLUMNA DERECHA: MacBook Pro con Transición Cinemática */}
                     <div className="col-span-7 w-full flex items-center justify-center py-4">
                         <div className="w-full max-w-[580px] flex flex-col items-center">
-                            {/* Tapa / Bisel Superior de la Pantalla */}
-                            <div className="w-full aspect-[16/10] rounded-t-2xl sm:rounded-t-3xl bg-card border-[6px] sm:border-[8px] border-card-border relative overflow-hidden shadow-md flex flex-col transition-colors duration-300">
+                            {/* Tapa / Bisel Superior de la Pantalla (Negro en Modo Claro, Blanco Neutro en Modo Oscuro) */}
+                            <div className="w-full aspect-[16/10] rounded-t-2xl sm:rounded-t-3xl bg-[#18181b] border-[6px] sm:border-[8px] border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] relative overflow-hidden shadow-md flex flex-col transition-colors duration-300">
                                 {/* Cámara Notch Sutil */}
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-3 sm:h-3.5 bg-card rounded-b-md z-30 flex items-center justify-center border-b border-x border-card-border transition-colors duration-300">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-text-muted/40" />
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-3 sm:h-3.5 bg-[#18181b] border-b border-x border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] rounded-b-md z-30 flex items-center justify-center transition-colors duration-300">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-zinc-600 dark:bg-zinc-400" />
                                 </div>
 
                                 {/* Pantalla con Transición de Fundido Suave */}
-                                <div className="w-full h-full flex-grow relative overflow-hidden">
+                                <div className="w-full h-full flex-grow relative overflow-hidden bg-white dark:bg-[#090a0f]">
                                     <div key={isExpanded ? current.id : 'welcome'} className="w-full h-full animate-fade-slide">
                                         {isExpanded ? current.renderScreen() : renderWelcomeScreen()}
                                     </div>
@@ -391,8 +393,8 @@ export const AppleDetailExplorer: React.FC = () => {
                             </div>
 
                             {/* Base de la Laptop */}
-                            <div className="w-[105%] h-3 sm:h-3.5 bg-card border border-t-0 border-card-border rounded-b-lg relative flex items-start justify-center transition-colors duration-300">
-                                <div className="w-12 sm:w-16 h-1 bg-card-border rounded-b" />
+                            <div className="w-[105%] h-3 sm:h-3.5 bg-[#18181b] border border-t-0 border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] rounded-b-lg relative flex items-start justify-center transition-colors duration-300">
+                                <div className="w-12 sm:w-16 h-1 bg-[#27272a] dark:bg-[#e4e4e7] rounded-b" />
                             </div>
                         </div>
                     </div>
@@ -401,19 +403,19 @@ export const AppleDetailExplorer: React.FC = () => {
                 {/* ========================================================================= */}
                 {/* 2. VISTA MÓVIL (< lg): Apple Official Mobile Layout */}
                 {/* ========================================================================= */}
-                <div className="flex lg:hidden flex-col items-center justify-center gap-7 sm:gap-8 flex-grow py-3">
+                <div className="flex lg:hidden flex-col items-center justify-center gap-5 sm:gap-6 flex-grow py-2">
                     {/* Laptop Centrada en la parte superior */}
                     <div className="w-full flex items-center justify-center">
                         <div className="w-full max-w-[340px] sm:max-w-[360px] flex flex-col items-center">
-                            {/* Pantalla Laptop */}
-                            <div className="w-full aspect-[16/10] rounded-t-2xl bg-card border-[5px] border-card-border relative overflow-hidden shadow-sm flex flex-col transition-colors duration-300">
+                            {/* Pantalla Laptop (Negra en Modo Claro, Blanca en Modo Oscuro) */}
+                            <div className="w-full aspect-[16/10] rounded-t-2xl bg-[#18181b] border-[5px] border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] relative overflow-hidden shadow-sm flex flex-col transition-colors duration-300">
                                 {/* Cámara Notch */}
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-2.5 bg-card rounded-b z-30 flex items-center justify-center border-b border-x border-card-border">
-                                    <div className="w-1 h-1 rounded-full bg-text-muted/40" />
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-2.5 bg-[#18181b] border-b border-x border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] rounded-b z-30 flex items-center justify-center">
+                                    <div className="w-1 h-1 rounded-full bg-zinc-600 dark:bg-zinc-400" />
                                 </div>
 
                                 {/* Contenido de Pantalla con Animación */}
-                                <div className="w-full h-full flex-grow relative overflow-hidden">
+                                <div className="w-full h-full flex-grow relative overflow-hidden bg-white dark:bg-[#090a0f]">
                                     <div key={isExpanded ? current.id : 'welcome'} className="w-full h-full animate-fade-slide">
                                         {isExpanded ? current.renderScreen() : renderWelcomeScreen()}
                                     </div>
@@ -421,14 +423,14 @@ export const AppleDetailExplorer: React.FC = () => {
                             </div>
 
                             {/* Base de Laptop */}
-                            <div className="w-[105%] h-2.5 bg-card border border-t-0 border-card-border rounded-b-md relative flex items-start justify-center">
-                                <div className="w-10 h-0.5 bg-card-border rounded-b" />
+                            <div className="w-[105%] h-2.5 bg-[#18181b] border border-t-0 border-[#27272a] dark:bg-[#ffffff] dark:border-[#e4e4e7] rounded-b-md relative flex items-start justify-center">
+                                <div className="w-10 h-0.5 bg-[#27272a] dark:bg-[#e4e4e7] rounded-b" />
                             </div>
                         </div>
                     </div>
 
-                    {/* Área Inferior: Alternancia entre Bocadillo con Flechas Flotantes (< >) o Barra de Píldoras */}
-                    <div className="w-full flex items-center justify-center px-1 sm:px-4">
+                    {/* Área Inferior con altura constante fija: Evita layout shift o cambios de tamaño entre estado cerrado y abierto */}
+                    <div className="w-full h-[125px] sm:h-[135px] flex items-center justify-center px-1 sm:px-4">
                         {isExpanded ? (
                             /* Modo Detalle Abierto: Bocadillo con bordes super redondeados y flechas flotantes laterales */
                             <div className="relative w-full max-w-[390px] mx-auto animate-fade-slide px-5 sm:px-6">

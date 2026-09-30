@@ -7,27 +7,38 @@ interface SlideVisualProps {
 export const SoftwareSlideVisual: React.FC<SlideVisualProps> = ({ isEs }) => {
   return (
     <div className="w-full flex flex-col justify-center text-left py-1">
-      {/* Columnas Separadas por Línea Sutil */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
-        <div className="flex flex-col gap-1.5 sm:pr-8 pb-4 sm:pb-0">
+      {/* 3 Columnas Separadas por Línea Sutil en Desktop y Espaciado Limpio en Móvil */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-0 sm:divide-x divide-card-border pt-3 sm:pt-4 border-t border-card-border">
+        <div className="flex flex-col gap-1 sm:pr-6">
           <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-            {isEs ? 'IA Generativa & Modelos de Razonamiento' : 'Generative AI & Reasoning Models'}
+            {isEs ? 'IA & Razonamiento' : 'AI & Reasoning'}
           </span>
           <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
             {isEs
-              ? 'Arquitecturas de inferencia, evaluación de benchmarks, agentes autónomos y técnicas avanzadas de prompting y RAG.'
-              : 'Inference architectures, benchmark evaluations, autonomous agents, and advanced prompting and RAG techniques.'}
+              ? 'Modelos LLM, inferencia, agentes autónomos y técnicas avanzadas de RAG.'
+              : 'LLM models, inference, autonomous agents, and advanced RAG techniques.'}
           </p>
         </div>
 
-        <div className="flex flex-col gap-1.5 sm:pl-8 pt-4 sm:pt-0">
+        <div className="flex flex-col gap-1 sm:px-6">
           <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-            {isEs ? 'Ciberseguridad & Defensa Activa' : 'Cybersecurity & Active Defense'}
+            {isEs ? 'Ciberseguridad' : 'Cybersecurity'}
           </span>
           <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
             {isEs
-              ? 'Análisis de vulnerabilidades, auditorías de dependencias, protección de APIs y políticas de seguridad zero-trust.'
-              : 'Vulnerability analysis, dependency audits, API protection, and zero-trust security policies.'}
+              ? 'Análisis de vulnerabilidades CVE, bastionado de servidores y zero-trust.'
+              : 'CVE vulnerability analysis, server hardening, and zero-trust policies.'}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-1 sm:pl-6">
+          <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            {isEs ? 'Tutoriales & Foros' : 'Tutorials & Community'}
+          </span>
+          <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+            {isEs
+              ? 'Guías paso a paso, noticias de vanguardia y debate técnico para desarrolladores.'
+              : 'Step-by-step guides, cutting-edge news, and developer discussions.'}
           </p>
         </div>
       </div>

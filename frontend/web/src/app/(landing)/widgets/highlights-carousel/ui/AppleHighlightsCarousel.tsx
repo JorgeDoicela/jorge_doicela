@@ -248,7 +248,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                     }
                                 }}
                                 style={{ width: 'var(--card-w)', marginRight: 'var(--card-gap)' }}
-                                className="shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[530px] sm:h-[500px] md:h-[520px] cursor-pointer group opacity-100 hover:border-card-hover-border"
+                                className="shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border !shadow-none p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[530px] sm:h-[500px] md:h-[520px] cursor-pointer group opacity-100"
                             >
                                 {/* Cabecera: Limpia, directa, alineada a la izquierda */}
                                 <div className="flex flex-col text-left max-w-2xl gap-1.5 mb-2">

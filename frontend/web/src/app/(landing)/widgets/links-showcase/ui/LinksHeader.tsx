@@ -89,13 +89,8 @@ export function LinksHeader() {
       </h1>
 
       {/* Tagline / Subtítulo */}
-      <p className="text-sm sm:text-base md:text-lg text-text-muted font-normal max-w-xl leading-relaxed mb-1">
+      <p className="text-sm sm:text-base md:text-lg text-text-muted font-normal max-w-xl leading-relaxed mb-4">
         {t('role')}
-      </p>
-
-      {/* Ubicación */}
-      <p className="text-xs sm:text-sm text-text-subtitle font-mono flex items-center justify-center gap-1.5 mb-4 tracking-wide">
-        <span>Quito, Ecuador</span>
       </p>
 
       {/* Iconos Sociales y Acción de Compartir en Fila Equilibrada */}

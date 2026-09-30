@@ -60,12 +60,12 @@ export default function TypewriterRole() {
     return (
         <div className="flex items-center justify-center min-h-[32px] sm:min-h-[24px] px-2" aria-live="polite">
             <p 
-                className="text-xs sm:text-sm md:text-base text-text-subtitle font-semibold tracking-[-0.01em] uppercase text-center leading-normal flex items-center justify-center"
+                className="text-xs sm:text-sm md:text-base text-text-subtitle font-semibold tracking-[-0.01em] uppercase text-center leading-normal max-w-full"
                 aria-label={`Especialidad: ${roles[currentRoleIndex] || roles[0]}`}
             >
                 <span>{currentText}</span>
                 <span 
-                    className={`inline-block w-1.5 h-3.5 md:h-4 ml-1.5 animate-pulse rounded-full transition-colors duration-500 ${cursorColorClasses[currentRoleIndex % cursorColorClasses.length]}`} 
+                    className={`inline-block w-1.5 h-3 sm:h-3.5 md:h-4 ml-1 align-middle -translate-y-[1px] animate-pulse rounded-full transition-colors duration-500 ${cursorColorClasses[currentRoleIndex % cursorColorClasses.length]}`} 
                     aria-hidden="true" 
                 />
             </p>

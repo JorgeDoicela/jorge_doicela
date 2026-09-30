@@ -91,11 +91,11 @@ export function CustomSelect({
         </span>
       </button>
 
-      {/* Menú Desplegable con Estilo Frosted Glass */}
+      {/* Menú Desplegable Sólido y Opaco sin Transparencias */}
       {isOpen && (
         <ul
           role="listbox"
-          className="absolute left-0 right-0 z-50 mt-2 py-1.5 rounded-2xl bg-card border border-card-border backdrop-blur-2xl shadow-2xl overflow-hidden animate-fade-slide max-h-64 overflow-y-auto"
+          className="absolute left-0 right-0 z-50 mt-2 py-1.5 rounded-2xl bg-white dark:bg-[#14151f] border border-card-border shadow-2xl overflow-hidden animate-fade-slide max-h-64 overflow-y-auto"
         >
           {options.map((option) => {
             const isSelected = option.value === value;

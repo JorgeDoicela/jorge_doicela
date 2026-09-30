@@ -99,9 +99,9 @@ export function ConsultaForm() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-between">
-      <div className="mb-6">
-        <h3 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-foreground mb-2">
+    <div className="w-full h-full flex flex-col justify-between">
+      <div className="mb-6 sm:mb-8">
+        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-[-0.03em] text-foreground mb-2 sm:mb-3">
           {t('formCardTitle')}
         </h3>
         <p className="text-text-muted text-sm sm:text-base font-normal leading-relaxed tracking-[-0.011em]">
@@ -110,14 +110,14 @@ export function ConsultaForm() {
       </div>
 
       {success && (
-        <div className="p-8 rounded-[2rem] bg-foreground/5 border border-card-border text-foreground text-center flex flex-col items-center justify-center gap-4 animate-fade-slide">
-          <p className="text-sm sm:text-base font-medium leading-relaxed max-w-sm text-foreground">
+        <div className="p-8 sm:p-12 rounded-[2rem] bg-foreground/5 border border-card-border text-foreground text-center flex flex-col items-center justify-center gap-5 animate-fade-slide my-auto">
+          <p className="text-base sm:text-lg font-medium leading-relaxed max-w-sm text-foreground">
             {t('successMsg')}
           </p>
           <button
             type="button"
             onClick={resetForm}
-            className="mt-2 px-5 py-2.5 text-xs font-semibold bg-foreground text-background rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all shadow-md cursor-pointer"
+            className="mt-3 px-6 py-3 text-xs sm:text-sm font-semibold bg-foreground text-background rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all shadow-md cursor-pointer"
           >
             {t('sendAnotherBtn')}
           </button>
@@ -131,99 +131,101 @@ export function ConsultaForm() {
       )}
 
       {!success && (
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-          <div>
-            <label htmlFor="name" className="block text-xs font-medium text-text-muted mb-1.5">
-              {t('nameLabel')} *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              maxLength={100}
-              required
-              className="w-full px-4 py-3 sm:py-3.5 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm"
-              placeholder={t('namePlaceholder')}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="flex-grow flex flex-col justify-between gap-5 sm:gap-6">
+          <div className="space-y-5 sm:space-y-6 flex-grow flex flex-col">
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-text-muted mb-1.5">
-                {t('emailLabel')} *
+              <label htmlFor="name" className="block text-xs sm:text-sm font-medium text-text-muted mb-2">
+                {t('nameLabel')} *
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                maxLength={150}
+                maxLength={100}
                 required
-                className="w-full px-4 py-3 sm:py-3.5 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm"
-                placeholder={t('emailPlaceholder')}
+                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm"
+                placeholder={t('namePlaceholder')}
               />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <div>
+                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-text-muted mb-2">
+                  {t('emailLabel')} *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  maxLength={150}
+                  required
+                  className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm"
+                  placeholder={t('emailPlaceholder')}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-xs sm:text-sm font-medium text-text-muted mb-2">
+                  {t('phoneLabel')}
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  maxLength={50}
+                  className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm"
+                  placeholder={t('phonePlaceholder')}
+                />
+              </div>
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-xs font-medium text-text-muted mb-1.5">
-                {t('phoneLabel')}
+              <label htmlFor="serviceType" className="block text-xs sm:text-sm font-medium text-text-muted mb-2">
+                {t('serviceLabel')}
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                maxLength={50}
-                className="w-full px-4 py-3 sm:py-3.5 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm"
-                placeholder={t('phonePlaceholder')}
+              <CustomSelect
+                id="serviceType"
+                name="serviceType"
+                value={formData.serviceType}
+                onChange={handleServiceChange}
+                options={serviceOptions}
+                placeholder={t('serviceSelect')}
               />
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="serviceType" className="block text-xs font-medium text-text-muted mb-1.5">
-              {t('serviceLabel')}
-            </label>
-            <CustomSelect
-              id="serviceType"
-              name="serviceType"
-              value={formData.serviceType}
-              onChange={handleServiceChange}
-              options={serviceOptions}
-              placeholder={t('serviceSelect')}
-            />
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <label htmlFor="message" className="block text-xs font-medium text-text-muted">
-                {t('messageLabel')} *
-              </label>
-              <span className={`text-[10px] font-mono ${formData.message.length > 2800 ? 'text-amber-400 font-semibold' : 'text-text-subtitle/70'}`}>
-                {formData.message.length} / 3000
-              </span>
+            <div className="flex-grow flex flex-col">
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="message" className="block text-xs sm:text-sm font-medium text-text-muted">
+                  {t('messageLabel')} *
+                </label>
+                <span className={`text-[10px] font-mono ${formData.message.length > 2800 ? 'text-amber-400 font-semibold' : 'text-text-subtitle/70'}`}>
+                  {formData.message.length} / 3000
+                </span>
+              </div>
+              <textarea
+                id="message"
+                name="message"
+                rows={5}
+                value={formData.message}
+                onChange={handleChange}
+                maxLength={3000}
+                required
+                className="w-full flex-grow min-h-[140px] sm:min-h-[160px] px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm resize-none"
+                placeholder={t('messagePlaceholder')}
+              />
             </div>
-            <textarea
-              id="message"
-              name="message"
-              rows={4}
-              value={formData.message}
-              onChange={handleChange}
-              maxLength={3000}
-              required
-              className="w-full px-4 py-3 sm:py-3.5 rounded-2xl bg-foreground/5 hover:bg-foreground/10 focus:bg-foreground/10 border border-card-border hover:border-card-hover-border focus:border-card-hover-border text-foreground placeholder:text-text-subtitle/60 focus:outline-none transition-all text-base sm:text-sm resize-none"
-              placeholder={t('messagePlaceholder')}
-            />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 sm:mt-3 py-3.5 sm:py-4 px-6 bg-foreground text-background font-semibold text-xs sm:text-sm tracking-tight rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg"
+            className="w-full py-4 sm:py-4.5 px-6 bg-foreground text-background font-semibold text-sm sm:text-base tracking-tight rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-xl shrink-0"
           >
             <span>{loading ? t('sendingBtn') : t('sendBtn')}</span>
           </button>

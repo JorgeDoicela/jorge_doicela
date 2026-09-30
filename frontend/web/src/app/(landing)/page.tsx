@@ -80,11 +80,14 @@ export default async function LandingPage() {
 
                     {/* Filosofía & Enfoque */}
                     <BentoCard className="p-8 md:p-12 flex flex-col justify-between">
-                        <div className="flex flex-col gap-3">
+                        <div>
                             <h3 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-foreground">
                                 {tLanding('philosophyTitle')}
                             </h3>
-                            <blockquote className="text-sm md:text-base italic text-text-muted leading-relaxed font-light mt-2 border-l-2 border-card-border pl-4">
+                        </div>
+
+                        <div className="my-auto py-6 sm:py-10">
+                            <blockquote className="text-sm sm:text-[15px] md:text-base italic text-text-muted leading-relaxed font-light border-l-2 border-card-border pl-4 sm:pl-5">
                                 {tLanding('philosophyQuote')}
                             </blockquote>
                         </div>

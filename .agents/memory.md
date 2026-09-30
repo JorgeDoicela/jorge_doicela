@@ -45,8 +45,29 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Centrado vertical armónico y aire visual calibrado con `gap-7 sm:gap-8` (28px a 32px) y `min-h-0 sm:min-h-[480px]`.
   - Integración de padding de seguridad (`px-5 sm:px-6` y flechas en `left-0` / `right-0`) en el bocadillo de texto para erradicar la superposición de los botones circulares táctiles sobre las palabras.
 
-* **Homologación de Botón de Compartir Perfil en `/links` (`ShareProfileButton`):**
+* **Cabecera de Perfil y Botón de Compartir en `/links` (`LinksHeader.tsx` & `ShareProfileButton`):**
+  - Se eliminó la etiqueta de texto de ubicación "Quito, Ecuador" para lograr un encabezado de presentación más limpio y minimalista.
   - Se sustituyó el botón píldora con texto por un botón de solo icono SVG (`size={22}`) idéntico a los iconos sociales.
   - Integración directa y continua en la fila de acciones de `LinksHeader` con el mismo espaciado `gap-2 sm:gap-3` sin separador.
   - Mantiene feedback accesible con Web Share API, fallback de copiado al portapapeles con icono `Check` esmeralda temporal y `aria-label`/`title` dinámicos.
 
+* **Nivelación y Expansión Vertical en `/consulta` (`consulta/page.tsx` & `ConsultaForm.tsx`):**
+  - Expansión vertical del formulario mediante `items-stretch` en el grid y `h-full flex flex-col justify-between` en `BentoCard`.
+  - En `ConsultaForm`, se ampliaron los espaciados (`space-y-5 sm:space-y-6`), el área de texto (`rows={6}`, `min-h-[170px]`), padding en inputs (`py-3.5 sm:py-4`) y botón prominente (`py-4 sm:py-4.5`).
+  - La tarjeta del formulario equipara la altura completa de la columna izquierda (~740 px), logrando simetría bilateral impecable sin huecos vacíos.
+  - Corrección de transparencia en `CustomSelect.tsx`: se erradicó la translúcidez `bg-card` (48% alfa) del menú flotante, reemplazándola por fondo 100% sólido y opaco (`bg-white dark:bg-[#14151f]`) para que el listbox oculte completamente los campos inferiores al desplegarse.
+  - Depuración de copys comerciales en `/consulta` (`messages/es.json` y `en.json`): se eliminaron las menciones de "1 GB de RAM" en subtítulos, selector de servicios y pilares técnicos, reemplazándolas por "optimización cloud de alto rendimiento" y estándares de infraestructura (AWS / Docker / CI/CD).
+  - Corrección de espaciado en `ConsultaForm.tsx`: se eliminó el hueco artificial entre el textarea y el botón de envío; el textarea ahora absorbe el espacio elástico con `flex-grow` y el botón queda vinculado inmediatamente con una separación armónica de `gap-5 sm:gap-6`.
+
+* **Depuración de Textos de Infraestructura y Homologación de Carrusel (`page.tsx`, `SoftwareSlideVisual.tsx`, `AppleHighlightsCarousel.tsx`, `es.json`, `en.json`):**
+  - Se eliminaron todas las menciones a nivel de interfaz de usuario de "1 GB de RAM" (en español e inglés) en los carruseles visuales, explorador Apple, vitrina de enlaces y mensajes del asistente, sustituyéndolas por una redacción sobria y técnica enfocada en *Optimización avanzada de recursos*, *Alto rendimiento* y *Baja latencia*.
+  - Se homologó `SoftwareSlideVisual.tsx` a una estructura de 3 columnas/pilares (*IA & Razonamiento*, *Ciberseguridad*, *Tutoriales & Comunidad*) idéntica al diseño y densidad de `PortfolioSlideVisual.tsx` y `BibleSlideVisual.tsx`, eliminando además las líneas divisorias horizontales apiladas en móvil (`divide-y`) para sustituirlas por espaciado limpio (`gap-3.5 sm:gap-0 sm:divide-x`), logrando un acabado minimalista sin sobrecarga de bordes.
+  - En `AppleHighlightsCarousel.tsx`, todas las tarjetas mantienen visualización limpia y nítida con opacidad uniforme (`opacity-100`), se eliminó el resaltado en hover (`hover:border-card-hover-border`) y se anuló la proyección de sombras difusas (`!shadow-none`), erradicando las sombras cruzadas que oscurecían los contornos laterales de las tarjetas vecinas.
+  - En la tarjeta Bento de Filosofía de `page.tsx`, se mantuvo estrictamente el contenido original (título, cita textual y pie), centrando y distribuyendo la cita tipográfica en el espacio vertical con `my-auto py-6 sm:py-10 text-base sm:text-lg md:text-xl font-light italic leading-relaxed` sin añadir bloques ni cajas adicionales.
+  - En `AppleDetailExplorer`, el botón de cierre `✕` se condicionó para renderizarse únicamente cuando hay un elemento seleccionado (`isExpanded === true`), se fijó una altura constante (`h-[125px] sm:h-[135px]`) en controles móviles, se implementó un acabado de alto contraste en la carcasa de la MacBook (grafito/negro mate `#18181b` en modo claro y blanco neutro puro `#ffffff` con borde `#e4e4e7` en modo oscuro, erradicando cualquier tinte celeste/slate), y se aisló el lienzo de la pantalla con una capa base sólida (`bg-white dark:bg-[#090a0f]`) bajo el `bg-card` translúcido para evitar mezclas cromáticas indeseadas.
+
+* **Alineación Inline del Cursor Typewriter (`TypewriterRole.tsx`):**
+  - Se eliminó el `flex items-center justify-center` del elemento `<p>`, que convertía al cursor en un flex item hermano separado. Esto provocaba que en viewport móvil, cuando el texto saltaba de renglón, el cursor quedara flotando desfasado a la derecha en lugar de acompañar la última palabra.
+  - Se configuró el cursor como elemento `inline-block align-middle` dentro del flujo tipográfico natural, garantizando que el cursor se mantenga siempre al final inmediato del texto mecanografiado, incluso con saltos de línea multirrenglón.
+* **Homologación de Botón de Retorno en Navbar (`LandingHeader.tsx`, `es.json`, `en.json`):**
+  - Se simplificó la etiqueta `backHome` en `/consulta` y `/links`: ahora muestra concisamente `← Volver` en español y `← Back` en inglés, eliminando el texto redundante "Volver a la página principal".

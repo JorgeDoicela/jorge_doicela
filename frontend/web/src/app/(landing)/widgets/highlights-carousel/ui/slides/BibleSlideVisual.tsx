@@ -17,19 +17,19 @@ export const BibleSlideVisual: React.FC<SlideVisualProps> = ({ isEs }) => {
         </span>
       </div>
 
-      {/* Desglose Morfológico con Separadores Sutiles */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-card-border pt-4 border-t border-card-border">
-        <div className="flex flex-col gap-0.5 sm:pr-6 pb-2.5 sm:pb-0">
+      {/* Desglose Morfológico Limpio */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-0 sm:divide-x divide-card-border pt-3 sm:pt-4 border-t border-card-border">
+        <div className="flex flex-col gap-0.5 sm:pr-6">
           <span className="text-xs sm:text-sm font-semibold text-foreground">Niyr (Strong H5216)</span>
           <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Lámpara y luz resplandeciente' : 'Lamp and shining light'}</span>
         </div>
 
-        <div className="flex flex-col gap-0.5 sm:px-6 py-2.5 sm:py-0">
+        <div className="flex flex-col gap-0.5 sm:px-6">
           <span className="text-xs sm:text-sm font-semibold text-foreground">Dâbar (Strong H1697)</span>
           <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Palabra divina y mandato' : 'Divine word and command'}</span>
         </div>
 
-        <div className="flex flex-col gap-0.5 sm:pl-6 pt-2.5 sm:pt-0">
+        <div className="flex flex-col gap-0.5 sm:pl-6">
           <span className="text-xs sm:text-sm font-semibold text-foreground">‘Ôwr (Strong H216)</span>
           <span className="text-[11px] sm:text-xs text-text-muted">{isEs ? 'Luz del alba y revelación' : 'Dawn light and revelation'}</span>
         </div>

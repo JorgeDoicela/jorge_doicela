@@ -12,9 +12,9 @@ export function ActionLinksList() {
 
   const links = [
     {
-      id: 'bible',
-      text: t('bibleTitle'),
-      href: getSubdomainUrl('bible'),
+      id: 'kartex',
+      text: t('kartexTitle'),
+      href: getSubdomainUrl('kartex'),
       isExternal: true,
     },
     {

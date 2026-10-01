@@ -1,0 +1,513 @@
+'use client';
+
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { useBooks, Book } from '../../books';
+import { getChaptersForBookId } from '../../../shared/data/canonData';
+import {
+  useTranslations,
+  Translation,
+  resolveInitialTranslationId,
+  saveTranslationPreference,
+  getDefaultTranslationId,
+  getSavedTranslationId,
+  getTranslationLanguageGroup,
+} from '../../translations';
+import { useKartexKeybindings } from '../../../shared/hooks/useKartexKeybindings';
+
+export interface InspectedWordData {
+  strongNumber: string;
+  wordText: string;
+  transliteration?: string;
+  pronunciation?: string;
+  lemma?: string;
+  definition?: string;
+  grammar?: string;
+  language?: 'hebrew' | 'greek' | 'aramaic';
+}
+
+export interface InspectedVerseData {
+  bookId: number;
+  bookName: string;
+  chapter: number;
+  verseNumber: number;
+  text: string;
+}
+
+export type InspectorTab = 'strong' | 'versions' | 'historical' | 'apologetics' | 'notes';
+
+interface KartexPassageContextValue {
+  books: Book[];
+  translations: Translation[];
+  selectedBookId: number;
+  selectedChapter: number;
+  selectedTranslationId: number | null;
+  selectedBook?: Book;
+  activeTranslation?: Translation;
+  setPassage: (bookId: number, chapter: number) => void;
+  setSelectedTranslationId: (id: number | null) => void;
+  nextChapter: () => void;
+  prevChapter: () => void;
+
+  // Control de visibilidad del Header Superior sincronizado con el scroll
+  isHeaderVisible: boolean;
+  setIsHeaderVisible: (visible: boolean) => void;
+
+  // Control de Paneles Laterales del Workspace Studio
+  isLeftSidebarOpen: boolean;
+  toggleLeftSidebar: () => void;
+  setLeftSidebarOpen: (open: boolean) => void;
+  leftSidebarWidth: number;
+  setLeftSidebarWidth: (width: number) => void;
+  resetLeftSidebarWidth: () => void;
+
+  isRightInspectorOpen: boolean;
+  toggleRightInspector: () => void;
+  setRightInspectorOpen: (open: boolean) => void;
+  rightInspectorWidth: number;
+  setRightInspectorWidth: (width: number) => void;
+  resetRightInspectorWidth: () => void;
+  activeInspectorTab: InspectorTab;
+  setActiveInspectorTab: (tab: InspectorTab) => void;
+
+  inspectedWord: InspectedWordData | null;
+  inspectedVerse: InspectedVerseData | null;
+  openInspectorWithWord: (word: InspectedWordData) => void;
+  openInspectorWithVerse: (verse: InspectedVerseData) => void;
+  closeInspector: () => void;
+}
+
+export const DEFAULT_LEFT_SIDEBAR_WIDTH = 280;
+export const DEFAULT_RIGHT_INSPECTOR_WIDTH = 340;
+export const MIN_LEFT_SIDEBAR_WIDTH = 200;
+export const MAX_LEFT_SIDEBAR_WIDTH = 480;
+export const MIN_RIGHT_INSPECTOR_WIDTH = 200;
+export const MAX_RIGHT_INSPECTOR_WIDTH = 480;
+export const AUTO_COLLAPSE_THRESHOLD = 175;
+
+const KartexPassageContext = createContext<KartexPassageContextValue | undefined>(undefined);
+
+interface KartexPassageProviderProps {
+  children: ReactNode;
+}
+
+export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ children }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const locale = useLocale();
+
+  const { books } = useBooks();
+  const { translations } = useTranslations();
+
+  // Obtener estado inicial desde URL query params si existen
+  const initialBookParam = searchParams.get('book');
+  const initialChapterParam = searchParams.get('chapter');
+  const initialTransParam = searchParams.get('trans');
+
+  const [selectedBookId, setSelectedBookId] = useState<number>(() => {
+    if (initialBookParam) {
+      const parsed = parseInt(initialBookParam, 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return 1; // Génesis por defecto
+  });
+
+  const [selectedChapter, setSelectedChapter] = useState<number>(() => {
+    if (initialChapterParam) {
+      const parsed = parseInt(initialChapterParam, 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return 1;
+  });
+
+  // Resolución profesional y determinista para SSR:
+  // 1) URL Param -> 2) Default Contextual del Locale (ES: NBLA [3], EN: NIV [5])
+  // La memoria secundaria de localStorage se sincroniza post-hidratación para evitar Hydration Mismatches
+  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(() => {
+    return resolveInitialTranslationId({
+      urlParam: initialTransParam,
+      locale,
+    });
+  });
+
+  const selectedBook = useMemo(
+    () => books.find((b) => b.id === selectedBookId) || books[0],
+    [books, selectedBookId]
+  );
+
+  const activeTranslation = useMemo(
+    () => translations.find((t) => t.id === selectedTranslationId) || translations[0],
+    [translations, selectedTranslationId]
+  );
+
+  // Control de Paneles Laterales (Dimensiones Redimensionables y Visibilidad):
+  // Inicialización determinista en false para evitar Hydration Mismatch entre SSR y cliente
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
+  const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(false);
+
+  const [leftSidebarWidth, setLeftSidebarWidthState] = useState<number>(DEFAULT_LEFT_SIDEBAR_WIDTH);
+  const [rightInspectorWidth, setRightInspectorWidthState] = useState<number>(DEFAULT_RIGHT_INSPECTOR_WIDTH);
+
+  const setLeftSidebarWidth = useCallback((width: number) => {
+    const max = typeof window !== 'undefined' ? Math.min(MAX_LEFT_SIDEBAR_WIDTH, Math.max(MIN_LEFT_SIDEBAR_WIDTH, Math.round(window.innerWidth * 0.38))) : MAX_LEFT_SIDEBAR_WIDTH;
+    const clamped = Math.max(120, Math.min(width, max));
+    setLeftSidebarWidthState(clamped);
+  }, []);
+
+  const resetLeftSidebarWidth = useCallback(() => {
+    setLeftSidebarWidthState(DEFAULT_LEFT_SIDEBAR_WIDTH);
+  }, []);
+
+  const setRightInspectorWidth = useCallback((width: number) => {
+    const max = typeof window !== 'undefined' ? Math.min(MAX_RIGHT_INSPECTOR_WIDTH, Math.max(MIN_RIGHT_INSPECTOR_WIDTH, Math.round(window.innerWidth * 0.38))) : MAX_RIGHT_INSPECTOR_WIDTH;
+    const clamped = Math.max(120, Math.min(width, max));
+    setRightInspectorWidthState(clamped);
+  }, []);
+
+  const resetRightInspectorWidth = useCallback(() => {
+    setRightInspectorWidthState(DEFAULT_RIGHT_INSPECTOR_WIDTH);
+  }, []);
+
+  // Sincronización post-montaje con la traducción contextual
+  useEffect(() => {
+    // Si no hubo ?trans= en la URL, verificar si el usuario tiene una traducción guardada
+    if (!initialTransParam) {
+      const savedTrans = getSavedTranslationId(locale);
+      if (savedTrans !== null) {
+        setSelectedTranslationId(savedTrans);
+      }
+    }
+  }, [initialTransParam, locale]);
+
+  // Transición reactiva y fluida entre PC y Móvil al redimensionar la ventana y montaje inicial en escritorio
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Inicialización al montar en cliente: En PC (>= 1024px) inician abiertos por defecto o según preferencia guardada
+    if (window.innerWidth >= 1024) {
+      try {
+        const savedLeft = localStorage.getItem('kartex_left_sidebar_open');
+        const savedRight = localStorage.getItem('kartex_right_inspector_open');
+        if (savedLeft !== null) {
+          setIsLeftSidebarOpen(savedLeft === 'true');
+        } else {
+          setIsLeftSidebarOpen(true);
+        }
+        if (savedRight !== null) {
+          setIsRightInspectorOpen(savedRight === 'true');
+        } else {
+          setIsRightInspectorOpen(true);
+        }
+      } catch {
+        setIsLeftSidebarOpen(true);
+        setIsRightInspectorOpen(true);
+      }
+    }
+
+    let prevWidth = window.innerWidth;
+
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      const wasDesktop = prevWidth >= 1024;
+      const isDesktop = currentWidth >= 1024;
+
+      if (wasDesktop && !isDesktop) {
+        // Al pasar de PC a móvil, colapsar ambos laterales para despejar la lectura
+        setIsLeftSidebarOpen(false);
+        setIsRightInspectorOpen(false);
+      } else if (!wasDesktop && isDesktop) {
+        // Al volver a PC, restaurar la vista según preferencia guardada o abierta por defecto
+        try {
+          const savedLeft = localStorage.getItem('kartex_left_sidebar_open');
+          const savedRight = localStorage.getItem('kartex_right_inspector_open');
+          setIsLeftSidebarOpen(savedLeft !== null ? savedLeft === 'true' : true);
+          setIsRightInspectorOpen(savedRight !== null ? savedRight === 'true' : true);
+        } catch {
+          setIsLeftSidebarOpen(true);
+          setIsRightInspectorOpen(true);
+        }
+      }
+
+      prevWidth = currentWidth;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const toggleLeftSidebar = useCallback(() => {
+    setIsLeftSidebarOpen((prev) => {
+      const next = !prev;
+      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+        try {
+          localStorage.setItem('kartex_left_sidebar_open', String(next));
+        } catch {
+          // fallback
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const setLeftSidebarOpen = useCallback((open: boolean) => {
+    setIsLeftSidebarOpen(open);
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      try {
+        localStorage.setItem('kartex_left_sidebar_open', String(open));
+      } catch {
+        // fallback
+      }
+    }
+  }, []);
+
+  const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>('versions');
+  const [inspectedWord, setInspectedWord] = useState<InspectedWordData | null>(null);
+  const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(() => ({
+    bookId: selectedBookId || 1,
+    bookName: 'Génesis',
+    chapter: selectedChapter || 1,
+    verseNumber: 1,
+    text: '',
+  }));
+
+  // Sincronizar el versículo inspeccionado por defecto al cambiar libro o capítulo si no pertenece al pasaje actual
+  useEffect(() => {
+    setInspectedVerse((prev) => {
+      if (!prev || prev.bookId !== selectedBookId || prev.chapter !== selectedChapter) {
+        return {
+          bookId: selectedBookId,
+          bookName: selectedBook?.name || 'Génesis',
+          chapter: selectedChapter,
+          verseNumber: 1,
+          text: '',
+        };
+      }
+      return prev;
+    });
+  }, [selectedBookId, selectedChapter, selectedBook?.name]);
+
+  const toggleRightInspector = useCallback(() => {
+    setIsRightInspectorOpen((prev) => {
+      const next = !prev;
+      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+        try {
+          localStorage.setItem('kartex_right_inspector_open', String(next));
+        } catch {
+          // fallback
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const openInspectorWithWord = useCallback((word: InspectedWordData) => {
+    setInspectedWord(word);
+    setActiveInspectorTab('strong');
+    setIsRightInspectorOpen(true);
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      try {
+        localStorage.setItem('kartex_right_inspector_open', 'true');
+      } catch {
+        // Ignorar fallo de almacenamiento en modo incógnito
+      }
+    }
+  }, []);
+
+  const openInspectorWithVerse = useCallback((verse: InspectedVerseData) => {
+    setInspectedVerse(verse);
+    setActiveInspectorTab('versions');
+    setIsRightInspectorOpen(true);
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      try {
+        localStorage.setItem('kartex_right_inspector_open', 'true');
+      } catch {
+        // Ignorar fallo de almacenamiento en modo incógnito
+      }
+    }
+  }, []);
+
+  const setRightInspectorOpen = useCallback((open: boolean) => {
+    setIsRightInspectorOpen(open);
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      try {
+        localStorage.setItem('kartex_right_inspector_open', String(open));
+      } catch {
+        // fallback
+      }
+    }
+  }, []);
+
+  // Control de visibilidad del Header Superior sincronizado con el scroll
+  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
+
+  const closeInspector = useCallback(() => {
+    setIsRightInspectorOpen(false);
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      try {
+        localStorage.setItem('kartex_right_inspector_open', 'false');
+      } catch {
+        // Ignorar fallo de almacenamiento en modo incógnito
+      }
+    }
+  }, []);
+
+  // Reaccionar al cambio de idioma de la interfaz (ES <-> EN) de manera inmediata y fluida
+  useEffect(() => {
+    const cleanLocale = locale && locale.toLowerCase().startsWith('en') ? 'en' : 'es';
+    const currentGroup = selectedTranslationId
+      ? getTranslationLanguageGroup(selectedTranslationId)
+      : null;
+
+    // Si la traducción actual pertenece a un idioma distinto al nuevo locale de la app
+    if (currentGroup && currentGroup !== 'ancient' && currentGroup !== cleanLocale) {
+      const preferredId = resolveInitialTranslationId({ locale: cleanLocale });
+      setSelectedTranslationId(preferredId);
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('book', selectedBookId.toString());
+      params.set('chapter', selectedChapter.toString());
+      params.set('trans', preferredId.toString());
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [locale, selectedTranslationId, selectedBookId, selectedChapter, searchParams, pathname, router]);
+
+  // Si los libros cargan y se especificó una abreviatura en la URL
+  useEffect(() => {
+    if (initialBookParam && isNaN(Number(initialBookParam)) && books.length > 0) {
+      const match = books.find(
+        (b) => b.abbreviation.toLowerCase() === initialBookParam.toLowerCase() ||
+               b.name.toLowerCase() === initialBookParam.toLowerCase()
+      );
+      if (match) {
+        setSelectedBookId(match.id);
+      }
+    }
+  }, [initialBookParam, books]);
+
+  // Sincronizar cambios en los search params de la URL de forma fluida
+  const updateUrlParams = (bookId: number, chapter: number, transId: number | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('book', bookId.toString());
+    params.set('chapter', chapter.toString());
+    if (transId) {
+      params.set('trans', transId.toString());
+    } else {
+      params.delete('trans');
+    }
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const setPassage = (bookId: number, chapter: number) => {
+    setSelectedBookId(bookId);
+    setSelectedChapter(chapter);
+    setIsHeaderVisible(true);
+    updateUrlParams(bookId, chapter, selectedTranslationId);
+  };
+
+  const handleSetTranslation = (id: number | null) => {
+    const targetId = id ?? getDefaultTranslationId(locale);
+    if (id !== null) {
+      saveTranslationPreference(id, locale);
+    }
+    setSelectedTranslationId(targetId);
+    updateUrlParams(selectedBookId, selectedChapter, targetId);
+  };
+
+  const nextChapter = () => {
+    if (!selectedBook) return;
+    const totalChapters = getChaptersForBookId(selectedBookId);
+    if (selectedChapter < totalChapters) {
+      setPassage(selectedBookId, selectedChapter + 1);
+    } else {
+      // Siguiente libro
+      const currentIdx = books.findIndex((b) => b.id === selectedBookId);
+      if (currentIdx >= 0 && currentIdx < books.length - 1) {
+        const nextBook = books[currentIdx + 1];
+        setPassage(nextBook.id, 1);
+      }
+    }
+  };
+
+  const prevChapter = () => {
+    if (!selectedBook) return;
+    if (selectedChapter > 1) {
+      setPassage(selectedBookId, selectedChapter - 1);
+    } else {
+      // Libro anterior
+      const currentIdx = books.findIndex((b) => b.id === selectedBookId);
+      if (currentIdx > 0) {
+        const prevBook = books[currentIdx - 1];
+        const prevBookTotal = getChaptersForBookId(prevBook.id);
+        setPassage(prevBook.id, prevBookTotal || 1);
+      }
+    }
+  };
+
+  // Atajos de Teclado Profesionales para Navegación y Control de Paneles
+  useKartexKeybindings({
+    onToggleLeftSidebar: toggleLeftSidebar,
+    onToggleRightInspector: toggleRightInspector,
+    onPrevChapter: prevChapter,
+    onNextChapter: nextChapter,
+    onCloseInspector: closeInspector,
+  });
+
+  return (
+    <KartexPassageContext.Provider
+      value={{
+        books,
+        translations,
+        selectedBookId,
+        selectedChapter,
+        selectedTranslationId,
+        selectedBook,
+        activeTranslation,
+        setPassage,
+        setSelectedTranslationId: handleSetTranslation,
+        nextChapter,
+        prevChapter,
+
+        // Control de visibilidad del Header Superior sincronizado con el scroll
+        isHeaderVisible,
+        setIsHeaderVisible,
+
+        // Paneles laterales del Workspace Studio
+        isLeftSidebarOpen,
+        toggleLeftSidebar,
+        setLeftSidebarOpen,
+        leftSidebarWidth,
+        setLeftSidebarWidth,
+        resetLeftSidebarWidth,
+        isRightInspectorOpen,
+        toggleRightInspector,
+        setRightInspectorOpen,
+        rightInspectorWidth,
+        setRightInspectorWidth,
+        resetRightInspectorWidth,
+        activeInspectorTab,
+        setActiveInspectorTab,
+        inspectedWord,
+        inspectedVerse,
+        openInspectorWithWord,
+        openInspectorWithVerse,
+        closeInspector,
+      }}
+    >
+      {children}
+    </KartexPassageContext.Provider>
+  );
+};
+
+export const useKartexPassage = () => {
+  const context = useContext(KartexPassageContext);
+  if (!context) {
+    throw new Error('useKartexPassage debe usarse dentro de un KartexPassageProvider');
+  }
+  return context;
+};
+
+export const useKartexPassageSafe = () => {
+  return useContext(KartexPassageContext);
+};

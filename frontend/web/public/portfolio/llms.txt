@@ -29,7 +29,7 @@
 - **Filtros Dinámicos:** Clasificación reactiva por categorías (Backend, Frontend, IA, DevOps, Mobile).
 - **Proyectos Clave:**
   - *DoicelaDev:* Plataforma tecnológica de 8 áreas con arquitectura en capas.
-  - *Biblia Modular:* Suite exegética académica con 9 motores de estudio y app nativa Expo.
+  - *KARTEX:* Plataforma de investigación bíblica y exégesis con 9 módulos de estudio y app nativa Expo.
   - *DIITRA:* Plataforma empresarial con frontend Next.js y backend ASP.NET Core en C#.
   - *Portfolio SSH:* Terminal virtual en tiempo real sobre WebSockets y microservicios.
 
@@ -43,7 +43,7 @@
 - **Portafolio:** https://portfolio.jorgedoicela.com
 - **Portal Maestro:** https://jorgedoicela.com
 - **DoicelaDev:** https://doiceladev.jorgedoicela.com
-- **Biblia Modular:** https://bible.jorgedoicela.com
+- **KARTEX:** https://kartex.jorgedoicela.com
 - **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
 - **GitHub:** https://github.com/JorgeDoicela
 - **TikTok:** https://www.tiktok.com/@jorge.doicela

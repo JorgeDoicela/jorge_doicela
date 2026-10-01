@@ -139,7 +139,7 @@ export default async function Image() {
               fontWeight: 500,
             }}
           >
-            Biblia
+            KARTEX
           </div>
           <div
             style={{

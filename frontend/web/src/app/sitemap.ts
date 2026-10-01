@@ -130,55 +130,73 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────────────────────
-    // 4. BIBLIA MODULAR (bible.jorgedoicela.com) — 6 Suites
+    // 4. KARTEX (kartex.jorgedoicela.com) — 9 Módulos Especializados
     // Al migrar a servidor independiente: copiar solo este bloque
     // en el sitemap.ts de la nueva app Next.js y borrar los demás.
     // ─────────────────────────────────────────────────────────────
-    const bibleRoutes: MetadataRoute.Sitemap = [
+    const kartexRoutes: MetadataRoute.Sitemap = [
         {
-            url: 'https://bible.jorgedoicela.com',
+            url: 'https://kartex.jorgedoicela.com',
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.95,
         },
         {
-            url: 'https://bible.jorgedoicela.com/llms.txt',
+            url: 'https://kartex.jorgedoicela.com/llms.txt',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.7,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/standard',
+            url: 'https://kartex.jorgedoicela.com/reader',
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.9,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/parallel',
+            url: 'https://kartex.jorgedoicela.com/parallel',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/interlinear',
+            url: 'https://kartex.jorgedoicela.com/interlinear',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.9,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/word-study',
+            url: 'https://kartex.jorgedoicela.com/lexicon',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.85,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/historical-context',
+            url: 'https://kartex.jorgedoicela.com/atlas',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.85,
         },
         {
-            url: 'https://bible.jorgedoicela.com/study/evangelism',
+            url: 'https://kartex.jorgedoicela.com/timeline',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
+            url: 'https://kartex.jorgedoicela.com/archaeology',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
+            url: 'https://kartex.jorgedoicela.com/evangelism',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
+            url: 'https://kartex.jorgedoicela.com/exegesis',
             lastModified: now,
             changeFrequency: 'weekly',
             priority: 0.85,
@@ -187,5 +205,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Servidor consolidado actual (1 GB RAM): todas las rutas juntas.
     // Al migrar, cada servidor retorna solo su bloque correspondiente.
-    return [...landingRoutes, ...portfolioRoutes, ...doiceladevRoutes, ...bibleRoutes];
+    return [...landingRoutes, ...portfolioRoutes, ...doiceladevRoutes, ...kartexRoutes];
 }

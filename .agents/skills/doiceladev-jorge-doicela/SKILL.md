@@ -233,7 +233,7 @@ pnpm run lint
 | Redactar exclusivamente para expertos o solo para novatos | Aleja a estudiantes o aburre a ingenieros experimentados. | Aplicar el enfoque multinivel: analogía didáctica + resumen ejecutivo + bajo nivel. |
 | Crear una tabla genérica con discriminador de categoría | Crea columnas vacías y rompe el modelo relacional a medida que el dominio crece. | Mantener entidades especializadas por submódulo. |
 | Inyectar repositorios sin `'doiceladevConnection'` | Conecta a la base de datos equivocada. | Usar `@InjectRepository(Entity, 'doiceladevConnection')`. |
-| Mezclar tipos de artículos con entidades de `bible` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/doiceladev/<modulo>/entities/`. |
+| Mezclar tipos de artículos con entidades de `kartex` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/doiceladev/<modulo>/entities/`. |
 | Hardcodear datos o autores en el frontend Next.js | Aumenta el bundle size, genera inconsistencias y acopla datos con la UI. | Los autores y datos de las 8 categorías provienen 100% de `doiceladev.sqlite` a través de NestJS. |
 | Poner datos semilla dentro del archivo `seed-doiceladev.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
 | Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de DoicelaDev. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |

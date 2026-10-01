@@ -1,50 +1,50 @@
 [
   {
     "id": 1,
-    "slug": "la-biblia-modular",
-    "title": "La Biblia Modular",
-    "description": "Plataforma de estudio bíblico y exégesis con suites teológicas modulares, morfología Strong masorética y griega, y app móvil nativa en Expo.",
+    "slug": "kartex-platform",
+    "title": "KARTEX",
+    "description": "Plataforma de investigación bíblica y exégesis con módulos especializados, morfología Strong masorética y griega, y app móvil nativa en Expo.",
     "role": "Lead Architect & Full Stack Developer",
     "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
     "language": "es",
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
-    "demoUrl": "https://bible.jorgedoicela.com",
+    "demoUrl": "https://kartex.jorgedoicela.com",
     "featured": true,
-    "overview": "Plataforma integral de exégesis bíblica orientada a la investigación académica y estudio pastoral profundo, combinando la lectura textual continua con aparatos morfológicos masoréticos y griegos en tiempo real.",
+    "overview": "Plataforma integral de investigación bíblica y exégesis orientada al estudio académico y pastoral profundo, combinando la lectura textual con aparatos morfológicos masoréticos y griegos en tiempo real.",
     "challenge": "Indexar y relacionar de forma determinista más de 31,000 versículos, tokens morfológicos BHS/NA28 y léxicos Strong BDB/Gesenius manteniendo tiempos de respuesta inferiores a 40 ms bajo una memoria RAM severamente restringida.",
     "architectureHighlights": [
-      "Suites de exégesis modulares (Interlineal Inverso, Léxicos Strong, Atlas WGS84, Cronología Sincrónica, Evangelización)",
-      "Persistencia ultra-ligera en bible.sqlite con better-sqlite3 en modo WAL e índices compuestos B-Tree",
+      "Módulos de investigación especializados (Interlineal Inverso, Léxicos Strong, Atlas WGS84, Cronología Sincrónica, Evangelización)",
+      "Persistencia ultra-ligera en kartex.sqlite con better-sqlite3 en modo WAL e índices compuestos B-Tree",
       "Integración oficial autorizada con API.Bible para versiones con derechos y fallback determinista local",
       "Cliente móvil nativo con Expo SDK 52, FlashList a 60 fps constantes y arquitectura Offline-First"
     ],
     "metrics": [
-      { "label": "Suites Exegéticas", "value": "6" },
+      { "label": "Módulos de Estudio", "value": "9" },
       { "label": "Tiempo de Ingestión", "value": "< 80 ms" },
       { "label": "Consumo de RAM", "value": "~45 MB" }
     ]
   },
   {
     "id": 2,
-    "slug": "the-modular-bible",
-    "title": "The Modular Bible",
-    "description": "Exegesis and scripture study platform featuring modular theological suites, Masoretic BHS / NA28 morphology, Strong dictionaries, and Expo native mobile app.",
+    "slug": "kartex-platform-en",
+    "title": "KARTEX",
+    "description": "Biblical research and study platform featuring specialized exegesis modules, Masoretic BHS / NA28 morphology, Strong dictionaries, and Expo native mobile app.",
     "role": "Lead Architect & Full Stack Developer",
     "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
     "language": "en",
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
-    "demoUrl": "https://bible.jorgedoicela.com",
+    "demoUrl": "https://kartex.jorgedoicela.com",
     "featured": true,
-    "overview": "Comprehensive biblical exegesis platform tailored for academic research and deep pastoral study, combining continuous scripture reading with real-time Masoretic and Greek morphological apparatuses.",
+    "overview": "Comprehensive biblical research platform tailored for academic inquiry and deep pastoral exegesis, combining continuous scripture reading with real-time Masoretic and Greek morphological apparatuses.",
     "challenge": "Deterministically indexing and querying over 31,000 verses, BHS/NA28 morphology tokens, and Strong lexicons while sustaining under 40 ms query latencies under tight RAM constraints.",
     "architectureHighlights": [
-      "Modular exegesis suites (Reverse Interlinear, Strong Lexicons, WGS84 Atlas, Synchronic Chronology, Evangelism Pathways)",
-      "Ultra-lightweight SQLite WAL persistence with better-sqlite3 and B-Tree compound indices",
+      "Specialized research modules (Reverse Interlinear, Strong Lexicons, WGS84 Atlas, Synchronic Chronology, Evangelism Pathways)",
+      "Ultra-lightweight SQLite WAL persistence in kartex.sqlite with better-sqlite3 and B-Tree compound indices",
       "Official authorized API.Bible integration with resilient local deterministic caching",
       "Native mobile client with Expo SDK 52, FlashList 60 fps recycling, and Offline-First architecture"
     ],
     "metrics": [
-      { "label": "Exegesis Suites", "value": "6" },
+      { "label": "Research Modules", "value": "9" },
       { "label": "Ingestion Time", "value": "< 80 ms" },
       { "label": "RAM Footprint", "value": "~45 MB" }
     ]

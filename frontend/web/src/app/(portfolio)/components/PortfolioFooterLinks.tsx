@@ -49,12 +49,12 @@ export function PortfolioFooterLinks() {
       </a>
       <span>•</span>
       <a
-        href={getSubdomainUrl('bible')}
+        href={getSubdomainUrl('kartex')}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-gold-300 transition-colors"
       >
-        {tNav('bible')}
+        {tNav('kartex')}
       </a>
       <span>•</span>
       <a

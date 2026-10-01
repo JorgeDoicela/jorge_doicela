@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "JorgeDoicelaMobile",
-    "slug": "jorge-doicela-mobile",
+    "name": "Kartex",
+    "slug": "kartex-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -10,7 +10,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.jorgedoicela.mobile"
+      "package": "com.jorgedoicela.kartex"
     }
   }
 }

@@ -88,7 +88,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ### 3.8 Asistente de Inteligencia Artificial Oficial (Route Handler & Guardrails)
 * **Arquitectura:** Endpoint servidor en `(landing)/api/chat/route.ts` con streaming en tiempo real vía Groq LPU (modelos OSS de alta velocidad).
-* **Frontera de Dominio Estricta:** Acotado 100% a la representación de Jorge Doicela, sus plataformas en producción (`bible`, `doiceladev`, `portfolio`, `landing`), su arquitectura en 1 GB de RAM y propuestas técnicas en `/consulta`.
+* **Frontera de Dominio Estricta:** Acotado 100% a la representación de Jorge Doicela, sus plataformas en producción (`kartex`, `doiceladev`, `portfolio`, `landing`), su arquitectura en 1 GB de RAM y propuestas técnicas en `/consulta`.
 * **Protección contra Consultas Fuera de Alcance:** Rechazo sistemático y profesional ante temas ajenos (cursos desde cero, tareas, cocina, entretenimiento, política) redirigiendo al [Formulario de Consulta](/consulta).
 * **Seguridad y Anti-Jailbreak:** Inmunidad contra inyecciones de prompt, limitador de tasa deslizante por IP (`checkRateLimit`) y caché LRU en memoria.
 * **Estilo Ejecutivo:** Prohibición absoluta de emojis, temperatura 0.2 para alta fidelidad y formato Markdown limpio.

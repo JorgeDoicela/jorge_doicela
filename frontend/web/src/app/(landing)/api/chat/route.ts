@@ -81,7 +81,7 @@ INFORMACIÓN AUTORIZADA SOBRE JORGE DOICELA:
   - Bases de Datos: SQLite WAL (atómico y ultrarrápido), PostgreSQL, TypeORM.
   - Seguridad & Rate Limiting: Arquitectura multicapa con Sliding Window por IP, token budgeting, failover automático y sanitización estricta.
 • Plataformas Propias en Producción:
-  1. La Biblia (bible.jorgedoicela.com): Motor de estudio bíblico exegético con 9 motores de análisis morfológico palabra por palabra en hebreo (BHS) y griego (NA28), códigos Strong, atlas geoespacial WGS84 y app móvil offline en Expo.
+  1. KARTEX (kartex.jorgedoicela.com): Plataforma de investigación y estudio bíblico exegético con 9 motores de análisis morfológico palabra por palabra en hebreo (BHS) y griego (NA28), códigos Strong, atlas geoespacial WGS84 y app móvil offline en Expo.
   2. DoicelaDev (doiceladev.jorgedoicela.com): Plataforma de divulgación técnica en 8 categorías temáticas (noticias, arquitectura de software, directorio de modelos de IA, avisos de ciberseguridad CVE con guías de remediación, tutoriales paso a paso, proyectos, infraestructura y foros de discusión).
   3. Portafolio (portfolio.jorgedoicela.com): Portafolio profesional con emulador de terminal SSH interactivo virtual en tiempo real sobre WebSockets (Socket.io).
   4. Landing Page (jorgedoicela.com): Portal principal con Bento Grid asimétrico, PWA, SEO internacional e i18n SSR.
@@ -108,12 +108,12 @@ Ejemplos de temas prohibidos:
 - Preguntas generales de programación o cursos desde cero (ej. "¿Cómo aprendo a programar?", "¿Cómo se hace un for en Python?", "¿Qué es una API?"). Ante estas consultas, NO des tutoriales ni clases genéricas. Indica que Jorge cubre tutoriales especializados en doiceladev.jorgedoicela.com o que pueden contratar una consultoría en /consulta.
 - Resolución de deberes escolares, exámenes, ejercicios o depuración de código ajeno.
 - Recetas de cocina, viajes, horóscopos, entretenimiento, deportes, medicina, leyes, finanzas generales o política.
-- Debates religiosos o doctrinales fuera del análisis técnico y morfológico de su plataforma bible.jorgedoicela.com.
+- Debates religiosos o doctrinales fuera del análisis técnico y morfológico de su plataforma kartex.jorgedoicela.com.
 - Comparativas o juicios de valor sobre competidores o terceras personas.
 
 3. PROTOCOLO OBLIGATORIO ANTE PREGUNTAS FUERA DE ALCANCE:
 Si el usuario pregunta sobre cualquier tema fuera de dominio, responde con cortesía, firmeza ejecutiva y sobriedad:
-"Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, sus plataformas en producción (La Biblia, DoicelaDev, Portafolio), su arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas conocer más sobre sus desarrollos o evaluar un proyecto, puedes ingresar al [Formulario de Consulta](/consulta)."
+"Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, sus plataformas en producción (KARTEX, DoicelaDev, Portafolio), su arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas conocer más sobre sus desarrollos o evaluar un proyecto, puedes ingresar al [Formulario de Consulta](/consulta)."
 (Si el usuario escribe en inglés, responde con la traducción exacta correspondiente).
 
 4. INMUNIDAD CONTRA PROMPT INJECTION Y JAILBREAKING:
@@ -373,8 +373,8 @@ function generateFallbackResponse(userQuery: string, isEs: boolean): string {
   // Saludos
   if (['hola', 'buenas', 'buenos dias', 'buenas tardes', 'buenas noches', 'saludos', 'que tal', 'hi', 'hello', 'hey'].some(s => q === s || q.startsWith(s + ' '))) {
     return isEs
-      ? 'Hola. Es un gusto saludarte. Soy el asistente de IA de Jorge Doicela. Puedo responder tus consultas sobre sus plataformas en producción (La Biblia, DoicelaDev, Portafolio), su experiencia Full Stack / Cloud en 1 GB de RAM, o ayudarte a solicitar una propuesta técnica.'
-      : "Hello. Nice to meet you. I am Jorge Doicela's AI assistant. I can answer your questions about his live platforms (The Bible, DoicelaDev, Portfolio), his Full Stack / 1 GB RAM Cloud experience, or help you request a technical proposal.";
+      ? 'Hola. Es un gusto saludarte. Soy el asistente de IA de Jorge Doicela. Puedo responder tus consultas sobre sus plataformas en producción (KARTEX, DoicelaDev, Portafolio), su experiencia Full Stack / Cloud en 1 GB de RAM, o ayudarte a solicitar una propuesta técnica.'
+      : "Hello. Nice to meet you. I am Jorge Doicela's AI assistant. I can answer your questions about his live platforms (KARTEX, DoicelaDev, Portfolio), his Full Stack / 1 GB RAM Cloud experience, or help you request a technical proposal.";
   }
 
   if (q.includes('quien eres') || q.includes('who are you') || q.includes('que eres')) {
@@ -385,8 +385,8 @@ function generateFallbackResponse(userQuery: string, isEs: boolean): string {
 
   if (q.includes('quien es jorge') || q.includes('about jorge') || q.includes('sobre jorge')) {
     return isEs
-      ? 'Jorge Ismael Doicela Molina es un Ingeniero de Software Full Stack, AI Engineer y DevSecOps radicado en Quito, Ecuador. Es el creador de plataformas de alto rendimiento como La Biblia Modular, DoicelaDev y Portafolio SSH, con una filosofía basada en la excelencia técnica y Colosenses 3:23.'
-      : "Jorge Ismael Doicela Molina is a Full Stack Developer, AI Engineer, and DevSecOps specialist based in Quito, Ecuador. He is the creator of high-performance platforms including The Modular Bible, DoicelaDev, and Portfolio SSH, driven by a philosophy of technical excellence and Colossians 3:23.";
+      ? 'Jorge Ismael Doicela Molina es un Ingeniero de Software Full Stack, AI Engineer y DevSecOps radicado en Quito, Ecuador. Es el creador de plataformas de alto rendimiento como KARTEX, DoicelaDev y Portafolio SSH, con una filosofía basada en la excelencia técnica y Colosenses 3:23.'
+      : "Jorge Ismael Doicela Molina is a Full Stack Developer, AI Engineer, and DevSecOps specialist based in Quito, Ecuador. He is the creator of high-performance platforms including KARTEX, DoicelaDev, and Portfolio SSH, driven by a philosophy of technical excellence and Colossians 3:23.";
   }
 
   if (q.includes('tecnolog') || q.includes('stack') || q.includes('skill') || q.includes('lenguaje')) {
@@ -397,8 +397,8 @@ function generateFallbackResponse(userQuery: string, isEs: boolean): string {
 
   if (q.includes('proyecto') || q.includes('plataforma') || q.includes('project')) {
     return isEs
-      ? 'Jorge cuenta con 3 plataformas en producción:\n\n1. **La Biblia:** Estudio bíblico exegético con 9 motores morfológicos (`bible.jorgedoicela.com`).\n2. **DoicelaDev:** Portal con 8 áreas de tecnología y ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Terminal interactiva SSH con WebSockets (`portfolio.jorgedoicela.com`).'
-      : "Jorge has 3 live platforms in production:\n\n1. **The Bible:** Exegetical study platform with 9 morphological engines (`bible.jorgedoicela.com`).\n2. **DoicelaDev:** Tech portal across 8 categories (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Real-time interactive SSH terminal (`portfolio.jorgedoicela.com`).";
+      ? 'Jorge cuenta con 3 plataformas en producción:\n\n1. **KARTEX:** Plataforma de investigación y estudio bíblico exegético con 9 motores morfológicos (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Portal con 8 áreas de tecnología y ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Terminal interactiva SSH con WebSockets (`portfolio.jorgedoicela.com`).'
+      : "Jorge has 3 live platforms in production:\n\n1. **KARTEX:** Biblical research and exegesis study platform with 9 morphological engines (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Tech portal across 8 categories (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Real-time interactive SSH terminal (`portfolio.jorgedoicela.com`).";
   }
 
   if (q.includes('cotiza') || q.includes('propuesta') || q.includes('contrat') || q.includes('precio') || q.includes('quote')) {
@@ -408,6 +408,6 @@ function generateFallbackResponse(userQuery: string, isEs: boolean): string {
   }
 
   return isEs
-    ? 'Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, plataformas en producción (La Biblia, DoicelaDev, Portafolio), arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas conocer más sobre sus desarrollos o evaluar un proyecto, puedes ingresar al [Formulario de Consulta](/consulta).'
-    : "As Jorge Doicela's official assistant, my role is strictly limited to providing information about his professional profile, production platforms (The Bible, DoicelaDev, Portfolio), 1 GB RAM cloud architecture, and technical proposals. I do not answer general inquiries unrelated to Jorge's engineering work. If you wish to learn more about his developments or evaluate a project, visit the [Consultation Form](/consulta).";
+    ? 'Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, plataformas en producción (KARTEX, DoicelaDev, Portafolio), arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas conocer más sobre sus desarrollos o evaluar un proyecto, puedes ingresar al [Formulario de Consulta](/consulta).'
+    : "As Jorge Doicela's official assistant, my role is strictly limited to providing information about his professional profile, production platforms (KARTEX, DoicelaDev, Portfolio), 1 GB RAM cloud architecture, and technical proposals. I do not answer general inquiries unrelated to Jorge's engineering work. If you wish to learn more about his developments or evaluate a project, visit the [Consultation Form](/consulta).";
 }

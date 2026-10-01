@@ -23,10 +23,10 @@ async function loadProjectMessages(project: string, locale: Locale): Promise<Rec
           ? (await import('../app/(doiceladev)/messages/en.json')).default
           : (await import('../app/(doiceladev)/messages/es.json')).default;
 
-      case 'bible':
+      case 'kartex':
         return locale === 'en'
-          ? (await import('../app/(bible)/messages/en.json')).default
-          : (await import('../app/(bible)/messages/es.json')).default;
+          ? (await import('../app/(kartex)/messages/en.json')).default
+          : (await import('../app/(kartex)/messages/es.json')).default;
 
       case 'landing':
       default:
@@ -78,8 +78,11 @@ export default getRequestConfig(async () => {
       subdomain = 'portfolio';
     } else if (normalizedHost.includes('doiceladev.') || normalizedHost.startsWith('doiceladev')) {
       subdomain = 'doiceladev';
-    } else if (normalizedHost.includes('bible.') || normalizedHost.startsWith('bible')) {
-      subdomain = 'bible';
+    } else if (
+      normalizedHost.includes('kartex.') ||
+      normalizedHost.startsWith('kartex')
+    ) {
+      subdomain = 'kartex';
     }
   }
 

@@ -10,7 +10,7 @@ Este documento detalla la investigación forense, el análisis técnico de causa
 | :--- | :--- |
 | **Fecha del Incidente** | 8 – 9 de Septiembre de 2026 |
 | **Severidad** | P1 (Crítico) — Subdominios inaccesibles |
-| **Servicios Afectados** | `bible.jorgedoicela.com`, `portfolio.jorgedoicela.com`, `doiceladev.jorgedoicela.com` |
+| **Servicios Afectados** | `kartex.jorgedoicela.com`, `portfolio.jorgedoicela.com`, `doiceladev.jorgedoicela.com` |
 | **Servicio No Afectado** | `jorgedoicela.com` (Landing page / Dominio raíz) |
 | **Síntoma Visible** | HTTP 500 (Internal Server Error) en navegador y llamadas cURL |
 | **Error en Logs de Next.js** | `Error: write EPROTO: SSL routines: WRONG_VERSION_NUMBER` en `proxy-request.js` |
@@ -38,7 +38,7 @@ Durante la auditoría de hardening perimetral de septiembre de 2026, se identifi
 ### 2.2 El Síntoma Inmediato
 Tras recargar PM2:
 * `jorgedoicela.com` (Landing) continuó respondiendo `200 OK` porque no requiere reescritura de subdominios en `src/middleware.ts`.
-* Todos los subdominios (`bible`, `portfolio`, `doiceladev`) comenzaron a devolver `500 Internal Server Error`.
+* Todos los subdominios (`kartex`, `portfolio`, `doiceladev`) comenzaron a devolver `500 Internal Server Error`.
 * En los logs de PM2 (`~/.pm2/logs/frontend-next-error-*.log`):
 ```text
 Failed to proxy https://localhost:3001/doiceladev Error: write EPROTO 80F2CC34637F0000:error:0A00010B:SSL routines:tls_validate_record_header:wrong version number:../deps/openssl/openssl/ssl/record/methods/tlsany_meth.c:77:
@@ -174,7 +174,7 @@ module.exports = {
         NODE_ENV: 'production',
         HOST: '127.0.0.1', // IPv4 loopback estricto para APIs y SQLite
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
-        DATABASE_BIBLE_PATH: './data/bible.sqlite',
+        DATABASE_KARTEX_PATH: './data/kartex.sqlite',
         DATABASE_DOICELADEV_PATH: './data/doiceladev.sqlite',
       },
     },
@@ -251,7 +251,7 @@ server {
 Comprobación empírica ejecutada directamente contra el servidor web de producción:
 
 ```bash
-curl -s -o /dev/null -w "público bible: %{http_code}\n" https://bible.jorgedoicela.com/
+curl -s -o /dev/null -w "público kartex: %{http_code}\n" https://kartex.jorgedoicela.com/
 curl -s -o /dev/null -w "público landing: %{http_code}\n" https://jorgedoicela.com/
 curl -s -o /dev/null -w "público doiceladev: %{http_code}\n" https://doiceladev.jorgedoicela.com/
 curl -s -o /dev/null -w "público portfolio: %{http_code}\n" https://portfolio.jorgedoicela.com/
@@ -259,7 +259,7 @@ curl -s -o /dev/null -w "público portfolio: %{http_code}\n" https://portfolio.j
 
 **Salida obtenida:**
 ```text
-público bible: 200
+público kartex: 200
 público landing: 200
 público doiceladev: 200
 público portfolio: 200

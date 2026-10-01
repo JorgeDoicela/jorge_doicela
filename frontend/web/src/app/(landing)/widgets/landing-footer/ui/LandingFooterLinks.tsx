@@ -30,12 +30,12 @@ export function LandingFooterLinks() {
       </a>
       <span>•</span>
       <a
-        href={urls.bible}
+        href={urls.kartex}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-foreground transition-colors"
       >
-        {tLanding('bibleHeadline')}
+        {tLanding('kartexHeadline')}
       </a>
       <span>•</span>
       <Link href="/links" className="hover:text-foreground transition-colors">

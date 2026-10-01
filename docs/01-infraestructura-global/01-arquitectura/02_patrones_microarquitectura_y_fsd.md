@@ -6,7 +6,7 @@ Este documento define los **estándares de codificación y diseño interno** que
 
 ## 1. Microarquitectura del Backend: Arquitectura en Capas (NestJS)
 
-Cada dominio dentro de `backend/src/` (`bible`, `doiceladev`, `portfolio`, o nuevos dominios futuros) debe operar como un **módulo aislado** dividido internamente en tres capas con Inversión de Control (IoC):
+Cada dominio dentro de `backend/src/` (`kartex`, `doiceladev`, `portfolio`, o nuevos dominios futuros) debe operar como un **módulo aislado** dividido internamente en tres capas con Inversión de Control (IoC):
 
 ```text
 backend/src/<dominio>/
@@ -31,7 +31,7 @@ backend/src/<dominio>/
 
 ## 2. Microarquitectura del Frontend: Feature-Sliced Design (FSD en Next.js)
 
-Cada subproyecto dentro de `frontend/web/src/app/` (`(landing)`, `(portfolio)`, `(bible)`, `(doiceladev)`) organiza su código por **funcionalidades de negocio**, no por carpetas técnicas genéricas:
+Cada subproyecto dentro de `frontend/web/src/app/` (`(landing)`, `(portfolio)`, `(kartex)`, `(doiceladev)`) organiza su código por **funcionalidades de negocio**, no por carpetas técnicas genéricas:
 
 ```text
 frontend/web/src/app/(subproyecto)/
@@ -57,8 +57,8 @@ frontend/web/src/app/(subproyecto)/
 ### Reglas Inviolables del Frontend:
 1. **Cero carpetas técnicas globales desordenadas:** Queda prohibido crear carpetas como `/src/components/` o `/src/hooks/` compartidas para todo el monorepo. Todo vive dentro de su respectivo subdominio y feature.
 2. **Aislamiento Estricto de Estilos:** Cada subproyecto tiene su propio archivo `globals.css`. Nunca se importan estilos globales en un layout raíz compartido para evitar colisiones de Tailwind CSS.
-3. **Cero importaciones cruzadas entre subdominios:** `(bible)` jamás debe importar componentes, hooks o utilidades de `(portfolio)` o `(doiceladev)`.
-4. **Consumo de Assets:** Toda imagen o video en `public/` debe consumirse con el prefijo de la carpeta del subdominio (`/portfolio/images/...`, `/bible/images/...`).
+3. **Cero importaciones cruzadas entre subdominios:** `(kartex)` jamás debe importar componentes, hooks o utilidades de `(portfolio)` o `(doiceladev)`.
+4. **Consumo de Assets:** Toda imagen o video en `public/` debe consumirse con el prefijo de la carpeta del subdominio (`/portfolio/images/...`, `/kartex/images/...`).
 5. **Tipografías Auto-Hospedadas y Portabilidad de Cajas Negras (Zero-External Network Fonts):** Queda estrictamente prohibido cargar fuentes desde CDNs externos o Google Fonts en tiempo de ejecución o build (`next/font/google`). Para garantizar la **extracción inmediata de cualquier subproyecto a otro servidor o VPS sin tocar código**, todas las fuentes `.woff2` residen encapsuladas dentro del propio subproyecto en `src/app/(subproyecto)/fonts/` y se consumen mediante `next/font/local` con ruta relativa `./fonts/...`.
 
 ```text
@@ -69,7 +69,7 @@ frontend/web/src/app/
 ├── (portfolio)/fonts/
 │   ├── Geist-Variable.woff2                    # Sans Dark Luxury
 │   └── GeistMono-Variable.woff2                # Terminal SSH interactiva
-├── (bible)/fonts/
+├── (kartex)/fonts/
 │   ├── Geist-Variable.woff2                    # UI Chrome / Geist Vercel Style
 │   ├── GeistMono-Variable.woff2                # Monoespaciada técnica
 │   ├── Lora-Variable.ttf                       # Modo de lectura bíblica Serif regular
@@ -94,7 +94,7 @@ frontend/web/src/
 │   ├── (landing)/messages/     # Diccionarios encapsulados exclusivamente para Landing (es.json, en.json)
 │   ├── (portfolio)/messages/   # Diccionarios encapsulados exclusivamente para Portafolio (es.json, en.json)
 │   ├── (doiceladev)/messages/    # Diccionarios encapsulados exclusivamente para DoicelaDev (es.json, en.json)
-│   └── (bible)/messages/       # Diccionarios encapsulados exclusivamente para Biblia (es.json, en.json)
+│   └── (kartex)/messages/       # Diccionarios encapsulados exclusivamente para KARTEX (es.json, en.json)
 ├── i18n/
 │   └── request.ts              # Configuración de servidor: importa dinámicamente solo el JSON del subdominio activo
 └── middleware.ts               # Detección y persistencia de idioma (?lang= sync a NEXT_LOCALE)
@@ -107,7 +107,7 @@ frontend/web/src/
 4. **SEO Internacional Dinámico:** Cada layout de subdominio exporta `generateMetadata()` con títulos y descripciones traducidas, e inyecta etiquetas `alternates.languages` (`hreflang="es-EC"` y `hreflang="en-US"`).
 5. **Doble Nivel de i18n (UI vs. Base de Datos):**
    * *Nivel 1 (UX/UI Chrome):* Textos de interfaz y navegación leídos con `useTranslations()` / `getTranslations()`.
-   * *Nivel 2 (Datos Dinámicos en SQLite):* Tablas de contenidos (`doiceladev.sqlite` y entidades explicativas de `bible.sqlite`) incorporan la columna `language: 'es' | 'en'` y soportan filtrado por query param `?lang=`.
+   * *Nivel 2 (Datos Dinámicos en SQLite):* Tablas de contenidos (`doiceladev.sqlite` y entidades explicativas de `kartex.sqlite`) incorporan la columna `language: 'es' | 'en'` y soportan filtrado por query param `?lang=`.
 
 ---
 

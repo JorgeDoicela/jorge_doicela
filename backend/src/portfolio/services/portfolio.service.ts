@@ -161,14 +161,14 @@ export class PortfolioService {
               permissions: 'drwxr-xr-x',
               updatedAt: 'Aug 14 12:30',
               children: {
-                'bible_modular.txt': {
+                'kartex.txt': {
                   type: 'file',
-                  name: 'bible_modular.txt',
+                  name: 'kartex.txt',
                   size: 512,
                   permissions: '-rw-r--r--',
                   updatedAt: 'Aug 14 12:30',
                   content:
-                    'Biblia Modular: Lector minimalista de las Sagradas Escrituras con Next.js, NestJS y SQLite.',
+                    'KARTEX: Plataforma de investigación bíblica y exégesis con Next.js, NestJS y SQLite.',
                 },
                 'doiceladev.txt': {
                   type: 'file',
@@ -315,10 +315,10 @@ export class PortfolioService {
           output: [
             '\x1b[1;33mProyectos de Ingeniería Destacados:\x1b[0m',
             '\x1b[90m------------------------------------------------------------\x1b[0m',
-            '  \x1b[1;33m1. La Biblia Modular\x1b[0m        \x1b[90m[bible.jorgedoicela.com]\x1b[0m',
+            '  \x1b[1;33m1. KARTEX\x1b[0m                  \x1b[90m[kartex.jorgedoicela.com]\x1b[0m',
             '     \x1b[33m• Rol:\x1b[0m Lead Architect & Full Stack Developer',
             '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite (WAL), Expo Mobile, TypeScript',
-            '     \x1b[90m• Resumen:\x1b[0m Plataforma de exégesis con 9 motores y morfología Strong.',
+            '     \x1b[90m• Resumen:\x1b[0m Plataforma de investigación bíblica con 9 módulos y morfología Strong.',
             '',
             '  \x1b[1;33m2. DoicelaDev Platform\x1b[0m      \x1b[90m[doiceladev.jorgedoicela.com]\x1b[0m',
             '     \x1b[33m• Rol:\x1b[0m Full Stack & DevSecOps Engineer',
@@ -335,7 +335,7 @@ export class PortfolioService {
             '     \x1b[33m• Stack:\x1b[0m NestJS WebSockets, Socket.io, TypeScript, ANSI Parser',
             '     \x1b[90m• Resumen:\x1b[0m Emulador UNIX interactivo sobre WebSockets.',
             '',
-            '\x1b[90m(Puedes usar "open doiceladev" o "open bible" para abrirlos directamente)\x1b[0m',
+            '\x1b[90m(Puedes usar "open doiceladev" o "open kartex" para abrirlos directamente)\x1b[0m',
           ].join('\n'),
         };
 
@@ -496,7 +496,7 @@ export class PortfolioService {
         if (!target) {
           return {
             output:
-              'Uso: open <github|linkedin|tiktok|email|doiceladev|bible|portfolio>',
+              'Uso: open <github|linkedin|tiktok|email|doiceladev|kartex|portfolio>',
           };
         }
         let url = '';
@@ -509,15 +509,15 @@ export class PortfolioService {
           url = 'mailto:jorge.doicela.m@gmail.com';
         else if (target.includes('doiceladev'))
           url = 'https://doiceladev.jorgedoicela.com';
-        else if (target.includes('bible'))
-          url = 'https://bible.jorgedoicela.com';
+        else if (target.includes('kartex'))
+          url = 'https://kartex.jorgedoicela.com';
         else if (target.includes('portfolio'))
           url = 'https://portfolio.jorgedoicela.com';
         else if (target.startsWith('http://') || target.startsWith('https://'))
           url = target;
         else {
           return {
-            output: `Destino desconocido: "${target}". Opciones: github, linkedin, tiktok, email, doiceladev, bible.`,
+            output: `Destino desconocido: "${target}". Opciones: github, linkedin, tiktok, email, doiceladev, kartex.`,
           };
         }
 
@@ -570,7 +570,7 @@ export class PortfolioService {
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
               'Date:   Mon Jun 10 18:30:12 2024 -0500',
               '',
-              '    feat: complete DoicelaDev platform & modular Bible reader',
+              '    feat: complete DoicelaDev platform & KARTEX research platform',
               '',
               '\x1b[33mcommit 3e1f9a2b8c4d5e\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
@@ -786,7 +786,7 @@ export class PortfolioService {
         'tiktok',
         'email',
         'doiceladev',
-        'bible',
+        'kartex',
         'portfolio',
       ];
       return targets.filter((t) => t.startsWith(lastArg));

@@ -63,7 +63,7 @@ frontend/web/src/app/(landing)/
 ├── widgets/                          # CAPA 3: Bloques Visuales Autónomos y Layouts
 │   ├── landing-header/               # LandingHeader (cabecera universal con badge opcional y backLink)
 │   ├── landing-footer/               # LandingFooter (variantes full y compact con LandingFooterLinks)
-│   ├── highlights-carousel/          # AppleHighlightsCarousel con slides/ (Bible, DoicelaDev, Portfolio)
+│   ├── highlights-carousel/          # AppleHighlightsCarousel con slides/ (Kartex, DoicelaDev, Portfolio)
 │   ├── highlights-explorer/          # AppleDetailExplorer (Modal/Drawer inmersivo de proyectos)
 │   ├── cosmic-canvas/                # LandingVisualEffects, ParallaxBackground, CinematicSpiralGalaxy, InteractiveParticles
 │   ├── consulta-section/             # ConsultaForm (formulario y feedback de leads)
@@ -88,7 +88,7 @@ Gestiona de forma unificada y segura para SSR la resolución dinámica hacia `ht
 import { useSubdomainUrl } from '../shared';
 
 // Uso directo en cualquier componente cliente:
-const bibleUrl = useSubdomainUrl('bible');
+const kartexUrl = useSubdomainUrl('kartex');
 const doiceladevUrl = useSubdomainUrl('doiceladev');
 const portfolioUrl = useSubdomainUrl('portfolio');
 ```
@@ -151,7 +151,7 @@ pnpm -r typecheck
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
 | Hacer llamadas fetch a endpoints de backend NestJS | La Landing es 100% estática del lado del cliente y no tiene backend. | Resolver enlaces y contenido puramente en el cliente. |
-| Importar componentes o estilos de (portfolio), (bible) o (doiceladev) | Rompe el aislamiento estético y añade dependencias innecesarias. | Mantener los componentes encapsulados en sus capas FSD dentro de (landing)/. |
+| Importar componentes o estilos de (portfolio), (kartex) o (doiceladev) | Rompe el aislamiento estético y añade dependencias innecesarias. | Mantener los componentes encapsulados en sus capas FSD dentro de (landing)/. |
 | Olvidar la zona horaria en el reloj de Quito | El reloj mostraría la hora local del navegador del visitante en vez de la hora de Ecuador. | Usar timeZone: 'America/Guayaquil' explícitamente en Intl.DateTimeFormat. |
 | Colocar imágenes en carpetas genéricas de public/ | Colisiona con assets de otros subproyectos. | Guardar assets exclusivamente en frontend/web/public/landing/. |
 | Cargar fuentes desde Google Fonts o CDNs | Rompe el principio de caja negra, crea dependencia de red externa y viola GDPR. | Alojar las fuentes `.woff2` locales en `src/app/(landing)/fonts/` con licencia SIL OFL 1.1 e importar con `next/font/local`. |

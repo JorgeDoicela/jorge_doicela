@@ -80,9 +80,9 @@ about() {
 projects() {
     echo -e "\033[1;38;5;221mProyectos Destacados de Ingeniería:\033[0m"
     echo -e "\033[38;5;242m────────────────────────────────────────────────────────────\033[0m"
-    echo -e "  \033[1;38;5;221m1. La Biblia Modular\033[0m \033[38;5;242m[https://bible.jorgedoicela.com]\033[0m"
+    echo -e "  \033[1;38;5;221m1. KARTEX\033[0m \033[38;5;242m[https://kartex.jorgedoicela.com]\033[0m"
     echo -e "     Stack: Next.js 16, NestJS 11, SQLite (WAL), Expo Mobile, TypeScript"
-    echo -e "     9 motores de exégesis bíblica y análisis de morfología Strong."
+    echo -e "     9 módulos de investigación bíblica y análisis de morfología Strong."
     echo ""
     echo -e "  \033[1;38;5;221m2. DoicelaDev Platform\033[0m \033[38;5;242m[https://doiceladev.jorgedoicela.com]\033[0m"
     echo -e "     Stack: Next.js 16, NestJS 11, SQLite, Neumorphism UI, Glassmorphism"
@@ -111,7 +111,7 @@ architecture() {
     echo -e "  \033[38;5;221mConsolidación:\033[0m     4 subdominios servidos por 1 solo proceso Next.js 16 (puerto 3001)"
     echo -e "                     y 1 solo proceso NestJS 11 (puerto 3000) mediante middleware."
     echo -e "  \033[38;5;221mPersistencia:\033[0m      Cero motores pesados. SQLite local en modo WAL (Write-Ahead Log)"
-    echo -e "                     con bases físicas independientes: bible.sqlite, doiceladev.sqlite,"
+    echo -e "                     con bases físicas independientes: kartex.sqlite, doiceladev.sqlite,"
     echo -e "                     portfolio.sqlite."
     echo -e "  \033[38;5;221mSeguridad:\033[0m         Cloudflare mTLS, Nginx reverse proxy, cuotas de cgroups y"
     echo -e "                     sesiones aisladas efímeras sin privilegios de root."
@@ -160,7 +160,7 @@ api-live() {
     "isolation": "unprivileged"
   },
   "modules": [
-    "bible.jorgedoicela.com",
+    "kartex.jorgedoicela.com",
     "doiceladev.jorgedoicela.com",
     "portfolio.jorgedoicela.com",
     "jorgedoicela.com"

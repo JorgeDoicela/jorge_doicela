@@ -44,7 +44,7 @@ async function bootstrap() {
     : [
         'https://jorgedoicela.com',
         'https://portfolio.jorgedoicela.com',
-        'https://bible.jorgedoicela.com',
+        'https://kartex.jorgedoicela.com',
         'https://doiceladev.jorgedoicela.com',
         // En desarrollo local se añaden los puertos y subdominios del monorepo
         ...(process.env.NODE_ENV !== 'production'
@@ -52,7 +52,7 @@ async function bootstrap() {
               'http://localhost:3001',
               'http://portfolio.localhost:3001',
               'http://doiceladev.localhost:3001',
-              'http://bible.localhost:3001',
+              'http://kartex.localhost:3001',
               'http://127.0.0.1:3001',
               'http://localhost:3000',
               'http://127.0.0.1:3000',

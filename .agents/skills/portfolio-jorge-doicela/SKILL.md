@@ -150,7 +150,7 @@ pnpm -r typecheck
 | Inyectar TypeOrmModule sin especificar 'portfolioConnection' | Conectaría a la base de datos por defecto en lugar de portfolio.sqlite. | Usar @InjectRepository(ContactMessage, 'portfolioConnection'). |
 | Poner bloques try/catch para devolver respuestas HTTP en el controlador | Duplica código y rompe el formateo estándar del filtro global. | Dejar que los errores sean capturados por GlobalExceptionFilter. |
 | Forzar la apertura de la terminal interactiva en pantallas móviles | En móviles no hay flechas, Tab ni secuencias ANSI; degrada la experiencia. | Mostrar vista adaptada de tarjetas en viewports móviles. |
-| Importar entidades de doiceladev o bible en el módulo portfolio | Viola la independencia estricta entre dominios. | Mantener las entidades dentro de backend/src/portfolio/entities/. |
+| Importar entidades de doiceladev o kartex en el módulo portfolio | Viola la independencia estricta entre dominios. | Mantener las entidades dentro de backend/src/portfolio/entities/. |
 | Cargar fuentes desde Google Fonts o depender de la fuente monoespaciada del SO para xterm | Degrada el renderizado de la consola interactiva en clientes sin fuentes modernas y rompe el aislamiento. | Alojar `Geist-Variable.woff2` y `GeistMono-Variable.woff2` en `(portfolio)/fonts/` (SIL OFL 1.1) e inyectar `var(--font-geist-mono)` en el hook de xterm. |
 
 ---

@@ -11,7 +11,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > * **Subdominio Canónico:** `doiceladev.jorgedoicela.com` (o `http://doiceladev.localhost:3001` en desarrollo local).
 > * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las secciones son rutas directas (`/news`, `/blog`, `/forum`, `/ai`, `/cybersecurity`, `/tutorials`, `/projects`, `/infrastructure`).
 > * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud en el subdominio con el prefijo redundante `/doiceladev` o `/doiceladev/*` se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/*`), eliminando URLs duplicadas en el navegador y protegiendo el SEO.
-> * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(doiceladev)/doiceladev/*` para evitar colisiones de rutas a nivel de compilación con `(landing)`, `(portfolio)` y `(bible)` bajo el runtime consolidado de 1 GB de RAM.
+> * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(doiceladev)/doiceladev/*` para evitar colisiones de rutas a nivel de compilación con `(landing)`, `(portfolio)` y `(kartex)` bajo el runtime consolidado de 1 GB de RAM.
 > * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/doiceladev` siguen respondiendo 200 OK directamente.
 > * **Consolidación Física:** Se ejecuta en el único servidor Next.js 16 (puerto `3001`, VPS 1 GB RAM).
 > * **Aislamiento de Dominio:** Estilos independientes en `(doiceladev)/globals.css`. Cero importaciones de otros subdominios.

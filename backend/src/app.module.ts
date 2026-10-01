@@ -11,7 +11,7 @@ import { AppService } from './app.service';
  * ---------------------------------------------------------------------------
  * Este repositorio unifica la ejecución de tres proyectos totalmente distintos:
  * 1. Portfolio
- * 2. Bible
+ * 2. Kartex
  * 3. DoicelaDev
  *
  * Se ejecutan bajo un mismo proceso NestJS únicamente para optimizar recursos en producción
@@ -23,11 +23,11 @@ import { AppService } from './app.service';
  * 2. NINGÚN módulo debe compartir bases de datos o servicios. Cada uno mantiene su propia persistencia.
  * 3. No existe comunicación (ni directa ni por eventos) entre ellos, ya que conceptualmente
  *    no tienen ninguna relación de negocio.
- * 4. La estructura física debe permitir copiar y pegar la carpeta de cualquier módulo (ej. /bible)
+ * 4. La estructura física debe permitir copiar y pegar la carpeta de cualquier módulo (ej. /kartex)
  *    a otro servidor NestJS limpio y que funcione de manera autónoma de inmediato.
  */
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { BibleModule } from './bible/bible.module';
+import { KartexModule } from './kartex/kartex.module';
 import { DoiceladevModule } from './doiceladev/doiceladev.module';
 
 function getPinoTransport() {
@@ -65,7 +65,7 @@ function getPinoTransport() {
       },
     }),
     PortfolioModule,
-    BibleModule,
+    KartexModule,
     DoiceladevModule,
   ],
   controllers: [AppController],

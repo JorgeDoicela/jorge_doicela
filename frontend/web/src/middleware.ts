@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server';
 //   El servidor consolidado (1 GB RAM) aloja 4 proyectos en un único proceso
 //   Next.js (puerto 3001). Este middleware detecta el subdominio del host y
 //   reescribe la URL internamente hacia el grupo de rutas correspondiente
-//   (route groups: (landing), (portfolio), (doiceladev), (bible)).
+//   (route groups: (landing), (portfolio), (doiceladev), (kartex)).
 //
 // GUÍA DE MIGRACIÓN POR PROYECTO:
 //   Al mover un proyecto a su propio servidor Next.js independiente,
@@ -21,7 +21,7 @@ import type { NextRequest } from 'next/server';
  */
 const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
     portfolio: '/portfolio',
-    bible: '/bible',
+    kartex: '/kartex',
     doiceladev: '/doiceladev',
 };
 
@@ -84,7 +84,7 @@ export function middleware(request: NextRequest) {
     if (!project) {
         if (pathname.startsWith('/doiceladev')) project = 'doiceladev';
         else if (pathname.startsWith('/portfolio')) project = 'portfolio';
-        else if (pathname.startsWith('/bible')) project = 'bible';
+        else if (pathname.startsWith('/kartex')) project = 'kartex';
         else project = 'landing';
     }
 

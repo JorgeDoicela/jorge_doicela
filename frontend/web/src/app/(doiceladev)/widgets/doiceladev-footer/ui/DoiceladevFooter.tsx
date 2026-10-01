@@ -64,7 +64,7 @@ export function DoiceladevFooter() {
             <ul className="space-y-2 text-xs text-zinc-500">
               <li><a href={getLandingUrl()} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('mainPortal')}</a></li>
               <li><a href={getSubdomainUrl('portfolio')} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('portfolioSSH')}</a></li>
-              <li><a href={getSubdomainUrl('bible')} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('exegesisBible')}</a></li>
+              <li><a href={getSubdomainUrl('kartex')} className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors">{t('exegesisKartex')}</a></li>
               <li><a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors font-mono">llms.txt</a></li>
             </ul>
           </div>

@@ -12,7 +12,7 @@
     "typecheck": "pnpm -r typecheck",
     "format": "pnpm -r format",
     "build": "pnpm -r --if-present build",
-    "seed:bible": "pnpm --filter backend seed:bible",
+    "seed:kartex": "pnpm --filter backend seed:kartex",
     "seed:doiceladev": "pnpm --filter backend seed:doiceladev",
     "seed:all": "pnpm --filter backend seed:all"
   },

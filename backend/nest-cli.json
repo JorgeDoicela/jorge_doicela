@@ -6,7 +6,7 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "bible/corpus/**/*",
+        "include": "kartex/corpus/**/*",
         "watchAssets": true
       },
       {

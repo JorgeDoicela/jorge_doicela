@@ -42,7 +42,7 @@ export default function robots(): MetadataRoute.Robots {
         // Al migrar un proyecto a servidor propio, apuntar a su sitemap individual:
         //   'https://portfolio.jorgedoicela.com/sitemap.xml'
         //   'https://doiceladev.jorgedoicela.com/sitemap.xml'
-        //   'https://bible.jorgedoicela.com/sitemap.xml'
+        //   'https://kartex.jorgedoicela.com/sitemap.xml'
         sitemap: 'https://jorgedoicela.com/sitemap.xml',
     };
 }

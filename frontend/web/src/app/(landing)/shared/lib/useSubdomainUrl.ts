@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 
 export interface SubdomainUrls {
   portfolio: string;
-  bible: string;
+  kartex: string;
   doiceladev: string;
 }
 
@@ -34,7 +34,7 @@ export function useSubdomainUrl() {
 
   const urls: SubdomainUrls = useMemo(() => ({
     portfolio: getSubdomainUrl('portfolio'),
-    bible: getSubdomainUrl('bible'),
+    kartex: getSubdomainUrl('kartex'),
     doiceladev: getSubdomainUrl('doiceladev'),
   }), [resolved]);
 

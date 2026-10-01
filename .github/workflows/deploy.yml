@@ -82,8 +82,8 @@ jobs:
             mkdir -p backend/data
             
             # 4. Reconstrucción atómica y seeding completo desde los corpus JSON compilados
-            echo "==> [CI/CD] Sembrando base de datos: bible.sqlite..."
-            node backend/dist/bible/cli/seed-corpus.js
+            echo "==> [CI/CD] Sembrando base de datos: kartex.sqlite..."
+            node backend/dist/kartex/cli/seed-corpus.js
             echo "==> [CI/CD] Sembrando base de datos: doiceladev.sqlite..."
             node backend/dist/doiceladev/cli/seed-doiceladev.js
             echo "==> [CI/CD] Sembrando base de datos: portfolio.sqlite..."

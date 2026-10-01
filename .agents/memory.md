@@ -9,12 +9,12 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 * **Infraestructura y Restricción de 1 GB RAM:**
   - Servidor VPS en AWS Lightsail limitado a 1 GB de RAM.
   - Runtime consolidado: Backend corre en un solo proceso NestJS (puerto `3000`), frontend corre consolidado en un solo proceso Next.js (puerto `3001`) con `middleware.ts` para resolución de subdominios.
-  - Aislamiento de Cajas Negras: las 4 aplicaciones (`landing`, `portfolio`, `bible`, `doiceladev`) son 100% independientes, prohibidas las importaciones cruzadas entre dominios.
+  - Aislamiento de Cajas Negras: las 4 aplicaciones (`landing`, `portfolio`, `kartex`, `doiceladev`) son 100% independientes, prohibidas las importaciones cruzadas entre dominios.
 * **Gestión de Paquetes y Tipos:**
   - Monorepo pnpm: instalación obligatoria con filtro (`pnpm --filter backend add ...`, `pnpm --filter web add ...`).
   - Cero paquetes `@shared`: cada subproyecto define sus propias interfaces y tipos localmente.
 * **Persistencia Aislada (SQLite):**
-  - Bases independientes en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`).
+  - Bases independientes en `backend/data/` (`kartex.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`).
   - Los archivos `.sqlite` están en `.gitignore`. Al cambiar de máquina o hacer `git pull` con cambios en corpus o entidades, es obligatorio ejecutar `pnpm seed:all`.
 * **Protocolo de Diagnóstico 404:**
   - Ante errores 404 en rutas dinámicas (`/infrastructure/[slug]`, `/tutorials/[slug]`, etc.) en local, verificar primero si el registro existe en la base SQLite o ejecutar `pnpm seed:all` antes de tocar routing o middleware.
@@ -28,7 +28,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Las tipografías residen 100% encapsuladas dentro de la carpeta de cada subproyecto en `frontend/web/src/app/(subproyecto)/fonts/`:
     - `src/app/(landing)/fonts/` (Geist Sans y Geist Mono)
     - `src/app/(portfolio)/fonts/` (Geist Sans y Geist Mono)
-    - `src/app/(bible)/fonts/` (Geist Sans, Geist Mono, Lora Regular/Itálico, Frank Ruhl Libre para hebreo y Cardo para griego)
+    - `src/app/(kartex)/fonts/` (Geist Sans, Geist Mono, Lora Regular/Itálico, Frank Ruhl Libre para hebreo y Cardo para griego)
     - `src/app/(doiceladev)/fonts/` (Plus Jakarta Sans Regular/Itálico y Geist Mono para terminal y snippets)
   - Se cargan mediante `next/font/local` con ruta relativa `./fonts/...` en cada layout, inyectando las variables CSS (`--font-geist-sans`, `--font-geist-mono`, `--font-plus-jakarta-sans`, `--font-lora`, `--font-hebrew`, `--font-greek`).
   - Todas las fuentes operan bajo la **SIL Open Font License (OFL 1.1)**: 100% legal, código abierto, libre para uso comercial y auto-hospedaje sin pago de regalías ni telemetría de terceros.
@@ -130,11 +130,11 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Verificación Integral: `pnpm -r typecheck` validado con 0 errores en los 3 proyectos del monorepo (`backend`, `frontend/mobile`, `frontend/web`).
   - Auditoría y Limpieza en Producción (AWS Lightsail): ejecutado escaneo forense con `find`, eliminados los 6 directorios/archivos huérfanos residuales en el VPS (`docs/05-software`, `skills/software-*`, `public/software`, `(software)`, `SoftwareSlideVisual.tsx`, y carátula legacy); corroborado estado con 0 resultados residuales y servicios online en PM2.
   - Auditoría de Arquitectura FSD y Cajas Negras (DoicelaDev):
-    - Aislamiento de dominio absoluto: 0 importaciones cruzadas (cross-imports) entre `(doiceladev)` y `(bible)`, `(portfolio)` o `(landing)` en frontend y backend.
+    - Aislamiento de dominio absoluto: 0 importaciones cruzadas (cross-imports) entre `(doiceladev)` y `(kartex)`, `(portfolio)` o `(landing)` en frontend y backend.
     - Jerarquía FSD unidireccional estricta: se eliminó la única violación en `shared/markdown` elevando la interfaz `GlossaryTerm` a `shared/types/glossary.ts` y re-exportando desde `entities/glossary`, alcanzando 0 violaciones de capa en las 6 capas de FSD.
     - Backend NestJS: 100% de servicios inyectan `@InjectRepository(Entity, 'doiceladevConnection')` y preservan las 3 capas canónicas (Controladores, Servicios de Dominio, Entidades TypeORM / DTOs).
 * **Auditoría Integral de Bilingüismo (i18n ES/EN) y Erradicación de Cadenas Hardcodeadas:**
-  - Paridad de Diccionarios al 100%: verificado con script automatizado que las 4 aplicaciones del monorepo (`doiceladev`: 388/388, `landing`: 164/164, `portfolio`: 228/228, `bible`: 845/845) poseen simetría idéntica y 0 claves huérfanas entre `messages/es.json` y `messages/en.json`.
+  - Paridad de Diccionarios al 100%: verificado con script automatizado que las 4 aplicaciones del monorepo (`doiceladev`: 388/388, `landing`: 164/164, `portfolio`: 228/228, `kartex`: 845/845) poseen simetría idéntica y 0 claves huérfanas entre `messages/es.json` y `messages/en.json`.
   - Frontend DoicelaDev:
     - Los 76 componentes TSX fueron analizados exhaustivamente: 0 cadenas de texto literales quemadas en la interfaz de usuario.
     - Las 8 subrutas de catálogo (`page.tsx`) y los 8 lectores dinámicos (`[slug]/page.tsx`) delegan 100% sus textos en `useTranslations`/`getTranslations` y consumen el backend de forma localizada mediante `?lang=${locale}`.
@@ -148,7 +148,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Verificación de Tipos: `pnpm -r typecheck` validado con 0 errores en los 3 proyectos del monorepo (`backend`, `frontend/mobile`, `frontend/web`).
 * **Auditoría Arquitectónica FSD, NestJS y Principio de Cajas Negras (DoicelaDev Post-Renombramiento):**
   - Principio de Cajas Negras (Domain Isolation):
-    - Cero importaciones cruzadas (0 cross-imports) desde `(doiceladev)` hacia `(landing)`, `(portfolio)` o `(bible)` tanto en frontend como en backend.
+    - Cero importaciones cruzadas (0 cross-imports) desde `(doiceladev)` hacia `(landing)`, `(portfolio)` o `(kartex)` tanto en frontend como en backend.
     - Cero importaciones de otros dominios hacia código interno de `(doiceladev)`.
   - Feature-Sliced Design (FSD Canónico en 6 Capas):
     - Escaneo automatizado de dependencias sobre los 139 archivos de `(doiceladev)`: **0 violaciones de jerarquía unidireccional de capas**. Ninguna capa inferior importa de una capa superior (`shared` -> `entities` -> `features` -> `widgets` -> `pages` -> `app`).
@@ -165,8 +165,8 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - `(doiceladev)`: 390/390 claves simétricas. Se agregaron `Spotlight.commandPalette` y `ArticleLayout.breadcrumb`, erradicando los últimos atributos estáticos.
     - `(landing)`: 172/172 claves simétricas. Se internacionalizaron `AppleDetailExplorer.tsx` y `LinksAiAssistant.tsx`.
     - `(portfolio)`: 232/232 claves simétricas. Se internacionalizaron `ProjectDetailModal.tsx`, `ProjectShowcase.tsx` y `portfolio/page.tsx`.
-    - `(bible)`: 920/920 claves simétricas. Se incorporaron 75+ nuevas claves cubriendo la totalidad de inspectores, barras laterales, herramientas del lector, carruseles y secciones de landing.
-  - Saneamiento Exhaustivo en `(bible)`:
+    - `(kartex)`: 920/920 claves simétricas. Se incorporaron 75+ nuevas claves cubriendo la totalidad de inspectores, barras laterales, herramientas del lector, carruseles y secciones de landing.
+  - Saneamiento Exhaustivo en `(kartex)`:
     - Inspectores y Paneles: `ArchaeologyInspector`, `ArchaeologySidebar`, `AtlasInspector`, `AtlasSidebar`, `InteractiveMapCanvas`, `EvangelismInspector`, `EvangelismSidebar`, `InterlinearInspector`, `InterlinearSidebar`, `WordStudyInspector`, `WordStudySidebar`, `ParallelDiffInspector`, `ParallelSidebar`, `ParallelViewGrid`, `TimelineInspector`, `TimelineSidebar`, `BibleNavigationSidebar`.
     - Lector y Navegación: `ChapterNavigator`, `ReaderToolbar`, `VerseList`, `ThemeToggle`.
     - Landing de la Biblia: `BibleCorpusVersionsSection`, `BibleEnginesCarousel`, `BibleMobileAppSection`, `BiblePurposeSection`.
@@ -174,3 +174,76 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - Escaneo profundo con script automatizado: **0 atributos ni textos sospechosos con tildes/ñ quemados en los 4 dominios**.
     - Compilación estricta TypeScript: `pnpm --filter web typecheck` (código 0) y `pnpm --filter backend build` (código 0).
     - Principio de cajas negras y arquitectura de 1 GB RAM preservados al 100%.
+* **Transición Arquitectónica Integral a KARTEX (`kartex`):**
+  - Renombramiento de marca e infraestructura del subproyecto bíblico:
+    - Nombre de Marca: **KARTEX** (`kartex`).
+    - Taglines: *KARTEX · Plataforma de Investigación y Estudio Bíblico* (ES) / *KARTEX · Biblical Research & Study Platform* (EN).
+    - Motores especializados bilingües: Kartex Interlineal, Kartex Atlas, Kartex Lexicón, Kartex Evangelismo, Kartex Exégesis, Kartex Cronología, Kartex Arqueología, Kartex Paralelo, Kartex Lector.
+  - Frontend Web Next.js 16 (FSD):
+    - Grupo de rutas renombrado a `frontend/web/src/app/(kartex)`.
+    - Subrutas internas migradas a `/(kartex)/kartex` (`/study/standard`, `/study/parallel`, `/study/atlas`, etc.).
+    - Diccionarios `(kartex)/messages/{es,en}.json` con paridad 1:1 (920 claves).
+    - Componentes de SEO y UI: `KartexJsonLd.tsx`, `KartexLogo.tsx`, `BackToKartexButton.tsx`, `KartexNavigationSidebar`.
+  - Backend NestJS 11 y Persistencia:
+    - Módulo renombrado a `backend/src/kartex/` (`KartexModule`), registrado en `app.module.ts`.
+    - Persistencia SQLite en `backend/data/kartex.sqlite` bajo la conexión `'kartexConnection'`.
+    - Controladores canónicos exclusivos `@Controller('kartex/...')`.
+    - Seeders CLI actualizados (`seed:kartex`, `seed:all`).
+  - Enrutamiento por Subdominio (`middleware.ts`):
+    - Subdominio canónico exclusivo `kartex: '/kartex'` (cero alias o fallbacks de retrocompatibilidad).
+  - Eliminación Radical y Definitiva de Retrocompatibilidad (`/goal`):
+    - Eliminado cualquier rastro, alias o compatibilidad con `bible.jorgedoicela.com`, `bible.sqlite`, `(bible)` o endpoints `/bible/*` en todo el repositorio.
+    - Dominio canónico exclusivo: `kartex.jorgedoicela.com` / `kartex` / `KARTEX`.
+    - Base de datos física exclusiva: `backend/data/kartex.sqlite` (conexión `'kartexConnection'`).
+    - Nginx, PM2, GitHub Actions CI/CD, variables de entorno, documentación en `docs/` y componentes en los 4 proyectos del monorepo (`landing`, `portfolio`, `kartex`, `doiceladev`) sincronizados al 100% bajo KARTEX.
+  - Sincronización Inter-Dominios y App Móvil:
+    - Enlaces actualizados en `(landing)` (Bento, AI Assistant, `PersonJsonLd`), `(portfolio)` (`PortfolioJsonLd`) y `(doiceladev)` (`DoiceladevFooter`).
+    - App móvil Expo (`frontend/mobile/app.json`): `name: "Kartex"`, `slug: "kartex-mobile"`.
+    - Documentación técnica sincronizada en `docs/04-kartex/`.
+  - Cajas Negras y Compilación: 0 violaciones de aislamiento y compilación limpia al 100% (`tsc --noEmit` código 0, `nest build` código 0).
+* **Auditoría Automatizada Exhaustiva de Cero Residuos (Script en Raíz):**
+  - Se crearon y ejecutaron scripts de escaneo profundo en Node.js sobre la totalidad del monorepo (`scan-residuals.js` y `scan-deep-bible.js`), analizando cada archivo de código fuente, configuraciones, variables de entorno y documentación técnica.
+  - Saneamiento y correcciones aplicadas:
+    - [backend/nest-cli.json](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/backend/nest-cli.json): Actualizado el compilador de assets a `"kartex/corpus/**/*"`, verificando la generación correcta de `dist/kartex/corpus/` con `nest build`.
+    - [backend/.env](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/backend/.env): Actualizadas `DATABASE_KARTEX_PATH`, `DATABASE_DOICELADEV_PATH` y `CORS_ORIGINS` con los subdominios canónicos de desarrollo y producción.
+    - [frontend/web/src/app/(doiceladev)](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(doiceladev)): Actualizada la clave `"exegesisKartex"` en `DoiceladevFooter.tsx` y diccionarios `messages/{es,en}.json`.
+    - [frontend/web/src/app/(kartex)](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)): Actualizada la clave `"modularKartex"` en diccionarios `messages/{es,en}.json`.
+    - Documentación técnica (`docs/`): Saneadas todas las referencias de arquitectura residuales en `02_patrones_microarquitectura_y_fsd.md`, `03_resolucion_incidente_subdominios_nextjs_loopback.md`, `01_arquitectura_y_diseno.md`, `01_frontend_y_terminal_ssh.md` y `01_backend_y_persistencia.md`.
+  - Scripts de búsqueda temporales eliminados de la raíz.
+  - Verificación Integral Exitosa:
+    - `pnpm -r typecheck`: 3/3 proyectos pasaron con código 0.
+    - `pnpm -r lint`: 3/3 proyectos pasaron con código 0.
+    - `pnpm --filter backend build`: `nest build` completado con código 0.
+* **Auditoría Arquitectónica Senior de KARTEX (FSD, 3 Capas y Cajas Negras):**
+  - **Principio de Cajas Negras (Domain Isolation):** 0 importaciones cruzadas entre `(kartex)` y `(landing)`, `(portfolio)` o `(doiceladev)`.
+  - **Feature-Sliced Design (FSD en 6 Capas):**
+    - Se elevó el orquestador de pasajes a `entities/passage` (`KartexPassageContext.tsx`, `index.ts`).
+    - Desacoplado `StudySidePanel.tsx` en `shared/ui` como componente puro.
+    - Migrados los 34 componentes y widgets dependientes a la API pública de `entities/passage`.
+    - Resultado: **0 violaciones de jerarquía de capas FSD**.
+  - **Backend NestJS (3 Capas Canónicas):**
+    - 8 submódulos verticales de estudio (`archaeology`, `atlas`, `books`, `evangelism`, `morphology`, `timeline`, `translations`, `verses`) implementan rigurosamente la separación de Controladores (`@Controller('kartex/...')`), Servicios de Dominio (`@Injectable()`) y Entidades TypeORM/DTOs bajo la conexión aislada `'kartexConnection'`.
+  - **Verificación Técnica:** `pnpm -r typecheck` (código 0), `pnpm -r lint` (código 0) y `nest build` (código 0).
+* **Auditoría Exhaustiva de Bilingüismo (i18n ES/EN) y Erradicación Total de Cadenas Hardcodeadas en KARTEX:**
+  - **Paridad 1:1 de Diccionarios:** Verificada la simetría absoluta entre `frontend/web/src/app/(kartex)/messages/es.json` y `en.json` alcanzando 1053/1053 claves idénticas con 0 claves faltantes o huérfanas.
+  - **Saneamiento de Componentes y Vistas:**
+    - [TimelineCanvas.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/features/timeline/components/TimelineCanvas.tsx): Internacionalizadas las cabeceras SVG de pistas (`trackJudah`, `trackIsrael`, `trackProphets`, `trackEmpires`, `trackMilestones`), el badge de sincronización (`syncing`) y el formato de años dinámicos bilingües (`a.C.` / `d.C.` en ES vs `BC` / `AD` en EN).
+    - [ReaderToolbar.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/features/verses/components/reader-toolbar/ReaderToolbar.tsx): Internacionalizada la indicación de teclas de navegación (`shortcutNavKeys`).
+    - [KartexHeroSection.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/widgets/landing/ui/KartexHeroSection.tsx) y [KartexManuscriptsSection.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/widgets/landing/ui/KartexManuscriptsSection.tsx): Internacionalizados los atributos accesibles `alt` de las imágenes destacadas (`heroImageAlt`, `manuscriptImageAlt`).
+    - [KartexPurposeSection.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/widgets/landing/ui/KartexPurposeSection.tsx): Erradicado el versículo comparativo hardcodeado y parametrizado con `purposeCompareCard2VersePre` y `purposeCompareCard2VerseHighlight`.
+    - [KartexCorpusVersionsSection.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/widgets/landing/ui/KartexCorpusVersionsSection.tsx) y [KartexMobileAppSection.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/widgets/landing/ui/KartexMobileAppSection.tsx): Localizadas las referencias bíblicas de muestra (`sampleReferencePsalms23_1`, `mobilePsalmTitle`).
+    - [App.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/mobile/App.tsx): Actualizada la presentación de la app móvil a **KARTEX Mobile**.
+  - **Backend NestJS y Corpus:** Verificado que los 14 datasets en `backend/src/kartex/corpus/` (evangelismo, arqueología, atlas, cronología) cuentan con esquema bilingüe simétrico `{ es, en }`.
+  - **Verificación Técnica:** `pnpm -r typecheck` (código 0) y `pnpm --filter backend build` (código 0).
+* **Auditoría Arquitectónica Senior y Pureza FSD en KARTEX (Post-Renombramiento):**
+  - **Principio de Cajas Negras (Domain Isolation):** **0 violaciones de importación cruzada** (cero cross-imports) entre `(kartex)` y `(landing)`, `(portfolio)` o `(doiceladev)` en frontend y backend.
+  - **Feature-Sliced Design (FSD Canónico en 6 Capas):**
+    - Se reubicaron los inspectores de entidades a sus dominios puros: `BookHistoricalProfile` en `entities/books/ui/`, `ParallelVerseInspector` en `entities/passage/ui/` y `StrongMorphologyInspector` en `entities/passage/ui/`.
+    - Se erradicaron las dependencias ascendentes desde `features/` hacia `widgets/` en `AtlasInspector`, `InterlinearInspector`, `WordStudyInspector` y `ParallelDiffInspector`.
+    - Resultado: **0 violaciones de jerarquía de capas FSD** y **0 violaciones cross-feature**.
+  - **Backend NestJS (3 Capas Canónicas):**
+    - 8 Controladores (`@Controller('kartex/...')`), 9 Servicios de Dominio (`@Injectable()`) y 11 Entidades TypeORM/DTOs operan 100% bajo la conexión aislada `'kartexConnection'` (`kartex.sqlite`).
+  - **Verificación Técnica Integral:** `pnpm -r typecheck` (código 0), `pnpm -r lint` (código 0), `nest build` (código 0) y `next build` en producción (código 0, 31 rutas optimizadas).
+
+
+

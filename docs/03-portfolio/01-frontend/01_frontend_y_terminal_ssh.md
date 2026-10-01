@@ -14,7 +14,7 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 > * **Reescritura Interna Transparente:** Next.js reescribe internamente la ruta raíz `/` al directorio físico `frontend/web/src/app/(portfolio)/portfolio/page.tsx` para evitar colisiones entre proyectos consolidados.
 > * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/portfolio` siguen respondiendo 200 OK directamente.
 > * **Consolidación Física:** Se ejecuta en el único servidor Next.js 16 (puerto `3001`) para optimizar el límite de **1 GB de RAM** del VPS.
-> * **Aislamiento:** Cero importaciones de otros subdominios (`bible`, `doiceladev`, `landing`). Estilos encapsulados en `(portfolio)/globals.css`.
+> * **Aislamiento:** Cero importaciones de otros subdominios (`kartex`, `doiceladev`, `landing`). Estilos encapsulados en `(portfolio)/globals.css`.
 >
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD):** El código se organiza en `features/terminal/` (consola SSH) y `features/contact/` (formulario).

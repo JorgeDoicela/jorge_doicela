@@ -110,7 +110,7 @@ export default async function ProjectDetailPage({ params }: Params) {
 
     subgraph Storage ["Persistencia Aislada (Cajas Negras)"]
         DBSw[("doiceladev.sqlite (WAL)")]
-        DBBib[("bible.sqlite (WAL)")]
+        DBKartex[("kartex.sqlite (WAL)")]
         DBPort[("portfolio.sqlite (WAL)")]
     end
 
@@ -118,7 +118,7 @@ export default async function ProjectDetailPage({ params }: Params) {
     Nginx -->|Web Traffic| Next
     Nginx -->|API Traffic| Nest
     Nest --> DBSw
-    Nest --> DBBib
+    Nest --> DBKartex
     Nest --> DBPort`
               : `graph TD
     subgraph Edge ["Secure Perimeter (AWS Lightsail)"]
@@ -133,7 +133,7 @@ export default async function ProjectDetailPage({ params }: Params) {
 
     subgraph Storage ["Isolated Persistence (Black-Box)"]
         DBSw[("doiceladev.sqlite (WAL)")]
-        DBBib[("bible.sqlite (WAL)")]
+        DBKartex[("kartex.sqlite (WAL)")]
         DBPort[("portfolio.sqlite (WAL)")]
     end
 
@@ -141,15 +141,15 @@ export default async function ProjectDetailPage({ params }: Params) {
     Nginx -->|Web Traffic| Next
     Nginx -->|API Traffic| Nest
     Nest --> DBSw
-    Nest --> DBBib
+    Nest --> DBKartex
     Nest --> DBPort`
           }
         />
 
         <CalloutBlock type="note">
           {locale === 'es'
-            ? 'Las 4 aplicaciones (landing, portfolio, bible, doiceladev) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
-            : 'All 4 sub-applications (landing, portfolio, bible, doiceladev) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
+            ? 'Las 4 aplicaciones (landing, portfolio, kartex, doiceladev) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
+            : 'All 4 sub-applications (landing, portfolio, kartex, doiceladev) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
         </CalloutBlock>
 
         {/* Botones de Acción de Enlaces Externos al final del artículo (CTA) */}

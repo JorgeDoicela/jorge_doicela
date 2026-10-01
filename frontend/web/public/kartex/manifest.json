@@ -1,0 +1,24 @@
+{
+  "name": "KARTEX | Jorge Doicela",
+  "short_name": "KARTEX",
+  "description": "Plataforma de investigación bíblica y exégesis modular con 9 motores de estudio, textos en idiomas originales y herramientas analíticas.",
+  "start_url": "/kartex",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/kartex/logo/logo_fondo_circular_color_.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/kartex/logo/logo_fondo_circular_color_.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

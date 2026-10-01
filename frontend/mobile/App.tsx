@@ -4,8 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Jorge Doicela - Biblia Móvil</Text>
-      <Text style={styles.subtitle}>Cimientos del proyecto móvil en React Native / Expo.</Text>
+      <Text style={styles.title}>KARTEX Mobile</Text>
+      <Text style={styles.subtitle}>Cimientos de la plataforma móvil KARTEX (React Native / Expo).</Text>
       <StatusBar style="light" />
     </View>
   );

@@ -16,10 +16,10 @@ export function ProjectsMediaGrid() {
 
   const projects = [
     {
-      id: 'bible',
+      id: 'kartex',
       title: t('project1Badge'),
       icon: BookOpen,
-      href: getSubdomainUrl('bible'),
+      href: getSubdomainUrl('kartex'),
     },
     {
       id: 'portfolio',

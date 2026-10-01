@@ -17,8 +17,8 @@ export const AppleDetailExplorer: React.FC = () => {
             navTitle: isEs ? '3 Plataformas Digitales' : '3 Digital Platforms',
             title: isEs ? '3 Plataformas en Producción' : '3 Live Platforms',
             description: isEs
-                ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: estudio bíblico profundo, plataforma DoicelaDev y portafolio de ingeniería.'
-                : 'A master portal connecting three independent platforms designed for distinct needs: in-depth bible study, DoicelaDev platform, and professional engineering portfolio.',
+                ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: plataforma de investigación bíblica KARTEX, plataforma DoicelaDev y portafolio de ingeniería.'
+                : 'A master portal connecting three independent platforms designed for distinct needs: KARTEX biblical research platform, DoicelaDev platform, and professional engineering portfolio.',
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
@@ -35,10 +35,10 @@ export const AppleDetailExplorer: React.FC = () => {
                     <div className="grid grid-cols-3 divide-x divide-card-border pt-3 md:pt-4 border-t border-card-border my-auto">
                         <div className="flex flex-col gap-0.5 sm:gap-1 pr-2 sm:pr-4">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Biblia' : 'Bible'}
+                                KARTEX
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs ? 'Estudio bíblico y exégesis teológica.' : 'Bible study & theological exegesis.'}
+                                {isEs ? 'Investigación bíblica y exégesis modular.' : 'Biblical research & modular exegesis.'}
                             </p>
                         </div>
 

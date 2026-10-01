@@ -7,7 +7,7 @@ Este documento establece las directrices de ingeniería para la gestión de base
 ## 1. Fundamentos de Persistencia y Seguridad
 
 El ecosistema Jorge Doicela implementa persistencia desacoplada mediante tres bases de datos físicas independientes ubicadas en `backend/data/`:
-* `backend/data/bible.sqlite` (`'bibleConnection'`)
+* `backend/data/kartex.sqlite` (`'kartexConnection'`)
 * `backend/data/doiceladev.sqlite` (`'doiceladevConnection'`)
 * `backend/data/portfolio.sqlite` (`'portfolioConnection'`)
 
@@ -60,7 +60,7 @@ El pipeline de CI/CD ([deploy.yml](file:///c:/Users/jorge/Desktop/Proyectos/jorg
 rm -f backend/data/*.sqlite* 2>/dev/null || true
 
 # 2. Reconstrucción atómica y seeding desde los corpus JSON compilados
-node backend/dist/bible/cli/seed-corpus.js
+node backend/dist/kartex/cli/seed-corpus.js
 node backend/dist/doiceladev/cli/seed-doiceladev.js
 node backend/dist/portfolio/cli/seed-portfolio.js
 ```
@@ -87,7 +87,7 @@ pnpm seed:all
 
 # 3. O de forma granular según el dominio en desarrollo:
 pnpm seed:doiceladev     # Sincroniza doiceladev.sqlite (8 módulos + glosario)
-pnpm seed:bible        # Sincroniza bible.sqlite (versiones y lemas Strong)
+pnpm seed:kartex        # Sincroniza kartex.sqlite (versiones y lemas Strong)
 pnpm --filter backend seed:portfolio # Sincroniza portfolio.sqlite
 
 # 4. Iniciar los entornos en paralelo

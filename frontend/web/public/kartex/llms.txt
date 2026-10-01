@@ -1,0 +1,52 @@
+# KARTEX | Jorge Doicela
+
+> KARTEX · Biblical Research & Study Platform. Plataforma de investigación académica y estudio exegético de textos bíblicos con 9 módulos especializados, fuentes en idiomas originales (Hebreo BHS / Griego NA28), léxicos Strong y app móvil nativa en Expo.
+
+## Información General
+- **URL Canónica:** https://kartex.jorgedoicela.com
+- **Autor / Desarrollador:** Jorge Ismael Doicela Molina
+- **Arquitectura Web:** Next.js 16 con Feature-Sliced Design (FSD) y estética Geist (Vercel Style) monocromática de alta densidad.
+- **Arquitectura Móvil:** React Native / Expo (SDK 52+) con `@shopify/flash-list` y arquitectura 100% Offline-First.
+- **Arquitectura Backend:** NestJS 11 con TypeORM, SQLite (`kartex.sqlite`) en modo WAL y seeder transaccional atómico determinista.
+- **Marco Legal:** Conexión autorizada vía API.Bible (American Bible Society / Digital Bible Library) y fuentes críticas de dominio público universal (Groves Center, Open Scriptures, MorphGNT).
+
+---
+
+## Los 9 Módulos Especializados de KARTEX
+
+### 1. Kartex Lector (`/reader`)
+- Lectura bíblica fluida sin distracciones con controles responsivos de tipografía, tamaño de fuente y notas de atribución legal de copyright oficial al pie de cada capítulo.
+
+### 2. Kartex Paralelo (`/parallel`)
+- Comparación simultánea de 2 a 4 traducciones sincronizadas por capítulo (`RV1960`, `NVI`, `NBLA`, `BHS`, `LXX`) con algoritmo de Diferencia de Texto (LCS) para resaltar automáticamente adiciones, omisiones y divergencias.
+
+### 3. Kartex Interlineal (`/interlinear`)
+- Desglose morfológico palabra por palabra del Texto Masorético Hebreo (**Westminster Leningrad Codex / BHS**) y Griego del Nuevo Testamento (**Nestle-Aland 28 / Nestle 1904**).
+- Glosas literales, lematización consonántica, códigos Strong y análisis gramatical completo con hover bidireccional.
+
+### 4. Kartex Lexicón (`/lexicon`)
+- Diccionarios clásicos de dominio público integrados: *Brown-Driver-Briggs (BDB)*, *Gesenius*, *Thayer* y numeración universal de *James Strong*.
+
+### 5. Kartex Atlas (`/atlas`)
+- Coordenadas espaciales satelitales WGS84 proyectadas sobre canvas vectorial con filtro por épocas históricas, rutas del Éxodo y viajes apostólicos.
+
+### 6. Kartex Cronología (`/timeline`)
+- Tabla temporal sincrónica de monarcas de Israel/Judá vs imperios contemporáneos (Egipto, Asiria, Babilonia, Persia).
+
+### 7. Kartex Arqueología (`/archaeology`)
+- Catálogo de evidencia material y epigráfica (Estela de Tel Dan, Cilindro de Ciro, Inscripción de Siloé).
+
+### 8. Kartex Evangelismo (`/evangelism`)
+- Rutas bíblicas estructuradas (El Camino de Romanos, El Puente hacia la Vida, Las Cuatro Verdades), banco interactivo de objeciones apologéticas con respuestas exegéticas y tratados/bosquejos homiléticos listos para predicar o compartir.
+
+### 9. Kartex Exégesis (`/exegesis`)
+- Espacio integrador de investigación teológica y análisis contextual exhaustivo.
+
+---
+
+## Enlaces Oficiales
+- **KARTEX:** https://kartex.jorgedoicela.com
+- **Portal Maestro:** https://jorgedoicela.com
+- **DoicelaDev:** https://doiceladev.jorgedoicela.com
+- **Portafolio:** https://portfolio.jorgedoicela.com
+- **GitHub:** https://github.com/JorgeDoicela

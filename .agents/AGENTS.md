@@ -7,12 +7,12 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 ## 1. Justificación de Infraestructura y Runtimes Consolidados
 * El servidor VPS de producción en AWS Lightsail está limitado a **1 GB de RAM**.
 * Por este motivo físico exclusivo, el backend corre consolidado en un solo proceso NestJS (puerto `3000`) y el frontend web corre consolidado en un solo proceso Next.js (puerto `3001`) mediante `middleware.ts` para resolver subdominios.
-* **Principio de Cajas Negras:** A pesar de compartir procesos físicos, las 4 aplicaciones (`landing`, `portfolio`, `bible`, `doiceladev`) son **proyectos 100% aislados e independientes**. Nunca deben acoplarse ni depender entre sí.
+* **Principio de Cajas Negras:** A pesar de compartir procesos físicos, las 4 aplicaciones (`landing`, `portfolio`, `kartex`, `doiceladev`) son **proyectos 100% aislados e independientes**. Nunca deben acoplarse ni depender entre sí.
 
 ---
 
 ## 2. Cero Importaciones Cruzadas (Aislamiento de Dominio)
-* **Prohibido:** Importar código, componentes, hooks, entidades o servicios entre dominios (ej. `bible` no puede importar nada de `doiceladev` o `portfolio`).
+* **Prohibido:** Importar código, componentes, hooks, entidades o servicios entre dominios (ej. `kartex` no puede importar nada de `doiceladev` o `portfolio`).
 * **Comunicación Interna:** Si se requiere interacción inter-módulos en NestJS, se debe hacer de forma desacoplada mediante `@nestjs/event-emitter`.
 
 ---
@@ -30,7 +30,7 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
 
 ## 4. Aislamiento de Tipos, Persistencia y Protocolo de Diagnóstico 404
 * **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
-* **Persistencia Aislada:** Cada módulo del backend se conecta a su propia base de datos SQLite física independiente encapsulada en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`).
+* **Persistencia Aislada:** Cada módulo del backend se conecta a su propia base de datos SQLite física independiente encapsulada en `backend/data/` (`kartex.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`).
 * **Sincronización Local Multiequipo (SQLite no viaja en Git):** Los archivos binarios `.sqlite` están estrictamente ignorados por Git (`.gitignore`). Al cambiar de máquina, clonar o hacer `git pull` con cambios en corpus JSON (`backend/src/*/corpus/*.json`), entidades o seeders, es **obligatorio ejecutar `pnpm seed:all`** para aprovisionar las bases locales. En producción, GitHub Actions ejecuta este paso automáticamente en cada despliegue.
 * **Protocolo de Diagnóstico Obligatorio ante Errores 404:** Ante cualquier error `404 Not Found` en rutas dinámicas de contenido (`/infrastructure/[slug]`, `/tutorials/[slug]`, `/news/[slug]`, etc.) en desarrollo local, **queda terminantemente prohibido modificar middleware, routing o componentes de Next.js** sin antes haber verificado si el registro existe en la base de datos local SQLite (`SELECT COUNT(*) FROM ... WHERE slug = ...`) o haber ejecutado `pnpm seed:all`. Si el dato no existe físicamente, el 404 es la respuesta esperada y correcta del sistema.
 
@@ -44,8 +44,8 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
    * Documentación: [`docs/02-landing/`](../docs/02-landing/)
 3. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets, contacto, `portfolio.sqlite` y estética **Dark Luxury**.
    * Documentación: [`docs/03-portfolio/`](../docs/03-portfolio/)
-4. `bible-jorge-doicela`: Biblia (`bible.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `bible.sqlite` y estilo **Geist (Vercel Style)**.
-   * Documentación: [`docs/04-bible/`](../docs/04-bible/)
+4. `kartex-jorge-doicela`: KARTEX (`kartex.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `kartex.sqlite` y estilo **Geist (Vercel Style)**.
+   * Documentación: [`docs/04-kartex/`](../docs/04-kartex/)
 5. `doiceladev-jorge-doicela`: DoicelaDev (`doiceladev.*`), 8 categorías temáticas, foros, proyectos, `doiceladev.sqlite` y estética **Neumorphism UI + Glassmorphism**.
    * Documentación: [`docs/05-doiceladev/`](../docs/05-doiceladev/)
 

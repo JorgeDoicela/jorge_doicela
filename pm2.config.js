@@ -43,7 +43,7 @@ module.exports = {
         PORT: 3000,
         HOST: '127.0.0.1',
         DATABASE_PORTFOLIO_PATH: './data/portfolio.sqlite',
-        DATABASE_BIBLE_PATH: './data/bible.sqlite',
+        DATABASE_KARTEX_PATH: './data/kartex.sqlite',
         DATABASE_DOICELADEV_PATH: './data/doiceladev.sqlite',
       },
     },

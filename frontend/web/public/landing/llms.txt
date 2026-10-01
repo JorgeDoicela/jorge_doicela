@@ -54,11 +54,11 @@ Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la a
   8. *Infraestructura, Servidores y Cloud:* Guías de arquitectura, hardening y despliegue en Linux Debian / Lightsail.
 - **Arquitectura:** Frontend Next.js 16 con Feature-Sliced Design y estética Neumorphism UI + Glassmorphism; Backend NestJS 11 con 8 submódulos modulares y persistencia relacional en SQLite.
 
-### 2. Biblia Modular | Jorge Doicela
-- **URL Oficial:** https://bible.jorgedoicela.com
-- **Dossier Técnico LLMs:** https://bible.jorgedoicela.com/llms.txt
-- **Descripción:** Plataforma de investigación exegética y estudio académico de textos bíblicos en idiomas originales y traducciones contemporáneas:
-  - *Suites de Exégesis:* Lector continuo, comparador multi-versión paralelo con diff textual (LCS), Interlineal Inverso Morfológico (Hebreo Masorético BHS / Griego NA28), Léxicos Strong BDB/Thayer/Gesenius con concordancia canónica, Atlas Bíblico Georreferenciado WGS84, Cronología Sincrónica, Catálogo de Arqueología/Epigrafía y Suite de Evangelización y Apologética Práctica.
+### 2. KARTEX | Jorge Doicela
+- **URL Oficial:** https://kartex.jorgedoicela.com
+- **Dossier Técnico LLMs:** https://kartex.jorgedoicela.com/llms.txt
+- **Descripción:** Plataforma de investigación académica y estudio exegético de textos bíblicos en idiomas originales y traducciones contemporáneas:
+  - *Módulos de Exégesis:* Lector continuo, comparador multi-versión paralelo con diff textual (LCS), Interlineal Inverso Morfológico (Hebreo Masorético BHS / Griego NA28), Léxicos Strong BDB/Thayer/Gesenius con concordancia canónica, Atlas Bíblico Georreferenciado WGS84, Cronología Sincrónica, Catálogo de Arqueología/Epigrafía, Suite de Evangelización y Apologética Práctica, y Módulo de Exégesis Integrada.
   - *App Móvil Nativa:* React Native / Expo con soporte 100% Offline-First.
   - *Marco Legal:* Integración autorizada con API.Bible (Sociedades Bíblicas) y fuentes críticas de dominio público universal.
 - **Arquitectura:** Estética Geist (Vercel Style) monocromática de alta densidad, base de datos SQLite con más de 30,000 registros indexados y seeder atómico determinista.
@@ -84,7 +84,7 @@ Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la a
 - **Solicitud de Propuestas Técnicas:** https://jorgedoicela.com/consulta
 - **Portafolio:** https://portfolio.jorgedoicela.com (`https://portfolio.jorgedoicela.com/llms.txt`)
 - **DoicelaDev:** https://doiceladev.jorgedoicela.com (`https://doiceladev.jorgedoicela.com/llms.txt`)
-- **Biblia Modular:** https://bible.jorgedoicela.com (`https://bible.jorgedoicela.com/llms.txt`)
+- **KARTEX:** https://kartex.jorgedoicela.com (`https://kartex.jorgedoicela.com/llms.txt`)
 - **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
 - **GitHub:** https://github.com/JorgeDoicela
 - **YouTube:** https://www.youtube.com/@jorge.doicela

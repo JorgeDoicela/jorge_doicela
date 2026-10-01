@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
-import type { GlossaryTerm } from '../../../entities/glossary/types';
+import type { GlossaryTerm } from '../../types';
 
 interface GlossaryTermPopoverProps {
   displayText: string;

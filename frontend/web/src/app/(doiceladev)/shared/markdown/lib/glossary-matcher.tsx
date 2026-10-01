@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GlossaryTerm } from '../../../entities/glossary/types';
+import type { GlossaryTerm } from '../../types';
 import { GlossaryTermPopover } from '../components/GlossaryTermPopover';
 
 function escapeRegExp(string: string) {

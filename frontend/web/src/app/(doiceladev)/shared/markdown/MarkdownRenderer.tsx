@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock, InlineCode, TableBlock, CalloutBlock, GlossaryTermPopover } from './components';
-import type { GlossaryTerm } from '../../entities/glossary/types';
+import type { GlossaryTerm } from '../types';
 import { createRemarkGlossary } from './lib/glossary-matcher';
 
 interface MarkdownRendererProps {

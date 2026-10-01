@@ -40,7 +40,7 @@ async function bootstrap() {
   // CORS: lista blanca explícita de orígenes autorizados
   // Fallback: en desarrollo local permite localhost. Nunca origin: true en producción.
   const allowedOrigins = process.env.CORS_ORIGINS
-    ? process.env.CORS_ORIGINS.split(',')
+    ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
     : [
         'https://jorgedoicela.com',
         'https://portfolio.jorgedoicela.com',

@@ -42,6 +42,11 @@ export const useTerminalSocket = () => {
   const [completionInput, setCompletionInput] = useState<string>('');
 
   const socketRef = useRef<Socket | null>(null);
+  const commandHistoriesRef = useRef<Record<string, string[]>>({
+    'pane-1': ['about', 'projects', 'skills', 'contact'],
+  });
+  const historyIndicesRef = useRef<Record<string, number>>({});
+  const inputDraftsRef = useRef<Record<string, string>>({});
 
   // Inicializar Socket.io
   useEffect(() => {
@@ -374,7 +379,14 @@ export const useTerminalSocket = () => {
         return;
       }
 
-      // Actualizar historial local del pane
+      // Actualizar historial local del pane y en la ref síncrona
+      if (trimmed) {
+        const existing = commandHistoriesRef.current[targetPaneId] || [];
+        commandHistoriesRef.current[targetPaneId] = [...existing, trimmed];
+        historyIndicesRef.current[targetPaneId] = -1;
+        inputDraftsRef.current[targetPaneId] = '';
+      }
+
       setTabs((prev) =>
         prev.map((t) => {
           if (t.id === activeTabId) {
@@ -383,7 +395,9 @@ export const useTerminalSocket = () => {
                 ? {
                     ...p,
                     history: [...p.history, commandItem],
-                    commandHistory: trimmed ? [...p.commandHistory, commandText] : p.commandHistory,
+                    commandHistory: trimmed
+                      ? [...(commandHistoriesRef.current[targetPaneId] || [])]
+                      : p.commandHistory,
                     historyIndex: -1,
                     inputDraft: '',
                   }
@@ -439,72 +453,47 @@ export const useTerminalSocket = () => {
     [activeTabId, tabs, connectionStatus]
   );
 
-  // Navegar historial de comandos con Flechas Arriba y Abajo
+  // Navegar historial de comandos con Flechas Arriba y Abajo (100% síncrono vía refs)
   const navigateHistory = useCallback(
     (direction: 'up' | 'down', currentInput: string, paneId?: string): string => {
       const currentTab = tabs.find((t) => t.id === activeTabId);
-      if (!currentTab) return currentInput;
+      const targetPaneId =
+        paneId || currentTab?.activePaneId || currentTab?.panes[0]?.id || 'pane-1';
 
-      const targetPaneId = paneId || currentTab.activePaneId || currentTab.panes[0]?.id || 'pane-1';
-      const targetPane = currentTab.panes.find((p) => p.id === targetPaneId) || currentTab.panes[0];
-      if (!targetPane || targetPane.commandHistory.length === 0) return currentInput;
+      const history = commandHistoriesRef.current[targetPaneId] || [
+        'about',
+        'projects',
+        'skills',
+        'contact',
+      ];
+      if (history.length === 0) return currentInput;
 
-      const history = targetPane.commandHistory;
-      let newIndex = targetPane.historyIndex;
+      let currentIndex =
+        historyIndicesRef.current[targetPaneId] !== undefined
+          ? historyIndicesRef.current[targetPaneId]
+          : -1;
 
       if (direction === 'up') {
-        if (newIndex === -1) {
-          setTabs((prev) =>
-            prev.map((t) => {
-              if (t.id === activeTabId) {
-                const updatedPanes = t.panes.map((p) =>
-                  p.id === targetPaneId ? { ...p, inputDraft: currentInput } : p
-                );
-                return { ...t, panes: updatedPanes };
-              }
-              return t;
-            })
-          );
-          newIndex = history.length - 1;
-        } else if (newIndex > 0) {
-          newIndex -= 1;
+        if (currentIndex === -1) {
+          inputDraftsRef.current[targetPaneId] = currentInput;
+          currentIndex = history.length - 1;
+        } else if (currentIndex > 0) {
+          currentIndex -= 1;
         }
       } else {
-        if (newIndex === -1) {
+        if (currentIndex === -1) {
           return currentInput;
-        } else if (newIndex < history.length - 1) {
-          newIndex += 1;
+        } else if (currentIndex < history.length - 1) {
+          currentIndex += 1;
         } else {
-          newIndex = -1;
-          const restoredDraft = targetPane.inputDraft;
-          setTabs((prev) =>
-            prev.map((t) => {
-              if (t.id === activeTabId) {
-                const updatedPanes = t.panes.map((p) =>
-                  p.id === targetPaneId ? { ...p, historyIndex: -1 } : p
-                );
-                return { ...t, panes: updatedPanes };
-              }
-              return t;
-            })
-          );
-          return restoredDraft;
+          currentIndex = -1;
+          historyIndicesRef.current[targetPaneId] = -1;
+          return inputDraftsRef.current[targetPaneId] || '';
         }
       }
 
-      setTabs((prev) =>
-        prev.map((t) => {
-          if (t.id === activeTabId) {
-            const updatedPanes = t.panes.map((p) =>
-              p.id === targetPaneId ? { ...p, historyIndex: newIndex } : p
-            );
-            return { ...t, panes: updatedPanes };
-          }
-          return t;
-        })
-      );
-
-      return history[newIndex] || '';
+      historyIndicesRef.current[targetPaneId] = currentIndex;
+      return history[currentIndex] || '';
     },
     [activeTabId, tabs]
   );

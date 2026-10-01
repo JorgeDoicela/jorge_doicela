@@ -193,6 +193,9 @@
     "noSelectionToCopy": "Select text first",
     "pasted": "Pasted",
     "instanceInfo": "VPS Instance: AWS Lightsail (Debian 13)",
+    "clipboardInfoTitle": "Clipboard and shortcut info",
+    "clipboardTooltipP1": "Your keyboard shortcuts for copy/paste may not work reliably in the browser terminal.",
+    "clipboardTooltipP2": "Use \"Copy from terminal\" to copy selected text to your local clipboard, and \"Paste into terminal\" to paste the contents of your local clipboard into the browser terminal.",
     "activeSessionNotice": "Active session in another window",
     "transferSession": "Transfer terminal to this window",
     "cooldownNotice": "Preparing environment: {seconds}s",
@@ -203,7 +206,7 @@
     "remainingTime": "Remaining session time"
   },
   "SandboxStandalone": {
-    "backToPortfolio": "Back to Portfolio",
+    "backToPortfolio": "Back",
     "closeWindow": "Close Console",
     "pageTitle": "Interactive Linux Terminal"
   },

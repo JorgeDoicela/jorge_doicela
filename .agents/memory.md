@@ -243,7 +243,17 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - Resultado: **0 violaciones de jerarquía de capas FSD** y **0 violaciones cross-feature**.
   - **Backend NestJS (3 Capas Canónicas):**
     - 8 Controladores (`@Controller('kartex/...')`), 9 Servicios de Dominio (`@Injectable()`) y 11 Entidades TypeORM/DTOs operan 100% bajo la conexión aislada `'kartexConnection'` (`kartex.sqlite`).
-  - **Verificación Técnica Integral:** `pnpm -r typecheck` (código 0), `pnpm -r lint` (código 0), `nest build` (código 0) y `next build` en producción (código 0, 31 rutas optimizadas).
+* **Homologación de Terminales estilo AWS Lightsail (Clipboard & Host Identity):**
+  - **Causa Raíz:** En terminales web basadas en navegador (`xterm.js` o emuladas), los atajos nativos del teclado (`Ctrl+C` / `Ctrl+V`) no operan como en el SO de escritorio porque `Ctrl+C` emite `SIGINT` (`\x03`) al PTY y `Ctrl+V` está restringido por las políticas de seguridad del navegador.
+  - **Implementación Arquitectónica Senior:**
+    - Se creó el componente reutilizable `TerminalClipboardFooter.tsx` en `(portfolio)/features/terminal/components/`.
+    - **Identidad de Instancia:** Emite icono Debian, hostname (`jorge`), IP pública / local y estado de conexión en vivo.
+    - **Popover Informativo `(i)`:** Despliega tooltip accesible explicando la razón por la cual los atajos de teclado difieren en el navegador y cómo usar los botones de acción.
+    - **Botón "Copy from terminal":** Copia la selección activa o el buffer completo con `navigator.clipboard.writeText()` y feedback visual instantáneo.
+    - **Botón "Paste into terminal":** Ejecuta `navigator.clipboard.readText()` bajo evento de usuario legítimo (disparando el diálogo de permisos nativo del navegador de forma segura) y envía el payload al PTY / comando.
+    - **Integración Homogénea:** Incorporado en `SandboxTerminal.tsx` (Live Linux PTY) y `TerminalConsole.tsx` (Consola interactiva).
+    - **i18n Paridad 1:1:** Diccionarios `es.json` y `en.json` sincronizados con claves `clipboardInfoTitle`, `clipboardTooltipP1` y `clipboardTooltipP2`.
+  - **Verificación Técnica:** `pnpm -r typecheck` ejecutado con éxito (código 0 en los 3 workspaces).
 
 
 

@@ -31,10 +31,17 @@ alias df='df -h'
 alias free='free -m'
 alias grep='grep --color=auto'
 
-# Historial desactivado: privacidad entre sesiones de visitantes distintos
+# Historial interactivo activo en memoria durante la sesión (sin persistir a disco)
 export HISTFILE=/dev/null
-export HISTSIZE=0
+export HISTSIZE=1000
 export HISTFILESIZE=0
+
+# Precargar comandos útiles en el historial para navegación inmediata con Flecha Arriba
+history -s "contact"
+history -s "skills"
+history -s "projects"
+history -s "about"
+history -s "help"
 
 # ── LÍMITES DEL SHELL (defensa en profundidad sobre los cgroups del contenedor) ──
 # file descriptors: limitar a 256 (por defecto 1048576 — innecesariamente alto)
@@ -56,15 +63,6 @@ umask 077
 # Proteger la variable de modo contra sobreescritura desde la shell del visitante
 readonly SANDBOX_MODE
 
-
-# ── ALIASES DE ALTA PRODUCTIVIDAD ───────────────────────────────────
-alias ll='ls -lah --color=auto'
-alias la='ls -A --color=auto'
-alias l='ls -CF --color=auto'
-alias ls='ls --color=auto'
-alias df='df -h'
-alias free='free -m'
-alias grep='grep --color=auto'
 
 # ── COMANDOS DE PERFIL PROFESIONAL Y PROYECTOS ─────────────────────────────
 about() {

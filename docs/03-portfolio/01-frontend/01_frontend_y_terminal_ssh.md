@@ -59,6 +59,7 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── components/
 │   │   │   ├── TerminalConsole.tsx       # Conmutador de modo y ventana interactiva
 │   │   │   ├── SandboxTerminal.tsx       # Terminal Linux Real en Vivo (xterm.js + FitAddon)
+│   │   │   ├── TerminalClipboardFooter.tsx # Barra inferior estilo AWS Lightsail para SandboxTerminal (popover y portapapeles)
 │   │   │   ├── ServerOfflineBanner.tsx   # Banner Dark Luxury de Servidor Offline y Solicitud Telegram
 │   │   │   ├── SandboxSecurityModal.tsx  # Modal para límites de concurrencia, cooldown y traspaso
 │   │   │   ├── TerminalHeader.tsx        # Barra superior tmux y controles

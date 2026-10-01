@@ -193,6 +193,9 @@
     "noSelectionToCopy": "Selecciona texto primero",
     "pasted": "Pegado",
     "instanceInfo": "Instancia VPS: AWS Lightsail (Debian 13)",
+    "clipboardInfoTitle": "Información de portapapeles y atajos",
+    "clipboardTooltipP1": "Es posible que los atajos de teclado para copiar/pegar no funcionen de manera fiable en la terminal del navegador.",
+    "clipboardTooltipP2": "Usa \"Copiar de la terminal\" para copiar el texto seleccionado a tu portapapeles local, y \"Pegar en la terminal\" para pegar el contenido de tu portapapeles local en la terminal del navegador.",
     "activeSessionNotice": "Sesión activa en otra ventana",
     "transferSession": "Transferir terminal a esta ventana",
     "cooldownNotice": "Preparando entorno: {seconds}s",
@@ -203,7 +206,7 @@
     "remainingTime": "Tiempo restante de la sesión"
   },
   "SandboxStandalone": {
-    "backToPortfolio": "Volver al Portafolio",
+    "backToPortfolio": "Volver",
     "closeWindow": "Cerrar Consola",
     "pageTitle": "Terminal Interactiva Linux"
   },

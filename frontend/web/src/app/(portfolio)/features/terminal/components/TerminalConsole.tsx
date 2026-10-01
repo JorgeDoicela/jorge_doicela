@@ -362,6 +362,12 @@ const SinglePane: React.FC<SinglePaneProps> = ({
       e.preventDefault();
       const previousCommand = onNavigateHistory('up', input);
       setInput(previousCommand);
+      setTimeout(() => {
+        if (inputRef.current) {
+          const len = previousCommand.length;
+          inputRef.current.setSelectionRange(len, len);
+        }
+      }, 0);
       return;
     }
 
@@ -369,6 +375,12 @@ const SinglePane: React.FC<SinglePaneProps> = ({
       e.preventDefault();
       const nextCommand = onNavigateHistory('down', input);
       setInput(nextCommand);
+      setTimeout(() => {
+        if (inputRef.current) {
+          const len = nextCommand.length;
+          inputRef.current.setSelectionRange(len, len);
+        }
+      }, 0);
       return;
     }
 

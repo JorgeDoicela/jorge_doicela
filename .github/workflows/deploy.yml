@@ -57,6 +57,7 @@ jobs:
           SOURCE: "/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.TARGET_DIR }}
           EXCLUDE: "/node_modules/, /out/, /.git/, /.github/, /backend/node_modules/, /frontend/web/node_modules/, *.sqlite, *.sqlite-journal, *.sqlite-wal, *.sqlite-shm, .env, .env.local, .env.development, .env.production, **/.env, **/.env.local, **/.env.development, **/.env.production"
 
       - name: Ejecutar tareas de inicio y reiniciar PM2 por SSH

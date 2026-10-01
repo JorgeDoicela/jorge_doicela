@@ -307,3 +307,9 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - Cero violaciones FSD en Frontend (DoicelaDev y Kartex).
     - Cero violaciones de 3 capas en Backend NestJS.
   - **Verificación Técnica:** `pnpm -r typecheck` (código 0), `pnpm --filter web build` (Next.js 16 - 31 rutas optimizadas con código 0) y `pnpm --filter backend build` (NestJS 11 con código 0).
+
+* **Corrección de Causa Raíz en Despliegue CI/CD (`deploy.yml`):**
+  - **Problema Detectado:** Los cambios subidos al repositorio en commits recientes no se reflejaban en producción en AWS Lightsail, incluso abriendo en modo incógnito y purgando la caché de Cloudflare.
+  - **Causa Raíz:** En el commit `a8774128` se había eliminado inadvertidamente la clave `TARGET: ${{ secrets.TARGET_DIR }}` del step `easingthemes/ssh-deploy@v5.1.0`. Por ende, el rsync copiaba los archivos a la raíz del usuario SSH (`~/`) en lugar de sobreescribir la carpeta operativa del proyecto (`/home/admin/jorge_doicela`). Posteriormente, PM2 y los seeders se ejecutaban en `TARGET_DIR`, manteniendo intacta la versión previa en disco.
+  - **Solución Implementada:** Se restauró `TARGET: ${{ secrets.TARGET_DIR }}` en `.github/workflows/deploy.yml`. Al confirmarse y subirse a `main`, el pipeline sincroniza los archivos compilados en la ruta exacta de ejecución de PM2.
+

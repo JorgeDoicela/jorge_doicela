@@ -75,7 +75,8 @@
     "exitFocusKey": "Salir de Modo Enfoque [Esc]",
     "focusModeKey": "Modo Enfoque Inmersivo [F]",
     "readingMode": "Modo de Lectura",
-    "fontFamily": "Familia Tipográfica"
+    "fontFamily": "Familia Tipográfica",
+    "shortcutNavKeys": "← / → ó J / K"
   },
   "PassagePicker": {
     "selectPassage": "Seleccionar Pasaje",
@@ -533,7 +534,16 @@
     "inspectVerseRight": "Inspeccionar versículo en panel derecho",
     "inspectVerse": "Inspeccionar versículo",
     "prevVerse": "Versículo anterior",
-    "nextVerse": "Versículo siguiente"
+    "nextVerse": "Versículo siguiente",
+    "columnsSynced": "Columnas sincronizadas",
+    "presetsTitle": "Vistas Preconfiguradas",
+    "columnsOnCanvas": "Columnas en lienzo",
+    "translationFallback": "Traducción",
+    "addToCanvas": "Añadir al lienzo",
+    "syncedPassage": "Pasaje Activo Sincronizado",
+    "genesisFallback": "Génesis",
+    "prevChapterShort": "← Cap. Anterior",
+    "nextChapterShort": "Cap. Siguiente →"
   },
   "TextualDiff": {
     "modalTitle": "Comparador de Variantes Textuales",
@@ -803,7 +813,34 @@
     "trackIsrael": "ISRAEL (NORTE - 10 TRIBUS)",
     "trackProphets": "PROFETAS BÍBLICOS",
     "trackEmpires": "IMPERIOS MUNDIALES (EGIPTO, ASIRIA, BABILONIA, PERSIA, ROMA)",
-    "trackMilestones": "HITOS & EVIDENCIAS ARQUEOLÓGICAS FECHADAS"
+    "trackMilestones": "HITOS & EVIDENCIAS ARQUEOLÓGICAS FECHADAS",
+    "kingdom": "Reino:",
+    "evaluation": "Evaluación Bíblica:",
+    "duration": "Duración:",
+    "archaeologicalCorroboration": "Corroboración Arqueológica",
+    "audience": "Audiencia / Destinatario:",
+    "canonicalBook": "Libro Canónico:",
+    "centralMessage": "Mensaje Central",
+    "empire": "Imperio:",
+    "biblicalInteraction": "Interacción con Israel y Judá",
+    "location": "Ubicación / Custodia:",
+    "historicalSignificance": "Relevancia Histórica y Bíblica",
+    "biblicalCitations": "Citas Bíblicas Vinculadas",
+    "noEventSelected": "Sin Selección Activa",
+    "noEventSelectedDesc": "Haz clic en cualquier monarca, profeta, imperio o hito arqueológico de la línea temporal para ver su ficha técnica e interacción bíblica.",
+    "allHistory": "Toda la Historia",
+    "exodus": "Éxodo y Conquista",
+    "monarchyUnited": "Monarquía Unida",
+    "monarchyDivided": "Monarquía Dividida",
+    "exile": "Exilio en Babilonia",
+    "secondTemple": "Segundo Templo",
+    "newTestamentEra": "Era del Nuevo Testamento",
+    "archaeologicalMilestones": "Hitos Arqueológicos",
+    "historicalTracks": "Pistas Históricas",
+    "jumpToEraTitle": "Saltar a Época Bíblica",
+    "visibleTracksTitle": "Pistas Visibles en Línea Temporal",
+    "museumCustody": "Museo / Custodia:",
+    "patriarchs": "Patriarcas y Orígenes"
   },
   "ArchaeologyFeed": {
     "noArticlesTitle": "No se encontraron artículos",

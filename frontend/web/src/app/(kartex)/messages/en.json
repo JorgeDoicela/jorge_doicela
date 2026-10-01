@@ -35,7 +35,7 @@
     "readInReader": "Read in Reader"
   },
   "Toolbar": {
-    "selectTranslation": "Select Bible translation",
+    "selectTranslation": "Select biblical translation",
     "passage": "Scripture Passage",
     "version": "Translation",
     "fontSize": "Font Size",
@@ -75,7 +75,8 @@
     "exitFocusKey": "Exit Focus Mode [Esc]",
     "focusModeKey": "Immersive Focus Mode [F]",
     "readingMode": "Reading Mode",
-    "fontFamily": "Font Family"
+    "fontFamily": "Font Family",
+    "shortcutNavKeys": "← / → or J / K"
   },
   "PassagePicker": {
     "selectPassage": "Select Passage",
@@ -533,7 +534,16 @@
     "inspectVerseRight": "Inspect verse in right panel",
     "inspectVerse": "Inspect verse",
     "prevVerse": "Previous verse",
-    "nextVerse": "Next verse"
+    "nextVerse": "Next verse",
+    "columnsSynced": "Synchronized columns",
+    "presetsTitle": "Preconfigured Views",
+    "columnsOnCanvas": "Canvas columns",
+    "translationFallback": "Translation",
+    "addToCanvas": "Add to canvas",
+    "syncedPassage": "Synchronized Active Passage",
+    "genesisFallback": "Genesis",
+    "prevChapterShort": "← Prev. Chapter",
+    "nextChapterShort": "Next Chapter →"
   },
   "TextualDiff": {
     "modalTitle": "Textual Variants Comparator",
@@ -803,7 +813,34 @@
     "trackIsrael": "ISRAEL (NORTH - 10 TRIBES)",
     "trackProphets": "BIBLICAL PROPHETS",
     "trackEmpires": "WORLD EMPIRES (EGYPT, ASSYRIA, BABYLON, PERSIA, ROME)",
-    "trackMilestones": "DATED ARCHAEOLOGICAL MILESTONES & EVIDENCE"
+    "trackMilestones": "DATED ARCHAEOLOGICAL MILESTONES & EVIDENCE",
+    "kingdom": "Kingdom:",
+    "evaluation": "Biblical Evaluation:",
+    "duration": "Duration:",
+    "archaeologicalCorroboration": "Archaeological Corroboration",
+    "audience": "Audience / Recipient:",
+    "canonicalBook": "Canonical Book:",
+    "centralMessage": "Central Message",
+    "empire": "Empire:",
+    "biblicalInteraction": "Interaction with Israel & Judah",
+    "location": "Location / Custody:",
+    "historicalSignificance": "Historical & Biblical Significance",
+    "biblicalCitations": "Linked Biblical Citations",
+    "noEventSelected": "No Active Selection",
+    "noEventSelectedDesc": "Click on any monarch, prophet, empire, or archaeological milestone on the timeline to view its technical profile and biblical interaction.",
+    "allHistory": "All History",
+    "exodus": "Exodus & Conquest",
+    "monarchyUnited": "United Monarchy",
+    "monarchyDivided": "Divided Monarchy",
+    "exile": "Babylonian Exile",
+    "secondTemple": "Second Temple",
+    "newTestamentEra": "New Testament Era",
+    "archaeologicalMilestones": "Archaeological Milestones",
+    "historicalTracks": "Historical Tracks",
+    "jumpToEraTitle": "Jump to Biblical Era",
+    "visibleTracksTitle": "Visible Timeline Tracks",
+    "museumCustody": "Museum / Custody:",
+    "patriarchs": "Patriarchs & Origins"
   },
   "ArchaeologyFeed": {
     "noArticlesTitle": "No articles found",

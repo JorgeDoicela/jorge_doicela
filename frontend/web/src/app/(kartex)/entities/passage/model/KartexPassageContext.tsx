@@ -15,6 +15,10 @@ import {
   getTranslationLanguageGroup,
 } from '../../translations';
 import { useKartexKeybindings } from '../../../shared/hooks/useKartexKeybindings';
+import {
+  StudySidePanelContextProvider,
+  type StudySidePanelContextValue,
+} from '../../../shared/ui';
 
 export interface InspectedWordData {
   strongNumber: string;
@@ -143,9 +147,9 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   );
 
   // Control de Paneles Laterales (Dimensiones Redimensionables y Visibilidad):
-  // Inicialización determinista en false para evitar Hydration Mismatch entre SSR y cliente
-  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
-  const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(false);
+  // En escritorio inician abiertos por defecto para productividad inmediata; en móvil (< 1024px) inician colapsados
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(true);
+  const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(true);
 
   const [leftSidebarWidth, setLeftSidebarWidthState] = useState<number>(DEFAULT_LEFT_SIDEBAR_WIDTH);
   const [rightInspectorWidth, setRightInspectorWidthState] = useState<number>(DEFAULT_RIGHT_INSPECTOR_WIDTH);
@@ -373,18 +377,33 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     }
   }, [locale, selectedTranslationId, selectedBookId, selectedChapter, searchParams, pathname, router]);
 
-  // Si los libros cargan y se especificó una abreviatura en la URL
+  // Sincronizar reactivamente el pasaje cuando cambian los search params de la URL
   useEffect(() => {
-    if (initialBookParam && isNaN(Number(initialBookParam)) && books.length > 0) {
-      const match = books.find(
-        (b) => b.abbreviation.toLowerCase() === initialBookParam.toLowerCase() ||
-               b.name.toLowerCase() === initialBookParam.toLowerCase()
-      );
-      if (match) {
-        setSelectedBookId(match.id);
+    const bookParam = searchParams.get('book');
+    const chapterParam = searchParams.get('chapter');
+
+    if (bookParam) {
+      const parsedBookId = parseInt(bookParam, 10);
+      if (!isNaN(parsedBookId) && parsedBookId > 0 && parsedBookId !== selectedBookId) {
+        setSelectedBookId(parsedBookId);
+      } else if (isNaN(parsedBookId) && books.length > 0) {
+        const match = books.find(
+          (b) => b.abbreviation.toLowerCase() === bookParam.toLowerCase() ||
+                 b.name.toLowerCase() === bookParam.toLowerCase()
+        );
+        if (match && match.id !== selectedBookId) {
+          setSelectedBookId(match.id);
+        }
       }
     }
-  }, [initialBookParam, books]);
+
+    if (chapterParam) {
+      const parsedChapter = parseInt(chapterParam, 10);
+      if (!isNaN(parsedChapter) && parsedChapter > 0 && parsedChapter !== selectedChapter) {
+        setSelectedChapter(parsedChapter);
+      }
+    }
+  }, [searchParams, books, selectedBookId, selectedChapter]);
 
   // Sincronizar cambios en los search params de la URL de forma fluida
   const updateUrlParams = (bookId: number, chapter: number, transId: number | null) => {
@@ -454,6 +473,35 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     onCloseInspector: closeInspector,
   });
 
+  // Estado agnóstico para paneles laterales de UI (desacoplamiento FSD)
+  const sidePanelValue: StudySidePanelContextValue = useMemo(() => ({
+    left: {
+      isOpen: isLeftSidebarOpen,
+      onClose: toggleLeftSidebar,
+      width: leftSidebarWidth,
+      onResize: setLeftSidebarWidth,
+      onReset: resetLeftSidebarWidth,
+    },
+    right: {
+      isOpen: isRightInspectorOpen,
+      onClose: toggleRightInspector,
+      width: rightInspectorWidth,
+      onResize: setRightInspectorWidth,
+      onReset: resetRightInspectorWidth,
+    },
+  }), [
+    isLeftSidebarOpen,
+    toggleLeftSidebar,
+    leftSidebarWidth,
+    setLeftSidebarWidth,
+    resetLeftSidebarWidth,
+    isRightInspectorOpen,
+    toggleRightInspector,
+    rightInspectorWidth,
+    setRightInspectorWidth,
+    resetRightInspectorWidth,
+  ]);
+
   return (
     <KartexPassageContext.Provider
       value={{
@@ -495,7 +543,9 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         closeInspector,
       }}
     >
-      {children}
+      <StudySidePanelContextProvider value={sidePanelValue}>
+        {children}
+      </StudySidePanelContextProvider>
     </KartexPassageContext.Provider>
   );
 };

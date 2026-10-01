@@ -21,6 +21,27 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 ---
 
+* **Auditoría Integral y Corrección de KARTEX post-refactorización:**
+  - Sincronización de rutas canónicas en `sitemap.ts`: se actualizaron las URLs a la estructura canónica `/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`, eliminando endpoints obsoletos (`/reader`, `/lexicon`, `/exegesis`).
+  - Navegación reactiva en `KartexNavigationSidebar`: se corrigió el enlace al lector para enviar `book.id` en lugar de `book.abbreviation`, y en `KartexPassageContext` se sincronizó reactivamente el estado ante mutaciones de `searchParams` en cliente tanto para IDs numéricos como para abreviaturas canónicas.
+  - Adaptabilidad de `studyUrl` en Landing de Kartex: resolución dinámica de rutas (`/study` en subdominio y `/kartex/study` en desarrollo local directo) para prevenir fallos 404 durante pruebas locales.
+  - Conexión reactiva de `StudySidePanel`: se corrigió la causa raíz por la cual los paneles laterales izquierdo y derecho no aparecían en módulos como `word-study`, `atlas`, `timeline`, `archaeology`, etc. Los sidebars/inspectors no pasaban `isOpen` ni `onClose` explícitamente y `StudySidePanelRoot` caía en `isOpen = false` por defecto. Se dotó a `StudySidePanelRoot` de consumo reactivo automático de `useKartexPassageSafe()` (`isLeftSidebarOpen` / `isRightInspectorOpen`, ancho, redimensionamiento y colapso), e inicialización en `true` para pantallas de escritorio.
+  - Validación de paridad REST backend: todos los endpoints bajo `/api/kartex/*` y TypeORM SQLite WAL (`kartex.sqlite`) verificados y certificados con `pnpm seed:kartex` y compilación de producción exitosa en Next.js (`pnpm --filter web build`).
+
+* **Auditoría Integral de DOICELADEV (Backend, Base de Datos, i18n y Frontend):**
+  - Corrección de `tutorials.json` (adición del campo obligatorio `category: "web"` en registros de corpus) y resolución de tipado estricto en `ForumReplyForm.tsx` (`ForumReply` retornado por la API en vez de `ForumTopic`).
+  - Verificación y aprovisionamiento limpio de `doiceladev.sqlite` mediante `pnpm seed:doiceladev` ejecutado con éxito en 324 ms.
+  - Validación REST exhaustiva: comprobación de disponibilidad HTTP 200 en los 10 endpoints de DoicelaDev (`/api/doiceladev/hub`, `/tutorials`, `/tutorials/categories`, `/blog`, `/news`, `/projects`, `/forum`, `/ai`, `/cybersecurity`, `/infrastructure`, `/glossary`) y verificación de resolución por slug individual (`/tutorials/[slug]`, `/cybersecurity/[slug]`, `/forum/[slug]`, `/glossary/[slug]`).
+  - Auditoría i18n completa: 390 claves en español y 390 claves en inglés verificadas en paridad 1:1, y escaneo de 139 archivos `.tsx`/`.ts` en `frontend/web/src/app/(doiceladev)` con 0 errores de namespace o claves faltantes.
+  - Compilación de producción Next.js 16 (`pnpm --filter web build`) finalizada con código 0 y las 31 rutas optimizadas correctamente.
+
+* **Resolución Declarativa de Subproyectos en Localhost (`middleware.ts`):**
+  - Causa raíz identificada: En desarrollo local (`localhost:3001` sin subdominios DNS virtuales), los componentes de UI generan enlaces canónicos de subdominio (ej. `/study/parallel`, `/tutorials`, `/news`, `/sandbox`). Al no haber subdominio en el host, Next.js interpretaba que pertenecían al grupo `(landing)` arrojando errores `404 Not Found`.
+  - Solución arquitectónica: Se implementó `LOCALHOST_ROUTE_MAP` en `middleware.ts` para mapear limpiamente las rutas de cada proyecto hacia su carpeta física (`/study` -> `/kartex/study`, `/tutorials` -> `/doiceladev/tutorials`, `/sandbox` -> `/portfolio/sandbox`, etc.) cuando `matchedSubdomain` no está presente.
+  - En producción (AWS Lightsail con subdominios `*.jorgedoicela.com`), el bloque opera de forma 100% transparente sin afectar el enrutamiento nativo por subdominio.
+  - Verificación: 17 rutas canónicas y 8 rutas dinámicas `[slug]` probadas vía HTTP en `localhost:3001` con respuesta `200 OK` en todas.
+
+
 ## 2. Historial de Decisiones y Lecciones Aprendidas
 
 * **Tipografías Auto-Hospedadas y Portabilidad de Cajas Negras (Zero-External Network Fonts):**
@@ -255,5 +276,34 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - **i18n Paridad 1:1:** Diccionarios `es.json` y `en.json` sincronizados con claves `clipboardInfoTitle`, `clipboardTooltipP1` y `clipboardTooltipP2`.
   - **Verificación Técnica:** `pnpm -r typecheck` ejecutado con éxito (código 0 en los 3 workspaces).
 
+* **Auditoría Exhaustiva de Refactorización y Disponibilidad Funcional en DoicelaDev (`/goal`):**
+  - **Objetivo:** Verificar rigurosamente la integridad de tipos, rutas relativas, importaciones, contratos de API, bilingüismo i18n y consistencia de persistencia en SQLite tras la refactorización integral de DoicelaDev.
+  - **Hallazgos y Soluciones de Causa Raíz:**
+    1. **Sincronización de Categorías en Dataset de Tutoriales:**
+       - En `backend/src/doiceladev/corpus/tutorials.json`, el tutorial en inglés (id: 2, `Building a Virtual SSH Terminal with WebSockets in React and NestJS`) carecía de la propiedad `"category": "web"`, lo que provocaba que en la base de datos se asignara el valor por defecto (`category: 'backend'`) desfasando los filtros de categoría y conteos entre ES y EN.
+       - Corrección: se añadió `"category": "web"` al registro en inglés y se re-sembró la base limpia local (`pnpm --filter backend seed:doiceladev`), completando la recreación de `doiceladev.sqlite` en 214 ms.
+    2. **Contrato de Tipado en `ForumReplyForm.tsx`:**
+       - La interfaz `ForumReplyFormProps` tipaba el callback como `onReplySent?: (updated: ForumTopic) => void;` y parseaba `ForumTopic`, mientras que el endpoint del backend `@Post('doiceladev/forum/replies')` retorna la entidad `ForumReply`.
+       - Corrección: se tipó formalmente con `ForumReply` tanto en la interfaz como en el manejo seguro de la respuesta JSON del formulario.
+  - **Auditoría de Componentes y Funcionalidad:**
+    - Se verificó la disponibilidad y corrección de las 6 capas FSD en los 8 dominios (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) junto con `hub` y `glossary`.
+    - Componentes de UI comunes (`MarkdownRenderer`, `CodeBlock`, `MermaidBlock`, `TableBlock`, `CalloutBlock`, `GlossaryTermPopover`, `DoiceladevCard`, `CategoryFilterBar`, `DoiceladevSelect`, `ArticleCover`, `BackToPortalButton`, `ScrollToTopButton`, `FeaturedCarousel`, `SpotlightModal`, `DoiceladevArticleLayout`) revisados con imports 100% válidos.
+  - **Bilingüismo e i18n (390/390 claves):**
+    - Paridad absoluta entre `messages/es.json` y `messages/en.json`, con 0 claves huérfanas o faltantes en todas las vistas y widgets.
+  - **Aislamiento y Principio de Cajas Negras:**
+    - Cero importaciones cruzadas entre `(doiceladev)` y los dominios `(landing)`, `(portfolio)` o `(kartex)`.
+  - **Verificación Técnica de Compilación:**
+    - `pnpm -r typecheck`: Validación exitosa con 0 errores en los 3 proyectos (`backend`, `frontend/web`, `frontend/mobile`).
+    - `pnpm --filter backend build`: `nest build` completado exitosamente con código 0.
 
-
+* **Auditoría Arquitectónica Integral de DoicelaDev y Kartex (FSD Puro, Cajas Negras y 3 Capas NestJS):**
+  - **Script Automatizado de Auditoría (`backend/audit-architecture.mjs`):**
+    - Evalúa en tiempo real: (1) Cero importaciones cruzadas entre dominios en backend y frontend, (2) Cumplimiento riguroso de jerarquía FSD (`app` -> `widgets` -> `features` -> `entities` -> `shared`), (3) Arquitectura de 3 capas en NestJS (Controllers no inyectan TypeORM ni Repositorios; Services no importan Controllers; Entities no importan capas de aplicación).
+  - **Resolución de Causa Raíz FSD en `StudySidePanel`:**
+    - Se identificó violación FSD en `frontend/web/src/app/(kartex)/shared/ui/StudySidePanel.tsx` que importaba directamente `useKartexPassageSafe` de la capa superior `entities/passage`.
+    - Solución arquitectónica (Inversión de Control / DIP): Se creó el contrato agnóstico `StudySidePanelContext.tsx` en `shared/ui`. `KartexPassageProvider` provee dicho contexto mediante `StudySidePanelContextProvider`, permitiendo que `StudySidePanel` consuma exclusivamente `useStudySidePanelState(side)` sin ninguna dependencia ascendente hacia `entities`.
+  - **Resultados de Auditoría:**
+    - Cero importaciones cruzadas en Backend y Frontend (DoicelaDev y Kartex).
+    - Cero violaciones FSD en Frontend (DoicelaDev y Kartex).
+    - Cero violaciones de 3 capas en Backend NestJS.
+  - **Verificación Técnica:** `pnpm -r typecheck` (código 0), `pnpm --filter web build` (Next.js 16 - 31 rutas optimizadas con código 0) y `pnpm --filter backend build` (NestJS 11 con código 0).

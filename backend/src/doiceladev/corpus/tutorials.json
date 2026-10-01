@@ -25,6 +25,7 @@
       "title": "Building a Virtual SSH Terminal with WebSockets in React and NestJS",
       "excerpt": "Learn how to architect and implement an interactive real-time terminal console using Socket.io, NestJS Gateways, stream buffers, and custom React Hooks.",
       "description": "Comprehensive hands-on engineering guide to crafting an interactive in-browser console supporting Unix command execution, memory buffers, command history traversal, and high-contrast Neumorphic styling.",
+      "category": "web",
       "difficulty": "intermediate",
       "prerequisites": "Working knowledge of React, NestJS, WebSockets, and TypeScript",
       "techStack": "React 19, NestJS 11, Socket.io, TypeScript, TailwindCSS",

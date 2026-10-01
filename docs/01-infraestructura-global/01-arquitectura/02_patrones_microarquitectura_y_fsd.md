@@ -118,8 +118,10 @@ Antes de confirmar cualquier cambio con Git, se debe garantizar:
 * [x] **Cero acoplamiento:** No existen importaciones cruzadas entre carpetas de dominios distintos.
 * [x] **Tipos duplicados:** Las interfaces de datos están definidas localmente en el subproyecto sin depender de un paquete `@shared`.
 * [x] **Sincronización GEO, PWA y LLMs:** Si se agregan, modifican o eliminan proyectos, herramientas o features principales en cualquiera de las 4 plataformas, se actualizó su dossier especializado `public/<proyecto>/llms.txt`, su `manifest.json`, su componente `*JsonLd.tsx` y `sitemap.ts`.
+* [x] **Auditoría de Arquitectura Automatizada:** `pnpm audit:arch` ejecuta con **0 violaciones** (cero cross-imports, jerarquía FSD pura, cero acoplamiento cross-feature y 3 capas canónicas en NestJS).
 * [x] **Documentación técnica sincronizada:** Se actualizó, amplió o depuró la documentación en `docs/` reflejando con exactitud los cambios realizados en el código.
 * [x] **Chequeo de Tipos:** `pnpm -r typecheck` ejecuta con **0 errores** en todos los workspaces.
+
 
 
 

@@ -1,3 +1,6 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import {
     KartexLandingHeader,
     KartexHeroSection,
@@ -11,7 +14,15 @@ import {
 } from '../widgets/landing';
 
 export default function KartexLandingPage() {
-    const studyUrl = '/study';
+    const [studyUrl, setStudyUrl] = useState('/study');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const hostname = window.location.hostname.toLowerCase();
+            const isSubdomain = hostname.startsWith('kartex.');
+            setStudyUrl(isSubdomain ? '/study' : '/kartex/study');
+        }
+    }, []);
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background transition-colors duration-200">

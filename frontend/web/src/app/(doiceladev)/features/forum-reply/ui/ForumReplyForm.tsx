@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ForumTopic } from '../../../entities/forum/types';
+import { ForumTopic, ForumReply } from '../../../entities/forum/types';
 import { API_URL } from '../../../shared';
 
 interface ForumReplyFormProps {
   topic: ForumTopic;
   locale: string;
-  onReplySent?: (updated: ForumTopic) => void;
+  onReplySent?: (reply: ForumReply) => void;
 }
 
 export function ForumReplyForm({ topic, locale, onReplySent }: ForumReplyFormProps) {
@@ -37,9 +37,9 @@ export function ForumReplyForm({ topic, locale, onReplySent }: ForumReplyFormPro
 
       if (!res.ok) throw new Error('Error al enviar respuesta');
 
-      const data = (await res.json()) as { data?: ForumTopic } | ForumTopic;
-      const updated = (data as { data?: ForumTopic }).data ?? (data as ForumTopic);
-      onReplySent?.(updated);
+      const data = (await res.json()) as { data?: ForumReply } | ForumReply;
+      const createdReply = (data as { data?: ForumReply }).data ?? (data as ForumReply);
+      onReplySent?.(createdReply);
       setReplyContent('');
       router.refresh();
     } catch (err: unknown) {

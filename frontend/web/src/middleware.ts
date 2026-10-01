@@ -124,10 +124,33 @@ export function middleware(request: NextRequest) {
             response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
         }
     } else {
-        // ── DOMINIO RAÍZ (LANDING) ───────────────────────────────────────────
-        // Si se solicita un asset con extensión en la raíz (ej. /llms.txt, /manifest.json),
-        // se resuelve deterministamente hacia el espacio de assets de la Landing (/landing/...).
-        if (pathname.includes('.') && !pathname.startsWith('/landing/')) {
+        // ── DOMINIO RAÍZ (LANDING O LOCALHOST SIN SUBDOMINIO) ────────────────
+        // Mapeo declarativo de rutas de proyectos para desarrollo en localhost sin subdominios:
+        const LOCALHOST_ROUTE_MAP: { prefix: string; targetPrefix: string; proj: string }[] = [
+            { prefix: '/study', targetPrefix: '/kartex/study', proj: 'kartex' },
+            { prefix: '/tutorials', targetPrefix: '/doiceladev/tutorials', proj: 'doiceladev' },
+            { prefix: '/news', targetPrefix: '/doiceladev/news', proj: 'doiceladev' },
+            { prefix: '/ai', targetPrefix: '/doiceladev/ai', proj: 'doiceladev' },
+            { prefix: '/cybersecurity', targetPrefix: '/doiceladev/cybersecurity', proj: 'doiceladev' },
+            { prefix: '/infrastructure', targetPrefix: '/doiceladev/infrastructure', proj: 'doiceladev' },
+            { prefix: '/projects', targetPrefix: '/doiceladev/projects', proj: 'doiceladev' },
+            { prefix: '/blog', targetPrefix: '/doiceladev/blog', proj: 'doiceladev' },
+            { prefix: '/forum', targetPrefix: '/doiceladev/forum', proj: 'doiceladev' },
+            { prefix: '/sandbox', targetPrefix: '/portfolio/sandbox', proj: 'portfolio' },
+        ];
+
+        const matchedLocalRoute = LOCALHOST_ROUTE_MAP.find(
+            (r) => pathname === r.prefix || pathname.startsWith(`${r.prefix}/`),
+        );
+
+        if (matchedLocalRoute) {
+            project = matchedLocalRoute.proj;
+            requestHeaders.set('x-project', project);
+            url.pathname = pathname.replace(matchedLocalRoute.prefix, matchedLocalRoute.targetPrefix);
+            response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+        } else if (pathname.includes('.') && !pathname.startsWith('/landing/')) {
+            // Si se solicita un asset con extensión en la raíz (ej. /llms.txt, /manifest.json),
+            // se resuelve deterministamente hacia el espacio de assets de la Landing (/landing/...).
             url.pathname = `/landing${pathname}`;
             response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
         }

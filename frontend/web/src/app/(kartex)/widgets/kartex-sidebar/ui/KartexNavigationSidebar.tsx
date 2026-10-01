@@ -238,7 +238,7 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                     {(isHistoricalContext || isEvangelism) && (
                       <div className="mt-2.5 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between">
                         <Link
-                          href={`/study/standard?book=${book.abbreviation}&chapter=${selectedChapter || 1}`}
+                          href={`/study/standard?book=${book.id}&chapter=${selectedChapter || 1}`}
                           className="text-[11px] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center gap-1 transition-colors font-medium group"
                         >
                           <BookOpen className="w-3 h-3 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />

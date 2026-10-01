@@ -129,6 +129,10 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - Actualizados mapas Nginx, sitemaps y guías en `01_arquitectura_macro_y_hardware.md`, `02_patrones_microarquitectura_y_fsd.md`, `03_persistencia_local_y_sincronizacion_multiequipo.md`, `01_despliegue_pm2_y_cicd.md`, `01_arquitectura_y_diseno.md`, `01_frontend_y_terminal_ssh.md`, `01_backend_y_persistencia.md`.
   - Verificación Integral: `pnpm -r typecheck` validado con 0 errores en los 3 proyectos del monorepo (`backend`, `frontend/mobile`, `frontend/web`).
   - Auditoría y Limpieza en Producción (AWS Lightsail): ejecutado escaneo forense con `find`, eliminados los 6 directorios/archivos huérfanos residuales en el VPS (`docs/05-software`, `skills/software-*`, `public/software`, `(software)`, `SoftwareSlideVisual.tsx`, y carátula legacy); corroborado estado con 0 resultados residuales y servicios online en PM2.
+  - Auditoría de Arquitectura FSD y Cajas Negras (DoicelaDev):
+    - Aislamiento de dominio absoluto: 0 importaciones cruzadas (cross-imports) entre `(doiceladev)` y `(bible)`, `(portfolio)` o `(landing)` en frontend y backend.
+    - Jerarquía FSD unidireccional estricta: se eliminó la única violación en `shared/markdown` elevando la interfaz `GlossaryTerm` a `shared/types/glossary.ts` y re-exportando desde `entities/glossary`, alcanzando 0 violaciones de capa en las 6 capas de FSD.
+    - Backend NestJS: 100% de servicios inyectan `@InjectRepository(Entity, 'doiceladevConnection')` y preservan las 3 capas canónicas (Controladores, Servicios de Dominio, Entidades TypeORM / DTOs).
 
 
 

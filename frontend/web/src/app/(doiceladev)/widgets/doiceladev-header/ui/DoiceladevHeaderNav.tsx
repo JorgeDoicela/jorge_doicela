@@ -68,7 +68,7 @@ export function DoiceladevHeaderNav({
                     {/* Logo Blanco (Modo Oscuro) */}
                     <Image
                         src="/doiceladev/logo/logo_blanco.png"
-                        alt="Logo Jorge Doicela"
+                        alt={tNav('headerLogoAlt')}
                         width={128}
                         height={128}
                         className="h-full w-auto object-contain hidden dark:block"
@@ -77,7 +77,7 @@ export function DoiceladevHeaderNav({
                     {/* Logo Negro (Modo Claro) */}
                     <Image
                         src="/doiceladev/logo/logo_negro.png"
-                        alt="Logo Jorge Doicela"
+                        alt={tNav('headerLogoAlt')}
                         width={128}
                         height={128}
                         className="h-full w-auto object-contain block dark:hidden"

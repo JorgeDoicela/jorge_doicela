@@ -1,12 +1,12 @@
-import { DoiceladevArticleCategory } from '../../shared/ui/ArticleCover';
-import { NewsArticle } from '../news';
-import { BlogPost } from '../blog';
-import { ForumTopic } from '../forum';
-import { AiResource } from '../ai';
-import { SecurityPost } from '../cybersecurity';
-import { Tutorial } from '../tutorials';
-import { Project } from '../projects';
-import { InfrastructurePost } from '../infrastructure';
+import type { DoiceladevArticleCategory } from '../../shared/ui/ArticleCover';
+import type { NewsArticle } from '../news';
+import type { BlogPost } from '../blog';
+import type { ForumTopic } from '../forum';
+import type { AiResource } from '../ai';
+import type { SecurityPost } from '../cybersecurity';
+import type { Tutorial } from '../tutorials';
+import type { Project } from '../projects';
+import type { InfrastructurePost } from '../infrastructure';
 
 export interface HubFeedItem {
   id: string;

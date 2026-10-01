@@ -133,6 +133,32 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - Aislamiento de dominio absoluto: 0 importaciones cruzadas (cross-imports) entre `(doiceladev)` y `(bible)`, `(portfolio)` o `(landing)` en frontend y backend.
     - Jerarquía FSD unidireccional estricta: se eliminó la única violación en `shared/markdown` elevando la interfaz `GlossaryTerm` a `shared/types/glossary.ts` y re-exportando desde `entities/glossary`, alcanzando 0 violaciones de capa en las 6 capas de FSD.
     - Backend NestJS: 100% de servicios inyectan `@InjectRepository(Entity, 'doiceladevConnection')` y preservan las 3 capas canónicas (Controladores, Servicios de Dominio, Entidades TypeORM / DTOs).
+* **Auditoría Integral de Bilingüismo (i18n ES/EN) y Erradicación de Cadenas Hardcodeadas:**
+  - Paridad de Diccionarios al 100%: verificado con script automatizado que las 4 aplicaciones del monorepo (`doiceladev`: 388/388, `landing`: 164/164, `portfolio`: 228/228, `bible`: 845/845) poseen simetría idéntica y 0 claves huérfanas entre `messages/es.json` y `messages/en.json`.
+  - Frontend DoicelaDev:
+    - Los 76 componentes TSX fueron analizados exhaustivamente: 0 cadenas de texto literales quemadas en la interfaz de usuario.
+    - Las 8 subrutas de catálogo (`page.tsx`) y los 8 lectores dinámicos (`[slug]/page.tsx`) delegan 100% sus textos en `useTranslations`/`getTranslations` y consumen el backend de forma localizada mediante `?lang=${locale}`.
+    - Todos los hooks de datos y categorías en `entities/` (`useNews`, `useNewsCategories`, `useTutorials`, `useProjects`, `useInfrastructure`, `useForum`, `useCybersecurity`, `useBlog`, `useAi`, `useDoiceladevHub`) consumen y reaccionan dinámicamente a `useLocale()`.
+    - Homologado el imagotipo en `DoiceladevHeaderNav.tsx` para usar `alt={tNav('headerLogoAlt')}` en modo claro y oscuro.
+  - Frontend Landing y Portfolio:
+    - Enriquecido `LandingHeader.tsx` con `useLanguage()` para hacer bilingües los atributos accesibles `aria-label` y etiquetas de retorno a inicio según el idioma activo (`language === 'es' ? ... : ...`).
+  - Backend NestJS (DoicelaDev):
+    - Las 9 entidades TypeORM poseen columna `language` e índices compuestos (`['slug', 'language']`).
+    - Los datasets semilla en `backend/src/doiceladev/corpus/*.json` cuentan con versiones simétricas completas `{ es: 1, en: 1 }` (y 34 términos en `glossary.json`: 17 ES / 17 EN).
+  - Verificación de Tipos: `pnpm -r typecheck` validado con 0 errores en los 3 proyectos del monorepo (`backend`, `frontend/mobile`, `frontend/web`).
+* **Auditoría Arquitectónica FSD, NestJS y Principio de Cajas Negras (DoicelaDev Post-Renombramiento):**
+  - Principio de Cajas Negras (Domain Isolation):
+    - Cero importaciones cruzadas (0 cross-imports) desde `(doiceladev)` hacia `(landing)`, `(portfolio)` o `(bible)` tanto en frontend como en backend.
+    - Cero importaciones de otros dominios hacia código interno de `(doiceladev)`.
+  - Feature-Sliced Design (FSD Canónico en 6 Capas):
+    - Escaneo automatizado de dependencias sobre los 139 archivos de `(doiceladev)`: **0 violaciones de jerarquía unidireccional de capas**. Ninguna capa inferior importa de una capa superior (`shared` -> `entities` -> `features` -> `widgets` -> `pages` -> `app`).
+    - Cero acoplamiento cruzado en `features/` (0 cross-feature imports).
+    - Tipado puro en `entities/hub/types.ts` mediante `import type` para todas las entidades agregadas.
+  - Backend NestJS (3 Capas Canónicas):
+    - Submódulos verticales estructurados con estricta separación: Controladores (`@Controller('doiceladev/...')`), Servicios de Dominio (`@Injectable()`) y Capa de Datos (Entidades TypeORM + DTOs).
+    - 100% de los repositorios inyectados (11/11) utilizan `@InjectRepository(Entity, 'doiceladevConnection')`, garantizando aislamiento físico en `doiceladev.sqlite`.
+    - Orquestador `DoiceladevModule` registra las 11 entidades y los 10 submódulos con optimizaciones SQLite para VPS 1 GB RAM (WAL, cache_size 20MB, pragmas de alto rendimiento).
+  - Verificación de Calidad: `pnpm -r typecheck` y `pnpm run lint` superados con 0 errores.
 
 
 

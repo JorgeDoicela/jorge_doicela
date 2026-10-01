@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const resource = await serverGet<AiResource>(`/doiceladev/ai/${slug}?lang=${locale}`);
 
   if (!resource) {
-    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
+    return { title: `${tCommon('notFound')} | DoicelaDev — Jorge Doicela` };
   }
 
   return {

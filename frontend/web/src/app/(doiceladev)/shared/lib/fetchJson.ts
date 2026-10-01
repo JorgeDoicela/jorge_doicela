@@ -1,6 +1,6 @@
 /**
  * safeFetchJson
- * Helper de infraestructura frontend para el dominio Software.
+ * Helper de infraestructura frontend para el dominio DoicelaDev.
  * Realiza peticiones HTTP defensivas y seguras al backend NestJS (puerto 3000 / SQLite).
  * Garantiza cabeceras JSON, valida Content-Type y maneja respuestas de error limpiamente.
  */

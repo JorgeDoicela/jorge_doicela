@@ -10,20 +10,20 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > **Arquitectura Macro y Enrutamiento Canónico Limpio:**
 > * **Subdominio Canónico:** `doiceladev.jorgedoicela.com` (o `http://doiceladev.localhost:3001` en desarrollo local).
 > * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las secciones son rutas directas (`/news`, `/blog`, `/forum`, `/ai`, `/cybersecurity`, `/tutorials`, `/projects`, `/infrastructure`).
-> * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud en el subdominio con el prefijo redundante `/software` o `/software/*` se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/*`), eliminando URLs duplicadas en el navegador y protegiendo el SEO.
-> * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(doiceladev)/software/*` para evitar colisiones de rutas a nivel de compilación con `(landing)`, `(portfolio)` y `(bible)` bajo el runtime consolidado de 1 GB de RAM.
-> * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/software` siguen respondiendo 200 OK directamente.
+> * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud en el subdominio con el prefijo redundante `/doiceladev` o `/doiceladev/*` se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/*`), eliminando URLs duplicadas en el navegador y protegiendo el SEO.
+> * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(doiceladev)/doiceladev/*` para evitar colisiones de rutas a nivel de compilación con `(landing)`, `(portfolio)` y `(bible)` bajo el runtime consolidado de 1 GB de RAM.
+> * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/doiceladev` siguen respondiendo 200 OK directamente.
 > * **Consolidación Física:** Se ejecuta en el único servidor Next.js 16 (puerto `3001`, VPS 1 GB RAM).
 > * **Aislamiento de Dominio:** Estilos independientes en `(doiceladev)/globals.css`. Cero importaciones de otros subdominios.
 >
 > **Arquitectura Micro:**
 > * **Feature-Sliced Design (FSD Canónico en 6 Capas):**
 >   * `providers/`: Envoltorios de montaje global en layout (`theme-provider`).
->   * `shared/`: UI Kit agnóstico (`SoftwareCard`, `BackToPortalButton`, `ScrollToTopButton`, `ArticleCover`), suite Markdown (`MarkdownRenderer`, bloques de código/Mermaid/tablas/callouts), SEO (`SoftwareJsonLd`), utilitarios de red (`api`, `serverFetch`, `fetchJson`) y tipos base.
+>   * `shared/`: UI Kit agnóstico (`DoiceladevCard`, `BackToPortalButton`, `ScrollToTopButton`, `ArticleCover`), suite Markdown (`MarkdownRenderer`, bloques de código/Mermaid/tablas/callouts), SEO (`DoiceladevJsonLd`), utilitarios de red (`api`, `serverFetch`, `fetchJson`) y tipos base.
 >   * `entities/`: 8 dominios temáticos (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) y feed consolidado (`hub`), cada uno con sus modelos, tipos, hooks API y componentes de presentación (`NewsCard`, etc.).
 >   * `features/`: Acciones e interactividad del usuario (`spotlight-search`, `forum-reply`, `language-toggle`, `theme-toggle`).
->   * `widgets/`: Bloques visuales complejos y layouts (`software-header`, `software-footer`, `category-nav`, `featured-carousel`, `article-layout`, `page-layout`).
-> * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, cabecera `SoftwareHeaderNav`, badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
+>   * `widgets/`: Bloques visuales complejos y layouts (`doiceladev-header`, `doiceladev-footer`, `category-nav`, `featured-carousel`, `article-layout`, `page-layout`).
+> * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, cabecera `DoiceladevHeaderNav`, badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
 > * **Jerarquía de Componentes:** Componentes encapsulados localmente con sus propios hooks y tipos.
 > * **Estética Neumorphism UI + Glassmorphism y Tipografías Locales:** Paneles táctiles cóncavos/convexos combinados con desenfoques vítreos translúcidos, reflejos esmerilados y sombras suaves superpuestas. Utiliza exclusivamente sus tipografías locales auto-hospedadas bajo `(doiceladev)/fonts/` (`PlusJakartaSans-Variable.woff2`, `PlusJakartaSans-Italic-Variable.woff2`, `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` bajo licencia **SIL OFL 1.1** (Zero-External Network Fonts). Cero consultas a Google Fonts o CDNs.
 
@@ -34,7 +34,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 ```text
 frontend/web/src/app/(doiceladev)/
 ├── fonts/                            # Tipografías locales autocontenidas (Plus Jakarta Sans y Geist Mono)
-├── globals.css                       # Estilos aislados de Software (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
+├── globals.css                       # Estilos aislados de DoicelaDev (Neumorphism UI + Glassmorphism: Titanio Claro / Obsidiana Oscuro)
 ├── layout.tsx                        # Layout raíz del subdominio (localFont + ThemeProvider + NextIntlClientProvider)
 ├── messages/                         # Diccionarios i18n
 │   ├── es.json
@@ -45,9 +45,9 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts
 │
 ├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
-│   ├── ui/                           # SoftwareCard, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── ui/                           # DoiceladevCard, BackToPortalButton, ScrollToTopButton, ArticleCover
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
-│   ├── seo/                          # SoftwareJsonLd (Schema JSON-LD)
+│   ├── seo/                          # DoiceladevJsonLd (Schema JSON-LD)
 │   ├── lib/                          # api, serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
@@ -60,7 +60,7 @@ frontend/web/src/app/(doiceladev)/
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
-│   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
+│   └── hub/                          # DoiceladevHubFeed, useDoiceladevHub, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
@@ -69,15 +69,15 @@ frontend/web/src/app/(doiceladev)/
 │   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
 │
 ├── widgets/                          # CAPA 3: Bloques Visuales Autónomos Complejos y Shells
-│   ├── software-header/              # SoftwareHeaderNav (Lupa conectada a useSpotlight)
-│   ├── software-footer/              # SoftwareFooter
+│   ├── doiceladev-header/            # DoiceladevHeaderNav (Lupa conectada a useSpotlight)
+│   ├── doiceladev-footer/            # DoiceladevFooter
 │   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
 │   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
-│   ├── article-layout/               # SoftwareArticleLayout + Sidebars (Author, ExploreTopics, PopularTags con useSpotlight, FeaturedPosts, StayInformed)
-│   └── page-layout/                  # SoftwarePageLayout
+│   ├── article-layout/               # DoiceladevArticleLayout + Sidebars (Author, ExploreTopics, PopularTags con useSpotlight, FeaturedPosts, StayInformed)
+│   └── page-layout/                  # DoiceladevPageLayout
 │
-└── software/                         # CAPAS 2 & 1: Enrutamiento y Páginas del App Router de Next.js
-    ├── page.tsx                      # Vista principal de Software (Bento Grid + Feed Hub)
+└── doiceladev/                       # CAPAS 2 & 1: Enrutamiento y Páginas del App Router de Next.js
+    ├── page.tsx                      # Vista principal de DoicelaDev (Bento Grid + Feed Hub)
     ├── news/                         # Catálogo y lector de noticias (/news, /news/[slug])
     ├── blog/                         # Catálogo y lector de artículos (/blog, /blog/[slug])
     ├── forum/                        # Catálogo e hilo de discusión (/forum, /forum/[slug])
@@ -90,7 +90,7 @@ frontend/web/src/app/(doiceladev)/
 
 ---
 
-## 3. Las 8 Especialidades de Software (Nivel 1 de la Taxonomía)
+## 3. Las 8 Especialidades de DoicelaDev (Nivel 1 de la Taxonomía)
 
 Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del sistema. En tarjetas y catálogos, la línea superior de metadatos (`categoryMeta`) combina estrictamente el **Nivel 1 (Módulo)** con el **Nivel 2 (Categoría)**:
 
@@ -109,8 +109,8 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 
 ## 4. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
-* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Software.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
-* **Datos Estructurados Schema.org (`SoftwareJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Doiceladev.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
+* **Datos Estructurados Schema.org (`DoiceladevJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
 * **Dossier Especializado para IA (`public/doiceladev/llms.txt`):** Desglose detallado de las 8 áreas de conocimiento, tutoriales StepWizard y proyectos servido en `doiceladev.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/doiceladev/manifest.json`):** Configuración de aplicación web independiente con tema `#0b0f19`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://doiceladev.jorgedoicela.com`.
@@ -123,15 +123,15 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 
 * **Fusión Neumórfica y Vítrea Calibrada:** Contenedores y tarjetas construidos sobre `.glass-convex-panel` y `.glass-concave-panel` que combinan sombras cóncavas (efecto hendido) y convexas (relieve extruido) con fondos de cristal esmerilado translúcido (`backdrop-filter: blur(16px)`), gradientes lumínicos diagonales y bordes perimetrales vítreos.
 * **Cabecera Editorial de Marca Centralizada:**
-  * Imagotipo compuesto de alta nitidez y escala calibrada: icono [`logo_blanco.png`](/software/logo/logo_blanco.png) a la izquierda y bloque tipográfico [`doiceladev.png`](/software/logo/doiceladev.png) a la derecha, asegurando una proporción armónica y legibilidad impecable.
-  * **Enrutamiento Determinístico del Logotipo:** El logotipo completo está enlazado a la raíz del subdominio de Software (`/` o `http://doiceladev.localhost:3001/` en desarrollo local y `https://doiceladev.jorgedoicela.com` en producción). Además, al hacer clic sobre el imagotipo mientras se está en la página principal, reinicia automáticamente la categoría a `'all'` (*Todo el Contenido*), restaurando la vista principal de destacados y últimas publicaciones.
+  * Imagotipo compuesto de alta nitidez y escala calibrada: icono [`logo_blanco.png`](/doiceladev/logo/logo_blanco.png) a la izquierda y bloque tipográfico [`doiceladev.png`](/doiceladev/logo/doiceladev.png) a la derecha, asegurando una proporción armónica y legibilidad impecable.
+  * **Enrutamiento Determinístico del Logotipo:** El logotipo completo está enlazado a la raíz del subdominio de DoicelaDev (`/` o `http://doiceladev.localhost:3001/` en desarrollo local y `https://doiceladev.jorgedoicela.com` en producción). Además, al hacer clic sobre el imagotipo mientras se está en la página principal, reinicia automáticamente la categoría a `'all'` (*Todo el Contenido*), restaurando la vista principal de destacados y últimas publicaciones.
   * Titular semántico accesible para SEO (`h1.sr-only`), eliminando el texto visual redundante para dar protagonismo absoluto al diseño del imagotipo.
   * Fila limpia de iconos de redes sociales libres sin contenedores invasivos (`w-6 h-6`, 24px) en color blanco nítido: LinkedIn, GitHub, YouTube, TikTok y Email de contacto, situados a proximidad inmediata bajo el logotipo (`text-white hover:text-zinc-300`).
   * **Barra de Navegación y Control Unificada a Ancho Completo (`w-full glass-concave-panel`):**
     * Encapsulada dentro de un único contenedor cóncavo continuo (`glass-concave-panel`) que abarca el 100% del ancho del layout, alineándose exactamente con los márgenes exteriores de las tarjetas de la grilla de publicaciones:
-      * **Flanco Izquierdo:** Botón adaptativo de retorno ([`BackToPortalButton`](/software/shared/ui/BackToPortalButton.tsx)): enlaza al portal central `jorgedoicela.com` desde la raíz con etiqueta `Portal`, o a la raíz del subdominio (`/`) desde páginas de categoría con la etiqueta internacionalizada `Inicio` (ES) / `Home` (EN).
-      * **Centro:** Menú de categorías ([`CategoryNav`](/software/widgets/category-nav/ui/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 8 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`, `infrastructure`). Funciona bajo **arquitectura canónica URL-driven**: cada pestaña enlaza directamente a su módulo dedicado (`/news`, `/blog`, `/infrastructure`, etc.), permitiendo que el usuario experimente el módulo completo con sus propios filtros, buscadores y controles avanzados sin estados efímeros en memoria que oculten las rutas.
-      * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/software/features/language-toggle/ui/LanguageToggle.tsx) ES/EN).
+      * **Flanco Izquierdo:** Botón adaptativo de retorno ([`BackToPortalButton`](/doiceladev/shared/ui/BackToPortalButton.tsx)): enlaza al portal central `jorgedoicela.com` desde la raíz con etiqueta `Portal`, o a la raíz del subdominio (`/`) desde páginas de categoría con la etiqueta internacionalizada `Inicio` (ES) / `Home` (EN).
+      * **Centro:** Menú de categorías ([`CategoryNav`](/doiceladev/widgets/category-nav/ui/CategoryNav.tsx)) con prop `bare` para integrarse limpiamente sin contenedores cóncavos redundantes, cubriendo las 8 áreas temáticas (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `forum`, `projects`, `infrastructure`). Funciona bajo **arquitectura canónica URL-driven**: cada pestaña enlaza directamente a su módulo dedicado (`/news`, `/blog`, `/infrastructure`, etc.), permitiendo que el usuario experimente el módulo completo con sus propios filtros, buscadores y controles avanzados sin estados efímeros en memoria que oculten las rutas.
+      * **Flanco Derecho:** Utilidades integradas con el botón de lupa (buscador modal Spotlight `⌘K`) y el conmutador de idioma ([`LanguageToggle`](/doiceladev/features/language-toggle/ui/LanguageToggle.tsx) ES/EN).
 * **Portadas Visuales de Alta Precisión e Inteligencia Temática (`ArticleCover.tsx` en 16:9):**
   * Soporta imágenes estáticas con `next/image` y fallback procedural dinámico por categoría temática (`category` / `topicCategory`):
     * **Servidores (`servers`):** Nodos bare-metal y topologías físicas en gradientes esmeralda (`from-emerald-950/70`).
@@ -142,54 +142,54 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
     * **Cloud (`cloud`):** Topologías de nube híbrida y orquestación systemd en gradientes azul cielo.
   * Refracción vítrea, texturas de ingeniería (`.tech-grid-bg`) y badges animados de `★ DESTACADO` en artículos de alta prioridad editorial.
 * **Motor de Relevancia y Ordenamiento Inteligente Enterprise (`sortBy`):**
-  * Tanto la página de categoría `/infrastructure` como el Hub de Software integran un algoritmo de ponderación matemática en el backend:
+  * Tanto la página de categoría `/infrastructure` como el Hub de DoicelaDev integran un algoritmo de ponderación matemática en el backend:
     $$\text{SmartScore} = (\text{featured} \times 1000) + (\text{orderPriority} \times 20) + (\text{likes} \times 4) + (\text{views} \times 1.5)$$
   * Esto garantiza que los artículos insignia (como el análisis forense del incidente P1 y la arquitectura en 1 GB de RAM) encabecen la experiencia del usuario, evitando el desplazamiento errático de nuevas publicaciones al fondo.
   * El usuario dispone de una barra de control interactiva multi-criterio: *★ Relevancia Arquitectónica*, *Más Recientes*, *Más Populares* y *Mayor Complejidad*.
 * **Portada General de Todo el Contenido: Podio Top 3 Global y Feed Cronológico Unificado:**
   * **Podio de Destacados (Top 3):** No está restringido artificialmente a categorías fijas; evalúa el `smartScore` consolidado entre todas las áreas para seleccionar las 3 publicaciones insignia de mayor impacto global de la plataforma.
   * **Feed de Últimas Publicaciones:** Unifica todas las publicaciones restantes en una lista polimórfica ordenada estrictamente por fecha de publicación descendente (`publishedAt DESC`), garantizando un flujo vivo, orgánico y fresco donde cada nueva publicación (sea tutorial, aviso de seguridad, servidor o noticia) aparece de inmediato en la parte superior.
-* **Normalización Arquitectónica Universal de 3 Secciones (`SoftwareCard.tsx`):**
-  * Para garantizar simetría visual absoluta, sobriedad y máxima elegancia entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura), todas las tarjetas especializadas (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`, `InfrastructureCard`) delegan como componentes de presentación en la tarjeta atómica unificada `SoftwareCard`.
+* **Normalización Arquitectónica Universal de 3 Secciones (`DoiceladevCard.tsx`):**
+  * Para garantizar simetría visual absoluta, sobriedad y máxima elegancia entre todas las categorías (Noticias, Blog, IA, Ciberseguridad, Tutoriales, Proyectos, Infraestructura), todas las tarjetas especializadas (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`, `InfrastructureCard`) delegan como componentes de presentación en la tarjeta atómica unificada `DoiceladevCard`.
     * **1. Metadatos Técnicos / Jerarquía Taxonómica (Nivel 1 • Nivel 2):** Una sola línea mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate font-medium`) estructurada bajo la regla universal **Nivel 1 (Módulo) • Nivel 2 (Categoría Temática)** (ej. `TUTORIALES • WEB`, `PROYECTOS • DEVOPS`, `INFRAESTRUCTURA • SERVERS`, `CIBERSEGURIDAD • HARDENING`), con internacionalización reactiva (`tNav(module).toUpperCase() • post.category.toUpperCase()`). Los atributos de Nivel 4 (ej. severidad, dificultad) se reservan para sus respectivos badges dedicados.
     * **2. Titular Principal:** Campo `title` o `name` puro de la base de datos en `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
     * **3. Extracto Descriptivo:** Campo `excerpt`, `subtitle` o `description` puro de la base de datos en `text-xs` (12px, `text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5`).
   * **Cero Ruido Visual (Prohibición de Footers, Tiempos de Lectura y Datos Quemados):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas, estimaciones de tiempo de lectura y textos estáticos artificiales, garantizando que el 100% de la información provenga directamente de la base de datos SQLite y los corpus JSON bilingües.
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
-  * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`SoftwareHeaderNav`](/software/widgets/software-header/ui/SoftwareHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`SoftwareFooter`](/software/widgets/software-footer/ui/SoftwareFooter.tsx).
+  * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`DoiceladevHeaderNav`](/doiceladev/widgets/doiceladev-header/ui/DoiceladevHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`DoiceladevFooter`](/doiceladev/widgets/doiceladev-footer/ui/DoiceladevFooter.tsx).
   * **Motor Universal de Filtros Polimórficos (`CategoryFilterBar.tsx` en `shared/ui`):**
-    * Erradicación total de categorías quemadas en cliente TSX y en controladores del backend. Todo el catálogo delega en el componente transversal reutilizable [`CategoryFilterBar`](/software/shared/ui/CategoryFilterBar.tsx) basado en el contrato único `FilterOption: { id: string, label: string, count?: number }`.
-    * El backend NestJS actúa como proveedor puro de datos y conteos desde SQLite (`GET /software/[modulo]/categories?lang=es|en`), mientras que la internacionalización reside de forma reactiva y limpia en los archivos JSON de mensajes del frontend (`messages/es.json` y `messages/en.json` bajo la clave `"Filters"`), eliminando diccionarios de strings duplicados en memoria en el servidor.
+    * Erradicación total de categorías quemadas en cliente TSX y en controladores del backend. Todo el catálogo delega en el componente transversal reutilizable [`CategoryFilterBar`](/doiceladev/shared/ui/CategoryFilterBar.tsx) basado en el contrato único `FilterOption: { id: string, label: string, count?: number }`.
+    * El backend NestJS actúa como proveedor puro de datos y conteos desde SQLite (`GET /doiceladev/[modulo]/categories?lang=es|en`), mientras que la internacionalización reside de forma reactiva y limpia en los archivos JSON de mensajes del frontend (`messages/es.json` y `messages/en.json` bajo la clave `"Filters"`), eliminando diccionarios de strings duplicados en memoria en el servidor.
     * Consulta reactiva en tiempo real al backend NestJS con hooks desacoplados en la capa `entities/*` (`useNewsCategories`, `useBlogCategories`, `useForumCategories`, `useInfrastructureCategories`, `useCybersecurityCategories`, `useTutorialsCategories`, `useProjectsCategories`, `useAiCategories`).
     * **Identidad Neumórfica UI + Glassmorphic:** Pastillas con relieve extruido activo (`glass-btn-neumorphic`), skeletons pulsantes automáticos mientras SQLite calcula los conteos, badges numéricos discretos con la cantidad de publicaciones vivas, accesibilidad WCAG (`tablist`, `tab`, `aria-selected`) y paleta de acentos visuales por módulo (`cyan`, `blue`, `purple`, `emerald`, `amber`, `rose`).
-    * **Arquitectura Adaptativa Responsive (Móvil vs Escritorio):** Para erradicar el desbordamiento horizontal en pantallas estrechas (`< 640px`), delega automáticamente en [`SoftwareSelect`](/software/shared/ui/SoftwareSelect.tsx) centrado con ancho uniforme `max-w-xs` (alineado simétricamente con el buscador), desplegando verticalmente todas las opciones de filtro con sus conteos; en pantallas de escritorio (`>= 640px`) despliega la fila horizontal de pastillas neumórficas completas. Esta mejora beneficia de forma unificada a las 8 páginas de catálogo de la plataforma.
-  * **Selector Dropdown Táctil Neumórfico Reutilizable ([`SoftwareSelect.tsx`](/software/shared/ui/SoftwareSelect.tsx)):**
+    * **Arquitectura Adaptativa Responsive (Móvil vs Escritorio):** Para erradicar el desbordamiento horizontal en pantallas estrechas (`< 640px`), delega automáticamente en el selector dropdown centrado con ancho uniforme `max-w-xs` (alineado simétricamente con el buscador), desplegando verticalmente todas las opciones de filtro con sus conteos; en pantallas de escritorio (`>= 640px`) despliega la fila horizontal de pastillas neumórficas completas. Esta mejora beneficia de forma unificada a las 8 páginas de catálogo de la plataforma.
+  * **Selector Dropdown Táctil Neumórfico Reutilizable:**
     * Componente atómico de presentación desacoplado en la Capa 6 (`shared/ui`) que sustituye de raíz los elementos `<select>` nativos del navegador por un popover flotante calibrado con **Neumorphism UI + Glassmorphism**.
     * **Gatillo Táctil (Trigger):** Botón con pastilla convexa (`glass-convex-panel`), micro-chevron `ChevronDown` animado que rota $180^\circ$ suavemente al desplegar, feedback táctil (`active:scale-[0.98]`) y borde vítreo fino.
     * **Panel Flotante Popover Inmune a Clipping (`createPortal`):** Se monta directamente en `document.body` mediante `createPortal` con posicionamiento flotante calculado dinámicamente (`getBoundingClientRect`) y `position: fixed` (`z-[999999]`), haciéndolo 100% inmune a ser recortado por cualquier contenedor padre con `overflow: hidden`, `overflow-x: auto` o restricciones de altura. Posee vidrio esmerilado denso (`backdrop-blur-2xl bg-white/95 dark:bg-[#12161f]/95 border border-black/10 dark:border-white/10 shadow-2xl rounded-2xl p-1.5`), con micro-indicadores de selección (`Check`), badges opcionales, soporte para íconos y transiciones fluidas.
-    * **Accesibilidad e Interactividad Completa (WCAG AA):** Cierre automático por clic exterior, cierre con tecla `Escape`, navegación completa por teclado (`ArrowDown`, `ArrowUp`, `Enter`, `Space`, `Home`, `End`) y roles ARIA (`role="combobox"`, `role="listbox"`, `role="option"`, `aria-expanded`). Se integra transversalmente en la navegación móvil de categorías ([`CategoryNav.tsx`](/software/widgets/category-nav/ui/CategoryNav.tsx)).
+    * **Accesibilidad e Interactividad Completa (WCAG AA):** Cierre automático por clic exterior, cierre con tecla `Escape`, navegación completa por teclado (`ArrowDown`, `ArrowUp`, `Enter`, `Space`, `Home`, `End`) y roles ARIA (`role="combobox"`, `role="listbox"`, `role="option"`, `aria-expanded`). Se integra transversalmente en la navegación móvil de categorías ([`CategoryNav.tsx`](/doiceladev/widgets/category-nav/ui/CategoryNav.tsx)).
   * **Tarjetas con Banners de Portada (`ArticleCover` 16:9):** Todas las tarjetas de catálogo (`NewsCard`, `BlogCard`, `AiCard`, `SecurityCard`, `TutorialCard`, `ProjectCard`) integran en la parte superior el banner de portada en proporción 16:9 (`<ArticleCover />`), ya sea con su imagen real de alta resolución o con el banner procedural SVG temático neumórfico/glassmórfico de la categoría, estructuradas en grillas responsivas de 3 columnas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`).
 
-* **Lector Editorial Unificado y Migas de Pan Embebidas (`SoftwareArticleLayout.tsx`):**
+* **Lector Editorial Unificado y Migas de Pan Embebidas (`DoiceladevArticleLayout.tsx`):**
   * Shell reutilizable para todos los artículos individuales con cabecera adaptada: el botón de retroceso de la barra superior apunta a su respectiva categoría de origen (`← Infraestructura`, `← Noticias`, etc.).
   * **Cabecera Editorial Estilo Hero Centrado con Divisor:** La cabecera del artículo implementa un Hero centrado de alta legibilidad (`text-center border-b pb-8`) que reúne en el eje central las migas de pan embebidas (`[🏠 Inicio] › [Categoría]`), el título H1 (`max-w-4xl mx-auto`), el subtítulo descriptivo (`max-w-2xl mx-auto`) y el byline editorial con micro-avatar de Jorge Doicela y fecha. La línea divisoria inferior delimita con sobriedad la cabecera del cuerpo técnico del artículo (resumen ejecutivo, callouts y Markdown), el cual arranca a la izquierda con su margen natural.
   * **Expansión de Lectura Inmersiva por Borde Interactivo Invisible (`cursor-col-resize`):** Para optimizar la concentración y ergonomía de lectura de artículos largos o con diagramas extensos, el borde derecho del cuadro de lectura incorpora un disparador sutil sin líneas invasivas (`hidden lg:block absolute top-0 -right-2 w-4 h-full cursor-col-resize`). Al pasar el cursor, adopta el puntero de ajuste de columna (`col-resize`); al hacer clic, colapsa la barra lateral (`aside`) y expande el artículo fluidamente de 8 a 12 columnas (`lg:col-span-12`). Al hacer clic nuevamente en el borde derecho del artículo expandido, restaura la barra lateral instantáneamente (`ArticleLayout.expandReading` / `ArticleLayout.restoreSidebar`).
-* **Navegación Flotante Global "Scroll to Top" ([`ScrollToTopButton.tsx`](/software/shared/ui/ScrollToTopButton.tsx)):**
+* **Navegación Flotante Global "Scroll to Top" ([`ScrollToTopButton.tsx`](/doiceladev/shared/ui/ScrollToTopButton.tsx)):**
   * Botón flotante interactivo situado en la esquina inferior derecha (`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40`).
   * Detección reactiva de scroll con listener pasivo de alto rendimiento: permanece oculto en la cabecera y se revela con animación fluida de opacidad y elevación al desplazarse más de 300px hacia abajo.
   * Al activarlo, ejecuta un desplazamiento suave hasta la parte superior de la página (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
-  * Diseño Neumórfico UI + Glassmorphic (`.glass-convex-panel`), micro-interacciones táctiles al hover/active, icono `ArrowUp` de Lucide y soporte bilingüe (`Nav.scrollToTop`). Se integra a nivel global en el layout raíz `(doiceladev)/layout.tsx` para todas las páginas y subrutas de Software.
-* **Barra Lateral de Recirculación Editorial ([`FeaturedPostsSidebarCard.tsx`](/software/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):**
-  * Inspirado en la arquitectura editorial de **Marcus Hutchins (MalwareTech)** y alineado 100% con la estética **Neumorphism UI + Glassmorphism** de Software, sustituye las fichas estáticas de hardware por un widget dinámico de publicaciones destacadas de alta retención.
+  * Diseño Neumórfico UI + Glassmorphic (`.glass-convex-panel`), micro-interacciones táctiles al hover/active, icono `ArrowUp` de Lucide y soporte bilingüe (`Nav.scrollToTop`). Se integra a nivel global en el layout raíz `(doiceladev)/layout.tsx` para todas las páginas y subrutas de DoicelaDev.
+* **Barra Lateral de Recirculación Editorial ([`FeaturedPostsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):**
+  * Inspirado en la arquitectura editorial de **Marcus Hutchins (MalwareTech)** y alineado 100% con la estética **Neumorphism UI + Glassmorphism** de DoicelaDev, sustituye las fichas estáticas de hardware por un widget dinámico de publicaciones destacadas de alta retención.
   * **Diseño Tipográfico Puro y Ultraligero:** Cada fila presenta exclusivamente la especialidad o módulo correspondiente (Nivel 1, ej. *PROYECTOS*, *IA*, *TUTORIALES*, *CIBERSEGURIDAD*) en tipografía mono sobria (`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider`) y titular en negrita con micro-transición cromática en hover, mientras que las tarjetas del feed principal y catálogos estandarizan su línea de metadatos estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)**. Elimina imágenes miniaturas pesadas o decorativas para priorizar la velocidad de lectura, el enfoque tipográfico y la sobriedad ejecutiva en todo el ancho del componente.
   * Integra filtrado contextual automático (`usePathname`) para nunca recomendar el artículo actualmente abierto y skeletons de carga fluidos integrados.
-* **Directorio Tipográfico con Acordeón por Especialidad ([`ExploreTopicsSidebarCard.tsx`](/software/widgets/article-layout/ui/ExploreTopicsSidebarCard.tsx)):**
+* **Directorio Tipográfico con Acordeón por Especialidad ([`ExploreTopicsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/ExploreTopicsSidebarCard.tsx)):**
   * Inspirado en la navegación técnica de **Marcus Hutchins (MalwareTech)** y optimizado para la ergonomía del sidebar fijo (`sticky`), implementa un **árbol interactivo multi-apertura por cada especialidad**:
     * **Despliegue Multi-Apertura Concurrente (Sin Cierre Automático):** Al pulsar sobre cualquiera de las 8 especialidades (Ciberseguridad, Infraestructura, IA, Tutoriales, Proyectos, Blog, Noticias, Foros), la fila se expande suavemente revelando sus publicaciones sin colapsar ni cerrar automáticamente las demás especialidades previamente abiertas, permitiendo navegación y comparación simultánea fluida.
     * **Minimalismo Visual Sobrio:** Erradica iconos temáticos SVG innecesarios en la lista de categorías, conservando una presentación limpia y monocromática con el chevron indicador `ChevronRight` rotativo, el label de la categoría y la pastilla cóncava neumórfica (`glass-concave-panel px-2.5 py-0.5 rounded-md text-[11px] font-mono`) con conteo dinámico de artículos.
     * **Estética de Rama Técnica Centrada en Títulos (Tree / Branch View):** Al expandir una categoría, despliega un riel vertical con línea guía (`border-l-2 border-blue-500/25`) y **únicamente el título limpio de cada publicación** (alineado directamente sin puntos, viñetas ni metadatos intermedios para una lectura minimalista inmediata), finalizando con el enlace terminal limpio `Todo el Contenido ↗` (sin números redundantes, ya que el conteo vive exclusivamente en la pastilla cóncava superior).
-  * Consolida la jerarquía editorial de 5 bloques en la barra lateral fija ([`SoftwareArticleLayout.tsx`](/software/widgets/article-layout/ui/SoftwareArticleLayout.tsx)): **1. Autor (`AuthorSidebarCard`) → 2. Publicaciones Destacadas (`FeaturedPostsSidebarCard`) → 3. Explorador de Especialidades (`ExploreTopicsSidebarCard`) → 4. Etiquetas Populares (`PopularTagsSidebarCard`) → 5. Mantente Informado (`StayInformedCard`)**.
-* **Directorio de Etiquetas Populares del Dominio ([`PopularTagsSidebarCard.tsx`](/software/widgets/article-layout/ui/PopularTagsSidebarCard.tsx)):**
+  * Consolida la jerarquía editorial de 5 bloques en la barra lateral fija ([`DoiceladevArticleLayout.tsx`](/doiceladev/widgets/article-layout/ui/DoiceladevArticleLayout.tsx)): **1. Autor (`AuthorSidebarCard`) → 2. Publicaciones Destacadas (`FeaturedPostsSidebarCard`) → 3. Explorador de Especialidades (`ExploreTopicsSidebarCard`) → 4. Etiquetas Populares (`PopularTagsSidebarCard`) → 5. Mantente Informado (`StayInformedCard`)**.
+* **Directorio de Etiquetas Populares del Dominio ([`PopularTagsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/PopularTagsSidebarCard.tsx)):**
   * Materializa la visibilidad del **Nivel 3 (Tags / Etiquetas)** de forma limpia y desacoplada del catálogo principal.
   * **Diseño Homogéneo en Lista Vertical:** Sustituye la dispersión de píldoras aglomeradas por una lista vertical minimalista en armonía con las demás tarjetas del sidebar. Su cabecera erradica el símbolo `#` del título (`ETIQUETAS POPULARES` en mayúsculas mono sobrias), mientras que cada fila preserva el identificador `#` en el término técnico (`# typescript`, `# architecture`), el nombre tipográfico mono y su contador de publicaciones en pastilla cóncava neumórfica a la derecha.
   * **Interacción Instantánea con Spotlight:** Cada fila es un botón interactivo y accesible conectado a `useSpotlight(name)`: al pulsar sobre una etiqueta, abre inmediatamente el buscador modal Spotlight (`Cmd + K`) prefiltrado con ese término, mostrando en tiempo real todas las publicaciones asociadas con su correspondiente badge destacado `#[tag]` sin recargas de página ni pérdida del contexto de lectura.
@@ -201,15 +201,15 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 * **Cero Cadenas en Duro (100% i18n con `next-intl`):**
   * Todo texto de interfaz de usuario (etiquetas, placeholders, accesibilidad `aria-label`, títulos de tooltips, mensajes de error, estados de carga, empty states, botones de copia de código y diagramas, y badges de callout) se resuelve a través de `messages/es.json` y `messages/en.json`.
   * Namespaces dedicados y consistentes con paridad 1:1 estricta: `Metadata`, `Nav`, `Search`, `Common`, `Home`, `AuthorCard`, `Newsletter`, `Footer`, `Spotlight`, `CardActions`, `Filters`, `Detail`, `Markdown`, `News`, `Blog`, `Forum`, `Ai`, `Cybersecurity`, `Tutorials`, `Projects`, `Infrastructure`.
-  * Datos estructurados `Schema.org` ([`SoftwareJsonLd.tsx`](/software/shared/seo/SoftwareJsonLd.tsx)) dinámicamente localizados según el `locale` activo.
+  * Datos estructurados `Schema.org` ([`DoiceladevJsonLd.tsx`](/doiceladev/shared/seo/DoiceladevJsonLd.tsx)) dinámicamente localizados según el `locale` activo.
 * **Erradicación Total de "Tiempos de Lectura":**
   * Se eliminaron por completo las estimaciones de lectura ("5 min lectura", "readingTime") tanto en la base de datos `doiceladev.sqlite` (entidades TypeORM), en los esquemas y corpus JSON, como en todos los componentes de la interfaz (`NewsCard`, `BlogCard`, `TutorialCard`, etc.). La plataforma sigue una filosofía de ingeniería y referencia directa sin métricas artificiales.
 * **Slugs Canónicos Bilingües:**
   * Cada recurso mantiene el mismo `slug` canónico para español e inglés en la base de datos (`IDX_<tabla>_slug_lang`), permitiendo alternar de idioma con `LanguageToggle` de manera instantánea sin redirecciones 404 ni roturas de navegación.
 * **Autor 100% Dinámico desde Base de Datos y Micro-Avatar Editorial:**
   * Los 8 módulos temáticos (`infrastructure`, `tutorials`, `projects`, `cybersecurity`, `ai`, `blog`, `news`, `forum`) leen el autor estrictamente de la entidad devuelta por la base de datos (`author` en `doiceladev.sqlite`).
-  * Erradicación total de fallbacks o valores por defecto hardcodeados tanto en las páginas `[slug]/page.tsx` como en el layout maestro ([`SoftwareArticleLayout.tsx`](/software/widgets/article-layout/ui/SoftwareArticleLayout.tsx)).
-  * La cabecera editorial integra un micro-avatar circular de perfil ($20\times 20\text{px}$, `/software/logo/perfil.jpg`) a la izquierda del nombre del autor con borde suave y sombra neumórfica.
+  * Erradicación total de fallbacks o valores por defecto hardcodeados tanto en las páginas `[slug]/page.tsx` como en el layout maestro ([`DoiceladevArticleLayout.tsx`](/doiceladev/widgets/article-layout/ui/DoiceladevArticleLayout.tsx)).
+  * La cabecera editorial integra un micro-avatar circular de perfil ($20\times 20\text{px}$, `/doiceladev/logo/perfil.jpg`) a la izquierda del nombre del autor con borde suave y sombra neumórfica.
   * En el módulo de IA (`/ai`), el proveedor tecnológico (`provider`, ej. *Anthropic*) se aísla en una insignia técnica (`badge`) independiente, distinguiéndolo claramente del autor del artículo.
 
 ---
@@ -221,7 +221,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
   * **Cero Carga en el Servidor (VPS 1 GB RAM):** El backend en NestJS se limita a servir el texto crudo sin transformaciones pesadas ni manipulación de árboles sintácticos en el servidor.
   * **Seguridad (Inmunidad XSS):** No se almacena HTML crudo en base de datos. El parsing lo realiza el cliente de forma controlada y segura mediante componentes React.
 * **Componentes Modulares Especializados (`shared/markdown/components/`):**
-   1. **Diagramas Vectoriales Multidiagrama Adaptativos Estilo Mermaid Chart ([`MermaidBlock.tsx`](/software/shared/markdown/components/MermaidBlock.tsx)):**
+   1. **Diagramas Vectoriales Multidiagrama Adaptativos Estilo Mermaid Chart ([`MermaidBlock.tsx`](/doiceladev/shared/markdown/components/MermaidBlock.tsx)):**
       * **Detección Tipificada Robusta:** Analiza el bloque ignorando comentarios (`%%`) y frontmatter YAML (`---`) para identificar automáticamente la familia del diagrama (`sequenceDiagram`, `flowchart` / `graph`, `classDiagram`, `erDiagram`, `stateDiagram-v2`, `gitGraph`, `architecture-beta`, `c4Context`, `mindmap`, `pie`, etc.).
       * **Cabecera Técnica Minimalista (Acción Directa de Inspección):** Muestra el título específico del tipo de diagrama traducido vía `next-intl` con su icono temático de Lucide, y a la derecha el botón de acción minimalista con icono de alta precisión (`Maximize2` para expandir en visor inmersivo) con tooltip nativo accesible, manteniendo máxima sobriedad y elegancia sin saturar la cabecera ni incluir acciones redundantes como copiar en diagramas puramente visuales.
       * **Renderizado Universal en Cliente (Mermaid 12):** Motor configurado con `look: 'neo'`, temas oficiales nativos (`theme: 'dark'` en modo oscuro y `'neutral'` en claro) y `themeVariables` de alta definición calibradas para Neumorphism / Dark Luxury, curvas orgánicas `basis` en flowcharts y tipografía uniforme ($13\text{px}$ a $14\text{px}$).
@@ -236,41 +236,41 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
             - **Controles Simétricos de Zoom:** `ZoomOut`, indicador interactivo de porcentaje (clic para volver al $100\%$) y `ZoomIn`.
             - **Botón de Cierre:** Icono `X` accesible con highlight sutil en hover.
             - **Lienzo $100\%$ Libre:** Toda la pantalla queda completamente despejada sin barras inferiores ni elementos dispersos en la izquierda. Soporta atajos (`Escape` o clic en el fondo para cerrar, `+` / `-` para zoom, `0` o doble clic en el lienzo para centrar).
-   2. **Bloques de Código de Alta Precisión con Cabecera Inteligente ([`CodeBlock.tsx`](/software/shared/markdown/components/CodeBlock.tsx)):**
+   2. **Bloques de Código de Alta Precisión con Cabecera Inteligente ([`CodeBlock.tsx`](/doiceladev/shared/markdown/components/CodeBlock.tsx)):**
      * Resaltado de sintaxis profesional con `prismjs` para 13 lenguajes esenciales (`TypeScript`, `TSX`, `JavaScript`, `JSX`, `Bash`, `JSON`, `YAML`, `SQL`, `Python`, `Nginx`, `Docker`, `Markdown`, `INI`).
      * **Cabecera Inteligente Contextual y 100% Localizada:** Erradica los semáforos de colores decorativos y las etiquetas toscas de "Texto Plano". Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `pm2.config.js`, `nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs de error o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`.
      * **Botón Interactivo Minimalista (Solo Icono):** Muestra exclusivamente el micro-icono de Lucide (`Copy` / `Check`) con feedback mediante tooltip nativo accesible y micro-interacción táctil, eliminando etiquetas de texto redundantes y manteniendo simetría total con la cabecera de diagramas.
      * Paleta calibrada Obsidian / Dark Luxury integrada en `globals.css` (funciones en ámbar, cadenas en esmeralda, palabras clave en índigo, comentarios en cursiva).
      * Soporte para código en línea (`InlineCode`).
-  3. **Tablas Técnicas de Ingeniería Enterprise Data-Grid Pro ([`TableBlock.tsx`](/software/shared/markdown/components/TableBlock.tsx)):**
+  3. **Tablas Técnicas de Ingeniería Enterprise Data-Grid Pro ([`TableBlock.tsx`](/doiceladev/shared/markdown/components/TableBlock.tsx)):**
       * Marco de cristal convexo (`glass-convex-panel`) con borde vítreo perimetral y sombra de elevación suave (`shadow-lg`).
      * Cabecera `thead` con sutil desenfoque (`backdrop-blur-md`), línea guía inferior `border-blue-500/30` y tipografía mono técnica en mayúsculas (`text-[11px] uppercase tracking-wider font-bold`).
      * **Diferenciación Estructural de Clave/Parámetro:** La primera columna (`td:first-child`, ancho fijo `28%`) posee tipografía mono seminegrita, fondo sutil contrastado (`bg-black/[0.015] dark:bg-white/[0.015]`) y borde divisorio vertical para identificar inmediatamente la clave del parámetro frente a los valores y detalles.
      * Filas con transición fluida de iluminación interactiva al pasar el cursor (`hover:bg-blue-500/[0.035] dark:hover:bg-blue-400/[0.04]`).
-  4. **Paneles de Resumen Técnico y Callouts Blueprint Glass ([`CalloutBlock.tsx`](/software/shared/markdown/components/CalloutBlock.tsx)):**
+  4. **Paneles de Resumen Técnico y Callouts Blueprint Glass ([`CalloutBlock.tsx`](/doiceladev/shared/markdown/components/CalloutBlock.tsx)):**
      * **Diseño Simétrico Neumórfico / Glassmórfico Unificado:** Todos los paneles de resumen (`post.architectureOverview`, `post.remediation`), directivas de alerta de GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) y citas se renderizan bajo la misma estructura arquitectónica limpia y simétrica: marco de cristal convexo (`glass-convex-panel`), esquinas simétricas (`rounded-2xl`), gradiente de color sutil por tipo, titular semántico en mayúsculas monospace (`text-[11px] font-mono font-bold tracking-wider uppercase`) y cuerpo de texto nítido sin forzar cursivas ni barras laterales asimétricas (`border-l-4`), erradicando cualquier inconsistencia visual en todo el subdominio.
-  5. **Glosario Terminológico Interactivo ([`GlossaryTermPopover.tsx`](/software/shared/markdown/components/GlossaryTermPopover.tsx)):**
-      * **Detección Léxica Desacoplada (100% Base de Datos):** Los artículos consumen dinámicamente los términos de `doiceladev.sqlite` (`glossary_terms`) mediante `serverGet<GlossaryTerm[]>('/software/glossary?lang=' + locale)`.
+  5. **Glosario Terminológico Interactivo ([`GlossaryTermPopover.tsx`](/doiceladev/shared/markdown/components/GlossaryTermPopover.tsx)):**
+      * **Detección Léxica Desacoplada (100% Base de Datos):** Los artículos consumen dinámicamente los términos de `doiceladev.sqlite` (`glossary_terms`) mediante `serverGet<GlossaryTerm[]>('/doiceladev/glossary?lang=' + locale)`.
       * **Regla de la Primera Mención (Anti-Fatiga Visual):** Para evitar sobrecarga cognitiva (*efecto árbol de navidad*), cada concepto técnico se vuelve interactivo **únicamente en su primera aparición en el artículo**. Las siguientes ocurrencias permanecen como texto o código limpio regular.
       * **Soporte de Alias Bilingüe y Límites de Palabra (`\b`):** Reconoce variantes en inglés y español (ej. `DROP`, `REJECT`, `firewall`, `cortafuegos`, `Netfilter`) sin falsos positivos ni coincidencias parciales.
       * **Diseño Neumorphism UI + Glassmorphism y Accesibilidad WCAG 2.1 AA:** Presenta un subrayado punteado W3C (`border-b-2 border-dotted border-blue-500/70`) tanto en texto plano como en `InlineCode`. Al hacer clic o navegar con `Tab` + `Enter`, despliega un popover flotante de cristal con pastilla de categoría, definición didáctica concisa y claves de arquitectura, con cierre suave al pulsar afuera o mediante tecla `Escape`.
-* **Orquestador Central ([`MarkdownRenderer.tsx`](/software/shared/markdown/MarkdownRenderer.tsx)):**
+* **Orquestador Central ([`MarkdownRenderer.tsx`](/doiceladev/shared/markdown/MarkdownRenderer.tsx)):**
   * Conecta `react-markdown`, `remark-gfm` y el plugin AST nativo `createRemarkGlossary` con los componentes de la suite, garantizando una experiencia editorial homogénea en todas las subrutas `[slug]/page.tsx`.
   * **Arquitectura AST Determinista y Cero Hydration Mismatches:** El enriquecimiento de glosario y la regla de la primera mención operan a nivel de Abstract Syntax Tree (MDAST) mediante el plugin `createRemarkGlossary` antes del render de React. Esto erradica el uso de `useRef` mutables en la fase de renderizado, asegurando compatibilidad estricta con el modo concurrente y StrictMode de React 19 y garantizando una paridad 1:1 absoluta entre el HTML del servidor (SSR) y la hidratación del cliente.
-  * **Defensa en Profundidad Semántica (WCAG 2.1 / SEO):** Dado que la cabecera editorial (`SoftwareArticleLayout`) es el único `<h1>` del documento, cualquier encabezado `h1` que provenga del cuerpo Markdown se degrada automáticamente a un `<h2>` semántico estilizado, blindando el DOM contra duplicaciones de H1.
+  * **Defensa en Profundidad Semántica (WCAG 2.1 / SEO):** Dado que la cabecera editorial (`DoiceladevArticleLayout`) es el único `<h1>` del documento, cualquier encabezado `h1` que provenga del cuerpo Markdown se degrada automáticamente a un `<h2>` semántico estilizado, blindando el DOM contra duplicaciones de H1.
   * **Protección Estricta de Código:** El enriquecimiento de glosario opera exclusivamente sobre nodos de texto editorial en párrafos (`p`), listas (`li`) e inline snippets (`InlineCode`), dejando 100% intactos los bloques de código fuente (`CodeBlock`) y diagramas vectoriales (`MermaidBlock`).
 
 ---
 
 ## 8. Arquitectura de Activos Estáticos e Imágenes (`public/doiceladev/images/`)
 
-Para garantizar escalabilidad, trazabilidad y cero colisión de archivos a medida que crezca el catálogo editorial, los recursos visuales se organizan estrictamente bajo `frontend/web/public/doiceladev/images/`, alineados 100% con la directiva de caché estático de Nginx en Debian 13 (`location ^~ /software/images/`):
+Para garantizar escalabilidad, trazabilidad y cero colisión de archivos a medida que crezca el catálogo editorial, los recursos visuales se organizan estrictamente bajo `frontend/web/public/doiceladev/images/`, alineados 100% con la directiva de caché estático de Nginx en Debian 13 (`location ^~ /doiceladev/images/`):
 
 ```text
 public/doiceladev/images/
 ├── covers/                      # Portadas 16:9 oficiales (1 por publicación, nombrada con el slug)
-│   ├── news/                    # ej: /software/images/covers/news/nextjs-16.jpg
-│   ├── tutorials/               # ej: /software/images/covers/tutorials/terminal-ssh-websockets.jpg
+│   ├── news/                    # ej: /doiceladev/images/covers/news/nextjs-16.jpg
+│   ├── tutorials/               # ej: /doiceladev/images/covers/tutorials/terminal-ssh-websockets.jpg
 │   ├── blog/                    # Portadas de ensayos de arquitectura
 │   ├── cybersecurity/           # Portadas de avisos de seguridad
 │   ├── ai/                      # Portadas de modelos y herramientas IA
@@ -287,7 +287,7 @@ public/doiceladev/images/
 │   └── projects/[slug]/         # Capturas de la UI del proyecto
 │
 └── placeholders/                # Gráficos procedurales y SVGs de respaldo
-    └── default-software-cover.svg
+    └── default-doiceladev-cover.svg
 ```
 
 * **Nomenclatura basada en `slug`:** Las portadas coinciden exactamente con el `slug` del artículo (`covers/<categoría>/<slug>.<ext>`), garantizando rutas predecibles en base de datos SQLite y corpus JSON.

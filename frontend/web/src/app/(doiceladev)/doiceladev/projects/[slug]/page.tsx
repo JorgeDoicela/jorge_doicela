@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const project = await serverGet<Project>(`/doiceladev/projects/${slug}?lang=${locale}`);
 
   if (!project) {
-    return { title: `${tCommon('notFound')} | Software — Jorge Doicela` };
+    return { title: `${tCommon('notFound')} | DoicelaDev — Jorge Doicela` };
   }
 
   return {
@@ -109,7 +109,7 @@ export default async function ProjectDetailPage({ params }: Params) {
     end
 
     subgraph Storage ["Persistencia Aislada (Cajas Negras)"]
-        DBSw[("software.sqlite (WAL)")]
+        DBSw[("doiceladev.sqlite (WAL)")]
         DBBib[("bible.sqlite (WAL)")]
         DBPort[("portfolio.sqlite (WAL)")]
     end
@@ -132,7 +132,7 @@ export default async function ProjectDetailPage({ params }: Params) {
     end
 
     subgraph Storage ["Isolated Persistence (Black-Box)"]
-        DBSw[("software.sqlite (WAL)")]
+        DBSw[("doiceladev.sqlite (WAL)")]
         DBBib[("bible.sqlite (WAL)")]
         DBPort[("portfolio.sqlite (WAL)")]
     end
@@ -148,8 +148,8 @@ export default async function ProjectDetailPage({ params }: Params) {
 
         <CalloutBlock type="note">
           {locale === 'es'
-            ? 'Las 4 aplicaciones (landing, portfolio, bible, software) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
-            : 'All 4 sub-applications (landing, portfolio, bible, software) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
+            ? 'Las 4 aplicaciones (landing, portfolio, bible, doiceladev) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
+            : 'All 4 sub-applications (landing, portfolio, bible, doiceladev) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
         </CalloutBlock>
 
         {/* Botones de Acción de Enlaces Externos al final del artículo (CTA) */}

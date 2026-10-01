@@ -22,7 +22,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * **Restricción Física de Hardware:** El servidor en producción en AWS Lightsail está limitado a **1 GB de RAM** (Debian 13). Por este motivo:
   * El **backend** corre consolidado en un solo proceso NestJS (puerto `3000`).
   * El **frontend web** corre consolidado en un solo proceso Next.js (puerto `3001`) mediante `src/middleware.ts` para resolver subdominios.
-* **Principio de Cajas Negras:** Las 4 aplicaciones (`landing`, `portfolio`, `bible`, `software`) son **proyectos 100% aislados e independientes**. Nunca deben acoplarse ni depender entre sí.
+* **Principio de Cajas Negras:** Las 4 aplicaciones (`landing`, `portfolio`, `bible`, `doiceladev`) son **proyectos 100% aislados e independientes**. Nunca deben acoplarse ni depender entre sí.
 * **Diseño para la Extracción Inmediata:** Cualquier módulo o subproyecto debe poder extraerse a su propio repositorio o servidor en el futuro y funcionar sin refactorizaciones.
 
 > [!IMPORTANT]
@@ -47,7 +47,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ## 3. Aislamiento de Tipos y Contratos (Cero `@shared`)
 
 * **Cero paquetes `@shared`:** Cada subproyecto define sus propias interfaces TypeScript en sus carpetas locales (`types.ts`, DTOs).
-* **Persistencia Aislada:** Cada módulo del backend interactúa con su propia base de datos SQLite física encapsulada en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`) bajo conexiones nombradas (`'bibleConnection'`, `'softwareConnection'`, `'portfolioConnection'`).
+* **Persistencia Aislada:** Cada módulo del backend interactúa con su propia base de datos SQLite física encapsulada en `backend/data/` (`bible.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`) bajo conexiones nombradas (`'bibleConnection'`, `'doiceladevConnection'`, `'portfolioConnection'`).
 
 ---
 
@@ -74,7 +74,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * **Arquitectura Multicanal `public/<proyecto>/llms.txt`:** Cada uno de los 4 proyectos tiene su propio dossier especializado servido directamente por Nginx sin tocar Node.js:
   * `public/landing/llms.txt` $\rightarrow$ `https://jorgedoicela.com/llms.txt` (Perfil general del creador)
   * `public/portfolio/llms.txt` $\rightarrow$ `https://portfolio.jorgedoicela.com/llms.txt` (Terminal SSH, proyectos)
-  * `public/software/llms.txt` $\rightarrow$ `https://doiceladev.jorgedoicela.com/llms.txt` (7 categorías tecnológicas)
+  * `public/doiceladev/llms.txt` $\rightarrow$ `https://doiceladev.jorgedoicela.com/llms.txt` (8 categorías tecnológicas)
   * `public/bible/llms.txt` $\rightarrow$ `https://bible.jorgedoicela.com/llms.txt` (9 motores exegéticos)
 * **Obligación de Sincronización:** Cuando se cree, modifique o elimine cualquier proyecto, submódulo o categoría principal en el ecosistema, es **obligatorio actualizar el `llms.txt` de su subcarpeta, su `manifest.json`, su componente `*JsonLd.tsx` y `sitemap.ts`**.
 * **Manifiestos PWA Independientes (`public/<proyecto>/manifest.json`):** Cada subdominio tiene su propia identidad de aplicación instalable (nombre, tema, ícono, ruta de inicio).
@@ -104,7 +104,7 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 ### 5.3 Pipeline CI/CD (`.github/workflows/deploy.yml`)
 1. Compilación y validación de tipos en GitHub Actions (`ubuntu-latest`).
 2. Transferencia segura por `rsync` excluyendo `.sqlite` y `node_modules`.
-3. Sincronización automática de bases de datos (`node dist/bible/cli/seed-corpus.js`, `seed-software.js` y `seed-portfolio.js`).
+3. Sincronización automática de bases de datos (`node dist/bible/cli/seed-corpus.js`, `seed-doiceladev.js` y `seed-portfolio.js`).
 4. Construcción automatizada de la imagen `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` y permisos de socket Docker (`0660 /var/run/docker.sock`).
 5. Sincronización de `nginx/jorgedoicela.com.conf` y recarga en caliente de Nginx.
 6. Reinicio de procesos en PM2.
@@ -113,9 +113,9 @@ Esta habilidad define las directrices maestras, la arquitectura de hardware/soft
 * **Producción (Automático):** GitHub Actions borra y regenera atómicamente los archivos SQLite mediante los seeders compilados en cada `git push` a `main`. Producción siempre está sincronizada.
 * **Desarrollo Local (Manual e Imperativo):** Los archivos `.sqlite` están en `.gitignore`. Al cambiar de estación de trabajo, clonar o hacer `git pull` con cambios en datasets JSON (`corpus/*.json`) o entidades, es **mandatorio ejecutar**:
   ```bash
-  pnpm seed:all          # Siembra las 3 bases: bible, software y portfolio
+  pnpm seed:all          # Siembra las 3 bases: bible, doiceladev y portfolio
   # O de forma granular según el dominio:
-  pnpm seed:software     # Re-siembra doiceladev.sqlite desde corpus/*.json
+  pnpm seed:doiceladev   # Re-siembra doiceladev.sqlite desde corpus/*.json
   pnpm seed:bible        # Re-siembra bible.sqlite
   ```
 * **Protocolo de Diagnóstico 404:** Ante cualquier error `404 Not Found` en rutas dinámicas de contenido (`[slug]`), **el primer paso obligatorio es verificar la persistencia local**. Queda prohibido modificar middleware o componentes sin validar si el registro existe en SQLite.
@@ -184,5 +184,5 @@ Según el dominio específico en el que trabajes:
 * **Landing Page:** `landing-jorge-doicela`
 * **Portafolio Profesional:** `portfolio-jorge-doicela`
 * **Biblia Modular (Web y Móvil):** `bible-jorge-doicela`
-* **Software:** `doiceladev-jorge-doicela`
+* **DoicelaDev:** `doiceladev-jorge-doicela`
 

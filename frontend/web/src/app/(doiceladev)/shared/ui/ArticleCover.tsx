@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
-export type SoftwareArticleCategory =
+export type DoiceladevArticleCategory =
   | 'news'
   | 'blog'
   | 'ai'
@@ -15,7 +15,7 @@ export type SoftwareArticleCategory =
 
 interface ArticleCoverProps {
   title: string;
-  category: SoftwareArticleCategory;
+  category: DoiceladevArticleCategory;
   topicCategory?: string;
   coverImage?: string;
   tag?: string;

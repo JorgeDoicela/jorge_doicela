@@ -1,6 +1,6 @@
 /**
  * serverFetch
- * Utilidad de infraestructura exclusiva para Server Components del dominio Software.
+ * Utilidad de infraestructura exclusiva para Server Components del dominio DoicelaDev.
  * Se ejecuta en el servidor de Next.js y se comunica directamente con el backend NestJS.
  * No depende de window ni de variables de entorno del cliente.
  */

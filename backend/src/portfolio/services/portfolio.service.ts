@@ -507,11 +507,7 @@ export class PortfolioService {
           url = 'https://tiktok.com/@jorge.doicela';
         else if (target.includes('email') || target.includes('mail'))
           url = 'mailto:jorge.doicela.m@gmail.com';
-        else if (
-          target.includes('doiceladev') ||
-          target.includes('doiceladev') ||
-          target.includes('software')
-        )
+        else if (target.includes('doiceladev'))
           url = 'https://doiceladev.jorgedoicela.com';
         else if (target.includes('bible'))
           url = 'https://bible.jorgedoicela.com';
@@ -789,7 +785,7 @@ export class PortfolioService {
         'linkedin',
         'tiktok',
         'email',
-        'software',
+        'doiceladev',
         'bible',
         'portfolio',
       ];

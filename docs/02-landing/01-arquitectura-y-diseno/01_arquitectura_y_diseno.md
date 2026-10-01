@@ -88,7 +88,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ### 3.8 Asistente de Inteligencia Artificial Oficial (Route Handler & Guardrails)
 * **Arquitectura:** Endpoint servidor en `(landing)/api/chat/route.ts` con streaming en tiempo real vía Groq LPU (modelos OSS de alta velocidad).
-* **Frontera de Dominio Estricta:** Acotado 100% a la representación de Jorge Doicela, sus plataformas en producción (`bible`, `software`, `portfolio`, `landing`), su arquitectura en 1 GB de RAM y propuestas técnicas en `/consulta`.
+* **Frontera de Dominio Estricta:** Acotado 100% a la representación de Jorge Doicela, sus plataformas en producción (`bible`, `doiceladev`, `portfolio`, `landing`), su arquitectura en 1 GB de RAM y propuestas técnicas en `/consulta`.
 * **Protección contra Consultas Fuera de Alcance:** Rechazo sistemático y profesional ante temas ajenos (cursos desde cero, tareas, cocina, entretenimiento, política) redirigiendo al [Formulario de Consulta](/consulta).
 * **Seguridad y Anti-Jailbreak:** Inmunidad contra inyecciones de prompt, limitador de tasa deslizante por IP (`checkRateLimit`) y caché LRU en memoria.
 * **Estilo Ejecutivo:** Prohibición absoluta de emojis, temperatura 0.2 para alta fidelidad y formato Markdown limpio.
@@ -101,7 +101,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
   * **Umbral Elástico de Transición:** Desplazamiento mínimo de 60 px (`DRAG_THRESHOLD`) para activar el avance (`nextSlide()`) o retroceso (`prevSlide()`).
 * **Preservación del Scroll Vertical Móvil:** Detección direccional temprana; si el desplazamiento inicial supera 7 px y el eje vertical predomina (`|deltaY| > |deltaX|`), se cede el control inmediatamente al navegador nativo (`touch-pan-y`) para evitar bloquear el desplazamiento de la página en smartphones.
 * **Inmunidad contra Clics Fantasma:** Bloqueo selectivo de eventos `onClick` y `onAuxClick` cuando se ha ejecutado un gesto de arrastre (`hasDragged.current = true`), evitando la navegación involuntaria a los proyectos al soltar el puntero.
-* **Autoplay y Controles de Accesibilidad:** Temporizador de diapositivas con pausa automática durante la interacción de arrastre, controles de reproducción (`Play`/`Pause`), indicadores de posición por puntos con aria-labels y botones de acción directa internos (`Abrir Biblia`, `Entrar a Software`, `Ver Portafolio`).
+* **Autoplay y Controles de Accesibilidad:** Temporizador de diapositivas con pausa automática durante la interacción de arrastre, controles de reproducción (`Play`/`Pause`), indicadores de posición por puntos con aria-labels y botones de acción directa internos (`Abrir Biblia`, `Entrar a DoicelaDev`, `Ver Portafolio`).
 * **Cero Dependencias Adicionales (Zero-RAM Overhead):** Diseñado sin librerías externas de carrusel (ni Swiper ni Embla), reduciendo a cero el consumo extra de memoria para la estricta cuota de 1 GB en VPS.
 
 ### 3.9 Motor de Rendimiento Adaptativo Multi-Nivel (PerformanceContext & Tiers)

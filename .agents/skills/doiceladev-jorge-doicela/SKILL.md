@@ -2,28 +2,28 @@
 name: doiceladev-jorge-doicela
 description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de DoicelaDev (doiceladev.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (9 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos doiceladev.sqlite (11 tablas relacionales).
 ---
-# Directrices de Desarrollo: Plataforma de Software (doiceladev.jorgedoicela.com)
+# Directrices de Desarrollo: DoicelaDev (doiceladev.jorgedoicela.com)
 
-Esta habilidad define los estándares técnicos, estructura, modelo de datos y buenas prácticas de desarrollo para Software de Jorge Doicela.
+Esta habilidad define los estándares técnicos, estructura, modelo de datos y buenas prácticas de desarrollo para DoicelaDev de Jorge Doicela.
 
 ---
 
 ## Documentación Técnica Oficial
 * [01_frontend_y_hub_tecnologico.md](../../../docs/05-doiceladev/01-frontend/01_frontend_y_hub_tecnologico.md)
 * [01_backend_y_persistencia.md](../../../docs/05-doiceladev/02-backend/01_backend_y_persistencia.md)
-* [01_roadmap_software.md](../../../docs/05-doiceladev/03-roadmap/01_roadmap_software.md)
+* [01_roadmap_doiceladev.md](../../../docs/05-doiceladev/03-roadmap/01_roadmap_doiceladev.md)
 * [01_estandares_editoriales_y_publicaciones.md](../../../docs/05-doiceladev/04-editorial/01_estandares_editoriales_y_publicaciones.md)
 
 ---
 
 ## 1. Arquitectura y Aislamiento (Principio de Cajas Negras)
 
-* **Subdominio:** `doiceladev.jorgedoicela.com` (en desarrollo: `software.localhost:3001` o subruta `/software`).
+* **Subdominio:** `doiceladev.jorgedoicela.com` (en desarrollo: `doiceladev.localhost:3001` o subruta `/doiceladev`).
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(doiceladev)/`.
-* **Backend:** Módulo orquestador `backend/src/software/software.module.ts` compuesto por 7 submódulos verticales.
+* **Backend:** Módulo orquestador `backend/src/doiceladev/doiceladev.module.ts` compuesto por 9 submódulos verticales.
 * **Persistencia:** Base de datos SQLite física independiente `doiceladev.sqlite` conectada mediante `'doiceladevConnection'` en TypeORM.
 * **Aislamiento de Estilos y Tipografías Locales:** Utiliza exclusivamente su propio archivo `(doiceladev)/globals.css` (estética **Neumorphism UI + Glassmorphism**, combinando paneles táctiles cóncavos/convexos con desenfoques vítreos, reflejos esmerilados y sombras suaves superpuestas) y sus tipografías locales en `(doiceladev)/fonts/` (`PlusJakartaSans-Variable.woff2`, `PlusJakartaSans-Italic-Variable.woff2`, `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1**. Prohibido cualquier enlace a Google Fonts o CDNs externos.
-* **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/software/`.
+* **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/doiceladev/`.
 
 ---
 
@@ -33,7 +33,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 ```text
 frontend/web/src/app/(doiceladev)/
 ├── fonts/                            # Tipografías locales autocontenidas (Plus Jakarta Sans y Geist Mono)
-├── messages/                         # Diccionarios locales de software (es.json, en.json)
+├── messages/                         # Diccionarios locales de DoicelaDev (es.json, en.json)
 ├── globals.css                       # Estilos Neumorphism UI + Glassmorphism (Titanio Claro / Obsidiana Oscuro)
 ├── layout.tsx                        # Layout raíz del subdominio (localFont + ThemeProvider + NextIntlClientProvider + generateMetadata)
 │
@@ -42,9 +42,9 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts                      # Barrel export de providers
 │
 ├── shared/                           # CAPA 6: UI Kit agnóstico, suite Markdown, SEO, Lib y Tipos
-│   ├── ui/                           # SoftwareCard, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── ui/                           # DoiceladevCard, DoiceladevSelect, BackToPortalButton, ScrollToTopButton, ArticleCover
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
-│   ├── seo/                          # SoftwareJsonLd (Schema.org JSON-LD bilingüe)
+│   ├── seo/                          # DoiceladevJsonLd (Schema.org JSON-LD bilingüe)
 │   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
@@ -57,7 +57,7 @@ frontend/web/src/app/(doiceladev)/
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, ProjectActions, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
-│   └── hub/                          # SoftwareHubFeed, useSoftwareHub, types.ts, index.ts
+│   └── hub/                          # DoiceladevHubFeed, useDoiceladevHub, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightModal (Cmd + K) y búsqueda interactiva
@@ -66,14 +66,14 @@ frontend/web/src/app/(doiceladev)/
 │   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
 │
 ├── widgets/                          # CAPA 3: Bloques Visuales Complejos y Layouts Shell
-│   ├── software-header/              # SoftwareHeaderNav
-│   ├── software-footer/              # SoftwareFooter
+│   ├── doiceladev-header/            # DoiceladevHeaderNav
+│   ├── doiceladev-footer/            # DoiceladevFooter
 │   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
 │   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
-│   ├── article-layout/               # SoftwareArticleLayout + Sidebars (Author, ExploreTopics, FeaturedPosts, StayInformed)
-│   └── page-layout/                  # SoftwarePageLayout
+│   ├── article-layout/               # DoiceladevArticleLayout + Sidebars (Author, ExploreTopics, FeaturedPosts, StayInformed)
+│   └── page-layout/                  # DoiceladevPageLayout
 │
-└── software/                         # CAPAS 2 & 1: Enrutamiento Físico Next.js App Router
+└── doiceladev/                       # CAPAS 2 & 1: Enrutamiento Físico Next.js App Router
     ├── page.tsx                      # Página principal: Bento Grid + feed editorial consolidado
     ├── news/                         # Catálogo (/news) y lector ([slug]/page.tsx)
     ├── blog/                         # Catálogo (/blog) y lector ([slug]/page.tsx)
@@ -85,8 +85,8 @@ frontend/web/src/app/(doiceladev)/
     └── infrastructure/               # Catálogo (/infrastructure) y visor de specs ([slug]/page.tsx)
 ```
 
-### 2.2 Las 8 Áreas Temáticas de Software
-1. **Noticias (`news`):** Novedades y tendencias del sector de software con alertas breaking.
+### 2.2 Las 8 Áreas Temáticas de DoicelaDev
+1. **Noticias (`news`):** Novedades y tendencias del sector tecnológico con alertas breaking.
 2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software y buenas prácticas.
 3. **Foros (`forum`):** Espacio de discusión y debates técnicos comunitarios con respuestas anidadas.
 4. **Inteligencia Artificial (`ai`):** Modelos de razonamiento, agentes, servidores MCP y herramientas.
@@ -96,16 +96,16 @@ frontend/web/src/app/(doiceladev)/
 8. **Infraestructura (`infrastructure`):** Servidores Linux, topologías cloud (AWS Lightsail), arquitectura en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y CI/CD.
 
 ### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
-* **Datos Estructurados Schema.org ([`SoftwareJsonLd.tsx`](/software/shared/seo/SoftwareJsonLd.tsx)):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
-* **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en Software, reflejarlos en `public/software/llms.txt` y en `public/landing/llms.txt`.
+* **Datos Estructurados Schema.org ([`DoiceladevJsonLd.tsx`](/doiceladev/shared/seo/DoiceladevJsonLd.tsx)):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en DoicelaDev, reflejarlos en `public/doiceladev/llms.txt` y en `public/landing/llms.txt`.
 
 ### 2.4 Suite Editorial y Renderizado Técnico de Contenido (`shared/markdown/`)
 * **Modelo Arquitectónico:** Almacenamiento de Markdown puro en `doiceladev.sqlite` (`contentMarkdown TEXT`) sin procesamiento pesado en NestJS (Zero-RAM en VPS 1 GB). El frontend Next.js intercepta y enriquece los elementos sintácticos mediante componentes React modulares y 100% reutilizables en todas las categorías:
-  * **Diagramas Vectoriales Multidiagrama Adaptativos ([`MermaidBlock.tsx`](/software/shared/markdown/components/MermaidBlock.tsx)):** Renderizado en cliente con Mermaid 12 (`look: 'neo'`, `redux-color` / `redux-dark-color`, curvas `basis`). Detección tipificada robusta tolerante a comentarios (`%%`) y frontmatter (`---`). Cabecera técnica minimalista con solo iconos de acción (`Maximize2` y `Copy`/`Check`) con tooltips nativos. Arquitectura híbrida de primera clase: en el artículo el diagrama se ajusta de forma fluida (`max-w-full mx-auto`) sin recortes en móvil, y a escala natural 1:1 en PC (tope $1020\text{px}$). Visor modal inmersivo a pantalla completa inmune a grids montado en `document.body` vía `createPortal` con vidrio esmerilado suave (`backdrop-blur-xl bg-black/20 dark:bg-black/40`) sin barras superiores ni fondos negros densos: el SVG flota nítido a escala 1:1 en el centro y se cierra de forma natural al presionar afuera en el fondo o con `Escape`. Soporte apaisado (landscape) en móvil. Cero hacks, cero `!important` y cero impacto en RAM.
-  * **Bloques de Código con Cabecera Inteligente ([`CodeBlock.tsx`](/software/shared/markdown/components/CodeBlock.tsx)):** Resaltado con `prismjs` para 13 lenguajes. Erradica semáforos de colores artificiales. Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `📄 pm2.config.js`, `📄 nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`. Incluye botón de copiado con confirmación interactiva.
-  * **Tablas Técnicas de Ingeniería ([`TableBlock.tsx`](/software/shared/markdown/components/TableBlock.tsx) — Data-Grid Pro B1):** Contenedor convexo con relieve vítreo y sombra de elevación (`glass-convex-panel shadow-lg`), cabecera `thead` con sutil desenfoque (`backdrop-blur-md`) y línea guía `border-blue-500/30`, primera columna de claves/parámetros con ancho fijo `28%`, tipografía mono seminegrita, fondo sutil contrastado y borde divisorio vertical, e iluminación interactiva por fila en hover.
-  * **Paneles de Resumen y Callouts ([`CalloutBlock.tsx`](/software/shared/markdown/components/CalloutBlock.tsx) — Blueprint Glass A1):** Directivas estándar de GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) con micro-iconos semánticos de Lucide y blockquotes editoriales con riel vertical iluminado (`border-l-4 border-blue-500/80`).
-* **Orquestador Universal:** Todos los lectores de artículos (`[slug]/page.tsx` de Tutoriales, Noticias, Blog, Ciberseguridad, Infraestructura, IA, Proyectos, Foros) delegan su contenido en [`MarkdownRenderer.tsx`](/software/shared/markdown/MarkdownRenderer.tsx), garantizando coherencia visual idéntica y reutilización universal en todo el sistema.
+  * **Diagramas Vectoriales Multidiagrama Adaptativos ([`MermaidBlock.tsx`](/doiceladev/shared/markdown/components/MermaidBlock.tsx)):** Renderizado en cliente con Mermaid 12 (`look: 'neo'`, `redux-color` / `redux-dark-color`, curvas `basis`). Detección tipificada robusta tolerante a comentarios (`%%`) y frontmatter (`---`). Cabecera técnica minimalista con solo iconos de acción (`Maximize2` y `Copy`/`Check`) con tooltips nativos. Arquitectura híbrida de primera clase: en el artículo el diagrama se ajusta de forma fluida (`max-w-full mx-auto`) sin recortes en móvil, y a escala natural 1:1 en PC (tope $1020\text{px}$). Visor modal inmersivo a pantalla completa inmune a grids montado en `document.body` vía `createPortal` con vidrio esmerilado suave (`backdrop-blur-xl bg-black/20 dark:bg-black/40`) sin barras superiores ni fondos negros densos: el SVG flota nítido a escala 1:1 en el centro y se cierra de forma natural al presionar afuera en el fondo o con `Escape`. Soporte apaisado (landscape) en móvil. Cero hacks, cero `!important` y cero impacto en RAM.
+  * **Bloques de Código con Cabecera Inteligente ([`CodeBlock.tsx`](/doiceladev/shared/markdown/components/CodeBlock.tsx)):** Resaltado con `prismjs` para 13 lenguajes. Erradica semáforos de colores artificiales. Detecta automáticamente nombres de archivo y rutas en comentarios de la primera línea (ej. `📄 pm2.config.js`, `📄 nginx/jorgedoicela.com.conf`) para orientar didácticamente al lector; si se trata de scripts o comandos muestra `Bash` / `Shell`, y para logs o salida de comandos muestra `Terminal / Salida` (ES) / `Terminal / Output` (EN) vía `t('terminal')`. Incluye botón de copiado con confirmación interactiva.
+  * **Tablas Técnicas de Ingeniería ([`TableBlock.tsx`](/doiceladev/shared/markdown/components/TableBlock.tsx) — Data-Grid Pro B1):** Contenedor convexo con relieve vítreo y sombra de elevación (`glass-convex-panel shadow-lg`), cabecera `thead` con sutil desenfoque (`backdrop-blur-md`) y línea guía `border-blue-500/30`, primera columna de claves/parámetros con ancho fijo `28%`, tipografía mono seminegrita, fondo sutil contrastado y borde divisorio vertical, e iluminación interactiva por fila en hover.
+  * **Paneles de Resumen y Callouts ([`CalloutBlock.tsx`](/doiceladev/shared/markdown/components/CalloutBlock.tsx) — Blueprint Glass A1):** Directivas estándar de GitHub (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) con micro-iconos semánticos de Lucide y blockquotes editoriales con riel vertical iluminado (`border-l-4 border-blue-500/80`).
+* **Orquestador Universal:** Todos los lectores de artículos (`[slug]/page.tsx` de Tutoriales, Noticias, Blog, Ciberseguridad, Infraestructura, IA, Proyectos, Foros) delegan su contenido en [`MarkdownRenderer.tsx`](/doiceladev/shared/markdown/MarkdownRenderer.tsx), garantizando coherencia visual idéntica y reutilización universal en todo el sistema.
 
 ---
 
@@ -113,10 +113,10 @@ frontend/web/src/app/(doiceladev)/
 
 ### 3.1 Estructura de Directorios Backend
 ```text
-backend/src/software/
-├── software.module.ts                 # Orquestador puro (importa 8 submódulos, registra 10 entidades)
+backend/src/doiceladev/
+├── doiceladev.module.ts               # Orquestador puro (importa 9 submódulos, registra 11 entidades)
 ├── cli/
-│   └── seed-doiceladev.ts               # Sembrado transaccional atómico CLI (9 tablas desde corpus/*.json)
+│   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI (11 tablas desde corpus/*.json)
 │
 ├── corpus/                            # DATASETS JSON ESTRUCTURADOS (FUENTE DE VERDAD)
 │   ├── news.json
@@ -126,16 +126,18 @@ backend/src/software/
 │   ├── security.json
 │   ├── tutorials.json
 │   ├── projects.json
-│   └── infrastructure.json
+│   ├── infrastructure.json
+│   └── glossary.json
 │
-├── news/                              # NewsArticle (GET|POST /software/news)
-├── blog/                              # BlogPost (GET|POST /software/blog)
-├── forum/                             # ForumTopic + ForumReply (GET|POST /software/forum)
-├── ai/                                # AiResource (GET|POST /software/ai)
-├── cybersecurity/                     # SecurityPost (GET|POST /software/cybersecurity)
-├── tutorials/                         # Tutorial + TutorialStep (GET|POST /software/tutorials)
-├── projects/                          # Project (GET|POST|PATCH|DELETE /software/projects)
-└── infrastructure/                    # InfrastructurePost (GET|POST /software/infrastructure)
+├── news/                              # NewsArticle (GET|POST /doiceladev/news)
+├── blog/                              # BlogPost (GET|POST /doiceladev/blog)
+├── forum/                             # ForumTopic + ForumReply (GET|POST /doiceladev/forum)
+├── ai/                                # AiResource (GET|POST /doiceladev/ai)
+├── cybersecurity/                     # SecurityPost (GET|POST /doiceladev/cybersecurity)
+├── tutorials/                         # Tutorial + TutorialStep (GET|POST /doiceladev/tutorials)
+├── projects/                          # Project (GET|POST|PATCH|DELETE /doiceladev/projects)
+├── infrastructure/                    # InfrastructurePost (GET|POST /doiceladev/infrastructure)
+└── glossary/                          # GlossaryTerm (GET /doiceladev/glossary)
 ```
 
 ### 3.2 11 Entidades TypeORM en `doiceladev.sqlite`
@@ -155,14 +157,14 @@ backend/src/software/
 | `glossary_terms` | Catálogo bilingüe de conceptos técnicos interactivos con `aliases`, `shortDefinition`, `keyDifference` |
 
 ### 3.3 Arquitectura Taxonómica Oficial y Regla de Presentación de Metadatos
-Toda publicación, recurso o registro técnico dentro del ecosistema de Software opera estrictamente bajo las siguientes fuentes de datos físicas en `doiceladev.sqlite`:
+Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaDev opera estrictamente bajo las siguientes fuentes de datos físicas en `doiceladev.sqlite`:
 
 1. **Nivel 1 (Módulo / Especialidad):** Tabla física TypeORM (`tutorials`, `security_posts`, `projects`, etc.). Determina la subruta URL (`/tutorials`, `/projects`).
 2. **Nivel 2 (Categoría Temática):** Columna física `category` con restricción `CHECK` e índice en SQLite. **Gobierna de forma exclusiva la barra de filtros (`CategoryFilterBar`)** en los 8 módulos (`web`, `backend`, `devops`, `hardening`, `servers`, etc.).
 3. **Nivel 3 (Tags / Etiquetas):** Columna física `tags TEXT` + tablas `tags` y `content_tags`. Vocabulario universal para indexación y Spotlight `⌘K`.
 4. **Nivel 4 (Atributo Específico de Dominio):** Columnas físicas especializadas en SQLite (`tutorials.difficulty`, `security_posts.severity`, `projects.status`, `infrastructure_posts.environment`).
 
-* **Regla Inviolable de UI en Tarjetas (`SoftwareCard.tsx`):**
+* **Regla Inviolable de UI en Tarjetas (`DoiceladevCard.tsx`):**
   La línea de metadatos técnicos superior se renderiza siempre de forma 100% dinámica desde SQLite sin cadenas quemadas:
   $$\text{Nivel 1 (Módulo)} \bullet \text{Nivel 2 (Categoría)} \bullet \text{Nivel 4 (Atributo de Dominio)}$$
   Ejemplo: `TUTORIALES • WEB • INTERMEDIO`, `SEGURIDAD • HARDENING_GUIDE • CRÍTICO`, `PROYECTOS • WEB • EN PRODUCCIÓN`.
@@ -172,7 +174,7 @@ Toda publicación, recurso o registro técnico dentro del ecosistema de Software
 
 ## 4. Estándar Editorial y Enfoque Pedagógico Multinivel (Obligatorio en Publicaciones)
 
-Toda publicación elaborada para cualquiera de los 8 módulos de Software (`infrastructure`, `tutorials`, `blog`, `news`, `security`, `ai`, `projects`, `forum`) debe cumplir de forma estricta los siguientes principios editoriales:
+Toda publicación elaborada para cualquiera de los 8 módulos de DoicelaDev (`infrastructure`, `tutorials`, `blog`, `news`, `security`, `ai`, `projects`, `forum`) debe cumplir de forma estricta los siguientes principios editoriales:
 
 ### 4.1 Prohibición Absoluta de Lenguaje Publicitario ("Hype" o Marketing)
 * **Prohibido:** Usar expresiones sensacionalistas, publicitarias o superlativos vacíos como *"el mejor"*, *"la solución definitiva"*, *"increíble"*, *"revolucionario"*, *"mágico"* o cualquier tono comercial.
@@ -231,10 +233,10 @@ pnpm run lint
 | Redactar exclusivamente para expertos o solo para novatos | Aleja a estudiantes o aburre a ingenieros experimentados. | Aplicar el enfoque multinivel: analogía didáctica + resumen ejecutivo + bajo nivel. |
 | Crear una tabla genérica con discriminador de categoría | Crea columnas vacías y rompe el modelo relacional a medida que el dominio crece. | Mantener entidades especializadas por submódulo. |
 | Inyectar repositorios sin `'doiceladevConnection'` | Conecta a la base de datos equivocada. | Usar `@InjectRepository(Entity, 'doiceladevConnection')`. |
-| Mezclar tipos de artículos con entidades de `bible` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/software/<modulo>/entities/`. |
+| Mezclar tipos de artículos con entidades de `bible` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/doiceladev/<modulo>/entities/`. |
 | Hardcodear datos o autores en el frontend Next.js | Aumenta el bundle size, genera inconsistencias y acopla datos con la UI. | Los autores y datos de las 8 categorías provienen 100% de `doiceladev.sqlite` a través de NestJS. |
 | Poner datos semilla dentro del archivo `seed-doiceladev.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
-| Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de Software. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
+| Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de DoicelaDev. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
 | Tratar un 404 de contenido editorial como bug de Next.js/middleware | Enmascara la causa raíz: el post o término no está sembrado en `doiceladev.sqlite` local tras un `git pull`. | Correr `pnpm seed:doiceladev` o validar el slug en SQLite antes de tocar cualquier archivo de frontend. |
 | Usar o inventar el campo `subCategory` | Introduce conceptos fantasma que no existen en el esquema físico relacional de SQLite. | La taxonomía solo tiene Nivel 1 (Módulo) y Nivel 2 (Categoría `category`). |
 | Filtrar la barra `CategoryFilterBar` por atributos de Nivel 4 (dificultad/severidad) | Rompe la simetría entre módulos y degrada la experiencia de navegación. | La barra filtra exclusivamente por el Nivel 2 (Categoría). El Nivel 4 se muestra en la línea de metadatos o como badge. |

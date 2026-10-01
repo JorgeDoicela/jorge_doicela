@@ -47,7 +47,7 @@
   --accent-slate: #475569;
   --accent-ia: #4f46e5;
   --accent-security: #0284c7;
-  --accent-software: #2563eb;
+  --accent-doiceladev: #2563eb;
   --accent-tutorial: #64748b;
   --accent-blog: #2563eb;
 }
@@ -86,7 +86,7 @@ html.dark .theme-doiceladev {
   --accent-slate: #94a3b8;
   --accent-ia: #818cf8;
   --accent-security: #38bdf8;
-  --accent-software: #3b82f6;
+  --accent-doiceladev: #3b82f6;
   --accent-tutorial: #94a3b8;
   --accent-blog: #3b82f6;
 }
@@ -242,8 +242,8 @@ body {
 }
 
 .tech-led-indigo {
-  background-color: var(--accent-software);
-  box-shadow: 0 0 8px var(--accent-software);
+  background-color: var(--accent-doiceladev);
+  box-shadow: 0 0 8px var(--accent-doiceladev);
 }
 
 .tech-led-violet {

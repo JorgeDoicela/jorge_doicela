@@ -1,6 +1,6 @@
-# Software - Backend, Submódulos y Persistencia (NestJS)
+# DoicelaDev - Backend, Submódulos y Persistencia (NestJS)
 
-Este documento detalla la arquitectura macro y micro, submódulos verticales, controladores, modelos de persistencia y catálogo de endpoints REST del módulo de Software (`backend/src/software/`).
+Este documento detalla la arquitectura macro y micro, submódulos verticales, controladores, modelos de persistencia y catálogo de endpoints REST del módulo de DoicelaDev (`backend/src/doiceladev/`).
 
 ---
 
@@ -8,7 +8,7 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 
 > [!IMPORTANT]
 > **Arquitectura Macro:**
-> * **Monolito Modular Orquestado:** Módulo orquestador en `backend/src/software/software.module.ts` dentro del proceso único NestJS (puerto `3000`, VPS 1 GB RAM).
+> * **Monolito Modular Orquestado:** Módulo orquestador en `backend/src/doiceladev/doiceladev.module.ts` dentro del proceso único NestJS (puerto `3000`, VPS 1 GB RAM).
 > * **Aislamiento de Persistencia:** Base de datos física independiente `backend/data/doiceladev.sqlite` registrada con la conexión TypeORM `'doiceladevConnection'`.
 > * **Aislamiento de Dominio:** 8 submódulos verticales con sus propios módulos, controladores, servicios y entidades.
 >
@@ -18,17 +18,17 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 >   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas (`NewsService`, `BlogService`, `InfrastructureService`, etc.).
 >   3. *Acceso a Datos:* 10 entidades TypeORM en `better-sqlite3` (`NewsArticle`, `BlogPost`, `ForumTopic`, `ForumReply`, `AiResource`, `SecurityPost`, `Tutorial`, `TutorialStep`, `Project`, `InfrastructurePost`).
 > * **Motor Universal de Filtros Polimórficos:**
->   - Todos los submódulos exponen el endpoint `GET /software/[modulo]/categories?lang=es|en` devolviendo el contrato universal `{ id: string, label: string, count: number }`.
+>   - Todos los submódulos exponen el endpoint `GET /doiceladev/[modulo]/categories?lang=es|en` devolviendo el contrato universal `{ id: string, label: string, count: number }`.
 >   - Las agregaciones se ejecutan dinámicamente en `doiceladev.sqlite` sin sobrecarga de memoria, erradicando datos quemados y alimentando de forma homogénea a `CategoryFilterBar` en el frontend.
 
 
 ---
 
-## 2. Módulos del Backend (`backend/src/software/`)
+## 2. Módulos del Backend (`backend/src/doiceladev/`)
 
 ```text
-backend/src/software/
-├── software.module.ts                 # Orquestador puro de los 8 submódulos (registra 10 entidades)
+backend/src/doiceladev/
+├── doiceladev.module.ts               # Orquestador puro de los 8 submódulos (registra 10 entidades)
 ├── cli/
 │   └── seed-doiceladev.ts               # Sembrado transaccional atómico CLI (9 tablas desde corpus/*.json)
 │
@@ -42,26 +42,26 @@ backend/src/software/
 │   ├── projects.json                  # Proyectos showcase de Jorge Doicela
 │   └── infrastructure.json            # Guías de infraestructura, servidores y cloud
 │
-├── common/                            # DTOs Y UTILIDADES COMPARTIDAS DEL MÓDULO SOFTWARE
+├── common/                            # DTOs Y UTILIDADES COMPARTIDAS DEL MÓDULO DOICELADEV
 │   └── dto/doiceladev-query.dto.ts      # Clase base con paginación (limit/page), search y lang
 │
 ├── news/                              # 1. NOTICIAS Y TENDENCIAS
 │   ├── news.module.ts
-│   ├── controllers/news.controller.ts # /software/news (ParseIntPipe en :id)
+│   ├── controllers/news.controller.ts # /doiceladev/news (ParseIntPipe en :id)
 │   ├── services/news.service.ts
 │   ├── entities/news-article.entity.ts
 │   └── dto/{create-news.dto.ts, get-news-query.dto.ts}
 │
 ├── blog/                              # 2. BLOG DE ARQUITECTURA
 │   ├── blog.module.ts
-│   ├── controllers/blog.controller.ts # /software/blog (ParseIntPipe en :id)
+│   ├── controllers/blog.controller.ts # /doiceladev/blog (ParseIntPipe en :id)
 │   ├── services/blog.service.ts
 │   ├── entities/blog-post.entity.ts
 │   └── dto/{create-blog-post.dto.ts, get-blog-query.dto.ts}
 │
 ├── forum/                             # 3. FOROS Y DEBATES COMUNITARIOS
 │   ├── forum.module.ts
-│   ├── controllers/forum.controller.ts # /software/forum (ParseIntPipe en :id/replies)
+│   ├── controllers/forum.controller.ts # /doiceladev/forum (ParseIntPipe en :id/replies)
 │   ├── services/forum.service.ts
 │   ├── entities/forum-topic.entity.ts
 │   ├── entities/forum-reply.entity.ts
@@ -69,21 +69,21 @@ backend/src/software/
 │
 ├── ai/                                # 4. INTELIGENCIA ARTIFICIAL Y AGENTES
 │   ├── ai.module.ts
-│   ├── controllers/ai.controller.ts   # /software/ai (ParseIntPipe en :id)
+│   ├── controllers/ai.controller.ts   # /doiceladev/ai (ParseIntPipe en :id)
 │   ├── services/ai.service.ts
 │   ├── entities/ai-resource.entity.ts
 │   └── dto/{create-ai-resource.dto.ts, get-ai-resources-query.dto.ts}
 │
 ├── cybersecurity/                     # 5. CIBERSEGURIDAD Y BASTIONADO
 │   ├── cybersecurity.module.ts
-│   ├── controllers/cybersecurity.controller.ts # /software/cybersecurity (ParseIntPipe en :id)
+│   ├── controllers/cybersecurity.controller.ts # /doiceladev/cybersecurity (ParseIntPipe en :id)
 │   ├── services/cybersecurity.service.ts
 │   ├── entities/security-post.entity.ts
 │   └── dto/{create-security-post.dto.ts, get-security-posts-query.dto.ts}
 │
 ├── tutorials/                         # 6. TUTORIALES PRÁCTICOS
 │   ├── tutorials.module.ts
-│   ├── controllers/tutorials.controller.ts # /software/tutorials (ParseIntPipe en :id)
+│   ├── controllers/tutorials.controller.ts # /doiceladev/tutorials (ParseIntPipe en :id)
 │   ├── services/tutorials.service.ts
 │   ├── entities/tutorial.entity.ts
 │   ├── entities/tutorial-step.entity.ts
@@ -91,21 +91,21 @@ backend/src/software/
 │
 ├── projects/                          # 7. PROYECTOS SHOWCASE
 │   ├── projects.module.ts
-│   ├── controllers/projects.controller.ts # /software/projects (ParseIntPipe en :id)
+│   ├── controllers/projects.controller.ts # /doiceladev/projects (ParseIntPipe en :id)
 │   ├── services/projects.service.ts
 │   ├── entities/project.entity.ts
 │   └── dto/{create-project.dto.ts, update-project.dto.ts, get-projects-query.dto.ts}
 │
 ├── infrastructure/                   # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD
 │   ├── infrastructure.module.ts
-│   ├── controllers/infrastructure.controller.ts # /software/infrastructure (ParseIntPipe en :id y like)
+│   ├── controllers/infrastructure.controller.ts # /doiceladev/infrastructure (ParseIntPipe en :id y like)
 │   ├── services/infrastructure.service.ts
 │   ├── entities/infrastructure-post.entity.ts
 │   └── dto/{create-infrastructure-post.dto.ts, get-infrastructure-query.dto.ts}
 │
 ├── glossary/                         # 9. GLOSARIO TERMINOLÓGICO Y PEDAGÓGICO
 │   ├── glossary.module.ts
-│   ├── controllers/glossary.controller.ts # /software/glossary (?lang, :slug)
+│   ├── controllers/glossary.controller.ts # /doiceladev/glossary (?lang, :slug)
 │   ├── services/glossary.service.ts
 │   ├── entities/glossary-term.entity.ts
 │   └── dto/get-glossary-query.dto.ts
@@ -113,7 +113,7 @@ backend/src/software/
 └── hub/                              # 10. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
     ├── hub.module.ts
     ├── controllers/
-    │   └── hub.controller.ts         # GET /software/hub con GetHubQueryDto validado
+    │   └── hub.controller.ts         # GET /doiceladev/hub con GetHubQueryDto validado
     ├── dto/
     │   ├── hub-response.dto.ts       # HubFeedItem, HubSpotlightData, HubResponseDto
     │   └── get-hub-query.dto.ts      # Validación class-validator (?lang, ?search)
@@ -129,56 +129,53 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 
 | Dominio | Método y Ruta | Parámetros Query | Descripción |
 |---|---|---|---|
-| **Noticias** | `GET /software/news` | `search`, `category`, `tag`, `lang` | Listado filtrable por búsqueda, categoría, etiqueta e idioma |
-| | `GET /software/news/categories` | `lang` | Taxonomías y categorías dinámicas con conteo de artículos activos |
-| | `GET /software/news/:idOrSlug` | `lang` | Detalle de la noticia por ID o slug con fallback de idioma |
-| | `POST /software/news` | - | Crear nuevo artículo de noticias |
-| | `DELETE /software/news/:id` | - | Eliminar artículo de noticias por ID |
-| **Blog** | `GET /software/blog` | `search`, `category`, `tag`, `series`, `lang` | Ensayos de arquitectura filtrables por categoría, búsqueda, serie, etiqueta e idioma |
-| | `GET /software/blog/categories` | `lang` | Series y categorías dinámicas del blog con conteo de artículos activos |
-| | `GET /software/blog/:idOrSlug` | `lang` | Detalle del post con tabla de contenidos e idioma |
-| | `POST /software/blog` | - | Publicar nuevo post editorial de blog |
-| | `DELETE /software/blog/:id` | - | Eliminar post de blog por ID |
-| **Foros** | `GET /software/forum` | `category`, `search`, `lang` | Hilos de debate filtrables por categoría, búsqueda e idioma |
-| | `GET /software/forum/categories` | `lang` | Categorías y salas de debate activas con conteo de hilos |
-| | `GET /software/forum/:idOrSlug` | `lang` | Hilo principal con respuestas anidadas |
-| | `POST /software/forum` | - | Crear nuevo hilo de debate (`ForumTopic`) |
-| | `POST /software/forum/replies` | - | Publicar nueva respuesta a un tema (`ForumReply`) |
-| | `GET /software/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
-| **IA** | `GET /software/ai` | `category`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, búsqueda e idioma |
-| | `GET /software/ai/categories` | `lang` | Categorías y artefactos de IA activos con conteo real |
-| | `GET /software/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
-
-| | `POST /software/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
-| | `DELETE /software/ai/:id` | - | Eliminar recurso de IA por ID |
-| **Ciberseguridad** | `GET /software/cybersecurity` | `severity`, `category`, `search`, `lang` | Avisos por severidad, categoría, búsqueda e idioma |
-| | `GET /software/cybersecurity/categories` | `lang` | Severidades de seguridad activas en base a estándar CVSS con conteo |
-| | `GET /software/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
-| | `POST /software/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
-| | `DELETE /software/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
-| **Tutoriales** | `GET /software/tutorials` | `category`, `difficulty`, `search`, `lang` | Guías paso a paso filtrables por categoría temática, dificultad, búsqueda e idioma |
-| | `GET /software/tutorials/categories` | `lang` | Niveles y dificultades pedagógicas activas con conteo |
-| | `GET /software/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
-
-| | `POST /software/tutorials` | - | Crear nuevo tutorial maestro |
-| | `POST /software/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
-| | `DELETE /software/tutorials/:id` | - | Eliminar tutorial por ID |
-| **Proyectos** | `GET /software/projects` | `category`, `status`, `search`, `lang` | Showcase filtrable por categoría temática, estado, búsqueda e idioma |
-| | `GET /software/projects/categories` | `lang` | Estados de proyectos activos con conteo |
-| | `GET /software/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
-
-| | `POST /software/projects` | - | Registrar nuevo proyecto showcase |
-| | `PATCH /software/projects/:id` | - | Actualizar campos o estado de un proyecto |
-| | `DELETE /software/projects/:id` | - | Eliminar proyecto por ID |
-| **Infraestructura** | `GET /software/infrastructure` | `category`, `environment`, `difficulty`, `search`, `lang` | Guías de servidores y cloud filtrables |
-| | `GET /software/infrastructure/categories` | `lang` | Categorías disponibles con conteo de guías |
-| | `GET /software/infrastructure/:idOrSlug` | `lang` | Detalle de guía técnica con specs e incremento de vistas |
-| | `GET /software/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
-| | `POST /software/infrastructure` | - | Crear nueva publicación de infraestructura |
-| | `DELETE /software/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
-| **Glosario** | `GET /software/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
-| | `GET /software/glossary/:slug` | `lang` | Definición de un término específico por slug |
-| **Hub Global** | `GET /software/hub` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
+| **Noticias** | `GET /doiceladev/news` | `search`, `category`, `tag`, `lang` | Listado filtrable por búsqueda, categoría, etiqueta e idioma |
+| | `GET /doiceladev/news/categories` | `lang` | Taxonomías y categorías dinámicas con conteo de artículos activos |
+| | `GET /doiceladev/news/:idOrSlug` | `lang` | Detalle de la noticia por ID o slug con fallback de idioma |
+| | `POST /doiceladev/news` | - | Crear nuevo artículo de noticias |
+| | `DELETE /doiceladev/news/:id` | - | Eliminar artículo de noticias por ID |
+| **Blog** | `GET /doiceladev/blog` | `search`, `category`, `tag`, `series`, `lang` | Ensayos de arquitectura filtrables por categoría, búsqueda, serie, etiqueta e idioma |
+| | `GET /doiceladev/blog/categories` | `lang` | Series y categorías dinámicas del blog con conteo de artículos activos |
+| | `GET /doiceladev/blog/:idOrSlug` | `lang` | Detalle del post con tabla de contenidos e idioma |
+| | `POST /doiceladev/blog` | - | Publicar nuevo post editorial de blog |
+| | `DELETE /doiceladev/blog/:id` | - | Eliminar post de blog por ID |
+| **Foros** | `GET /doiceladev/forum` | `category`, `search`, `lang` | Hilos de debate filtrables por categoría, búsqueda e idioma |
+| | `GET /doiceladev/forum/categories` | `lang` | Categorías y salas de debate activas con conteo de hilos |
+| | `GET /doiceladev/forum/:idOrSlug` | `lang` | Hilo principal con respuestas anidadas |
+| | `POST /doiceladev/forum` | - | Crear nuevo hilo de debate (`ForumTopic`) |
+| | `POST /doiceladev/forum/replies` | - | Publicar nueva respuesta a un tema (`ForumReply`) |
+| | `GET /doiceladev/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
+| **IA** | `GET /doiceladev/ai` | `category`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, búsqueda e idioma |
+| | `GET /doiceladev/ai/categories` | `lang` | Categorías y artefactos de IA activos con conteo real |
+| | `GET /doiceladev/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
+| | `POST /doiceladev/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
+| | `DELETE /doiceladev/ai/:id` | - | Eliminar recurso de IA por ID |
+| **Ciberseguridad** | `GET /doiceladev/cybersecurity` | `severity`, `category`, `search`, `lang` | Avisos por severidad, categoría, búsqueda e idioma |
+| | `GET /doiceladev/cybersecurity/categories` | `lang` | Severidades de seguridad activas en base a estándar CVSS con conteo |
+| | `GET /doiceladev/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
+| | `POST /doiceladev/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
+| | `DELETE /doiceladev/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
+| **Tutoriales** | `GET /doiceladev/tutorials` | `category`, `difficulty`, `search`, `lang` | Guías paso a paso filtrables por categoría temática, dificultad, búsqueda e idioma |
+| | `GET /doiceladev/tutorials/categories` | `lang` | Niveles y dificultades pedagógicas activas con conteo |
+| | `GET /doiceladev/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
+| | `POST /doiceladev/tutorials` | - | Crear nuevo tutorial maestro |
+| | `POST /doiceladev/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
+| | `DELETE /doiceladev/tutorials/:id` | - | Eliminar tutorial por ID |
+| **Proyectos** | `GET /doiceladev/projects` | `category`, `status`, `search`, `lang` | Showcase filtrable por categoría temática, estado, búsqueda e idioma |
+| | `GET /doiceladev/projects/categories` | `lang` | Estados de proyectos activos con conteo |
+| | `GET /doiceladev/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
+| | `POST /doiceladev/projects` | - | Registrar nuevo proyecto showcase |
+| | `PATCH /doiceladev/projects/:id` | - | Actualizar campos o estado de un proyecto |
+| | `DELETE /doiceladev/projects/:id` | - | Eliminar proyecto por ID |
+| **Infraestructura** | `GET /doiceladev/infrastructure` | `category`, `environment`, `difficulty`, `search`, `lang` | Guías de servidores y cloud filtrables |
+| | `GET /doiceladev/infrastructure/categories` | `lang` | Categorías disponibles con conteo de guías |
+| | `GET /doiceladev/infrastructure/:idOrSlug` | `lang` | Detalle de guía técnica con specs e incremento de vistas |
+| | `GET /doiceladev/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
+| | `POST /doiceladev/infrastructure` | - | Crear nueva publicación de infraestructura |
+| | `DELETE /doiceladev/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
+| **Glosario** | `GET /doiceladev/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
+| | `GET /doiceladev/glossary/:slug` | `lang` | Definición de un término específico por slug |
+| **Hub Global** | `GET /doiceladev/hub` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
 
 ---
 
@@ -191,7 +188,7 @@ La persistencia implementa soporte multiidioma nativo mediante la columna `langu
 * `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_blog_posts_slug_lang (slug, language)`.
 ### 4.1 Pragmas de Conexión SQLite (`better-sqlite3`)
-En `backend/src/software/software.module.ts` y en `seed-doiceladev.ts`, la base de datos `doiceladev.sqlite` está configurada con los siguientes pragmas de alto rendimiento y blindaje de memoria:
+En `backend/src/doiceladev/doiceladev.module.ts` y en `seed-doiceladev.ts`, la base de datos `doiceladev.sqlite` está configurada con los siguientes pragmas de alto rendimiento y blindaje de memoria:
 * `enableWAL: true` (`PRAGMA journal_mode = WAL;`): Permite lecturas y escrituras concurrentes sin bloqueo.
 * `PRAGMA foreign_keys = ON;`: Garantiza integridad referencial y borrado en cascada relacional (`ON DELETE CASCADE`).
 * `PRAGMA synchronous = NORMAL;`: Reduce el I/O en disco un 80% manteniendo durabilidad completa contra caídas en modo WAL.
@@ -263,18 +260,18 @@ $$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\te
 
 ## 6. Corpus JSON Bilingüe, Portadas Profesionales y Sincronización Idempotente (`seed-doiceladev.ts`)
 
-Todos los datasets fuente en `backend/src/software/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`). Cada publicación técnica cuenta con su portada editorial profesional (16:9, Dark Luxury / Neumorphic Glassmorphism) servida estáticamente desde `frontend/web/public/doiceladev/images/covers/<categoría>/`:
+Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen registros pareados en español (`language: "es"`) e inglés (`language: "en"`). Cada publicación técnica cuenta con su portada editorial profesional (16:9, Dark Luxury / Neumorphic Glassmorphism) servida estáticamente desde `frontend/web/public/doiceladev/images/covers/<categoría>/`:
 
 | Sección | Archivo JSON | Slug Canónico | Portada Editorial (16:9) |
 |---|---|---|---|
-| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | `/software/images/covers/news/nextjs-16.jpg` |
-| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/software/images/covers/blog/arquitectura-limpia-monolitos.jpg` |
-| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/software/images/covers/forum/optimizacion-ram-vps.jpg` |
-| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/software/images/covers/ai/model-context-protocol.jpg` |
-| **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/software/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
-| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/software/images/covers/tutorials/terminal-ssh-websockets.jpg` |
-| **Proyectos** | `projects.json` | `software-tecnologico` | `/software/images/covers/projects/software-hub-tecnologico.jpg` |
-| **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/software/images/covers/infrastructure/guia-firewall-linux-ufw.jpg` |
+| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | `/doiceladev/images/covers/news/nextjs-16.jpg` |
+| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.jpg` |
+| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.jpg` |
+| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.jpg` |
+| **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/doiceladev/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
+| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.jpg` |
+| **Proyectos** | `projects.json` | `doiceladev-hub-tecnologico` | `/doiceladev/images/covers/projects/doiceladev-hub-tecnologico.jpg` |
+| **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.jpg` |
 
 ### 6.1 Modo de Operación del Seeder (`seed-doiceladev.ts`)
 El script `seed-doiceladev.ts` está diseñado para reconstruir y reiniciar la base de datos limpia desde cero de forma instantánea:
@@ -295,7 +292,7 @@ El script `seed-doiceladev.ts` está diseñado para reconstruir y reiniciar la b
 
 ## 7. Arquitectura Taxonómica Oficial de 4 Niveles
 
-Toda publicación, recurso o registro técnico dentro del ecosistema de Software se clasifica rigurosamente bajo una **jerarquía taxonómica estricta de 4 niveles**. Esta estructura elimina la ambigüedad, previene el acoplamiento cruzado de dominios y garantiza indexación atómica en `doiceladev.sqlite`:
+Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaDev se clasifica rigurosamente bajo una **jerarquía taxonómica estricta de 4 niveles**. Esta estructura elimina la ambigüedad, previene el acoplamiento cruzado de dominios y garantiza indexación atómica en `doiceladev.sqlite`:
 
 | Nivel | Dimensión Taxonómica | Ámbito / Gobernanza | Mecanismo en SQLite | Propósito Técnico |
 | :--- | :--- | :--- | :--- | :--- |
@@ -307,15 +304,15 @@ Toda publicación, recurso o registro técnico dentro del ecosistema de Software
 ### 7.1 Regla Universal de Presentación en UI (Frontend)
 Para garantizar una jerarquía visual sobria, limpia y predecible en todo el sistema:
 1. **Línea de Metadatos de Tarjetas (`categoryMeta`):** Se restringe estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)** (ej. `PROYECTOS • WEB`, `TUTORIALES • WEB`, `INFRAESTRUCTURA • CONTAINERS`).
-2. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/software/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra exclusivamente el **Nivel 1 (Módulo)** en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
+2. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra exclusivamente el **Nivel 1 (Módulo)** en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
 3. **Badges Visuales Complementarios (`tag`):** Reservados para el Nivel 4 cuando aporta valor operativo inmediato (ej. badge `CRITICAL` en avisos de ciberseguridad, badge `INTERMEDIATE` en tutoriales o `BREAKING` en noticias).
 4. **Prohibición de "Subcategorías":** No existe ninguna columna, tabla o entidad llamada `subCategory` ni en persistencia ni en contratos de API; cualquier concepto secundario corresponde estrictamente al Nivel 2 (`category`) o Nivel 4 (atributo de entidad).
 5. **Estandarización Unificada de la Barra de Filtros (`CategoryFilterBar`):** En los 8 módulos de la plataforma, la barra de pastillas neumórficas filtra unívocamente por el **Nivel 2 (Categoría Temática)** (`web`, `backend`, `devops`, `hardening`, `servers`, `llm`, `frameworks`, etc.), garantizando una experiencia de usuario perfectamente simétrica y predecible. Los atributos de Nivel 4 (dificultad, severidad, estado) residen como badges informativos en las tarjetas.
 
 ### 7.2 Desacoplamiento de Internacionalización en Filtros de API (`/categories`)
 Para garantizar un servidor ultra-eficiente en el VPS de 1 GB de RAM y evitar duplicación de strings en memoria:
-* **El Backend como Proveedor Canónico Puro:** Los endpoints `GET /software/[modulo]/categories` consultan agregaciones SQL directas en `doiceladev.sqlite` y retornan exclusivamente el contrato canónico `{ id: string, label: string, count: number }` sin diccionarios de traducción embebidos en código TypeScript (`labelsEs` / `labelsEn` eliminados).
-* **Internacionalización Delegada en el Cliente:** El componente transversal [`CategoryFilterBar`](/software/shared/ui/CategoryFilterBar.tsx) resuelve los textos localizados mediante `useTranslations('Filters')` contra los diccionarios JSON del frontend (`messages/es.json` y `messages/en.json`). Si una categoría técnica no requiere traducción (ej. `mcp_server`, `turbopack`), se formatea automáticamente en tiempo de renderizado con preservación de mayúsculas y acrónimos.
+* **El Backend como Proveedor Canónico Puro:** Los endpoints `GET /doiceladev/[modulo]/categories` consultan agregaciones SQL directas en `doiceladev.sqlite` y retornan exclusivamente el contrato canónico `{ id: string, label: string, count: number }` sin diccionarios de traducción embebidos en código TypeScript (`labelsEs` / `labelsEn` eliminados).
+* **Internacionalización Delegada en el Cliente:** El componente transversal [`CategoryFilterBar`](/doiceladev/shared/ui/CategoryFilterBar.tsx) resuelve los textos localizados mediante `useTranslations('Filters')` contra los diccionarios JSON del frontend (`messages/es.json` y `messages/en.json`). Si una categoría técnica no requiere traducción (ej. `mcp_server`, `turbopack`), se formatea automáticamente en tiempo de renderizado con preservación de mayúsculas y acrónimos.
 
 
 

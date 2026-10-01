@@ -6,7 +6,7 @@ import { DoiceladevFooter } from '../widgets/doiceladev-footer';
 import { DoiceladevHeaderNav } from '../widgets/doiceladev-header';
 import { FeaturedCarousel } from '../widgets/featured-carousel';
 
-export default function SoftwarePage() {
+export default function DoiceladevPage() {
   const tHome = useTranslations('Home');
 
   // Consulta consolidada de alto rendimiento (1 única petición HTTP)

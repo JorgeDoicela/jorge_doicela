@@ -5,14 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { BackToPortalButton } from '../../../shared/ui/BackToPortalButton';
-import { CategoryNav, SoftwareSection } from '../../category-nav/ui/CategoryNav';
+import { CategoryNav, DoiceladevSection } from '../../category-nav/ui/CategoryNav';
 import { LanguageToggle } from '../../../features/language-toggle/ui/LanguageToggle';
 import { ThemeToggle } from '../../../features/theme-toggle/ui/ThemeToggle';
 import { useSpotlight } from '../../../features/spotlight-search';
 
 export interface DoiceladevHeaderNavProps {
-    activeCategory?: SoftwareSection;
-    onSelectCategory?: (cat: SoftwareSection) => void;
+    activeCategory?: DoiceladevSection;
+    onSelectCategory?: (cat: DoiceladevSection) => void;
     onOpenSpotlight?: () => void;
     compact?: boolean;
     backHref?: string;
@@ -31,7 +31,7 @@ export function DoiceladevHeaderNav({
     const { openSpotlight } = useSpotlight();
     const tSpotlight = useTranslations('Spotlight');
     const tNav = useTranslations('Nav');
-    const [softwareUrl, setSoftwareUrl] = useState('/');
+    const [doiceladevUrl, setDoiceladevUrl] = useState('/');
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -41,11 +41,11 @@ export function DoiceladevHeaderNav({
             const port = window.location.port ? `:${window.location.port}` : '';
             const protocol = window.location.protocol;
             if (isSubdomain) {
-                setSoftwareUrl('/');
+                setDoiceladevUrl('/');
             } else if (isLocal) {
-                setSoftwareUrl(`${protocol}//doiceladev.localhost${port}/`);
+                setDoiceladevUrl(`${protocol}//doiceladev.localhost${port}/`);
             } else {
-                setSoftwareUrl('https://doiceladev.jorgedoicela.com');
+                setDoiceladevUrl('https://doiceladev.jorgedoicela.com');
             }
         }
     }, []);
@@ -54,9 +54,9 @@ export function DoiceladevHeaderNav({
             {/* Título semántico accesible para SEO */}
             <h1 className="sr-only">{tNav('headerSrTitle')}</h1>
 
-            {/* Logotipo Central Compuesto Ampliado (Linkeado determinísticamente al subdominio de Software) */}
+            {/* Logotipo Central Compuesto Ampliado (Linkeado determinísticamente al subdominio de DoicelaDev) */}
             <Link
-                href={softwareUrl}
+                href={doiceladevUrl}
                 onClick={() => {
                     if (onSelectCategory) {
                         onSelectCategory('all');

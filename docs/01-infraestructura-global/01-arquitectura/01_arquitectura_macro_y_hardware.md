@@ -10,7 +10,7 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 1. **Landing Page** (`jorgedoicela.com`): Portal de bienvenida y presentación general.
 2. **Portafolio Profesional** (`portfolio.jorgedoicela.com`): Portafolio interactivo con terminal SSH virtual en tiempo real.
 3. **Biblia Modular** (`bible.jorgedoicela.com`): Lector y suite exegética con análisis morfológico y multiversión.
-4. **DoicelaDev / Software** (`doiceladev.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
+4. **DoicelaDev** (`doiceladev.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
 
 ### 1.1 La Regla de Oro: Aislamiento Lógico vs. Consolidación Física
 > [!IMPORTANT]
@@ -43,8 +43,8 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
      (Enrutador de Subdominios)                                (Monolito Modular)
         ├── (landing)   -> jorgedoicela.com                       ├── /portfolio -> data/portfolio.sqlite
         ├── (portfolio) -> portfolio.*                            ├── /bible     -> data/bible.sqlite
-        ├── (bible)     -> bible.*                                └── /software  -> data/doiceladev.sqlite
-        └── (doiceladev)  -> software.*
+        ├── (bible)     -> bible.*                                └── /doiceladev -> data/doiceladev.sqlite
+        └── (doiceladev) -> doiceladev.*
 ```
 
 ### 2.1 Flujo de Peticiones y Seguridad Perimetral
@@ -53,7 +53,7 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
 3. **UFW Firewall (Perimetral del Servidor):** Política `deny incoming` por defecto. Solo los puertos 22 (SSH), 80 (HTTP→HTTPS) y 443 (HTTPS) están permitidos. Los puertos internos de Node.js (3000/3001) quedan bloqueados a nivel de kernel aunque el proceso los abra.
 4. **fail2ban (Anti-fuerza Bruta SSH):** Bloquea automáticamente IPs con más de 5 intentos fallidos de SSH en 10 minutos (ban de 1 hora).
 5. **Distribución Interna en Nginx:**
-   * Rutas `/portfolio/*`, `/bible/*`, `/software/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`, IPv4 loopback sellado).
+   * Rutas `/portfolio/*`, `/bible/*`, `/doiceladev/*` y `/socket.io/*` $\rightarrow$ Proxy inverso al backend NestJS (`http://127.0.0.1:3000`, IPv4 loopback sellado).
    * Rutas raíz y páginas de subdominios $\rightarrow$ Proxy inverso al frontend Next.js (`http://[::1]:3001`, IPv6 loopback sellado vía `HOSTNAME: 'localhost'`).
    * Recursos estáticos clave (`/llms.txt`, `/manifest.json`, `/_next/static/`) $\rightarrow$ Servidos directamente por Nginx desde disco en < 1 ms con caché, garantizando 0 MB de consumo de RAM en Node.js frente a crawlers de IA (GEO / Generative Engine Optimization).
 6. **Rate Limiting Perimetral y Protección Anti-Scraping (Zero-RAM):**
@@ -116,7 +116,7 @@ Aunque el frontend Next.js corre en un solo proceso consolidado, los 3 archivos 
 
 ### 5.1 `src/app/sitemap.ts` — Bloques Aislados por Proyecto
 
-Cada proyecto define sus propias rutas en una constante independiente (`landingRoutes`, `portfolioRoutes`, `softwareRoutes`, `bibleRoutes`). El `return` final las concatena. Al migrar un proyecto a servidor propio, **se copia solo su constante** al nuevo `sitemap.ts` y se borra del original.
+Cada proyecto define sus propias rutas en una constante independiente (`landingRoutes`, `portfolioRoutes`, `doiceladevRoutes`, `bibleRoutes`). El `return` final las concatena. Al migrar un proyecto a servidor propio, **se copia solo su constante** al nuevo `sitemap.ts` y se borra del original.
 
 ### 5.2 `src/app/robots.ts` — Guía de Migración Inline
 
@@ -130,7 +130,7 @@ El middleware opera mediante una **tabla declarativa de rutas** (`SUBDOMAIN_TARG
 const SUBDOMAIN_TARGET_MAP: Record<string, string> = {
     portfolio: '/portfolio',
     bible: '/bible',
-    doiceladev: '/software',
+    doiceladev: '/doiceladev',
 };
 ```
 

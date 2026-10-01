@@ -1,4 +1,4 @@
-import { SoftwareArticleCategory } from '../../shared/ui/ArticleCover';
+import { DoiceladevArticleCategory } from '../../shared/ui/ArticleCover';
 import { NewsArticle } from '../news';
 import { BlogPost } from '../blog';
 import { ForumTopic } from '../forum';
@@ -12,7 +12,7 @@ export interface HubFeedItem {
   id: string;
   href: string;
   title: string;
-  category: SoftwareArticleCategory;
+  category: DoiceladevArticleCategory;
   coverImage?: string;
   tag?: string;
   categoryMeta: string;

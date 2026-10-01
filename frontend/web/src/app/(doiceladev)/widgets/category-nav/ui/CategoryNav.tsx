@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { DoiceladevSelect, type SelectOption } from '../../../shared/ui';
 
-export type SoftwareSection =
+export type DoiceladevSection =
     | 'all'
     | 'tutorials'
     | 'news'
@@ -18,12 +18,12 @@ export type SoftwareSection =
     | 'forum';
 
 interface CategoryNavProps {
-    selectedCategory: SoftwareSection;
-    onSelectCategory?: (cat: SoftwareSection) => void;
+    selectedCategory: DoiceladevSection;
+    onSelectCategory?: (cat: DoiceladevSection) => void;
     bare?: boolean;
 }
 
-export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
+export const CATEGORY_ROUTES: Record<DoiceladevSection, string> = {
     all: '/',
     tutorials: '/tutorials',
     news: '/news',
@@ -35,7 +35,7 @@ export const CATEGORY_ROUTES: Record<SoftwareSection, string> = {
     forum: '/forum',
 };
 
-export const SOFTWARE_CATEGORY_KEYS: { id: SoftwareSection; key: SoftwareSection }[] = [
+export const DOICELADEV_CATEGORY_KEYS: { id: DoiceladevSection; key: DoiceladevSection }[] = [
     { id: 'all', key: 'all' },
     { id: 'tutorials', key: 'tutorials' },
     { id: 'news', key: 'news' },
@@ -55,14 +55,14 @@ export function CategoryNav({
     const t = useTranslations('Nav');
     const router = useRouter();
 
-    const categoryOptions: SelectOption<SoftwareSection>[] = React.useMemo(() => {
-        return SOFTWARE_CATEGORY_KEYS.map((cat) => ({
+    const categoryOptions: SelectOption<DoiceladevSection>[] = React.useMemo(() => {
+        return DOICELADEV_CATEGORY_KEYS.map((cat) => ({
             value: cat.id,
             label: t(cat.key),
         }));
     }, [t]);
 
-    const handleSelectCategory = (nextCat: SoftwareSection) => {
+    const handleSelectCategory = (nextCat: DoiceladevSection) => {
         if (onSelectCategory) {
             onSelectCategory(nextCat);
         } else {
@@ -74,7 +74,7 @@ export function CategoryNav({
         <nav aria-label={t('all')} className={bare ? 'w-full' : 'w-fit max-w-full'}>
             {/* 1. Selector Dropdown Táctil Reutilizable (Exclusivo para Móvil: visible en < sm, oculto en sm y superior) */}
             <div className="sm:hidden w-full max-w-[185px] mx-auto flex justify-center">
-                <DoiceladevSelect<SoftwareSection>
+                <DoiceladevSelect<DoiceladevSection>
                     options={categoryOptions}
                     value={selectedCategory}
                     onChange={handleSelectCategory}
@@ -91,7 +91,7 @@ export function CategoryNav({
                         : 'p-1.5 rounded-2xl glass-concave-panel w-fit max-w-full'
                     }`}
             >
-                {SOFTWARE_CATEGORY_KEYS.map((cat) => {
+                {DOICELADEV_CATEGORY_KEYS.map((cat) => {
                     const isSelected = selectedCategory === cat.id;
                     const href = CATEGORY_ROUTES[cat.id];
 

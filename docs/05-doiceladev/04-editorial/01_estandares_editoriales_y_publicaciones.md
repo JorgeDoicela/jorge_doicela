@@ -1,4 +1,4 @@
-# DoicelaDev (Software) - Estándares Editoriales, Pedagogía Multinivel y Reglas de Redacción
+# DoicelaDev - Estándares Editoriales, Pedagogía Multinivel y Reglas de Redacción
 
 Este documento define las directrices editoriales mandatorias para la creación, revisión y publicación de contenidos técnicos en los 8 módulos de **DoicelaDev** (`doiceladev.jorgedoicela.com`).
 
@@ -6,7 +6,7 @@ Este documento define las directrices editoriales mandatorias para la creación,
 
 ## 1. Filosofía Editorial: Rigor Técnico sin Hype ni Marketing
 
-En toda la plataforma de Software rige un principio fundamental: **Ingeniería Sobria y Objetiva**.
+En toda la plataforma de DoicelaDev rige un principio fundamental: **Ingeniería Sobria y Objetiva**.
 
 ### 1.1 Prohibición Estricta de Palabras Marketineras y Superlativos Vacíos
 Queda terminantemente prohibido utilizar términos sensacionalistas, publicitarios o de venta vacía, tales como:
@@ -92,14 +92,14 @@ Toda publicación en cualquiera de las 8 categorías (`infrastructure`, `tutoria
 * Los archivos se preparan en:
   * `frontend/web/src/app/(doiceladev)/entities/<categoria>/drafts/es.<slug>.md`
   * `frontend/web/src/app/(doiceladev)/entities/<categoria>/drafts/en.<slug>.md`
-* Y se sincronizan con `backend/src/software/corpus/<categoria>.json`.
+* Y se sincronizan con `backend/src/doiceladev/corpus/<categoria>.json`.
 
 ---
 
 ## 5. Jerarquía Semántica y Pureza del Cuerpo Markdown (Regla de Oro H1 / DRY)
 
 * **El Título Vive en los Metadatos:** En cumplimiento de la regla de *Fuente Única de Verdad (SSOT)* y estándares W3C/WCAG 2.1 (un único `<h1>` por documento), el título y subtítulo se almacenan exclusivamente en las columnas relacionales `title` y `subtitle` (o `excerpt`/`description`).
-* **Cuerpo Markdown Puro (`contentMarkdown`):** Los archivos de borrador `.md` y el campo `contentMarkdown` en el corpus **nunca deben comenzar con `# Título`**, ya que el componente de cabecera de la página (`SoftwareArticleLayout`) es el dueño canónico del `<h1>`.
+* **Cuerpo Markdown Puro (`contentMarkdown`):** Los archivos de borrador `.md` y el campo `contentMarkdown` en el corpus **nunca deben comenzar con `# Título`**, ya que el componente de cabecera de la página (`DoiceladevArticleLayout`) es el dueño canónico del `<h1>`.
 * **Estructura de Encabezados Interna:** El cuerpo del artículo debe arrancar directamente con el bloque de introducción o resumen ejecutivo (`> [!IMPORTANT]`), y todas las secciones principales deben emplear exclusivamente nivel 2 (`## Título de Sección`), subsecciones nivel 3 (`### Paso o Concepto`) y sub-bloques nivel 4 (`#### Detalle`).
 
 ---

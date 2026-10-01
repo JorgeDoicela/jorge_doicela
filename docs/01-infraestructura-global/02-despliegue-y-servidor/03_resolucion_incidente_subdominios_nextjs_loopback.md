@@ -38,10 +38,10 @@ Durante la auditoría de hardening perimetral de septiembre de 2026, se identifi
 ### 2.2 El Síntoma Inmediato
 Tras recargar PM2:
 * `jorgedoicela.com` (Landing) continuó respondiendo `200 OK` porque no requiere reescritura de subdominios en `src/middleware.ts`.
-* Todos los subdominios (`bible`, `portfolio`, `software`) comenzaron a devolver `500 Internal Server Error`.
+* Todos los subdominios (`bible`, `portfolio`, `doiceladev`) comenzaron a devolver `500 Internal Server Error`.
 * En los logs de PM2 (`~/.pm2/logs/frontend-next-error-*.log`):
 ```text
-Failed to proxy https://localhost:3001/software Error: write EPROTO 80F2CC34637F0000:error:0A00010B:SSL routines:tls_validate_record_header:wrong version number:../deps/openssl/openssl/ssl/record/methods/tlsany_meth.c:77:
+Failed to proxy https://localhost:3001/doiceladev Error: write EPROTO 80F2CC34637F0000:error:0A00010B:SSL routines:tls_validate_record_header:wrong version number:../deps/openssl/openssl/ssl/record/methods/tlsany_meth.c:77:
     at ignore-listed frames {
   errno: -71,
   code: 'EPROTO',
@@ -90,7 +90,7 @@ function parseURL(url, base) {
 3. En consecuencia, en `src/middleware.ts`:
    * `request.nextUrl.origin` queda fijado en `https://localhost:3001`.
    * Al ejecutar `url.pathname = resolvedPath; return NextResponse.rewrite(url);`, la cabecera `x-middleware-rewrite` se emite como:
-   $$\text{x-middleware-rewrite} = \text{https://localhost:3001/software}$$
+   $$\text{x-middleware-rewrite} = \text{https://localhost:3001/doiceladev}$$
 
 ### 3.3 El Juicio de Relatividad (`relativize-url.js`)
 En `node_modules/next/dist/shared/lib/router/utils/relativize-url.js`:
@@ -116,7 +116,7 @@ Se comparan los orígenes:
 
 ### 3.4 El Disparo Fatal de `proxyRequest` (`router-server.js`)
 Dado que `isRelative` es `false`:
-1. `destination` no se convierte en una ruta relativa (`/software`), sino que se mantiene como una URL absoluta completa con esquema: `https://localhost:3001/software`.
+1. `destination` no se convierte en una ruta relativa (`/doiceladev`), sino que se mantiene como una URL absoluta completa con esquema: `https://localhost:3001/doiceladev`.
 2. En `router-server.js` (Línea 374):
    ```javascript
    if (finished && parsedUrl.protocol) {

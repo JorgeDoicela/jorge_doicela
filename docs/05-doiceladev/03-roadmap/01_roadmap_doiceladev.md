@@ -1,4 +1,4 @@
-# Roadmap y Funcionalidades: DoicelaDev (Software)
+# Roadmap y Funcionalidades: DoicelaDev
 
 Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** (`doiceladev.jorgedoicela.com`).
 
@@ -9,10 +9,10 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 - [x] **Fuente de Verdad en `corpus/*.json`:** 8 datasets JSON estructurados que alimentan la base de datos de forma desacoplada.
 - [x] **Seeder Atómico Transaccional:** Script CLI (`seed-doiceladev.ts`) que recrea y siembra 9 tablas en SQLite en < 100 ms.
 - [x] **Modelo Relacional Físico (`doiceladev.sqlite`):** 10 entidades registradas bajo `doiceladevConnection` con relaciones foráneas e índices B-Tree especializados.
-- [x] **Frontend Web Next.js 16 (FSD Canónico en 4 Capas):** Capas desacopladas `shared/` (UI, suite Markdown, SEO, lib, types), `entities/` (8 dominios temáticos + hub consolidado), `features/` (spotlight-search, forum-reply, language-toggle, theme-toggle) y `widgets/` (software-header, software-footer, category-nav, featured-carousel, article-layout, page-layout).
-- [x] **Páginas de Catálogo Dedicadas:** `/software/news`, `/software/blog`, `/software/forum`, `/software/ai`, `/software/cybersecurity`, `/software/tutorials`, `/software/projects`, `/software/infrastructure`.
+- [x] **Frontend Web Next.js 16 (FSD Canónico en 4 Capas):** Capas desacopladas `shared/` (UI, suite Markdown, SEO, lib, types), `entities/` (8 dominios temáticos + hub consolidado), `features/` (spotlight-search, forum-reply, language-toggle, theme-toggle) y `widgets/` (header-nav, footer, category-nav, featured-carousel, article-layout, page-layout).
+- [x] **Páginas de Catálogo Dedicadas:** `/doiceladev/news`, `/doiceladev/blog`, `/doiceladev/forum`, `/doiceladev/ai`, `/doiceladev/cybersecurity`, `/doiceladev/tutorials`, `/doiceladev/projects`, `/doiceladev/infrastructure` (o rutas raíz en subdominio `doiceladev.jorgedoicela.com`).
 - [x] **Lector Individual y Modo Interactivo `[slug]`:** Vistas individuales por categoría, incluyendo `StepWizard` interactivo para tutoriales, hilo de discusión para foros y visor de especificaciones de hardware/servidor (`specs`) para infraestructura.
-- [x] **Página Principal (`/software`):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura, spotlight command palette (`Cmd+K`) y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.
+- [x] **Página Principal (`/doiceladev` o subdominio):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura, spotlight command palette (`Cmd+K`) y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.
 - [x] **Sistema de Borradores Markdown (`drafts/` en FSD):** Carpetas `drafts/` co-localizadas en las 8 entidades de frontend para redacción y edición nativa en Markdown puro antes de la ingesta en el corpus JSON.
 - [x] **Publicación Inaugural de Infraestructura:** Publicación bilingüe de ingeniería sobre *Firewall en Linux: De Netfilter y UFW a la Seguridad Perimetral de Servidores* (`firewall-linux-ufw-netfilter-seguridad-servidores`).
 

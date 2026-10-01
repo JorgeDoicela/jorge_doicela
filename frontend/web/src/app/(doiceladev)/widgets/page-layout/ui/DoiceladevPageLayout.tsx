@@ -3,10 +3,10 @@
 import React from 'react';
 import { DoiceladevHeaderNav } from '../../doiceladev-header/ui/DoiceladevHeaderNav';
 import { DoiceladevFooter } from '../../doiceladev-footer/ui/DoiceladevFooter';
-import { SoftwareSection } from '../../category-nav/ui/CategoryNav';
+import { DoiceladevSection } from '../../category-nav/ui/CategoryNav';
 
 export interface DoiceladevPageLayoutProps {
-  activeCategory?: SoftwareSection;
+  activeCategory?: DoiceladevSection;
   backHref?: string;
   backLabel?: string;
   compact?: boolean;

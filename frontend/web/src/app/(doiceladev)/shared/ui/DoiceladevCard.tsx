@@ -3,12 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ArticleCover, SoftwareArticleCategory } from './ArticleCover';
+import { ArticleCover, DoiceladevArticleCategory } from './ArticleCover';
 
 export interface DoiceladevCardProps {
   href: string;
   title: string;
-  category: SoftwareArticleCategory;
+  category: DoiceladevArticleCategory;
   categoryMeta: React.ReactNode;
   excerpt?: string | null;
   coverImage?: string;

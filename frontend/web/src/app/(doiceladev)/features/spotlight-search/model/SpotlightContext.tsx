@@ -39,7 +39,7 @@ export function SpotlightProvider({ children }: SpotlightProviderProps) {
     setSearchQuery('');
   }, []);
 
-  // Atajo global Cmd+K o Ctrl+K disponible en todo el subdominio de Software
+  // Atajo global Cmd+K o Ctrl+K disponible en todo el subdominio de DoicelaDev
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {

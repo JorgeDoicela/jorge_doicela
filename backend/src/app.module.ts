@@ -12,7 +12,7 @@ import { AppService } from './app.service';
  * Este repositorio unifica la ejecución de tres proyectos totalmente distintos:
  * 1. Portfolio
  * 2. Bible
- * 3. Software
+ * 3. DoicelaDev
  *
  * Se ejecutan bajo un mismo proceso NestJS únicamente para optimizar recursos en producción
  * (servidores de 1GB RAM) y evitar levantar múltiples instancias Node.js.

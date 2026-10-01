@@ -17,8 +17,8 @@ export const AppleDetailExplorer: React.FC = () => {
             navTitle: isEs ? '3 Plataformas Digitales' : '3 Digital Platforms',
             title: isEs ? '3 Plataformas en Producción' : '3 Live Platforms',
             description: isEs
-                ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: estudio bíblico profundo, software con IA y servicios de ingeniería.'
-                : 'A master portal connecting three independent platforms designed for distinct needs: in-depth bible study, AI software, and professional engineering services.',
+                ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: estudio bíblico profundo, plataforma DoicelaDev y portafolio de ingeniería.'
+                : 'A master portal connecting three independent platforms designed for distinct needs: in-depth bible study, DoicelaDev platform, and professional engineering portfolio.',
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
@@ -44,7 +44,7 @@ export const AppleDetailExplorer: React.FC = () => {
 
                         <div className="flex flex-col gap-0.5 sm:gap-1 px-2 sm:px-4">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                Software
+                                DoicelaDev
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
                                 {isEs ? 'IA, tecnología y herramientas web.' : 'AI, tech, and web tools.'}
@@ -69,8 +69,8 @@ export const AppleDetailExplorer: React.FC = () => {
         },
         {
             id: 'innovation',
-            navTitle: isEs ? 'Inteligencia Artificial & Software' : 'AI & DoicelaDev Innovation',
-            title: isEs ? 'Inteligencia Artificial & Software' : 'AI & DoicelaDev Innovation',
+            navTitle: isEs ? 'Inteligencia Artificial & DoicelaDev' : 'AI & DoicelaDev Innovation',
+            title: isEs ? 'Inteligencia Artificial & DoicelaDev' : 'AI & DoicelaDev Innovation',
             description: isEs
                 ? 'Herramientas interactivas, modelos de lenguaje de última generación y arquitecturas de razonamiento construidas para potenciar el aprendizaje y la productividad.'
                 : 'Interactive tools, state-of-the-art LLM architectures, and reasoning models engineered to boost learning and productivity.',

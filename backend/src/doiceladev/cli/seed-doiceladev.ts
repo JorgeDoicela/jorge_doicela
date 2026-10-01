@@ -647,13 +647,13 @@ export function seedDoiceladev(
     CREATE INDEX        IF NOT EXISTS IDX_glossary_terms_cat        ON glossary_terms (language, category, orderPriority DESC);
   `);
 
-  const srcDir = path.resolve(__dirname, '../../../src/software/corpus');
+  const srcDir = path.resolve(__dirname, '../../../src/doiceladev/corpus');
   const distDir = path.resolve(__dirname, '../corpus');
   const corpusDir = fs.existsSync(srcDir) ? srcDir : distDir;
 
   if (!fs.existsSync(corpusDir)) {
     console.warn(
-      `[SoftwareSeeder] Directorio de corpus no encontrado en src ni en dist: ${corpusDir}`,
+      `[DoiceladevSeeder] Directorio de corpus no encontrado en src ni en dist: ${corpusDir}`,
     );
     return;
   }

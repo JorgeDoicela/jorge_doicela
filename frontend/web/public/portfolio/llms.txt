@@ -28,7 +28,7 @@
 ### 2. Showcase y Catálogo de Proyectos
 - **Filtros Dinámicos:** Clasificación reactiva por categorías (Backend, Frontend, IA, DevOps, Mobile).
 - **Proyectos Clave:**
-  - *Software:* Plataforma tecnológica de 7 categorías con arquitectura en capas.
+  - *DoicelaDev:* Plataforma tecnológica de 8 áreas con arquitectura en capas.
   - *Biblia Modular:* Suite exegética académica con 9 motores de estudio y app nativa Expo.
   - *DIITRA:* Plataforma empresarial con frontend Next.js y backend ASP.NET Core en C#.
   - *Portfolio SSH:* Terminal virtual en tiempo real sobre WebSockets y microservicios.

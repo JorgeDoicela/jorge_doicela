@@ -15,7 +15,7 @@ El ecosistema Jorge Doicela implementa persistencia desacoplada mediante tres ba
 > [!IMPORTANT]
 > **Seguridad y Aislamiento de Binarios:**  
 > Ningún archivo `.sqlite`, `.sqlite-wal`, `.sqlite-shm` o `.sqlite-journal` viaja en Git. Están estrictamente ignorados en `.gitignore` y auditados en cada commit por el script de seguridad pre-commit de Husky (`pnpm check-secrets`).  
-> La **única fuente de verdad** compartida en el repositorio para los datos iniciales y editoriales son los archivos estructurados en los submódulos de corpus (ej. `backend/src/software/corpus/*.json`).
+> La **única fuente de verdad** compartida en el repositorio para los datos iniciales y editoriales son los archivos estructurados en los submódulos de corpus (ej. `backend/src/doiceladev/corpus/*.json`).
 
 ---
 
@@ -61,7 +61,7 @@ rm -f backend/data/*.sqlite* 2>/dev/null || true
 
 # 2. Reconstrucción atómica y seeding desde los corpus JSON compilados
 node backend/dist/bible/cli/seed-corpus.js
-node backend/dist/software/cli/seed-doiceladev.js
+node backend/dist/doiceladev/cli/seed-doiceladev.js
 node backend/dist/portfolio/cli/seed-portfolio.js
 ```
 Por este motivo físico, el servidor de producción **siempre cuenta con todas las tablas, columnas, artículos y términos de glosario actualizados**.
@@ -127,7 +127,7 @@ Cuando una ruta dinámica de contenido (ej. `http://doiceladev.localhost:3001/in
 3. **Verificación Directa del Endpoint:** Antes de sospechar del renderizado de React, audita la API directamente con curl:
    ```bash
    # Debe responder {"success": true, "data": { ... }}
-   curl -i "http://127.0.0.1:3000/api/software/infrastructure/<slug>?lang=es"
+   curl -i "http://127.0.0.1:3000/api/doiceladev/infrastructure/<slug>?lang=es"
    ```
 
 ---

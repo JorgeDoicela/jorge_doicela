@@ -6,7 +6,7 @@ Este documento define los **estándares de codificación y diseño interno** que
 
 ## 1. Microarquitectura del Backend: Arquitectura en Capas (NestJS)
 
-Cada dominio dentro de `backend/src/` (`bible`, `software`, `portfolio`, o nuevos dominios futuros) debe operar como un **módulo aislado** dividido internamente en tres capas con Inversión de Control (IoC):
+Cada dominio dentro de `backend/src/` (`bible`, `doiceladev`, `portfolio`, o nuevos dominios futuros) debe operar como un **módulo aislado** dividido internamente en tres capas con Inversión de Control (IoC):
 
 ```text
 backend/src/<dominio>/
@@ -93,7 +93,7 @@ frontend/web/src/
 ├── app/
 │   ├── (landing)/messages/     # Diccionarios encapsulados exclusivamente para Landing (es.json, en.json)
 │   ├── (portfolio)/messages/   # Diccionarios encapsulados exclusivamente para Portafolio (es.json, en.json)
-│   ├── (doiceladev)/messages/    # Diccionarios encapsulados exclusivamente para Software (es.json, en.json)
+│   ├── (doiceladev)/messages/    # Diccionarios encapsulados exclusivamente para DoicelaDev (es.json, en.json)
 │   └── (bible)/messages/       # Diccionarios encapsulados exclusivamente para Biblia (es.json, en.json)
 ├── i18n/
 │   └── request.ts              # Configuración de servidor: importa dinámicamente solo el JSON del subdominio activo

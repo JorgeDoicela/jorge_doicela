@@ -12,7 +12,7 @@ import { StayInformedCard } from './StayInformedCard';
 import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
 import { ExploreTopicsSidebarCard } from './ExploreTopicsSidebarCard';
 import { PopularTagsSidebarCard } from './PopularTagsSidebarCard';
-import { SoftwareSection } from '../../category-nav/ui/CategoryNav';
+import { DoiceladevSection } from '../../category-nav/ui/CategoryNav';
 
 export interface BreadcrumbItem {
   label: string;
@@ -20,7 +20,7 @@ export interface BreadcrumbItem {
 }
 
 export interface DoiceladevArticleLayoutProps {
-  category: SoftwareSection;
+  category: DoiceladevSection;
   categoryLabel: string;
   categoryHref: string;
   title: string;

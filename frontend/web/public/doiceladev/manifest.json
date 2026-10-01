@@ -1,21 +1,21 @@
 {
-  "name": "Software | Jorge Doicela",
+  "name": "DoicelaDev | Jorge Doicela",
   "short_name": "DoicelaDev",
-  "description": "Plataforma de software, noticias, blog de arquitectura, foros, IA, ciberseguridad y tutoriales de Jorge Doicela.",
-  "start_url": "/software",
+  "description": "Plataforma tecnológica, noticias, blog de arquitectura, foros, IA, ciberseguridad y tutoriales de Jorge Doicela.",
+  "start_url": "/doiceladev",
   "display": "standalone",
   "background_color": "#0b0f19",
   "theme_color": "#0b0f19",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/software/logo/logo_fondo_circular_color_.png",
+      "src": "/doiceladev/logo/logo_fondo_circular_color_.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/software/logo/logo_fondo_circular_color_.png",
+      "src": "/doiceladev/logo/logo_fondo_circular_color_.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

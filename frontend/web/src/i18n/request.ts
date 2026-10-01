@@ -19,7 +19,6 @@ async function loadProjectMessages(project: string, locale: Locale): Promise<Rec
           : (await import('../app/(portfolio)/messages/es.json')).default;
 
       case 'doiceladev':
-      case 'software':
         return locale === 'en'
           ? (await import('../app/(doiceladev)/messages/en.json')).default
           : (await import('../app/(doiceladev)/messages/es.json')).default;

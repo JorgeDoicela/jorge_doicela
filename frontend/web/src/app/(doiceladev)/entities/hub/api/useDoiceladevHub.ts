@@ -70,7 +70,7 @@ export function useDoiceladevHub(search: string = '') {
         }
 
         const msg = err instanceof Error ? err.message : String(err);
-        console.warn('Aviso de conexión al hub de software:', msg);
+        console.warn('Aviso de conexión al hub de doiceladev:', msg);
         setError(msg || (locale === 'es' ? 'No se pudo cargar el feed editorial' : 'Failed to load editorial feed'));
       } finally {
         if (isMounted && !retryTimer) {

@@ -6,7 +6,6 @@ export interface SubdomainUrls {
   portfolio: string;
   bible: string;
   doiceladev: string;
-  software: string;
 }
 
 export function useSubdomainUrl() {
@@ -37,7 +36,6 @@ export function useSubdomainUrl() {
     portfolio: getSubdomainUrl('portfolio'),
     bible: getSubdomainUrl('bible'),
     doiceladev: getSubdomainUrl('doiceladev'),
-    software: getSubdomainUrl('doiceladev'),
   }), [resolved]);
 
   return { getSubdomainUrl, urls, isLocal: resolved.isLocal };

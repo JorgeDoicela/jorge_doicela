@@ -34,7 +34,7 @@ export default function DoiceladevJsonLd({ locale = 'es' }: DoiceladevJsonLdProp
           },
           {
             '@type': 'WebPage',
-            'name': isEn ? 'Software & Tech News' : 'Noticias de Software & Tecnología',
+            'name': isEn ? 'Tech & Development News' : 'Noticias de Tecnología & Desarrollo',
             'url': 'https://doiceladev.jorgedoicela.com/news'
           },
           {

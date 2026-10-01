@@ -66,7 +66,7 @@ export function BibleFinalCtaAndFooter({ studyUrl = '/study' }: BibleFinalCtaAnd
                         <span className="text-accents-2">•</span>
                         <a href={getSubdomainUrl('portfolio')} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerPortfolio')}</a>
                         <span className="text-accents-2">•</span>
-                        <a href={getSubdomainUrl('software')} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerSoftware')}</a>
+                        <a href={getSubdomainUrl('doiceladev')} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerDoiceladev')}</a>
                         <span className="text-accents-2">•</span>
                         <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerLlms')}</a>
                     </div>

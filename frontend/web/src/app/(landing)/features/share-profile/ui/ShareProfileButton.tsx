@@ -18,7 +18,7 @@ export function ShareProfileButton({
 
   const handleShare = async () => {
     const shareData = {
-      title: 'Jorge Doicela — Enlaces & Proyectos de Software',
+      title: 'Jorge Doicela — Enlaces & Proyectos',
       text: 'Explora el portafolio, proyectos y plataformas de Jorge Doicela.',
       url: typeof window !== 'undefined' ? window.location.href : 'https://jorgedoicela.com/links',
     };

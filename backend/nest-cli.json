@@ -10,7 +10,7 @@
         "watchAssets": true
       },
       {
-        "include": "software/corpus/**/*",
+        "include": "doiceladev/corpus/**/*",
         "watchAssets": true
       },
       {

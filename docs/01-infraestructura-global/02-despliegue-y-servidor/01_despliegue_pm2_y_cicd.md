@@ -211,7 +211,7 @@ limit_req_status 429;
 map $host $llms_file {
     default                 /home/admin/jorge_doicela/frontend/web/public/landing/llms.txt;
     ~*portfolio\.           /home/admin/jorge_doicela/frontend/web/public/portfolio/llms.txt;
-    ~*software\.            /home/admin/jorge_doicela/frontend/web/public/doiceladev/llms.txt;
+    ~*doiceladev\.          /home/admin/jorge_doicela/frontend/web/public/doiceladev/llms.txt;
     ~*bible\.               /home/admin/jorge_doicela/frontend/web/public/bible/llms.txt;
 }
 
@@ -219,7 +219,7 @@ map $host $llms_file {
 map $host $manifest_file {
     default                 /home/admin/jorge_doicela/frontend/web/public/landing/manifest.json;
     ~*portfolio\.           /home/admin/jorge_doicela/frontend/web/public/portfolio/manifest.json;
-    ~*software\.            /home/admin/jorge_doicela/frontend/web/public/doiceladev/manifest.json;
+    ~*doiceladev\.          /home/admin/jorge_doicela/frontend/web/public/doiceladev/manifest.json;
     ~*bible\.               /home/admin/jorge_doicela/frontend/web/public/bible/manifest.json;
 }
 
@@ -227,7 +227,7 @@ map $host $manifest_file {
 map $host $favicon_file {
     default                 /home/admin/jorge_doicela/frontend/web/public/landing/logo/logo_fondo_circular_color_.png;
     ~*portfolio\.           /home/admin/jorge_doicela/frontend/web/public/portfolio/logo/logo_fondo_circular_color_.png;
-    ~*software\.            /home/admin/jorge_doicela/frontend/web/public/doiceladev/logo/logo_fondo_circular_color_.png;
+    ~*doiceladev\.          /home/admin/jorge_doicela/frontend/web/public/doiceladev/logo/logo_fondo_circular_color_.png;
     ~*bible\.               /home/admin/jorge_doicela/frontend/web/public/bible/logo/logo_fondo_circular_color_.png;
 }
 
@@ -350,7 +350,7 @@ server {
         add_header Cache-Control "public, max-age=2592000, immutable";
     }
 
-    location ^~ /software/logo/ {
+    location ^~ /doiceladev/logo/ {
         alias /home/admin/jorge_doicela/frontend/web/public/doiceladev/logo/;
         expires 30d;
         access_log off;

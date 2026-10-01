@@ -196,7 +196,7 @@ export function BibleEnginesCarousel() {
                                                 }}
                                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background font-semibold text-xs sm:text-sm hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer select-none"
                                             >
-                                                <span>Explorar herramienta</span>
+                                                <span>{tLanding('exploreTool')}</span>
                                                 <ArrowRight className="w-3.5 h-3.5" />
                                             </Link>
                                         </div>
@@ -426,7 +426,7 @@ export function BibleEnginesCarousel() {
                 {/* Flechas Anterior / Siguiente */}
                 <button
                     onClick={handlePrevEngine}
-                    aria-label="Herramienta anterior"
+                    aria-label={tLanding('prevTool')}
                     className="w-12 h-12 rounded-full bg-background/90 dark:bg-zinc-900/90 border border-border shadow-2xs backdrop-blur-md flex items-center justify-center text-foreground hover:bg-accents-1 dark:hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer select-none"
                 >
                     <ChevronLeft className="w-5 h-5" />
@@ -434,7 +434,7 @@ export function BibleEnginesCarousel() {
 
                 <button
                     onClick={handleNextEngine}
-                    aria-label="Siguiente herramienta"
+                    aria-label={tLanding('nextTool')}
                     className="w-12 h-12 rounded-full bg-background/90 dark:bg-zinc-900/90 border border-border shadow-2xs backdrop-blur-md flex items-center justify-center text-foreground hover:bg-accents-1 dark:hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer select-none"
                 >
                     <ChevronRight className="w-5 h-5" />
@@ -485,7 +485,7 @@ export function BibleEnginesCarousel() {
                 {/* Botón Play / Pause Circular */}
                 <button
                     onClick={() => setIsEngineAutoplay(!isEngineAutoplay)}
-                    aria-label={isEngineAutoplay ? 'Pausar rotación automática' : 'Reanudar rotación automática'}
+                    aria-label={isEngineAutoplay ? tLanding('pauseAutoplay') : tLanding('resumeAutoplay')}
                     className="w-12 h-12 rounded-full bg-background/90 dark:bg-zinc-900/90 border border-border shadow-2xs backdrop-blur-md flex items-center justify-center text-foreground hover:bg-accents-1 dark:hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer select-none"
                 >
                     {isEngineAutoplay ? (

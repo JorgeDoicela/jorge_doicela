@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Verse,
   ReaderSettings,
@@ -73,6 +74,9 @@ export const VerseList: React.FC<VerseListProps> = ({
   activeTranslationAbbr,
   onRetry,
 }) => {
+  const tToolbar = useTranslations('Toolbar');
+  const tVerses = useTranslations('Verses');
+
   // Activar atajos de teclado para navegación, zoom de tipografía y modo enfoque
   useReaderKeybindings({
     onPrevChapter,
@@ -175,7 +179,7 @@ export const VerseList: React.FC<VerseListProps> = ({
                     : 'text-zinc-500 hover:text-foreground'
                 }`}
               >
-                Auto
+                {tToolbar('toneAuto')}
               </button>
               <button
                 type="button"
@@ -186,7 +190,7 @@ export const VerseList: React.FC<VerseListProps> = ({
                     : 'text-zinc-500 hover:text-foreground'
                 }`}
               >
-                Sepia
+                {tToolbar('toneSepia')}
               </button>
               <button
                 type="button"
@@ -197,7 +201,7 @@ export const VerseList: React.FC<VerseListProps> = ({
                     : 'text-zinc-500 hover:text-foreground'
                 }`}
               >
-                OLED
+                {tToolbar('toneOled')}
               </button>
             </div>
 
@@ -206,10 +210,10 @@ export const VerseList: React.FC<VerseListProps> = ({
               type="button"
               onClick={onToggleFocusMode}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium hover:opacity-90 transition-all cursor-pointer shadow-sm text-xs"
-              title="Salir de Modo Enfoque (Esc)"
+              title={tVerses('exitFocusEsc')}
             >
               <Minimize2 className="w-3.5 h-3.5" />
-              <span>Salir (Esc)</span>
+              <span>{tVerses('exitEsc')}</span>
             </button>
           </div>
         </div>

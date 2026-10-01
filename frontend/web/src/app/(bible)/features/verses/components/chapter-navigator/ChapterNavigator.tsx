@@ -69,21 +69,21 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
 
   const prevSubtitle = currentChapter > 1
     ? tPassage('prevChapterTooltip').replace(' (←)', '')
-    : 'Libro anterior';
+    : tToolbar('prevBook');
   const prevLabel = currentChapter > 1
     ? `${selectedBookName} ${currentChapter - 1}`
     : (prevBook?.name || '');
 
   const nextSubtitle = currentChapter < maxChapters
     ? tPassage('nextChapterTooltip').replace(' (→)', '')
-    : 'Libro siguiente';
+    : tToolbar('nextBook');
   const nextLabel = currentChapter < maxChapters
     ? `${selectedBookName} ${currentChapter + 1}`
     : (nextBook?.name || '');
 
   return (
     <nav
-      aria-label="Navegación de capítulos"
+      aria-label={tToolbar('chapterNavigation')}
       className="w-full flex items-center justify-between gap-4 pt-4 pb-2 print:hidden select-none"
     >
       {canGoPrev ? (

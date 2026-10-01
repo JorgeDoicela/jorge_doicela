@@ -78,32 +78,32 @@ export function BibleMobileAppSection() {
 
                             <div className="px-4 py-3 space-y-2.5 font-serif text-xs leading-relaxed overflow-hidden my-auto">
                                 <div className="text-[9px] font-mono text-accents-4 uppercase tracking-widest pb-1 border-b border-accents-2/40">
-                                    El Señor es mi Pastor
+                                    {tLanding('mobilePsalmHeader')}
                                 </div>
                                 <p className="text-foreground/90">
                                     <sup className="text-[9px] font-mono text-accents-4 mr-1">1</sup>
-                                    El Señor es mi pastor, nada me faltará.
+                                    {tLanding('mobileVerse1')}
                                 </p>
                                 <p className="text-foreground/90">
                                     <sup className="text-[9px] font-mono text-accents-4 mr-1">2</sup>
-                                    En lugares de verdes pastos me hace descansar; junto a aguas de reposo me conduce.
+                                    {tLanding('mobileVerse2')}
                                 </p>
                                 <p className="text-foreground/90">
                                     <sup className="text-[9px] font-mono text-accents-4 mr-1">3</sup>
-                                    Conforta mi alma; me guía por senderos de justicia por amor de Su nombre.
+                                    {tLanding('mobileVerse3')}
                                 </p>
                                 <p className="text-foreground/90">
                                     <sup className="text-[9px] font-mono text-accents-4 mr-1">4</sup>
-                                    Aunque pase por el valle de sombra de muerte, no temeré mal alguno...
+                                    {tLanding('mobileVerse4')}
                                 </p>
                             </div>
 
                             <div className="pt-2 pb-1.5 border-t border-accents-2/60 bg-accents-1/20">
                                 <div className="flex justify-around text-[10px] font-medium text-accents-4 px-2 pb-2">
-                                    <span className="text-foreground font-semibold">Lectura</span>
-                                    <span>Paralelo</span>
-                                    <span>Estudio</span>
-                                    <span>Notas</span>
+                                    <span className="text-foreground font-semibold">{tLanding('mobileTabReader')}</span>
+                                    <span>{tLanding('mobileTabParallel')}</span>
+                                    <span>{tLanding('mobileTabStudy')}</span>
+                                    <span>{tLanding('mobileTabNotes')}</span>
                                 </div>
                                 <div className="w-24 h-1 bg-foreground/30 rounded-full mx-auto" />
                             </div>

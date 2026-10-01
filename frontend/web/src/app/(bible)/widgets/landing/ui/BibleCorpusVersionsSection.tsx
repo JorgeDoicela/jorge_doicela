@@ -127,7 +127,7 @@ export function BibleCorpusVersionsSection() {
                                 <div className="p-3 rounded-xl bg-accents-1/50 border border-border/70 space-y-1">
                                     <div className="text-[9.5px] font-mono text-accents-4 uppercase tracking-wider flex items-center justify-between">
                                         <span>Salmos 23:1</span>
-                                        <span className="text-[9px] text-accents-4">Texto Fuente</span>
+                                        <span className="text-[9px] text-accents-4">{tLanding('sourceText')}</span>
                                     </div>
                                     <p
                                         dir={v.dir}

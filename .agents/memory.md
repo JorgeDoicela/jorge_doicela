@@ -159,7 +159,18 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - 100% de los repositorios inyectados (11/11) utilizan `@InjectRepository(Entity, 'doiceladevConnection')`, garantizando aislamiento físico en `doiceladev.sqlite`.
     - Orquestador `DoiceladevModule` registra las 11 entidades y los 10 submódulos con optimizaciones SQLite para VPS 1 GB RAM (WAL, cache_size 20MB, pragmas de alto rendimiento).
   - Verificación de Calidad: `pnpm -r typecheck` y `pnpm run lint` superados con 0 errores.
-
-
-
-
+* **Auditoría y Erradicación Total de Cadenas Hardcodeadas en los 4 Dominios (i18n /goal):**
+  - Se realizó una auditoría forense integral sobre todo el monorepo para certificar que el software respeta el esquema de internacionalización Inglés/Español sin textos quemados (hardcoded).
+  - Paridad de Diccionarios 1:1:
+    - `(doiceladev)`: 390/390 claves simétricas. Se agregaron `Spotlight.commandPalette` y `ArticleLayout.breadcrumb`, erradicando los últimos atributos estáticos.
+    - `(landing)`: 172/172 claves simétricas. Se internacionalizaron `AppleDetailExplorer.tsx` y `LinksAiAssistant.tsx`.
+    - `(portfolio)`: 232/232 claves simétricas. Se internacionalizaron `ProjectDetailModal.tsx`, `ProjectShowcase.tsx` y `portfolio/page.tsx`.
+    - `(bible)`: 920/920 claves simétricas. Se incorporaron 75+ nuevas claves cubriendo la totalidad de inspectores, barras laterales, herramientas del lector, carruseles y secciones de landing.
+  - Saneamiento Exhaustivo en `(bible)`:
+    - Inspectores y Paneles: `ArchaeologyInspector`, `ArchaeologySidebar`, `AtlasInspector`, `AtlasSidebar`, `InteractiveMapCanvas`, `EvangelismInspector`, `EvangelismSidebar`, `InterlinearInspector`, `InterlinearSidebar`, `WordStudyInspector`, `WordStudySidebar`, `ParallelDiffInspector`, `ParallelSidebar`, `ParallelViewGrid`, `TimelineInspector`, `TimelineSidebar`, `BibleNavigationSidebar`.
+    - Lector y Navegación: `ChapterNavigator`, `ReaderToolbar`, `VerseList`, `ThemeToggle`.
+    - Landing de la Biblia: `BibleCorpusVersionsSection`, `BibleEnginesCarousel`, `BibleMobileAppSection`, `BiblePurposeSection`.
+  - Verificación de Calidad y Cero Textos Residuales:
+    - Escaneo profundo con script automatizado: **0 atributos ni textos sospechosos con tildes/ñ quemados en los 4 dominios**.
+    - Compilación estricta TypeScript: `pnpm --filter web typecheck` (código 0) y `pnpm --filter backend build` (código 0).
+    - Principio de cajas negras y arquitectura de 1 GB RAM preservados al 100%.

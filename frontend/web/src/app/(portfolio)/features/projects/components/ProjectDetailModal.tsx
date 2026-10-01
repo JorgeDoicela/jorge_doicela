@@ -75,7 +75,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
 
           <button
             onClick={onClose}
-            aria-label="Cerrar modal de proyecto"
+            aria-label={t('modalClose')}
             className="p-2 rounded-lg text-foreground/60 hover:text-foreground hover:bg-foreground/10 border border-border/40 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />

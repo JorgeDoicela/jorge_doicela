@@ -320,14 +320,14 @@ export const AppleDetailExplorer: React.FC = () => {
                             <button
                                 onClick={handlePrev}
                                 className="w-7 h-7 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer"
-                                aria-label="Anterior característica"
+                                aria-label={isEs ? 'Anterior característica' : 'Previous feature'}
                             >
                                 <ChevronUp className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={handleNext}
                                 className="w-7 h-7 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer"
-                                aria-label="Siguiente característica"
+                                aria-label={isEs ? 'Siguiente característica' : 'Next feature'}
                             >
                                 <ChevronDown className="w-4 h-4" />
                             </button>
@@ -438,7 +438,7 @@ export const AppleDetailExplorer: React.FC = () => {
                                 <button
                                     onClick={handlePrev}
                                     className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
-                                    aria-label="Anterior característica"
+                                    aria-label={isEs ? 'Anterior característica' : 'Previous feature'}
                                 >
                                     <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                                 </button>
@@ -455,7 +455,7 @@ export const AppleDetailExplorer: React.FC = () => {
                                 <button
                                     onClick={handleNext}
                                     className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
-                                    aria-label="Siguiente característica"
+                                    aria-label={isEs ? 'Siguiente característica' : 'Next feature'}
                                 >
                                     <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                                 </button>

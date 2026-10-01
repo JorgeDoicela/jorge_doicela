@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { AiAssistantChatModal } from './AiAssistantChatModal';
 
 export function LinksAiAssistant() {
+  const t = useTranslations('AiAssistant');
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
   // Atajos de teclado: Ctrl + K (Abrir/Cerrar) y Esc (Cerrar)
@@ -36,8 +38,8 @@ export function LinksAiAssistant() {
           type="button"
           onClick={() => setIsAiModalOpen((prev) => !prev)}
           className="relative p-3.5 sm:p-4 rounded-full bg-card border border-card-border hover:border-card-hover-border text-foreground shadow-2xl backdrop-blur-2xl hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center"
-          aria-label="Abrir o cerrar asistente de IA"
-          title="Asistente de IA · Jorge Doicela"
+          aria-label={t('toggleAriaLabel')}
+          title={t('buttonTitle')}
         >
           <MessageCircle size={22} className="text-indigo-600 dark:text-indigo-400" />
         </button>

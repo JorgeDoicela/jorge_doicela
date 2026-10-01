@@ -21,6 +21,7 @@ export const TimelineInspector: React.FC = () => {
   const localTimeline = useBiblicalTimeline();
   const timeline = timelineContext || localTimeline;
   const tStudio = useTranslations('Studio');
+  const tTimeline = useTranslations('Timeline');
 
   const item = timeline.selectedItem;
 
@@ -59,7 +60,7 @@ export const TimelineInspector: React.FC = () => {
   return (
     <StudySidePanel
       side="right"
-      title="Ficha Cronológica"
+      title={tTimeline('inspectorTitle') || 'Ficha Cronológica'}
       icon={<Clock className="w-4 h-4 text-amber-500" />}
       storageKey="bible_timeline_inspector_w"
       defaultWidth={360}
@@ -91,21 +92,21 @@ export const TimelineInspector: React.FC = () => {
               {item.type === 'monarch' && (
                 <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Reino:</span>
+                    <span className="text-zinc-400">{tTimeline('kingdom')}</span>
                     <span className="font-semibold uppercase text-zinc-700 dark:text-zinc-300">{item.data.kingdom}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Evaluación:</span>
+                    <span className="text-zinc-400">{tTimeline('evaluation')}</span>
                     <span className="font-semibold capitalize text-zinc-700 dark:text-zinc-300">{item.data.evaluation}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Duración:</span>
-                    <span className="font-mono text-zinc-700 dark:text-zinc-300">{item.data.reignDurationYears} años</span>
+                    <span className="text-zinc-400">{tTimeline('duration')}</span>
+                    <span className="font-mono text-zinc-700 dark:text-zinc-300">{item.data.reignDurationYears} {tTimeline('years')}</span>
                   </div>
                   {item.data.archaeologicalCorroboration && (
                     <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60">
                       <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block mb-1">
-                        Corroboración Arqueológica
+                        {tTimeline('archaeologicalCorroboration')}
                       </span>
                       <p className="text-[11px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
                         {item.data.archaeologicalCorroboration}
@@ -118,18 +119,18 @@ export const TimelineInspector: React.FC = () => {
               {item.type === 'prophet' && (
                 <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Audiencia:</span>
+                    <span className="text-zinc-400">{tTimeline('audience')}</span>
                     <span className="font-semibold capitalize text-zinc-700 dark:text-zinc-300">{item.data.audience}</span>
                   </div>
                   {item.data.biblicalBook && (
                     <div className="flex items-center justify-between">
-                      <span className="text-zinc-400">Libro Canónico:</span>
+                      <span className="text-zinc-400">{tTimeline('canonicalBook')}</span>
                       <span className="font-semibold text-zinc-700 dark:text-zinc-300">{item.data.biblicalBook}</span>
                     </div>
                   )}
                   <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block mb-1">
-                      Mensaje Central
+                      {tTimeline('centralMessage')}
                     </span>
                     <p className="text-[11px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       {item.data.keyMessage}
@@ -141,12 +142,12 @@ export const TimelineInspector: React.FC = () => {
               {item.type === 'empire' && (
                 <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Imperio:</span>
+                    <span className="text-zinc-400">{tTimeline('empire')}</span>
                     <span className="font-semibold uppercase text-zinc-700 dark:text-zinc-300">{item.data.empire}</span>
                   </div>
                   <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block mb-1">
-                      Interacción Bíblica
+                      {tTimeline('biblicalInteraction')}
                     </span>
                     <p className="text-[11px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       {item.data.interactionWithBiblicalHistory}
@@ -158,16 +159,16 @@ export const TimelineInspector: React.FC = () => {
               {item.type === 'milestone' && (
                 <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Ubicación:</span>
+                    <span className="text-zinc-400">{tTimeline('location')}</span>
                     <span className="font-semibold text-zinc-700 dark:text-zinc-300">{item.data.location}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Museo / Custodia:</span>
+                    <span className="text-zinc-400">{tTimeline('museumCustody')}</span>
                     <span className="font-semibold text-zinc-700 dark:text-zinc-300">{item.data.museumLocation}</span>
                   </div>
                   <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block mb-1">
-                      Significado Histórico
+                      {tTimeline('historicalSignificance')}
                     </span>
                     <p className="text-[11px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       {item.data.significance}
@@ -180,7 +181,7 @@ export const TimelineInspector: React.FC = () => {
               {references.length > 0 && (
                 <div className="space-y-1.5">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold px-1">
-                    Citas y Pasajes Bíblicos
+                    {tTimeline('biblicalCitations')}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {references.map((ref, i) => (
@@ -199,10 +200,10 @@ export const TimelineInspector: React.FC = () => {
             <div className="p-6 text-center border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-2">
               <Clock className="w-8 h-8 text-zinc-400 mx-auto" />
               <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
-                Ningún evento seleccionado
+                {tTimeline('noEventSelected')}
               </h4>
               <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Haz clic sobre cualquier monarca, profeta o imperio en la cinta horizontal para examinar su sincronismo histórico y referencias bíblicas.
+                {tTimeline('noEventSelectedDesc')}
               </p>
             </div>
           )}

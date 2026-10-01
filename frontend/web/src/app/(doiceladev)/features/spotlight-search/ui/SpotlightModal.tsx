@@ -218,7 +218,7 @@ export function SpotlightModal({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Spotlight Command Palette"
+      aria-label={t('commandPalette')}
       className="fixed inset-0 z-50 flex items-start justify-center pt-20 md:pt-28 px-4 bg-black/60 backdrop-blur-md transition-all duration-300"
       onClick={onClose}
     >

@@ -169,7 +169,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-zinc-200/80 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
                   : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
               }`}
-              title="Ajustes de Tipografía y Lectura"
+              title={t('typographySettings')}
             >
               <Type className="w-3.5 h-3.5" />
               <span className="font-semibold text-[11px] font-mono">Aa</span>
@@ -181,7 +181,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 {/* Modo de Lectura (Especialmente accesible en móvil) */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
-                    Modo de Lectura
+                    {t('readingMode')}
                   </span>
                   <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
                     <button
@@ -214,7 +214,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 {/* Familia Tipográfica */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
-                    Familia Tipográfica
+                    {t('fontFamily')}
                   </span>
                   <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
                     <button
@@ -245,7 +245,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 {/* Tamaño de Fuente */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
-                    Tamaño de Fuente
+                    {t('fontSize')}
                   </span>
                   <div className="grid grid-cols-4 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
                     {fontSizes.map((f) => (
@@ -268,7 +268,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 {/* Tono de Lienzo Editorial */}
                 <div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1.5">
-                    Tono de Lectura
+                    {t('readingTone')}
                   </span>
                   <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden text-[11px]">
                     <button
@@ -280,7 +280,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                           : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                       }`}
                     >
-                      Auto
+                      {t('toneAuto')}
                     </button>
                     <button
                       type="button"
@@ -291,7 +291,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                           : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                       }`}
                     >
-                      Sepia
+                      {t('toneSepia')}
                     </button>
                     <button
                       type="button"
@@ -302,7 +302,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                           : 'bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                       }`}
                     >
-                      OLED
+                      {t('toneOled')}
                     </button>
                   </div>
                 </div>
@@ -310,7 +310,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 {/* Alternar Números de Versículo */}
                 <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
                   <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">
-                    Números de Versículo
+                    {t('verseNumbers')}
                   </span>
                   <button
                     type="button"
@@ -328,15 +328,15 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                 {/* Guía Rápida de Atajos de Teclado */}
                 <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800/80 text-[10px] text-zinc-400 space-y-1 font-mono">
                   <div className="flex justify-between">
-                    <span>Navegar capítulos:</span>
+                    <span>{t('navigateChapters')}</span>
                     <span className="text-zinc-600 dark:text-zinc-300 font-bold">← / → ó J / K</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Modo Enfoque:</span>
+                    <span>{t('focusMode')}</span>
                     <span className="text-zinc-600 dark:text-zinc-300 font-bold">F</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Tamaño de fuente:</span>
+                    <span>{t('fontSizeLabel')}</span>
                     <span className="text-zinc-600 dark:text-zinc-300 font-bold">+ / -</span>
                   </div>
                 </div>
@@ -356,7 +356,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-xs'
                   : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
               }`}
-              title={readerSettings.focusMode ? 'Salir de Modo Enfoque [Esc]' : 'Modo Enfoque Inmersivo [F]'}
+              title={readerSettings.focusMode ? t('exitFocusKey') : t('focusModeKey')}
             >
               {readerSettings.focusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
             </button>
@@ -381,7 +381,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
               if (typeof window !== 'undefined') window.print();
             }}
             className="hidden sm:flex p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
-            title="Imprimir o exportar pasaje a PDF"
+            title={t('printOrPdf')}
           >
             <Printer className="w-3.5 h-3.5" />
           </button>
@@ -396,8 +396,8 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   ? 'bg-zinc-200/80 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
                   : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
               }`}
-              title="Más acciones"
-              aria-label="Más acciones"
+              title={t('moreActions')}
+              aria-label={t('moreActions')}
             >
               <MoreHorizontal className="w-3.5 h-3.5" />
             </button>
@@ -428,7 +428,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     className="w-full flex items-center gap-2.5 px-2.5 py-2 text-xs rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-left font-medium"
                   >
                     {readerSettings.focusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-                    <span>{readerSettings.focusMode ? 'Salir de Enfoque' : 'Modo Enfoque'}</span>
+                    <span>{readerSettings.focusMode ? t('exitFocus') : t('focusModeShort')}</span>
                   </button>
                 )}
 
@@ -441,7 +441,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   className="w-full flex items-center gap-2.5 px-2.5 py-2 text-xs rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-left font-medium"
                 >
                   <Printer className="w-3.5 h-3.5" />
-                  <span>Imprimir / PDF</span>
+                  <span>{t('printPdf')}</span>
                 </button>
               </div>
             )}

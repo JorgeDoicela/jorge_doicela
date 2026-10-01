@@ -112,7 +112,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                         type="button"
                         onClick={() => onInspectRow(row)}
                         className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-background border border-accents-2 text-accents-5 hover:text-foreground hover:border-foreground transition-all shadow-xs flex items-center gap-1 cursor-pointer"
-                        title="Inspeccionar versículo en panel derecho"
+                        title={t('inspectVerseRight')}
                       >
                         <span>v.{row.verseNumber}</span>
                         <Sparkles className="w-2.5 h-2.5 text-primary" />
@@ -154,7 +154,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                                 type="button"
                                 onClick={() => onInspectRow(row)}
                                 className="text-[11px] font-mono font-semibold text-foreground flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
-                                title="Inspeccionar versículo"
+                                title={t('inspectVerse')}
                               >
                                 <span>v.{row.verseNumber} ({verseData?.translationAbbreviation || '---'})</span>
                                 <Sparkles className="w-3 h-3 text-primary" />

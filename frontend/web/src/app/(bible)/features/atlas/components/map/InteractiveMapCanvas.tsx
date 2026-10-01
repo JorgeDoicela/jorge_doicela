@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 import { AncientPlace, MapLayerType } from '../../types';
 import { projectGeoToCanvas } from '../../hooks/useAtlasMap';
 
@@ -38,6 +39,7 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
   onTouchMove,
   onTouchEnd,
 }) => {
+  const tAtlas = useTranslations('Atlas');
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
@@ -133,17 +135,17 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         {(activeLayer === 'satellite' || isDark) && (
           <g fill={textMutedColor} opacity={0.7} fontSize="10" fontWeight="600" fontFamily="monospace" textAnchor="middle">
             <text x="280" y="360" transform="rotate(-15, 280, 360)">
-              MARE INTERNUM (MEDITERRÁNEO)
+              MARE INTERNUM
             </text>
-            <text x="540" y="180">ASIA MENOR</text>
-            <text x="210" y="180">MACEDONIA & AQUEA</text>
-            <text x="630" y="260">SIRIA</text>
-            <text x="488" y="340">GALILEA</text>
-            <text x="484" y="365">SAMARIA</text>
-            <text x="480" y="405">JUDEA</text>
-            <text x="458" y="555">PENÍNSULA DEL SINAÍ</text>
-            <text x="360" y="520">EGIPTO (GOSÉN)</text>
-            <text x="640" y="440">ARABIA / MOAB</text>
+            <text x="540" y="180">{tAtlas('regionAsiaMinor')}</text>
+            <text x="210" y="180">{tAtlas('regionMacedonia')}</text>
+            <text x="630" y="260">{tAtlas('regionSyria')}</text>
+            <text x="488" y="340">{tAtlas('regionGalilee')}</text>
+            <text x="484" y="365">{tAtlas('regionSamaria')}</text>
+            <text x="480" y="405">{tAtlas('regionJudea')}</text>
+            <text x="458" y="555">{tAtlas('regionSinai')}</text>
+            <text x="360" y="520">{tAtlas('regionEgypt')}</text>
+            <text x="640" y="440">{tAtlas('regionArabia')}</text>
           </g>
         )}
 

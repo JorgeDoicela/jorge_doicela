@@ -21,6 +21,7 @@ export const WordStudyInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const lexicon = useLexiconContextSafe();
   const tStudio = useTranslations('Studio');
+  const tWord = useTranslations('WordStudy');
 
   const [activeTab, setActiveTab] = useState<'concordance' | 'verse'>('concordance');
   const [copied, setCopied] = useState(false);
@@ -38,7 +39,7 @@ export const WordStudyInspector: React.FC = () => {
   return (
     <StudySidePanel
       side="right"
-      title="Concordancia & Exégesis"
+      title={tWord('inspectorTitle')}
       icon={<BarChart3 className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />}
       badge={activeTerm ? `${activeTerm.strong} • ${activeTerm.occurrences} apariciones` : undefined}
       storageKey="bible_lexicon_inspector_w"
@@ -58,7 +59,7 @@ export const WordStudyInspector: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Concordancia</span>
+            <span>{tWord('concordanceTab')}</span>
           </button>
           <button
             type="button"
@@ -70,7 +71,7 @@ export const WordStudyInspector: React.FC = () => {
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Versículo</span>
+            <span>{tWord('verseTab')}</span>
           </button>
         </div>
       </StudySidePanel.Toolbar>
@@ -91,17 +92,17 @@ export const WordStudyInspector: React.FC = () => {
                         type="button"
                         onClick={handleCopyTerm}
                         className="flex items-center gap-1 text-xs text-zinc-500 hover:text-foreground cursor-pointer transition-colors"
-                        title="Copiar ficha de estudio"
+                        title={tWord('copyStudyCard')}
                       >
                         {copied ? (
                           <>
                             <Check className="w-3 h-3 text-emerald-500" />
-                            <span className="text-emerald-500">Copiado</span>
+                            <span className="text-emerald-500">{tWord('copied')}</span>
                           </>
                         ) : (
                           <>
                             <Copy className="w-3 h-3" />
-                            <span>Copiar</span>
+                            <span>{tWord('copy')}</span>
                           </>
                         )}
                       </button>
@@ -120,7 +121,7 @@ export const WordStudyInspector: React.FC = () => {
                     </div>
 
                     <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between text-xs">
-                      <span className="text-zinc-400">Traducción:</span>
+                      <span className="text-zinc-400">{tWord('translationLabel')}</span>
                       <span className="font-semibold text-foreground">
                         {activeTerm.gloss}
                       </span>
@@ -172,7 +173,7 @@ export const WordStudyInspector: React.FC = () => {
               ) : (
                 <div className="py-12 text-center text-xs text-zinc-400 space-y-2">
                   <BarChart3 className="w-8 h-8 text-zinc-300 dark:text-zinc-700 mx-auto" />
-                  <p>Selecciona un vocablo en el panel izquierdo para ver su concordancia exegética.</p>
+                  <p>{tWord('emptyInspectorPrompt')}</p>
                 </div>
               )}
             </>

@@ -50,7 +50,7 @@ export const AtlasSidebar: React.FC = () => {
   return (
     <StudySidePanel
       side="left"
-      title="Atlas Bíblico WGS84"
+      title={tAtlas('sidebarTitle')}
       icon={<Compass className="w-4 h-4 text-rose-500" />}
       storageKey="bible_atlas_sidebar_w"
       defaultWidth={340}
@@ -68,7 +68,7 @@ export const AtlasSidebar: React.FC = () => {
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <span>Lugares</span>
+              <span>{tAtlas('places')}</span>
             </button>
             <button
               type="button"
@@ -79,7 +79,7 @@ export const AtlasSidebar: React.FC = () => {
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <span>Épocas</span>
+              <span>{tAtlas('eras')}</span>
             </button>
             <button
               type="button"
@@ -90,7 +90,7 @@ export const AtlasSidebar: React.FC = () => {
                   : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
-              <span>Tipos</span>
+              <span>{tAtlas('types')}</span>
             </button>
           </div>
 
@@ -102,7 +102,7 @@ export const AtlasSidebar: React.FC = () => {
                 type="text"
                 value={atlas?.searchQuery || ''}
                 onChange={(e) => atlas?.setSearchQuery(e.target.value)}
-                placeholder="Buscar lugar bíblico o moderno..."
+                placeholder={tAtlas('searchPlaceholder')}
                 className="w-full pl-8 pr-7 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 transition-colors"
               />
               {atlas?.searchQuery && (
@@ -126,7 +126,7 @@ export const AtlasSidebar: React.FC = () => {
               <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 px-1">
                 <span>{places.length} ubicaciones</span>
                 {atlas?.activeEra !== 'all' && (
-                  <span className="text-amber-500 font-semibold">Filtro de época activo</span>
+                  <span className="text-amber-500 font-semibold">{tAtlas('eraFilterActive')}</span>
                 )}
               </div>
 

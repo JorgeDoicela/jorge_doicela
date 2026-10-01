@@ -14,6 +14,7 @@ export const WordStudySidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const lexicon = useLexiconContextSafe();
   const tStudio = useTranslations('Studio');
+  const tWord = useTranslations('WordStudy');
 
   const [filterQuery, setFilterQuery] = useState('');
 
@@ -38,7 +39,7 @@ export const WordStudySidebar: React.FC = () => {
   return (
     <StudySidePanel
       side="left"
-      title="Explorador Léxico"
+      title={tWord('sidebarTitle')}
       icon={<Languages className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />}
       badge={activeLanguage === 'hebrew' ? 'Léxico Hebreo BDB' : 'Léxico Griego Thayer'}
       storageKey="bible_lexicon_sidebar_w"
@@ -80,7 +81,7 @@ export const WordStudySidebar: React.FC = () => {
             type="text"
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}
-            placeholder="Buscar por Strong, lema o glosa..."
+            placeholder={tWord('searchPlaceholder')}
             className="w-full text-xs pl-8.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-background text-foreground placeholder:text-zinc-400 focus:outline-hidden focus:border-foreground transition-colors"
           />
         </div>

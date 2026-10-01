@@ -23,6 +23,7 @@ export const ParallelDiffInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const parallel = useParallelContextSafe();
   const tStudio = useTranslations('Studio');
+  const tParallel = useTranslations('Parallel');
 
   const [activeTab, setActiveTab] = useState<'diff' | 'strong'>('diff');
   const [copied, setCopied] = useState(false);
@@ -108,7 +109,7 @@ export const ParallelDiffInspector: React.FC = () => {
               onClick={handlePrevVerse}
               disabled={selectedVerseNumber <= 1}
               className="p-1 rounded-md text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 disabled:opacity-30 cursor-pointer"
-              title="Versículo anterior"
+              title={tParallel('prevVerse')}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -116,7 +117,7 @@ export const ParallelDiffInspector: React.FC = () => {
               type="button"
               onClick={handleNextVerse}
               className="p-1 rounded-md text-zinc-400 hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer"
-              title="Versículo siguiente"
+              title={tParallel('nextVerse')}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -135,7 +136,7 @@ export const ParallelDiffInspector: React.FC = () => {
             }`}
           >
             <ArrowRightLeft className="w-3.5 h-3.5" />
-            <span>Diff Textual</span>
+            <span>{tParallel('diffTextualTab')}</span>
           </button>
           <button
             type="button"
@@ -147,7 +148,7 @@ export const ParallelDiffInspector: React.FC = () => {
             }`}
           >
             <Languages className="w-3.5 h-3.5" />
-            <span>Morfología</span>
+            <span>{tParallel('morphologyTab')}</span>
           </button>
         </div>
       </StudySidePanel.Toolbar>
@@ -159,22 +160,22 @@ export const ParallelDiffInspector: React.FC = () => {
               {/* SELECTORES DE LAS DOS VERSIONES A COMPARAR */}
               <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/40 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                  <span>Cotejar Columnas</span>
+                  <span>{tParallel('compareColumnsTab')}</span>
                   <button
                     type="button"
                     onClick={handleCopyComparison}
                     className="flex items-center gap-1 text-zinc-500 hover:text-foreground cursor-pointer transition-colors"
-                    title="Copiar comparación"
+                    title={tParallel('copyComparison')}
                   >
                     {copied ? (
                       <>
                         <Check className="w-3 h-3 text-emerald-500" />
-                        <span className="text-emerald-500">Copiado</span>
+                        <span className="text-emerald-500">{tParallel('copied')}</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
-                        <span>Copiar</span>
+                        <span>{tParallel('copy')}</span>
                       </>
                     )}
                   </button>
@@ -182,7 +183,7 @@ export const ParallelDiffInspector: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[10px] font-mono text-zinc-400 block mb-1">Base A:</label>
+                    <label className="text-[10px] font-mono text-zinc-400 block mb-1">{tParallel('baseA')}</label>
                     <select
                       value={diffTransAId ?? ''}
                       onChange={(e) => setDiffTransAId(Number(e.target.value))}
@@ -200,7 +201,7 @@ export const ParallelDiffInspector: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-mono text-zinc-400 block mb-1">Cotejo B:</label>
+                    <label className="text-[10px] font-mono text-zinc-400 block mb-1">{tParallel('compareB')}</label>
                     <select
                       value={diffTransBId ?? ''}
                       onChange={(e) => setDiffTransBId(Number(e.target.value))}
@@ -222,7 +223,7 @@ export const ParallelDiffInspector: React.FC = () => {
                 {diffResult && (
                   <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 space-y-1.5">
                     <div className="flex items-center justify-between text-[11px] font-mono">
-                      <span className="text-zinc-500 dark:text-zinc-400">Similitud Léxica (LCS):</span>
+                      <span className="text-zinc-500 dark:text-zinc-400">{tParallel('lexicalSimilarityLCS')}</span>
                       <span className="font-bold text-foreground">
                         {diffResult.similarityPercentage}%
                       </span>
@@ -259,7 +260,7 @@ export const ParallelDiffInspector: React.FC = () => {
                             <span
                               key={i}
                               className="bg-amber-500/15 text-amber-600 dark:text-amber-400 font-medium rounded-xs px-1 py-0.5 inline-block"
-                              title="Palabra omitida o divergente en B"
+                              title={tParallel('omittedWordTooltip')}
                             >
                               {tok.value}
                             </span>
@@ -293,7 +294,7 @@ export const ParallelDiffInspector: React.FC = () => {
                             <span
                               key={i}
                               className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-medium rounded-xs px-1 py-0.5 inline-block"
-                              title="Palabra añadida o diferente en B"
+                              title={tParallel('addedWordTooltip')}
                             >
                               {tok.value}
                             </span>
@@ -311,7 +312,7 @@ export const ParallelDiffInspector: React.FC = () => {
               ) : (
                 <div className="py-12 text-center text-xs text-zinc-400 space-y-2">
                   <BookMarked className="w-8 h-8 text-zinc-300 dark:text-zinc-700 mx-auto" />
-                  <p>Selecciona dos versiones activas para ver el diff textual.</p>
+                  <p>{tParallel('emptyDiffPrompt')}</p>
                 </div>
               )}
             </>

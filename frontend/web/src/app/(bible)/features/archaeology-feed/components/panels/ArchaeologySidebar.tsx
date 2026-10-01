@@ -32,6 +32,7 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
   const passageContext = useBiblePassageSafe();
   const archContext = useArchaeologyContextSafe();
   const tStudio = useTranslations('Studio');
+  const tArch = useTranslations('ArchaeologyFeed');
 
   const selectedCategory = propCategory ?? archContext?.selectedCategory ?? 'all';
   const onSelectCategory = propOnSelectCategory ?? archContext?.setSelectedCategory ?? (() => {});
@@ -42,26 +43,26 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
   const [activeTab, setActiveTab] = useState<'categories' | 'regions'>('categories');
 
   const categories: { id: ArticleCategory | 'all'; label: string; icon: React.ComponentType<{ className?: string }>; count: string }[] = [
-    { id: 'all', label: 'Todos los Registros', icon: Layers, count: 'Total' },
-    { id: 'recent_discoveries', label: 'Excavaciones Recientes', icon: Compass, count: 'Nuevos' },
-    { id: 'manuscripts_epigraphy', label: 'Manuscritos y Epigrafía', icon: Scroll, count: 'Rollos' },
-    { id: 'apologetics_reliability', label: 'Confiabilidad Histórica', icon: ShieldCheck, count: 'Defensa' },
+    { id: 'all', label: tArch('categoryAll'), icon: Layers, count: 'Total' },
+    { id: 'recent_discoveries', label: tArch('categoryRecent'), icon: Compass, count: 'Nuevos' },
+    { id: 'manuscripts_epigraphy', label: tArch('categoryManuscripts'), icon: Scroll, count: 'Rollos' },
+    { id: 'apologetics_reliability', label: tArch('categoryApologetics'), icon: ShieldCheck, count: 'Defensa' },
   ];
 
   const regions: { id: GeographicRegion; label: string; location: string }[] = [
-    { id: 'all', label: 'Todas las Regiones', location: 'Creciente Fértil' },
-    { id: 'jerusalem_judea', label: 'Jerusalén y Judea', location: 'Ciudad de David, Ofel' },
-    { id: 'galilee_samaria', label: 'Galilea y Samaria', location: 'Hazor, Meguido, Capernaúm' },
-    { id: 'jordan_dead_sea', label: 'Jordán y Mar Muerto', location: 'Qumrán, Masada' },
+    { id: 'all', label: tArch('regionAll'), location: 'Creciente Fértil' },
+    { id: 'jerusalem_judea', label: tArch('regionJerusalem'), location: 'Ciudad de David, Ofel' },
+    { id: 'galilee_samaria', label: tArch('regionGalilee'), location: 'Hazor, Meguido, Capernaúm' },
+    { id: 'jordan_dead_sea', label: tArch('regionJordan'), location: 'Qumrán, Masada' },
     { id: 'egypt_sinai', label: 'Egipto y Sinaí', location: 'Delta, Tell el-Daba' },
-    { id: 'turkey_asia_minor', label: 'Turquía y Asia Menor', location: 'Éfeso, Pérgamo, Antioquía' },
-    { id: 'greece_rome', label: 'Grecia y Roma', location: 'Corinto, Atenas, Catacumbas' },
+    { id: 'turkey_asia_minor', label: tArch('regionTurkey'), location: 'Éfeso, Pérgamo, Antioquía' },
+    { id: 'greece_rome', label: tArch('regionGreece'), location: 'Corinto, Atenas, Catacumbas' },
   ];
 
   return (
     <StudySidePanel
       side="left"
-      title="Arqueología y Evidencias"
+      title={tArch('sidebarTitle')}
       icon={<Compass className="w-4 h-4 text-emerald-500" />}
       storageKey="bible_archaeology_sidebar_w"
       defaultWidth={320}
@@ -79,7 +80,7 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <span>Categorías</span>
+            <span>{tArch('categories')}</span>
           </button>
           <button
             type="button"
@@ -90,7 +91,7 @@ export const ArchaeologySidebar: React.FC<ArchaeologySidebarProps> = ({
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <span>Regiones</span>
+            <span>{tArch('regions')}</span>
           </button>
         </div>
       </StudySidePanel.Toolbar>

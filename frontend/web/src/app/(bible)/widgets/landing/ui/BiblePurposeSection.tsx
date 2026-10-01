@@ -188,8 +188,8 @@ export function BiblePurposeSection() {
                                     </p>
 
                                     <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 pt-1">
-                                        <span className="text-zinc-500">Persistencia SQLite</span>
-                                        <span className="text-zinc-300">100% Offline</span>
+                                        <span className="text-zinc-500">{tLanding('sqlitePersistence')}</span>
+                                        <span className="text-zinc-300">{tLanding('offline100')}</span>
                                     </div>
                                 </div>
 
@@ -328,11 +328,11 @@ export function BiblePurposeSection() {
                                 <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-4.5 shadow-inner mt-auto space-y-2 text-xs">
                                     <div className="flex items-center justify-between p-2 rounded-xl bg-zinc-950 border border-zinc-800/80">
                                         <span className="font-mono text-[10px] text-zinc-200 font-medium">{tLanding('purposeCompareCard3M1')}</span>
-                                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">Hebreo</span>
+                                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">{tLanding('langHebrew')}</span>
                                     </div>
                                     <div className="flex items-center justify-between p-2 rounded-xl bg-zinc-950 border border-zinc-800/80">
                                         <span className="font-mono text-[10px] text-zinc-200 font-medium">{tLanding('purposeCompareCard3M2')}</span>
-                                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">Griego</span>
+                                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">{tLanding('langGreek')}</span>
                                     </div>
                                 </div>
                             </div>

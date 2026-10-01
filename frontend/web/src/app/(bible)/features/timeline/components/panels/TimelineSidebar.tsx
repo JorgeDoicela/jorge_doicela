@@ -20,32 +20,33 @@ export const TimelineSidebar: React.FC = () => {
   const localTimeline = useBiblicalTimeline();
   const timeline = timelineContext || localTimeline;
   const tStudio = useTranslations('Studio');
+  const tTimeline = useTranslations('Timeline');
 
   const [activeTab, setActiveTab] = useState<'eras' | 'tracks'>('eras');
 
   const eras = [
-    { id: 'all', label: 'Toda la Cronología', range: 'c. 2000 a.C. - 100 d.C.', year: 1000 },
-    { id: 'patriarchs', label: 'Patriarcas y Orígenes', range: 'c. 2000 - 1500 a.C.', year: 1800 },
-    { id: 'exodus', label: 'Éxodo y Conquista', range: 'c. 1445 - 1375 a.C.', year: 1400 },
-    { id: 'monarchy_united', label: 'Monarquía Unida (Saúl, David, Salomón)', range: 'c. 1050 - 930 a.C.', year: 1000 },
-    { id: 'monarchy_divided', label: 'Monarquía Dividida (Judá e Israel)', range: 'c. 930 - 586 a.C.', year: 750 },
-    { id: 'exile', label: 'Exilio en Babilonia', range: 'c. 586 - 538 a.C.', year: 560 },
-    { id: 'second_temple', label: 'Segundo Templo y Período Intertestamentario', range: 'c. 538 - 4 a.C.', year: 400 },
-    { id: 'new_testament', label: 'Ministerio de Jesús y Época Apostólica', range: 'c. 4 a.C. - 100 d.C.', year: 30 },
+    { id: 'all', label: tTimeline('allHistory'), range: 'c. 2000 a.C. - 100 d.C.', year: 1000 },
+    { id: 'patriarchs', label: tTimeline('patriarchs'), range: 'c. 2000 - 1500 a.C.', year: 1800 },
+    { id: 'exodus', label: tTimeline('exodus'), range: 'c. 1445 - 1375 a.C.', year: 1400 },
+    { id: 'monarchy_united', label: tTimeline('monarchyUnited'), range: 'c. 1050 - 930 a.C.', year: 1000 },
+    { id: 'monarchy_divided', label: tTimeline('monarchyDivided'), range: 'c. 930 - 586 a.C.', year: 750 },
+    { id: 'exile', label: tTimeline('exile'), range: 'c. 586 - 538 a.C.', year: 560 },
+    { id: 'second_temple', label: tTimeline('secondTemple'), range: 'c. 538 - 4 a.C.', year: 400 },
+    { id: 'new_testament', label: tTimeline('newTestamentEra'), range: 'c. 4 a.C. - 100 d.C.', year: 30 },
   ];
 
   const tracks = [
-    { id: 'judah' as const, label: 'Reyes de Judá', icon: Crown, color: 'text-amber-500' },
-    { id: 'israel' as const, label: 'Reyes de Israel', icon: Crown, color: 'text-blue-500' },
-    { id: 'prophets' as const, label: 'Profetas Bíblicos', icon: ScrollText, color: 'text-emerald-500' },
-    { id: 'empires' as const, label: 'Imperios Mundiales', icon: Globe, color: 'text-purple-500' },
-    { id: 'milestones' as const, label: 'Hitos Arqueológicos', icon: Sparkles, color: 'text-rose-500' },
+    { id: 'judah' as const, label: tTimeline('judahKings'), icon: Crown, color: 'text-amber-500' },
+    { id: 'israel' as const, label: tTimeline('israelKings'), icon: Crown, color: 'text-blue-500' },
+    { id: 'prophets' as const, label: tTimeline('biblicalProphets'), icon: ScrollText, color: 'text-emerald-500' },
+    { id: 'empires' as const, label: tTimeline('worldEmpires'), icon: Globe, color: 'text-purple-500' },
+    { id: 'milestones' as const, label: tTimeline('archaeologicalMilestones'), icon: Sparkles, color: 'text-rose-500' },
   ];
 
   return (
     <StudySidePanel
       side="left"
-      title="Cronología Sincrónica"
+      title={tTimeline('sidebarTitle') || 'Cronología Sincrónica'}
       icon={<Clock className="w-4 h-4 text-amber-500" />}
       storageKey="bible_timeline_sidebar_w"
       defaultWidth={340}
@@ -63,7 +64,7 @@ export const TimelineSidebar: React.FC = () => {
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <span>Épocas Bíblicas</span>
+            <span>{tTimeline('biblicalEras')}</span>
           </button>
           <button
             type="button"
@@ -74,7 +75,7 @@ export const TimelineSidebar: React.FC = () => {
                 : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
             }`}
           >
-            <span>Líneas Históricas</span>
+            <span>{tTimeline('historicalTracks')}</span>
           </button>
         </div>
       </StudySidePanel.Toolbar>
@@ -85,7 +86,7 @@ export const TimelineSidebar: React.FC = () => {
           <div className="space-y-1.5">
             <div className="px-1 mb-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
-                Saltar a Época Histórica en la Cinta
+                {tTimeline('jumpToEraTitle')}
               </span>
             </div>
             {eras.map((era) => (
@@ -120,7 +121,7 @@ export const TimelineSidebar: React.FC = () => {
           <div className="space-y-1.5">
             <div className="px-1 mb-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
-                Líneas de Tiempo Visibles
+                {tTimeline('visibleTracksTitle')}
               </span>
             </div>
             {tracks.map((track) => {

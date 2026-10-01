@@ -15,6 +15,7 @@ import { StudySidePanel } from '../../../../shared/ui';
 export const EvangelismInspector: React.FC = () => {
   const evangelism = useEvangelismContextSafe();
   const tStudio = useTranslations('Studio');
+  const tEvang = useTranslations('Evangelism');
 
   const activeTab = evangelism?.activeTab ?? 'pathways';
   const pathway = evangelism?.selectedPathway;
@@ -26,7 +27,7 @@ export const EvangelismInspector: React.FC = () => {
   return (
     <StudySidePanel
       side="right"
-      title="Asistente de Evangelismo"
+      title={tEvang('inspectorTitle')}
       icon={<Sparkles className="w-4 h-4 text-emerald-500" />}
       storageKey="bible_evangelism_inspector_w"
       defaultWidth={360}
@@ -66,7 +67,7 @@ export const EvangelismInspector: React.FC = () => {
               {/* Exposición Teológica del Paso */}
               <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/70 dark:bg-black/60 space-y-1.5">
                 <div className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-                  <span>Exposición Teológica</span>
+                  <span>{tEvang('theologicalExposition')}</span>
                 </div>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                   {activeStep.exposition}
@@ -76,7 +77,7 @@ export const EvangelismInspector: React.FC = () => {
               {/* Pregunta para el Diálogo */}
               <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-amber-500/5 dark:bg-amber-500/10 border-amber-500/20 space-y-1.5">
                 <div className="text-xs font-semibold text-amber-700 dark:text-amber-400">
-                  <span>Pregunta de Reflexión</span>
+                  <span>{tEvang('reflectionQuestion')}</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed italic">
                   {activeStep.reflectionQuestion}
@@ -87,7 +88,7 @@ export const EvangelismInspector: React.FC = () => {
               {activeStep.actionCall && (
                 <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-emerald-500/5 dark:bg-emerald-500/10 border-emerald-500/20 space-y-1.5">
                   <div className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
-                    <span>Llamado a la Fe</span>
+                    <span>{tEvang('faithCall')}</span>
                   </div>
                   <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed font-medium">
                     {activeStep.actionCall}
@@ -104,7 +105,7 @@ export const EvangelismInspector: React.FC = () => {
                   className="px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-xs font-medium disabled:opacity-30 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-3 h-3" />
-                  <span>Anterior</span>
+                  <span>{tEvang('previous')}</span>
                 </button>
                 <button
                   type="button"
@@ -112,7 +113,7 @@ export const EvangelismInspector: React.FC = () => {
                   disabled={(evangelism?.activeStepIndex || 0) === totalSteps - 1}
                   className="px-3 py-1.5 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold disabled:opacity-30 hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer"
                 >
-                  <span>Siguiente</span>
+                  <span>{tEvang('next')}</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
@@ -146,7 +147,7 @@ export const EvangelismInspector: React.FC = () => {
               <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/60 dark:bg-black/60 space-y-2">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-800 dark:text-zinc-200">
                   <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
-                  <span>Método Socrático de Jesús</span>
+                  <span>{tEvang('socraticMethod')}</span>
                 </div>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                   Cuando te hagan una objeción agresiva, responde primero con una pregunta aclaratoria: «¿Por qué es importante eso para ti?» o «¿Qué quieres decir exactamente con esa palabra?». Esto desarma la hostilidad y toca el corazón.

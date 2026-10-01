@@ -95,7 +95,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
               <div className="flex flex-col gap-2">
                 <h3
                   className="text-lg md:text-xl font-light text-foreground group-hover:text-gold-200 transition-colors flex items-center justify-between"
-                  title="Ver caso de estudio detallado"
+                  title={t('caseStudyTitle')}
                 >
                   <span>{project.title}</span>
                 </h3>
@@ -126,7 +126,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                   handleOpenDetail(project);
                 }}
                 className="flex items-center gap-1.5 text-xs font-mono text-muted hover:text-gold-300 transition-colors cursor-pointer group/btn"
-                title="Ver caso de estudio y arquitectura"
+                title={t('caseStudyArchitecture')}
               >
                 <BookOpen className="w-3.5 h-3.5 text-gold-400/80 group-hover/btn:text-gold-300 transition-colors" />
                 <span className="underline decoration-border/60 underline-offset-4 group-hover/btn:decoration-gold-300">

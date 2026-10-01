@@ -16,13 +16,14 @@ export const AtlasInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const atlas = useAtlasContextSafe();
   const tStudio = useTranslations('Studio');
+  const tAtlas = useTranslations('Atlas');
 
   const place = atlas?.selectedPlace;
 
   return (
     <StudySidePanel
       side="right"
-      title="Telemetría WGS84"
+      title={tAtlas('inspectorTitle')}
       icon={<Compass className="w-4 h-4 text-rose-500" />}
       storageKey="bible_atlas_inspector_w"
       defaultWidth={360}
@@ -58,22 +59,22 @@ export const AtlasInspector: React.FC = () => {
               {/* Telemetría WGS84 */}
               <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2">
                 <div className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                  <span>Coordenadas Geográficas WGS84</span>
+                  <span>{tAtlas('coordinatesWGS84')}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
                   <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/60">
-                    <span className="text-zinc-400 block text-[9px] uppercase">Latitud</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase">{tAtlas('latitude')}</span>
                     <span className="font-bold text-zinc-800 dark:text-zinc-200">{place.coordinates.lat.toFixed(4)}° N</span>
                   </div>
                   <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/60">
-                    <span className="text-zinc-400 block text-[9px] uppercase">Longitud</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase">{tAtlas('longitude')}</span>
                     <span className="font-bold text-zinc-800 dark:text-zinc-200">{place.coordinates.lng.toFixed(4)}° E</span>
                   </div>
                 </div>
                 {place.modernName && (
                   <div className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5 pt-1">
                     <MapPin className="w-3 h-3 text-zinc-400" />
-                    <span>Nombre moderno: <strong className="text-zinc-700 dark:text-zinc-300">{place.modernName}</strong></span>
+                    <span>{tAtlas('modernName')} <strong className="text-zinc-700 dark:text-zinc-300">{place.modernName}</strong></span>
                   </div>
                 )}
               </div>
@@ -83,7 +84,7 @@ export const AtlasInspector: React.FC = () => {
                 <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-amber-500/5 dark:bg-amber-500/10 border-amber-500/20 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="text-xs font-bold text-amber-600 dark:text-amber-400">
-                      <span>Evidencia Arqueológica</span>
+                      <span>{tAtlas('archaeologicalEvidence')}</span>
                     </div>
                     {place.archaeologicalNotes.verifiedByBiblicalArchaeology && (
                       <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-semibold">
@@ -93,7 +94,7 @@ export const AtlasInspector: React.FC = () => {
                   </div>
                   {place.archaeologicalNotes.excavationStatus && (
                     <p className="text-xs text-zinc-600 dark:text-zinc-300">
-                      <strong>Estado:</strong> {place.archaeologicalNotes.excavationStatus}
+                      <strong>{tAtlas('excavationStatus')}</strong> {place.archaeologicalNotes.excavationStatus}
                     </p>
                   )}
                   {place.archaeologicalNotes.discoveries && place.archaeologicalNotes.discoveries.length > 0 && (

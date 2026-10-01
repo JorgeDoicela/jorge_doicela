@@ -46,7 +46,9 @@
     "modalTelemetry": "Especificaciones & Telemetría",
     "modalVerifiedMetrics": "Métricas Verificadas",
     "modalClose": "Cerrar",
-    "modalViewGithub": "Ver Código en GitHub"
+    "modalViewGithub": "Ver Código en GitHub",
+    "caseStudyTitle": "Ver caso de estudio detallado",
+    "caseStudyArchitecture": "Ver caso de estudio y arquitectura"
   },
   "Stack": {
     "eyebrow": "Stack Principal",
@@ -125,7 +127,8 @@
     "sendAnotherBtn": "Enviar otro mensaje",
     "charLimit": "caracteres",
     "successMsg": "¡Mensaje enviado con éxito! Te responderé a la brevedad.",
-    "errorMsg": "Ocurrió un error al enviar el mensaje. Por favor intenta de nuevo."
+    "errorMsg": "Ocurrió un error al enviar el mensaje. Por favor intenta de nuevo.",
+    "mapsTitle": "Ver Quito, Ecuador en Google Maps"
   },
   "Terminal": {
     "eyebrow": "CONSOLA INTERACTIVA",

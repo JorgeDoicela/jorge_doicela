@@ -47,6 +47,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
 
   const tStudio = useTranslations('Studio');
   const tBooks = useTranslations('Books');
+  const tNav = useTranslations('Nav');
   const passageContext = useBiblePassageSafe();
 
   // Soporte Dual: Props explícitas con fallback transparente a BiblePassageContext
@@ -198,7 +199,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
 
                     {/* Insignia Contextual Doctrinal en Evangelismo */}
                     {isEvangelism && isKeyDoctrineBook && (
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" title="Libro fundamental de doctrina y evangelismo" />
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" title={tNav('keyDoctrinalBook')} />
                     )}
                   </div>
                   <div className="flex items-center shrink-0 ml-1">
@@ -241,7 +242,7 @@ export const BibleNavigationSidebar: React.FC<BibleNavigationSidebarProps> = ({
                           className="text-[11px] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center gap-1 transition-colors font-medium group"
                         >
                           <BookOpen className="w-3 h-3 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />
-                          <span>Leer en Lector</span>
+                          <span>{tNav('readInReader')}</span>
                           <ArrowRight className="w-3 h-3 opacity-60 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
                         <span className="text-[10px] font-mono text-zinc-400">

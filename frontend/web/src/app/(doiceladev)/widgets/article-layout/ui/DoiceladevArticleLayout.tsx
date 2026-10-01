@@ -89,7 +89,7 @@ export function DoiceladevArticleLayout({
               {/* Barra Jerárquica de Navegación Centrada */}
               <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-xs select-none">
                 {/* Migas de Pan (Breadcrumbs) Embebidas */}
-                <nav aria-label="Breadcrumb" className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400">
+                <nav aria-label={tArticle('breadcrumb')} className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400">
                   <Link
                     href="/"
                     className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"

@@ -175,7 +175,7 @@ export default async function PortfolioPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-between p-3 rounded-lg border border-border bg-background/30 hover:bg-surface-raised transition-all duration-300 text-xs text-foreground/80 hover:text-foreground font-mono"
-                            title="Ver Quito, Ecuador en Google Maps"
+                            title={tContact('mapsTitle')}
                         >
                             <span className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4 text-gold-300" />

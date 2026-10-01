@@ -24,6 +24,7 @@ export const InterlinearInspector: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const interlinear = useInterlinearContextSafe();
   const tStudio = useTranslations('Studio');
+  const tInter = useTranslations('Interlinear');
 
   const [activeTab, setActiveTab] = useState<'morphology' | 'verse'>('morphology');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -89,7 +90,7 @@ export const InterlinearInspector: React.FC = () => {
   return (
     <StudySidePanel
       side="right"
-      title="Ficha Morfológica & Léxica"
+      title={tInter('inspectorTitle')}
       icon={<Languages className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />}
       badge={`${strongCode} • ${activeCanon === 'NT' ? 'Griego Koiné' : 'Hebreo Masorético'}`}
       storageKey="bible_interlinear_inspector_w"
@@ -109,7 +110,7 @@ export const InterlinearInspector: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Morfología</span>
+            <span>{tInter('morphology')}</span>
           </button>
           <button
             type="button"
@@ -121,7 +122,7 @@ export const InterlinearInspector: React.FC = () => {
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Versiones</span>
+            <span>{tInter('versionsTab')}</span>
           </button>
         </div>
       </StudySidePanel.Toolbar>
@@ -143,7 +144,7 @@ export const InterlinearInspector: React.FC = () => {
                           type="button"
                           onClick={handlePlayAudio}
                           className="p-1.5 rounded-lg text-zinc-500 hover:text-foreground hover:bg-zinc-200/60 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer"
-                          title="Reproducir pronunciación fonética"
+                          title={tInter('playPronunciation')}
                         >
                           {isPlayingAudio ? (
                             <VolumeX className="w-4 h-4 text-amber-500 animate-pulse" />
@@ -155,7 +156,7 @@ export const InterlinearInspector: React.FC = () => {
                           type="button"
                           onClick={handleCopyWord}
                           className="p-1.5 rounded-lg text-zinc-500 hover:text-foreground hover:bg-zinc-200/60 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer"
-                          title="Copiar lema y definición"
+                          title={tInter('copyLemma')}
                         >
                           {copied ? (
                             <Check className="w-4 h-4 text-emerald-500" />
@@ -188,7 +189,7 @@ export const InterlinearInspector: React.FC = () => {
 
                     {/* Glosa Rápida */}
                     <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between text-xs">
-                      <span className="text-zinc-400">Traducción directa:</span>
+                      <span className="text-zinc-400">{tInter('directTranslation')}</span>
                       <span className="font-semibold text-foreground">
                         {token?.gloss || entry?.shortDefinition || '—'}
                       </span>
@@ -203,20 +204,20 @@ export const InterlinearInspector: React.FC = () => {
 
                     <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-background space-y-2 text-xs">
                       <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                        <span className="text-zinc-400">Categoría:</span>
+                        <span className="text-zinc-400">{tInter('category')}</span>
                         <span className="font-medium text-foreground">{partOfSpeech}</span>
                       </div>
 
                       {morphCode && (
                         <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                          <span className="text-zinc-400">Código Parsing:</span>
+                          <span className="text-zinc-400">{tInter('parsingCode')}</span>
                           <span className="font-mono font-bold text-foreground">{morphCode}</span>
                         </div>
                       )}
 
                       {root && (
                         <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                          <span className="text-zinc-400">Raíz Lingüística:</span>
+                          <span className="text-zinc-400">{tInter('semiticRoot')}</span>
                           <span className="font-serif font-bold text-foreground">{root}</span>
                         </div>
                       )}
@@ -225,19 +226,19 @@ export const InterlinearInspector: React.FC = () => {
                         <>
                           {token.binyan && (
                             <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                              <span className="text-zinc-400">Binyan (Tronco):</span>
+                              <span className="text-zinc-400">{tInter('binyanStemLabel')}</span>
                               <span className="font-medium text-foreground">{token.binyan}</span>
                             </div>
                           )}
                           {token.aspect && (
                             <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                              <span className="text-zinc-400">Aspecto:</span>
+                              <span className="text-zinc-400">{tInter('aspectLabel')}</span>
                               <span className="font-medium text-foreground">{token.aspect}</span>
                             </div>
                           )}
                           {token.gender && (
                             <div className="flex justify-between py-1">
-                              <span className="text-zinc-400">Género / Número:</span>
+                              <span className="text-zinc-400">{tInter('genderNumberLabel')}</span>
                               <span className="font-medium text-foreground">
                                 {token.gender} {token.number ? `• ${token.number}` : ''}
                               </span>
@@ -250,7 +251,7 @@ export const InterlinearInspector: React.FC = () => {
                         <>
                           {token.tense && (
                             <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                              <span className="text-zinc-400">Tiempo / Voz:</span>
+                              <span className="text-zinc-400">{tInter('tenseVoiceLabel')}</span>
                               <span className="font-medium text-foreground">
                                 {token.tense} {token.voice ? `(${token.voice})` : ''}
                               </span>
@@ -258,13 +259,13 @@ export const InterlinearInspector: React.FC = () => {
                           )}
                           {token.mood && (
                             <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
-                              <span className="text-zinc-400">Modo:</span>
+                              <span className="text-zinc-400">{tInter('moodLabel')}</span>
                               <span className="font-medium text-foreground">{token.mood}</span>
                             </div>
                           )}
                           {token.case && (
                             <div className="flex justify-between py-1">
-                              <span className="text-zinc-400">Caso / Género:</span>
+                              <span className="text-zinc-400">{tInter('caseGenderLabel')}</span>
                               <span className="font-medium text-foreground">
                                 {token.case} {token.gender ? `• ${token.gender}` : ''}
                               </span>
@@ -309,7 +310,7 @@ export const InterlinearInspector: React.FC = () => {
 
                         {entry.occurrencesInBible !== undefined && (
                           <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between text-[11px] font-mono">
-                            <span className="text-zinc-400">Apariciones en el canon:</span>
+                            <span className="text-zinc-400">{tInter('occurrencesInCanonLabel')}</span>
                             <span className="font-bold text-foreground">
                               {entry.occurrencesInBible} veces
                             </span>
@@ -322,7 +323,7 @@ export const InterlinearInspector: React.FC = () => {
               ) : (
                 <div className="py-12 text-center text-xs text-zinc-400 space-y-2">
                   <Languages className="w-8 h-8 text-zinc-300 dark:text-zinc-700 mx-auto" />
-                  <p>Haz clic en cualquier palabra del texto interlineal para ver su análisis morfológico.</p>
+                  <p>{tInter('emptyInspectorPrompt')}</p>
                 </div>
               )}
             </>

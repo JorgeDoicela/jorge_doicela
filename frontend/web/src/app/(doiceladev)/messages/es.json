@@ -105,6 +105,7 @@
     "copyright": "DoicelaDev © {year} — Jorge Doicela."
   },
   "Spotlight": {
+    "commandPalette": "Paleta de comandos Spotlight",
     "clear": "Limpiar",
     "noResults": "No se encontraron resultados para “{query}”",
     "go": "Ir →",
@@ -433,6 +434,7 @@
   "ArticleLayout": {
     "expandReading": "Expandir lectura (ocultar barra lateral)",
     "restoreSidebar": "Restaurar barra lateral",
-    "popularTags": "Etiquetas Populares"
+    "popularTags": "Etiquetas Populares",
+    "breadcrumb": "Miga de pan"
   }
 }

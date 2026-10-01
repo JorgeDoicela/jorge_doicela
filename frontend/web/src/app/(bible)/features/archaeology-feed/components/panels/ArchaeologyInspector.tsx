@@ -25,13 +25,14 @@ export const ArchaeologyInspector: React.FC<ArchaeologyInspectorProps> = ({
 }) => {
   const archContext = useArchaeologyContextSafe();
   const tStudio = useTranslations('Studio');
+  const tArch = useTranslations('ArchaeologyFeed');
 
   const article = propArticle ?? archContext?.activeArticle ?? null;
 
   return (
     <StudySidePanel
       side="right"
-      title="Ficha Arqueológica"
+      title={tArch('inspectorTitle')}
       icon={<Compass className="w-4 h-4 text-emerald-500" />}
       storageKey="bible_archaeology_inspector_w"
       defaultWidth={360}
@@ -61,20 +62,20 @@ export const ArchaeologyInspector: React.FC<ArchaeologyInspectorProps> = ({
               {/* Ficha Técnica del Hallazgo */}
               <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
-                  Metadatos de Excavación
+                  {tArch('excavationMetadata')}
                 </span>
                 <div className="space-y-1.5 text-zinc-600 dark:text-zinc-300">
                   <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                    <span><strong>Institución:</strong> {article.institutionOrAuthor}</span>
+                    <span><strong>{tArch('institution')}</strong> {article.institutionOrAuthor}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Layers className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                    <span><strong>Artefacto clave:</strong> {article.keyArtifact}</span>
+                    <span><strong>{tArch('keyArtifact')}</strong> {article.keyArtifact}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                    <span><strong>Custodia / Museo:</strong> {article.museumOrLocation}</span>
+                    <span><strong>{tArch('museumCustody')}</strong> {article.museumOrLocation}</span>
                   </div>
                 </div>
               </div>
@@ -84,7 +85,7 @@ export const ArchaeologyInspector: React.FC<ArchaeologyInspectorProps> = ({
                 <div className="p-3.5 rounded-xl border border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/20 space-y-2">
                   <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold text-xs">
                     <Scroll className="w-3.5 h-3.5" />
-                    <span>Epigrafía e Inscripción</span>
+                    <span>{tArch('epigraphyAndInscription')}</span>
                   </div>
                   <div className="font-serif text-sm tracking-wide text-zinc-800 dark:text-zinc-200 bg-white/80 dark:bg-black/60 p-2 rounded border border-amber-500/10">
                     {article.epigraphy.originalScript}

@@ -102,6 +102,7 @@ export const InterlinearSidebar: React.FC = () => {
   const passageContext = useBiblePassageSafe();
   const interlinear = useInterlinearContextSafe();
   const tStudio = useTranslations('Studio');
+  const tInter = useTranslations('Interlinear');
 
   const [activeSubTab, setActiveSubTab] = useState<'corpus' | 'layers'>('corpus');
 
@@ -116,7 +117,7 @@ export const InterlinearSidebar: React.FC = () => {
   return (
     <StudySidePanel
       side="left"
-      title="Corpus Interlineal"
+      title={tInter('sidebarTitle')}
       icon={<Scroll className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />}
       storageKey="bible_interlinear_sidebar_w"
       defaultWidth={340}
@@ -126,7 +127,7 @@ export const InterlinearSidebar: React.FC = () => {
       <StudySidePanel.Toolbar className="space-y-3">
         <div className="hidden lg:block">
           <h2 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            Corpus Interlineal
+            {tInter('sidebarTitle')}
           </h2>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
             {activeCanon === 'OT' ? 'Texto Masorético BHS' : 'Texto Griego NA28'}
@@ -225,7 +226,7 @@ export const InterlinearSidebar: React.FC = () => {
                             {b.isAramaic && (
                               <span
                                 className="text-[9px] font-mono font-semibold text-amber-600 dark:text-amber-400"
-                                title="Contiene secciones en Arameo Imperial"
+                                title={tInter('sidebarArameoTooltip')}
                               >
                                 Arameo
                               </span>
@@ -260,8 +261,8 @@ export const InterlinearSidebar: React.FC = () => {
                         : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300'
                     }`}
                   >
-                    <span className="text-xs font-semibold block text-foreground">Inverso</span>
-                    <span className="text-[10px] text-zinc-400">Lectura corrida fluida</span>
+                    <span className="text-xs font-semibold block text-foreground">{tInter('reverseMode')}</span>
+                    <span className="text-[10px] text-zinc-400">{tInter('reverseModeDesc')}</span>
                   </button>
                   <button
                     type="button"
@@ -272,8 +273,8 @@ export const InterlinearSidebar: React.FC = () => {
                         : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300'
                     }`}
                   >
-                    <span className="text-xs font-semibold block text-foreground">Cuadrícula</span>
-                    <span className="text-[10px] text-zinc-400">Fichas morfológicas</span>
+                    <span className="text-xs font-semibold block text-foreground">{tInter('gridMode')}</span>
+                    <span className="text-[10px] text-zinc-400">{tInter('gridModeDesc')}</span>
                   </button>
                 </div>
               </div>

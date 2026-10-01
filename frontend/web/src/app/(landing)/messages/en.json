@@ -178,7 +178,9 @@
     "sendAriaLabel": "Send",
     "consultationActionText": "Request technical proposal",
     "emptyError": "Could not get a response from the assistant.",
-    "networkError": "Connection error with the assistant. Please try again."
+    "networkError": "Connection error with the assistant. Please try again.",
+    "toggleAriaLabel": "Open or close AI assistant",
+    "buttonTitle": "AI Assistant · Jorge Doicela"
   }
 }
 

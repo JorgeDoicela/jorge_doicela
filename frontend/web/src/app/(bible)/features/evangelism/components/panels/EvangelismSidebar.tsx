@@ -42,7 +42,7 @@ export const EvangelismSidebar: React.FC = () => {
   return (
     <StudySidePanel
       side="left"
-      title="Ministerio & Apologética"
+      title={t('sidebarTitle')}
       icon={<Sparkles className="w-4 h-4 text-emerald-500" />}
       storageKey="bible_evangelism_sidebar_w"
       defaultWidth={320}
@@ -123,7 +123,7 @@ export const EvangelismSidebar: React.FC = () => {
                   type="text"
                   value={evangelism?.searchQuery || ''}
                   onChange={(e) => evangelism?.setSearchQuery(e.target.value)}
-                  placeholder="Buscar objeción o duda..."
+                  placeholder={t('searchPlaceholder')}
                   className="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200/80 dark:border-zinc-800 rounded-xl pl-8 pr-7 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors"
                 />
                 {evangelism?.searchQuery && (

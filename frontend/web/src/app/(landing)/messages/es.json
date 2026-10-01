@@ -178,7 +178,9 @@
     "sendAriaLabel": "Enviar",
     "consultationActionText": "Solicitar propuesta técnica",
     "emptyError": "No se pudo obtener respuesta del asistente.",
-    "networkError": "Error de conexión con el asistente. Intenta de nuevo."
+    "networkError": "Error de conexión con el asistente. Intenta de nuevo.",
+    "toggleAriaLabel": "Abrir o cerrar asistente de IA",
+    "buttonTitle": "Asistente de IA · Jorge Doicela"
   }
 }
 

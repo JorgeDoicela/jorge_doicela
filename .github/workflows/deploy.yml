@@ -57,8 +57,7 @@ jobs:
           SOURCE: "/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.TARGET_DIR }}
-          EXCLUDE: "/node_modules/, /out/, /.git/, /.github/, /backend/node_modules/, /frontend/web/node_modules/, *.sqlite, *.sqlite-journal, *.sqlite-wal, *.sqlite-shm, .env, .env*, **/.env, **/.env*"
+          EXCLUDE: "/node_modules/, /out/, /.git/, /.github/, /backend/node_modules/, /frontend/web/node_modules/, *.sqlite, *.sqlite-journal, *.sqlite-wal, *.sqlite-shm, .env, .env.local, .env.development, .env.production, **/.env, **/.env.local, **/.env.development, **/.env.production"
 
       - name: Ejecutar tareas de inicio y reiniciar PM2 por SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -69,10 +68,14 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             
-            # 1. Detener procesos en PM2 para liberar los file descriptors de SQLite en memoria
+            # 1. Limpieza de rutas y artefactos legados en el VPS
+            rm -rf frontend/web/src/app/api/landing frontend/web/src/app/\(landing\)/components frontend/web/src/app/\(landing\)/widgets/highlights-carousel/ui/slides/BibleSlideVisual.tsx GUIA_MIGRACION_PRODUCCION_DOICELADEV.md 2>/dev/null || true
+            rm -rf frontend/web/src/app/\(bible\) backend/src/bible backend/dist/bible frontend/web/public/bible docs/04-bible .agents/skills/bible-* 2>/dev/null || true
+
+            # 2. Detener procesos en PM2 para liberar los file descriptors de SQLite en memoria
             pm2 stop pm2.config.js 2>/dev/null || true
             
-            # 2. Instalar dependencias del backend en producción con filtro monorepo
+            # 3. Instalar dependencias del backend en producción con filtro monorepo
             pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts
             
             # 3. Limpieza física y reinicio total de las bases de datos en producción

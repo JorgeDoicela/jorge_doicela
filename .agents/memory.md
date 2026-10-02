@@ -341,3 +341,39 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - Se desacopló la identidad del portafolio de la terminal SSH: la consola interactiva es solo una herramienta exploratoria secundaria dentro de la plataforma, no el núcleo ni el titular de la misma (`Portafolio & Terminal SSH` -> `Portafolio`).
     - Las descripciones editoriales priorizan la arquitectura de software, los proyectos destacados y el stack técnico, situando a la terminal como un complemento interactivo.
     - Se depuraron enlaces residuales de pie de página en DoicelaDev (`portfolioSSH`: *Portafolio SSH* / *SSH Portfolio* -> *Portafolio* / *Portfolio*), respuestas del asistente de IA en modal y API (`route.ts`), dossiers de IA (`llms.txt`), así como el sistema de archivos virtual emulado en el backend (`portfolio_ssh.txt` -> `portfolio.txt`). Cero ocurrencias de "profesional" / "professional" en todos los diccionarios de internacionalización del ecosistema.
+
+* **Calibración Editorial de Presencia de Marca en Landing de Kartex (`messages/{es,en}.json`):**
+  - **Criterio de Identidad sin Saturación:**
+    - Se evitó el anonimato genérico ("Una Plataforma para el Estudio...", "La plataforma enlaza...", "accede a la plataforma...") sin caer en la sobrecarga publicitaria de repetir la marca en cada título de herramienta.
+    - Puntos clave calibrados con **Kartex** (Title Case):
+      1. *Hero Title (`heroTitle`)*: "Kartex: Plataforma para el Estudio de la Biblia" (ES) / "Kartex: A Scripture Study Platform" (EN), situando la identidad desde el primer impacto visual.
+      2. *Sección Móvil (`mobileDesc`)*: "Kartex Móvil está diseñada para acompañarte..." (ES) / "Kartex Mobile is designed to go wherever you go..." (EN), identificando con claridad la app Expo offline.
+      3. *Manuscritos y Códices (`manuscriptsDesc`)*: "Kartex enlaza directamente con los textos base..." (ES) / "Kartex connects directly with landmark archival sources..." (EN).
+      4. *CTA Final (`ctaSubtitle`)*: "Accede de forma inmediata a Kartex sin necesidad de registrarte..." (ES) / "Get instant access to Kartex without any mandatory signup..." (EN).
+      5. *Footer Copyright (`footerCopyright`)*: "Jorge Doicela © {year} • Kartex" en sustitución de la descripción genérica "Estudio de la biblia".
+    - Los 10 motores de estudio se mantienen limpios sin prefijos repetitivos (*Lector Bíblico*, *Paralelo*, *Interlineal*, *Lexicón*, *Atlas*, etc.).
+
+* **Estandarización Integral de Nomenclatura Kartex (Cero Mayúsculas Sostenidas en Metadatos y OpenGraph):**
+  - **Causa Raíz:** La pestaña del navegador y las vistas previas de enlaces compartidos (OpenGraph, WhatsApp, Twitter, Telegram) mostraban `KARTEX · Plataforma de Investigación...` en mayúsculas sostenidas, generando una apariencia estridente y desbalanceada respecto a las demás plataformas (`Portafolio`, `DoicelaDev`).
+  - **Alineación Integral en Title Case (`Kartex`):**
+    - Metadatos HTML (`Metadata.title` y `Metadata.description` en `es.json` y `en.json`): ahora inicia limpiamente como `Kartex · Plataforma de Investigación y Estudio Bíblico | Jorge Doicela`.
+    - OpenGraph y Twitter Cards (`layout.tsx` de `(kartex)`): `siteName` actualizado a `Kartex | Jorge Doicela` y `alt` de imagen a `Kartex - Jorge Doicela`.
+    - Datos estructurados Schema.org (`KartexJsonLd.tsx`): `name` y `description` actualizados a `Kartex`.
+    - PWA Manifest (`public/kartex/manifest.json`): `name` a `Kartex | Jorge Doicela` y `short_name` a `Kartex`.
+    - Accesibilidad gráfica (`KartexLogo.tsx`): atributos `alt` unificados a `Logo Kartex`.
+    - OpenGraph de Portal (`opengraph-image.tsx`): badge de plataforma actualizado a `Kartex` para simetría con `DoicelaDev` y `Portafolio`.
+* **Arquitectura de Inspector Exegético Unificado en Kartex (`VerseExegesisCard`):**
+  - **Causa Raíz:** En la vista de lectura estándar (`/study/standard`), el panel lateral derecho (`KartexExegesisInspector`) dividía el espacio en dos pestañas mutuamente excluyentes (`[ Versiones Paralelas ] [ Morfología Strong ]`). Dado que el lector estándar presenta texto continuo, la pestaña de morfología permanecía desaprovechada y la de versiones estaba limitada, desperdiciando el espacio vertical del viewport.
+  - **Solución Arquitectónica (Ficha Exegética Continua de Alta Densidad):**
+    - Se eliminó la barra de pestañas excluyentes y se implementó un flujo vertical continuo mediante `VerseExegesisCard` en `(kartex)/entities/passage/ui/VerseExegesisCard.tsx`.
+    - **5 Secciones Verticales Integradas:**
+      1. *Cabecera del Versículo:* Cita bíblica localizada (`tBooks`), controles discretos de navegación versicular anterior/siguiente (`tStudio('prevVerse')` / `tStudio('nextVerse')`), selector interactivo con menú desplegable para activar/desactivar versiones (BHS, NA28, NBLA, NTV, RV1960...) y chips removibles.
+      2. *Cotejo Multiversión Scrolleable:* 100% dinámico desde SQLite (`/api/kartex/verses?bookId=...&chapter=...&translationId=...`), renderizado tipográfico diferenciado (RTL para hebreo con fuente masorética, LTR para griego y español).
+      3. *Términos Clave y Morfología Original:* 100% dinámico desde SQLite (`/api/kartex/morphology/passage`), filtrado por versículo con lemas, transliteración y claves Strong. Al tocar una clave, consulta en tiempo real el léxico BDB/Thayer (`/api/kartex/morphology/lexicon/:code`) con acordeón in-situ.
+      4. *Referencias Cruzadas Canónicas Localizadas:* Módulo `crossReferencesData.ts` con pasajes correlativos enriquecidos con soporte bilingüe nativo (`relationLabel`, `relationLabelEn`, `snippetText`, `snippetTextEn`) según `useLocale()`, y nombres de libros traducidos mediante `tBooks`. Navegación instantánea en un solo clic invocando `setPassage(bookId, chapter, verseNumber)`.
+      5. *Accesos Directos a Motores Exegéticos:* Enlaces con parámetros de consulta para abrir el pasaje en `/study/interlinear`, `/study/parallel`, `/study/atlas` o `/study/timeline`.
+    - **Cero Textos Quemados y Paridad i18n 1:1:** Todas las etiquetas de interfaz, tooltips, libros bíblicos y descripciones provienen estrictamente de `next-intl` (`messages/es.json` y `messages/en.json` bajo `Studio` y `Books`).
+    - **FSD y Aislamiento:** Ubicado en `entities/passage/ui/` y consumido por `widgets/exegesis-inspector/ui/`, respetando la microarquitectura de capas sin importaciones cruzadas.
+
+
+

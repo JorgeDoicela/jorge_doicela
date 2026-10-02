@@ -17,7 +17,7 @@ export const KartexLogo: React.FC<KartexLogoProps> = ({ size = 20, className = '
       {/* Modo Claro: logo_negro.png */}
       <Image
         src="/kartex/logo/logo_negro.png"
-        alt="Logo KARTEX"
+        alt="Logo Kartex"
         width={size}
         height={size}
         className="w-full h-full object-contain block dark:hidden"
@@ -26,7 +26,7 @@ export const KartexLogo: React.FC<KartexLogoProps> = ({ size = 20, className = '
       {/* Modo Oscuro: logo_blanco.png */}
       <Image
         src="/kartex/logo/logo_blanco.png"
-        alt="Logo KARTEX"
+        alt="Logo Kartex"
         width={size}
         height={size}
         className="w-full h-full object-contain hidden dark:block"

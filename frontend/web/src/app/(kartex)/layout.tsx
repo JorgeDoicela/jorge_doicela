@@ -66,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: t("title"),
       description: t("description"),
       url: "https://kartex.jorgedoicela.com",
-      siteName: "KARTEX | Jorge Doicela",
+      siteName: "Kartex | Jorge Doicela",
       locale: locale === "es" ? "es_EC" : "en_US",
       type: "website",
       images: [
@@ -74,7 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/kartex/logo/logo_fondo_circular_color_.png",
           width: 512,
           height: 512,
-          alt: "KARTEX - Jorge Doicela",
+          alt: "Kartex - Jorge Doicela",
         },
       ],
     },

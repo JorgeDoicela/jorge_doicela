@@ -139,7 +139,7 @@ export default async function Image() {
               fontWeight: 500,
             }}
           >
-            KARTEX
+            Kartex
           </div>
           <div
             style={{

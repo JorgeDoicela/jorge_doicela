@@ -126,6 +126,37 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     }
   };
 
+  const activeInspectedVerseNum = passageContext?.inspectedVerse?.verseNumber;
+  const isVerseActive = (verse: Verse) => {
+    if (selectedVerseId !== null) return selectedVerseId === verse.id;
+    if (passageContext?.isRightInspectorOpen && activeInspectedVerseNum !== undefined) {
+      return verse.verseNumber === activeInspectedVerseNum;
+    }
+    return false;
+  };
+
+  const handleToggleVerse = (verse: Verse) => {
+    const isCurrentlyActive = isVerseActive(verse);
+    if (isCurrentlyActive && selectedVerseId !== null) {
+      setSelectedVerseId(null);
+    } else {
+      setSelectedVerseId(verse.id);
+      if (passageContext) {
+        const bId =
+          typeof verse.book === 'object' && verse.book !== null
+            ? verse.book.id
+            : passageContext.selectedBookId || 1;
+        passageContext.openInspectorWithVerse({
+          bookId: bId,
+          bookName: localizedBookTitle,
+          chapter: verse.chapter,
+          verseNumber: verse.verseNumber,
+          text: verse.text,
+        });
+      }
+    }
+  };
+
   return (
     <div className={`w-full rounded-2xl border pt-8 pb-8 px-6 sm:px-10 lg:px-12 relative print:border-none print:shadow-none print:p-0 print:m-0 print:bg-transparent transition-colors duration-200 ${getToneContainerClass(readerTone)}`}>
       {/* Toast flotante de confirmación */}
@@ -168,11 +199,11 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       >
         <p className="space-x-1 text-justify sm:text-left">
           {verses.map((verse) => {
-            const isSelected = selectedVerseId === verse.id;
+            const isSelected = isVerseActive(verse);
             return (
               <span
                 key={verse.id}
-                onClick={() => setSelectedVerseId(isSelected ? null : verse.id)}
+                onClick={() => handleToggleVerse(verse)}
                 className={`inline rounded-md px-1 py-0.5 relative group cursor-pointer transition-colors ${
                   isSelected
                     ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium'

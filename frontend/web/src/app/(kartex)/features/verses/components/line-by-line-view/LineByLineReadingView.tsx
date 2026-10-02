@@ -138,11 +138,32 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
 
       {/* Lista versículo a versículo en tarjeta elevada */}
       <div className={`divide-y border rounded-2xl overflow-hidden transition-colors duration-200 ${getToneContainerClass(readerTone)}`}>
-        {verses.map((verse) => (
-          <div
-            key={verse.id}
-            className={`p-4 sm:p-5 transition-colors duration-150 flex items-start gap-4 group ${getToneHoverClass(readerTone)}`}
-          >
+        {verses.map((verse) => {
+          const isInspected = passageContext?.inspectedVerse?.verseNumber === verse.verseNumber;
+          return (
+            <div
+              key={verse.id}
+              onClick={() => {
+                if (passageContext) {
+                  const bId =
+                    typeof verse.book === 'object' && verse.book !== null
+                      ? verse.book.id
+                      : passageContext.selectedBookId || 1;
+                  passageContext.openInspectorWithVerse({
+                    bookId: bId,
+                    bookName: localizedBookName,
+                    chapter: verse.chapter,
+                    verseNumber: verse.verseNumber,
+                    text: verse.text,
+                  });
+                }
+              }}
+              className={`p-4 sm:p-5 transition-colors duration-150 flex items-start gap-4 group cursor-pointer ${
+                isInspected
+                  ? 'bg-zinc-100/70 dark:bg-zinc-900/80 ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700'
+                  : getToneHoverClass(readerTone)
+              }`}
+            >
             {/* Columna con número de versículo */}
             <div className="shrink-0 w-10 text-right pt-0.5">
               <span className={`font-mono text-xs font-semibold ${readerTone === 'sepia' ? 'text-[#8C765C] dark:text-[#A8947C]' : 'text-zinc-400 dark:text-zinc-500'} group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors`}>
@@ -206,7 +227,8 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
               </button>
             </div>
           </div>
-        ))}
+        );
+      })}
       </div>
     </div>
   );

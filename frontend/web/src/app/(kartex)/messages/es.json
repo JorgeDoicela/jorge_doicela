@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "KARTEX · Plataforma de Investigación y Estudio Bíblico | Jorge Doicela",
-    "description": "KARTEX: Plataforma de investigación y estudio bíblico exegético con motores de estudio modulares: Interlineal, Lexicón Strong, Atlas WGS84, Cronología, Arqueología, Evangelismo, Paralelo y análisis morfológico Masorético BHS / LXX."
+    "title": "Kartex · Plataforma de Investigación y Estudio Bíblico | Jorge Doicela",
+    "description": "Kartex: Plataforma de investigación y estudio bíblico exegético con motores de estudio modulares: Interlineal, Lexicón Strong, Atlas WGS84, Cronología, Arqueología, Evangelismo, Paralelo y análisis morfológico Masorético BHS / LXX."
   },
   "Nav": {
     "landing": "Inicio",
@@ -9,7 +9,7 @@
     "backToKartex": "Volver al inicio",
     "portal": "Volver a jorgedoicela.com",
     "portalShort": "Portal",
-    "modularKartex": "KARTEX",
+    "modularKartex": "Kartex",
     "studyTools": "Herramientas de Estudio",
     "selectTool": "Seleccionar herramienta de estudio",
     "studySuites": "Herramientas de Estudio",
@@ -172,7 +172,7 @@
     "APO": "Apocalipsis"
   },
   "Landing": {
-    "heroTitle": "Una Plataforma para el Estudio de la Biblia",
+    "heroTitle": "Kartex: Plataforma para el Estudio de la Biblia",
     "heroSubtitle": "Lectura clara y sin distracciones, estudio profundo en los idiomas originales (Hebreo, Arameo y Griego), mapas bíblicos interactivos, líneas de tiempo y herramientas para comprender las Sagradas Escrituras.",
     "openStudy": "Abrir Estudio",
     "startStudy": "Comenzar Lectura y Estudio",
@@ -260,7 +260,7 @@
     "corpusV6Source": "Dominio Público Académico (Rahlfs)",
     "mobileBadge": "App para Teléfonos y Tablets",
     "mobileTitle": "Lectura sin Conexión a Internet (Dios mediante en un futuro)",
-    "mobileDesc": "Diseñada para acompañarte donde vayas sin depender de conexión a internet. Disfruta de una lectura ágil y cómoda, guarda tus notas y pasajes favoritos de forma segura en tu teléfono, y recibe el versículo del día para tu devocional.",
+    "mobileDesc": "Kartex Móvil está diseñada para acompañarte donde vayas sin depender de conexión a internet. Disfruta de una lectura ágil y cómoda, guarda tus notas y pasajes favoritos de forma segura en tu teléfono, y recibe el versículo del día para tu devocional.",
     "mobileSpecsHeader": "CARACTERÍSTICAS PRINCIPALES",
     "mobileOfflineReady": "100% SIN INTERNET",
     "mobileSpecListEngine": "Experiencia de lectura",
@@ -373,7 +373,7 @@
     "purposeDailyCard3Action": "Iniciar reflexión del día",
     "manuscriptsBadge": "Herencia y Fidelidad Textual",
     "manuscriptsTitle": "De los Manuscritos Milenarios a tu Pantalla",
-    "manuscriptsDesc": "La plataforma enlaza directamente con los textos base de la erudición bíblica internacional: el Códice de Leningrado (Hebreo Masorético BHS), la Septuaginta griega (LXX) y los Rollos del Mar Muerto.",
+    "manuscriptsDesc": "Kartex enlaza directamente con los textos base de la erudición bíblica internacional: el Códice de Leningrado (Hebreo Masorético BHS), la Septuaginta griega (LXX) y los Rollos del Mar Muerto.",
     "manuscriptsItem1Title": "Códice de Leningrado (1008 d.C.)",
     "manuscriptsItem1Desc": "El manuscrito completo más antiguo de la Biblia Hebrea, base del texto masorético contemporáneo.",
     "manuscriptsItem2Title": "Septuaginta Griega (LXX)",
@@ -393,9 +393,9 @@
     "step3Title": "Profundiza a tu ritmo",
     "step3Desc": "Consulta diccionarios bíblicos Strong, mapas geográficos o líneas de tiempo históricas con un solo toque.",
     "ctaTitle": "Comienza tu Estudio Bíblico Hoy",
-    "ctaSubtitle": "Accede de forma inmediata a la plataforma sin necesidad de registrarte ni realizar instalaciones complejas.",
+    "ctaSubtitle": "Accede de forma inmediata a Kartex sin necesidad de registrarte ni realizar instalaciones complejas.",
     "ctaButton": "Abrir Estudio Bíblico Ahora",
-    "footerCopyright": "Jorge Doicela © {year} • Estudio de la biblia",
+    "footerCopyright": "Jorge Doicela © {year} • Kartex",
     "footerHome": "Inicio",
     "footerPortfolio": "Portafolio",
     "footerDoiceladev": "DoicelaDev",
@@ -492,7 +492,7 @@
     "mobilePsalmTitle": "Salmos 23"
   },
   "StudyLayout": {
-    "title": "Jorge Doicela © {year} • KARTEX",
+    "title": "Jorge Doicela © {year} • Kartex",
     "presentation": "Presentación",
     "holyScriptures": "Sagradas Escrituras"
   },
@@ -1038,6 +1038,8 @@
     "expandSidebar": "Expandir panel de navegación",
     "closeSidebar": "Ocultar panel",
     "closeInspector": "Cerrar inspector",
+    "prevVerse": "Versículo anterior",
+    "nextVerse": "Siguiente versículo",
     "inspectorTitle": "Inspector Exegético",
     "searchBook": "Buscar libro o abreviatura...",
     "oldTestament": "Antiguo Testamento",
@@ -1078,7 +1080,29 @@
     "historicalCataloging": "Información histórica en proceso de catalogación.",
     "chapterShort": "Cap. {chapter}",
     "hebrewLexiconBadge": "Léxico Hebreo (BDB • Gesenius)",
-    "greekLexiconBadge": "Léxico Griego (Thayer • BDAG)"
+    "greekLexiconBadge": "Léxico Griego (Thayer • BDAG)",
+    "verseExegesisTitle": "Ficha Exegética del Versículo",
+    "multiverseComparison": "Cotejo Multiversión",
+    "manageVersions": "Seleccionar Traducciones",
+    "originalKeywords": "Términos Clave en Lengua Original",
+    "originalKeywordsSubtitle": "Vocabulario, morfología y claves Strong",
+    "loadingTokens": "Cargando términos originales...",
+    "noTokensForVerse": "Sin tokens morfológicos disponibles para este versículo.",
+    "crossReferencesTitle": "Referencias Cruzadas Canónicas",
+    "crossReferencesSubtitle": "Pasajes correlativos de las Sagradas Escrituras",
+    "noCrossReferences": "Sin referencias cruzadas para este pasaje.",
+    "quickAccessTitle": "Profundizar en Kartex",
+    "openInInterlinear": "Abrir en Interlineal",
+    "openInParallel": "Abrir en Paralelo",
+    "openInAtlas": "Explorar en Atlas",
+    "openInTimeline": "Ver en Cronología",
+    "copyReferenceOnly": "Copiar cita",
+    "copyAllTranslations": "Copiar cotejo completo",
+    "addTranslation": "Añadir versión",
+    "removeVersion": "Quitar versión",
+    "activeTranslationsCount": "{count} versiones",
+    "viewDefinition": "Ver definición léxica",
+    "hideDefinition": "Ocultar definición"
   },
   "Evangelism": {
     "tabPathways": "Rutas Bíblicas",

@@ -15,3 +15,5 @@ export {
 } from './model/KartexPassageContext';
 export { ParallelVerseInspector, type ParallelVerseInspectorProps, type ParallelVerseData, type TargetTranslationItem } from './ui/ParallelVerseInspector';
 export { StrongMorphologyInspector, type StrongMorphologyInspectorProps, type StrongLexiconEntryData } from './ui/StrongMorphologyInspector';
+export { VerseExegesisCard, type VerseExegesisCardProps, type ParallelVerseItem, type MorphologyVerseToken } from './ui/VerseExegesisCard';
+export { getCrossReferencesForVerse, type CrossReferenceItem } from './data/crossReferencesData';

@@ -168,7 +168,7 @@ export class PortfolioService {
                   permissions: '-rw-r--r--',
                   updatedAt: 'Aug 14 12:30',
                   content:
-                    'KARTEX: Plataforma de investigación bíblica y exégesis con Next.js, NestJS y SQLite.',
+                    'Kartex: Plataforma de investigación bíblica y exégesis con Next.js, NestJS y SQLite.',
                 },
                 'doiceladev.txt': {
                   type: 'file',
@@ -315,7 +315,7 @@ export class PortfolioService {
           output: [
             '\x1b[1;33mProyectos de Ingeniería Destacados:\x1b[0m',
             '\x1b[90m------------------------------------------------------------\x1b[0m',
-            '  \x1b[1;33m1. KARTEX\x1b[0m                  \x1b[90m[kartex.jorgedoicela.com]\x1b[0m',
+            '  \x1b[1;33m1. Kartex\x1b[0m                  \x1b[90m[kartex.jorgedoicela.com]\x1b[0m',
             '     \x1b[33m• Rol:\x1b[0m Lead Architect & Full Stack Developer',
             '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite (WAL), Expo Mobile, TypeScript',
             '     \x1b[90m• Resumen:\x1b[0m Plataforma de investigación bíblica con 9 módulos y morfología Strong.',
@@ -570,7 +570,7 @@ export class PortfolioService {
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
               'Date:   Mon Jun 10 18:30:12 2024 -0500',
               '',
-              '    feat: complete DoicelaDev platform & KARTEX research platform',
+              '    feat: complete DoicelaDev platform & Kartex research platform',
               '',
               '\x1b[33mcommit 3e1f9a2b8c4d5e\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',

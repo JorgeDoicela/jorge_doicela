@@ -54,7 +54,7 @@ Jorge Ismael Doicela Molina es un desarrollador e ingeniero enfocado en la arqui
   8. *Infraestructura, Servidores y Cloud:* Guías de arquitectura, hardening y despliegue en Linux Debian / Lightsail.
 - **Arquitectura:** Frontend Next.js 16 con Feature-Sliced Design y estética Neumorphism UI + Glassmorphism; Backend NestJS 11 con 8 submódulos modulares y persistencia relacional en SQLite.
 
-### 2. KARTEX | Jorge Doicela
+### 2. Kartex | Jorge Doicela
 - **URL Oficial:** https://kartex.jorgedoicela.com
 - **Dossier Técnico LLMs:** https://kartex.jorgedoicela.com/llms.txt
 - **Descripción:** Plataforma de investigación académica y estudio exegético de textos bíblicos en idiomas originales y traducciones contemporáneas:
@@ -84,7 +84,7 @@ Jorge Ismael Doicela Molina es un desarrollador e ingeniero enfocado en la arqui
 - **Solicitud de Propuestas Técnicas:** https://jorgedoicela.com/consulta
 - **Portafolio:** https://portfolio.jorgedoicela.com (`https://portfolio.jorgedoicela.com/llms.txt`)
 - **DoicelaDev:** https://doiceladev.jorgedoicela.com (`https://doiceladev.jorgedoicela.com/llms.txt`)
-- **KARTEX:** https://kartex.jorgedoicela.com (`https://kartex.jorgedoicela.com/llms.txt`)
+- **Kartex:** https://kartex.jorgedoicela.com (`https://kartex.jorgedoicela.com/llms.txt`)
 - **LinkedIn:** https://www.linkedin.com/in/jorgedoicela
 - **GitHub:** https://github.com/JorgeDoicela
 - **YouTube:** https://www.youtube.com/@jorge.doicela

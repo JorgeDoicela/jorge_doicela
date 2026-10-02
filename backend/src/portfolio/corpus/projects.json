@@ -2,7 +2,7 @@
   {
     "id": 1,
     "slug": "kartex-platform",
-    "title": "KARTEX",
+    "title": "Kartex",
     "description": "Plataforma de investigación bíblica y exégesis con módulos especializados, morfología Strong masorética y griega, y app móvil nativa en Expo.",
     "role": "Lead Architect & Full Stack Developer",
     "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],
@@ -27,7 +27,7 @@
   {
     "id": 2,
     "slug": "kartex-platform-en",
-    "title": "KARTEX",
+    "title": "Kartex",
     "description": "Biblical research and study platform featuring specialized exegesis modules, Masoretic BHS / NA28 morphology, Strong dictionaries, and Expo native mobile app.",
     "role": "Lead Architect & Full Stack Developer",
     "technologies": ["Next.js 16", "NestJS 11", "SQLite", "Expo", "TypeScript", "Tailwind CSS"],

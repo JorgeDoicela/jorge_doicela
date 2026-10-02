@@ -43,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
             "Ecuador",
             "Quito",
             "Portafolio",
-            "KARTEX",
+            "Kartex",
             "DoicelaDev",
         ],
         authors: [{ name: "Jorge Doicela", url: "https://jorgedoicela.com" }],

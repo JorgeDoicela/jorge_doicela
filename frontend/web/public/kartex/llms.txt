@@ -1,6 +1,6 @@
-# KARTEX | Jorge Doicela
+# Kartex | Jorge Doicela
 
-> KARTEX · Biblical Research & Study Platform. Plataforma de investigación académica y estudio exegético de textos bíblicos con 9 módulos especializados, fuentes en idiomas originales (Hebreo BHS / Griego NA28), léxicos Strong y app móvil nativa en Expo.
+> Kartex · Biblical Research & Study Platform. Plataforma de investigación académica y estudio exegético de textos bíblicos con 9 módulos especializados, fuentes en idiomas originales (Hebreo BHS / Griego NA28), léxicos Strong y app móvil nativa en Expo.
 
 ## Información General
 - **URL Canónica:** https://kartex.jorgedoicela.com
@@ -45,7 +45,7 @@
 ---
 
 ## Enlaces Oficiales
-- **KARTEX:** https://kartex.jorgedoicela.com
+- **Kartex:** https://kartex.jorgedoicela.com
 - **Portal Maestro:** https://jorgedoicela.com
 - **DoicelaDev:** https://doiceladev.jorgedoicela.com
 - **Portafolio:** https://portfolio.jorgedoicela.com

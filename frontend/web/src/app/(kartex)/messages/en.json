@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "KARTEX · Biblical Research & Study Platform | Jorge Doicela",
-    "description": "KARTEX: Biblical research and exegesis study platform featuring modular study engines: Interlinear, Lexicon Strong, Atlas WGS84, Timeline, Archaeology, Evangelism, Parallel, and Masoretic BHS / LXX morphology."
+    "title": "Kartex · Biblical Research & Study Platform | Jorge Doicela",
+    "description": "Kartex: Biblical research and exegesis study platform featuring modular study engines: Interlinear, Lexicon Strong, Atlas WGS84, Timeline, Archaeology, Evangelism, Parallel, and Masoretic BHS / LXX morphology."
   },
   "Nav": {
     "landing": "Home",
@@ -9,7 +9,7 @@
     "backToKartex": "Back to home",
     "portal": "Back to jorgedoicela.com",
     "portalShort": "Portal",
-    "modularKartex": "KARTEX",
+    "modularKartex": "Kartex",
     "studyTools": "Study Tools",
     "selectTool": "Select study tool",
     "studySuites": "Study Tools",
@@ -172,7 +172,7 @@
     "APO": "Revelation"
   },
   "Landing": {
-    "heroTitle": "A Scripture Study Platform",
+    "heroTitle": "Kartex: A Scripture Study Platform",
     "heroSubtitle": "Distraction-free reading, deep study in original languages (Hebrew, Aramaic, and Greek), interactive biblical maps, timelines, and tools to understand the Holy Scriptures.",
     "openStudy": "Open Study",
     "startStudy": "Start Reading & Study",
@@ -260,7 +260,7 @@
     "corpusV6Source": "Academic Public Domain (Rahlfs)",
     "mobileBadge": "App for Phones & Tablets",
     "mobileTitle": "Offline Bible Reading (God willing in the future)",
-    "mobileDesc": "Designed to go wherever you go without needing an internet connection. Enjoy smooth reading, securely save personal notes and favorites on your device, and receive verse of the day reminders.",
+    "mobileDesc": "Kartex Mobile is designed to go wherever you go without needing an internet connection. Enjoy smooth reading, securely save personal notes and favorites on your device, and receive verse of the day reminders.",
     "mobileSpecsHeader": "KEY HIGHLIGHTS",
     "mobileOfflineReady": "100% OFFLINE",
     "mobileSpecListEngine": "Reading Experience",
@@ -373,7 +373,7 @@
     "purposeDailyCard3Action": "Begin daily devotion",
     "manuscriptsBadge": "Textual Heritage & Fidelity",
     "manuscriptsTitle": "From Millennial Manuscripts to Your Screen",
-    "manuscriptsDesc": "Direct connection to landmark archival sources: Codex Leningradensis (Hebrew Masoretic BHS), the Greek Septuagint (LXX), and the Dead Sea Scrolls.",
+    "manuscriptsDesc": "Kartex connects directly with landmark archival sources: Codex Leningradensis (Hebrew Masoretic BHS), the Greek Septuagint (LXX), and the Dead Sea Scrolls.",
     "manuscriptsItem1Title": "Codex Leningradensis (1008 A.D.)",
     "manuscriptsItem1Desc": "The oldest complete manuscript of the Hebrew Bible, basis for the modern scholarly Masoretic text.",
     "manuscriptsItem2Title": "Greek Septuagint (LXX)",
@@ -393,9 +393,9 @@
     "step3Title": "Go as deep as you want",
     "step3Desc": "Look up Strong's concordance definitions, geographical maps, or historical timelines in a single tap.",
     "ctaTitle": "Begin Your Scripture Study Today",
-    "ctaSubtitle": "Get instant access to the platform without any mandatory signup or complicated setups.",
+    "ctaSubtitle": "Get instant access to Kartex without any mandatory signup or complicated setups.",
     "ctaButton": "Open Scripture Study Now",
-    "footerCopyright": "Jorge Doicela © {year} • Scripture Study",
+    "footerCopyright": "Jorge Doicela © {year} • Kartex",
     "footerHome": "Home",
     "footerPortfolio": "Portfolio",
     "footerDoiceladev": "DoicelaDev",
@@ -492,7 +492,7 @@
     "mobilePsalmTitle": "Psalm 23"
   },
   "StudyLayout": {
-    "title": "Jorge Doicela © {year} • KARTEX",
+    "title": "Jorge Doicela © {year} • Kartex",
     "presentation": "Overview",
     "holyScriptures": "Holy Scriptures"
   },
@@ -1038,6 +1038,8 @@
     "expandSidebar": "Expand navigation panel",
     "closeSidebar": "Hide panel",
     "closeInspector": "Close inspector",
+    "prevVerse": "Previous verse",
+    "nextVerse": "Next verse",
     "inspectorTitle": "Exegetical Inspector",
     "searchBook": "Search book or abbreviation...",
     "oldTestament": "Old Testament",
@@ -1078,7 +1080,29 @@
     "historicalCataloging": "Historical information being cataloged.",
     "chapterShort": "Ch. {chapter}",
     "hebrewLexiconBadge": "Hebrew Lexicon (BDB • Gesenius)",
-    "greekLexiconBadge": "Greek Lexicon (Thayer • BDAG)"
+    "greekLexiconBadge": "Greek Lexicon (Thayer • BDAG)",
+    "verseExegesisTitle": "Verse Exegetical Sheet",
+    "multiverseComparison": "Multi-Version Comparison",
+    "manageVersions": "Select Translations",
+    "originalKeywords": "Key Terms in Original Language",
+    "originalKeywordsSubtitle": "Vocabulary, morphology, and Strong codes",
+    "loadingTokens": "Loading original terms...",
+    "noTokensForVerse": "No morphological tokens available for this verse.",
+    "crossReferencesTitle": "Canonical Cross References",
+    "crossReferencesSubtitle": "Correlative Holy Scripture passages",
+    "noCrossReferences": "No cross references for this passage.",
+    "quickAccessTitle": "Deepen in Kartex",
+    "openInInterlinear": "Open in Interlinear",
+    "openInParallel": "Open in Parallel",
+    "openInAtlas": "Explore in Atlas",
+    "openInTimeline": "View in Timeline",
+    "copyReferenceOnly": "Copy citation",
+    "copyAllTranslations": "Copy full comparison",
+    "addTranslation": "Add version",
+    "removeVersion": "Remove version",
+    "activeTranslationsCount": "{count} versions",
+    "viewDefinition": "View lexical definition",
+    "hideDefinition": "Hide definition"
   },
   "Evangelism": {
     "tabPathways": "Biblical Pathways",

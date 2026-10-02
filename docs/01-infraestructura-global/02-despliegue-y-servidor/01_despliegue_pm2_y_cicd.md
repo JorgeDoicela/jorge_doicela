@@ -169,32 +169,7 @@ ss -tlnp | grep -E "3001|3000"
 pm2 save
 ```
 
-#### 2.5.6 Rotación y Limpieza Automática de Logs con pm2-logrotate
-
-Para evitar la saturación de disco e inodos en el VPS de 1 GB de RAM, los logs de `stdout` y `stderr` de PM2 no deben crecer indefinidamente. Se implementa el módulo oficial `pm2-logrotate` con retención acotada y compresión gzip automática:
-
-```bash
-# 1. Instalar módulo oficial
-pm2 install pm2-logrotate
-
-# 2. Configurar tamaño máximo por archivo (10 MB)
-pm2 set pm2-logrotate:max_size 10M
-
-# 3. Retención estricta: conservar solo los 7 más recientes y eliminar anteriores automáticamente
-pm2 set pm2-logrotate:retain 7
-
-# 4. Comprimir logs rotados en gzip (reducción ~90% de almacenamiento)
-pm2 set pm2-logrotate:compress true
-
-# 5. Formato de fecha y rotación diaria programada (medianoche)
-pm2 set pm2-logrotate:dateFormat 'YYYY-MM-DD'
-pm2 set pm2-logrotate:rotateInterval '0 0 * * *'
-
-# 6. Persistir configuración en snapshot de PM2
-pm2 save --force
-```
-
-#### 2.5.7 Checklist de Verificación Completa
+#### 2.5.6 Checklist de Verificación Completa
 
 ```bash
 # Puertos expuestos (solo deben aparecer 22, 80, 443 en 0.0.0.0)

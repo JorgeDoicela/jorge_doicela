@@ -1,6 +1,6 @@
-# Roadmap y Funcionalidades: Portafolio Profesional
+# Roadmap y Funcionalidades: Portafolio
 
-Catálogo de ideas, funcionalidades completadas y requerimientos pendientes exclusivamente para el **Portafolio Profesional** (`portfolio.jorgedoicela.com`).
+Catálogo de ideas, funcionalidades completadas y requerimientos pendientes exclusivamente para el **Portafolio** (`portfolio.jorgedoicela.com`).
 
 ---
 
@@ -19,7 +19,7 @@ Catálogo de ideas, funcionalidades completadas y requerimientos pendientes excl
 ---
 
 ## 2. Secciones Visuales del Portafolio
-- [x] **Animación de escritura de roles:** Alternancia cíclica entre títulos profesionales.
+- [x] **Animación de escritura de roles:** Alternancia cíclica entre roles técnicos.
 - [x] **Sección de valores y filosofía:** Texto inspiracional sobre ética de trabajo guiada por principios cristianos.
 - [ ] **Tarjetas 3D del stack tecnológico:** Efecto de profundidad y rotación al hover/tap.
 - [ ] **Timeline de experiencia interactiva:** Línea de tiempo scrolleable con hitos desplegables.

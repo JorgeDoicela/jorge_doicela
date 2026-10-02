@@ -59,7 +59,7 @@ export class PortfolioGateway
       rows: 24,
     });
 
-    // Enviar banner inicial de bienvenida profesional con formato ANSI
+    // Enviar banner inicial de bienvenida con formato ANSI
     const welcomeBanner = [
       '\x1b[90m┌────────────────────────────────────────────────────────────┐\x1b[0m',
       '\x1b[90m│\x1b[0m  \x1b[1;33mJorge Ismael Doicela Molina • Portfolio Shell\x1b[0m             \x1b[90m│\x1b[0m',
@@ -67,10 +67,10 @@ export class PortfolioGateway
       '\x1b[90m└────────────────────────────────────────────────────────────┘\x1b[0m',
       '',
       '¡Bienvenido/a! Esta consola interactiva te permite explorar mi',
-      'perfil profesional, proyectos destacados y habilidades técnicas.',
+      'perfil, proyectos destacados y habilidades técnicas.',
       '',
       '\x1b[1;33mComandos recomendados para comenzar:\x1b[0m',
-      '  • \x1b[1;33mabout\x1b[0m     \x1b[90m→\x1b[0m Perfil profesional, formación y valores',
+      '  • \x1b[1;33mabout\x1b[0m     \x1b[90m→\x1b[0m Perfil, formación y valores',
       '  • \x1b[1;33mprojects\x1b[0m  \x1b[90m→\x1b[0m Proyectos de ingeniería destacados',
       '  • \x1b[1;33mskills\x1b[0m    \x1b[90m→\x1b[0m Stack tecnológico y especialidades',
       '  • \x1b[1;33mcontact\x1b[0m   \x1b[90m→\x1b[0m Canales oficiales (LinkedIn, GitHub, Email)',

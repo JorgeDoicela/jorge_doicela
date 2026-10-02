@@ -1,4 +1,4 @@
-# Portafolio Profesional - Frontend y Terminal SSH (Next.js)
+# Portafolio - Frontend y Terminal SSH (Next.js)
 
 Este documento detalla la arquitectura macro y micro, componentes y funcionamiento de la terminal SSH virtual interactiva del Portafolio (`portfolio.jorgedoicela.com`).
 
@@ -145,7 +145,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Hardware y Aislamiento:** 64 MB RAM, 0.25 vCPU, `pids-limit=50` (ver sección de seguridad en backend).
 * **Lanzamiento:** Botón `[ Iniciar Terminal en la Nube ]` → `/sandbox?mode=vps`.
 * **Comandos Interactivos Nativos del Servidor:**
-  * `about`, `projects`, `skills`, `contact`: Fichas del perfil profesional y proyectos destacados.
+  * `about`, `projects`, `skills`, `contact`: Fichas de perfil y proyectos destacados.
   * `architecture`: Demostración del reto de consolidación en 1 GB de RAM.
   * `benchmark`: Test de velocidad matemática de CPU y lectura de memoria en tiempo real.
   * `api-live`: Respuesta JSON estructurada de telemetría del sistema.
@@ -223,7 +223,7 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
 ## 6. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
 * **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Portfolio.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
-* **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` para indexación de perfil profesional y terminal en motores de búsqueda e IA.
+* **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` para indexación de perfil y proyectos en motores de búsqueda e IA.
 * **Dossier Especializado para IA (`public/portfolio/llms.txt`):** Resumen detallado del perfil técnico, proyectos y comandos de terminal en `portfolio.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/portfolio/manifest.json`):** Configuración de aplicación web independiente con tema `#08080a`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://portfolio.jorgedoicela.com`.

@@ -1,4 +1,4 @@
-# Portafolio Profesional - Backend y Persistencia (NestJS)
+# Portafolio - Backend y Persistencia (NestJS)
 
 Este documento detalla la arquitectura macro y micro, gateways de WebSockets, controladores y persistencia del módulo de Portafolio.
 

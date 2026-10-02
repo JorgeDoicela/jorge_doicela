@@ -53,7 +53,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Zona Horaria:** Formateado explícitamente con `'America/Guayaquil'` (UTC-5), mostrando siempre la hora local en Quito independientemente de dónde se encuentre el visitante.
 * **Aislamiento e Hidratación:** Renderizado seguro con `suppressHydrationWarning` para erradicar cualquier parpadeo de hidratación sin bloquear la pintura inicial del DOM.
 
-### 3.3 Internacionalización Profesional (next-intl Unificado + SSR & SEO Gold Standard)
+### 3.3 Internacionalización (next-intl Unificado + SSR & SEO Gold Standard)
 * **Unificación Total en next-intl:** Arquitectura 100% estandarizada con `useTranslations` de `next-intl`. Se eliminó por completo el archivo `translations.ts` manual obsoleto, erradicando duplicidades y garantizando paridad bilingüe estricta entre `src/messages/es.json` y `src/messages/en.json`.
 * **LanguageContext Desacoplado:** El proveedor de contexto de idioma gestiona exclusivamente el estado de locale ('es' | 'en'), cookies `NEXT_LOCALE` y transiciones atómicas (`useTransition`), delegando todas las cadenas de texto a los diccionarios reactivos de `next-intl`.
 * **Arquitectura de Servidor y Carga Determinista:** Configuración en `src/i18n/request.ts` integrada mediante `createNextIntlPlugin` en `next.config.ts`. Implementa un mapeo de importaciones estáticas y explícitas por proyecto e idioma (`loadProjectMessages`), eliminando expresiones dinámicas con plantillas de strings frágiles (`(${subdomain})`) y garantizando que Turbopack y Next.js Standalone empaqueten el 100% de los diccionarios `.json` en los chunks del servidor, erradicando fallos de `MISSING_MESSAGE` o 500 en SSR.

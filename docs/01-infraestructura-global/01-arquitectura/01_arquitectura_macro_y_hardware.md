@@ -8,7 +8,7 @@ Este documento detalla la arquitectura de alto nivel (macroarquitectura) del eco
 
 El proyecto está diseñado como un ecosistema modular compuesto por **cuatro aplicaciones totalmente independientes**:
 1. **Landing Page** (`jorgedoicela.com`): Portal de bienvenida y presentación general.
-2. **Portafolio Profesional** (`portfolio.jorgedoicela.com`): Portafolio interactivo con terminal SSH virtual en tiempo real.
+2. **Portafolio** (`portfolio.jorgedoicela.com`): Portafolio interactivo con vitrina de proyectos y terminal de comandos.
 3. **KARTEX** (`kartex.jorgedoicela.com`): Lector y suite exegética con análisis morfológico y multiversión.
 4. **DoicelaDev** (`doiceladev.jorgedoicela.com`): Plataforma de contenidos, noticias, blog, foros, IA, ciberseguridad, tutoriales y catálogo de proyectos.
 

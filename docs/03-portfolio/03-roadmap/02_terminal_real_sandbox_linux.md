@@ -1,6 +1,6 @@
 # Terminal Linux Real en Vivo (Sandbox) — Arquitectura, Seguridad y Despliegue
 
-Este documento define la arquitectura técnica completa, las capas de seguridad inviolables (*hardening*) y los manuales de despliegue paso a paso para implementar la **Terminal Linux Real en Vivo (Sandbox)** en el Portafolio Profesional (`portfolio.jorgedoicela.com`), tanto en el **VPS de AWS Lightsail** como en un **Servidor Dedicado Doméstico (PC en Casa)** conectado mediante Cloudflare Tunnel.
+Este documento define la arquitectura técnica completa, las capas de seguridad inviolables (*hardening*) y los manuales de despliegue paso a paso para implementar la **Terminal Linux Real en Vivo (Sandbox)** en el Portafolio (`portfolio.jorgedoicela.com`), tanto en el **VPS de AWS Lightsail** como en un **Servidor Dedicado Doméstico (PC en Casa)** conectado mediante Cloudflare Tunnel.
 
 ---
 

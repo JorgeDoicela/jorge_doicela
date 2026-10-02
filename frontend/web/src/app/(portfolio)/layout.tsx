@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
             title: t("title"),
             description: t("description"),
             url: "https://portfolio.jorgedoicela.com",
-            siteName: "Portafolio Profesional | Jorge Doicela",
+            siteName: "Portafolio | Jorge Doicela",
             locale: locale === "es" ? "es_EC" : "en_US",
             type: "profile",
             images: [
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
                     url: "/portfolio/logo/logo_fondo_circular_color_.png",
                     width: 512,
                     height: 512,
-                    alt: "Jorge Doicela - Portafolio Profesional",
+                    alt: "Jorge Doicela - Portafolio",
                 },
             ],
         },

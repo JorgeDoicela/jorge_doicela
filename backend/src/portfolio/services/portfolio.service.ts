@@ -179,14 +179,14 @@ export class PortfolioService {
                   content:
                     'DoicelaDev: Plataforma de contenidos sobre IA, Ciberseguridad, Noticias, Tutoriales y Foros.',
                 },
-                'portfolio_ssh.txt': {
+                'portfolio.txt': {
                   type: 'file',
-                  name: 'portfolio_ssh.txt',
+                  name: 'portfolio.txt',
                   size: 490,
                   permissions: '-rw-r--r--',
                   updatedAt: 'Aug 14 12:30',
                   content:
-                    'Portfolio SSH: Terminal virtual interactiva en tiempo real sobre WebSockets con Socket.io.',
+                    'Portafolio: Plataforma interactiva con catálogo de proyectos, arquitectura de sistemas y consola sobre WebSockets.',
                 },
               },
             },

@@ -96,7 +96,7 @@ pnpm dev
 
 ---
 
-## 4. Protocolo Profesional de Diagnóstico ante Errores 404
+## 4. Protocolo de Diagnóstico ante Errores 404
 
 Cuando una ruta dinámica de contenido (ej. `http://doiceladev.localhost:3001/infrastructure/[slug]`) devuelva `404 Not Found` en un entorno de desarrollo local, todo ingeniero o agente de IA debe aplicar de forma rigurosa el siguiente árbol de decisión:
 

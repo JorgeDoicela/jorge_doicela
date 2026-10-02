@@ -2,13 +2,13 @@
 
 > Desarrollador de Software, Administrador de Sistemas Linux (SysAdmin) y Especialista en DevOps e Ingeniería de Inteligencia Artificial en Quito, Ecuador.
 
-## Biografía y Perfil Profesional
-Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la arquitectura de software de alto rendimiento, optimización de sistemas en entornos de recursos restringidos, desarrollo backend con NestJS/C#, aplicaciones web avanzadas con Next.js y React, y administración de servidores Linux (Debian 13 y Arch Linux).
+## Biografía y Perfil Técnico
+Jorge Ismael Doicela Molina es un desarrollador e ingeniero enfocado en la arquitectura de software de alto rendimiento, optimización de sistemas en entornos de recursos restringidos, desarrollo backend con NestJS/C#, aplicaciones web avanzadas con Next.js y React, y administración de servidores Linux (Debian 13 y Arch Linux).
 
 - **Ubicación:** Quito, Pichincha, Ecuador.
 - **Educación:** Egresado de la carrera de **Desarrollo de Software** en el **Instituto Tecnológico Superior Traversari (ISTPET)**, Quito, Ecuador.
-- **Valores y Filosofía:** Compromiso con la excelencia técnica, la disciplina rigurosa, la integridad profesional y la ética laboral guiada por principios cristianos.
-- **Idiomas:** Español (Nativo), Inglés (Técnico / Profesional).
+- **Valores y Filosofía:** Compromiso con la excelencia técnica, la disciplina rigurosa, la integridad técnica y la ética laboral guiada por principios cristianos.
+- **Idiomas:** Español (Nativo), Inglés (Técnico / Avanzado).
 
 ---
 
@@ -63,7 +63,7 @@ Jorge Ismael Doicela Molina es un profesional de la tecnología enfocado en la a
   - *Marco Legal:* Integración autorizada con API.Bible (Sociedades Bíblicas) y fuentes críticas de dominio público universal.
 - **Arquitectura:** Estética Geist (Vercel Style) monocromática de alta densidad, base de datos SQLite con más de 30,000 registros indexados y seeder atómico determinista.
 
-### 3. Portafolio Profesional | Jorge Doicela
+### 3. Portafolio | Jorge Doicela
 - **URL Oficial:** https://portfolio.jorgedoicela.com
 - **Dossier Técnico LLMs:** https://portfolio.jorgedoicela.com/llms.txt
 - **Descripción:** Portafolio interactivo de ingeniería con estética Dark Luxury:

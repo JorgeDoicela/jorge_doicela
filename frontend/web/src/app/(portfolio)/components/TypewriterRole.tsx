@@ -63,7 +63,7 @@ export const TypewriterRole: React.FC<TypewriterRoleProps> = ({
   return (
     <div
       className={`min-h-[1.5rem] font-mono text-xs md:text-sm tracking-wider uppercase ${className}`}
-      aria-label={`Rol profesional: ${roles[currentRoleIndex]}`}
+      aria-label={`Rol: ${roles[currentRoleIndex]}`}
     >
       <span className="text-foreground/80 font-medium">
         {displayedText}

@@ -64,9 +64,9 @@ umask 077
 readonly SANDBOX_MODE
 
 
-# ── COMANDOS DE PERFIL PROFESIONAL Y PROYECTOS ─────────────────────────────
+# ── COMANDOS DE PERFIL Y PROYECTOS ─────────────────────────────────────────
 about() {
-    echo -e "\033[1;38;5;221mJorge Ismael Doicela Molina • Perfil Profesional\033[0m"
+    echo -e "\033[1;38;5;221mJorge Ismael Doicela Molina • Perfil\033[0m"
     echo -e "\033[38;5;242m────────────────────────────────────────────────────────────\033[0m"
     echo -e "  \033[38;5;221mRol:\033[0m          Full-Stack & DevSecOps Engineer"
     echo -e "  \033[38;5;221mEspecialidad:\033[0m Arquitectura Monolítica Modular, Next.js, NestJS y Cloud"
@@ -86,7 +86,7 @@ projects() {
     echo -e "     Stack: Next.js 16, NestJS 11, SQLite, Neumorphism UI, Glassmorphism"
     echo -e "     8 categorías temáticas, asesor de código interactivo StepWizard."
     echo ""
-    echo -e "  \033[1;38;5;221m3. Portafolio Profesional & Shell\033[0m \033[38;5;242m[https://portfolio.jorgedoicela.com]\033[0m"
+    echo -e "  \033[1;38;5;221m3. Portafolio\033[0m \033[38;5;242m[https://portfolio.jorgedoicela.com]\033[0m"
     echo -e "     Stack: Next.js 16, NestJS 11, WebSockets, xterm.js, Docker Hardened"
     echo -e "     Consola Web Interactiva, multiplexor tmux y contenedor en vivo."
     echo ""
@@ -203,7 +203,7 @@ contact() {
 
 help() {
     echo -e "\033[1;38;5;221m── Comandos y herramientas disponibles en este servidor ──\033[0m"
-    echo -e "  \033[38;5;221mabout\033[0m         \033[38;5;242m→\033[0m Mi perfil profesional, educación y principios"
+    echo -e "  \033[38;5;221mabout\033[0m         \033[38;5;242m→\033[0m Mi perfil, educación y principios"
     echo -e "  \033[38;5;221mprojects\033[0m      \033[38;5;242m→\033[0m Proyectos de producción, arquitectura y métricas"
     echo -e "  \033[38;5;221mskills\033[0m        \033[38;5;242m→\033[0m Tecnologías dominadas (Next.js, NestJS, Cloud)"
     echo -e "  \033[38;5;221marchitecture\033[0m  \033[38;5;242m→\033[0m Cómo corre este ecosistema en solo 1 GB de RAM"
@@ -237,7 +237,7 @@ EOF
     printf '\033[38;5;242m─────────────────────────────────────────────────────────────────────────────\033[0m\n'
     printf '\033[38;5;250m%b\033[0m\n\n' "$NODE_GREETING"
     printf '\033[1;38;5;221mEXPERIENCIA Y PROYECTOS:\033[0m\n'
-    printf '  \033[38;5;221m• about\033[0m        \033[38;5;242m→\033[0m  \033[38;5;250mMi perfil profesional, educación y principios de ingeniería\033[0m\n'
+    printf '  \033[38;5;221m• about\033[0m        \033[38;5;242m→\033[0m  \033[38;5;250mMi perfil, educación y principios de ingeniería\033[0m\n'
     printf '  \033[38;5;221m• projects\033[0m     \033[38;5;242m→\033[0m  \033[38;5;250mProyectos de producción, arquitectura y enlaces directos\033[0m\n'
     printf '  \033[38;5;221m• skills\033[0m       \033[38;5;242m→\033[0m  \033[38;5;250mTecnologías dominadas (Next.js, NestJS, Cloud, Docker)\033[0m\n'
     printf '  \033[38;5;221m• architecture\033[0m \033[38;5;242m→\033[0m  \033[38;5;250mCómo corre este ecosistema completo en solo 1 GB de RAM\033[0m\n\n'

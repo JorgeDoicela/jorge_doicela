@@ -1,6 +1,6 @@
-# Portafolio Profesional | Jorge Ismael Doicela Molina
+# Portafolio | Jorge Ismael Doicela Molina
 
-> Portafolio interactivo de ingeniería de software, terminal SSH virtual sobre WebSockets, catálogo de proyectos y perfil técnico de Jorge Doicela.
+> Portafolio de ingeniería de software, catálogo de proyectos, arquitectura de sistemas, perfil técnico y consola interactiva de Jorge Doicela.
 
 ## Información General
 - **URL Canónica:** https://portfolio.jorgedoicela.com
@@ -31,7 +31,7 @@
   - *DoicelaDev:* Plataforma tecnológica de 8 áreas con arquitectura en capas.
   - *KARTEX:* Plataforma de investigación bíblica y exégesis con 9 módulos de estudio y app nativa Expo.
   - *DIITRA:* Plataforma empresarial con frontend Next.js y backend ASP.NET Core en C#.
-  - *Portfolio SSH:* Terminal virtual en tiempo real sobre WebSockets y microservicios.
+  - *Portafolio:* Aplicación web interactiva con catálogo de proyectos, arquitectura de sistemas y consola de comandos sobre WebSockets.
 
 ### 3. Servicio de Contacto Seguro
 - **Endpoint:** `POST /portfolio/contact` con validación DTO estricta (`class-validator`) y protección contra rate limiting y spam.

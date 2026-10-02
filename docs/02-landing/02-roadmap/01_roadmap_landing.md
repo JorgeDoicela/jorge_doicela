@@ -8,7 +8,7 @@ Catálogo vivo de ideas, funcionalidades completadas y requerimientos pendientes
 - [x] **Efecto Parallax en el fondo:** Elipses degradadas que se mueven a distinta velocidad al hacer scroll.
 - [x] **Partículas interactivas:** Reacción al movimiento del cursor o toques táctiles.
 - [x] **Animación de entrada (Page Load):** Entrada escalonada (staggered fade-in + slide-up) al cargar la página.
-- [x] **Efecto Typewriter:** Título profesional que se escribe letra por letra.
+- [x] **Efecto Typewriter:** Título que se escribe letra por letra.
 - [x] **Gradiente reactivo al cursor:** Fondo reactivo al puntero en escritorio.
 
 ---
@@ -30,7 +30,7 @@ Catálogo vivo de ideas, funcionalidades completadas y requerimientos pendientes
 
 ## 3. Funcionalidades Técnicas y Accesibilidad
 - [x] **Arquitectura Canónica FSD (6 Capas):** Reorganización modular desacoplada en `providers/`, `shared/`, `entities/`, `features/`, `widgets/` y App Router pages (`page.tsx`, `consulta/`, `links/`).
-- [x] **Internacionalización Profesional (next-intl):** Server-Side Rendering (SSR) limpio, cero parpadeos (FOUC), cookies `NEXT_LOCALE` y cabeceras `Accept-Language`.
+- [x] **Internacionalización (next-intl):** Server-Side Rendering (SSR) limpio, cero parpadeos (FOUC), cookies `NEXT_LOCALE` y cabeceras `Accept-Language`.
 - [x] **Metadatos SEO Internacionales Dinámicos:** Generación bilingüe con `generateMetadata()`, Open Graph, Twitter Cards, Schema.org JSON-LD y etiquetas `hreflang` (`es-EC` y `en-US`).
 - [x] **Sitemap dinámico (`sitemap.xml`):** Generación automática desde Next.js incluyendo `/links`.
 - [x] **Robots.txt personalizado:** Reglas de indexación para bots.

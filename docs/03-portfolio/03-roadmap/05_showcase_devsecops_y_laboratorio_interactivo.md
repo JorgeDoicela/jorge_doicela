@@ -10,7 +10,7 @@ El objetivo es proyectar ante Directores de Tecnología (CTO), Tech Leads y Prin
 
 La terminal actual implementa una arquitectura sólida y aislada mediante `Alpine 3.20`, `dockerode`, `tmpfs`, `CapDrop: ALL` y WebSockets bidireccionales con `xterm.js`. Sin embargo, a nivel de experiencia de usuario, se percibe como una terminal estática con comandos informativos (`about`, `projects`, `skills`, `architecture`, `neofetch`).
 
-Para elevar el impacto profesional, el sistema se estructurará en dos grandes vertientes complementarias:
+Para elevar el impacto técnico, el sistema se estructurará en dos grandes vertientes complementarias:
 1. **Showcase Enterprise & Observabilidad de Bajo Nivel:** Módulos que inspeccionan y demuestran la ingeniería real del sistema (cgroups v2, auditoría CIS Benchmark, mTLS, latencia hop-by-hop).
 2. **Defensa Activa y Retos DevSecOps (Interactive Sandbox / Mini-CTF):** Pruebas interactivas donde el visitante intenta romper el contenedor y el sistema le enseña en tiempo real cómo y por qué falló el ataque, o bien resuelve incidentes forenses reales.
 

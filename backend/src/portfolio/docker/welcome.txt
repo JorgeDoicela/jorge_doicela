@@ -13,7 +13,7 @@
 Linux interactiva de alto rendimiento con acceso a comandos y herramientas reales. [0m
 
  [1;38;5;221mEXPERIENCIA Y PROYECTOS: [0m
-   [38;5;221m• about [0m        [38;5;242m→ [0m  [38;5;250mMi perfil profesional, educación y principios de ingeniería [0m
+   [38;5;221m• about [0m        [38;5;242m→ [0m  [38;5;250mMi perfil, educación y principios de ingeniería [0m
    [38;5;221m• projects [0m     [38;5;242m→ [0m  [38;5;250mProyectos de producción, arquitectura y enlaces directos [0m
    [38;5;221m• skills [0m       [38;5;242m→ [0m  [38;5;250mTecnologías dominadas (Next.js, NestJS, Cloud, Docker) [0m
    [38;5;221m• architecture [0m [38;5;242m→ [0m  [38;5;250mCómo corre este ecosistema completo en solo 1 GB de RAM [0m

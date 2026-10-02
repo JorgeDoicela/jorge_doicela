@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────────────────────
-    // 2. PORTAFOLIO PROFESIONAL (portfolio.jorgedoicela.com)
+    // 2. PORTAFOLIO (portfolio.jorgedoicela.com)
     // Al migrar a servidor independiente: copiar solo este bloque
     // en el sitemap.ts de la nueva app Next.js y borrar los demás.
     // ─────────────────────────────────────────────────────────────

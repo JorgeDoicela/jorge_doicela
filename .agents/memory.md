@@ -334,5 +334,10 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
       - Se refactorizó `KartexEnginesCarousel.tsx` para consumir `tLanding('...')` en todos los paneles, dot and slot HUDs, eliminando `isEn` y preservando intacta la morfología hebrea y griega original.
   - **Verificación Técnica:** `0` ocurrencias de `isEs ?` en `frontend/web/src`, `pnpm -r typecheck` con 0 errores (código 0 en backend, web y mobile), y `pnpm check-secrets` limpio.
 
-
-
+* **Estandarización de Denominación de Portafolio (Cero "Profesional", Cero "Portafolio & Terminal SSH"):**
+  - **Criterio de Marca y Nomenclatura:**
+    - La plataforma se denomina simple y contundentemente **Portafolio** (ES) / **Portfolio** (EN) en todos los niveles (UI, diccionarios de internacionalización `messages/`, títulos de tarjetas, metadatos OpenGraph, PWA manifest, dossiers `llms.txt` y documentación técnica).
+    - Se erradicó el calificativo redundante *"Profesional"* en títulos y etiquetas (`Portafolio Profesional` -> `Portafolio`), manteniendo un tono sobrio, elegante y libre de adjetivos marketeros.
+    - Se desacopló la identidad del portafolio de la terminal SSH: la consola interactiva es solo una herramienta exploratoria secundaria dentro de la plataforma, no el núcleo ni el titular de la misma (`Portafolio & Terminal SSH` -> `Portafolio`).
+    - Las descripciones editoriales priorizan la arquitectura de software, los proyectos destacados y el stack técnico, situando a la terminal como un complemento interactivo.
+    - Se depuraron enlaces residuales de pie de página en DoicelaDev (`portfolioSSH`: *Portafolio SSH* / *SSH Portfolio* -> *Portafolio* / *Portfolio*), respuestas del asistente de IA en modal y API (`route.ts`), dossiers de IA (`llms.txt`), así como el sistema de archivos virtual emulado en el backend (`portfolio_ssh.txt` -> `portfolio.txt`). Cero ocurrencias de "profesional" / "professional" en todos los diccionarios de internacionalización del ecosistema.

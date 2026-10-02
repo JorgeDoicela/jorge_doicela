@@ -6,7 +6,7 @@ Este documento registra técnicamente el aprovisionamiento de infraestructura, h
 
 ## 1. Resumen Ejecutivo de la Puesta en Marcha
 
-Se completó la puesta a punto del entorno de ejecución aislado para la Terminal Interactiva Linux en producción. La arquitectura permite que los usuarios que visitan el Portafolio Profesional (`portfolio.jorgedoicela.com`) inicien sesiones interactivas de terminal en contenedores efímeros Docker sin comprometer los recursos de hardware ni la seguridad del servidor anfitrión.
+Se completó la puesta a punto del entorno de ejecución aislado para la Terminal Interactiva Linux en producción. La arquitectura permite que los usuarios que visitan el Portafolio (`portfolio.jorgedoicela.com`) inicien sesiones interactivas de terminal en contenedores efímeros Docker sin comprometer los recursos de hardware ni la seguridad del servidor anfitrión.
 
 ---
 

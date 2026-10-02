@@ -6,8 +6,8 @@ export default function PortfolioJsonLd() {
         '@type': 'ProfilePage',
         '@id': 'https://portfolio.jorgedoicela.com/#profile',
         'url': 'https://portfolio.jorgedoicela.com',
-        'name': 'Portafolio Profesional | Jorge Ismael Doicela Molina',
-        'description': 'Portafolio interactivo de ingeniería de software, terminal SSH virtual sobre WebSockets, proyectos y stack técnico de Jorge Doicela.',
+        'name': 'Portafolio | Jorge Ismael Doicela Molina',
+        'description': 'Portafolio de ingeniería de software, vitrina de proyectos, arquitectura de sistemas y consola interactiva de Jorge Doicela.',
         'inLanguage': ['es', 'en'],
         'mainEntity': {
           '@type': 'Person',

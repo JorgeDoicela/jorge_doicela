@@ -373,7 +373,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
       4. *Referencias Cruzadas Canónicas Localizadas:* Módulo `crossReferencesData.ts` con pasajes correlativos enriquecidos con soporte bilingüe nativo (`relationLabel`, `relationLabelEn`, `snippetText`, `snippetTextEn`) según `useLocale()`, y nombres de libros traducidos mediante `tBooks`. Navegación instantánea en un solo clic invocando `setPassage(bookId, chapter, verseNumber)`.
       5. *Accesos Directos a Motores Exegéticos:* Enlaces con parámetros de consulta para abrir el pasaje en `/study/interlinear`, `/study/parallel`, `/study/atlas` o `/study/timeline`.
     - **Cero Textos Quemados y Paridad i18n 1:1:** Todas las etiquetas de interfaz, tooltips, libros bíblicos y descripciones provienen estrictamente de `next-intl` (`messages/es.json` y `messages/en.json` bajo `Studio` y `Books`).
-    - **FSD y Aislamiento:** Ubicado en `entities/passage/ui/` y consumido por `widgets/exegesis-inspector/ui/`, respetando la microarquitectura de capas sin importaciones cruzadas.
+    - **Depuración de Barra Contextual Inferior Residual (`ContinuousReadingView`):** Se eliminó de raíz el menú flotante inferior redundante (`selectedVerseId && <div ...>`) y el estado asociado de timers/toasts. Al hacer clic sobre cualquier versículo, la acción activa directamente el Inspector Exegético en el panel lateral derecho con resaltado sutil en el texto, manteniendo el flujo de lectura 100% limpio y libre de distracciones.
 
 
 

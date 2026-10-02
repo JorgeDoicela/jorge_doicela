@@ -10,6 +10,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Servidor VPS en AWS Lightsail limitado a 1 GB de RAM.
   - Runtime consolidado: Backend corre en un solo proceso NestJS (puerto `3000`), frontend corre consolidado en un solo proceso Next.js (puerto `3001`) con `middleware.ts` para resolución de subdominios.
   - Aislamiento de Cajas Negras: las 4 aplicaciones (`landing`, `portfolio`, `kartex`, `doiceladev`) son 100% independientes, prohibidas las importaciones cruzadas entre dominios.
+  - Gestión y Rotación Automática de Logs: módulo `pm2-logrotate` activo en producción con rotación diaria (`0 0 * * *`), límite de 10 MB (`max_size 10M`), retención estricta de 7 archivos (`retain 7`) y compresión gzip (`compress true`) para evitar saturación de disco en el VPS.
 * **Gestión de Paquetes y Tipos:**
   - Monorepo pnpm: instalación obligatoria con filtro (`pnpm --filter backend add ...`, `pnpm --filter web add ...`).
   - Cero paquetes `@shared`: cada subproyecto define sus propias interfaces y tipos localmente.

@@ -313,3 +313,14 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - **Causa Raíz:** En el commit `a8774128` se había eliminado inadvertidamente la clave `TARGET: ${{ secrets.TARGET_DIR }}` del step `easingthemes/ssh-deploy@v5.1.0`. Por ende, el rsync copiaba los archivos a la raíz del usuario SSH (`~/`) en lugar de sobreescribir la carpeta operativa del proyecto (`/home/admin/jorge_doicela`). Posteriormente, PM2 y los seeders se ejecutaban en `TARGET_DIR`, manteniendo intacta la versión previa en disco.
   - **Solución Implementada:** Se restauró `TARGET: ${{ secrets.TARGET_DIR }}` en `.github/workflows/deploy.yml`. Al confirmarse y subirse a `main`, el pipeline sincroniza los archivos compilados en la ruta exacta de ejecución de PM2.
 
+* **Depuración Tipográfica y Erradicación de Redundancias de Nombre (`KARTEX` vs `Kartex` vs Omisión):**
+  - **Criterio de Marca y Tipografía:**
+    - `KARTEX` (todo mayúsculas): Se reserva estrictamente para la identidad gráfica corporativa, isotipo/logotipo (`<KartexLogo />`), encabezado macro de landing y manifiestos formales (`manifest.json`, `og:site_name`, copyright formal).
+    - `Kartex` (capitalizado en mayúscula inicial / title case): Se utiliza en prosa corrida, descripciones, badges de ecosistema y botones de llamado a la acción (`Abrir Kartex`, `Open Kartex`) para mantener armonía visual con `Portafolio` y `DoicelaDev`, evitando el efecto estridente ("shouting") de mayúsculas sostenidas en botones y oraciones.
+    - **Omisión Total (Erradicación de Redundancia):**
+      - Pestañas de navegación interna de Kartex (`KartexHeaderNav.tsx`): Se eliminó el prefijo redundante "Kartex" en cada pestaña. Antes: *Kartex Lector*, *Kartex Paralelo*, *Kartex Interlineal*, etc. Ahora: *Lector*, *Paralelo*, *Interlineal*, *Lexicón*, *Atlas*, *Cronología*, *Arqueología*, *Evangelismo*. Esto reduce drásticamente la saturación visual, evita desbordamientos en pantallas medianas y se alinea con la estética minimalista Geist/Vercel.
+      - Botón de retorno (`BackToKartexButton.tsx`): Se simplificó de *Volver a Inicio de KARTEX* a *Volver al inicio* (ES) / *Back to home* (EN).
+      - Módulos en Landing Page (`engine1Title` a `engine10Title`): Se eliminó "Kartex" repetido en cada tarjeta, presentándolos concisamente (*Lector Bíblico*, *Paralelo*, *Interlineal*, *Exégesis*, *Lexicón*, etc.).
+      - Datos estructurados (`KartexJsonLd.tsx`) y dossiers IA (`llms.txt`): Se limpiaron las listas de características evitando iterar el nombre de la plataforma en cada una.
+
+

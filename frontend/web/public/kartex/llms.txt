@@ -12,34 +12,34 @@
 
 ---
 
-## Los 9 Módulos Especializados de KARTEX
+## Los 9 Módulos Especializados de Kartex
 
-### 1. Kartex Lector (`/reader`)
+### 1. Lector Bíblico (`/study/standard` o `/reader`)
 - Lectura bíblica fluida sin distracciones con controles responsivos de tipografía, tamaño de fuente y notas de atribución legal de copyright oficial al pie de cada capítulo.
 
-### 2. Kartex Paralelo (`/parallel`)
+### 2. Paralelo Multiversión (`/study/parallel` o `/parallel`)
 - Comparación simultánea de 2 a 4 traducciones sincronizadas por capítulo (`RV1960`, `NVI`, `NBLA`, `BHS`, `LXX`) con algoritmo de Diferencia de Texto (LCS) para resaltar automáticamente adiciones, omisiones y divergencias.
 
-### 3. Kartex Interlineal (`/interlinear`)
+### 3. Interlineal Inverso (`/study/interlinear` o `/interlinear`)
 - Desglose morfológico palabra por palabra del Texto Masorético Hebreo (**Westminster Leningrad Codex / BHS**) y Griego del Nuevo Testamento (**Nestle-Aland 28 / Nestle 1904**).
 - Glosas literales, lematización consonántica, códigos Strong y análisis gramatical completo con hover bidireccional.
 
-### 4. Kartex Lexicón (`/lexicon`)
+### 4. Lexicón Strong (`/study/word-study` o `/lexicon`)
 - Diccionarios clásicos de dominio público integrados: *Brown-Driver-Briggs (BDB)*, *Gesenius*, *Thayer* y numeración universal de *James Strong*.
 
-### 5. Kartex Atlas (`/atlas`)
+### 5. Atlas Geoespacial (`/study/atlas` o `/atlas`)
 - Coordenadas espaciales satelitales WGS84 proyectadas sobre canvas vectorial con filtro por épocas históricas, rutas del Éxodo y viajes apostólicos.
 
-### 6. Kartex Cronología (`/timeline`)
+### 6. Cronología Sincrónica (`/study/timeline` o `/timeline`)
 - Tabla temporal sincrónica de monarcas de Israel/Judá vs imperios contemporáneos (Egipto, Asiria, Babilonia, Persia).
 
-### 7. Kartex Arqueología (`/archaeology`)
+### 7. Arqueología Bíblica (`/study/archaeology` o `/archaeology`)
 - Catálogo de evidencia material y epigráfica (Estela de Tel Dan, Cilindro de Ciro, Inscripción de Siloé).
 
-### 8. Kartex Evangelismo (`/evangelism`)
+### 8. Evangelismo & Apologética (`/study/evangelism` o `/evangelism`)
 - Rutas bíblicas estructuradas (El Camino de Romanos, El Puente hacia la Vida, Las Cuatro Verdades), banco interactivo de objeciones apologéticas con respuestas exegéticas y tratados/bosquejos homiléticos listos para predicar o compartir.
 
-### 9. Kartex Exégesis (`/exegesis`)
+### 9. Exégesis Teológica (`/study/exegesis` o `/exegesis`)
 - Espacio integrador de investigación teológica y análisis contextual exhaustivo.
 
 ---

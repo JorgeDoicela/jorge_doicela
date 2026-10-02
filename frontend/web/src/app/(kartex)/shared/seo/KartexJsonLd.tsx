@@ -9,7 +9,7 @@ export function KartexJsonLd() {
         'name': 'KARTEX · Plataforma de Investigación y Estudio Bíblico | Jorge Doicela',
         'applicationCategory': 'EducationalApplication, ReferenceApplication',
         'operatingSystem': 'Web, iOS, Android',
-        'description': 'KARTEX: Plataforma de investigación y estudio bíblico exegético con 9 motores de estudio modulares: Kartex Interlineal, Kartex Lexicón Strong, Kartex Atlas WGS84, Kartex Cronología, Kartex Arqueología, Kartex Evangelismo, Kartex Paralelo y App Móvil Expo.',
+        'description': 'KARTEX: Plataforma de investigación y estudio bíblico exegético con 9 motores de estudio modulares: Interlineal, Lexicón Strong, Atlas WGS84, Cronología, Arqueología, Evangelismo, Paralelo y App Móvil Expo.',
         'inLanguage': ['es', 'en', 'he', 'grc'],
         'author': {
           '@type': 'Person',
@@ -18,14 +18,14 @@ export function KartexJsonLd() {
           'url': 'https://jorgedoicela.com'
         },
         'featureList': [
-          'Kartex Lector: Lectura continua editorial',
-          'Kartex Paralelo: Comparador paralelo multiversión y diff textual (LCS)',
-          'Kartex Interlineal: Interlineal inverso morfológico BHS / NA28',
-          'Kartex Lexicón: Léxicos Strong BDB, Thayer y Gesenius con ocurrencias canónicas',
-          'Kartex Atlas: Atlas bíblico georreferenciado WGS84 e itinerarios históricos',
-          'Kartex Cronología: Cronología sincrónica de reyes, profetas e imperios',
-          'Kartex Arqueología: Evidencia material y catálogo arqueológico',
-          'Kartex Evangelismo: Rutas soteriológicas y apologética práctica',
+          'Lector: Lectura continua editorial',
+          'Paralelo: Comparador paralelo multiversión y diff textual (LCS)',
+          'Interlineal: Interlineal inverso morfológico BHS / NA28',
+          'Lexicón: Léxicos Strong BDB, Thayer y Gesenius con ocurrencias canónicas',
+          'Atlas: Atlas bíblico georreferenciado WGS84 e itinerarios históricos',
+          'Cronología: Cronología sincrónica de reyes, profetas e imperios',
+          'Arqueología: Evidencia material y catálogo arqueológico',
+          'Evangelismo: Rutas soteriológicas y apologética práctica',
           'App móvil nativa React Native / Expo con soporte Offline-First'
         ]
       }

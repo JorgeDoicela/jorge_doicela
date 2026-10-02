@@ -5,7 +5,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>KARTEX Mobile</Text>
-      <Text style={styles.subtitle}>Cimientos de la plataforma móvil KARTEX (React Native / Expo).</Text>
+      <Text style={styles.subtitle}>Cimientos de la plataforma móvil Kartex (React Native / Expo).</Text>
       <StatusBar style="light" />
     </View>
   );

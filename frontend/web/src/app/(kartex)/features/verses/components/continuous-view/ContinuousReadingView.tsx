@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Verse, ReaderFontSize, ReaderFontFamily, ReaderTone } from '../../types';
@@ -34,7 +34,6 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   const t = useTranslations('ReadingView');
   const tBooks = useTranslations('Books');
   const passageContext = useKartexPassageSafe();
-  const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
 
   const rawAbbr =
     bookAbbr ||
@@ -96,34 +95,40 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     }
   };
 
-  const activeInspectedVerseNum = passageContext?.inspectedVerse?.verseNumber;
-  const isVerseActive = (verse: Verse) => {
-    if (selectedVerseId !== null) return selectedVerseId === verse.id;
-    if (passageContext?.isRightInspectorOpen && activeInspectedVerseNum !== undefined) {
-      return verse.verseNumber === activeInspectedVerseNum;
+  const getSelectedVerseClass = (tone: ReaderTone) => {
+    switch (tone) {
+      case 'sepia':
+        return 'bg-[#EADAB8]/90 dark:bg-[#382E24] text-[#2C221E] dark:text-[#FAF6EE] ring-1 ring-[#8C765C]/40 font-medium rounded-md shadow-xs';
+      case 'dark':
+        return 'bg-zinc-800 text-zinc-100 ring-1 ring-zinc-700 font-medium rounded-md shadow-xs';
+      case 'system':
+      default:
+        return 'bg-zinc-200/90 dark:bg-zinc-800 text-zinc-950 dark:text-zinc-100 ring-1 ring-zinc-300 dark:ring-zinc-700 font-medium rounded-md shadow-xs';
     }
-    return false;
+  };
+
+  const isVerseActive = (verse: Verse) => {
+    return (
+      (passageContext?.isRightInspectorOpen ?? false) &&
+      passageContext?.inspectedVerse?.verseNumber === verse.verseNumber
+    );
   };
 
   const handleToggleVerse = (verse: Verse) => {
-    const isCurrentlyActive = isVerseActive(verse);
-    if (isCurrentlyActive && selectedVerseId !== null) {
-      setSelectedVerseId(null);
-    } else {
-      setSelectedVerseId(verse.id);
-      if (passageContext) {
-        const bId =
-          typeof verse.book === 'object' && verse.book !== null
-            ? verse.book.id
-            : passageContext.selectedBookId || 1;
-        passageContext.openInspectorWithVerse({
-          bookId: bId,
-          bookName: localizedBookTitle,
-          chapter: verse.chapter,
-          verseNumber: verse.verseNumber,
-          text: verse.text,
-        });
-      }
+    if (isVerseActive(verse)) {
+      passageContext?.clearInspectedVerse?.();
+    } else if (passageContext) {
+      const bId =
+        typeof verse.book === 'object' && verse.book !== null
+          ? verse.book.id
+          : passageContext.selectedBookId || 1;
+      passageContext.openInspectorWithVerse({
+        bookId: bId,
+        bookName: localizedBookTitle,
+        chapter: verse.chapter,
+        verseNumber: verse.verseNumber,
+        text: verse.text,
+      });
     }
   };
 
@@ -164,17 +169,17 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
               <span
                 key={verse.id}
                 onClick={() => handleToggleVerse(verse)}
-                className={`inline rounded-md px-1 py-0.5 relative group cursor-pointer transition-colors ${
+                className={`inline rounded-md px-1 py-0.5 relative group cursor-pointer transition-all duration-150 ${
                   isSelected
-                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium'
-                    : 'hover:bg-zinc-100 dark:hover:bg-zinc-900/60'
+                    ? getSelectedVerseClass(readerTone)
+                    : 'hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60'
                 }`}
               >
                 {showVerseNumbers && (
                   <sup
                     className={`font-mono text-[10px] font-semibold select-none mr-1.5 ml-0.5 align-super transition-colors ${
                       isSelected
-                        ? 'text-zinc-300 dark:text-zinc-700'
+                        ? 'text-zinc-600 dark:text-zinc-300 font-bold'
                         : 'text-zinc-400/80 dark:text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100'
                     }`}
                     title={t('verseTooltip', { number: verse.verseNumber })}

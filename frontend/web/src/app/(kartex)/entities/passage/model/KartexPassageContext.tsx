@@ -79,6 +79,7 @@ interface KartexPassageContextValue {
   inspectedVerse: InspectedVerseData | null;
   openInspectorWithWord: (word: InspectedWordData) => void;
   openInspectorWithVerse: (verse: InspectedVerseData) => void;
+  clearInspectedVerse: () => void;
   closeInspector: () => void;
 }
 
@@ -332,6 +333,10 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     }
   }, []);
 
+  const clearInspectedVerse = useCallback(() => {
+    setInspectedVerse(null);
+  }, []);
+
   const setRightInspectorOpen = useCallback((open: boolean) => {
     setIsRightInspectorOpen(open);
     if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
@@ -540,6 +545,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         inspectedVerse,
         openInspectorWithWord,
         openInspectorWithVerse,
+        clearInspectedVerse,
         closeInspector,
       }}
     >

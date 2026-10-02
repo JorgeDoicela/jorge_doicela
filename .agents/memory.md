@@ -374,6 +374,16 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
       5. *Accesos Directos a Motores Exegéticos:* Enlaces con parámetros de consulta para abrir el pasaje en `/study/interlinear`, `/study/parallel`, `/study/atlas` o `/study/timeline`.
     - **Cero Textos Quemados y Paridad i18n 1:1:** Todas las etiquetas de interfaz, tooltips, libros bíblicos y descripciones provienen estrictamente de `next-intl` (`messages/es.json` y `messages/en.json` bajo `Studio` y `Books`).
     - **Depuración de Barra Contextual Inferior Residual (`ContinuousReadingView`):** Se eliminó de raíz el menú flotante inferior redundante (`selectedVerseId && <div ...>`) y el estado asociado de timers/toasts. Al hacer clic sobre cualquier versículo, la acción activa directamente el Inspector Exegético en el panel lateral derecho con resaltado sutil en el texto, manteniendo el flujo de lectura 100% limpio y libre de distracciones.
+    - **Selección y Deselección Fluida de Versículos (Toggle Reactivo):**
+      - Se expuso `clearInspectedVerse()` en `KartexPassageContext`.
+      - Tanto en lectura continua (`ContinuousReadingView`) como versículo a versículo (`LineByLineReadingView`), la interacción opera como un toggle limpio: un clic selecciona el versículo y abre/actualiza el inspector; un segundo clic sobre el mismo versículo lo deselecciona inmediatamente sin dejar resaltados residuales.
+      - Se reemplazó el bloque negro invertido de alto contraste (`bg-zinc-900 text-white`) por un resaltado armónico adaptativo (`getSelectedVerseClass`) que respeta la paleta editorial según el tema (`sepia`, `dark`, `system`), mejorando sustancialmente la comodidad de lectura.
+    - **Estado Inicial del Inspector Exegético sin Génesis 1:1 Forzado:**
+      - **Causa Raíz:** `KartexExegesisInspector.tsx` forzaba un objeto sintético `{ bookId: 1, bookName: 'Génesis', chapter: 1, verseNumber: 1 }` como fallback por defecto cuando `passageContext.inspectedVerse` era nulo. Esto provocaba que, al abrir la vista sin haber tocado ningún versículo, el panel derecho disparara peticiones de red y mostrara Génesis 1:1 automáticamente.
+      - **Solución Implementada:**
+        1. Se eliminó el fallback forzado en `KartexExegesisInspector.tsx` (`targetVerse` retorna `null` si no hay selección).
+        2. Se añadieron cláusulas de guarda en los efectos secundarios de `VerseExegesisCard.tsx` para evitar consultas de versículos paralelos y morfología cuando `!verse`.
+        3. Se implementó una presentación de estado vacío (`empty state`) minimalista y limpia sin bordes punteados (integrada naturalmente sobre el lienzo del panel lateral), con icono `BookOpen` y textos explicativos bilingües (`selectVerseToInspect` y `noVerseSelectedDesc` en `messages/es.json` y `messages/en.json` bajo el namespace `Studio`), invitando amablemente a pulsar cualquier versículo del texto bíblico para activar el cotejo multiversión y el análisis léxico.
 
 
 

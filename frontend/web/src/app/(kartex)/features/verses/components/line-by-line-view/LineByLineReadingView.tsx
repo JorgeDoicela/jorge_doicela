@@ -139,12 +139,16 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
       {/* Lista versículo a versículo en tarjeta elevada */}
       <div className={`divide-y border rounded-2xl overflow-hidden transition-colors duration-200 ${getToneContainerClass(readerTone)}`}>
         {verses.map((verse) => {
-          const isInspected = passageContext?.inspectedVerse?.verseNumber === verse.verseNumber;
+          const isInspected =
+            (passageContext?.isRightInspectorOpen ?? false) &&
+            passageContext?.inspectedVerse?.verseNumber === verse.verseNumber;
           return (
             <div
               key={verse.id}
               onClick={() => {
-                if (passageContext) {
+                if (isInspected) {
+                  passageContext?.clearInspectedVerse?.();
+                } else if (passageContext) {
                   const bId =
                     typeof verse.book === 'object' && verse.book !== null
                       ? verse.book.id

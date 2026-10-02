@@ -130,7 +130,7 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
 
   // Carga de versículos paralelos para las traducciones seleccionadas
   useEffect(() => {
-    if (!bookId || !chapter || !verseNumber || activeTranslationIds.length === 0) {
+    if (!verse || !bookId || !chapter || !verseNumber || activeTranslationIds.length === 0) {
       setParallelVerses([]);
       setParallelLoading(false);
       return;
@@ -181,6 +181,12 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
 
   // Carga de tokens morfológicos del versículo activo
   useEffect(() => {
+    if (!verse) {
+      setTokens([]);
+      setTokensLoading(false);
+      return;
+    }
+
     let isMounted = true;
     setTokensLoading(true);
     setActiveLexiconCode(null);
@@ -253,6 +259,24 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
     }
     return verse?.bookName || (locale === 'en' ? 'Genesis' : 'Génesis');
   }, [canonicalAbbr, verse?.bookName, tBooks, locale]);
+
+  if (!verse) {
+    return (
+      <div className={`py-16 px-4 text-center space-y-4 my-auto ${className}`}>
+        <div className="w-12 h-12 rounded-2xl bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/60 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500 shadow-xs">
+          <BookOpen className="w-5 h-5 stroke-[1.75]" />
+        </div>
+        <div className="space-y-1.5 max-w-xs mx-auto">
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 font-serif">
+            {tStudio('selectVerseToInspect')}
+          </h3>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">
+            {tStudio('noVerseSelectedDesc')}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`space-y-7 text-sm ${className}`}>

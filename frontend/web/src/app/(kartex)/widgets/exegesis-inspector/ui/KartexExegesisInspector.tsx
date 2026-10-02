@@ -41,23 +41,8 @@ export const KartexExegesisInspector: React.FC<KartexExegesisInspectorProps> = (
   const targetVerse: InspectedVerseData | null = useMemo(() => {
     if (propVerse !== undefined) return propVerse;
     if (passageContext?.inspectedVerse) return passageContext.inspectedVerse;
-    if (passageContext) {
-      return {
-        bookId: passageContext.selectedBookId || 1,
-        bookName: passageContext.selectedBook?.name || 'Génesis',
-        chapter: passageContext.selectedChapter || 1,
-        verseNumber: 1,
-        text: '',
-      };
-    }
     return null;
-  }, [
-    propVerse,
-    passageContext?.inspectedVerse,
-    passageContext?.selectedBookId,
-    passageContext?.selectedBook?.name,
-    passageContext?.selectedChapter,
-  ]);
+  }, [propVerse, passageContext?.inspectedVerse]);
 
   const fallbackTranslations = passageContext?.translations;
   const translations = useMemo(() => {

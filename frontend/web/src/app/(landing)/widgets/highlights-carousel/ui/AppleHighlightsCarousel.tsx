@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useLanguage, useSubdomainUrl } from '../../../shared';
+import { useSubdomainUrl } from '../../../shared';
 import { KartexSlideVisual, DoiceladevSlideVisual, PortfolioSlideVisual } from './slides';
 
 interface AppleHighlightsCarouselProps {
@@ -15,8 +15,8 @@ interface AppleHighlightsCarouselProps {
 }
 
 export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = ({ links }) => {
-    const { language } = useLanguage();
     const tLanding = useTranslations('Landing');
+    const tCommon = useTranslations('Common');
     const { urls } = useSubdomainUrl();
     const resolvedLinks = links || urls;
 
@@ -25,7 +25,6 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
     const [isInView, setIsInView] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
 
-    const isEs = language === 'es';
     const SLIDE_DURATION = 6500;
 
     const slides = [
@@ -35,7 +34,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             description: tLanding('kartexDescription'),
             linkUrl: resolvedLinks.kartex,
             linkText: tLanding('kartexCta'),
-            renderVisual: () => <KartexSlideVisual isEs={isEs} />,
+            renderVisual: () => <KartexSlideVisual />,
         },
         {
             id: 'doiceladev',
@@ -43,7 +42,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             description: tLanding('doiceladevDescription'),
             linkUrl: resolvedLinks.doiceladev,
             linkText: tLanding('doiceladevCta'),
-            renderVisual: () => <DoiceladevSlideVisual isEs={isEs} />,
+            renderVisual: () => <DoiceladevSlideVisual />,
         },
         {
             id: 'portfolio',
@@ -51,7 +50,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
             description: tLanding('portfolioDescription'),
             linkUrl: resolvedLinks.portfolio,
             linkText: tLanding('portfolioCta'),
-            renderVisual: () => <PortfolioSlideVisual isEs={isEs} />,
+            renderVisual: () => <PortfolioSlideVisual />,
         },
     ];
 
@@ -298,7 +297,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                 key={slide.id}
                                 onClick={() => goToSlide(idx)}
                                 className="h-10 px-1.5 sm:px-2 flex items-center justify-center cursor-pointer group/dot focus:outline-none select-none"
-                                aria-label={`Slide ${idx + 1}`}
+                                aria-label={tCommon('slideAria', { number: idx + 1 })}
                             >
                                 <div
                                     className={`relative h-2.5 sm:h-3 rounded-full transition-all duration-500 overflow-hidden ${isActive
@@ -326,7 +325,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                 <button
                     onClick={() => setIsPlaying(!isPlaying)}
                     className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-btn-sec border border-card-border shadow-sm backdrop-blur-xl flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer select-none"
-                    aria-label={isPlaying ? (isEs ? 'Pausar' : 'Pause') : (isEs ? 'Reproducir' : 'Play')}
+                    aria-label={isPlaying ? tCommon('pause') : tCommon('play')}
                 >
                     {isPlaying ? (
                         <Pause className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" />

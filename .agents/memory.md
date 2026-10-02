@@ -323,4 +323,16 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
       - Módulos en Landing Page (`engine1Title` a `engine10Title`): Se eliminó "Kartex" repetido en cada tarjeta, presentándolos concisamente (*Lector Bíblico*, *Paralelo*, *Interlineal*, *Exégesis*, *Lexicón*, etc.).
       - Datos estructurados (`KartexJsonLd.tsx`) y dossiers IA (`llms.txt`): Se limpiaron las listas de características evitando iterar el nombre de la plataforma en cada una.
 
+* **Erradicación de Textos Quemados y Migración Integral a `next-intl` (`messages/es.json` y `messages/en.json`):**
+  - **Causa Raíz Identificada:** Existían componentes de interfaz que empleaban ternarios en línea (`isEs ? '...' : '...'`, `isEn ? '...' : '...'`) o cadenas estáticas en español en lugar de consumir los diccionarios de internacionalización del framework (`next-intl`), generando acoplamiento innecesario y prop drilling (`isEs`).
+  - **Refactorización Integral:**
+    - **Landing (`frontend/web/src/app/(landing)/`):**
+      - Se extrajeron a `messages/es.json` y `messages/en.json` todas las etiquetas de controles accesibles comunes (`home`, `homeAria`, `pause`, `play`, `slideAria` en namespace `Common`), pilares de diapositivas y glosas Strong en hebreo/griego (`kartexStrong1-3`, `portfolioPillar1-3`, `doiceladevPillar1-3` en namespace `Landing`), 30+ claves completas del inspector interactivo Apple (`Explorer`), y acciones rápidas del modal de IA (`AiAssistant`).
+      - Se refactorizaron `AppleDetailExplorer.tsx`, `AppleHighlightsCarousel.tsx`, `LandingHeader.tsx`, `AiAssistantChatModal.tsx`, `KartexSlideVisual.tsx`, `PortfolioSlideVisual.tsx` y `DoiceladevSlideVisual.tsx` para consumir directamente `useTranslations()`, eliminando `useLanguage()`, ternarios `isEs ?` y el paso manual de props de idioma.
+    - **KARTEX (`frontend/web/src/app/(kartex)/`):**
+      - Se agregaron claves de HUD y mockups exegéticos a `(kartex)/messages/` (`nblaLabel`, `ntvLabel`, `bhsMasoretic`, `bdbThayerLexicon`, `otUses173`, `psalmsIsaiah`, `atlasRouteSample`, `synchronousChronology`, `exileYear`, `manuscriptRecord`, `qumranCave1`, `qumranDate`, `leningradDate`, `practicalApologetics`, `slideAria`).
+      - Se refactorizó `KartexEnginesCarousel.tsx` para consumir `tLanding('...')` en todos los paneles, dot and slot HUDs, eliminando `isEn` y preservando intacta la morfología hebrea y griega original.
+  - **Verificación Técnica:** `0` ocurrencias de `isEs ?` en `frontend/web/src`, `pnpm -r typecheck` con 0 errores (código 0 en backend, web y mobile), y `pnpm check-secrets` limpio.
+
+
 

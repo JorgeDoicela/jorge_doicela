@@ -2,33 +2,27 @@
 
 import React, { useState } from 'react';
 import { Plus, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useLanguage } from '../../../shared';
+import { useTranslations } from 'next-intl';
 
 export const AppleDetailExplorer: React.FC = () => {
-    const { language } = useLanguage();
+    const t = useTranslations('Explorer');
     const [activeItem, setActiveItem] = useState<number>(0);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-    const isEs = language === 'es';
 
     const details = [
         {
             id: 'platforms',
-            navTitle: isEs ? '3 Plataformas Digitales' : '3 Digital Platforms',
-            title: isEs ? '3 Plataformas en Producción' : '3 Live Platforms',
-            description: isEs
-                ? 'Un portal maestro que conecta tres plataformas independientes concebidas para distintas necesidades: plataforma de investigación bíblica Kartex, plataforma DoicelaDev y portafolio de ingeniería.'
-                : 'A master portal connecting three independent platforms designed for distinct needs: Kartex biblical research platform, DoicelaDev platform, and professional engineering portfolio.',
+            navTitle: t('platformsNav'),
+            title: t('platformsTitle'),
+            description: t('platformsDesc'),
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Plataformas Digitales Propias' : 'Proprietary Digital Platforms'}
+                            {t('platformsHeader')}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
-                            {isEs
-                                ? 'Tres portales especializados conectados desde un único punto de acceso.'
-                                : 'Three specialized platforms connected from a single entry point.'}
+                            {t('platformsSubtitle')}
                         </p>
                     </div>
 
@@ -38,7 +32,7 @@ export const AppleDetailExplorer: React.FC = () => {
                                 Kartex
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs ? 'Investigación bíblica y exégesis modular.' : 'Biblical research & modular exegesis.'}
+                                {t('platformsKartex')}
                             </p>
                         </div>
 
@@ -47,7 +41,7 @@ export const AppleDetailExplorer: React.FC = () => {
                                 DoicelaDev
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs ? 'IA, tecnología y herramientas web.' : 'AI, tech, and web tools.'}
+                                {t('platformsDoiceladev')}
                             </p>
                         </div>
 
@@ -56,203 +50,179 @@ export const AppleDetailExplorer: React.FC = () => {
                                 Portafolio
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs ? 'Ingeniería y arquitectura de software.' : 'Engineering and software architecture.'}
+                                {t('platformsPortfolio')}
                             </p>
                         </div>
                     </div>
 
                     <div className="text-[10px] sm:text-[11px] text-text-muted pt-2 sm:pt-3 border-t border-card-border">
-                        {isEs ? 'Acceso rápido y directo a cada plataforma independiente.' : 'Quick and direct access to each independent platform.'}
+                        {t('platformsFooter')}
                     </div>
                 </div>
             ),
         },
         {
             id: 'innovation',
-            navTitle: isEs ? 'Inteligencia Artificial & DoicelaDev' : 'AI & DoicelaDev Innovation',
-            title: isEs ? 'Inteligencia Artificial & DoicelaDev' : 'AI & DoicelaDev Innovation',
-            description: isEs
-                ? 'Herramientas interactivas, modelos de lenguaje de última generación y arquitecturas de razonamiento construidas para potenciar el aprendizaje y la productividad.'
-                : 'Interactive tools, state-of-the-art LLM architectures, and reasoning models engineered to boost learning and productivity.',
+            navTitle: t('innovationNav'),
+            title: t('innovationTitle'),
+            description: t('innovationDesc'),
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'DoicelaDev & Inteligencia Artificial' : 'DoicelaDev & Artificial Intelligence'}
+                            {t('innovationHeader')}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
-                            {isEs
-                                ? 'Noticias de vanguardia, análisis de modelos de razonamiento y herramientas interactivas.'
-                                : 'Cutting-edge news, reasoning model analysis, and interactive tools.'}
+                            {t('innovationSubtitle')}
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 divide-x divide-card-border pt-3 md:pt-4 border-t border-card-border my-auto">
                         <div className="flex flex-col gap-0.5 sm:gap-1 pr-3 sm:pr-6">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'IA' : 'AI'}
+                                {t('innovationAiColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs
-                                    ? 'Inferencia, agentes autónomos y análisis de LLMs.'
-                                    : 'Inference, autonomous agents, and LLM evaluations.'}
+                                {t('innovationAiColDesc')}
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-0.5 sm:gap-1 pl-3 sm:pl-6">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Ciberdefensa' : 'Cyberdefense'}
+                                {t('innovationSecColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs
-                                    ? 'Análisis de vulnerabilidades y seguridad digital.'
-                                    : 'Vulnerability analysis and digital security.'}
+                                {t('innovationSecColDesc')}
                             </p>
                         </div>
                     </div>
 
                     <div className="text-[10px] sm:text-[11px] text-text-muted pt-2 sm:pt-3 border-t border-card-border">
-                        {isEs ? 'Tecnología moderna aplicada con rigor técnico.' : 'Modern technology applied with technical craftsmanship.'}
+                        {t('innovationFooter')}
                     </div>
                 </div>
             ),
         },
         {
             id: 'faith',
-            navTitle: isEs ? 'Fe Cristiana & Excelencia' : 'Christian Faith & Values',
-            title: isEs ? 'Fe Cristiana & Excelencia' : 'Christian Faith & Values',
-            description: isEs
-                ? 'Cada proyecto y línea de código se construye sobre principios de honestidad, integridad y excelencia técnica, poniendo los talentos al servicio del prójimo.'
-                : 'Every project and line of code is built upon principles of honesty, integrity, and craftsmanship, putting gifts at the service of others.',
+            navTitle: t('faithNav'),
+            title: t('faithTitle'),
+            description: t('faithDesc'),
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Fe Cristiana & Principios' : 'Christian Faith & Principles'}
+                            {t('faithHeader')}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
-                            {isEs
-                                ? 'Ingeniería de software fundamentada en principios bíblicos y ética profesional.'
-                                : 'Software engineering grounded in biblical principles and craftsmanship.'}
+                            {t('faithSubtitle')}
                         </p>
                     </div>
 
                     <div className="pt-3 md:pt-4 border-t border-card-border my-auto">
                         <p className="text-xs sm:text-sm md:text-base font-light italic text-foreground leading-relaxed">
-                            &ldquo;{isEs ? 'Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres.' : 'Whatever you do, work heartily, as for the Lord and not for men.'}&rdquo;
+                            &ldquo;{t('faithQuote')}&rdquo;
                         </p>
                         <p className="text-[10px] sm:text-[11px] text-text-muted mt-1.5">
-                            Salmos 119:105 · Colosenses 3:23
+                            {t('faithRef')}
                         </p>
                     </div>
 
                     <div className="text-[10px] sm:text-[11px] text-text-muted pt-2 sm:pt-3 border-t border-card-border">
-                        {isEs ? 'La excelencia técnica como vocación de servicio.' : 'Technical excellence as a vocation of service.'}
+                        {t('faithFooter')}
                     </div>
                 </div>
             ),
         },
         {
             id: 'experience',
-            navTitle: isEs ? 'Experiencia & Interactividad' : 'UX & Interactivity',
-            title: isEs ? 'Experiencia & Interactividad' : 'UX & Interactivity',
-            description: isEs
-                ? 'Interfaces limpias con soporte bilingüe (Español/Inglés), modo claro y oscuro instantáneo, tipografía precisa y adaptabilidad completa a cualquier pantalla.'
-                : 'Clean interfaces with bilingual support (Spanish/English), instant light/dark mode, crisp typography, and full responsiveness.',
+            navTitle: t('experienceNav'),
+            title: t('experienceTitle'),
+            description: t('experienceDesc'),
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Diseño Inmersivo & Accesible' : 'Immersive & Accessible Design'}
+                            {t('experienceHeader')}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
-                            {isEs
-                                ? 'Interfaces limpias concebidas para una experiencia de lectura cómoda.'
-                                : 'Clean interfaces designed for a comfortable reading experience.'}
+                            {t('experienceSubtitle')}
                         </p>
                     </div>
 
                     <div className="grid grid-cols-3 divide-x divide-card-border pt-3 md:pt-4 border-t border-card-border my-auto">
                         <div className="flex flex-col gap-0.5 sm:gap-1 pr-2 sm:pr-4">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Velocidad' : 'Speed'}
+                                {t('experienceSpeedColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed">
-                                {isEs ? 'Carga inmediata.' : 'Instant load.'}
+                                {t('experienceSpeedColDesc')}
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-0.5 sm:gap-1 px-2 sm:px-4">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Bilingüe' : 'Bilingual'}
+                                {t('experienceLangColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed">
-                                {isEs ? 'Español / Inglés.' : 'Spanish / English.'}
+                                {t('experienceLangColDesc')}
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-0.5 sm:gap-1 pl-2 sm:pr-4">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Adaptable' : 'Responsive'}
+                                {t('experienceRespColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed">
-                                {isEs ? 'Multi-dispositivo.' : 'Multi-device.'}
+                                {t('experienceRespColDesc')}
                             </p>
                         </div>
                     </div>
 
                     <div className="text-[10px] sm:text-[11px] text-text-muted pt-2 sm:pt-3 border-t border-card-border">
-                        {isEs ? 'Sincronización instantánea de tema claro y oscuro.' : 'Instant light and dark theme synchronization.'}
+                        {t('experienceFooter')}
                     </div>
                 </div>
             ),
         },
         {
             id: 'security',
-            navTitle: isEs ? 'Seguridad & Privacidad' : 'Security & Privacy',
-            title: isEs ? 'Seguridad & Privacidad' : 'Security & Privacy',
-            description: isEs
-                ? 'Plataformas construidas con altos estándares de ciberseguridad, arquitectura de alto rendimiento, Cloudflare mTLS y privacidad estricta.'
-                : 'Platforms engineered with high cybersecurity standards, high-performance architecture, Cloudflare mTLS, and privacy by design.',
+            navTitle: t('securityNav'),
+            title: t('securityTitle'),
+            description: t('securityDesc'),
             renderScreen: () => (
                 <div className="w-full h-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-card text-foreground font-sans select-none text-left transition-colors duration-300">
                     <div className="flex flex-col gap-1">
                         <h4 className="text-sm sm:text-base md:text-lg font-semibold tracking-tight text-foreground">
-                            {isEs ? 'Seguridad & Confianza Digital' : 'Security & Digital Trust'}
+                            {t('securityHeader')}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-text-muted leading-relaxed">
-                            {isEs
-                                ? 'Protección proactiva de datos y privacidad garantizada desde el diseño.'
-                                : 'Proactive data protection and privacy guaranteed by design.'}
+                            {t('securitySubtitle')}
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 divide-x divide-card-border pt-3 md:pt-4 border-t border-card-border my-auto">
                         <div className="flex flex-col gap-0.5 sm:gap-1 pr-3 sm:pr-6">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Privacidad' : 'Privacy'}
+                                {t('securityPrivColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs
-                                    ? 'Sin anuncios invasivos ni venta de datos.'
-                                    : 'No ads or commercial data selling.'}
+                                {t('securityPrivColDesc')}
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-0.5 sm:gap-1 pl-3 sm:pl-6">
                             <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                                {isEs ? 'Conexiones' : 'Connections'}
+                                {t('securityConnColTitle')}
                             </span>
                             <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-3">
-                                {isEs
-                                    ? 'Cifrado moderno de extremo a extremo.'
-                                    : 'Modern end-to-end encryption.'}
+                                {t('securityConnColDesc')}
                             </p>
                         </div>
                     </div>
 
                     <div className="text-[10px] sm:text-[11px] text-text-muted pt-2 sm:pt-3 border-t border-card-border">
-                        {isEs ? 'Un entorno digital seguro y transparente.' : 'A secure and transparent digital environment.'}
+                        {t('securityFooter')}
                     </div>
                 </div>
             ),
@@ -267,7 +237,7 @@ export const AppleDetailExplorer: React.FC = () => {
             {/* Tipografía de Bienvenida Estilo Apple Hello */}
             <div className="relative z-10 flex flex-col items-center justify-center">
                 <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-                    {isEs ? 'Bienvenido' : 'Welcome'}
+                    {t('welcome')}
                 </h3>
             </div>
         </div>
@@ -292,7 +262,7 @@ export const AppleDetailExplorer: React.FC = () => {
             {/* Título de Sección Estilo Apple */}
             <div className="w-full flex flex-col items-start px-2 sm:px-4">
                 <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-[-0.04em] text-foreground leading-tight">
-                    {isEs ? 'Mírala en detalle' : 'Take a closer look'}
+                    {t('sectionTitle')}
                 </h2>
             </div>
 
@@ -303,7 +273,7 @@ export const AppleDetailExplorer: React.FC = () => {
                     <button
                         onClick={() => setIsExpanded(false)}
                         className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer z-20 animate-fade-slide"
-                        aria-label={isEs ? 'Cerrar detalle' : 'Close detail'}
+                        aria-label={t('closeDetail')}
                     >
                         <X className="w-4 h-4" />
                     </button>
@@ -320,14 +290,14 @@ export const AppleDetailExplorer: React.FC = () => {
                             <button
                                 onClick={handlePrev}
                                 className="w-7 h-7 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer"
-                                aria-label={isEs ? 'Anterior característica' : 'Previous feature'}
+                                aria-label={t('prevFeature')}
                             >
                                 <ChevronUp className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={handleNext}
                                 className="w-7 h-7 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-text-muted hover:text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all cursor-pointer"
-                                aria-label={isEs ? 'Siguiente característica' : 'Next feature'}
+                                aria-label={t('nextFeature')}
                             >
                                 <ChevronDown className="w-4 h-4" />
                             </button>
@@ -438,7 +408,7 @@ export const AppleDetailExplorer: React.FC = () => {
                                 <button
                                     onClick={handlePrev}
                                     className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
-                                    aria-label={isEs ? 'Anterior característica' : 'Previous feature'}
+                                    aria-label={t('prevFeature')}
                                 >
                                     <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                                 </button>
@@ -455,7 +425,7 @@ export const AppleDetailExplorer: React.FC = () => {
                                 <button
                                     onClick={handleNext}
                                     className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
-                                    aria-label={isEs ? 'Siguiente característica' : 'Next feature'}
+                                    aria-label={t('nextFeature')}
                                 >
                                     <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                                 </button>

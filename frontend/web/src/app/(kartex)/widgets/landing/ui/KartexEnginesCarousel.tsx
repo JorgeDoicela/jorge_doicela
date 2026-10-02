@@ -18,12 +18,10 @@ import {
     Pause,
     Play,
 } from 'lucide-react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 export function KartexEnginesCarousel() {
     const tLanding = useTranslations('Landing');
-    const locale = useLocale();
-    const isEn = locale?.startsWith('en');
 
     const engines = [
         {
@@ -214,24 +212,21 @@ export function KartexEnginesCarousel() {
                                                 className="object-cover filter brightness-[0.78] contrast-[1.10] group-hover:scale-105 transition-transform duration-700 select-none"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/15 pointer-events-none" />
-                                        </div>                                        {/* 1. LECTURA CLARA Y CONTINUA */}
+                                        </div>                                        {/* 1. LECTURA CLARA Y CONTINUA */}
                                         {idx === 0 && (
                                             <div className="absolute -bottom-3 sm:-bottom-5 -left-2 sm:-left-6 w-[96%] sm:w-[88%] z-20 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left space-y-2.5">
                                                 <div className="flex items-center justify-between text-[11px] font-mono text-accents-4 border-b border-border/70 pb-1.5">
-                                                    <span>{isEn ? 'Psalm 23:1-2' : 'Salmos 23:1-2'}</span>
+                                                    <span>{tLanding('psalm23Verse12')}</span>
                                                     <span className="px-2 py-0.5 rounded-full bg-foreground/10 text-foreground font-semibold text-[10px]">
-                                                        {isEn ? 'Prose Mode' : 'Modo Prosa'}
+                                                        {tLanding('proseMode')}
                                                     </span>
                                                 </div>
                                                 <p className="font-serif italic text-xs sm:text-sm text-foreground leading-relaxed">
-                                                    {isEn
-                                                        ? '“The LORD is my shepherd, I lack nothing. He makes me lie down in green pastures; he leads me beside quiet waters.”'
-                                                        : '«El Señor es mi pastor, nada me faltará. En lugares de verdes pastos me hace descansar; junto a aguas de reposo me conduce.»'}
+                                                    {tLanding('psalm23Full')}
                                                 </p>
                                                 <div className="flex flex-wrap gap-2 pt-1 text-[10px] font-mono text-accents-5">
                                                     <span className="px-2 py-0.5 rounded bg-accents-1">Serif 18px</span>
-                                                    <span className="px-2 py-0.5 rounded bg-accents-1">{isEn ? 'Clean page' : 'Página limpia'}</span>
-                                                    <span className="px-2 py-0.5 rounded bg-accents-1">{isEn ? 'Uninterrupted' : 'Cero cortes'}</span>
+                                                    <span className="px-2 py-0.5 rounded bg-accents-1">{tLanding('cleanPage')}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -242,29 +237,25 @@ export function KartexEnginesCarousel() {
                                                 <div className="w-full max-w-[440px] rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2 text-xs">
                                                     <div className="p-2 rounded-xl bg-accents-1/80 border border-border/70 space-y-0.5">
                                                         <div className="font-mono text-[10px] text-foreground font-semibold flex items-center justify-between">
-                                                            <span>{isEn ? 'ESV (Formal & Faithful)' : 'NBLA (Formal y Fiel)'}</span>
-                                                            <span className="text-[9px] text-accents-4 font-normal">{isEn ? 'Base Text' : 'Texto Base'}</span>
+                                                            <span>{tLanding('nblaLabel')}</span>
+                                                            <span className="text-[9px] text-accents-4 font-normal">{tLanding('baseText')}</span>
                                                         </div>
                                                         <p className="font-serif text-foreground text-xs leading-snug">
-                                                            {isEn
-                                                                ? '“The LORD is my shepherd; I shall not want.”'
-                                                                : '«El Señor es mi pastor, nada me faltará.»'}
+                                                            {tLanding('psalm23Nbla')}
                                                         </p>
                                                     </div>
                                                     <div className="p-2 rounded-xl bg-accents-1/80 border border-border/70 space-y-0.5">
                                                         <div className="font-mono text-[10px] text-accents-5 font-semibold flex items-center justify-between">
-                                                            <span>{isEn ? 'NIV (Contemporary Clarity)' : 'NTV (Lenguaje Actual)'}</span>
-                                                            <span className="text-[9px] text-accents-4 font-normal">{isEn ? 'Parallel' : 'Paralelo'}</span>
+                                                            <span>{tLanding('ntvLabel')}</span>
+                                                            <span className="text-[9px] text-accents-4 font-normal">{tLanding('parallelBadge')}</span>
                                                         </div>
                                                         <p className="font-serif text-foreground text-xs leading-snug">
-                                                            {isEn
-                                                                ? '“The LORD is my shepherd, I lack nothing.”'
-                                                                : '«El Señor es mi pastor; tengo todo lo que necesito.»'}
+                                                            {tLanding('psalm23Ntv')}
                                                         </p>
                                                     </div>
                                                     <div className="text-[10px] font-mono text-accents-4 pt-1 flex items-center justify-between border-t border-border/60">
-                                                        <span>{isEn ? 'LCS Variant Algorithm:' : 'Algoritmo LCS de variantes:'}</span>
-                                                        <span className="text-emerald-500 font-semibold">{isEn ? '2 nuances detected' : '2 matices detectados'}</span>
+                                                        <span>{tLanding('lcsAlgorithm')}</span>
+                                                        <span className="text-emerald-500 font-semibold">{tLanding('nuancesDetected')}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -278,21 +269,21 @@ export function KartexEnginesCarousel() {
                                                         יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃
                                                     </div>
                                                     <span className="text-[10px] font-mono text-foreground font-semibold uppercase px-2 py-0.5 rounded bg-accents-1 border border-border">
-                                                        {isEn ? 'BHS Masoretic' : 'BHS Masorético'}
+                                                        {tLanding('bhsMasoretic')}
                                                     </span>
                                                 </div>
                                                 <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
                                                     <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
                                                         <span className="font-bold text-foreground block">Adonay</span>
-                                                        <span className="text-accents-4 text-[9.5px]">H3068 · {isEn ? 'LORD' : 'Señor'}</span>
+                                                        <span className="text-accents-4 text-[9.5px]">H3068 · {tLanding('lord')}</span>
                                                     </div>
                                                     <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
                                                         <span className="font-bold text-foreground block">Ro'í</span>
-                                                        <span className="text-accents-4 text-[9.5px]">H7462 · {isEn ? 'Shepherd' : 'Pastor'}</span>
+                                                        <span className="text-accents-4 text-[9.5px]">H7462 · {tLanding('shepherd')}</span>
                                                     </div>
                                                     <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
                                                         <span className="font-bold text-foreground block">Lo Ehsar</span>
-                                                        <span className="text-accents-4 text-[9.5px]">H2637 · {isEn ? 'Lack' : 'Provisión'}</span>
+                                                        <span className="text-accents-4 text-[9.5px]">H2637 · {tLanding('provision')}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -304,21 +295,21 @@ export function KartexEnginesCarousel() {
                                                 <div className="flex items-center justify-between border-b border-border pb-1.5">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-[10px] font-mono font-bold text-foreground bg-accents-1 px-2 py-0.5 rounded border border-border">H7462</span>
-                                                        <span className="text-[10px] font-mono text-accents-4">{isEn ? 'BDB / Thayer Lexicon' : 'Léxico BDB / Thayer'}</span>
+                                                        <span className="text-[10px] font-mono text-accents-4">{tLanding('bdbThayerLexicon')}</span>
                                                     </div>
                                                     <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1/80">
-                                                        {isEn ? '173 OT uses' : '173 usos AT'}
+                                                        {tLanding('otUses173')}
                                                     </span>
                                                 </div>
                                                 <div>
                                                     <p className="text-base font-bold font-serif text-foreground">רָעָה (ra'ah)</p>
                                                     <p className="text-xs text-accents-5 font-sans">
-                                                        {isEn ? 'To pasture, tend, graze, feed a flock' : 'Apacentar, pastorear, guiar a las ovejas'}
+                                                        {tLanding('feedFlock')}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center justify-between text-[10px] font-mono text-accents-4 pt-1 border-t border-border/60">
                                                     <span>LXX: <strong className="text-foreground font-serif">ποιμαίνω (G4165)</strong></span>
-                                                    <span>{isEn ? 'Psalms, Isaiah' : 'Salmos, Isaías'}</span>
+                                                    <span>{tLanding('psalmsIsaiah')}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -330,24 +321,24 @@ export function KartexEnginesCarousel() {
                                                     <div className="flex items-center justify-between text-foreground font-semibold text-xs border-b border-border pb-1">
                                                         <div className="flex items-center gap-1.5">
                                                             <MapPin className="w-3.5 h-3.5 text-rose-500" />
-                                                            <span>{isEn ? 'Geo-Referenced Atlas' : 'Atlas Geo-Referenciado'}</span>
+                                                            <span>{tLanding('geoReferencedAtlas')}</span>
                                                         </div>
-                                                        <span className="text-[9.5px] font-mono text-accents-4">{isEn ? '1st Century' : 'Siglo I'}</span>
+                                                        <span className="text-[9.5px] font-mono text-accents-4">{tLanding('firstCentury')}</span>
                                                     </div>
                                                     <div className="text-[10.5px] font-mono text-foreground font-medium pt-0.5">
-                                                        {isEn ? 'Antioch ➔ Cyprus ➔ Perga ➔ Lystra' : 'Antioquía ➔ Chipre ➔ Perge ➔ Listra'}
+                                                        {tLanding('atlasRouteSample')}
                                                     </div>
                                                 </div>
 
                                                 <div className="absolute -bottom-2.5 sm:-bottom-3.5 -right-2 sm:-right-4 z-20 rounded-xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 px-3.5 py-2 shadow-[0_15px_35px_rgba(0,0,0,0.18)] dark:shadow-[0_15px_35px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left flex items-center gap-3 text-[10.5px] font-mono">
                                                     <div>
-                                                        <span className="text-accents-4 block text-[9px] uppercase">{isEn ? 'Distance' : 'Distancia'}</span>
+                                                        <span className="text-accents-4 block text-[9px] uppercase">{tLanding('distance')}</span>
                                                         <span className="text-foreground font-semibold">2,250 km</span>
                                                     </div>
                                                     <div className="h-6 w-px bg-border" />
                                                     <div>
-                                                        <span className="text-accents-4 block text-[9px] uppercase">{isEn ? 'Database' : 'Base de Datos'}</span>
-                                                        <span className="text-emerald-500 font-semibold">{isEn ? '420+ WGS84 Sites' : '420+ Sitios WGS84'}</span>
+                                                        <span className="text-accents-4 block text-[9px] uppercase">{tLanding('database')}</span>
+                                                        <span className="text-emerald-500 font-semibold">{tLanding('sitesCount')}</span>
                                                     </div>
                                                 </div>
                                             </>
@@ -359,22 +350,22 @@ export function KartexEnginesCarousel() {
                                                 <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
                                                     <span className="font-mono font-bold text-foreground uppercase text-[10.5px] flex items-center gap-2">
                                                         <span className="w-2 h-2 rounded-full bg-amber-500" />
-                                                        {isEn ? 'Synchronous Chronology' : 'Cronología Sincrónica'}
+                                                        {tLanding('synchronousChronology')}
                                                     </span>
-                                                    <span className="text-[10px] font-mono text-accents-4">{isEn ? '2000 BC — 100 AD' : '2000 a.C. — 100 d.C.'}</span>
+                                                    <span className="text-[10px] font-mono text-accents-4">{tLanding('eraRange')}</span>
                                                 </div>
                                                 <div className="grid grid-cols-3 gap-2 text-center text-[10.5px] font-mono">
                                                     <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
-                                                        <div className="font-bold text-foreground">{isEn ? 'United Monarchy' : 'Monarquía Unida'}</div>
-                                                        <div className="text-accents-4 text-[9.5px]">{isEn ? '1000 BC (David)' : '1000 a.C. (David)'}</div>
+                                                        <div className="font-bold text-foreground">{tLanding('unitedMonarchy')}</div>
+                                                        <div className="text-accents-4 text-[9.5px]">{tLanding('davidEra')}</div>
                                                     </div>
                                                     <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
-                                                        <div className="font-bold text-foreground">{isEn ? 'Babylonian Exile' : 'Exilio Babilonia'}</div>
-                                                        <div className="text-accents-4 text-[9.5px]">586 {isEn ? 'BC' : 'a.C.'}</div>
+                                                        <div className="font-bold text-foreground">{tLanding('babylonExile')}</div>
+                                                        <div className="text-accents-4 text-[9.5px]">{tLanding('exileYear')}</div>
                                                     </div>
                                                     <div className="p-1.5 rounded-lg bg-accents-1/80 border border-border/60">
-                                                        <div className="font-bold text-foreground">{isEn ? 'Roman Era' : 'Ocupación Romana'}</div>
-                                                        <div className="text-accents-4 text-[9.5px]">{isEn ? '1st Century (Caesar)' : 'Siglo I (César)'}</div>
+                                                        <div className="font-bold text-foreground">{tLanding('romanOccupation')}</div>
+                                                        <div className="text-accents-4 text-[9.5px]">{tLanding('caesarEra')}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -387,20 +378,20 @@ export function KartexEnginesCarousel() {
                                                     <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
                                                         <span className="font-mono font-bold text-foreground uppercase text-[10px] flex items-center gap-1.5">
                                                             <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
-                                                            {isEn ? 'Manuscript Record' : 'Registro de Manuscrito'}
+                                                            {tLanding('manuscriptRecord')}
                                                         </span>
                                                         <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1">
-                                                            {isEn ? 'Qumran Cave 1' : 'Qumrán Cueva 1'}
+                                                            {tLanding('qumranCave1')}
                                                         </span>
                                                     </div>
                                                     <div className="space-y-1.5 text-[10.5px] font-mono">
                                                         <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
-                                                            <span className="text-foreground font-semibold">{isEn ? 'Great Isaiah Scroll (1QIsaª)' : 'Gran Rollo de Isaías (1QIsaª)'}</span>
-                                                            <span className="text-accents-4 text-[9.5px]">{isEn ? '125 BC' : '125 a.C.'}</span>
+                                                            <span className="text-foreground font-semibold">{tLanding('deadSeaScrolls')}</span>
+                                                            <span className="text-accents-4 text-[9.5px]">{tLanding('qumranDate')}</span>
                                                         </div>
                                                         <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
-                                                            <span className="text-foreground font-semibold">{isEn ? 'Leningrad Codex (BHS)' : 'Códice de Leningrado (BHS)'}</span>
-                                                            <span className="text-accents-4 text-[9.5px]">{isEn ? '1008 AD' : '1008 d.C.'}</span>
+                                                            <span className="text-foreground font-semibold">{tLanding('leningradCodex')}</span>
+                                                            <span className="text-accents-4 text-[9.5px]">{tLanding('leningradDate')}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -414,18 +405,18 @@ export function KartexEnginesCarousel() {
                                                     <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
                                                         <span className="font-mono font-bold text-foreground uppercase text-[10px] flex items-center gap-1.5">
                                                             <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                                                            {isEn ? 'Pathways & Practical Apologetics' : 'Rutas y Apologética Práctica'}
+                                                            {tLanding('practicalApologetics')}
                                                         </span>
                                                         <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1">Kerygma & Missio Dei</span>
                                                     </div>
                                                     <div className="space-y-1.5 text-[10.5px] font-mono">
                                                         <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
-                                                            <span className="text-foreground font-semibold">{isEn ? 'Romans Road' : 'Camino de Romanos'}</span>
-                                                            <span className="text-rose-500 font-bold text-[9.5px]">{isEn ? '5 Soteriological Steps' : '5 Pasos Soteriológicos'}</span>
+                                                            <span className="text-foreground font-semibold">{tLanding('romansRoad')}</span>
+                                                            <span className="text-rose-500 font-bold text-[9.5px]">{tLanding('soteriologicalSteps')}</span>
                                                         </div>
                                                         <div className="flex justify-between items-center p-1.5 rounded bg-accents-1/60">
-                                                            <span className="text-foreground font-semibold">{isEn ? 'Defense & Tracts' : 'Defensa & Tratados'}</span>
-                                                            <span className="text-accents-4 text-[9.5px]">{isEn ? 'Biblical Answers' : 'Respuestas Bíblicas'}</span>
+                                                            <span className="text-foreground font-semibold">{tLanding('defenseAndTracts')}</span>
+                                                            <span className="text-accents-4 text-[9.5px]">{tLanding('biblicalAnswers')}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -470,7 +461,7 @@ export function KartexEnginesCarousel() {
                                     setCurrentEngineSlide(dotIdx);
                                 }}
                                 className="h-9 px-1 flex items-center justify-center cursor-pointer group/dot focus:outline-none select-none"
-                                aria-label={`Slide ${dotIdx + 1}`}
+                                aria-label={tLanding('slideAria', { number: dotIdx + 1 })}
                             >
                                 <div
                                     className={`relative h-2.5 rounded-full transition-all duration-400 overflow-hidden ${

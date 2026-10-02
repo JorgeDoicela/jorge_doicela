@@ -334,7 +334,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
           ? 'Puedes solicitar una propuesta técnica y cotización formal de desarrollo web, móvil o arquitectura en la sección de consulta. Jorge responde personalmente en menos de 24 horas con alcance, tiempos y presupuesto detallado.'
           : 'You can request a formal technical proposal and estimate for web, mobile, or cloud architecture in the consultation section. Jorge personally responds within 24 hours with detailed scope, timeline, and pricing.',
         actionUrl: '/consulta',
-        actionText: isEs ? 'Solicitar Propuesta Técnica' : 'Request Technical Proposal'
+        actionText: tAi('actionProposal')
       };
     }
 
@@ -360,7 +360,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
         ? 'Como asistente oficial de Jorge Doicela, mi función está enfocada exclusivamente en proporcionar información sobre su perfil profesional, plataformas en producción (Kartex, DoicelaDev, Portafolio), arquitectura cloud en 1 GB de RAM y canalizar solicitudes de propuestas técnicas o contratación. No estoy facultado para responder consultas de índole general ajenas a la labor de ingeniería de Jorge. Si deseas evaluar un proyecto, puedes ingresar al Formulario de Consulta:'
         : "As Jorge Doicela's official assistant, my role is strictly limited to providing information about his professional profile, production platforms (Kartex, DoicelaDev, Portfolio), 1 GB RAM cloud architecture, and technical proposals. I do not answer general inquiries unrelated to Jorge's engineering work. If you wish to discuss a project, feel free to open the Consultation Form:",
       actionUrl: '/consulta',
-      actionText: isEs ? 'Abrir Formulario de Consulta' : 'Open Consultation Form'
+      actionText: tAi('actionConsultation')
     };
   };
 
@@ -505,7 +505,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
 
           <div className="flex flex-col text-left">
             <h3 id="ai-chat-title" className="text-xs sm:text-sm font-semibold tracking-tight font-outfit">
-              {isEs ? 'Asistente IA' : 'AI Assistant'}
+              {tAi('title')}
             </h3>
             <span className="text-[10px] opacity-60 font-mono">
               Jorge Doicela

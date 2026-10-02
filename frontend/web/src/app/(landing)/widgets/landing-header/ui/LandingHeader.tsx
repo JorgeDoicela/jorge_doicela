@@ -3,7 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { QuitoClockBadge, useLanguage } from '../../../shared';
+import { useTranslations } from 'next-intl';
+import { QuitoClockBadge } from '../../../shared';
 import { LanguageToggleButton } from '../../../features/language-toggle';
 import { ThemeToggle } from '../../../features/theme-toggle';
 import { useLandingHeaderScroll } from '../hooks/useLandingHeaderScroll';
@@ -25,8 +26,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
   logoHref,
   className = '',
 }) => {
-  const { language } = useLanguage();
-  const isEs = language === 'es';
+  const tCommon = useTranslations('Common');
   const isVisible = useLandingHeaderScroll();
   const targetHref = logoHref || (sectionBadge || showBackLink ? backHref : '#');
 
@@ -44,7 +44,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
         <Link
           href={targetHref}
           className="flex items-center gap-2 outline-none focus:outline-none hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
-          aria-label={isEs ? 'Jorge Doicela - Inicio' : 'Jorge Doicela - Home'}
+          aria-label={tCommon('homeAria')}
         >
           {/* Logo Blanco (Modo Oscuro) */}
           <Image
@@ -70,10 +70,10 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
             <Link
               href={backHref}
               className="inline-flex items-center gap-1 text-xs font-medium text-text-muted hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-foreground/5 cursor-pointer active:scale-95"
-              aria-label={backLabel || (isEs ? 'Volver' : 'Back')}
+              aria-label={backLabel || tCommon('back')}
             >
               <span>←</span>
-              <span>{backLabel || (isEs ? 'Inicio' : 'Home')}</span>
+              <span>{backLabel || tCommon('home')}</span>
             </Link>
           </>
         )}

@@ -269,29 +269,17 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
 
   const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>('versions');
   const [inspectedWord, setInspectedWord] = useState<InspectedWordData | null>(null);
-  const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(() => ({
-    bookId: selectedBookId || 1,
-    bookName: 'Génesis',
-    chapter: selectedChapter || 1,
-    verseNumber: 1,
-    text: '',
-  }));
+  const [inspectedVerse, setInspectedVerse] = useState<InspectedVerseData | null>(null);
 
-  // Sincronizar el versículo inspeccionado por defecto al cambiar libro o capítulo si no pertenece al pasaje actual
+  // Limpiar el versículo inspeccionado al cambiar de libro o capítulo si ya no pertenece al pasaje actual
   useEffect(() => {
     setInspectedVerse((prev) => {
-      if (!prev || prev.bookId !== selectedBookId || prev.chapter !== selectedChapter) {
-        return {
-          bookId: selectedBookId,
-          bookName: selectedBook?.name || 'Génesis',
-          chapter: selectedChapter,
-          verseNumber: 1,
-          text: '',
-        };
+      if (prev && (prev.bookId !== selectedBookId || prev.chapter !== selectedChapter)) {
+        return null;
       }
       return prev;
     });
-  }, [selectedBookId, selectedChapter, selectedBook?.name]);
+  }, [selectedBookId, selectedChapter]);
 
   const toggleRightInspector = useCallback(() => {
     setIsRightInspectorOpen((prev) => {

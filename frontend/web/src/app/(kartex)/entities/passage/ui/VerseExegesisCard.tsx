@@ -263,9 +263,7 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
   if (!verse) {
     return (
       <div className={`py-16 px-4 text-center space-y-4 my-auto ${className}`}>
-        <div className="w-12 h-12 rounded-2xl bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/60 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-500 shadow-xs">
-          <BookOpen className="w-5 h-5 stroke-[1.75]" />
-        </div>
+        <BookOpen className="w-8 h-8 stroke-[1.5] mx-auto text-zinc-400 dark:text-zinc-500" />
         <div className="space-y-1.5 max-w-xs mx-auto">
           <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 font-serif">
             {tStudio('selectVerseToInspect')}

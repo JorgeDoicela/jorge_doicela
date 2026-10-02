@@ -114,9 +114,7 @@ export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({
   if (!verse) {
     return (
       <div className={`py-12 px-4 text-center space-y-3 ${className}`}>
-        <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center mx-auto text-zinc-400 dark:text-zinc-400">
-          <BookMarked className="w-5 h-5" />
-        </div>
+        <BookMarked className="w-7 h-7 stroke-[1.5] mx-auto text-zinc-400 dark:text-zinc-500" />
         <div className="space-y-1">
           <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
             {tStudio('synopticComparison')}

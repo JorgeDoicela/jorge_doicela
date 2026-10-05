@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
-import { HubFeedItem, HubResponseData, HubSpotlightData } from '../types';
+import { PortalFeedItem, PortalResponseData, PortalSpotlightData } from '../types';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
-export function useDoiceladevHub(search: string = '') {
+export function useDoiceladevPortal(search: string = '') {
   const locale = useLocale();
-  const [featured, setFeatured] = useState<HubFeedItem[]>([]);
-  const [feed, setFeed] = useState<HubFeedItem[]>([]);
-  const [spotlightData, setSpotlightData] = useState<HubSpotlightData>({
+  const [featured, setFeatured] = useState<PortalFeedItem[]>([]);
+  const [feed, setFeed] = useState<PortalFeedItem[]>([]);
+  const [spotlightData, setSpotlightData] = useState<PortalSpotlightData>({
     news: [],
     posts: [],
     topics: [],
@@ -32,7 +32,7 @@ export function useDoiceladevHub(search: string = '') {
     let isMounted = true;
     let retryTimer: NodeJS.Timeout | null = null;
 
-    const fetchHub = async (isRetry = false) => {
+    const fetchPortal = async (isRetry = false) => {
       setLoading(true);
       setError(null);
 
@@ -41,16 +41,16 @@ export function useDoiceladevHub(search: string = '') {
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
 
-        const url = `${API_URL}/doiceladev/hub${params.toString() ? `?${params.toString()}` : ''}`;
-        const res = await safeFetchJson<HubResponseData | { data: HubResponseData }>(url);
+        const url = `${API_URL}/doiceladev/portal${params.toString() ? `?${params.toString()}` : ''}`;
+        const res = await safeFetchJson<PortalResponseData | { data: PortalResponseData }>(url);
 
         if (!isMounted) return;
 
-        const isWrapped = (r: HubResponseData | { data: HubResponseData }): r is { data: HubResponseData } =>
+        const isWrapped = (r: PortalResponseData | { data: PortalResponseData }): r is { data: PortalResponseData } =>
           'data' in r && r.data !== null && typeof r.data === 'object';
-        const data: HubResponseData = isWrapped(res)
+        const data: PortalResponseData = isWrapped(res)
           ? res.data
-          : (res as HubResponseData);
+          : (res as PortalResponseData);
         setFeatured(Array.isArray(data.featured) ? data.featured : []);
         setFeed(Array.isArray(data.feed) ? data.feed : []);
         if (data.spotlightData) {
@@ -63,14 +63,14 @@ export function useDoiceladevHub(search: string = '') {
         if (!isRetry) {
           retryTimer = setTimeout(() => {
             if (isMounted) {
-              fetchHub(true);
+              fetchPortal(true);
             }
           }, 1500);
           return;
         }
 
         const msg = err instanceof Error ? err.message : String(err);
-        console.warn('Aviso de conexión al hub de doiceladev:', msg);
+        console.warn('Aviso de conexión al portal de doiceladev:', msg);
         setError(msg || (locale === 'es' ? 'No se pudo cargar el feed editorial' : 'Failed to load editorial feed'));
       } finally {
         if (isMounted && !retryTimer) {
@@ -79,7 +79,7 @@ export function useDoiceladevHub(search: string = '') {
       }
     };
 
-    fetchHub();
+    fetchPortal();
 
     return () => {
       isMounted = false;

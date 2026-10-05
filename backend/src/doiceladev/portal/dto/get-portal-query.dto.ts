@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class GetHubQueryDto {
+export class GetPortalQueryDto {
   @IsOptional()
   @IsString({ message: 'El parámetro lang debe ser una cadena de texto.' })
   lang?: string = 'es';

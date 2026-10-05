@@ -7,7 +7,7 @@ import { AiResource } from '../../ai/entities/ai-resource.entity';
 import { Project } from '../../projects/entities/project.entity';
 import { ForumTopic } from '../../forum/entities/forum-topic.entity';
 
-export interface HubFeedItem {
+export interface PortalFeedItem {
   id: string;
   href: string;
   title: string;
@@ -29,7 +29,7 @@ export interface HubFeedItem {
   smartScore: number;
 }
 
-export interface HubSpotlightData {
+export interface PortalSpotlightData {
   news: NewsArticle[];
   posts: BlogPost[];
   topics: ForumTopic[];
@@ -40,9 +40,9 @@ export interface HubSpotlightData {
   infraPosts: InfrastructurePost[];
 }
 
-export interface HubResponseDto {
-  featured: HubFeedItem[];
-  feed: HubFeedItem[];
+export interface PortalResponseDto {
+  featured: PortalFeedItem[];
+  feed: PortalFeedItem[];
   totalCount: number;
-  spotlightData: HubSpotlightData;
+  spotlightData: PortalSpotlightData;
 }

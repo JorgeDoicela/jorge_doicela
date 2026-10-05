@@ -8,16 +8,16 @@ import { AiService } from '../../ai/services/ai.service';
 import { ProjectsService } from '../../projects/services/projects.service';
 import { ForumService } from '../../forum/services/forum.service';
 import {
-  HubFeedItem,
-  HubSpotlightData,
-  HubResponseDto,
-} from '../dto/hub-response.dto';
+  PortalFeedItem,
+  PortalSpotlightData,
+  PortalResponseDto,
+} from '../dto/portal-response.dto';
 
-export type { HubFeedItem, HubSpotlightData, HubResponseDto };
+export type { PortalFeedItem, PortalSpotlightData, PortalResponseDto };
 
 @Injectable()
-export class HubService {
-  private readonly logger = new Logger(HubService.name);
+export class PortalService {
+  private readonly logger = new Logger(PortalService.name);
 
   constructor(
     private readonly newsService: NewsService,
@@ -30,10 +30,10 @@ export class HubService {
     private readonly forumService: ForumService,
   ) {}
 
-  async getHubData(
+  async getPortalData(
     lang: string = 'es',
     search?: string,
-  ): Promise<HubResponseDto> {
+  ): Promise<PortalResponseDto> {
     // Consultas consolidadas resilientes en paralelo en SQLite local (Fault-Tolerant Aggregator)
     const results = await Promise.allSettled([
       this.newsService.findAll({ search, lang }),
@@ -109,7 +109,7 @@ export class HubService {
     };
 
     // Mapeo normalizado con cálculo de SmartScore
-    const newsItems: HubFeedItem[] = news.map((item) => {
+    const newsItems: PortalFeedItem[] = news.map((item) => {
       const dateStr = new Date(
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
@@ -137,7 +137,7 @@ export class HubService {
       };
     });
 
-    const blogItems: HubFeedItem[] = posts.map((item) => {
+    const blogItems: PortalFeedItem[] = posts.map((item) => {
       const dateStr = new Date(
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
@@ -164,7 +164,7 @@ export class HubService {
       };
     });
 
-    const secItems: HubFeedItem[] = secPosts.map((sec) => {
+    const secItems: PortalFeedItem[] = secPosts.map((sec) => {
       const dateStr = new Date(
         sec.publishedAt || sec.createdAt || Date.now(),
       ).toISOString();
@@ -205,7 +205,7 @@ export class HubService {
       };
     });
 
-    const tutItems: HubFeedItem[] = tutorials.map((tut) => {
+    const tutItems: PortalFeedItem[] = tutorials.map((tut) => {
       const dateStr = new Date(
         tut.publishedAt || tut.createdAt || Date.now(),
       ).toISOString();
@@ -240,7 +240,7 @@ export class HubService {
       };
     });
 
-    const infraItems: HubFeedItem[] = infraPosts.map((inf) => {
+    const infraItems: PortalFeedItem[] = infraPosts.map((inf) => {
       const dateStr = new Date(
         inf.publishedAt || inf.createdAt || Date.now(),
       ).toISOString();
@@ -277,7 +277,7 @@ export class HubService {
       };
     });
 
-    const aiItems: HubFeedItem[] = resources.map((res) => {
+    const aiItems: PortalFeedItem[] = resources.map((res) => {
       const dateStr = new Date(
         res.publishedAt || res.createdAt || Date.now(),
       ).toISOString();
@@ -304,7 +304,7 @@ export class HubService {
       };
     });
 
-    const projItems: HubFeedItem[] = projects.map((proj) => {
+    const projItems: PortalFeedItem[] = projects.map((proj) => {
       const dateStr = new Date(proj.createdAt || Date.now()).toISOString();
       const module = isEn ? 'PROJECTS' : 'PROYECTOS';
       const sub = formatSub(proj.category);
@@ -337,7 +337,7 @@ export class HubService {
       };
     });
 
-    const forumItems: HubFeedItem[] = topics.map((top) => {
+    const forumItems: PortalFeedItem[] = topics.map((top) => {
       const dateStr = new Date(top.createdAt || Date.now()).toISOString();
       const module = isEn ? 'FORUM' : 'FORO';
       const sub = formatSub(top.category);
@@ -363,7 +363,7 @@ export class HubService {
       };
     });
 
-    const allItems: HubFeedItem[] = [
+    const allItems: PortalFeedItem[] = [
       ...newsItems,
       ...blogItems,
       ...secItems,

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { HubController } from './controllers/hub.controller';
-import { HubService } from './services/hub.service';
+import { PortalController } from './controllers/portal.controller';
+import { PortalService } from './services/portal.service';
 import { NewsModule } from '../news/news.module';
 import { BlogModule } from '../blog/blog.module';
 import { CybersecurityModule } from '../cybersecurity/cybersecurity.module';
@@ -21,8 +21,8 @@ import { ForumModule } from '../forum/forum.module';
     ProjectsModule,
     ForumModule,
   ],
-  controllers: [HubController],
-  providers: [HubService],
-  exports: [HubService],
+  controllers: [PortalController],
+  providers: [PortalService],
+  exports: [PortalService],
 })
-export class HubModule {}
+export class PortalModule {}

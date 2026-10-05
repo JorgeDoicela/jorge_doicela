@@ -8,7 +8,7 @@ import type { Tutorial } from '../tutorials';
 import type { Project } from '../projects';
 import type { InfrastructurePost } from '../infrastructure';
 
-export interface HubFeedItem {
+export interface PortalFeedItem {
   id: string;
   href: string;
   title: string;
@@ -22,7 +22,7 @@ export interface HubFeedItem {
   smartScore: number;
 }
 
-export interface HubSpotlightData {
+export interface PortalSpotlightData {
   news: NewsArticle[];
   posts: BlogPost[];
   topics: ForumTopic[];
@@ -33,10 +33,9 @@ export interface HubSpotlightData {
   infraPosts: InfrastructurePost[];
 }
 
-export interface HubResponseData {
-  featured: HubFeedItem[];
-  feed: HubFeedItem[];
+export interface PortalResponseData {
+  featured: PortalFeedItem[];
+  feed: PortalFeedItem[];
   totalCount: number;
-  spotlightData: HubSpotlightData;
+  spotlightData: PortalSpotlightData;
 }
-

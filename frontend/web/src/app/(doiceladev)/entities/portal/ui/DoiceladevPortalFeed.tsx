@@ -3,21 +3,21 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
-import { HubFeedItem } from '../types';
+import { PortalFeedItem } from '../types';
 
-interface DoiceladevHubFeedProps {
-  feed: HubFeedItem[];
+interface DoiceladevPortalFeedProps {
+  feed: PortalFeedItem[];
   isLoading: boolean;
   error: string | null;
   onRetry: () => void;
 }
 
-export function DoiceladevHubFeed({
+export function DoiceladevPortalFeed({
   feed,
   isLoading,
   error,
   onRetry,
-}: DoiceladevHubFeedProps) {
+}: DoiceladevPortalFeedProps) {
   const tHome = useTranslations('Home');
   const tCommon = useTranslations('Common');
 

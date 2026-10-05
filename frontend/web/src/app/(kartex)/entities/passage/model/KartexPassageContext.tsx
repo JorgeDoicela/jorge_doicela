@@ -148,9 +148,10 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   );
 
   // Control de Paneles Laterales (Dimensiones Redimensionables y Visibilidad):
-  // En escritorio inician abiertos por defecto para productividad inmediata; en móvil (< 1024px) inician colapsados
-  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(true);
-  const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(true);
+  // En PC (>= 1024px) ambos laterales abren automáticamente por defecto para ofrecer la suite de estudio completa;
+  // En Móvil (< 1024px) NINGÚN lateral se abre automáticamente al ingresar para mantener la pantalla 100% despejada
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
+  const [isRightInspectorOpen, setIsRightInspectorOpen] = useState<boolean>(false);
 
   const [leftSidebarWidth, setLeftSidebarWidthState] = useState<number>(DEFAULT_LEFT_SIDEBAR_WIDTH);
   const [rightInspectorWidth, setRightInspectorWidthState] = useState<number>(DEFAULT_RIGHT_INSPECTOR_WIDTH);
@@ -190,25 +191,26 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Inicialización al montar en cliente: En PC (>= 1024px) inician abiertos por defecto o según preferencia guardada
+    // Inicialización al montar en cliente:
+    // En PC (>= 1024px): Ambos laterales inician abiertos automáticamente por defecto (o según preferencia del usuario en PC).
+    // En Móvil (< 1024px): NINGÚN lateral se abre automáticamente al ingresar para mantener la pantalla 100% despejada.
     if (window.innerWidth >= 1024) {
       try {
         const savedLeft = localStorage.getItem('kartex_left_sidebar_open');
-        const savedRight = localStorage.getItem('kartex_right_inspector_open');
-        if (savedLeft !== null) {
-          setIsLeftSidebarOpen(savedLeft === 'true');
-        } else {
-          setIsLeftSidebarOpen(true);
-        }
-        if (savedRight !== null) {
-          setIsRightInspectorOpen(savedRight === 'true');
-        } else {
-          setIsRightInspectorOpen(true);
-        }
+        setIsLeftSidebarOpen(savedLeft !== null ? savedLeft === 'true' : true);
       } catch {
         setIsLeftSidebarOpen(true);
+      }
+
+      try {
+        const savedRight = localStorage.getItem('kartex_right_inspector_open');
+        setIsRightInspectorOpen(savedRight !== null ? savedRight === 'true' : true);
+      } catch {
         setIsRightInspectorOpen(true);
       }
+    } else {
+      setIsLeftSidebarOpen(false);
+      setIsRightInspectorOpen(false);
     }
 
     let prevWidth = window.innerWidth;
@@ -219,18 +221,22 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
       const isDesktop = currentWidth >= 1024;
 
       if (wasDesktop && !isDesktop) {
-        // Al pasar de PC a móvil, colapsar ambos laterales para despejar la lectura
+        // Al pasar de PC a móvil, colapsar ambos laterales para despejar la lectura táctil
         setIsLeftSidebarOpen(false);
         setIsRightInspectorOpen(false);
       } else if (!wasDesktop && isDesktop) {
-        // Al volver a PC, restaurar la vista según preferencia guardada o abierta por defecto
+        // Al volver a PC, restaurar ambos laterales según preferencia guardada en PC (abiertos por defecto)
         try {
           const savedLeft = localStorage.getItem('kartex_left_sidebar_open');
-          const savedRight = localStorage.getItem('kartex_right_inspector_open');
           setIsLeftSidebarOpen(savedLeft !== null ? savedLeft === 'true' : true);
-          setIsRightInspectorOpen(savedRight !== null ? savedRight === 'true' : true);
         } catch {
           setIsLeftSidebarOpen(true);
+        }
+
+        try {
+          const savedRight = localStorage.getItem('kartex_right_inspector_open');
+          setIsRightInspectorOpen(savedRight !== null ? savedRight === 'true' : true);
+        } catch {
           setIsRightInspectorOpen(true);
         }
       }

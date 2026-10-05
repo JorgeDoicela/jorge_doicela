@@ -401,5 +401,19 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     - *DoicelaDev:* «Sistema de Relevancia y Ordenamiento», «Sistema Universal de Filtros Polimórficos» y «Sistema de Contenido Técnico Markdown».
     - *Infraestructura:* «servicio Docker» / «daemon de Docker», «servidor de Socket.io», «sintetizador TTS».
 
+* **Comportamiento Responsive de Paneles Laterales en Kartex (`KartexPassageContext.tsx`):**
+  - **Requisito de UX:** En pantallas táctiles móviles (< 1024px) ningún panel debe abrirse automáticamente para no obstruir el texto de lectura con drawers flotantes ni backdrop oscuro; en PC (>= 1024px), ambos paneles laterales (navegación izquierda e inspector exegético derecho) deben abrirse automáticamente por defecto (o restaurar la preferencia guardada en PC) para brindar la suite de estudio completa de 3 columnas sin obstrucciones.
+  - **Solución Arquitectónica:**
+    1. En SSR, `isLeftSidebarOpen` e `isRightInspectorOpen` arrancan en `false` para prevenir desfases de hidratación (hydration mismatch).
+    2. Durante el montaje en cliente (`useEffect`):
+       - Si `window.innerWidth >= 1024` (PC): Ambos paneles se abren automáticamente (`true` por defecto o respetando `localStorage` si el usuario los alternó deliberadamente en PC).
+       - Si `window.innerWidth < 1024` (Móvil): Ambos paneles se definen estrictamente en `false`, presentando el texto bíblico diáfano sin modales flotantes superpuestos.
+    3. Al redimensionar la ventana (`handleResize`):
+       - De PC a Móvil: Se colapsan ambos paneles a `false` inmediatamente.
+       - De Móvil a PC: Se restauran ambos paneles a su estado de escritorio (`true` por defecto o según preferencia en PC).
+    4. En Móvil, las escrituras en `localStorage` quedan bloqueadas (`window.innerWidth >= 1024`), evitando que interacciones táctiles temporales contaminen la configuración de escritorio.
+    5. Al seleccionar un pasaje en móvil desde `KartexNavigationSidebar`, el drawer se cierra automáticamente tras la selección para focalizar el texto del capítulo.
+
+
 
 

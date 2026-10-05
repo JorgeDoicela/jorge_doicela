@@ -9,7 +9,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 ---
 
 ## Documentación Técnica Oficial
-* [01_frontend_y_hub_tecnologico.md](../../../docs/05-doiceladev/01-frontend/01_frontend_y_hub_tecnologico.md)
+* [01_frontend_y_portal_tecnologico.md](../../../docs/05-doiceladev/01-frontend/01_frontend_y_portal_tecnologico.md)
 * [01_backend_y_persistencia.md](../../../docs/05-doiceladev/02-backend/01_backend_y_persistencia.md)
 * [01_roadmap_doiceladev.md](../../../docs/05-doiceladev/03-roadmap/01_roadmap_doiceladev.md)
 * [01_estandares_editoriales_y_publicaciones.md](../../../docs/05-doiceladev/04-editorial/01_estandares_editoriales_y_publicaciones.md)
@@ -203,6 +203,13 @@ Cada publicación debe estructurarse para que tres niveles de audiencia aprendan
 ### 4.4 Estructura Bilingüe Simétrica
 * Cada publicación debe mantenerse sincronizada tanto en español (`es`) como en inglés (`en`), manteniendo idéntico rigor conceptual, diagramas y terminología profesional.
 
+### 4.5 Prohibición Terminológica Estricta: Cero Uso de 'Hub'
+* **Prohibido:** Utilizar la palabra *"hub"* en cualquier superficie visual, textos de interfaz, diccionarios de internacionalización (`messages/{es,en}.json`), endpoints de API, nombres de componentes, hooks, variables o documentación técnica.
+* **Obligatorio:** Utilizar vocabulario técnico formal y contextual:
+  - Para la plataforma en su conjunto: **Portal** o **Plataforma** (ej. *"Portal tecnológico de divulgación técnica"*).
+  - Para agregaciones o flujos de publicaciones: **Feed** o **Feed Principal** (ej. `DoiceladevPortalFeed`).
+  - Para directorios e índices de enlaces: **Directorio** (ej. *"Directorio de Enlaces"*).
+
 ---
 
 ## 5. Comandos de Operación
@@ -241,6 +248,7 @@ pnpm run lint
 | Usar o inventar el campo `subCategory` | Introduce conceptos fantasma que no existen en el esquema físico relacional de SQLite. | La taxonomía solo tiene Nivel 1 (Módulo) y Nivel 2 (Categoría `category`). |
 | Filtrar la barra `CategoryFilterBar` por atributos de Nivel 4 (dificultad/severidad) | Rompe la simetría entre módulos y degrada la experiencia de navegación. | La barra filtra exclusivamente por el Nivel 2 (Categoría). El Nivel 4 se muestra en la línea de metadatos o como badge. |
 | Cargar fuentes desde Google Fonts o CDNs externos | Genera llamadas de red innecesarias, bloquea la renderización neumórfica y viola la autonomía de caja negra. | Mantener las tipografías variables locales en `(doiceladev)/fonts/` (SIL OFL 1.1) e importar vía `next/font/local`. |
+| Usar la palabra "hub" en interfaces, código o docs | Término impreciso, informal y vetado en los estándares del proyecto. | Emplear términos formales y canónicos: **Portal**, **Plataforma**, **Directorio** o **Feed**. |
 
 ---
 

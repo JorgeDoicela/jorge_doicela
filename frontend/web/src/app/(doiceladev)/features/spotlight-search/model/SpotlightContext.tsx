@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { SpotlightModal } from '../ui/SpotlightModal';
-import { useDoiceladevHub } from '../../../entities/hub/api/useDoiceladevHub';
+import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
 
 interface SpotlightContextValue {
   isOpen: boolean;
@@ -27,7 +27,7 @@ interface SpotlightProviderProps {
 export function SpotlightProvider({ children }: SpotlightProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { spotlightData } = useDoiceladevHub();
+  const { spotlightData } = useDoiceladevPortal();
 
   const openSpotlight = useCallback((initialQuery: string = '') => {
     setSearchQuery(initialQuery);

@@ -122,7 +122,7 @@ class BiblicalAudioService {
   }
 
   /**
-   * Respaldo acústico mediante Web Audio API cuando el motor TTS del navegador no cuenta con la voz instalada.
+   * Respaldo acústico mediante Web Audio API cuando el sintetizador TTS del navegador no cuenta con la voz instalada.
    */
   private playAcousticChime(options: PlayAudioOptions): void {
     const ctx = this.getAudioContext();

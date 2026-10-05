@@ -1,6 +1,6 @@
 ---
 name: kartex-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de KARTEX (kartex.jorgedoicela.com), incluyendo el frontend web Next.js (estilo Geist / Vercel Style, FSD), la app móvil nativa en Expo (frontend/mobile), el backend en NestJS, los 9 motores de estudio exegético, la morfología Strong, el contexto histórico y la persistencia escalable en kartex.sqlite.
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de KARTEX (kartex.jorgedoicela.com), incluyendo el frontend web Next.js (estilo Geist / Vercel Style, FSD), la app móvil nativa en Expo (frontend/mobile), el backend en NestJS, los 9 módulos de estudio exegético, la morfología Strong, el contexto histórico y la persistencia escalable en kartex.sqlite.
 ---
 # Directrices de Desarrollo: KARTEX (kartex.jorgedoicela.com)
 
@@ -34,8 +34,8 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
   - `Cardo-Regular.ttf` (`--font-greek`): Griego Koiné politónico con acentos, espíritus y ligaduras clásicas (Septuaginta y Nuevo Testamento).
   - **Zero-External Network Fonts:** Prohibido depender de fuentes del sistema operativo del cliente o de Google Fonts/CDNs.
 * **Internacionalización y SEO (next-intl):** Diccionarios encapsulados en `(kartex)/messages/es.json` y `en.json`. Layout raíz `(kartex)/layout.tsx` integrado con `NextIntlClientProvider` y `generateMetadata()` dinámico con etiquetas `hreflang`. Soporte de base de datos bilingüe (`language: 'es' | 'en'`) en tablas explicativas (`archaeology_articles`, `timeline_events`, `historical_places`).
-* **Datos Estructurados Schema.org (`KartexJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus de investigación y los 9 módulos de Kartex ante motores de búsqueda e IA.
-* **Sincronización con IA:** Cuando se agreguen nuevos motores o traducciones oficiales, reflejarlos en `public/kartex/llms.txt` y en `public/landing/llms.txt`.
+* **Datos Estructurados Schema.org (`KartexJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus de investigación y los 9 módulos de Kartex ante buscadores web e IA.
+* **Sincronización con IA:** Cuando se agreguen nuevos módulos o traducciones oficiales, reflejarlos en `public/kartex/llms.txt` y en `public/landing/llms.txt`.
 
 ---
 
@@ -50,7 +50,7 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
    - Header unificado persistente (`KartexHeaderNav.tsx`) con navegación macro en desktop y menú móvil.
    - Barra de control exegético integrada (`KartexPassageToolbar.tsx`).
    - **Módulo 1: Kartex Lector (`/kartex/reader`):** Prosa continua y versículo a versículo sin distracciones.
-   - **Módulo 2: Kartex Paralelo (`/kartex/parallel`):** Comparación simultánea de 2 a 4 versiones con motor diff textual (LCS).
+   - **Módulo 2: Kartex Paralelo (`/kartex/parallel`):** Comparación simultánea de 2 a 4 versiones con herramienta de diff textual (LCS).
    - **Módulo 3: Kartex Interlineal (`/kartex/interlinear`):** Desglose morfológico palabra por palabra (BHS/NA28) con lematización y Strong.
    - **Módulo 4: Kartex Lexicón (`/kartex/lexicon`):** Léxicos Strong BDB/Thayer/Gesenius y ocurrencias canónicas.
    - **Módulo 5: Kartex Atlas (`/kartex/atlas`):** Atlas Georreferenciado WGS84 con canvas vectorial y filtro por épocas.

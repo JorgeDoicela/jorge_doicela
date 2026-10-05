@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { useDoiceladevHub } from '../../../entities/hub/api/useDoiceladevHub';
+import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
 import { useSpotlight } from '../../../features/spotlight-search';
 
 interface PopularTagsSidebarCardProps {
@@ -21,7 +21,7 @@ export function PopularTagsSidebarCard({
 }: PopularTagsSidebarCardProps) {
   const t = useTranslations('ArticleLayout');
   const { openSpotlight } = useSpotlight();
-  const { spotlightData, loading } = useDoiceladevHub();
+  const { spotlightData, loading } = useDoiceladevPortal();
 
   // Cálculo reactivo puro y memoizado de los tags más frecuentes
   const popularTags = useMemo<TagFrequency[]>(() => {

@@ -69,7 +69,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 
 ### 3.5 Metadatos SEO Internacionales y Datos Estructurados (Schema.org JSON-LD)
 * **`generateMetadata()` Dinámica:** Títulos, descripciones y Open Graph localizados por idioma.
-* **Etiquetas `hreflang` para Google:** Mapeo de `alternates.languages` (`es-EC` y `en-US`) para posicionamiento bilingüe en motores de búsqueda.
+* **Etiquetas `hreflang` para Google:** Mapeo de `alternates.languages` (`es-EC` y `en-US`) para posicionamiento bilingüe en buscadores web.
 * Componente `PersonJsonLd.tsx` con especificación de Schema.org (`Person`, `WebSite`, formación en `ISTPET`, áreas de conocimiento `knowsAbout` y enlaces `sameAs`).
 * Archivo estático `llms.txt` normalizado para descubrimiento y consumo ultrarrápido por modelos LLM (ChatGPT, Perplexity, Claude, Gemini).
 * Generador de previsualización para redes sociales en `opengraph-image.tsx` (tarjeta de 1200x630 px).
@@ -104,7 +104,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Autoplay y Controles de Accesibilidad:** Temporizador de diapositivas con pausa automática durante la interacción de arrastre, controles de reproducción (`Play`/`Pause`), indicadores de posición por puntos con aria-labels y botones de acción directa internos (`Abrir Biblia`, `Entrar a DoicelaDev`, `Ver Portafolio`).
 * **Cero Dependencias Adicionales (Zero-RAM Overhead):** Diseñado sin librerías externas de carrusel (ni Swiper ni Embla), reduciendo a cero el consumo extra de memoria para la estricta cuota de 1 GB en VPS.
 
-### 3.9 Motor de Rendimiento Adaptativo Multi-Nivel (PerformanceContext & Tiers)
+### 3.9 Sistema de Rendimiento Adaptativo Multi-Nivel (PerformanceContext & Tiers)
 * **Arquitectura Determinista W3C:** Administrado en `shared/context/PerformanceContext.tsx`, clasifica de forma determinista y estable al cliente en 3 niveles de potencia física (`high`, `mid`, `low`):
   * **Tier `high` (Desktops y Laptops Potentes):** Experiencia cinemática completa a 120-144 Hz (1,600 partículas en `InteractiveParticles.tsx`, 48 nebulosas cósmicas y 16 rayos en `CinematicSpiralGalaxy.tsx`, parallax 3D multicapa con inercia física en `ParallaxBackground.tsx`).
   * **Tier `mid` (Smartphones y Tablets):** Optimizado para pantallas táctiles y dispositivos móviles a 60 FPS estables (350 partículas, 12 nebulosas, 6 rayos suaves, reposo inteligente de parallax), preservando la GPU y evitando el recalentamiento de la batería.

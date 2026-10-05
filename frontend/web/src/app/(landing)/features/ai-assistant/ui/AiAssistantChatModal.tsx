@@ -284,7 +284,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     }
   };
 
-  // Motor de respuestas semánticas locales de respaldo
+  // Sistema de respuestas semánticas locales de respaldo
   const generateAiResponse = (userQuery: string): { text: string; actionUrl?: string; actionText?: string } => {
     const q = userQuery.toLowerCase().trim();
 
@@ -307,8 +307,8 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
     if (q.includes('proyecto') || q.includes('plataforma') || q.includes('produccion') || q.includes('project')) {
       return {
         text: isEs
-          ? 'Jorge ha desarrollado 3 plataformas propias en producción:\n\n1. **Kartex:** Plataforma de investigación y estudio bíblico exegético con 9 motores de análisis morfológico palabra por palabra en hebreo y griego (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Plataforma con 8 áreas de contenido tecnológico, noticias, modelos de IA y avisos de ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Portafolio interactivo con vitrina de proyectos, arquitectura de sistemas y consola de comandos (`portfolio.jorgedoicela.com`).'
-          : "Jorge has built 3 proprietary live platforms in production:\n\n1. **Kartex:** Biblical research and exegesis study platform featuring 9 morphological study engines (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Tech outreach platform covering 8 categories, news, AI directory, and security CVEs (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Interactive portfolio featuring systems architecture, project showcase, and command console (`portfolio.jorgedoicela.com`)."
+          ? 'Jorge ha desarrollado 3 plataformas propias en producción:\n\n1. **Kartex:** Plataforma de investigación y estudio bíblico exegético con 9 módulos de análisis morfológico palabra por palabra en hebreo y griego (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Plataforma con 8 áreas de contenido tecnológico, noticias, modelos de IA y avisos de ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Portafolio interactivo con vitrina de proyectos, arquitectura de sistemas y consola de comandos (`portfolio.jorgedoicela.com`).'
+          : "Jorge has built 3 proprietary live platforms in production:\n\n1. **Kartex:** Biblical research and exegesis study platform featuring 9 morphological study modules (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Tech outreach platform covering 8 categories, news, AI directory, and security CVEs (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Interactive portfolio featuring systems architecture, project showcase, and command console (`portfolio.jorgedoicela.com`)."
       };
     }
 

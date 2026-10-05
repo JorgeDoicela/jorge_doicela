@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useDoiceladevHub, DoiceladevHubFeed } from '../entities/hub';
+import { useDoiceladevPortal, DoiceladevPortalFeed } from '../entities/portal';
 import { DoiceladevFooter } from '../widgets/doiceladev-footer';
 import { DoiceladevHeaderNav } from '../widgets/doiceladev-header';
 import { FeaturedCarousel } from '../widgets/featured-carousel';
@@ -15,9 +15,9 @@ export default function DoiceladevPage() {
     feed: latestFeed,
     spotlightData,
     loading: isLoadingCurrent,
-    error: hubError,
-    refetch: refetchHub,
-  } = useDoiceladevHub();
+    error: portalError,
+    refetch: refetchPortal,
+  } = useDoiceladevPortal();
 
   return (
     <>
@@ -35,12 +35,12 @@ export default function DoiceladevPage() {
             isLoading={isLoadingCurrent}
           />
 
-          {/* SECCIÓN 2: LATEST POSTS / FEED CRONOLÓGICO UNIFICADO (FEATURE HUB) */}
-          <DoiceladevHubFeed
+          {/* SECCIÓN 2: LATEST POSTS / FEED CRONOLÓGICO UNIFICADO (FEED PRINCIPAL) */}
+          <DoiceladevPortalFeed
             feed={latestFeed}
             isLoading={isLoadingCurrent}
-            error={hubError}
-            onRetry={refetchHub}
+            error={portalError}
+            onRetry={refetchPortal}
           />
 
         </div>

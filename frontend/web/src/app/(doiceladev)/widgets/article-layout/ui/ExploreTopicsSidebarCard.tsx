@@ -4,8 +4,8 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ChevronRight, ArrowUpRight } from 'lucide-react';
-import { useDoiceladevHub } from '../../../entities/hub/api/useDoiceladevHub';
-import { HubFeedItem, HubSpotlightData } from '../../../entities/hub/types';
+import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
+import { PortalFeedItem, PortalSpotlightData } from '../../../entities/portal/types';
 
 interface ExploreTopicsSidebarCardProps {
   className?: string;
@@ -15,12 +15,12 @@ interface TopicCategory {
   id: string;
   label: string;
   href: string;
-  spotlightKey: keyof HubSpotlightData;
+  spotlightKey: keyof PortalSpotlightData;
 }
 
 export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSidebarCardProps) {
   const tNav = useTranslations('Nav');
-  const { featured, feed, spotlightData, loading } = useDoiceladevHub();
+  const { featured, feed, spotlightData, loading } = useDoiceladevPortal();
 
   // Estado para las categorías abiertas en el árbol (múltiple concurrente, no cierre automático)
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
@@ -33,7 +33,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
 
   // Mapeo ordenado de todas las publicaciones por categoría
   const postsByCategory = useMemo(() => {
-    const map: Record<string, HubFeedItem[]> = {
+    const map: Record<string, PortalFeedItem[]> = {
       cybersecurity: [],
       infrastructure: [],
       ai: [],

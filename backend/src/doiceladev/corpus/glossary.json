@@ -49,7 +49,7 @@
     "aliases": "netfilter, subsistema netfilter",
     "category": "linux",
     "shortDefinition": "Subsistema interno del kernel Linux que proporciona hooks para interceptar, filtrar, alterar y redirigir paquetes de red antes de que alcancen el espacio de usuario.",
-    "keyDifference": "Es el motor de ejecución real a nivel de kernel; herramientas como iptables, nftables y UFW son interfaces de usuario para controlarlo.",
+    "keyDifference": "Es el subsistema de ejecución real a nivel de kernel; herramientas como iptables, nftables y UFW son interfaces de usuario para controlarlo.",
     "caseSensitive": false,
     "language": "es",
     "orderPriority": 90

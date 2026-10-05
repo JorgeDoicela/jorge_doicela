@@ -31,7 +31,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 * **Auditoría Integral de DOICELADEV (Backend, Base de Datos, i18n y Frontend):**
   - Corrección de `tutorials.json` (adición del campo obligatorio `category: "web"` en registros de corpus) y resolución de tipado estricto en `ForumReplyForm.tsx` (`ForumReply` retornado por la API en vez de `ForumTopic`).
   - Verificación y aprovisionamiento limpio de `doiceladev.sqlite` mediante `pnpm seed:doiceladev` ejecutado con éxito en 324 ms.
-  - Validación REST exhaustiva: comprobación de disponibilidad HTTP 200 en los 10 endpoints de DoicelaDev (`/api/doiceladev/hub`, `/tutorials`, `/tutorials/categories`, `/blog`, `/news`, `/projects`, `/forum`, `/ai`, `/cybersecurity`, `/infrastructure`, `/glossary`) y verificación de resolución por slug individual (`/tutorials/[slug]`, `/cybersecurity/[slug]`, `/forum/[slug]`, `/glossary/[slug]`).
+  - Validación REST exhaustiva: comprobación de disponibilidad HTTP 200 en los 10 endpoints de DoicelaDev (`/api/doiceladev/portal`, `/tutorials`, `/tutorials/categories`, `/blog`, `/news`, `/projects`, `/forum`, `/ai`, `/cybersecurity`, `/infrastructure`, `/glossary`) y verificación de resolución por slug individual (`/tutorials/[slug]`, `/cybersecurity/[slug]`, `/forum/[slug]`, `/glossary/[slug]`).
   - Auditoría i18n completa: 390 claves en español y 390 claves en inglés verificadas en paridad 1:1, y escaneo de 139 archivos `.tsx`/`.ts` en `frontend/web/src/app/(doiceladev)` con 0 errores de namespace o claves faltantes.
   - Compilación de producción Next.js 16 (`pnpm --filter web build`) finalizada con código 0 y las 31 rutas optimizadas correctamente.
 
@@ -95,7 +95,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 * **Erradicación del Destello (Flash/FOUC) en Efectos Cósmicos (`cosmic-canvas`):**
   - Causa raíz identificada: `CinematicSpiralGalaxy`, `InteractiveParticles` y `ParallaxBackground` inicializaban un estado de React `useState(false)` para `isLight`. Durante el render inicial y hasta que terminaba la hidratación de React (~1s), se montaba el canvas de la galaxia y los gradientes oscuros de nebulosas saturadas antes de que `useEffect` detectara el modo claro.
-  - Solución arquitectónica: se desacopló el control de visibilidad del estado de React y se delegó 100% al motor CSS del navegador mediante clases `hidden dark:block` y capas duales sincronizadas con `block dark:hidden` / `hidden dark:block`. De este modo, en modo claro la galaxia y las partículas tienen `display: none` instantáneo en 0 ms desde el primer frame de renderizado del navegador, sin destellos ni cambios tardíos de color.
+  - Solución arquitectónica: se desacopló el control de visibilidad del estado de React y se delegó 100% al renderizador CSS del navegador mediante clases `hidden dark:block` y capas duales sincronizadas con `block dark:hidden` / `hidden dark:block`. De este modo, en modo claro la galaxia y las partículas tienen `display: none` instantáneo en 0 ms desde el primer frame de renderizado del navegador, sin destellos ni cambios tardíos de color.
 
 * **Alineación y Estilo de Botones en Carrusel (`AppleHighlightsCarousel.tsx`):**
   - Se eliminó el borde superior separador (`border-t border-card-border`) que dividía el cuerpo de las tarjetas del carrusel respecto a los botones de acción ("Abrir Biblia", "Entrar a DoicelaDev", "Explorar Portafolio").
@@ -122,6 +122,12 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 * **Estandarización y Sobriedad Visual en Portadas de DoicelaDev (`frontend/web/public/doiceladev/images/covers/`):**
   - Se erradicaron los renders 3D con tipografía publicitaria gigante flotante.
   - Se homologó el estándar de sobriedad tomando la sencillez y el realismo de la portada de Infraestructura (`guia-firewall-linux-ufw.jpg`) como pauta conceptual, asignando a cada publicación un sujeto y entorno fotográfico único, tangible y directamente representativo de su temática.
+* **Normalización Léxica Editorial y Arquitectónica (Erradicación Total de 'Motor' y 'Hub'):**
+  - Término 'Motor': Erradicado en su totalidad de interfaces, manifiestos PWA, diccionarios de i18n, datasets de corpus y documentación técnica, sustituyéndolo según contexto por 'módulo', 'herramienta', 'suite' o 'aplicación' (ej. 'Módulo de Estudio Exegético', 'Módulo de Navegación').
+  - Término 'Hub': Erradicado integralmente a nivel visual, editorial y de código fuente:
+    - Frontend: Renombrada la entidad `entities/hub` a `entities/portal`, el hook `useDoiceladevHub` a `useDoiceladevPortal`, el componente `DoiceladevHubFeed` a `DoiceladevPortalFeed`, y actualizados todos los widgets consumidores (`PopularTagsSidebarCard`, `ExploreTopicsSidebarCard`, `FeaturedPostsSidebarCard`, `FeaturedCarousel`, `SpotlightContext` y `doiceladev/page.tsx`).
+    - Backend: Renombrado el submódulo `src/doiceladev/hub` a `src/doiceladev/portal`, su controlador a `PortalController` con ruta `@Controller('doiceladev/portal')`, su servicio a `PortalService`, DTOs a `PortalResponseDto` / `GetPortalQueryDto`, y registrado en `DoiceladevModule` como `PortalModule`.
+    - Documentación Técnica: Renombrado `docs/05-doiceladev/01-frontend/01_frontend_y_hub_tecnologico.md` a `01_frontend_y_portal_tecnologico.md` y actualizados árboles FSD y endpoints en `README.md` y `docs/`.
 * **Auditoría Exhaustiva y Erradicación de Residuos Legacy de Software:**
   - Se ejecutó una auditoría exhaustiva en la raíz con clasificación contextual por criticidad (CRITICO_ROUTING_CONFIG, ALTO_IDENTIFICADOR_CODIGO, RUTA_O_PATH, DOCS_O_CONTENIDO, OTROS_REVISAR y GENERICO_PROFESION), depurando el script buscador una vez completada la tarea para mantener limpio el repositorio.
   - Backend: corregida la ruta de corpus en `seed-doiceladev.ts` (`src/doiceladev/corpus`), identificadores de logs `[DoiceladevSeeder]`, variables en `backend/.env` local (`DATABASE_DOICELADEV_PATH`, `CORS_ORIGINS`) y `portfolio.service.ts` (comandos `open` de terminal SSH).
@@ -137,10 +143,10 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Se implementó en la raíz el script de auditoría exhaustiva `search-software.mjs` (posteriormente eliminado tras la verificación para mantener limpio el repositorio), corroborando cero rutas, archivos o módulos residuales con el nombre `software`.
   - Backend NestJS:
     - Corregido `backend/nest-cli.json` para compilar y observar los assets de corpus bajo `doiceladev/corpus/**/*` en lugar de la ruta legacy.
-    - Actualizado dataset de proyectos en `backend/src/doiceladev/corpus/projects.json` con el slug canónico `doiceladev-hub-tecnologico` y ruta de portada `doiceladev-hub-tecnologico.jpg`.
+    - Actualizado dataset de proyectos en `backend/src/doiceladev/corpus/projects.json` con el slug canónico `doiceladev-plataforma-tecnologica` y ruta de portada `doiceladev-plataforma-tecnologica.jpg`.
     - Base de datos local `doiceladev.sqlite` re-sembrada y validada en 38 ms (`pnpm --filter backend seed:doiceladev`).
   - Assets Públicos e Imágenes:
-    - Renombrada la única imagen física restante `software-hub-tecnologico.jpg` a `doiceladev-hub-tecnologico.jpg` en `frontend/web/public/doiceladev/images/covers/projects/`.
+    - Renombrada la imagen física de portada a `doiceladev-plataforma-tecnologica.jpg` en `frontend/web/public/doiceladev/images/covers/projects/`.
   - Reglas y Skills Maestras (`.agents/`):
     - `.agents/AGENTS.md`: homologadas las 4 aplicaciones (`landing`, `portfolio`, `bible`, `doiceladev`) y la regla de oro #5 con la skill `doiceladev-jorge-doicela`.
     - `.agents/skills/doiceladev-jorge-doicela/SKILL.md`: sincronización completa de rutas (`doiceladev.localhost`, `/doiceladev`), árbol de carpetas FSD, nombres de componentes (`DoiceladevCard`, `DoiceladevSelect`, `DoiceladevJsonLd`, `DoiceladevHubFeed`), orquestador `doiceladev.module.ts` y controladores `@Controller('doiceladev/...')`.
@@ -159,7 +165,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Frontend DoicelaDev:
     - Los 76 componentes TSX fueron analizados exhaustivamente: 0 cadenas de texto literales quemadas en la interfaz de usuario.
     - Las 8 subrutas de catálogo (`page.tsx`) y los 8 lectores dinámicos (`[slug]/page.tsx`) delegan 100% sus textos en `useTranslations`/`getTranslations` y consumen el backend de forma localizada mediante `?lang=${locale}`.
-    - Todos los hooks de datos y categorías en `entities/` (`useNews`, `useNewsCategories`, `useTutorials`, `useProjects`, `useInfrastructure`, `useForum`, `useCybersecurity`, `useBlog`, `useAi`, `useDoiceladevHub`) consumen y reaccionan dinámicamente a `useLocale()`.
+    - Todos los hooks de datos y categorías en `entities/` (`useNews`, `useNewsCategories`, `useTutorials`, `useProjects`, `useInfrastructure`, `useForum`, `useCybersecurity`, `useBlog`, `useAi`, `useDoiceladevPortal`) consumen y reaccionan dinámicamente a `useLocale()`.
     - Homologado el imagotipo en `DoiceladevHeaderNav.tsx` para usar `alt={tNav('headerLogoAlt')}` en modo claro y oscuro.
   - Frontend Landing y Portfolio:
     - Enriquecido `LandingHeader.tsx` con `useLanguage()` para hacer bilingües los atributos accesibles `aria-label` y etiquetas de retorno a inicio según el idioma activo (`language === 'es' ? ... : ...`).
@@ -174,7 +180,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Feature-Sliced Design (FSD Canónico en 6 Capas):
     - Escaneo automatizado de dependencias sobre los 139 archivos de `(doiceladev)`: **0 violaciones de jerarquía unidireccional de capas**. Ninguna capa inferior importa de una capa superior (`shared` -> `entities` -> `features` -> `widgets` -> `pages` -> `app`).
     - Cero acoplamiento cruzado en `features/` (0 cross-feature imports).
-    - Tipado puro en `entities/hub/types.ts` mediante `import type` para todas las entidades agregadas.
+    - Tipado puro en `entities/portal/types.ts` mediante `import type` para todas las entidades agregadas.
   - Backend NestJS (3 Capas Canónicas):
     - Submódulos verticales estructurados con estricta separación: Controladores (`@Controller('doiceladev/...')`), Servicios de Dominio (`@Injectable()`) y Capa de Datos (Entidades TypeORM + DTOs).
     - 100% de los repositorios inyectados (11/11) utilizan `@InjectRepository(Entity, 'doiceladevConnection')`, garantizando aislamiento físico en `doiceladev.sqlite`.
@@ -199,7 +205,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Renombramiento de marca e infraestructura del subproyecto bíblico:
     - Nombre de Marca: **KARTEX** (`kartex`).
     - Taglines: *KARTEX · Plataforma de Investigación y Estudio Bíblico* (ES) / *KARTEX · Biblical Research & Study Platform* (EN).
-    - Motores especializados bilingües: Kartex Interlineal, Kartex Atlas, Kartex Lexicón, Kartex Evangelismo, Kartex Exégesis, Kartex Cronología, Kartex Arqueología, Kartex Paralelo, Kartex Lector.
+    - Módulos especializados bilingües: Kartex Interlineal, Kartex Atlas, Kartex Lexicón, Kartex Evangelismo, Kartex Exégesis, Kartex Cronología, Kartex Arqueología, Kartex Paralelo, Kartex Lector.
   - Frontend Web Next.js 16 (FSD):
     - Grupo de rutas renombrado a `frontend/web/src/app/(kartex)`.
     - Subrutas internas migradas a `/(kartex)/kartex` (`/study/standard`, `/study/parallel`, `/study/atlas`, etc.).
@@ -286,7 +292,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
        - La interfaz `ForumReplyFormProps` tipaba el callback como `onReplySent?: (updated: ForumTopic) => void;` y parseaba `ForumTopic`, mientras que el endpoint del backend `@Post('doiceladev/forum/replies')` retorna la entidad `ForumReply`.
        - Corrección: se tipó formalmente con `ForumReply` tanto en la interfaz como en el manejo seguro de la respuesta JSON del formulario.
   - **Auditoría de Componentes y Funcionalidad:**
-    - Se verificó la disponibilidad y corrección de las 6 capas FSD en los 8 dominios (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) junto con `hub` y `glossary`.
+    - Se verificó la disponibilidad y corrección de las 6 capas FSD en los 8 dominios (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) junto con `portal` y `glossary`.
     - Componentes de UI comunes (`MarkdownRenderer`, `CodeBlock`, `MermaidBlock`, `TableBlock`, `CalloutBlock`, `GlossaryTermPopover`, `DoiceladevCard`, `CategoryFilterBar`, `DoiceladevSelect`, `ArticleCover`, `BackToPortalButton`, `ScrollToTopButton`, `FeaturedCarousel`, `SpotlightModal`, `DoiceladevArticleLayout`) revisados con imports 100% válidos.
   - **Bilingüismo e i18n (390/390 claves):**
     - Paridad absoluta entre `messages/es.json` y `messages/en.json`, con 0 claves huérfanas o faltantes en todas las vistas y widgets.
@@ -351,7 +357,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
       3. *Manuscritos y Códices (`manuscriptsDesc`)*: "Kartex enlaza directamente con los textos base..." (ES) / "Kartex connects directly with landmark archival sources..." (EN).
       4. *CTA Final (`ctaSubtitle`)*: "Accede de forma inmediata a Kartex sin necesidad de registrarte..." (ES) / "Get instant access to Kartex without any mandatory signup..." (EN).
       5. *Footer Copyright (`footerCopyright`)*: "Jorge Doicela © {year} • Kartex" en sustitución de la descripción genérica "Estudio de la biblia".
-    - Los 10 motores de estudio se mantienen limpios sin prefijos repetitivos (*Lector Bíblico*, *Paralelo*, *Interlineal*, *Lexicón*, *Atlas*, etc.).
+    - Los 10 módulos de estudio se mantienen limpios sin prefijos repetitivos (*Lector Bíblico*, *Paralelo*, *Interlineal*, *Lexicón*, *Atlas*, etc.).
 
 * **Estandarización Integral de Nomenclatura Kartex (Cero Mayúsculas Sostenidas en Metadatos y OpenGraph):**
   - **Causa Raíz:** La pestaña del navegador y las vistas previas de enlaces compartidos (OpenGraph, WhatsApp, Twitter, Telegram) mostraban `KARTEX · Plataforma de Investigación...` en mayúsculas sostenidas, generando una apariencia estridente y desbalanceada respecto a las demás plataformas (`Portafolio`, `DoicelaDev`).
@@ -371,7 +377,7 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
       2. *Cotejo Multiversión Scrolleable:* 100% dinámico desde SQLite (`/api/kartex/verses?bookId=...&chapter=...&translationId=...`), renderizado tipográfico diferenciado (RTL para hebreo con fuente masorética, LTR para griego y español).
       3. *Términos Clave y Morfología Original:* 100% dinámico desde SQLite (`/api/kartex/morphology/passage`), filtrado por versículo con lemas, transliteración y claves Strong. Al tocar una clave, consulta en tiempo real el léxico BDB/Thayer (`/api/kartex/morphology/lexicon/:code`) con acordeón in-situ.
       4. *Referencias Cruzadas Canónicas Localizadas:* Módulo `crossReferencesData.ts` con pasajes correlativos enriquecidos con soporte bilingüe nativo (`relationLabel`, `relationLabelEn`, `snippetText`, `snippetTextEn`) según `useLocale()`, y nombres de libros traducidos mediante `tBooks`. Navegación instantánea en un solo clic invocando `setPassage(bookId, chapter, verseNumber)`.
-      5. *Accesos Directos a Motores Exegéticos:* Enlaces con parámetros de consulta para abrir el pasaje en `/study/interlinear`, `/study/parallel`, `/study/atlas` o `/study/timeline`.
+      5. *Accesos Directos a Módulos Exegéticos:* Enlaces con parámetros de consulta para abrir el pasaje en `/study/interlinear`, `/study/parallel`, `/study/atlas` o `/study/timeline`.
     - **Cero Textos Quemados y Paridad i18n 1:1:** Todas las etiquetas de interfaz, tooltips, libros bíblicos y descripciones provienen estrictamente de `next-intl` (`messages/es.json` y `messages/en.json` bajo `Studio` y `Books`).
     - **Depuración de Barra Contextual Inferior Residual (`ContinuousReadingView`):** Se eliminó de raíz el menú flotante inferior redundante (`selectedVerseId && <div ...>`) y el estado asociado de timers/toasts. Al hacer clic sobre cualquier versículo, la acción activa directamente el Inspector Exegético en el panel lateral derecho con resaltado sutil en el texto, manteniendo el flujo de lectura 100% limpio y libre de distracciones.
     - **Selección y Deselección Fluida de Versículos (Toggle Reactivo):**
@@ -386,6 +392,14 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
         3. En `KartexExegesisInspector.tsx` se eliminó el fallback sintético hacia Génesis 1:1.
         4. En `VerseExegesisCard.tsx` se configuraron cláusulas de guarda en las consultas de red (`parallelVerses` y `morphology`) y se implementó la presentación del estado vacío (`empty state`) minimalista sin bordes punteados ni cajas cerradas, con el icono `BookOpen` directamente visible sin recuadros o contenedores envolventes (al igual que en `ParallelVerseInspector` y `StrongMorphologyInspector`) y textos internacionalizados (`selectVerseToInspect` y `noVerseSelectedDesc`).
         5. Al abrir el lector, ningún versículo está resaltado ni seleccionado; el usuario tiene el control total para tocar cualquier versículo y activar el inspector cuando lo desee.
+
+* **Estandarización Terminológica Universal (Adopción de «Módulo», «Herramienta», «Sistema» y «Algoritmo»):**
+  - **Decisión de Arquitectura y Lenguaje:** Se estandarizó la terminología técnica en todo el monorepo (UI, i18n, APIs, documentación técnica y metadatos SEO), sustituyendo cualquier denominación genérica por vocablos técnicos precisos y contextualizados:
+    - *Kartex:* «9 módulos de estudio especializados» / «módulos exegéticos» / «módulos de análisis morfológico».
+    - *Diff y Cotejo Textual:* «algoritmo de diferencias textuales LCS» / «herramienta de resaltado léxico».
+    - *Búsqueda y SEO:* «buscadores web» / «rastreadores y buscadores estándar».
+    - *DoicelaDev:* «Sistema de Relevancia y Ordenamiento», «Sistema Universal de Filtros Polimórficos» y «Sistema de Contenido Técnico Markdown».
+    - *Infraestructura:* «servicio Docker» / «daemon de Docker», «servidor de Socket.io», «sintetizador TTS».
 
 
 

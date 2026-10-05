@@ -61,7 +61,7 @@ interface ShootingStar {
 }
 
 /**
- * Componente InteractiveParticles (Motor Estelar Adaptativo Multi-Nivel)
+ * Componente InteractiveParticles (Sistema Estelar Adaptativo Multi-Nivel)
  * 
  * - Tier 'low' / Brave: Renderizado estático único sin bucle RAF (0% de bloqueo de Canvas Farbling).
  * - Tier 'mid': Campo estelar dinámico a 60 FPS con atracción gravitacional y meteoros periódicos.

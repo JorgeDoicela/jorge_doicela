@@ -108,7 +108,7 @@ architecture() {
     echo -e "  \033[38;5;221mEl Reto Físico:\033[0m    VPS en AWS Lightsail limitado estrictamente a 1 GB RAM."
     echo -e "  \033[38;5;221mConsolidación:\033[0m     4 subdominios servidos por 1 solo proceso Next.js 16 (puerto 3001)"
     echo -e "                     y 1 solo proceso NestJS 11 (puerto 3000) mediante middleware."
-    echo -e "  \033[38;5;221mPersistencia:\033[0m      Cero motores pesados. SQLite local en modo WAL (Write-Ahead Log)"
+    echo -e "  \033[38;5;221mPersistencia:\033[0m      Cero gestores pesados. SQLite local en modo WAL (Write-Ahead Log)"
     echo -e "                     con bases físicas independientes: kartex.sqlite, doiceladev.sqlite,"
     echo -e "                     portfolio.sqlite."
     echo -e "  \033[38;5;221mSeguridad:\033[0m         Cloudflare mTLS, Nginx reverse proxy, cuotas de cgroups y"

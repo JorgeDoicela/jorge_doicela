@@ -138,7 +138,7 @@ Es fundamental comprender la diferencia arquitectónica entre el entorno local d
 
 | Dimensión | Desarrollo Local (`next dev`) | Producción Standalone (`next start`) |
 |---|---|---|
-| **Motor de Bundling** | Turbopack en desarrollo activo | Next.js Standalone precompilado |
+| **Sistema de Bundling** | Turbopack en desarrollo activo | Next.js Standalone precompilado |
 | **Variable `NODE_ENV`** | `development` | `production` |
 | **`React.StrictMode`** | **Activo:** Ejecuta dobles pasadas de renderizado para detectar impurezas y efectos colaterales. | **Inactivo:** Renderizado lineal único de máxima velocidad. |
 | **Warnings de Consola** | Reporta advertencias estrictas de React 19 (scripts dentro de componentes, tags de hidratación). | React suprime advertencias de desarrollo y recupera discrepancias menores en milisegundos. |

@@ -20,7 +20,7 @@ Este documento detalla la arquitectura macro y micro, componentes, categorías t
 > * **Feature-Sliced Design (FSD Canónico en 6 Capas):**
 >   * `providers/`: Envoltorios de montaje global en layout (`theme-provider`).
 >   * `shared/`: UI Kit agnóstico (`DoiceladevCard`, `BackToPortalButton`, `ScrollToTopButton`, `ArticleCover`), suite Markdown (`MarkdownRenderer`, bloques de código/Mermaid/tablas/callouts), SEO (`DoiceladevJsonLd`), utilitarios de red (`api`, `serverFetch`, `fetchJson`) y tipos base.
->   * `entities/`: 8 dominios temáticos (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) y feed consolidado (`hub`), cada uno con sus modelos, tipos, hooks API y componentes de presentación (`NewsCard`, etc.).
+>   * `entities/`: 8 dominios temáticos (`news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`) y feed consolidado (`portal`), cada uno con sus modelos, tipos, hooks API y componentes de presentación (`NewsCard`, etc.).
 >   * `features/`: Acciones e interactividad del usuario (`spotlight-search`, `forum-reply`, `language-toggle`, `theme-toggle`).
 >   * `widgets/`: Bloques visuales complejos y layouts (`doiceladev-header`, `doiceladev-footer`, `category-nav`, `featured-carousel`, `article-layout`, `page-layout`).
 > * **Internacionalización Integral (i18n):** Soporte bilingüe completo (`es` / `en`) mediante `next-intl` en `messages/{es,en}.json` para las 8 categorías, cabecera `DoiceladevHeaderNav`, badges, metadatos, y consumo bilingüe dinámico hacia el backend vía `?lang=${locale}`.
@@ -51,7 +51,7 @@ frontend/web/src/app/(doiceladev)/
 │   ├── lib/                          # api, serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
-├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown (8 Categorías + Hub)
+├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown (8 Categorías + Portal/Feed)
 │   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
 │   ├── blog/                         # BlogCard, BlogGrid, useBlog, drafts/, types.ts, index.ts
 │   ├── forum/                        # TopicCard, useForum, drafts/, types.ts, index.ts
@@ -60,7 +60,7 @@ frontend/web/src/app/(doiceladev)/
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
-│   └── hub/                          # DoiceladevHubFeed, useDoiceladevHub, types.ts, index.ts
+│   └── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
@@ -77,7 +77,7 @@ frontend/web/src/app/(doiceladev)/
 │   └── page-layout/                  # DoiceladevPageLayout
 │
 └── doiceladev/                       # CAPAS 2 & 1: Enrutamiento y Páginas del App Router de Next.js
-    ├── page.tsx                      # Vista principal de DoicelaDev (Bento Grid + Feed Hub)
+    ├── page.tsx                      # Vista principal de DoicelaDev (Bento Grid + Feed Principal)
     ├── news/                         # Catálogo y lector de noticias (/news, /news/[slug])
     ├── blog/                         # Catálogo y lector de artículos (/blog, /blog/[slug])
     ├── forum/                        # Catálogo e hilo de discusión (/forum, /forum/[slug])
@@ -110,7 +110,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 ## 4. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
 * **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Doiceladev.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
-* **Datos Estructurados Schema.org (`DoiceladevJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Datos Estructurados Schema.org (`DoiceladevJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en buscadores web e IA.
 * **Dossier Especializado para IA (`public/doiceladev/llms.txt`):** Desglose detallado de las 8 áreas de conocimiento, tutoriales StepWizard y proyectos servido en `doiceladev.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/doiceladev/manifest.json`):** Configuración de aplicación web independiente con tema `#0b0f19`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://doiceladev.jorgedoicela.com`.
@@ -141,8 +141,8 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
     * **Hardening (`hardening`):** Escudos de blindaje, mTLS y sockets seguros en gradientes ámbar/cobre con resplandor dorado.
     * **Cloud (`cloud`):** Topologías de nube híbrida y orquestación systemd en gradientes azul cielo.
   * Refracción vítrea, texturas de ingeniería (`.tech-grid-bg`) y badges animados de `★ DESTACADO` en artículos de alta prioridad editorial.
-* **Motor de Relevancia y Ordenamiento Inteligente Enterprise (`sortBy`):**
-  * Tanto la página de categoría `/infrastructure` como el Hub de DoicelaDev integran un algoritmo de ponderación matemática en el backend:
+* **Sistema de Relevancia y Ordenamiento Inteligente Enterprise (`sortBy`):**
+  * Tanto la página de categoría `/infrastructure` como el Portal de DoicelaDev integran un algoritmo de ponderación matemática en el backend:
     $$\text{SmartScore} = (\text{featured} \times 1000) + (\text{orderPriority} \times 20) + (\text{likes} \times 4) + (\text{views} \times 1.5)$$
   * Esto garantiza que los artículos insignia (como el análisis forense del incidente P1 y la arquitectura en 1 GB de RAM) encabecen la experiencia del usuario, evitando el desplazamiento errático de nuevas publicaciones al fondo.
   * El usuario dispone de una barra de control interactiva multi-criterio: *★ Relevancia Arquitectónica*, *Más Recientes*, *Más Populares* y *Mayor Complejidad*.
@@ -157,7 +157,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
   * **Cero Ruido Visual (Prohibición de Footers, Tiempos de Lectura y Datos Quemados):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas, estimaciones de tiempo de lectura y textos estáticos artificiales, garantizando que el 100% de la información provenga directamente de la base de datos SQLite y los corpus JSON bilingües.
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
   * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`DoiceladevHeaderNav`](/doiceladev/widgets/doiceladev-header/ui/DoiceladevHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`DoiceladevFooter`](/doiceladev/widgets/doiceladev-footer/ui/DoiceladevFooter.tsx).
-  * **Motor Universal de Filtros Polimórficos (`CategoryFilterBar.tsx` en `shared/ui`):**
+  * **Sistema Universal de Filtros Polimórficos (`CategoryFilterBar.tsx` en `shared/ui`):**
     * Erradicación total de categorías quemadas en cliente TSX y en controladores del backend. Todo el catálogo delega en el componente transversal reutilizable [`CategoryFilterBar`](/doiceladev/shared/ui/CategoryFilterBar.tsx) basado en el contrato único `FilterOption: { id: string, label: string, count?: number }`.
     * El backend NestJS actúa como proveedor puro de datos y conteos desde SQLite (`GET /doiceladev/[modulo]/categories?lang=es|en`), mientras que la internacionalización reside de forma reactiva y limpia en los archivos JSON de mensajes del frontend (`messages/es.json` y `messages/en.json` bajo la clave `"Filters"`), eliminando diccionarios de strings duplicados en memoria en el servidor.
     * Consulta reactiva en tiempo real al backend NestJS con hooks desacoplados en la capa `entities/*` (`useNewsCategories`, `useBlogCategories`, `useForumCategories`, `useInfrastructureCategories`, `useCybersecurityCategories`, `useTutorialsCategories`, `useProjectsCategories`, `useAiCategories`).
@@ -224,7 +224,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
    1. **Diagramas Vectoriales Multidiagrama Adaptativos Estilo Mermaid Chart ([`MermaidBlock.tsx`](/doiceladev/shared/markdown/components/MermaidBlock.tsx)):**
       * **Detección Tipificada Robusta:** Analiza el bloque ignorando comentarios (`%%`) y frontmatter YAML (`---`) para identificar automáticamente la familia del diagrama (`sequenceDiagram`, `flowchart` / `graph`, `classDiagram`, `erDiagram`, `stateDiagram-v2`, `gitGraph`, `architecture-beta`, `c4Context`, `mindmap`, `pie`, etc.).
       * **Cabecera Técnica Minimalista (Acción Directa de Inspección):** Muestra el título específico del tipo de diagrama traducido vía `next-intl` con su icono temático de Lucide, y a la derecha el botón de acción minimalista con icono de alta precisión (`Maximize2` para expandir en visor inmersivo) con tooltip nativo accesible, manteniendo máxima sobriedad y elegancia sin saturar la cabecera ni incluir acciones redundantes como copiar en diagramas puramente visuales.
-      * **Renderizado Universal en Cliente (Mermaid 12):** Motor configurado con `look: 'neo'`, temas oficiales nativos (`theme: 'dark'` en modo oscuro y `'neutral'` en claro) y `themeVariables` de alta definición calibradas para Neumorphism / Dark Luxury, curvas orgánicas `basis` en flowcharts y tipografía uniforme ($13\text{px}$ a $14\text{px}$).
+      * **Renderizado Universal en Cliente (Mermaid 12):** Renderizador configurado con `look: 'neo'`, temas oficiales nativos (`theme: 'dark'` en modo oscuro y `'neutral'` en claro) y `themeVariables` de alta definición calibradas para Neumorphism / Dark Luxury, curvas orgánicas `basis` en flowcharts y tipografía uniforme ($13\text{px}$ a $14\text{px}$).
       * **Arquitectura Híbrida de Primera Clase (Ajuste Fluido en Artículo + Visor de Inspección Forense a Pantalla Completa):**
         - *En el Artículo (Móvil y Escritorio):* El diagrama se muestra siempre **completo de inicio a fin** (`max-w-full mx-auto`), sin recortes a la izquierda ni barras de scroll forzadas que interrumpan el flujo de lectura. En escritorio respeta su ancho intrínseco 1:1 (`targetInlineWidth` hasta $1020\text{px}$) centrado simétricamente sin agigantarse.
         - *Visor Inmersivo Interactivo a Pantalla Completa (`createPortal` + Pan & Zoom):* Al pulsar el botón de expandir o hacer click en el diagrama (`cursor-zoom-in`), se monta un lienzo modal directamente en `document.body` mediante `createPortal`, cubriendo el $100\%$ de la pantalla (`z-[999999]`) con vidrio esmerilado de alta fidelidad (`backdrop-blur-2xl bg-slate-100/85 dark:bg-black/85`).
@@ -296,7 +296,7 @@ public/doiceladev/images/
 
 ---
 
-## 7. Motor de Contenido Técnico Markdown y Popovers de Glosario
+## 7. Sistema de Contenido Técnico Markdown y Popovers de Glosario
 
 ### 7.1 Arquitectura de Renderizado Markdown Determinista
 El componente `MarkdownRenderer` (`shared/markdown/MarkdownRenderer.tsx`) procesa artículos técnicos enriquecidos mediante un pipeline Unified/Remark/Rehype:

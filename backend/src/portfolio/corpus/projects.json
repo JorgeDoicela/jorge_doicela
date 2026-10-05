@@ -60,7 +60,7 @@
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
     "demoUrl": "https://doiceladev.jorgedoicela.com",
     "featured": true,
-    "overview": "Hub tecnológico desacoplado que centraliza divulgación técnica, avisos de vulnerabilidades con matrices de remediación, fichas técnicas de agentes de IA y tutoriales interactivos con ejecución guiada.",
+    "overview": "Portal tecnológico desacoplado que centraliza divulgación técnica, avisos de vulnerabilidades con matrices de remediación, fichas técnicas de agentes de IA y tutoriales interactivos con ejecución guiada.",
     "challenge": "Diseñar un monolito modular con 8 submódulos independientes sin acoplamiento, asegurando que cada dominio gestione sus propias entidades relacionales y soporte multiidioma con índices compuestos (slug, language).",
     "architectureHighlights": [
       "Arquitectura en 3 capas puras por submódulo: controladores REST, servicios de dominio y 9 entidades TypeORM",

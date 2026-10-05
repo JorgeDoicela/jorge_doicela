@@ -1,7 +1,7 @@
 {
   "name": "Kartex | Jorge Doicela",
   "short_name": "Kartex",
-  "description": "Plataforma de investigación bíblica y exégesis modular con 9 motores de estudio, textos en idiomas originales y herramientas analíticas.",
+  "description": "Plataforma de investigación bíblica y exégesis modular con 9 módulos de estudio, textos en idiomas originales y herramientas analíticas.",
   "start_url": "/kartex",
   "display": "standalone",
   "background_color": "#000000",

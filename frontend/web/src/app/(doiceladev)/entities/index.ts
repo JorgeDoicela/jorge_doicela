@@ -6,4 +6,4 @@ export * from './cybersecurity';
 export * from './tutorials';
 export * from './projects';
 export * from './infrastructure';
-export * from './hub';
+export * from './portal';

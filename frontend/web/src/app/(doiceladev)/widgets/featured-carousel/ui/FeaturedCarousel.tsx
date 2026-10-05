@@ -4,10 +4,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
-import { HubFeedItem } from '../../../entities/hub/types';
+import { PortalFeedItem } from '../../../entities/portal/types';
 
 export interface FeaturedCarouselProps {
-  items: HubFeedItem[];
+  items: PortalFeedItem[];
   title: string;
   isLoading?: boolean;
 }

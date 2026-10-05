@@ -190,7 +190,7 @@ body {
   background-color: rgba(161, 161, 170, 0.95);
 }
 
-/* Soporte exclusivo para navegadores sin motor WebKit (ej. Firefox) */
+/* Soporte exclusivo para navegadores sin entorno WebKit (ej. Firefox) */
 @supports not selector(::-webkit-scrollbar) {
   .kartex-scrollbar-slim,
   .kartex-reader-scroll {

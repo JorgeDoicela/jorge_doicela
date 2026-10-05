@@ -80,7 +80,7 @@ Jorge Ismael Doicela Molina es un desarrollador e ingeniero enfocado en la arqui
 ## Enlaces Oficiales y Redes Sociales
 
 - **Sitio Web Principal:** https://jorgedoicela.com
-- **Hub de Enlaces:** https://jorgedoicela.com/links
+- **Directorio de Enlaces:** https://jorgedoicela.com/links
 - **Solicitud de Propuestas Técnicas:** https://jorgedoicela.com/consulta
 - **Portafolio:** https://portfolio.jorgedoicela.com (`https://portfolio.jorgedoicela.com/llms.txt`)
 - **DoicelaDev:** https://doiceladev.jorgedoicela.com (`https://doiceladev.jorgedoicela.com/llms.txt`)

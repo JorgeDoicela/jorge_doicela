@@ -1,6 +1,6 @@
 [
   {
-    "slug": "doiceladev-hub-tecnologico",
+    "slug": "doiceladev-plataforma-tecnologica",
     "name": "DoicelaDev — Plataforma de Desarrollo & Ingeniería",
     "description": "Centro de divulgación técnica y plataforma de ingeniería de sistemas con arquitectura basada en Feature-Sliced Design (FSD), backend modular en NestJS 11, microservicios lógicos consolidados y persistencia aislada de alto rendimiento en SQLite WAL sobre 1 GB de RAM.",
     "techStack": "Next.js 16, React 19, NestJS 11, SQLite WAL, TypeORM, Better-SQLite3, TailwindCSS, TypeScript",
@@ -9,7 +9,7 @@
     "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",
     "liveUrl": "https://doiceladev.jorgedoicela.com",
     "status": "active",
-    "coverImage": "/doiceladev/images/covers/projects/doiceladev-hub-tecnologico.jpg",
+    "coverImage": "/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.jpg",
     "featured": true,
     "orderPriority": 100,
     "stars": 120,
@@ -17,7 +17,7 @@
     "author": "Jorge Doicela"
   },
   {
-    "slug": "doiceladev-hub-tecnologico",
+    "slug": "doiceladev-plataforma-tecnologica",
     "name": "DoicelaDev — Engineering & Development Platform",
     "description": "Engineering publication platform and systems architecture showcase featuring Feature-Sliced Design (FSD), modular NestJS 11 backend, consolidated black-box domain boundaries, and isolated high-performance SQLite WAL persistence operating within a 1 GB RAM footprint.",
     "techStack": "Next.js 16, React 19, NestJS 11, SQLite WAL, TypeORM, Better-SQLite3, TailwindCSS, TypeScript",
@@ -26,7 +26,7 @@
     "repoUrl": "https://github.com/JorgeDoicela/jorge_doicela",
     "liveUrl": "https://doiceladev.jorgedoicela.com",
     "status": "active",
-    "coverImage": "/doiceladev/images/covers/projects/doiceladev-hub-tecnologico.jpg",
+    "coverImage": "/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.jpg",
     "featured": true,
     "orderPriority": 100,
     "stars": 120,

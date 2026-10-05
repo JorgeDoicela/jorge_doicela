@@ -31,7 +31,7 @@ export default function robots(): MetadataRoute.Robots {
                 allow: ['/', '/llms.txt'],
                 disallow: ['/api/', '/_next/', '/socket.io/'],
             },
-            // Regla general para navegadores y motores de búsqueda web estándar
+            // Regla general para navegadores, buscadores y rastreadores web estándar
             {
                 userAgent: '*',
                 allow: '/',

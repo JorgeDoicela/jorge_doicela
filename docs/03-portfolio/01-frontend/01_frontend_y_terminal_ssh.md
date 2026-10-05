@@ -214,7 +214,7 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
   * **Columna Lateral de Compromiso (`md:col-span-1` con `md:pl-8 md:border-l border-border/40`):**
     * Inicia exactamente al mismo nivel superior que el formulario, distribuyéndose en tres tercios armónicos (`flex-1 flex flex-col justify-center`):
       1. *01 / Proyectos & Desarrollo:* Aplicaciones web completas, diseño de APIs robustas y optimización de software de extremo a extremo.
-      2. *02 / Consultas Técnicas:* Espacio abierto y cercano para dudas sobre la terminal interactiva, motores bíblicos o el monorepo.
+      2. *02 / Consultas Técnicas:* Espacio abierto y cercano para dudas sobre la terminal interactiva, módulos bíblicos o el monorepo.
       3. *03 / Tiempos de Respuesta:* Compromiso de respuesta personal habitual en menos de 24 horas (Quito, Ecuador).
     * Estética tipográfica pura sin iconos SVG decorativos, con separadores sutiles de lujo (`border-b border-border/40`) a distancia proporcional y calibrada.
 
@@ -223,7 +223,7 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
 ## 6. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
 * **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Portfolio.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
-* **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` para indexación de perfil y proyectos en motores de búsqueda e IA.
+* **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` para indexación de perfil y proyectos en buscadores web e IA.
 * **Dossier Especializado para IA (`public/portfolio/llms.txt`):** Resumen detallado del perfil técnico, proyectos y comandos de terminal en `portfolio.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/portfolio/manifest.json`):** Configuración de aplicación web independiente con tema `#08080a`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://portfolio.jorgedoicela.com`.

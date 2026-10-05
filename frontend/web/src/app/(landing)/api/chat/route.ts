@@ -80,7 +80,7 @@ INFORMACIÓN AUTORIZADA SOBRE JORGE DOICELA:
   - Bases de Datos: SQLite WAL (atómico y ultrarrápido), PostgreSQL, TypeORM.
   - Seguridad & Rate Limiting: Arquitectura multicapa con Sliding Window por IP, token budgeting, failover automático y sanitización estricta.
 • Plataformas Propias en Producción:
-  1. Kartex (kartex.jorgedoicela.com): Plataforma de investigación y estudio bíblico exegético con 9 motores de análisis morfológico palabra por palabra en hebreo (BHS) y griego (NA28), códigos Strong, atlas geoespacial WGS84 y app móvil offline en Expo.
+  1. Kartex (kartex.jorgedoicela.com): Plataforma de investigación y estudio bíblico exegético con 9 módulos de análisis morfológico palabra por palabra en hebreo (BHS) y griego (NA28), códigos Strong, atlas geoespacial WGS84 y app móvil offline en Expo.
   2. DoicelaDev (doiceladev.jorgedoicela.com): Plataforma de divulgación técnica en 8 categorías temáticas (noticias, arquitectura de software, directorio de modelos de IA, avisos de ciberseguridad CVE con guías de remediación, tutoriales paso a paso, proyectos, infraestructura y foros de discusión).
   3. Portafolio (portfolio.jorgedoicela.com): Portafolio interactivo con catálogo de proyectos, arquitectura de sistemas y emulador de consola interactiva sobre WebSockets (Socket.io).
   4. Landing Page (jorgedoicela.com): Portal principal con Bento Grid asimétrico, PWA, SEO internacional e i18n SSR.
@@ -396,8 +396,8 @@ function generateFallbackResponse(userQuery: string, isEs: boolean): string {
 
   if (q.includes('proyecto') || q.includes('plataforma') || q.includes('project')) {
     return isEs
-      ? 'Jorge cuenta con 3 plataformas en producción:\n\n1. **Kartex:** Plataforma de investigación y estudio bíblico exegético con 9 motores morfológicos (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Portal con 8 áreas de tecnología y ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Portafolio interactivo con vitrina de proyectos, arquitectura de sistemas y consola de comandos (`portfolio.jorgedoicela.com`).'
-      : "Jorge has 3 live platforms in production:\n\n1. **Kartex:** Biblical research and exegesis study platform with 9 morphological engines (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Tech portal across 8 categories (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Interactive portfolio with project showcase, systems architecture, and command console (`portfolio.jorgedoicela.com`).";
+      ? 'Jorge cuenta con 3 plataformas en producción:\n\n1. **Kartex:** Plataforma de investigación y estudio bíblico exegético con 9 módulos morfológicos (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Portal con 8 áreas de tecnología y ciberseguridad (`doiceladev.jorgedoicela.com`).\n3. **Portafolio:** Portafolio interactivo con vitrina de proyectos, arquitectura de sistemas y consola de comandos (`portfolio.jorgedoicela.com`).'
+      : "Jorge has 3 live platforms in production:\n\n1. **Kartex:** Biblical research and exegesis study platform with 9 morphological modules (`kartex.jorgedoicela.com`).\n2. **DoicelaDev:** Tech portal across 8 categories (`doiceladev.jorgedoicela.com`).\n3. **Portfolio:** Interactive portfolio with project showcase, systems architecture, and command console (`portfolio.jorgedoicela.com`).";
   }
 
   if (q.includes('cotiza') || q.includes('propuesta') || q.includes('contrat') || q.includes('precio') || q.includes('quote')) {

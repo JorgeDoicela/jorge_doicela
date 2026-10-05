@@ -57,7 +57,7 @@ frontend/web/src/app/(doiceladev)/
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, ProjectActions, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
-│   └── hub/                          # DoiceladevHubFeed, useDoiceladevHub, types.ts, index.ts
+│   └── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightModal (Cmd + K) y búsqueda interactiva
@@ -96,7 +96,7 @@ frontend/web/src/app/(doiceladev)/
 8. **Infraestructura (`infrastructure`):** Servidores Linux, topologías cloud (AWS Lightsail), arquitectura en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y CI/CD.
 
 ### 2.3 Datos Estructurados (Schema.org) y Sincronización con IA
-* **Datos Estructurados Schema.org ([`DoiceladevJsonLd.tsx`](/doiceladev/shared/seo/DoiceladevJsonLd.tsx)):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en motores de búsqueda e IA.
+* **Datos Estructurados Schema.org ([`DoiceladevJsonLd.tsx`](/doiceladev/shared/seo/DoiceladevJsonLd.tsx)):** Inyección de esquema `SoftwareApplication` y `WebSite` con desglose de las 8 áreas tecnológicas (`hasPart`) para indexación en buscadores web e IA.
 * **Sincronización con IA:** Cuando se agreguen nuevos tipos de contenido, tutoriales o proyectos mayores en DoicelaDev, reflejarlos en `public/doiceladev/llms.txt` y en `public/landing/llms.txt`.
 
 ### 2.4 Suite Editorial y Renderizado Técnico de Contenido (`shared/markdown/`)
@@ -235,7 +235,7 @@ pnpm run lint
 | Inyectar repositorios sin `'doiceladevConnection'` | Conecta a la base de datos equivocada. | Usar `@InjectRepository(Entity, 'doiceladevConnection')`. |
 | Mezclar tipos de artículos con entidades de `kartex` o `portfolio` | Rompe el principio de cajas negras. | Mantener las entidades dentro de `backend/src/doiceladev/<modulo>/entities/`. |
 | Hardcodear datos o autores en el frontend Next.js | Aumenta el bundle size, genera inconsistencias y acopla datos con la UI. | Los autores y datos de las 8 categorías provienen 100% de `doiceladev.sqlite` a través de NestJS. |
-| Poner datos semilla dentro del archivo `seed-doiceladev.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como motor de inserción. |
+| Poner datos semilla dentro del archivo `seed-doiceladev.ts` mezclados con código | A medida que crece el contenido, el seeder se convierte en un archivo monstruoso de miles de líneas. | Mantener los datos en `corpus/*.json` y el seeder solo como mecanismo de inserción. |
 | Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de DoicelaDev. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
 | Tratar un 404 de contenido editorial como bug de Next.js/middleware | Enmascara la causa raíz: el post o término no está sembrado en `doiceladev.sqlite` local tras un `git pull`. | Correr `pnpm seed:doiceladev` o validar el slug en SQLite antes de tocar cualquier archivo de frontend. |
 | Usar o inventar el campo `subCategory` | Introduce conceptos fantasma que no existen en el esquema físico relacional de SQLite. | La taxonomía solo tiene Nivel 1 (Módulo) y Nivel 2 (Categoría `category`). |

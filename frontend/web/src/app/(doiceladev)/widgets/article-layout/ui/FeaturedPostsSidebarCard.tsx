@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
-import { HubFeedItem } from '../../../entities/hub/types';
-import { useDoiceladevHub } from '../../../entities/hub/api/useDoiceladevHub';
+import { PortalFeedItem } from '../../../entities/portal/types';
+import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
 
 interface FeaturedPostsSidebarCardProps {
   maxPosts?: number;
@@ -20,10 +20,10 @@ export function FeaturedPostsSidebarCard({
   const tHome = useTranslations('Home');
   const tNav = useTranslations('Nav');
   const pathname = usePathname();
-  const { featured, feed, loading } = useDoiceladevHub();
+  const { featured, feed, loading } = useDoiceladevPortal();
 
   // Filtrar el post actual para que no aparezca el artículo que ya se está leyendo
-  const availablePosts = (featured.length > 0 ? featured : feed).filter((item: HubFeedItem) => {
+  const availablePosts = (featured.length > 0 ? featured : feed).filter((item: PortalFeedItem) => {
     if (!pathname) return true;
     const cleanPath = pathname.replace(/\/$/, '');
     const cleanHref = item.href.replace(/\/$/, '');
@@ -62,7 +62,7 @@ export function FeaturedPostsSidebarCard({
             </div>
           ))
         ) : displayPosts.length > 0 ? (
-          displayPosts.map((item: HubFeedItem) => {
+          displayPosts.map((item: PortalFeedItem) => {
             const moduleLabel = item.category ? tNav(item.category).toUpperCase() : '';
 
             return (

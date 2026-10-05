@@ -23,7 +23,7 @@ import { CybersecurityModule } from './cybersecurity/cybersecurity.module';
 import { TutorialsModule } from './tutorials/tutorials.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
-import { HubModule } from './hub/hub.module';
+import { PortalModule } from './portal/portal.module';
 import { GlossaryModule } from './glossary/glossary.module';
 import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
@@ -69,7 +69,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     TutorialsModule,
     ProjectsModule,
     InfrastructureModule,
-    HubModule,
+    PortalModule,
     GlossaryModule,
   ],
 })

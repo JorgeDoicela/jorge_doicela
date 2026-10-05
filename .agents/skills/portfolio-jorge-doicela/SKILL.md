@@ -64,7 +64,7 @@ frontend/web/src/app/(portfolio)/
 * **Diccionarios Encapsulados:** Textos de UI gestionados en `(portfolio)/messages/es.json` y `en.json`.
 * **Metadatos Dinámicos Localizados:** `generateMetadata()` consume `getTranslations("Metadata")` para emitir títulos y descripciones en español e inglés.
 * **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` vinculado al portafolio, terminal SSH sobre WebSockets y proyectos.
-* **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) para posicionar el portafolio en motores de búsqueda internacionales.
+* **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) para posicionar el portafolio en buscadores web internacionales.
 * **Cero Parpadeos (SSR):** `<html lang={locale}>` dinámico según la cookie `NEXT_LOCALE` o cabecera `Accept-Language`.
 * **Sincronización con IA:** Cuando se agreguen nuevos proyectos o comandos de terminal, reflejarlos en `public/portfolio/llms.txt` y en `public/landing/llms.txt`.
 

@@ -17,7 +17,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > * **Aislamiento de Dominio:** Cero dependencias de otros subdominios. Estilos aislados en `(kartex)/globals.css`.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** La arquitectura separa estrictamente la capa de entidades (`entities/books`, `entities/translations`) de las 8 herramientas exegéticas del usuario encapsuladas en `(kartex)/features/` (`verses`, `parallel-view`, `interlinear`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados. Las dependencias internas de una sola herramienta (como el motor de diferencias textuales LCS) están co-localizadas dentro de su respectivo slice (`parallel-view/textual-diff`).
+> * **Feature-Sliced Design (FSD):** La arquitectura separa estrictamente la capa de entidades (`entities/books`, `entities/translations`) de las 8 herramientas exegéticas del usuario encapsuladas en `(kartex)/features/` (`verses`, `parallel-view`, `interlinear`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados. Las dependencias internas de una sola herramienta (como el algoritmo de diferencias textuales LCS) están co-localizadas dentro de su respectivo slice (`parallel-view/textual-diff`).
 > * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todas las herramientas exegéticas (Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong, Arqueología) consumen namespaces tipados sin cadenas hardcodeadas.
 > * **Cero Datos Hardcodeados en Cliente:** Ningún archivo TypeScript contiene versículos, palabras, coordenadas ni textos bíblicos incrustados. Toda la data se consume asíncronamente desde los endpoints de NestJS (`GET /kartex/*`).
 > * **Header Unificado y Responsivo:** `KartexHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 8 herramientas en pantallas móviles (`< md`).
@@ -123,7 +123,7 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
      * **Tarjeta 3:** Texto superior + mockup inferior en tarjeta interior (`min-h-[615px]`).
    * **Mockups internos de alta precisión:**
       * *Lectura y Devocional:* Controles tipográficos (Serif/Sans, 18px, Prosa), texto en vivo (Salmos 23:2-3), checks de interlineado óptico, libreta de reflexiones privadas con anclaje escritural y devocional matutino con versículo destacado (NBLA) y meditación pastoral.
-     * *Comparar Versiones:* Cotejo paralelo a doble columna (NBLA vs NTV), motor de resaltado léxico LCS y cotejo de textos base (BHS vs LXX).
+     * *Comparar Versiones:* Cotejo paralelo a doble columna (NBLA vs NTV), herramienta de resaltado léxico LCS y cotejo de textos base (BHS vs LXX).
      * *Idiomas Originales:* Token interlineal morfológico (`יְהוָ֥ה רֹ֝עִ֗י`), ficha léxica Strong H7462 / BDB con conteo de ocurrencias, y diagrama de estructura quiástica (A-B-C-B'-A').
      * *Mapas e Historia:* Diagrama vectorial de ruta misionera mediterránea (Antioquía → Chipre → Perge → Listra/Derbe), cronología sincrónica tripartita (Monarquía/Profecía/Imperio) y ficha arqueológica del Gran Rollo de Isaías (1QIsaª).
 4. **Catálogo Exegético de Versiones y Manuscritos (`#versiones` en `max-w-[1400px]`):**
@@ -136,7 +136,7 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
 
 ---
 
-## 3. Los Motores de Estudio Exegético y Clientes API
+## 3. Los Módulos de Estudio Exegético y Clientes API
 
 1. **Lectura Continua (`features/verses/`):** Consume `GET /kartex/verses?bookId=&chapter=&translationId=`. Integra controles tipográficos (Serif / Sans, tamaños de escala con `+`/`-`), modos de tono de lectura (Auto / Sistema, Sepia / Papel Cálido `#FAF6EE`, Dark / OLED `#000000`), Modo Enfoque Inmersivo a pantalla completa sin distracciones (tecla `F` o botón de foco, salida con `Esc`), navegación por atajos de teclado (`←`/`→`, `J`/`K`), persistencia de preferencias (`kartex_reader_settings` en `localStorage`), notas de atribución legal de copyright oficiales al pie de cada capítulo, e integración con el lateral derecho (`KartexExegesisInspector`) inicializado por defecto en la pestaña `'versions'` para cotejo ágil de versículos.
 2. **Vista Paralela (`features/parallel-view/`):** Comparación simultánea de 2 a 4 versiones sincronizadas por capítulo (`RV1960`, `NVI`, `NBLA`, `BHS`, `LXX`).
@@ -193,8 +193,8 @@ Para garantizar una experiencia de usuario (UX) óptima tanto en primeros ingres
   * `ArchaeologyFeed`: Fichas epigráficas, catálogo de manuscritos, filtros temáticos/geográficos y modal de lectura completa.
   * `Atlas`: Itinerarios de peregrinación (Ruta del Éxodo, viajes paulinos), controles multimedia del reproductor, visor 3D arquitectónico (Tabernáculo, templos) y ficha arqueológica de lugares georreferenciados (`PlaceDetailsDrawer`).
   * `PassagePicker` y `BookSelector`: Catálogo bilingüe de los 66 libros canónicos, 9 categorías canónicas y placeholders.
-* **Datos Estructurados Schema.org (`KartexJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus bíblico y los 9 motores exegéticos en motores de búsqueda e IA.
-* **Dossier Especializado para IA (`public/kartex/llms.txt`):** Desglose detallado de los 9 motores exegéticos, textos Masorético BHS / Griego NA28 y léxicos servido en `kartex.jorgedoicela.com/llms.txt`.
+* **Datos Estructurados Schema.org (`KartexJsonLd.tsx`):** Inyección de esquema `SoftwareApplication` y `Dataset` para el corpus bíblico y los 9 módulos exegéticos en buscadores web e IA.
+* **Dossier Especializado para IA (`public/kartex/llms.txt`):** Desglose detallado de los 9 módulos exegéticos, textos Masorético BHS / Griego NA28 y léxicos servido en `kartex.jorgedoicela.com/llms.txt`.
 * **Manifiesto PWA Independiente (`public/kartex/manifest.json`):** Configuración de aplicación web independiente con tema `#000000`.
 * **Etiquetas `hreflang`:** Emite `alternates.languages` (`es-EC` y `en-US`) apuntando a `https://kartex.jorgedoicela.com`.
 * **Cero Parpadeos (SSR):** El layout raíz `(kartex)/layout.tsx` resuelve el `locale` en el servidor con `getLocale()`, envolviendo a los hijos en `NextIntlClientProvider`.
@@ -241,7 +241,7 @@ La arquitectura de paneles laterales (izquierdo y derecho) implementa un diseño
 * **Patrón de Componente Compuesto (`StudySidePanel` en `shared/ui`):**
   * **Estructura Declarativa FSD:**
     * `<StudySidePanel>`: Shell contenedor (`<aside>`), Backdrop móvil con difuminado (`backdrop-blur-xs`), tirador de redimensión interactivo (`ResizeBorderHandle`), cabecera móvil automática accesible (`title`, `icon`, `badge`, `onClose`) y gestión de anchura/colapso.
-    * `<StudySidePanel.Toolbar>`: Contenedor superior para controles de acción (selectores de testamentos, motores de búsqueda, tabs de segmented control, alternadores de filtros). Presenta borde divisorio inferior sutil `border-b border-zinc-100 dark:border-zinc-800/80` y empaquetado de layout limpio.
+    * `<StudySidePanel.Toolbar>`: Contenedor superior para controles de acción (selectores de testamentos, cajas de búsqueda, tabs de segmented control, alternadores de filtros). Presenta borde divisorio inferior sutil `border-b border-zinc-100 dark:border-zinc-800/80` y empaquetado de layout limpio.
     * `<StudySidePanel.Body>`: Contenedor ergonómico principal con desplazamiento vertical independiente (`overflow-y-auto min-h-0 flex-1`), eliminando barras de scroll duplicadas o desbordamiento incontrolado.
     * `<StudySidePanel.Footer>`: Contenedor inferior acoplado a la base (`border-t border-zinc-100 dark:border-zinc-800/80 p-3 bg-zinc-50/50 dark:bg-zinc-950/30`) para controles de paginación, contadores métricos o acciones secundarias.
   * **Arquitectura Canónica Controlled / Uncontrolled y Restablecimiento de Fábrica:** [`StudySidePanel`](../../../frontend/web/src/app/(kartex)/shared/ui/StudySidePanel.tsx) implementa el estándar nativo de componentes de React:
@@ -396,7 +396,7 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
      * **Inspector Derecho (`KartexExegesisInspector.tsx`):** Análisis morfológico profundo Strong H/G, lemas hebreos/griegos, información gramatical y pestaña de versículos paralelos comparativos.
   2. **Módulo 2: Vista Paralela & Diff Textual (`/study/parallel`):**
      * **Panel Izquierdo (`ParallelSidebar.tsx`):** Gestor de columnas activas (2 a 4 versiones en simultáneo), presets de estudio rápido (*Equivalencia Formal, Dinámica, Textos Base Originales, Visión Panorámica*) y navegación rápida de pasaje.
-     * **Inspector Derecho (`ParallelDiffInspector.tsx`):** Motor de cálculo diff textual en tiempo real (algoritmo LCS con similitud en porcentaje, resaltado cromático de adiciones en esmeralda y supresiones en ámbar), alternador de versículo de análisis y pestaña de morfología Strong.
+     * **Inspector Derecho (`ParallelDiffInspector.tsx`):** Herramienta de cálculo diff textual en tiempo real (algoritmo LCS con similitud en porcentaje, resaltado cromático de adiciones en esmeralda y supresiones en ámbar), alternador de versículo de análisis y pestaña de morfología Strong.
   3. **Módulo 3: Interlineal Inverso Morfológico (`/study/interlinear`):**
      * **Panel Izquierdo (`InterlinearSidebar.tsx`):** Navegación canónica por tradición lingüística (*Torah, Nevi'im, Ketuvim* con indicación de secciones en Arameo Imperial vs *Evangelios, Hechos, Corpus Paulino, Epístolas Generales, Apocalipsis* en Griego Koiné), y controles granulares de capas morfológicas visibles (Nikkud, transliteración, glosas, números Strong y parsing).
      * **Inspector Derecho (`InterlinearInspector.tsx`):** Ficha léxica profunda del vocablo seleccionado con tipografía original a gran formato, pronunciación fonética IPA, reproductor de audio bíblico vocalizado (`biblicalAudioService`), análisis morfosintáctico y definiciones integradas de Gesenius, BDB y Thayer.
@@ -466,7 +466,7 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
       * *Paralelo, Interlineal, Atlas y Cronología (`ParallelSidebar`, `InterlinearSidebar`, `AtlasSidebar`, `TimelineSidebar`):* `340px` (`defaultWidth`). Ancho expandido para fichas de presets, conmutadores de capas morfológicas (Nikkud, transliteración, glosas), selectores de 8 épocas y 5 carriles sincrónicos.
     - **Inspectores Laterales Derechos (Lectura, Fichas de Exégesis y Análisis):**
       * *Lector Estándar (`KartexExegesisInspector`):* `340px` (`defaultWidth`). Diseñado para tarjetas de versículos de comparación rápida y morfología lematizada.
-      * *Módulos Avanzados (7 restantes):* `360px` (`defaultWidth`). Espacio idóneo para el motor de diff textual (`ParallelDiffInspector`), fichas léxicas completas con audio y gramática (`InterlinearInspector`), concordancia BDB (`WordStudyInspector`), telemetría WGS84 (`AtlasInspector`), biografías históricas (`TimelineInspector`), registros de excavaciones (`ArchaeologyInspector`) y asistentes de diálogo apologético (`EvangelismInspector`).
+      * *Módulos Avanzados (7 restantes):* `360px` (`defaultWidth`). Espacio idóneo para el módulo de diff textual (`ParallelDiffInspector`), fichas léxicas completas con audio y gramática (`InterlinearInspector`), concordancia BDB (`WordStudyInspector`), telemetría WGS84 (`AtlasInspector`), biografías históricas (`TimelineInspector`), registros de excavaciones (`ArchaeologyInspector`) y asistentes de diálogo apologético (`EvangelismInspector`).
   * **Persistencia Aislada por Módulo (`storageKey`):** Cada panel almacena su dimensión redimensionada de forma estrictamente desacoplada en `localStorage` (`safeStorage.ts`), impidiendo que el ajuste manual de una herramienta afecte a las demás (`kartex_parallel_sidebar_w`, `kartex_interlinear_inspector_w`, etc.).
   * **Límites de Seguridad Físicos (`clamp`):** Todos los paneles operan bajo límites elásticos entre `200px` (mínimo) y `480px` (máximo) para salvaguardar la visibilidad y ergonomía del canvas central en cualquier resolución.
   * **Restablecimiento Instantáneo:** Soporte de doble clic sobre la manija de redimensionamiento (`ResizeBorderHandle`) para revertir inmediatamente cualquier panel a su valor de fábrica predeterminado.

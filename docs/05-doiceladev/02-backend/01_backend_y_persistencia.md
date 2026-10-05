@@ -17,7 +17,7 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 >   1. *Presentación:* Controladores REST (`NewsController`, `BlogController`, `ForumController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`, `InfrastructureController`).
 >   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas (`NewsService`, `BlogService`, `InfrastructureService`, etc.).
 >   3. *Acceso a Datos:* 10 entidades TypeORM en `better-sqlite3` (`NewsArticle`, `BlogPost`, `ForumTopic`, `ForumReply`, `AiResource`, `SecurityPost`, `Tutorial`, `TutorialStep`, `Project`, `InfrastructurePost`).
-> * **Motor Universal de Filtros Polimórficos:**
+> * **Sistema Universal de Filtros Polimórficos:**
 >   - Todos los submódulos exponen el endpoint `GET /doiceladev/[modulo]/categories?lang=es|en` devolviendo el contrato universal `{ id: string, label: string, count: number }`.
 >   - Las agregaciones se ejecutan dinámicamente en `doiceladev.sqlite` sin sobrecarga de memoria, erradicando datos quemados y alimentando de forma homogénea a `CategoryFilterBar` en el frontend.
 
@@ -110,15 +110,15 @@ backend/src/doiceladev/
 │   ├── entities/glossary-term.entity.ts
 │   └── dto/get-glossary-query.dto.ts
 │
-└── hub/                              # 10. AGREGACIÓN EDITORIAL CONSOLIDADA (HUB GLOBAL)
-    ├── hub.module.ts
+└── portal/                           # 10. AGREGACIÓN EDITORIAL CONSOLIDADA (FEED / PORTAL GLOBAL)
+    ├── portal.module.ts
     ├── controllers/
-    │   └── hub.controller.ts         # GET /doiceladev/hub con GetHubQueryDto validado
+    │   └── portal.controller.ts      # GET /doiceladev/portal con GetPortalQueryDto validado
     ├── dto/
-    │   ├── hub-response.dto.ts       # HubFeedItem, HubSpotlightData, HubResponseDto
-    │   └── get-hub-query.dto.ts      # Validación class-validator (?lang, ?search)
+    │   ├── portal-response.dto.ts    # PortalFeedItem, PortalSpotlightData, PortalResponseDto
+    │   └── get-portal-query.dto.ts   # Validación class-validator (?lang, ?search)
     └── services/
-        └── hub.service.ts            # Consulta consolidada resiliente (SmartScore + feed cronológico + Spotlight)
+        └── portal.service.ts         # Consulta consolidada resiliente (SmartScore + feed cronológico + Spotlight)
 ```
 
 ---
@@ -175,7 +175,7 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `DELETE /doiceladev/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
 | **Glosario** | `GET /doiceladev/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
 | | `GET /doiceladev/glossary/:slug` | `lang` | Definición de un término específico por slug |
-| **Hub Global** | `GET /doiceladev/hub` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
+| **Feed Global** | `GET /doiceladev/portal` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
 
 ---
 
@@ -270,7 +270,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 | **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.jpg` |
 | **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/doiceladev/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
 | **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.jpg` |
-| **Proyectos** | `projects.json` | `doiceladev-hub-tecnologico` | `/doiceladev/images/covers/projects/doiceladev-hub-tecnologico.jpg` |
+| **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.jpg` |
 | **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.jpg` |
 
 ### 6.1 Modo de Operación del Seeder (`seed-doiceladev.ts`)

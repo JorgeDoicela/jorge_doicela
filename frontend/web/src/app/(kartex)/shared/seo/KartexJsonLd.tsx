@@ -9,7 +9,7 @@ export function KartexJsonLd() {
         'name': 'Kartex · Plataforma de Investigación y Estudio Bíblico | Jorge Doicela',
         'applicationCategory': 'EducationalApplication, ReferenceApplication',
         'operatingSystem': 'Web, iOS, Android',
-        'description': 'Kartex: Plataforma de investigación y estudio bíblico exegético con 9 motores de estudio modulares: Interlineal, Lexicón Strong, Atlas WGS84, Cronología, Arqueología, Evangelismo, Paralelo y App Móvil Expo.',
+        'description': 'Kartex: Plataforma de investigación y estudio bíblico exegético con 9 módulos de estudio especializados: Interlineal, Lexicón Strong, Atlas WGS84, Cronología, Arqueología, Evangelismo, Paralelo y App Móvil Expo.',
         'inLanguage': ['es', 'en', 'he', 'grc'],
         'author': {
           '@type': 'Person',

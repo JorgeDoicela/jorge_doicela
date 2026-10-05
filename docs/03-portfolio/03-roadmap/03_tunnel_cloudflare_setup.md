@@ -36,7 +36,7 @@ Esta guia documenta la instalacion, configuracion de seguridad, arquitectura y p
 
 ## 2. Paso 1: Verificacion de Docker en Debian 13
 
-El sistema requiere el motor Docker y que el usuario pertenezca al grupo `docker`:
+El sistema requiere el servicio Docker y que el usuario pertenezca al grupo `docker`:
 
 ```bash
 # 1. Comprobar version instalada

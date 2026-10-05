@@ -25,13 +25,13 @@ La documentación del repositorio se encuentra modularizada verticalmente por pr
   * [02-backend/01_backend_y_persistencia.md](docs/03-portfolio/02-backend/01_backend_y_persistencia.md): Gateway NestJS, comandos Unix, servicio de contacto y `portfolio.sqlite`.
   * [03-roadmap/01_roadmap_portfolio.md](docs/03-portfolio/03-roadmap/01_roadmap_portfolio.md): Requerimientos e ideas del Portafolio.
 * **[04-kartex/](docs/04-kartex/)**:
-  * [01-frontend-web/01_lector_y_estudio_web.md](docs/04-kartex/01-frontend-web/01_lector_y_estudio_web.md): Frontend web (`kartex.*`), los 9 motores de estudio exegético y toolbar.
+  * [01-frontend-web/01_lector_y_estudio_web.md](docs/04-kartex/01-frontend-web/01_lector_y_estudio_web.md): Frontend web (`kartex.*`), los 9 módulos de estudio exegético y toolbar.
   * [02-backend/01_backend_y_morfologia.md](docs/04-kartex/02-backend/01_backend_y_morfologia.md): NestJS REST, tokens morfológicos hebreo/griego y códigos Strong.
   * [03-base-de-datos/01_base_datos_y_seeder.md](docs/04-kartex/03-base-de-datos/01_base_datos_y_seeder.md): `kartex.sqlite`, catálogo canónico, corpus por lotes y seeder transaccional.
   * [04-mobile-expo/01_app_movil_expo.md](docs/04-kartex/04-mobile-expo/01_app_movil_expo.md): App nativa React Native / Expo, modo Offline-First y FlashList.
   * [05-roadmap/01_roadmap_kartex.md](docs/04-kartex/05-roadmap/01_roadmap_kartex.md): Requerimientos e ideas de Kartex.
 * **[05-doiceladev/](docs/05-doiceladev/)**:
-  * [01-frontend/01_frontend_y_hub_tecnologico.md](docs/05-doiceladev/01-frontend/01_frontend_y_hub_tecnologico.md): Frontend web (`doiceladev.*`), las 8 categorías, buscador y foros.
+  * [01-frontend/01_frontend_y_portal_tecnologico.md](docs/05-doiceladev/01-frontend/01_frontend_y_portal_tecnologico.md): Frontend web (`doiceladev.*`), las 8 categorías, buscador y foros.
   * [02-backend/01_backend_y_persistencia.md](docs/05-doiceladev/02-backend/01_backend_y_persistencia.md): NestJS REST, foros, artículos, proyectos y `doiceladev.sqlite`.
   * [03-roadmap/01_roadmap_doiceladev.md](docs/05-doiceladev/03-roadmap/01_roadmap_doiceladev.md): Requerimientos e ideas de DoicelaDev.
 

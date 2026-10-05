@@ -44,7 +44,7 @@ Este archivo se carga de forma automática en todas las interacciones dentro de 
    * Documentación: [`docs/02-landing/`](../docs/02-landing/)
 3. `portfolio-jorge-doicela`: Portafolio (`portfolio.*`), terminal SSH por WebSockets, contacto, `portfolio.sqlite` y estética **Dark Luxury**.
    * Documentación: [`docs/03-portfolio/`](../docs/03-portfolio/)
-4. `kartex-jorge-doicela`: KARTEX (`kartex.*`), 9 motores exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `kartex.sqlite` y estilo **Geist (Vercel Style)**.
+4. `kartex-jorge-doicela`: KARTEX (`kartex.*`), 9 módulos exegéticos, app móvil Expo (`frontend/mobile`), backend NestJS, `kartex.sqlite` y estilo **Geist (Vercel Style)**.
    * Documentación: [`docs/04-kartex/`](../docs/04-kartex/)
 5. `doiceladev-jorge-doicela`: DoicelaDev (`doiceladev.*`), 8 categorías temáticas, foros, proyectos, `doiceladev.sqlite` y estética **Neumorphism UI + Glassmorphism**.
    * Documentación: [`docs/05-doiceladev/`](../docs/05-doiceladev/)

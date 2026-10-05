@@ -12,9 +12,9 @@ Se completó la puesta a punto del entorno de ejecución aislado para la Termina
 
 ## 2. Aprovisionamiento Inicial de Infraestructura (Servidor VPS)
 
-Debido a que las instancias limpias de Debian 13 en AWS Lightsail no incluyen el motor Docker de forma predeterminada, se ejecutaron las siguientes tareas de aprovisionamiento a nivel de sistema operativo. Estas tareas son de ejecución única y no se repiten en despliegues futuros.
+Debido a que las instancias limpias de Debian 13 en AWS Lightsail no incluyen el servicio Docker de forma predeterminada, se ejecutaron las siguientes tareas de aprovisionamiento a nivel de sistema operativo. Estas tareas son de ejecución única y no se repiten en despliegues futuros.
 
-### 2.1 Instalación del Motor Docker Ligero
+### 2.1 Instalación del Servicio Docker Ligero
 Se instaló el paquete nativo oficial de Debian:
 ```bash
 sudo apt update && sudo apt install -y docker.io
@@ -92,7 +92,7 @@ Durante la revisión de seguridad posterior al despliegue se identificaron y cor
 
 ### 4.2 Inyección de Parámetros desde el Cliente WebSocket (Gravedad Media)
 * **Archivo:** `backend/src/portfolio/services/sandbox.service.ts`
-* **Vulnerabilidad:** Los parámetros `cols`, `rows` y `targetMode` se pasaban directamente del cliente al motor de Docker sin ninguna validación. Un atacante podía enviar `cols=999999999` para inyectar valores arbitrarios como variables de entorno del contenedor, o un `targetMode` distinto de los valores esperados.
+* **Vulnerabilidad:** Los parámetros `cols`, `rows` y `targetMode` se pasaban directamente del cliente al daemon de Docker sin ninguna validación. Un atacante podía enviar `cols=999999999` para inyectar valores arbitrarios como variables de entorno del contenedor, o un `targetMode` distinto de los valores esperados.
 * **Corrección:** Se añadieron tres guardas explícitas:
   1. `targetMode` — Validación de valor de enum: si no es exactamente `'tunnel'`, se fuerza a `'vps'`. Ningún valor arbitrario puede pasar.
   2. `safeCols` — Forzado al rango `[40, 300]` mediante `Math.clamp`.

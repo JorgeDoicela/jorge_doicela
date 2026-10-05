@@ -11,7 +11,7 @@ Este documento define la política legal, el catálogo de fuentes textuales de d
 > KARTEX opera bajo una arquitectura de **estricto cumplimiento de copyright** y respeto a la propiedad intelectual. Ningún texto bíblico moderno con derechos de autor se almacena ilegalmente ni se extrae mediante scraping.  
 > Se implementa una **Estrategia Híbrida Oficial**:
 > 1. **Versiones Contemporáneas con Derechos:** Se consumen en vivo mediante **API.Bible** (*American Bible Society* & *Digital Bible Library*).
-> 2. **Textos Originales y Motores Exegéticos:** Se basan exclusivamente en **ediciones críticas de Dominio Público Universal** y licencias académicas abiertas.
+> 2. **Textos Originales y Módulos Exegéticos:** Se basan exclusivamente en **ediciones críticas de Dominio Público Universal** y licencias académicas abiertas.
 
 ---
 
@@ -46,9 +46,9 @@ Todas las fuentes tipográficas integradas en la plataforma residen encapsuladas
 
 ---
 
-## 3. Fuentes Académicas de los 4 Motores de Estudio
+## 3. Fuentes Académicas de los 4 Módulos de Estudio
 
-### 3.1 Motor Interlineal Inverso
+### 3.1 Módulo Interlineal Inverso
 * **Antiguo Testamento:** Texto consonántico, vocales masoréticas (*Nikkud*), acentos litúrgicos y cantilación del **Westminster Leningrad Codex (1008 d.C.)**.
 * **Nuevo Testamento:** Texto crítico griego de **Eberhard Nestle (1904)** cotejado con Westcott-Hort (1881) y Tischendorf (1869).
 * **Morfología y Glosas:** Lematización consonántica y glosas literales de libre distribución (*Open Scriptures Hebrew* y *MorphGNT*).

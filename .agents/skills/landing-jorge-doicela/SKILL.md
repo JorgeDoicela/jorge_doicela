@@ -125,7 +125,7 @@ new Intl.DateTimeFormat('es-EC', {
 
 ### 3.6 SEO Internacional, Datos Estructurados (Schema.org) y Visibilidad en IA (GEO)
 * **Metadatos Dinámicos Localizados (`generateMetadata`):** Emite títulos, descripciones y Open Graph en el idioma activo.
-* **Etiquetas `hreflang` para Google:** Configura `alternates.languages` (`es-EC` y `en-US`) para indexar ambas versiones en motores de búsqueda.
+* **Etiquetas `hreflang` para Google:** Configura `alternates.languages` (`es-EC` y `en-US`) para indexar ambas versiones en buscadores web.
 * **Datos Estructurados Schema.org (`PersonJsonLd.tsx`):** Grafo con entidad `Person` (nombre completo Jorge Ismael Doicela Molina, formación en ISTPET, áreas de especialidad `knowsAbout`, redes `sameAs`) y entidad `WebSite`.
 * **Dossier Maestro para LLMs (`public/landing/llms.txt`):** Resumen conciso del perfil completo del creador y enlaces a los 3 dossiers especializados de los subproyectos, servido directamente por Nginx/Cloudflare sin tocar la memoria RAM.
 * `sitemap.ts` y `robots.ts` en la raíz de Next.js con reglas para bots de IA (`GPTBot`, `PerplexityBot`, etc.).

@@ -8,6 +8,7 @@ import {
     Columns2,
     Languages,
     Library,
+    BookMarked,
     MapPin,
     Clock,
     Landmark,
@@ -51,6 +52,20 @@ export function KartexEnginesCarousel() {
             colorClass: 'bg-purple-500/10 border-purple-500/20 text-purple-500',
             title: tLanding('engine5Title'),
             desc: tLanding('engine5Desc'),
+        },
+        {
+            href: '/study/commentaries',
+            icon: Library,
+            colorClass: 'bg-amber-500/10 border-amber-500/20 text-amber-500',
+            title: tLanding('engineCommentariesTitle'),
+            desc: tLanding('engineCommentariesDesc'),
+        },
+        {
+            href: '/study/dictionaries',
+            icon: BookMarked,
+            colorClass: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500',
+            title: tLanding('engineDictionariesTitle'),
+            desc: tLanding('engineDictionariesDesc'),
         },
         {
             href: '/study/atlas',

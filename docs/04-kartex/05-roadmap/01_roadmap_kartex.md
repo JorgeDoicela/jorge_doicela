@@ -14,7 +14,7 @@ Catálogo exhaustivo de requerimientos, módulos completados y objetivos futuros
 - [x] **Evidencias & Arqueología:** Catálogo de artefactos, manuscritos del Mar Muerto y epigrafía.
 - [x] **Evangelización y Apologética:** Rutas soteriológicas canónicas, banco de objeciones y tratados homiléticos.
 - [ ] **Red de Referencias Cruzadas:** Integración de las referencias del *Treasury of Scripture Knowledge (TSK)*.
-- [ ] **Comentarios Clásicos Versículo por Versículo:** Matthew Henry, Jamieson-Fausset-Brown, John Gill.
+- [x] **Comentarios Clásicos Versículo por Versículo:** Matthew Henry, Jamieson-Fausset-Brown, Ginebra 1599, John Gill con suite dedicada (`/study/commentaries`), extracción transversal en inspectores de versículo y persistencia relacional en SQLite.
 
 ---
 

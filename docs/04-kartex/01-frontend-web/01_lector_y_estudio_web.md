@@ -9,7 +9,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > [!IMPORTANT]
 > **Arquitectura Macro y Enrutamiento Canónico Limpio:**
 > * **Subdominio Canónico:** `kartex.jorgedoicela.com` (o `http://kartex.localhost:3001` en desarrollo local).
-> * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las 8 herramientas de estudio son rutas directas de primer nivel (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`).
+> * **URLs Limpias Canónicas de Primer Nivel:** La raíz del subdominio es `/` y las 10 herramientas de estudio son rutas directas de primer nivel (`/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/commentaries`, `/study/dictionaries`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`).
 > * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud en el subdominio con el prefijo redundante `/kartex` o `/kartex/*` se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/*`), eliminando URLs duplicadas en el navegador y protegiendo el SEO.
 > * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas limpias al directorio físico `frontend/web/src/app/(kartex)/kartex/*` para evitar colisiones con los demás dominios bajo el runtime consolidado de 1 GB de RAM.
 > * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/kartex` siguen respondiendo 200 OK directamente.
@@ -17,10 +17,10 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 > * **Aislamiento de Dominio:** Cero dependencias de otros subdominios. Estilos aislados en `(kartex)/globals.css`.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** La arquitectura separa estrictamente la capa de entidades (`entities/books`, `entities/translations`) de las 8 herramientas exegéticas del usuario encapsuladas en `(kartex)/features/` (`verses`, `parallel-view`, `interlinear`, `lexicons`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados. Las dependencias internas de una sola herramienta (como el algoritmo de diferencias textuales LCS) están co-localizadas dentro de su respectivo slice (`parallel-view/textual-diff`).
-> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todas las herramientas exegéticas (Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong, Arqueología) consumen namespaces tipados sin cadenas hardcodeadas.
+> * **Feature-Sliced Design (FSD):** La arquitectura separa estrictamente la capa de entidades (`entities/books`, `entities/translations`, `entities/passage`) de las 10 herramientas exegéticas del usuario encapsuladas en `(kartex)/features/` (`verses`, `parallel-view`, `interlinear`, `lexicons`, `commentaries`, `dictionaries`, `atlas`, `timeline`, `archaeology-feed`, `evangelism`), con sus propios paneles laterales (`Sidebar`) e inspectores (`Inspector`) desacoplados con redimensionamiento reactivo `StudySidePanel`. Las dependencias internas de una sola herramienta (como el algoritmo de diferencias textuales LCS) están co-localizadas dentro de su respectivo slice (`parallel-view/textual-diff`).
+> * **Internacionalización Integral (i18n):** 100% de cobertura en `messages/es.json` y `messages/en.json` con `next-intl`. Todas las herramientas exegéticas (Comentarios Clásicos, Diccionarios Bíblicos, Interlineal Inverso, Atlas, Cronología Sincrónica, Léxicos Strong, Arqueología) consumen namespaces tipados sin cadenas hardcodeadas.
 > * **Cero Datos Hardcodeados en Cliente:** Ningún archivo TypeScript contiene versículos, palabras, coordenadas ni textos bíblicos incrustados. Toda la data se consume asíncronamente desde los endpoints de NestJS (`GET /kartex/*`).
-> * **Header Unificado y Responsivo:** `KartexHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 8 herramientas en pantallas móviles (`< md`).
+> * **Header Unificado y Responsivo:** `KartexHeaderNav.tsx` con pestañas en escritorio y menú desplegable flotante de las 10 herramientas en pantallas móviles (`< md`).
 > * **Barra de Control Exegético:** `KartexPassageToolbar.tsx` agrupa pasaje (`UnifiedPassagePicker`), versión bíblica (`TranslationSelector`) y controles de tipografía/diseño (`ReaderLayoutMode`, `ReaderFontSize`, `ReaderFontFamily`) de forma 100% responsiva.
 > * **Estética Geist / Vercel Style y Suite Tipográfica Exegética Local:** Monocromática de alta precisión, micro-interacciones de alta densidad, bordes ultra-delgados (`border-zinc-800`) y 6 fuentes auto-hospedadas bajo `(kartex)/fonts/` con licencia **SIL OFL 1.1** (Geist Sans, Geist Mono, Lora, Frank Ruhl Libre para hebreo masorético con *niqud* y Cardo para griego koiné politónico). Cero dependencias de fuentes de red externas.
 
@@ -28,7 +28,7 @@ Este documento detalla la arquitectura macro y micro, herramientas exegéticas y
 
 ## 2. Estructura de Rutas y Navegación URL-Driven
 
-El subdominio cuenta con una Landing Page y 8 módulos de estudio independientes con enrutamiento dedicado y layout persistente:
+El subdominio cuenta con una Landing Page y 10 módulos de estudio independientes con enrutamiento dedicado y layout persistente:
 
 ```text
 frontend/web/src/app/(kartex)/
@@ -45,10 +45,12 @@ frontend/web/src/app/(kartex)/
 │       ├── parallel/page.tsx  # Módulo 2: Cotejo Paralelo Multi-Versión & Diff Textual
 │       ├── interlinear/page.tsx # Módulo 3: Interlineal Inverso (Hebreo BHS / Griego NA28)
 │       ├── word-study/page.tsx # Módulo 4: Análisis de Palabra / Léxicos (BDB / Gesenius / Thayer)
-│       ├── atlas/page.tsx     # Módulo 5: Atlas Bíblico Vectorial y Georreferenciado WGS84 & 3D
-│       ├── timeline/page.tsx  # Módulo 6: Cronología Sincrónica e Historia Comparada
-│       ├── archaeology/page.tsx # Módulo 7: Arqueología Bíblica y Feed de Excavaciones
-│       └── evangelism/page.tsx # Módulo 8: Evangelización y Apologética (?tab=pathways | objections | tracts)
+│       ├── commentaries/page.tsx # Módulo 5: Corpus Exegético y Comentarios Bíblicos Clásicos
+│       ├── dictionaries/page.tsx # Módulo 6: Diccionarios Bíblicos Clásicos y Enciclopedia Teológica A-Z
+│       ├── atlas/page.tsx     # Módulo 7: Atlas Bíblico Vectorial y Georreferenciado WGS84 & 3D
+│       ├── timeline/page.tsx  # Módulo 8: Cronología Sincrónica e Historia Comparada
+│       ├── archaeology/page.tsx # Módulo 9: Arqueología Bíblica y Feed de Excavaciones
+│       └── evangelism/page.tsx # Módulo 10: Evangelización y Apologética (?tab=pathways | objections | tracts)
 │
 ├── providers/                 # CAPA DE PROVIDERS GLOBALES (FSD PROVIDERS)
 │   ├── theme-provider.tsx     # Provider next-themes aislado para el subdominio
@@ -81,6 +83,7 @@ frontend/web/src/app/(kartex)/
     ├── parallel-view/         # Comparador multi-columna + subdirectorio textual-diff (LCS)
     ├── interlinear/           # services/interlinearApiService (Hebreo Masorético BHS / Griego NA28)
     ├── lexicons/              # services/lexiconApiService (Léxicos Strong BDB, Thayer, Gesenius)
+    ├── commentaries/          # services/commentariesApiService (Corpus de comentarios bíblicos clásicos)
     ├── atlas/                 # services/atlasApiService (Atlas georreferenciado WGS84 con ?lang=)
     ├── timeline/              # services/timelineApiService (Cronología sincrónica con ?lang=)
     ├── archaeology-feed/      # services/archaeologyApiService (Feed de arqueología con ?lang=)

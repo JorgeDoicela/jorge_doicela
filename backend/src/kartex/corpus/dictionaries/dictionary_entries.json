@@ -1,0 +1,240 @@
+[
+  {
+    "id": "easton-arca-alianza-es",
+    "language": "es",
+    "dictionaryId": "easton-1897-es",
+    "term": "Arca de la Alianza",
+    "normalizedTerm": "arca de la alianza",
+    "letter": "A",
+    "category": "artifact",
+    "etymology": "Hebreo: אֲרוֹן הַבְּרִית (Arón Habrit), 'Cofre del Testimonio'",
+    "definitionMarkdown": "El cofre sagrado construido según el modelo revelado por Dios a Moisés en el monte Sinaí (Éxodo 25:10-22). Estaba hecho de madera de acacia revestida de oro puro por dentro y por fuera, de dos codos y medio de longitud, un codo y medio de anchura y un codo y medio de altura.\n\n### Construcción y Mobiliario\nSobre el arca se hallaba la cubierta de oro macizo denominada el **Propiciatorio** (*kapporeth*), en cuyos extremos reposaban dos querubines de oro labrados a martillo con sus alas extendidas cubriendo el trono de la gracia, entre los cuales se manifestaba la presencia divina de la *Shejiná*.\n\n### Contenido Sagrado\nSegún el testimonio canónico (Éxodo 25:16; Hebreos 9:4), el arca contenía:\n* Las dos tablas de piedra de la Ley grabadas con el Decálogo.\n* Una vasija de oro que contenía el maná del desierto.\n* La vara de Aarón que floreció como confirmación de la elección sacerdotal.\n\n### Trayectoria Histórica\nEl arca precedió al campamento israelita durante la travesía del desierto, detuvo las aguas del río Jordán ante Josué y rodeó los muros de Jericó. Más tarde permaneció en Silo, fue capturada temporalmente por los filisteos en tiempos de Elí, repatriada a Quiriat-jearim y finalmente trasladada por David a Jerusalén para ser entronizada en el *Sancta Sanctorum* del Templo de Salomón (1 Reyes 8:1-9).",
+    "biblicalReferences": [
+      { "reference": "Éxodo 25:10-22", "context": "Instrucciones arquitectónicas y propósito del propiciatorio" },
+      { "reference": "1 Reyes 8:1-9", "context": "Dedicación del Templo de Salomón y depósito del Arca" },
+      { "reference": "Hebreos 9:4-5", "context": "Descripción neotestamentaria del tabernáculo y su contenido" }
+    ],
+    "relatedTerms": ["Propiciatorio", "Tabernáculo", "Querubines", "Maná", "Sacerdocio"]
+  },
+  {
+    "id": "easton-ark-covenant-en",
+    "language": "en",
+    "dictionaryId": "easton-1897-en",
+    "term": "Ark of the Covenant",
+    "normalizedTerm": "ark of the covenant",
+    "letter": "A",
+    "category": "artifact",
+    "etymology": "Hebrew: אֲרוֹן הַבְּרִית (Aron HaBerit), 'Chest of the Testimony'",
+    "definitionMarkdown": "The sacred chest constructed according to the heavenly pattern revealed to Moses on Mount Sinai (Exodus 25:10-22). It was crafted of acacia wood overlaid with pure gold inside and out, measuring two and a half cubits in length, a cubit and a half in breadth, and a cubit and a half in height.\n\n### Construction and Mercy Seat\nAbove the ark was placed the solid gold lid termed the **Mercy Seat** (*kapporeth*), at whose extremities stood two cherubim of hammered gold with wings overshadowing the mercy seat, between which the divine presence (*Shekinah*) was manifested.\n\n### Sacred Contents\nAccording to canonical testimony (Exodus 25:16; Hebrews 9:4), the ark originally contained:\n* The two tables of stone inscribed with the Ten Commandments.\n* The golden pot containing an omer of wilderness manna.\n* Aaron's rod that budded in vindication of the priesthood.\n\n### Historical Trajectory\nThe ark led the host of Israel across the wilderness, parted the waters of the Jordan, and was carried around Jericho. Later housed at Shiloh, captured by the Philistines, restored to Kiriath-jearim, brought to Mount Zion by David, and ultimately consecrated within the Holy of Holies in Solomon's Temple (1 Kings 8:1-9).",
+    "biblicalReferences": [
+      { "reference": "Exodus 25:10-22", "context": "Architectural instructions and covenantal purpose" },
+      { "reference": "1 Kings 8:1-9", "context": "Temple dedication and enthronement of the Ark" },
+      { "reference": "Hebrews 9:4-5", "context": "New Testament description of the sanctuary furniture" }
+    ],
+    "relatedTerms": ["Mercy Seat", "Tabernacle", "Cherubim", "Manna", "Priesthood"]
+  },
+  {
+    "id": "easton-melquisedec-es",
+    "language": "es",
+    "dictionaryId": "easton-1897-es",
+    "term": "Melquisedec",
+    "normalizedTerm": "melquisedec",
+    "letter": "M",
+    "category": "person",
+    "etymology": "Hebreo: מַלְכִּי־צֶדֶק (Malki-Tsedeq), 'Rey de Justicia'",
+    "definitionMarkdown": "Rey de Salem (antiguo nombre de Jerusalén) y sacerdote del Dios Altísimo (*El Elyon*). Aparece en Génesis 14:18-20 saliendo al encuentro de Abram tras la derrota de Quedorlaomer y los reyes confederados.\n\n### Encuentro con Abram\nMelquisedec ofreció pan y vino a Abram, bendijo al patriarca en el nombre del Creador del cielo y de la tierra, y Abram le entregó los diezmos de todo el botín, reconociendo la primacía de su dignidad sacerdotal.\n\n### Significado Tipológico en Cristo\nEn el Salmo 110:4, el sacerdocio mesiánico es jurado solemnemente por Dios: *«Tú eres sacerdote para siempre según el orden de Melquisedec»*. La Epístola a los Hebreos (capítulos 5 a 7) expone ampliamente que Melquisedec es el tipo eminente del sacerdocio eterno de Jesucristo, el cual supera al sacerdocio levítico aarónico porque no depende de linaje carnal, es incorruptible, y une en una sola persona el trono real y el altar sacerdotal.",
+    "biblicalReferences": [
+      { "reference": "Génesis 14:18-20", "context": "Encuentro histórico en el valle de Save con Abram" },
+      { "reference": "Salmos 110:4", "context": "Profecía mesiánica del sacerdocio eterno" },
+      { "reference": "Hebreos 7:1-17", "context": "Exposición teológica de la superioridad de su orden" }
+    ],
+    "relatedTerms": ["Sacerdocio", "Jerusalén", "Abraham", "Pacto"]
+  },
+  {
+    "id": "easton-melchizedek-en",
+    "language": "en",
+    "dictionaryId": "easton-1897-en",
+    "term": "Melchizedek",
+    "normalizedTerm": "melchizedek",
+    "letter": "M",
+    "category": "person",
+    "etymology": "Hebrew: מַלְכִּי־צֶדֶק (Malki-Tsedeq), 'King of Righteousness'",
+    "definitionMarkdown": "King of Salem (ancient Jerusalem) and priest of the Most High God (*El Elyon*). He appears in Genesis 14:18-20 coming out to meet Abram following the defeat of Chedorlaomer and the allied kings.\n\n### Meeting with Abram\nMelchizedek brought out bread and wine, pronounced a solemn blessing upon Abram in the name of God Most High, Maker of heaven and earth, and Abram gave him a tithe of all the spoils, affirming his superior sacerdotal status.\n\n### Typological Fulfillment in Christ\nPsalm 110:4 declares prophetically: *«You are a priest forever according to the order of Melchizedek»*. The Epistle to the Hebrews (chapters 5–7) elaborates that Melchizedek prefigures Jesus Christ whose priesthood supersedes the Aaronic system, possessing an indestructible life and uniting royal sovereignty with perpetual intercession.",
+    "biblicalReferences": [
+      { "reference": "Genesis 14:18-20", "context": "Historical encounter in the Valley of Shaveh" },
+      { "reference": "Psalm 110:4", "context": "Messianic prophecy of perpetual royal priesthood" },
+      { "reference": "Hebrews 7:1-17", "context": "Theological demonstration of superior priesthood" }
+    ],
+    "relatedTerms": ["Priesthood", "Jerusalem", "Abraham", "Covenant"]
+  },
+  {
+    "id": "smith-jerusalen-es",
+    "language": "es",
+    "dictionaryId": "smith-1884-es",
+    "term": "Jerusalén",
+    "normalizedTerm": "jerusalen",
+    "letter": "J",
+    "category": "place",
+    "etymology": "Hebreo: יְרוּשָׁלַיִם (Yerushalayim), 'Fundación de Paz'; acadio: Urusalim",
+    "definitionMarkdown": "La ciudad santa y capital de la monarquía unida de Israel y del reino meridional de Judá. Situada en la cordillera de Judea a 750 metros sobre el nivel del mar mediterráneo, rodeada por los valles de Cedrón, Hinom y Tiropoeón.\n\n### Historia Bíblica\n* **Periodo Cananeo:** Conocida primitivamente como Salem en la era patriarcal y posteriormente como Jebús, baluarte fortificado de los jebuseos.\n* **Conquista Davídica:** David capturó la fortaleza de Sion a través del canal de agua (2 Samuel 5:6-9), estableciéndola como capital nacional y centro cultual al trasladar el Arca.\n* **Templo de Salomón:** Construcción del primer templo en el monte Moriah (2 Crónicas 3:1).\n* **Destrucción y Reconstrucción:** Asolada por Nabucodonosor II en 586 a.C. y reedificada bajo Zorobabel, Esdras y Nehemías.\n* **Ministerio de Cristo:** Escenario de la presentación infantil de Jesús, sus debates teológicos, la Última Cena, su crucifixión en el Gólgota y su gloriosa resurrección.",
+    "biblicalReferences": [
+      { "reference": "2 Samuel 5:6-9", "context": "Captura de la fortaleza jebusea de Sion" },
+      { "reference": "Salmos 122:1-9", "context": "Cántico de peregrinación y oración por la paz de Jerusalén" },
+      { "reference": "Lucas 24:44-53", "context": "Comisión apostólica y ascensión de Cristo" }
+    ],
+    "relatedTerms": ["Sion", "Templo", "Gólgota", "Melquisedec"]
+  },
+  {
+    "id": "smith-jerusalem-en",
+    "language": "en",
+    "dictionaryId": "smith-1884-en",
+    "term": "Jerusalem",
+    "normalizedTerm": "jerusalem",
+    "letter": "J",
+    "category": "place",
+    "etymology": "Hebrew: יְרוּשָׁלַיִם (Yerushalayim), 'Foundation of Peace'; Amarna Tablets: Urusalim",
+    "definitionMarkdown": "The holy city and capital of the united monarchy of Israel and the southern kingdom of Judah. Located in the Judean mountain range at approximately 2,500 feet above sea level, bounded by the Kidron, Hinnom, and Tyropoeon valleys.\n\n### Historical Eras\n* **Canaanite & Jebusite Period:** Identified as Salem under Melchizedek, and later known as Jebus, a formidable hill-fortress.\n* **Davidic Era:** Captured by David via the water shaft (2 Samuel 5:6-9), establishing it as both civic capital and sanctuary.\n* **Solomon's Temple:** Construction of the First Temple on Mount Moriah (2 Chronicles 3:1).\n* **Fall and Restoration:** Destroyed by Nebuchadnezzar in 586 BC; reconstructed under Zerubbabel, Ezra, and Nehemiah.\n* **New Testament:** The epicenter of Jesus Christ's ministry, Passion, Crucifixion outside the city walls, and Resurrection.",
+    "biblicalReferences": [
+      { "reference": "2 Samuel 5:6-9", "context": "Conquest of Jebusite stronghold of Zion" },
+      { "reference": "Psalm 122:1-9", "context": "Pilgrim hymn praying for the peace of Jerusalem" },
+      { "reference": "Luke 24:44-53", "context": "Post-resurrection commission and ascension" }
+    ],
+    "relatedTerms": ["Zion", "Temple", "Golgotha", "Melchizedek"]
+  },
+  {
+    "id": "easton-justificacion-es",
+    "language": "es",
+    "dictionaryId": "easton-1897-es",
+    "term": "Justificación",
+    "normalizedTerm": "justificacion",
+    "letter": "J",
+    "category": "theology",
+    "etymology": "Griego: δικαίωσις (dikaiōsis); hebreo: צְדָקָה (tsedaqah)",
+    "definitionMarkdown": "Un acto judicial forense de la libre gracia de Dios por el cual Él declara justo al pecador culpable, perdona todos sus pecados y lo acepta como legalmente justo delante de su tribunal divino.\n\n### Causa y Fundamento\nLa justificación no se basa en ninguna justicia inherente producida por el hombre ni en obras de la ley moral o ceremonial (Romanos 3:20; Gálatas 2:16). Se fundamenta exclusivamente en la justicia perfecta y la expiación vicaria de Jesucristo imputada al creyente.\n\n### El Instrumento de Recepción\nEl único medio instrumental para recibir la justificación es la **fe viva en Cristo Jesús** (Romanos 5:1). La fe no es el mérito que compra la salvación, sino la mano receptora vacía que descansa en la promesa y en la obra consumada de la cruz.",
+    "biblicalReferences": [
+      { "reference": "Romanos 3:21-28", "context": "Manifestación de la justicia de Dios sin la ley mediante la fe" },
+      { "reference": "Romanos 5:1-2", "context": "Paz para con Dios tras ser justificados por la fe" },
+      { "reference": "Gálatas 2:16", "context": "Imposibilidad de ser justificado por las obras de la ley" }
+    ],
+    "relatedTerms": ["Pacto", "Propiciatorio", "Gracia", "Expiación"]
+  },
+  {
+    "id": "easton-justification-en",
+    "language": "en",
+    "dictionaryId": "easton-1897-en",
+    "term": "Justification",
+    "normalizedTerm": "justification",
+    "letter": "J",
+    "category": "theology",
+    "etymology": "Greek: δικαίωσις (dikaiosis); Hebrew: צְדָקָה (tsedaqah)",
+    "definitionMarkdown": "A forensic judicial act of God's free grace wherein He declares a guilty sinner righteous, pardons all transgressions, and accepts him as legally justified before the divine tribunal.\n\n### Grounds and Merit\nJustification is not founded upon any infused righteousness or human merit derived from works of the law (Romans 3:20; Galatians 2:16). It rests solely upon the imputed righteousness and vicarious atonement of Jesus Christ.\n\n### The Instrumental Cause\nThe exclusive instrumental means of justification is **living faith in Jesus Christ** (Romans 5:1). Faith is not the meritorious ground of salvation, but the receiving instrument that lays hold of the Savior.",
+    "biblicalReferences": [
+      { "reference": "Romans 3:21-28", "context": "Righteousness of God manifested through faith in Jesus" },
+      { "reference": "Romans 5:1-2", "context": "Peace with God through justification by faith" },
+      { "reference": "Galatians 2:16", "context": "No flesh justified by works of the law" }
+    ],
+    "relatedTerms": ["Covenant", "Mercy Seat", "Grace", "Atonement"]
+  },
+  {
+    "id": "easton-pascua-es",
+    "language": "es",
+    "dictionaryId": "easton-1897-es",
+    "term": "Pascua",
+    "normalizedTerm": "pascua",
+    "letter": "P",
+    "category": "custom",
+    "etymology": "Hebreo: פֶּסַח (Pésaj), 'Pasar por alto', 'Eximir'; griego: Πάσχα (Pásja)",
+    "definitionMarkdown": "La primera de las tres grandes solemnidades anuales del calendario hebreo, instituida la noche de la liberación de Israel de la esclavitud en Egipto (Éxodo 12:1-28).\n\n### El Ritual del Cordero Pascual\nEl diez del mes de Nisán (Abib) cada familia tomaba un cordero macho de un año, sin defecto. El catorce de Nisán al atardecer era inmolado y su sangre se aplicaba con un manojo de hisopo en los dos postes y el dintel de las casas. Al ver la sangre, el ángel destructor pasaba de largo sin herir a los primogénitos israelitas.\n\n### Cumplimiento Tipológico\nEl apóstol Pablo enseña categóricamente: *«Porque nuestra Pascua, que es Cristo, ya fue sacrificada por nosotros»* (1 Corintios 5:7). El cordero pascual inmaculado anticipaba la muerte redentora de Jesucristo, cuya sangre protege de la ira divina y garantiza la reconciliación eterna.",
+    "biblicalReferences": [
+      { "reference": "Éxodo 12:1-28", "context": "Institución de la primera pascua en Egipto" },
+      { "reference": "1 Corintios 5:7-8", "context": "Cristo como la verdadera Pascua cumplida" },
+      { "reference": "Juan 1:29", "context": "He aquí el Cordero de Dios que quita el pecado del mundo" }
+    ],
+    "relatedTerms": ["Expiación", "Pacto", "Sacerdocio", "Tabernáculo"]
+  },
+  {
+    "id": "easton-passover-en",
+    "language": "en",
+    "dictionaryId": "easton-1897-en",
+    "term": "Passover",
+    "normalizedTerm": "passover",
+    "letter": "P",
+    "category": "custom",
+    "etymology": "Hebrew: פֶּסַח (Pesach), 'To leap over, spare'; Greek: Πάσχα (Pascha)",
+    "definitionMarkdown": "The foremost of the three annual pilgrim feasts of the covenant people, instituted on the eve of the exodus from Egypt (Exodus 12:1-28).\n\n### The Paschal Lamb\nOn the tenth of Nisan (Abib) a male lamb without blemish was selected. On the fourteenth at twilight it was slain, and its blood sprinkled upon the doorposts and lintel with hyssop. When the angel of judgment struck the firstborn of Egypt, the blood marked the household for divine mercy.\n\n### Typological Fulfillment\nThe Apostle Paul writes explicitly: *«For Christ, our Passover lamb, has been sacrificed»* (1 Corinthians 5:7). The unblemished lamb prefigured the sinless sacrifice of the Messiah whose blood delivers from eternal condemnation.",
+    "biblicalReferences": [
+      { "reference": "Exodus 12:1-28", "context": "Institution of the Passover in Egypt" },
+      { "reference": "1 Corinthians 5:7-8", "context": "Christ identified as the true Paschal Lamb" },
+      { "reference": "John 1:29", "context": "The Lamb of God who takes away the sin of the world" }
+    ],
+    "relatedTerms": ["Atonement", "Covenant", "Priesthood", "Tabernacle"]
+  },
+  {
+    "id": "smith-urim-tumim-es",
+    "language": "es",
+    "dictionaryId": "smith-1884-es",
+    "term": "Urim y Tumim",
+    "normalizedTerm": "urim y tumim",
+    "letter": "U",
+    "category": "artifact",
+    "etymology": "Hebreo: אוּרִים וְתֻמִּים (Urim ve-Tummim), 'Luces y Perfecciones'",
+    "definitionMarkdown": "Objetos sagrados colocados dentro del pectoral del juicio (*joshen*) del sumo sacerdote (Éxodo 28:30; Levítico 8:8), mediante los cuales el sumo sacerdote consultaba y recibía la revelación de la voluntad divina en asuntos graves de gobierno o guerra para la nación de Israel.\n\n### Uso Histórico\nSe empleaban cuando se requería un oráculo definitivo en ausencia de un profeta directo (Números 27:21; 1 Samuel 28:6). Tras el exilio babilónico, el uso oracular cesó, y en tiempos de Esdras y Nehemías se aguardaba la venida de un sumo sacerdote con Urim y Tumim para dirimir genealogías dudosas (Esdras 2:63).",
+    "biblicalReferences": [
+      { "reference": "Éxodo 28:30", "context": "Mandato de colocar el Urim y Tumim en el pectoral" },
+      { "reference": "1 Samuel 28:6", "context": "Silencio divino ante Saúl por sueños, profetas o Urim" },
+      { "reference": "Esdras 2:63", "context": "Espera post-exílica de revelación sacerdotal" }
+    ],
+    "relatedTerms": ["Sacerdocio", "Tabernáculo", "Arca de la Alianza"]
+  },
+  {
+    "id": "smith-urim-thummim-en",
+    "language": "en",
+    "dictionaryId": "smith-1884-en",
+    "term": "Urim and Thummim",
+    "normalizedTerm": "urim and thummim",
+    "letter": "U",
+    "category": "artifact",
+    "etymology": "Hebrew: אוּרִים וְתֻמִּים (Urim ve-Tummim), 'Lights and Perfections'",
+    "definitionMarkdown": "Sacred lots or instruments deposited within the breastplate of judgment (*choshen*) worn by the high priest (Exodus 28:30; Leviticus 8:8), through which divine guidance was sought on matters of national significance.\n\n### Historical Practice\nConsulted by leaders and kings in critical moments of warfare and governance (Numbers 27:21; 1 Samuel 28:6). Following the Babylonian captivity, their prophetic function was lost, prompting Ezra and Nehemiah to defer unresolved priestly genealogies until a priest should arise with Urim and Thummim (Ezra 2:63).",
+    "biblicalReferences": [
+      { "reference": "Exodus 28:30", "context": "Injunction to place Urim and Thummim in the breastplate" },
+      { "reference": "1 Samuel 28:6", "context": "The Lord answering not Saul by dreams, prophets, or Urim" },
+      { "reference": "Ezra 2:63", "context": "Post-exilic postponement pending priestly inquiry" }
+    ],
+    "relatedTerms": ["Priesthood", "Tabernacle", "Ark of the Covenant"]
+  },
+  {
+    "id": "hitchcock-abraham-es",
+    "language": "es",
+    "dictionaryId": "hitchcock-1869-es",
+    "term": "Abraham",
+    "normalizedTerm": "abraham",
+    "letter": "A",
+    "category": "person",
+    "etymology": "Hebreo: אַבְרָהָם (Avraham), 'Padre de una multitud de naciones'",
+    "definitionMarkdown": "Originalmente llamado **Abram** (*Padre excelso* o *Padre exaltado*). Dios cambió su nombre a Abraham al ratificar su pacto incondicional con él en Génesis 17:5: *«Porque te he puesto por padre de muchedumbre de gentes»*.\n\n### Significado Onomástico y Espiritual\nEl cambio de nombre representó la metamorfosis de un patriarca individual a progenitor de una descendencia incontable como las estrellas y las arenas del mar, que culmina en la bendición de todas las familias de la tierra a través de su Simiente prometida, Cristo Jesús (Gálatas 3:16).",
+    "biblicalReferences": [
+      { "reference": "Génesis 12:1-3", "context": "Llamamiento inicial de Abram en Harán" },
+      { "reference": "Génesis 17:5", "context": "Cambio solemne de nombre y pacto de la circuncisión" },
+      { "reference": "Romanos 4:1-12", "context": "Abraham como padre de todos los creyentes por la fe" }
+    ],
+    "relatedTerms": ["Pacto", "Melquisedec", "Justificación"]
+  },
+  {
+    "id": "hitchcock-abraham-en",
+    "language": "en",
+    "dictionaryId": "hitchcock-1869-en",
+    "term": "Abraham",
+    "normalizedTerm": "abraham",
+    "letter": "A",
+    "category": "person",
+    "etymology": "Hebrew: אַבְרָהָם (Avraham), 'Father of a great multitude'",
+    "definitionMarkdown": "Originally named **Abram** (*Exalted father*). God conferred the new covenant name Abraham in Genesis 17:5: *«For I have made you the father of a multitude of nations»*.\n\n### Onomastic and Spiritual Significance\nThe name transition marks the expansion from head of an individual clan to father of all who believe across all nations, finding ultimate fulfillment in Christ the promised Seed (Galatians 3:16).",
+    "biblicalReferences": [
+      { "reference": "Genesis 12:1-3", "context": "Original call of Abram out of Ur and Haran" },
+      { "reference": "Genesis 17:5", "context": "Covenantal conferral of the name Abraham" },
+      { "reference": "Romans 4:1-12", "context": "Abraham as archetype of justification by faith" }
+    ],
+    "relatedTerms": ["Covenant", "Melchizedek", "Justification"]
+  }
+]

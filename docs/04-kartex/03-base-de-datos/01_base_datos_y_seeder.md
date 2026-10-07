@@ -79,6 +79,24 @@ La base de datos física `kartex.sqlite` está optimizada para lecturas ultra-r�
 │ steps (JSON)           │       │ practicalAdvice        │       │ prayerOfFaith          │
 └────────────────────────┘       └────────────────────────┘       │ nextSteps (JSON)       │
                                                                   └────────────────────────┘
+
+┌────────────────────────┐       ┌────────────────────────────────────────────────────────┐
+│   commentary_authors   │       │                   commentary_entries                   │
+├────────────────────────┤       ├────────────────────────────────────────────────────────┤
+│ id (PK)                │       │ id (PK)                                                │
+│ language (PK)          │       │ language (PK)                                          │
+│ name                   │       │ authorId (IDX -> commentary_authors.id)                │
+│ author                 │       │ bookId (IDX)                                           │
+│ era                    │       │ chapter (IDX)                                          │
+│ theologicalFocus       │       │ verseStart                                             │
+│ biography              │       │ verseEnd                                               │
+│ historicalWork         │       │ title                                                  │
+│ license                │       │ contentMarkdown                                        │
+└────────────────────────┘       │ tags (JSON)                                            │
+                                 ├────────────────────────────────────────────────────────┤
+                                 │ INDEX(bookId, chapter, verseStart, verseEnd)           │
+                                 │ INDEX(authorId, language)                              │
+                                 └────────────────────────────────────────────────────────┘
 ```
 
 
@@ -101,6 +119,12 @@ backend/src/kartex/corpus/
 │   ├── atlas_locations.json      # Coordenadas WGS84, regiones y excavaciones
 │   ├── timeline_events.json      # Monarcas, profetas e imperios
 │   └── archaeology_articles.json # Artículos de epigrafía y manuscritos
+├── commentaries/                 # Corpus de Comentarios Bíblicos Clásicos (ES / EN)
+│   ├── commentary_authors.json   # Obras y biografías de comentaristas en Dominio Público
+│   └── commentary_entries.json   # Notas exegéticas versículo a versículo
+├── dictionaries/                 # Diccionarios Bíblicos Clásicos y Enciclopedia A-Z (ES / EN)
+│   ├── dictionaries.json         # Obras enciclopédicas (Easton 1897, Smith 1884, Hitchcock 1869)
+│   └── dictionary_entries.json   # Artículos y definiciones teológicas e históricas A-Z
 └── evangelism/                   # Fuentes de Evangelización y Apologética (ES / EN)
     ├── pathways.json             # Rutas y secuencias bíblicas (Camino de Romanos, Puente a la Vida)
     ├── objections.json           # Objeciones escépticas y defensas exegéticas
@@ -117,11 +141,13 @@ La persistencia del corpus bíblico e histórico sigue el principio de **Ingesti
 ### 3.1 Flujo de Recreación Limpia
 Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
 
-1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 11 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`).
-2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
+1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 15 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`, `commentary_entries`, `commentary_authors`, `bible_dictionary_entries`, `bible_dictionaries`).
+2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`, `IDX_commentary_passage`, `IDX_commentary_author`, `IDX_dict_term_lang`, `IDX_dict_letter`, `IDX_dict_category`), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
 3. **Sembrado Canónico y Textual por Lotes:** Inserta los 66 libros canónicos, versiones y procesa los versículos por lotes transaccionales (`better-sqlite3`).
 4. **Sembrado de Contexto Histórico Bilingüe:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía en español e inglés.
 5. **Sembrado de Evangelización y Apologética:** Inserta rutas salvíficas estructuradas, banco de objeciones exegéticas y tratados listos para predicar.
+6. **Sembrado de Comentarios Bíblicos Clásicos:** Inserta el catálogo de obras/autores clásicos en dominio público y las notas exegéticas granulares versículo por versículo indexadas por coordenadas bíblicas.
+7. **Sembrado de Diccionarios Bíblicos Clásicos:** Inserta las obras enciclopédicas históricas (Easton, Smith, Hitchcock) y sus artículos lexicográficos/teológicos con términos normalizados, desglose etimológico e hipervínculos relacionados.
 
 
 ### 3.2 Beneficios Arquitectónicos

@@ -19,6 +19,9 @@ import {
   Scroll,
   BookA,
   BarChart3,
+  Library,
+  BookMarked,
+  BookCheck,
 } from 'lucide-react';
 import { KartexPassageProvider, useKartexPassageSafe } from '../../entities/passage';
 import { KartexHeaderNav } from '../../widgets/kartex-header';
@@ -32,10 +35,28 @@ import { EvangelismProvider, EvangelismSidebar, EvangelismInspector } from '../.
 import { ParallelProvider, ParallelSidebar, ParallelDiffInspector } from '../../features/parallel-view';
 import { InterlinearProvider, InterlinearSidebar, InterlinearInspector } from '../../features/interlinear';
 import { LexiconProvider, WordStudySidebar, WordStudyInspector } from '../../features/lexicons';
+import {
+  CommentariesProvider,
+  CommentariesSidebar,
+  CommentariesInspector,
+} from '../../features/commentaries';
+import {
+  DictionariesProvider,
+  DictionariesSidebar,
+  DictionariesInspector,
+} from '../../features/dictionaries';
 import { useHeaderScrollBehavior } from '../../shared/hooks';
 
 function ScopedModuleProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';
+
+  if (pathname.includes('/dictionaries')) {
+    return <DictionariesProvider>{children}</DictionariesProvider>;
+  }
+
+  if (pathname.includes('/commentaries')) {
+    return <CommentariesProvider>{children}</CommentariesProvider>;
+  }
 
   if (pathname.includes('/atlas')) {
     return <AtlasProvider>{children}</AtlasProvider>;
@@ -81,6 +102,8 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
   const isAtlas = pathname.includes('/atlas');
   const isTimeline = pathname.includes('/timeline');
   const isArchaeology = pathname.includes('/archaeology');
+  const isCommentaries = pathname.includes('/commentaries');
+  const isDictionaries = pathname.includes('/dictionaries');
   const isEvangelism =
     pathname.includes('/evangelism') ||
     pathname.includes('/pathways') ||
@@ -111,6 +134,10 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? tStudio('toggleTimelineSidebar')
     : isArchaeology
     ? tStudio('toggleArchaeologySidebar')
+    : isCommentaries
+    ? tStudio('toggleCommentariesSidebar')
+    : isDictionaries
+    ? tStudio('toggleDictionariesSidebar')
     : isEvangelism
     ? pathname.includes('/objections')
       ? tStudio('toggleObjectionsSidebar')
@@ -131,6 +158,10 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? History
     : isArchaeology
     ? ScrollText
+    : isCommentaries
+    ? Library
+    : isDictionaries
+    ? BookMarked
     : isEvangelism
     ? Compass
     : isParallel
@@ -147,6 +178,10 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? tStudio('toggleTimelineInspector')
     : isArchaeology
     ? tStudio('toggleArchaeologyInspector')
+    : isCommentaries
+    ? tStudio('toggleCommentariesInspector')
+    : isDictionaries
+    ? tStudio('toggleDictionariesInspector')
     : isEvangelism
     ? pathname.includes('/objections')
       ? tStudio('toggleObjectionsInspector')
@@ -167,6 +202,10 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? Clock
     : isArchaeology
     ? Landmark
+    : isCommentaries
+    ? ScrollText
+    : isDictionaries
+    ? BookCheck
     : isEvangelism
     ? Sparkles
     : isParallel
@@ -213,6 +252,10 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
           <TimelineSidebar />
         ) : isArchaeology ? (
           <ArchaeologySidebar />
+        ) : isCommentaries ? (
+          <CommentariesSidebar />
+        ) : isDictionaries ? (
+          <DictionariesSidebar />
         ) : isEvangelism ? (
           <EvangelismSidebar />
         ) : isParallel ? (
@@ -233,23 +276,23 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
         >
           <div className="w-full max-w-[1780px] mx-auto space-y-4">
             {children}
-
-            {/* Footer Editorial al final del Canvas de Lectura */}
-            <footer className="border-t border-zinc-200/80 dark:border-zinc-800/80 w-full py-6 mt-12 bg-transparent print:hidden">
-              <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
-                <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
-                <div className="flex gap-4">
-                  <Link href="/" className="hover:text-foreground transition-colors duration-150">
-                    {t('presentation')}
-                  </Link>
-                  <span className="text-zinc-300 dark:text-zinc-700">|</span>
-                  <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-                    {t('holyScriptures')}
-                  </span>
-                </div>
-              </div>
-            </footer>
           </div>
+
+          {/* Footer Editorial al final del Canvas de Lectura */}
+          <footer className="border-t border-zinc-200/80 dark:border-zinc-800/80 w-full py-6 mt-12 bg-transparent print:hidden max-w-[1780px] mx-auto">
+            <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+              <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
+              <div className="flex gap-4">
+                <Link href="/" className="hover:text-foreground transition-colors duration-150">
+                  {t('presentation')}
+                </Link>
+                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                <span className="hover:text-foreground transition-colors duration-150 cursor-default">
+                  {t('holyScriptures')}
+                </span>
+              </div>
+            </div>
+          </footer>
         </main>
 
         {/* Panel Lateral Derecho Especializado por Módulo */}
@@ -259,6 +302,10 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
           <TimelineInspector />
         ) : isArchaeology ? (
           <ArchaeologyInspector />
+        ) : isCommentaries ? (
+          <CommentariesInspector />
+        ) : isDictionaries ? (
+          <DictionariesInspector />
         ) : isEvangelism ? (
           <EvangelismInspector />
         ) : isParallel ? (

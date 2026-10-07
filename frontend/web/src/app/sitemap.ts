@@ -172,6 +172,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.85,
         },
         {
+            url: 'https://kartex.jorgedoicela.com/study/commentaries',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
+            url: 'https://kartex.jorgedoicela.com/study/dictionaries',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
             url: 'https://kartex.jorgedoicela.com/study/atlas',
             lastModified: now,
             changeFrequency: 'weekly',

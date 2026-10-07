@@ -14,7 +14,10 @@ import {
   Plus,
   ScrollText,
   Volume2,
+  Library,
+  BookMarked,
 } from 'lucide-react';
+import { fetchCommentariesByPassage, CommentaryEntry } from '../../../features/commentaries';
 import { InspectedVerseData } from '../model/KartexPassageContext';
 import {
   getCrossReferencesForVerse,
@@ -99,6 +102,8 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
   const [activeLexiconCode, setActiveLexiconCode] = useState<string | null>(null);
   const [activeLexiconData, setActiveLexiconData] = useState<StrongLexiconEntryData | null>(null);
   const [lexiconLoading, setLexiconLoading] = useState(false);
+  const [verseCommentaries, setVerseCommentaries] = useState<CommentaryEntry[]>([]);
+  const [commentariesLoading, setCommentariesLoading] = useState(false);
 
   const bookId = verse?.bookId || 1;
   const chapter = verse?.chapter || 1;
@@ -215,6 +220,35 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
       isMounted = false;
     };
   }, [bookId, chapter, verseNumber, canonicalAbbr]);
+
+  // Carga de notas exegéticas de comentarios bíblicos para el versículo
+  useEffect(() => {
+    if (!canonicalAbbr || !chapter || !verseNumber) {
+      setVerseCommentaries([]);
+      return;
+    }
+
+    let isMounted = true;
+    setCommentariesLoading(true);
+
+    fetchCommentariesByPassage(canonicalAbbr, chapter, verseNumber, locale)
+      .then((data) => {
+        if (isMounted) {
+          setVerseCommentaries(data);
+          setCommentariesLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setVerseCommentaries([]);
+          setCommentariesLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [canonicalAbbr, chapter, verseNumber, locale]);
 
   // Carga de ficha léxica al hacer clic en un código Strong
   const handleToggleStrongDefinition = (strongCode: string) => {
@@ -553,6 +587,62 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
         )}
       </div>
 
+      {/* 4. Comentarios Bíblicos Clásicos del Versículo */}
+      <div className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 space-y-3.5">
+        <div className="flex items-center justify-between px-1">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500/80 dark:bg-amber-400/80 shrink-0" />
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-zinc-500 dark:text-zinc-400">
+                {tStudio('commentariesTitle')}
+              </span>
+            </div>
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-500 pl-3.5">
+              {tStudio('commentariesSubtitle')}
+            </p>
+          </div>
+          <Link
+            href={`/study/commentaries?book=${canonicalAbbr}&chapter=${chapter}&verse=${verseNumber}`}
+            className="text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-foreground flex items-center gap-1 font-mono hover:underline cursor-pointer"
+          >
+            <span>{tStudio('viewAllCommentaries')}</span>
+            <ExternalLink className="w-3 h-3" />
+          </Link>
+        </div>
+
+        {commentariesLoading ? (
+          <div className="p-4 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/40 dark:bg-zinc-900/20 animate-pulse space-y-2">
+            <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-1/3" />
+            <div className="h-10 bg-zinc-100 dark:bg-zinc-800/40 rounded w-full" />
+          </div>
+        ) : verseCommentaries.length > 0 ? (
+          <div className="space-y-2.5">
+            {verseCommentaries.map((comm) => (
+              <div
+                key={comm.id}
+                className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] space-y-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 font-serif">
+                    {comm.title}
+                  </span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-500 shrink-0 uppercase">
+                    {comm.authorId}
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-serif line-clamp-4">
+                  {comm.contentMarkdown.replace(/^#+\s+/gm, '').slice(0, 300)}...
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-3 rounded-xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-white/40 dark:bg-zinc-900/20 text-xs text-zinc-400">
+            {tStudio('noCommentariesForVerse')}
+          </div>
+        )}
+      </div>
+
       {/* 4. Referencias Cruzadas Canónicas */}
       <div className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 space-y-3.5">
         <div className="px-1 space-y-1">
@@ -637,6 +727,22 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
             className="p-2.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] hover:border-foreground/30 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all text-center text-xs font-medium text-foreground cursor-pointer shadow-xs"
           >
             <span className="truncate">{tStudio('openInTimeline')}</span>
+          </Link>
+
+          <Link
+            href={`/study/commentaries?book=${canonicalAbbr}&chapter=${chapter}&verse=${verseNumber}`}
+            className="p-2.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] hover:border-foreground/30 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all text-center text-xs font-medium text-foreground cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
+          >
+            <Library className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="truncate">{tStudio('openInCommentaries')}</span>
+          </Link>
+
+          <Link
+            href="/study/dictionaries"
+            className="p-2.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] hover:border-foreground/30 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all text-center text-xs font-medium text-foreground cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
+          >
+            <BookMarked className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="truncate">{tStudio('openInDictionaries')}</span>
           </Link>
         </div>
       </div>

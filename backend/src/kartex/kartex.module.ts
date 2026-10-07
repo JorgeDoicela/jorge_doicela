@@ -11,6 +11,10 @@ import { ArchaeologyArticleEntity } from './archaeology/entities/archaeology-art
 import { EvangelismPathwayEntity } from './evangelism/entities/evangelism-pathway.entity';
 import { EvangelismObjectionEntity } from './evangelism/entities/evangelism-objection.entity';
 import { EvangelismTractEntity } from './evangelism/entities/evangelism-tract.entity';
+import { CommentaryAuthorEntity } from './commentaries/entities/commentary-author.entity';
+import { CommentaryEntryEntity } from './commentaries/entities/commentary-entry.entity';
+import { BibleDictionaryEntity } from './dictionaries/entities/bible-dictionary.entity';
+import { BibleDictionaryEntryEntity } from './dictionaries/entities/bible-dictionary-entry.entity';
 import { VersesModule } from './verses/verses.module';
 import { BooksModule } from './books/books.module';
 import { TranslationsModule } from './translations/translations.module';
@@ -19,6 +23,8 @@ import { AtlasModule } from './atlas/atlas.module';
 import { TimelineModule } from './timeline/timeline.module';
 import { ArchaeologyModule } from './archaeology/archaeology.module';
 import { EvangelismModule } from './evangelism/evangelism.module';
+import { CommentariesModule } from './commentaries/commentaries.module';
+import { DictionariesModule } from './dictionaries/dictionaries.module';
 import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
@@ -49,6 +55,10 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         EvangelismPathwayEntity,
         EvangelismObjectionEntity,
         EvangelismTractEntity,
+        CommentaryAuthorEntity,
+        CommentaryEntryEntity,
+        BibleDictionaryEntity,
+        BibleDictionaryEntryEntity,
       ],
       synchronize: true,
     }),
@@ -60,6 +70,8 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     TimelineModule,
     ArchaeologyModule,
     EvangelismModule,
+    CommentariesModule,
+    DictionariesModule,
   ],
 })
 export class KartexModule {}

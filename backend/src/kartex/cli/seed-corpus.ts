@@ -136,6 +136,58 @@ interface SeedEvangelismTract {
   nextSteps: unknown[];
 }
 
+interface SeedCommentaryAuthor {
+  id: string;
+  language?: string;
+  name: string;
+  author: string;
+  era: string;
+  theologicalFocus: string;
+  biography: string;
+  historicalWork: string;
+  license: string;
+}
+
+interface SeedCommentaryEntry {
+  id: string;
+  authorId: string;
+  bookId: string;
+  chapter: number;
+  verseStart: number;
+  verseEnd?: number;
+  language?: string;
+  title: string;
+  contentMarkdown: string;
+  tags?: string[];
+}
+
+interface SeedBibleDictionary {
+  id: string;
+  language?: string;
+  slug: string;
+  title: string;
+  author: string;
+  era: string;
+  year: number;
+  theologicalFocus: string;
+  description: string;
+  license: string;
+}
+
+interface SeedBibleDictionaryEntry {
+  id: string;
+  language?: string;
+  dictionaryId: string;
+  term: string;
+  normalizedTerm: string;
+  letter: string;
+  category: string;
+  etymology?: string;
+  definitionMarkdown: string;
+  biblicalReferences?: { reference: string; context: string }[];
+  relatedTerms?: string[];
+}
+
 export const CANONICAL_BOOKS = [
   // Antiguo Testamento (39 libros)
   { id: 1, name: 'Génesis', abbreviation: 'GEN', testament: 'OT' },
@@ -235,6 +287,10 @@ export function seedCorpus(
     DROP TABLE IF EXISTS evangelism_pathways;
     DROP TABLE IF EXISTS evangelism_objections;
     DROP TABLE IF EXISTS evangelism_tracts;
+    DROP TABLE IF EXISTS commentary_entries;
+    DROP TABLE IF EXISTS commentary_authors;
+    DROP TABLE IF EXISTS bible_dictionary_entries;
+    DROP TABLE IF EXISTS bible_dictionaries;
 
 
     CREATE TABLE books (
@@ -397,6 +453,70 @@ export function seedCorpus(
       PRIMARY KEY (id, language)
     );
     CREATE INDEX IF NOT EXISTS IDX_objections_cat ON evangelism_objections(category);
+
+    CREATE TABLE commentary_authors (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      name VARCHAR(256) NOT NULL,
+      author VARCHAR(128) NOT NULL,
+      era VARCHAR(128) NOT NULL,
+      theologicalFocus VARCHAR(256) NOT NULL,
+      biography TEXT NOT NULL,
+      historicalWork VARCHAR(256) NOT NULL,
+      license VARCHAR(128) NOT NULL,
+      PRIMARY KEY (id, language)
+    );
+
+    CREATE TABLE commentary_entries (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      authorId VARCHAR(64) NOT NULL,
+      bookId VARCHAR(16) NOT NULL,
+      chapter INTEGER NOT NULL,
+      verseStart INTEGER NOT NULL,
+      verseEnd INTEGER,
+      title VARCHAR(256) NOT NULL,
+      contentMarkdown TEXT NOT NULL,
+      tags TEXT,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_commentary_passage ON commentary_entries(bookId, chapter, verseStart, verseEnd);
+    CREATE INDEX IF NOT EXISTS IDX_commentary_author ON commentary_entries(authorId, language);
+
+    CREATE TABLE bible_dictionaries (
+      id VARCHAR(64) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      slug VARCHAR(64) NOT NULL,
+      title VARCHAR(256) NOT NULL,
+      author VARCHAR(128) NOT NULL,
+      era VARCHAR(128) NOT NULL,
+      year INTEGER NOT NULL,
+      entriesCount INTEGER DEFAULT 0,
+      theologicalFocus VARCHAR(256) NOT NULL,
+      description TEXT NOT NULL,
+      license VARCHAR(128) NOT NULL DEFAULT 'Dominio Público Universal',
+      PRIMARY KEY (id, language)
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_dict_slug_lang ON bible_dictionaries(slug, language);
+
+    CREATE TABLE bible_dictionary_entries (
+      id VARCHAR(128) NOT NULL,
+      language VARCHAR(10) NOT NULL DEFAULT 'es',
+      dictionaryId VARCHAR(64) NOT NULL,
+      term VARCHAR(256) NOT NULL,
+      normalizedTerm VARCHAR(256) NOT NULL,
+      letter VARCHAR(4) NOT NULL,
+      category VARCHAR(64) NOT NULL,
+      etymology TEXT,
+      definitionMarkdown TEXT NOT NULL,
+      biblicalReferences TEXT,
+      relatedTerms TEXT,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id, language)
+    );
+    CREATE INDEX IF NOT EXISTS IDX_dict_term_lang ON bible_dictionary_entries(normalizedTerm, language);
+    CREATE INDEX IF NOT EXISTS IDX_dict_letter ON bible_dictionary_entries(dictionaryId, letter, language);
+    CREATE INDEX IF NOT EXISTS IDX_dict_category ON bible_dictionary_entries(category, language);
   `);
 
   // Sembrar los 66 libros canónicos de forma segura
@@ -892,6 +1012,163 @@ export function seedCorpus(
       console.log(
         `[EvangelismSeeder] -> ${tracts.length} tratados y bosquejos indexados.`,
       );
+    }
+  }
+
+  // 8. Sembrado del Módulo de Comentarios Bíblicos
+  const commentariesDir = path.join(corpusDir, 'commentaries');
+  if (fs.existsSync(commentariesDir)) {
+    console.log(
+      '[CommentariesSeeder] 📖 Sembrando corpus de comentarios bíblicos...',
+    );
+    // A. Commentary Authors
+    const authorsPath = path.join(commentariesDir, 'commentary_authors.json');
+    if (fs.existsSync(authorsPath)) {
+      const authors = JSON.parse(
+        fs.readFileSync(authorsPath, 'utf8'),
+      ) as SeedCommentaryAuthor[];
+      const insertAuthor = db.prepare(`
+        INSERT INTO commentary_authors (id, language, name, author, era, theologicalFocus, biography, historicalWork, license)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txAuthors = db.transaction((items: SeedCommentaryAuthor[]) => {
+        for (const a of items) {
+          insertAuthor.run(
+            a.id,
+            a.language || 'es',
+            a.name,
+            a.author,
+            a.era,
+            a.theologicalFocus,
+            a.biography,
+            a.historicalWork,
+            a.license,
+          );
+        }
+      });
+      txAuthors(authors);
+      console.log(
+        `[CommentariesSeeder] -> ${authors.length} autores/obras de comentarios indexados.`,
+      );
+    }
+
+    // B. Commentary Entries
+    const entriesPath = path.join(commentariesDir, 'commentary_entries.json');
+    if (fs.existsSync(entriesPath)) {
+      const entries = JSON.parse(
+        fs.readFileSync(entriesPath, 'utf8'),
+      ) as SeedCommentaryEntry[];
+      const insertEntry = db.prepare(`
+        INSERT INTO commentary_entries (id, language, authorId, bookId, chapter, verseStart, verseEnd, title, contentMarkdown, tags)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txEntries = db.transaction((items: SeedCommentaryEntry[]) => {
+        for (const e of items) {
+          insertEntry.run(
+            e.id,
+            e.language || 'es',
+            e.authorId,
+            e.bookId,
+            e.chapter,
+            e.verseStart,
+            e.verseEnd ?? null,
+            e.title,
+            e.contentMarkdown,
+            JSON.stringify(e.tags || []),
+          );
+        }
+      });
+      txEntries(entries);
+      console.log(
+        `[CommentariesSeeder] -> ${entries.length} notas exegéticas de comentarios indexadas.`,
+      );
+    }
+  }
+
+  // 9. Sembrado del Módulo de Diccionarios Bíblicos
+  const dictionariesDir = path.join(corpusDir, 'dictionaries');
+  if (fs.existsSync(dictionariesDir)) {
+    console.log(
+      '[DictionariesSeeder] 📚 Sembrando corpus de diccionarios bíblicos...',
+    );
+    // A. Dictionaries Catalog
+    const dictPath = path.join(dictionariesDir, 'dictionaries.json');
+    if (fs.existsSync(dictPath)) {
+      const dictionaries = JSON.parse(
+        fs.readFileSync(dictPath, 'utf8'),
+      ) as SeedBibleDictionary[];
+      const insertDict = db.prepare(`
+        INSERT INTO bible_dictionaries (id, language, slug, title, author, era, year, theologicalFocus, description, license)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txDict = db.transaction((items: SeedBibleDictionary[]) => {
+        for (const d of items) {
+          insertDict.run(
+            d.id,
+            d.language || 'es',
+            d.slug,
+            d.title,
+            d.author,
+            d.era,
+            d.year,
+            d.theologicalFocus,
+            d.description,
+            d.license || 'Dominio Público Universal',
+          );
+        }
+      });
+      txDict(dictionaries);
+      console.log(
+        `[DictionariesSeeder] -> ${dictionaries.length} diccionarios bíblicos clásicos indexados.`,
+      );
+    }
+
+    // B. Dictionary Entries
+    const entriesPath = path.join(dictionariesDir, 'dictionary_entries.json');
+    if (fs.existsSync(entriesPath)) {
+      const entries = JSON.parse(
+        fs.readFileSync(entriesPath, 'utf8'),
+      ) as SeedBibleDictionaryEntry[];
+      const insertEntry = db.prepare(`
+        INSERT INTO bible_dictionary_entries (id, language, dictionaryId, term, normalizedTerm, letter, category, etymology, definitionMarkdown, biblicalReferences, relatedTerms)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const txEntries = db.transaction((items: SeedBibleDictionaryEntry[]) => {
+        for (const e of items) {
+          insertEntry.run(
+            e.id,
+            e.language || 'es',
+            e.dictionaryId,
+            e.term,
+            e.normalizedTerm ||
+              e.term
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, ''),
+            e.letter || e.term.charAt(0).toUpperCase(),
+            e.category || 'theology',
+            e.etymology || null,
+            e.definitionMarkdown,
+            JSON.stringify(e.biblicalReferences || []),
+            JSON.stringify(e.relatedTerms || []),
+          );
+        }
+      });
+      txEntries(entries);
+      console.log(
+        `[DictionariesSeeder] -> ${entries.length} entradas enciclopédicas de diccionario indexadas.`,
+      );
+
+      // C. Actualizar recuento de entradas en el catálogo de diccionarios
+      const updateCounts = db.prepare(`
+        UPDATE bible_dictionaries
+        SET entriesCount = (
+          SELECT COUNT(*)
+          FROM bible_dictionary_entries
+          WHERE bible_dictionary_entries.dictionaryId = bible_dictionaries.id
+        )
+      `);
+      updateCounts.run();
     }
   }
 

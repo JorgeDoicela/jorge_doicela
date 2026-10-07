@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `AtlasController`, `TimelineController`, `ArchaeologyController`, `EvangelismController`.
->   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `AtlasService`, `TimelineService`, `ArchaeologyService`, `EvangelismService`.
->   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `EvangelismPathwayEntity`, `EvangelismObjectionEntity`, `EvangelismTractEntity`.
+>   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `CommentariesController`, `AtlasController`, `TimelineController`, `ArchaeologyController`, `EvangelismController`.
+>   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `CommentariesService`, `AtlasService`, `TimelineService`, `ArchaeologyService`, `EvangelismService`.
+>   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `CommentaryAuthorEntity`, `CommentaryEntryEntity`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `EvangelismPathwayEntity`, `EvangelismObjectionEntity`, `EvangelismTractEntity`.
 
 ---
 
@@ -33,6 +33,9 @@ backend/src/kartex/
 │   ├── bhs/                   # Westminster Leningrad Codex Hebreo (*.json)
 │   ├── lxx/                   # Septuaginta Griega (*.json)
 │   ├── morphology/            # Tokens WLC y Léxicos Strong BDB/Gesenius (*.json)
+│   ├── commentaries/          # Obras clásicas y notas exegéticas bilingües (*.json)
+│   │   ├── commentary_authors.json
+│   │   └── commentary_entries.json
 │   └── historical/            # Atlas WGS84, Cronología y Arqueología (*.json)
 │       ├── atlas_locations.json
 │       ├── timeline_events.json
@@ -92,6 +95,19 @@ backend/src/kartex/
     ├── dto/ (GetPathwaysQueryDto, GetObjectionsQueryDto, GetTractsQueryDto)
     ├── services/evangelism.service.ts # EntityNotFoundError para 404 canónico
     └── entities/ (EvangelismPathwayEntity, EvangelismObjectionEntity, EvangelismTractEntity)
+├── commentaries/                  # Corpus de comentarios bíblicos clásicos (/kartex/commentaries)
+│   ├── commentaries.module.ts
+│   ├── controllers/commentaries.controller.ts # @Controller('kartex/commentaries')
+│   ├── dto/ (GetCommentariesQueryDto)
+│   ├── services/commentaries.service.ts # Filtrado por pasaje, obra e idioma
+│   └── entities/ (CommentaryAuthorEntity, CommentaryEntryEntity)
+│
+└── dictionaries/                  # Diccionarios bíblicos clásicos y enciclopedia A-Z (/kartex/dictionaries)
+    ├── dictionaries.module.ts
+    ├── controllers/dictionaries.controller.ts # @Controller('kartex/dictionaries')
+    ├── dto/ (GetDictionariesQueryDto, SearchDictionaryEntriesDto)
+    ├── services/dictionaries.service.ts # Búsqueda A-Z, letra, normalización y agregación
+    └── entities/ (BibleDictionaryEntity, BibleDictionaryEntryEntity)
 ```
 
 ---
@@ -139,6 +155,19 @@ backend/src/kartex/
 * **`GET /kartex/evangelism/objections`**: Banco de objeciones comunes y respuestas apologéticas exegéticas con filtro por categoría y búsqueda textual (`?category=&q=&lang=es|en`).
 * **`GET /kartex/evangelism/tracts`**: Tratados y bosquejos homiléticos para predicar o compartir (`?audience=&lang=es|en`).
 * **`GET /kartex/evangelism/tracts/:slug`**: Detalle de un tratado con bosquejo por puntos, ilustración, oración de fe y pasos de discipulado (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
+
+### 3.9 Comentarios Bíblicos y Exégesis Clásica (`/kartex/commentaries/*`)
+* **`GET /kartex/commentaries`**: Búsqueda y filtrado de notas exegéticas por libro, capítulo, versículo, autor o consulta de texto (`?bookId=GEN&chapter=1&verse=1&authorId=matthew-henry&q=&lang=es|en`).
+* **`GET /kartex/commentaries/authors`**: Catálogo de obras y comentaristas canónicos en dominio público (`?lang=es|en`).
+* **`GET /kartex/commentaries/authors/:id`**: Detalle biográfico, obra y enfoque hermenéutico de un autor por ID (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
+* **`GET /kartex/commentaries/passage/:bookId/:chapter`**: Retorna todas las notas exegéticas de un capítulo o versículo específico optimizado para inspectores laterales (`?verse=1&lang=es|en`).
+
+### 3.10 Diccionarios Bíblicos Clásicos (`/kartex/dictionaries/*`)
+* **`GET /kartex/dictionaries`**: Catálogo de diccionarios bíblicos disponibles en dominio público (`?lang=es|en`). Retorna título, autor, época, año y recuento de entradas.
+* **`GET /kartex/dictionaries/:id`**: Perfil y metadata histórica detallada de una obra enciclopédica por ID o slug (`?lang=es|en`). Lanza `NotFoundException` si no existe.
+* **`GET /kartex/dictionaries/letters`**: Recuento agregado instantáneo de términos disponibles por letra A-Z (`?dictionaryId=easton-1897-es&lang=es|en`) para navegación alfabética en milisegundos.
+* **`GET /kartex/dictionaries/entries`**: Búsqueda paginada e indexada de artículos con soporte de normalización diacrítica (insensible a acentos), filtro por diccionario, letra A-Z o categoría temática (`?q=jerusalen&letter=J&category=toponym&page=1&limit=20&lang=es|en`).
+* **`GET /kartex/dictionaries/entries/:id`**: Entrada enciclopédica completa con definición, etimología, referencias bíblicas e hipervínculos relacionados (`?lang=es|en`). Lanza `NotFoundException` si no existe.
 
 
 

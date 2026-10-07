@@ -1,0 +1,74 @@
+[
+  {
+    "id": "easton-1897-es",
+    "slug": "easton-1897",
+    "language": "es",
+    "title": "Diccionario Bíblico Ilustrado Easton (1897)",
+    "author": "Matthew George Easton (1823-1894)",
+    "era": "Siglo XIX (1897, Escocia)",
+    "year": 1897,
+    "theologicalFocus": "Exposición Teológica, Histórica, Geográfica y Costumbres del Cercano Oriente",
+    "description": "Una de las obras de consulta enciclopédica clásica más respetadas del cristianismo histórico. Proporciona artículos exhaustivos sobre personas, lugares, animales, doctrinas y objetos sagrados del texto bíblico.",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "easton-1897-en",
+    "slug": "easton-1897",
+    "language": "en",
+    "title": "Easton's Illustrated Bible Dictionary (1897)",
+    "author": "Matthew George Easton (1823-1894)",
+    "era": "19th Century (1897, Scotland)",
+    "year": 1897,
+    "theologicalFocus": "Theological Exposition, Historical Context, Geography, and Ancient Near Eastern Customs",
+    "description": "One of the most revered classical encyclopedic reference works in historical biblical scholarship. Provides comprehensive articles on biblical people, places, fauna, doctrines, and sacred artifacts.",
+    "license": "Universal Public Domain"
+  },
+  {
+    "id": "smith-1884-es",
+    "slug": "smith-1884",
+    "language": "es",
+    "title": "Diccionario Bíblico Smith (1884)",
+    "author": "Dr. William Smith (1813-1893)",
+    "era": "Siglo XIX (1884, Inglaterra)",
+    "year": 1884,
+    "theologicalFocus": "Antigüedades Bíblicas, Arqueología, Cronología y Geografía Sagrada",
+    "description": "Referencia monumental inglesa condensada con aportes de prominentes egiptólogos, arqueólogos y hebraístas del siglo XIX para contextualizar el registro canónico.",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "smith-1884-en",
+    "slug": "smith-1884",
+    "language": "en",
+    "title": "Smith's Bible Dictionary (1884)",
+    "author": "Dr. William Smith (1813-1893)",
+    "era": "19th Century (1884, England)",
+    "year": 1884,
+    "theologicalFocus": "Biblical Antiquities, Archaeology, Chronology, and Sacred Geography",
+    "description": "Monumental English reference work combining 19th-century Egyptology, archaeology, and Semitic philology to illuminate canonical narratives.",
+    "license": "Universal Public Domain"
+  },
+  {
+    "id": "hitchcock-1869-es",
+    "slug": "hitchcock-1869",
+    "language": "es",
+    "title": "Diccionario de Nombres Bíblicos Hitchcock (1869)",
+    "author": "Roswell Dwight Hitchcock (1817-1887)",
+    "era": "Siglo XIX (1869, Estados Unidos)",
+    "year": 1869,
+    "theologicalFocus": "Onomástica Bíblica, Etimología Hebrea y Griega, Significado Espiritual",
+    "description": "Diccionario especializado en el desglose etimológico y significado semítico de más de 2,500 nombres propios de personas y lugares citados en las Escrituras.",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "hitchcock-1869-en",
+    "slug": "hitchcock-1869",
+    "language": "en",
+    "title": "Hitchcock's Bible Names Dictionary (1869)",
+    "author": "Roswell Dwight Hitchcock (1817-1887)",
+    "era": "19th Century (1869, United States)",
+    "year": 1869,
+    "theologicalFocus": "Biblical Onomastics, Hebrew & Greek Etymology, Spiritual Significance",
+    "description": "Specialized dictionary detailing the etymological roots and Semitic meanings of over 2,500 proper names and geographical locations across Scripture.",
+    "license": "Universal Public Domain"
+  }
+]

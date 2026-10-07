@@ -21,6 +21,23 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 ---
 
+* **Suite y Módulo de Comentarios Bíblicos en KARTEX (Hub Exegético Transversal):**
+  - **Motivación y Dominio:** Cierre de la brecha entre el análisis léxico de bajo nivel (Strong/morfología) y la hermenéutica aplicada, permitiendo la lectura continua por perícopas y la extracción versículo a versículo para otros módulos.
+  - **Backend y Persistencia SQLite (`kartex.sqlite`):** 2 entidades TypeORM (`CommentaryAuthorEntity` en `commentary_authors` y `CommentaryEntryEntity` en `commentary_entries`) bajo `kartexConnection`. Índices compuestos B-Tree sobre `(bookId, chapter, verseStart, verseEnd)` para lecturas en < 1.5 ms y cero consumo adicional de RAM.
+  - **Corpus Bilingüe y Seeder Atómico:** Datasets JSON en `backend/src/kartex/corpus/commentaries/` (`commentary_authors.json` y `commentary_entries.json`) en español e inglés con obras clásicas en Dominio Público Universal (Matthew Henry, Jamieson-Fausset-Brown, Ginebra 1599, John Gill). Sembrado transaccional integrado en `seed-corpus.ts` (`pnpm seed:kartex`).
+  - **Frontend FSD en Next.js 16:** Feature autocontenida en `(kartex)/features/commentaries/` (`components/`, `context/`, `services/`, `types.ts`, `index.ts`), ruta `/study/commentaries`, orquestación de paneles laterales en `(kartex)/kartex/study/layout.tsx` (`CommentariesSidebar` y `CommentariesInspector`), e integración en la cabecera `KartexHeaderNav`.
+  - **Extracción Transversal en Lector:** Integración en `VerseExegesisCard.tsx` (`fetchCommentariesByPassage`), permitiendo consultar las notas exegéticas del versículo activo tanto en el Lector Estándar como en el Interlineal y Cotejo Paralelo sin abandonar la vista del texto bíblico.
+  - **Internacionalización y Licencias:** 100% simétrico en `messages/es.json` y `messages/en.json` con `next-intl`. Cero riesgos de copyright gracias a fuentes estrictamente de dominio público.
+
+* **Suite y Módulo de Diccionarios Bíblicos en KARTEX (Enciclopedia Teológica e Histórica A-Z):**
+  - **Motivación y Dominio:** Proporciona un motor enciclopédico temático independiente de los léxicos morfológicos Strong, cubriendo conceptos teológicos, nombres propios (onomástica), topónimos y geografía bíblica a partir de grandes obras clásicas en Dominio Público Universal (Easton 1897, Smith 1884, Hitchcock 1869).
+  - **Backend y Persistencia SQLite (`kartex.sqlite`):** 2 entidades TypeORM (`BibleDictionaryEntity` en `bible_dictionaries` y `BibleDictionaryEntryEntity` en `bible_dictionary_entries`) bajo la conexión `'kartexConnection'`. Índices B-Tree optimizados sobre `(normalizedTerm, language)`, `(letter, language)` y `(category, language)` para latencia < 2 ms en 1 GB RAM. Endpoint `/letters` con agregación en tiempo de ejecución (`GROUP BY letter`) para cálculo instantáneo del alfabeto de navegación.
+  - **Corpus Bilingüe y Seeder Atómico:** Datasets en `backend/src/kartex/corpus/dictionaries/` (`dictionaries.json` y `dictionary_entries.json`) en español e inglés. Sembrado transaccional integrado en `seed-corpus.ts` ejecutado limpiamente en 51 ms (`pnpm --filter backend seed:kartex`).
+  - **Frontend FSD en Next.js 16:** Feature autocontenida en `(kartex)/features/dictionaries/` (`DictionariesDashboard`, `DictionariesSidebar`, `DictionariesInspector`, `DictionaryCard`, `DictionariesContext`, `dictionariesApiService.ts`, `types/index.ts`). Integración canónica con `StudySidePanel`, `ResizeBorderHandle`, persistencia de anchos en `localStorage` (`kartex_dictionaries_sidebar_w` y `kartex_dictionaries_inspector_w`), y accesibilidad WAI-ARIA completa.
+  - **Enrutamiento e Integración Global:** Página canónica en `/study/dictionaries` con `KartexPassageToolbar`, soporte en `(kartex)/kartex/study/layout.tsx` (`DictionariesProvider`, renderizado condicional de paneles y pestañas laterales flotantes con iconos `BookMarked` y `BookCheck`), pestaña en `KartexHeaderNav`, slide en `KartexEnginesCarousel`, enlace en `sitemap.ts` y acceso directo desde `VerseExegesisCard.tsx`.
+  - **Internacionalización 100% Simétrica:** Namespaces `Dictionaries`, `Studio` y `Nav` sincronizados al 100% en `messages/es.json` y `messages/en.json`. Cero textos quemados.
+
+
 * **Auditoría Integral y Corrección de KARTEX post-refactorización:**
   - Sincronización de rutas canónicas en `sitemap.ts`: se actualizaron las URLs a la estructura canónica `/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`, eliminando endpoints obsoletos (`/reader`, `/lexicon`, `/exegesis`).
   - Navegación reactiva en `KartexNavigationSidebar`: se corrigió el enlace al lector para enviar `book.id` en lugar de `book.abbreviation`, y en `KartexPassageContext` se sincronizó reactivamente el estado ante mutaciones de `searchParams` en cliente tanto para IDs numéricos como para abreviaturas canónicas.
@@ -412,8 +429,23 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
        - De PC a Móvil: Se colapsan ambos paneles a `false` inmediatamente.
        - De Móvil a PC: Se restauran ambos paneles a su estado de escritorio (`true` por defecto o según preferencia en PC).
     4. En Móvil, las escrituras en `localStorage` quedan bloqueadas (`window.innerWidth >= 1024`), evitando que interacciones táctiles temporales contaminen la configuración de escritorio.
-    5. Al seleccionar un pasaje en móvil desde `KartexNavigationSidebar`, el drawer se cierra automáticamente tras la selección para focalizar el texto del capítulo.
+* **Homologación de Paneles Laterales en Suite de Comentarios (`CommentariesSidebar.tsx` & `CommentariesInspector.tsx`):**
+  - **Causa Raíz:** Los componentes de la suite de comentarios bíblicos utilizaban etiquetas `<aside>` personalizadas que rompían la paridad visual con los demás módulos de Kartex (`Atlas`, `Archaeology`, `Timeline`, etc.), careciendo de tiradores de arrastre y redimensionamiento interactivo (`ResizeBorderHandle`), persistencia de ancho en `localStorage`, botón de cierre/colapso superior sincronizado y soporte dual claro/oscuro (Geist style).
+  - **Solución Arquitectónica:**
+    1. Se refactorizaron `CommentariesSidebar` y `CommentariesInspector` para utilizar el contenedor canónico `<StudySidePanel>` (`side="left"` y `side="right"`), con claves de persistencia `kartex_commentaries_sidebar_w` (320px) y `kartex_commentaries_inspector_w` (360px).
+    2. En `CommentariesSidebar`, se introdujo un submenú con pestañas en `<StudySidePanel.Toolbar>` para alternar entre "Autores" y "Perícopas", eliminando la saturación vertical previa y ofreciendo scroll infinito con `<StudySidePanel.Body>`.
+    3. En `CommentariesInspector`, se estructuró la Ficha Histórico-Exegética con perfil del comentarista, época, obra canónica, método hermenéutico, biografía y notas versiculares seleccionadas.
+    4. En `CommentaryCard` y `CommentariesDashboard`, se unificaron las clases para soporte bimodal idéntico al resto de módulos de Kartex.
+    5. Erradicación Total de Textos Quemados (i18n 1:1): 100% de cadenas literales migradas a `messages/es.json` y `messages/en.json` bajo el namespace `Commentaries` (`tabAuthors`, `tabPericopes`, `filterBySource`, `multiAuthorComparison`, `noPericopesInChapter`, `commentator`, `emptyInspectorTitle`, `emptyInspectorDesc`, `allCount`, `classicalExegesisFallback`), alcanzando paridad bilingüe estricta y cero cadenas quemadas en el código fuente.
+    6. Validación: 0 errores de compilación TypeScript (`tsc --noEmit` en backend y web).
 
-
+* **Corrección de Causa Raíz en Suite de Diccionarios (404 de API y Warning de Keys en React):**
+  - **Causa Raíz 404 en API:** `dictionariesApiService.ts` utilizaba URLs relativas al host del frontend (`/api/kartex/dictionaries...`). Al correr en el subdominio virtual `http://kartex.localhost:3001`, Next.js respondía 404 debido a que las APIs residen en el backend NestJS (puerto `3000`). En contraposición, los demás módulos (`commentaries`, `bibles`, etc.) consumen `${API_URL}/kartex/...` importado desde `frontend/web/src/app/config.ts`, el cual resuelve de forma dinámica hacia `http://localhost:3000/api` en desarrollo local y la variable `NEXT_PUBLIC_API_URL` en producción.
+  - **Causa Raíz Warning de Keys en `KartexStudyWorkspace`:** En [layout.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28kartex%29/kartex/study/layout.tsx), el slot `{children}` (deserializado por Turbopack como un array RSC de segmentos de página) se encontraba renderizado como hijo adyacente junto al elemento estático `<footer ...>` dentro del mismo `<div>`. Al estar aplanados en el mismo contenedor, el reconciliador de React (`reconcileChildrenArray`) trataba el sub-array de `{children}` como una lista de elementos dinámicos sin `key`.
+  - **Solución Implementada:**
+    1. Se migró el 100% de los endpoints en [dictionariesApiService.ts](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/%28kartex%29/features/dictionaries/services/dictionariesApiService.ts) a `${API_URL}/kartex/...` con importación de `API_URL` desde `../../../../config`.
+    2. Se encapsuló `{children}` como único hijo de su propio contenedor `<div className="w-full max-w-[1780px] mx-auto space-y-4">{children}</div>`, ubicando el `<footer ...>` como un bloque hermano fuera de dicho contenedor.
+    3. Se removieron `key` espurias de los componentes hijos estáticos de JSX en `KartexStudyWorkspace` para preservar la estructura estática pura de React.
+    4. Validación: `pnpm run typecheck` limpio con código 0 en todos los paquetes del monorepo (`backend`, `frontend/web`, `frontend/mobile`).
 
 

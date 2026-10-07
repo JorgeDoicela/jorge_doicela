@@ -1,0 +1,7 @@
+export * from './types';
+export * from './services/commentariesApiService';
+export * from './context/CommentariesContext';
+export * from './components/CommentaryCard';
+export * from './components/CommentariesDashboard';
+export * from './components/CommentariesSidebar';
+export * from './components/CommentariesInspector';

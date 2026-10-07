@@ -19,6 +19,8 @@ const NAV_TABS: NavTabItem[] = [
   { path: '/study/parallel', key: 'parallel' },
   { path: '/study/interlinear', key: 'interlinear' },
   { path: '/study/word-study', key: 'wordStudy' },
+  { path: '/study/commentaries', key: 'commentaries' },
+  { path: '/study/dictionaries', key: 'dictionaries' },
   { path: '/study/atlas', key: 'atlas' },
   { path: '/study/timeline', key: 'timeline' },
   { path: '/study/archaeology', key: 'archaeology' },

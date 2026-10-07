@@ -1,0 +1,90 @@
+[
+  {
+    "id": "matthew-henry",
+    "language": "es",
+    "name": "Comentario Expositivo y Devocional de Matthew Henry",
+    "author": "Matthew Henry (1662-1714)",
+    "era": "Siglo XVII - XVIII (Inglaterra)",
+    "theologicalFocus": "Exposición Pastoral, Teología Bíblica y Aplicación Espiritual",
+    "biography": "Ministro no conformista inglés conocido por su exhaustivo Comentario Bíblico de seis tomos, reconocido por su piedad, profundidad práctica y equilibrio teológico.",
+    "historicalWork": "Exposition of the Old and New Testaments (1706-1721)",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "matthew-henry",
+    "language": "en",
+    "name": "Matthew Henry's Exposition and Devotional Commentary",
+    "author": "Matthew Henry (1662-1714)",
+    "era": "17th - 18th Century (England)",
+    "theologicalFocus": "Pastoral Exposition, Biblical Theology and Spiritual Application",
+    "biography": "English nonconformist minister known for his monumental six-volume Bible Commentary, celebrated for its piety, practical depth, and theological discernment.",
+    "historicalWork": "Exposition of the Old and New Testaments (1706-1721)",
+    "license": "Public Domain"
+  },
+  {
+    "id": "jfb",
+    "language": "es",
+    "name": "Comentario Crítico, Explicativo y Práctico (Jamieson-Fausset-Brown)",
+    "author": "Robert Jamieson, A. R. Fausset y David Brown",
+    "era": "Siglo XIX (1871, Escocia e Inglaterra)",
+    "theologicalFocus": "Crítica Textual, Gramática Griego-Hebrea y Exégesis Histórica",
+    "biography": "Trío de eminentes eruditos bíblicos británicos que unieron la precisión filológica con la teología ortodoxa en una de las obras de consulta más respetadas del siglo XIX.",
+    "historicalWork": "Commentary Critical, Experimental, and Practical on the Old and New Testaments (1871)",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "jfb",
+    "language": "en",
+    "name": "Commentary Critical, Explanatory and Practical (Jamieson-Fausset-Brown)",
+    "author": "Robert Jamieson, A. R. Fausset, and David Brown",
+    "era": "19th Century (1871, Scotland and England)",
+    "theologicalFocus": "Textual Criticism, Greek-Hebrew Grammar and Historical Exegesis",
+    "biography": "Trio of eminent British biblical scholars uniting philological precision with classical orthodoxy into one of the most consulted 19th-century reference works.",
+    "historicalWork": "Commentary Critical, Experimental, and Practical on the Old and New Testaments (1871)",
+    "license": "Public Domain"
+  },
+  {
+    "id": "geneva-1599",
+    "language": "es",
+    "name": "Notas Exegéticas de la Biblia de Ginebra (1599)",
+    "author": "Teodoro de Beza, John Knox y reformadores en el exilio",
+    "era": "Reforma Protestante (1560-1599, Ginebra, Suiza)",
+    "theologicalFocus": "Hermenéutica Reformada, Eclesiología y Contexto Histórico",
+    "biography": "Notas al margen elaboradas por los teólogos protestantes exiliados en Ginebra durante el reinado de María Tudor, constituyendo el primer comentario de estudio bíblico impreso en inglés.",
+    "historicalWork": "The Geneva Bible Marginal Notes (1599 Edition)",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "geneva-1599",
+    "language": "en",
+    "name": "Geneva Bible Exegetical Notes (1599)",
+    "author": "Theodore Beza, John Knox, and exiled Reformers",
+    "era": "Protestant Reformation (1560-1599, Geneva, Switzerland)",
+    "theologicalFocus": "Reformed Hermeneutics, Ecclesiology and Historical Setting",
+    "biography": "Marginal study notes crafted by exiled Protestant theologians in Geneva during the Marian persecutions, constituting the earliest mass-circulated English study Bible notes.",
+    "historicalWork": "The Geneva Bible Marginal Notes (1599 Edition)",
+    "license": "Public Domain"
+  },
+  {
+    "id": "john-gill",
+    "language": "es",
+    "name": "Exposición del Antiguo y Nuevo Testamento de John Gill",
+    "author": "Dr. John Gill (1697-1771)",
+    "era": "Siglo XVIII (Inglaterra)",
+    "theologicalFocus": "Fuentes Rabínicas, Talmud, Lenguas Orientales y Teología de la Gracia",
+    "biography": "Pastor y erudito hebraísta inglés. Fue el primer comentarista en escribir un comentario versículo por versículo de toda la Biblia hebrea y griega recurriendo exhaustivamente a la literatura talmúdica y targúmica.",
+    "historicalWork": "An Exposition of the Old and New Testament (1746-1763)",
+    "license": "Dominio Público Universal"
+  },
+  {
+    "id": "john-gill",
+    "language": "en",
+    "name": "John Gill's Exposition of the Old and New Testament",
+    "author": "Dr. John Gill (1697-1771)",
+    "era": "18th Century (England)",
+    "theologicalFocus": "Rabbinic Sources, Talmud, Oriental Languages and Covenant Theology",
+    "biography": "English Baptist pastor and Hebraist scholar. He was the first commentator to produce a verse-by-verse exposition of the entire Bible incorporating exhaustive insights from Targumic and Talmudic literature.",
+    "historicalWork": "An Exposition of the Old and New Testament (1746-1763)",
+    "license": "Public Domain"
+  }
+]

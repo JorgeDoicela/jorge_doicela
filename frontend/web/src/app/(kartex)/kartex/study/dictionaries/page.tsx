@@ -11,8 +11,9 @@ export default function DictionariesStudyPage() {
   return (
     <div className="w-full max-w-6xl mx-auto space-y-4 animate-in fade-in duration-200">
       <KartexPassageToolbar
+        alwaysShowPicker
         rightBadge={
-          <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+          <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 font-medium">
             {tStudio('dictionariesTitle')}
           </span>
         }

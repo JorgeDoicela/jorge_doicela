@@ -3,15 +3,6 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import {
-  BookMarked,
-  Tag,
-  BookOpen,
-  Sparkles,
-  ExternalLink,
-  Layers,
-  Compass,
-} from 'lucide-react';
 import { BibleDictionaryEntry, BibleDictionary } from '../types';
 
 interface DictionaryCardProps {
@@ -53,50 +44,36 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
   const tDict = useTranslations('Dictionaries');
 
   // Mapeo accesible y armónico de colores de categorías
-  const categoryConfig: Record<string, { label: string; bg: string; text: string; border: string }> = {
+  const categoryConfig: Record<string, { label: string; text: string }> = {
     theology: {
       label: tDict('catTheology'),
-      bg: 'bg-purple-500/10 dark:bg-purple-950/30',
-      text: 'text-purple-700 dark:text-purple-300',
-      border: 'border-purple-500/20',
+      text: 'text-purple-600 dark:text-purple-400',
     },
     person: {
       label: tDict('catPerson'),
-      bg: 'bg-blue-500/10 dark:bg-blue-950/30',
-      text: 'text-blue-700 dark:text-blue-300',
-      border: 'border-blue-500/20',
+      text: 'text-blue-600 dark:text-blue-400',
     },
     place: {
       label: tDict('catPlace'),
-      bg: 'bg-emerald-500/10 dark:bg-emerald-950/30',
-      text: 'text-emerald-700 dark:text-emerald-300',
-      border: 'border-emerald-500/20',
+      text: 'text-emerald-600 dark:text-emerald-400',
     },
     artifact: {
       label: tDict('catArtifact'),
-      bg: 'bg-amber-500/10 dark:bg-amber-950/30',
-      text: 'text-amber-700 dark:text-amber-300',
-      border: 'border-amber-500/20',
+      text: 'text-amber-600 dark:text-amber-400',
     },
     custom: {
       label: tDict('catCustom'),
-      bg: 'bg-rose-500/10 dark:bg-rose-950/30',
-      text: 'text-rose-700 dark:text-rose-300',
-      border: 'border-rose-500/20',
+      text: 'text-rose-600 dark:text-rose-400',
     },
     flora_fauna: {
       label: tDict('catFloraFauna'),
-      bg: 'bg-teal-500/10 dark:bg-teal-950/30',
-      text: 'text-teal-700 dark:text-teal-300',
-      border: 'border-teal-500/20',
+      text: 'text-teal-600 dark:text-teal-400',
     },
   };
 
   const currentCat = categoryConfig[entry.category] || {
     label: entry.category,
-    bg: 'bg-zinc-100 dark:bg-zinc-800',
-    text: 'text-zinc-700 dark:text-zinc-300',
-    border: 'border-zinc-200 dark:border-zinc-700',
+    text: 'text-zinc-600 dark:text-zinc-400',
   };
 
   return (
@@ -108,23 +85,22 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           : 'bg-white dark:bg-[#121214] border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
       }`}
     >
-      {/* Cabecera de la Entrada */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <div className="flex items-center gap-2">
-          <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border ${currentCat.bg} ${currentCat.text} ${currentCat.border}`}
-          >
-            <Tag className="w-3 h-3" />
+      {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2.5 text-xs">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`font-semibold ${currentCat.text}`}>
             {currentCat.label}
           </span>
           {dictionary && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
-              <BookMarked className="w-3 h-3 text-zinc-400" />
-              {dictionary.author} ({dictionary.year})
-            </span>
+            <>
+              <span className="text-zinc-300 dark:text-zinc-700 select-none">·</span>
+              <span className="text-zinc-600 dark:text-zinc-400 font-medium">
+                {dictionary.author} ({dictionary.year})
+              </span>
+            </>
           )}
         </div>
-        <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
+        <span className="text-zinc-400 dark:text-zinc-500 font-mono text-[11px]">
           {tDict('letterBadge', { letter: entry.letter })}
         </span>
       </div>
@@ -178,16 +154,15 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
         <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 space-y-3">
           {/* Citas Bíblicas */}
           {entry.biblicalReferences && entry.biblicalReferences.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs font-medium text-zinc-400 mr-1 flex items-center gap-1">
-                <BookOpen className="w-3 h-3 text-amber-500" />
-                {tDict('citationsLabel')}
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs">
+              <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold mr-0.5">
+                {tDict('citationsLabel')}:
               </span>
               {entry.biblicalReferences.map((ref, rIdx) => (
                 <span
                   key={rIdx}
                   title={ref.context}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20"
+                  className="font-mono text-xs text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 underline underline-offset-2 decoration-amber-500/30 transition-colors"
                 >
                   {ref.reference}
                 </span>
@@ -197,9 +172,8 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
 
           {/* Términos Relacionados */}
           {entry.relatedTerms && entry.relatedTerms.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs font-medium text-zinc-400 mr-1 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-zinc-400" />
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs">
+              <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold mr-0.5">
                 {tDict('relatedTerms')}:
               </span>
               {entry.relatedTerms.map((term, tIdx) => (
@@ -210,7 +184,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
                     e.stopPropagation();
                     onSelectRelatedTerm?.(term);
                   }}
-                  className="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 hover:border-amber-400 dark:hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-300 transition-colors cursor-pointer"
+                  className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-amber-500"
                 >
                   {term}
                 </button>

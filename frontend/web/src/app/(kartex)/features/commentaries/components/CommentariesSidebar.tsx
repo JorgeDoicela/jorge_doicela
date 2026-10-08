@@ -16,6 +16,7 @@ import {
 import { useCommentaries } from '../context/CommentariesContext';
 import { useKartexPassageSafe } from '../../../entities/passage';
 import { StudySidePanel } from '../../../shared/ui';
+import { UnifiedPassagePicker } from '../../../entities/books';
 
 export const CommentariesSidebar: React.FC = () => {
   const {
@@ -46,8 +47,23 @@ export const CommentariesSidebar: React.FC = () => {
       defaultWidth={320}
       collapseTitle={tStudio('closeSidebar') || 'Ocultar panel'}
     >
-      {/* Barra de Sub-Pestañas: Comentaristas y Perícopas */}
-      <StudySidePanel.Toolbar>
+      {/* Barra de Herramientas: Selector de Pasaje + Sub-Pestañas */}
+      <StudySidePanel.Toolbar className="p-2.5 space-y-2">
+        {/* Selector Canónico de Libro y Capítulo */}
+        <div className="flex items-center justify-between gap-1 w-full pb-2 border-b border-zinc-200/80 dark:border-zinc-800/80">
+          <UnifiedPassagePicker
+            books={passageContext?.books || []}
+            selectedBookId={passageContext?.selectedBookId ?? 1}
+            selectedChapter={passageContext?.selectedChapter ?? 1}
+            onSelectPassage={passageContext?.setPassage ?? (() => {})}
+            onPrevChapter={passageContext?.prevChapter}
+            onNextChapter={passageContext?.nextChapter}
+            size="sm"
+            className="w-full justify-between"
+          />
+        </div>
+
+        {/* Barra de Sub-Pestañas: Comentaristas y Perícopas */}
         <div className="grid grid-cols-2 gap-1 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-xs">
           <button
             type="button"

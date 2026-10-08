@@ -81,7 +81,7 @@ export const CommentariesInspector: React.FC = () => {
                 {author.biography}
               </p>
               <div className="pt-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   {author.license}
                 </span>
@@ -107,12 +107,9 @@ export const CommentariesInspector: React.FC = () => {
                 </div>
 
                 {activeEntry.tags && activeEntry.tags.length > 0 && (
-                  <div className="pt-2 border-t border-amber-500/15 flex flex-wrap gap-1">
+                  <div className="pt-2 border-t border-amber-500/15 flex flex-wrap gap-2 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
                     {activeEntry.tags.map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/80 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800"
-                      >
+                      <span key={idx} className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
                         #{tag}
                       </span>
                     ))}

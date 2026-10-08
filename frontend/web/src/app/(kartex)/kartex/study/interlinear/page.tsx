@@ -13,6 +13,7 @@ export default function InterlinearStudyPage() {
   return (
     <div className="w-full max-w-5xl mx-auto space-y-4 animate-in fade-in duration-200">
       <KartexPassageToolbar
+        alwaysShowPicker
         rightBadge={
           <span className="text-[11px] font-mono text-amber-500/90 font-semibold">
             {selectedBook?.testament === 'NT' ? t('activeOriginalBadgeNt') : t('activeOriginalBadgeOt')}

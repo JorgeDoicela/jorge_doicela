@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { BookOpen, User, Tag, Sparkles } from 'lucide-react';
 import { CommentaryEntry, CommentaryAuthor } from '../types';
 import { renderLinkedScriptureText, ScriptureClickOptions } from '../utils/bibleReferenceParser';
 import { useKartexPassageSafe } from '../../../entities/passage';
@@ -68,21 +67,22 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           : 'bg-white dark:bg-[#121214] border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
       }`}
     >
-      {/* Cabecera de la tarjeta */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
-            <BookOpen className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+      {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2.5 text-xs">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-mono font-semibold text-amber-700 dark:text-amber-400">
             {bookName || entry.bookId} {entry.chapter}:{verseRangeText}
           </span>
           {author && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
-              <User className="w-3 h-3 text-zinc-400" />
-              {author.author}
-            </span>
+            <>
+              <span className="text-zinc-300 dark:text-zinc-700 select-none">·</span>
+              <span className="text-zinc-600 dark:text-zinc-400 font-medium">
+                {author.author}
+              </span>
+            </>
           )}
         </div>
-        <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
+        <span className="text-zinc-400 dark:text-zinc-500 font-mono text-[11px]">
           {author?.era || tComm('classicalExegesisFallback')}
         </span>
       </div>
@@ -123,12 +123,11 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
 
       {/* Tags de clasificación temática */}
       {entry.tags && entry.tags.length > 0 && (
-        <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-wrap items-center gap-1.5">
-          <Tag className="w-3 h-3 text-zinc-400 mr-1" />
+        <div className="mt-5 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400 dark:text-zinc-500">
           {entry.tags.map((tag, tIdx) => (
             <span
               key={tIdx}
-              className="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800"
+              className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
             >
               #{tag}
             </span>

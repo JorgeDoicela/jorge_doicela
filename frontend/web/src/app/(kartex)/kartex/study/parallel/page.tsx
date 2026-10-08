@@ -115,6 +115,7 @@ export default function ParallelStudyPage() {
     <div className={`w-full ${containerMaxWidthClass} mx-auto space-y-4 animate-in fade-in duration-200 transition-all`}>
       {/* Barra de Pasaje y Acciones de Paralelo */}
       <KartexPassageToolbar
+        alwaysShowPicker
         rightBadge={
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-mono text-accents-4 bg-accents-1 px-2.5 py-1 rounded-lg border border-accents-2">

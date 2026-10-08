@@ -15,6 +15,7 @@ export default function WordStudyPage() {
   return (
     <div className="w-full max-w-6xl mx-auto space-y-4 animate-in fade-in duration-200">
       <KartexPassageToolbar
+        alwaysShowPicker
         rightBadge={
           <span className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">
             {activeLang === 'hebrew'

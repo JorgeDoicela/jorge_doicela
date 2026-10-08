@@ -6,11 +6,6 @@ import {
   BookOpen,
   Search,
   Filter,
-  Sparkles,
-  Layers,
-  ExternalLink,
-  ChevronRight,
-  Library,
 } from 'lucide-react';
 import { useCommentaries } from '../context/CommentariesContext';
 import { CommentaryCard } from './CommentaryCard';
@@ -44,10 +39,9 @@ export const CommentariesDashboard: React.FC = () => {
       <div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-[#121214]/80 p-6 sm:p-8 backdrop-blur-sm shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-800 dark:text-amber-400 border border-amber-500/20">
-              <Library className="w-3.5 h-3.5" />
-              <span>{tComm('title')}</span>
-            </div>
+            <span className="text-[11px] font-mono uppercase tracking-wider text-amber-700 dark:text-amber-400 font-bold block">
+              {tComm('title')}
+            </span>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white font-serif">
               {currentBook?.name || tComm('selectedPassageFallback')} {currentChapter ? `· ${tComm('chapterPrefix')} ${currentChapter}` : ''}
             </h1>

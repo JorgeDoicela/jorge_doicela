@@ -90,8 +90,8 @@ export const DictionariesInspector: React.FC = () => {
                   </p>
                 </div>
                 <div className="pt-1.5 border-t border-zinc-100 dark:border-zinc-800/80">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                    <ShieldCheck className="w-3 h-3" />
+                  <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5" />
                     {dictionary.license}
                   </span>
                 </div>
@@ -111,8 +111,7 @@ export const DictionariesInspector: React.FC = () => {
                       className="p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs space-y-1"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1">
-                          <BookOpen className="w-3 h-3 text-amber-500" />
+                        <span className="font-mono font-bold text-amber-700 dark:text-amber-400">
                           {ref.reference}
                         </span>
                       </div>
@@ -131,13 +130,13 @@ export const DictionariesInspector: React.FC = () => {
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block px-1">
                   {tDict('relatedTerms')}
                 </span>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-x-2.5 gap-y-1 text-xs">
                   {activeEntry.relatedTerms.map((term, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => setSearchQuery(term)}
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-amber-400 dark:hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-300 transition-colors cursor-pointer"
+                      className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-amber-500"
                     >
                       {term}
                     </button>

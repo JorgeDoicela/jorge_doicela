@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ExternalLink } from 'lucide-react';
 
 interface BookInfo {
   id: number;
@@ -367,10 +366,9 @@ export function renderLinkedScriptureText(
             }
           }}
           title={`Examinar ${fullMatch} en el Lector Canónico`}
-          className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded font-mono text-[12px] font-medium bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 dark:hover:bg-amber-400/20 border border-amber-500/25 dark:border-amber-400/25 transition-all cursor-pointer no-underline group/ref mx-0.5 align-baseline"
+          className="text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 font-medium underline underline-offset-2 decoration-amber-500/40 hover:decoration-amber-500 transition-colors cursor-pointer"
         >
-          <span>{fullMatch}</span>
-          <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover/ref:opacity-100 transition-opacity shrink-0" />
+          {fullMatch}
         </Link>,
       );
 

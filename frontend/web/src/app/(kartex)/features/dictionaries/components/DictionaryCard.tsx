@@ -22,6 +22,27 @@ interface DictionaryCardProps {
   onSelectRelatedTerm?: (term: string) => void;
 }
 
+function renderFormattedText(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={index} className="font-semibold text-zinc-900 dark:text-zinc-100">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return (
+        <em key={index} className="italic text-zinc-800 dark:text-zinc-200">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
+}
+
 export const DictionaryCard: React.FC<DictionaryCardProps> = ({
   entry,
   dictionary,
@@ -138,7 +159,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
               <div key={idx} className="pl-4 border-l-2 border-amber-500/30 space-y-1.5 text-zinc-700 dark:text-zinc-300">
                 {paragraph.split('\n').map((line, lIdx) => (
                   <p key={lIdx} className="leading-relaxed">
-                    {line.replace(/^(\* |\d+\. )/, '')}
+                    {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''))}
                   </p>
                 ))}
               </div>
@@ -146,7 +167,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           }
           return (
             <p key={idx} className="leading-relaxed">
-              {paragraph}
+              {renderFormattedText(paragraph)}
             </p>
           );
         })}

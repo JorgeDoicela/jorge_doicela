@@ -23,8 +23,8 @@ export async function fetchDictionaries(locale: string = 'es'): Promise<BibleDic
     if (!res.ok) {
       throw new Error(`HTTP error ${res.status}`);
     }
-    const json: ApiResponse<BibleDictionary[]> = await res.json();
-    return json.success && Array.isArray(json.data) ? json.data : [];
+    const json = await res.json();
+    return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
   } catch (err) {
     console.error('[DictionariesApi] Error al obtener diccionarios:', err);
     return [];
@@ -43,8 +43,8 @@ export async function fetchDictionaryById(
       headers: { Accept: 'application/json' },
     });
     if (!res.ok) return null;
-    const json: ApiResponse<BibleDictionary> = await res.json();
-    return json.success ? json.data : null;
+    const json = await res.json();
+    return json?.data ?? (json?.id ? json : null);
   } catch (err) {
     console.error(`[DictionariesApi] Error al obtener diccionario ${id}:`, err);
     return null;
@@ -87,9 +87,10 @@ export async function searchDictionaryEntries(params: {
     if (!res.ok) {
       return { items: [], total: 0, page: 1, limit: 20, totalPages: 1 };
     }
-    const json: ApiResponse<SearchEntriesResult> = await res.json();
-    return json.success && json.data
-      ? json.data
+    const json = await res.json();
+    const raw = json?.data ?? json;
+    return raw?.items
+      ? raw
       : { items: [], total: 0, page: 1, limit: 20, totalPages: 1 };
   } catch (err) {
     console.error('[DictionariesApi] Error en búsqueda de entradas:', err);
@@ -109,8 +110,8 @@ export async function fetchDictionaryEntryById(
       headers: { Accept: 'application/json' },
     });
     if (!res.ok) return null;
-    const json: ApiResponse<BibleDictionaryEntry> = await res.json();
-    return json.success ? json.data : null;
+    const json = await res.json();
+    return json?.data ?? (json?.id ? json : null);
   } catch (err) {
     console.error(`[DictionariesApi] Error al obtener entrada ${id}:`, err);
     return null;
@@ -135,8 +136,8 @@ export async function fetchAvailableLetters(
       headers: { Accept: 'application/json' },
     });
     if (!res.ok) return [];
-    const json: ApiResponse<LetterCount[]> = await res.json();
-    return json.success && Array.isArray(json.data) ? json.data : [];
+    const json = await res.json();
+    return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
   } catch (err) {
     console.error('[DictionariesApi] Error al obtener letras:', err);
     return [];
@@ -155,8 +156,8 @@ export async function lookupDictionaryTerm(
       headers: { Accept: 'application/json' },
     });
     if (!res.ok) return [];
-    const json: ApiResponse<BibleDictionaryEntry[]> = await res.json();
-    return json.success && Array.isArray(json.data) ? json.data : [];
+    const json = await res.json();
+    return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
   } catch (err) {
     console.error(`[DictionariesApi] Error en lookup de ${term}:`, err);
     return [];

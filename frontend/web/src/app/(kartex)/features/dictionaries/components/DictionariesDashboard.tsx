@@ -115,13 +115,14 @@ export const DictionariesDashboard: React.FC = () => {
                 <button
                   key={letter}
                   type="button"
+                  disabled={!hasItems}
                   onClick={() => setSelectedLetter(letter)}
-                  className={`w-7.5 h-7.5 rounded-lg text-xs font-mono font-bold shrink-0 transition-all flex items-center justify-center cursor-pointer ${
+                  className={`w-8 h-8 rounded-lg text-xs font-mono font-bold shrink-0 transition-all flex items-center justify-center cursor-pointer ${
                     isSelected
                       ? 'bg-amber-500 text-white shadow-xs scale-105'
                       : hasItems
                       ? 'bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:border-amber-400 dark:hover:border-amber-500'
-                      : 'bg-zinc-50 dark:bg-zinc-950/50 text-zinc-300 dark:text-zinc-700 border border-transparent cursor-default'
+                      : 'bg-zinc-50 dark:bg-zinc-950/50 text-zinc-300 dark:text-zinc-700 border border-transparent cursor-not-allowed opacity-40'
                   }`}
                 >
                   {letter}

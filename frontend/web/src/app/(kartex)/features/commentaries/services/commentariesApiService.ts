@@ -55,6 +55,12 @@ export async function fetchCommentaries(
     if (filters.lang) {
       params.append('lang', filters.lang);
     }
+    if (filters.limit !== undefined && filters.limit !== null) {
+      params.append('limit', filters.limit.toString());
+    }
+    if (filters.offset !== undefined && filters.offset !== null) {
+      params.append('offset', filters.offset.toString());
+    }
 
     const res = await fetch(`${API_URL}/kartex/commentaries?${params.toString()}`);
     if (!res.ok) return [];

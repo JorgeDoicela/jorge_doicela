@@ -158,6 +158,9 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Documentación Técnica (`docs/`): sincronizados `01_backend_y_persistencia.md`, `01_frontend_y_hub_tecnologico.md`, `01_roadmap_doiceladev.md`, `01_estandares_editoriales_y_publicaciones.md`, `01_arquitectura_macro_y_hardware.md`, `03_persistencia_local_y_sincronizacion_multiequipo.md` y `01_despliegue_pm2_y_cicd.md`.
 * **Depuración Integral Definitiva de Nomenclatura DoicelaDev (Zero Legacy Residue):**
   - Se implementó en la raíz el script de auditoría exhaustiva `search-software.mjs` (posteriormente eliminado tras la verificación para mantener limpio el repositorio), corroborando cero rutas, archivos o módulos residuales con el nombre `software`.
+* **Maduración y Optimización Arquitectónica de Comentarios en KARTEX (`commentaries`):**
+  - Backend: tipado con DTO estricto (`GetCommentariesPassageQueryDto`) en la ruta `/passage/:bookId/:chapter` con validación `class-validator`/`class-transformer`. En `CommentariesService`, blindado contra filtros espurios ignorando `authorId === 'all'` y aplicando límite de seguridad (`Math.min(100, Math.max(1, limit || 50))`) para proteger la memoria heap en el VPS de 1 GB RAM. Añadido `@Index()` en `language` de `CommentaryAuthorEntity` e índice `IDX_commentary_author_lang` en DDL de SQLite (`seed-corpus.ts`).
+  - Frontend: erradicado el bug de refetch cíclico en `CommentariesContext.tsx` desacoplando `selectedEntryId` de las dependencias de `useCallback` en `loadEntries`. Añadido debounce de 150 ms para el buscador en tiempo real, reseteo automático de selección al cambiar de fuente, y renderizado enriquecido de negritas (`**`) y cursivas (`*`) con `renderFormattedText` en `CommentaryCard.tsx`.
   - Backend NestJS:
     - Corregido `backend/nest-cli.json` para compilar y observar los assets de corpus bajo `doiceladev/corpus/**/*` en lugar de la ruta legacy.
     - Actualizado dataset de proyectos en `backend/src/doiceladev/corpus/projects.json` con el slug canónico `doiceladev-plataforma-tecnologica` y ruta de portada `doiceladev-plataforma-tecnologica.jpg`.
@@ -447,5 +450,16 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     2. Se encapsuló `{children}` como único hijo de su propio contenedor `<div className="w-full max-w-[1780px] mx-auto space-y-4">{children}</div>`, ubicando el `<footer ...>` como un bloque hermano fuera de dicho contenedor.
     3. Se removieron `key` espurias de los componentes hijos estáticos de JSX en `KartexStudyWorkspace` para preservar la estructura estática pura de React.
     4. Validación: `pnpm run typecheck` limpio con código 0 en todos los paquetes del monorepo (`backend`, `frontend/web`, `frontend/mobile`).
+
+* **Endurecimiento Arquitectónico y Optimización de la Suite de Diccionarios (`dictionaries`):**
+  - **Backend y DDL SQLite (`seed-corpus.ts` & `BibleDictionaryEntity`):** Añadido decorador `@Index()` sobre la columna `language` en `BibleDictionaryEntity` para optimizar consultas de catálogo por idioma. En el script de siembra transaccional `seed-corpus.ts`, se eliminaron todas las cláusulas redundantes `IF NOT EXISTS` en los índices de diccionarios (`IDX_dict_slug_lang`, `IDX_dict_lang`, `IDX_dict_term_lang`, `IDX_dict_letter`, `IDX_dict_category`) y se vinculó `AND bible_dictionary_entries.language = bible_dictionaries.language` en el cálculo de `entriesCount`. En `SearchDictionaryEntriesDto`, se reforzó la validación estricta con `@IsInt()`, `@Min(1)` y `@Max(100)` para paginación y límites.
+  - **Frontend (Erradicación del Bucle de Selección, Formateo Markdown y UX de Títulos):**
+    1. En `DictionariesContext.tsx`, se desacopló `selectedEntryId` de las dependencias de `useCallback` en `loadEntries`, implementando actualización funcional atómica (`setSelectedEntryId((prev) => ...)`). Esto eliminó de raíz la ejecución de peticiones HTTP redundantes hacia la API al hacer clic sobre cualquier tarjeta de término.
+    2. En `DictionariesContext.tsx`, se corrigió el selector de `activeDictionary` para retornar `null` cuando `selectedDictionaryId === 'all'`, permitiendo que `DictionariesDashboard` renderice correctamente el título genérico «Todos los Diccionarios» en lugar de forzar siempre el título de la primera obra.
+    3. En `DictionaryCard.tsx`, se integró la función pura tipográfica `renderFormattedText` para transformar negritas (`**`) y cursivas (`*`) en elementos `<strong>` y `<em>` semánticos, eliminando la aparición de asteriscos Markdown en texto plano.
+    4. En `DictionariesDashboard.tsx`, se calibró la escala de navegación alfabética A-Z a dimensiones táctiles ergonómicas (`w-8 h-8` / 32px) con bloqueo declarativo `disabled={!hasItems}` para letras con 0 términos, erradicando peticiones infructuosas.
+    5. En `dictionariesApiService.ts`, se estandarizó la extracción defensiva de datos (`json?.data ?? json`) para total resiliencia ante variaciones en el interceptor de respuestas o renderizado en servidor.
+  - **Verificación:** Base de datos `kartex.sqlite` re-sembrada limpiamente en 111 ms, compilación estricta TypeScript aprobada al 100% (`tsc --noEmit` en backend y web con código 0), pruebas unitarias de Jest superadas con código 0, y build de producción de Next.js 16 (`next build`) finalizado exitosamente con las 33 rutas compiladas y optimizadas.
+
 
 

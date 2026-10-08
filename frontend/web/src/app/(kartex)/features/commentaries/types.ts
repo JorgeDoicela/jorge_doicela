@@ -30,4 +30,6 @@ export interface CommentaryFilterParams {
   authorId?: string;
   q?: string;
   lang?: string;
+  limit?: number;
+  offset?: number;
 }

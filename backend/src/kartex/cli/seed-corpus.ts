@@ -466,6 +466,7 @@ export function seedCorpus(
       license VARCHAR(128) NOT NULL,
       PRIMARY KEY (id, language)
     );
+    CREATE INDEX IDX_commentary_author_lang ON commentary_authors(language);
 
     CREATE TABLE commentary_entries (
       id VARCHAR(64) NOT NULL,
@@ -497,7 +498,8 @@ export function seedCorpus(
       license VARCHAR(128) NOT NULL DEFAULT 'Dominio Público Universal',
       PRIMARY KEY (id, language)
     );
-    CREATE UNIQUE INDEX IF NOT EXISTS IDX_dict_slug_lang ON bible_dictionaries(slug, language);
+    CREATE UNIQUE INDEX IDX_dict_slug_lang ON bible_dictionaries(slug, language);
+    CREATE INDEX IDX_dict_lang ON bible_dictionaries(language);
 
     CREATE TABLE bible_dictionary_entries (
       id VARCHAR(128) NOT NULL,
@@ -514,9 +516,9 @@ export function seedCorpus(
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (id, language)
     );
-    CREATE INDEX IF NOT EXISTS IDX_dict_term_lang ON bible_dictionary_entries(normalizedTerm, language);
-    CREATE INDEX IF NOT EXISTS IDX_dict_letter ON bible_dictionary_entries(dictionaryId, letter, language);
-    CREATE INDEX IF NOT EXISTS IDX_dict_category ON bible_dictionary_entries(category, language);
+    CREATE INDEX IDX_dict_term_lang ON bible_dictionary_entries(normalizedTerm, language);
+    CREATE INDEX IDX_dict_letter ON bible_dictionary_entries(dictionaryId, letter, language);
+    CREATE INDEX IDX_dict_category ON bible_dictionary_entries(category, language);
   `);
 
   // Sembrar los 66 libros canónicos de forma segura
@@ -1166,6 +1168,7 @@ export function seedCorpus(
           SELECT COUNT(*)
           FROM bible_dictionary_entries
           WHERE bible_dictionary_entries.dictionaryId = bible_dictionaries.id
+            AND bible_dictionary_entries.language = bible_dictionaries.language
         )
       `);
       updateCounts.run();

@@ -13,6 +13,27 @@ interface CommentaryCardProps {
   bookName?: string;
 }
 
+function renderFormattedText(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={index} className="font-semibold text-zinc-900 dark:text-zinc-100">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return (
+        <em key={index} className="italic text-zinc-800 dark:text-zinc-200">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
+}
+
 export const CommentaryCard: React.FC<CommentaryCardProps> = ({
   entry,
   author,
@@ -64,7 +85,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           if (paragraph.startsWith('### ')) {
             return (
               <h4 key={idx} className="text-sm font-sans font-semibold text-zinc-900 dark:text-zinc-100 mt-4 mb-2">
-                {paragraph.replace('### ', '')}
+                {renderFormattedText(paragraph.replace('### ', ''))}
               </h4>
             );
           }
@@ -73,7 +94,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
               <div key={idx} className="pl-4 border-l-2 border-amber-500/30 space-y-1.5 text-zinc-700 dark:text-zinc-300">
                 {paragraph.split('\n').map((line, lIdx) => (
                   <p key={lIdx} className="leading-relaxed">
-                    {line.replace(/^(\* |\d+\. )/, '')}
+                    {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''))}
                   </p>
                 ))}
               </div>
@@ -81,7 +102,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           }
           return (
             <p key={idx} className="leading-relaxed">
-              {paragraph}
+              {renderFormattedText(paragraph)}
             </p>
           );
         })}

@@ -1,10 +1,11 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 
 @Entity('commentary_authors')
 export class CommentaryAuthorEntity {
   @PrimaryColumn({ length: 64 })
   id: string;
 
+  @Index()
   @PrimaryColumn({ length: 8, default: 'es' })
   language: string;
 

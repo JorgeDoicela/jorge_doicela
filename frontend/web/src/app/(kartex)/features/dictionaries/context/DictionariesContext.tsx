@@ -99,11 +99,18 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setTotalEntries(result.total);
     setIsLoading(false);
 
-    // Auto-seleccionar la primera entrada si no hay ninguna seleccionada
-    if (result.items.length > 0 && !selectedEntryId) {
-      setSelectedEntryId(result.items[0].id);
+    // Auto-seleccionar la primera entrada si no hay ninguna válida seleccionada
+    if (result.items.length > 0) {
+      setSelectedEntryId((prev) => {
+        if (prev && result.items.some((item) => item.id === prev)) {
+          return prev;
+        }
+        return result.items[0]?.id || null;
+      });
+    } else {
+      setSelectedEntryId(null);
     }
-  }, [selectedDictionaryId, selectedLetter, selectedCategory, searchQuery, page, locale, selectedEntryId]);
+  }, [selectedDictionaryId, selectedLetter, selectedCategory, searchQuery, page, locale]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -115,7 +122,7 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
   // Diccionario activo
   const activeDictionary = useMemo(() => {
     if (selectedDictionaryId === 'all') {
-      return dictionaries[0] || null;
+      return null;
     }
     return dictionaries.find((d) => d.id === selectedDictionaryId) || null;
   }, [dictionaries, selectedDictionaryId]);

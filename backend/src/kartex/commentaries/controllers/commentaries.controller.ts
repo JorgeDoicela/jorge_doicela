@@ -1,6 +1,9 @@
 import { Controller, Get, Query, Param, ParseIntPipe } from '@nestjs/common';
 import { CommentariesService } from '../services/commentaries.service';
-import { GetCommentariesQueryDto } from '../dto/get-commentaries-query.dto';
+import {
+  GetCommentariesQueryDto,
+  GetCommentariesPassageQueryDto,
+} from '../dto/get-commentaries-query.dto';
 import { CommentaryAuthorEntity } from '../entities/commentary-author.entity';
 import { CommentaryEntryEntity } from '../entities/commentary-entry.entity';
 
@@ -34,15 +37,13 @@ export class CommentariesController {
   async getByPassage(
     @Param('bookId') bookId: string,
     @Param('chapter', ParseIntPipe) chapter: number,
-    @Query('verse') verse?: string,
-    @Query('lang') lang?: string,
+    @Query() query: GetCommentariesPassageQueryDto,
   ): Promise<CommentaryEntryEntity[]> {
-    const parsedVerse = verse ? parseInt(verse, 10) : undefined;
     return this.commentariesService.getCommentariesByPassage(
       bookId,
       chapter,
-      Number.isNaN(parsedVerse) ? undefined : parsedVerse,
-      lang,
+      query.verse,
+      query.lang,
     );
   }
 }

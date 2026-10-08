@@ -6,6 +6,7 @@ export class BibleDictionaryEntity {
   @PrimaryColumn({ length: 64 })
   id: string;
 
+  @Index()
   @PrimaryColumn({ length: 8, default: 'es' })
   language: string;
 

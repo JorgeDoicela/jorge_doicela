@@ -63,7 +63,7 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
     };
   }, [locale]);
 
-  // Cargar comentarios filtrados
+  // Cargar comentarios filtrados sin acoplar selectedEntryId
   const loadEntries = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -77,16 +77,22 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
         lang: locale,
       });
       setEntries(data);
-      if (data.length > 0 && !selectedEntryId) {
-        setSelectedEntryId(data[0].id);
-      }
+      setSelectedEntryId((prev) => {
+        if (data.length === 0) return null;
+        const stillExists = prev && data.some((e) => e.id === prev);
+        return stillExists ? prev : data[0].id;
+      });
     } finally {
       setIsLoading(false);
     }
-  }, [currentBookAbbr, currentChapter, selectedAuthorId, searchQuery, locale, selectedEntryId, verseParam]);
+  }, [currentBookAbbr, currentChapter, selectedAuthorId, searchQuery, locale, verseParam]);
 
+  // Debounce de 150ms para amortiguar entradas de búsqueda y sincronizar consultas
   useEffect(() => {
-    loadEntries();
+    const timer = setTimeout(() => {
+      loadEntries();
+    }, 150);
+    return () => clearTimeout(timer);
   }, [loadEntries]);
 
   const activeAuthor = useMemo(() => {
@@ -99,11 +105,16 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
     return entries.find((e) => e.id === selectedEntryId) || entries[0];
   }, [entries, selectedEntryId]);
 
+  const handleSelectAuthorId = useCallback((id: string) => {
+    setSelectedAuthorId(id);
+    setSelectedEntryId(null);
+  }, []);
+
   const value = useMemo(
     () => ({
       authors,
       selectedAuthorId,
-      setSelectedAuthorId,
+      setSelectedAuthorId: handleSelectAuthorId,
       selectedEntryId,
       setSelectedEntryId,
       searchQuery,
@@ -117,6 +128,7 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
     [
       authors,
       selectedAuthorId,
+      handleSelectAuthorId,
       selectedEntryId,
       searchQuery,
       entries,

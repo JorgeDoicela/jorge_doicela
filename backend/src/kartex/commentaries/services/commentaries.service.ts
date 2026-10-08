@@ -62,7 +62,7 @@ export class CommentariesService {
       );
     }
 
-    if (query.authorId) {
+    if (query.authorId && query.authorId !== 'all') {
       qb.andWhere('entry.authorId = :authorId', { authorId: query.authorId });
     }
 
@@ -75,6 +75,13 @@ export class CommentariesService {
     qb.orderBy('entry.bookId', 'ASC')
       .addOrderBy('entry.chapter', 'ASC')
       .addOrderBy('entry.verseStart', 'ASC');
+
+    const limit = Math.min(100, Math.max(1, query.limit || 50));
+    qb.take(limit);
+
+    if (query.offset && query.offset > 0) {
+      qb.skip(query.offset);
+    }
 
     return qb.getMany();
   }

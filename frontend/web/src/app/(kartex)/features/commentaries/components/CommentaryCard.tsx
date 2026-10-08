@@ -63,14 +63,14 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
       onClick={onSelect}
       className={`group relative p-6 rounded-2xl border transition-all duration-200 cursor-pointer ${
         isSelected
-          ? 'bg-amber-500/5 dark:bg-zinc-900/90 border-amber-500/60 dark:border-amber-500/60 shadow-lg shadow-amber-500/5 dark:shadow-black/40 ring-1 ring-amber-500/40'
-          : 'bg-white dark:bg-[#121214] border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
+          ? 'bg-zinc-100/80 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 shadow-xs ring-1 ring-zinc-300 dark:ring-zinc-700'
+          : 'bg-white dark:bg-[#121214] border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
       }`}
     >
       {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2.5 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-mono font-semibold text-amber-700 dark:text-amber-400">
+          <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
             {bookName || entry.bookId} {entry.chapter}:{verseRangeText}
           </span>
           {author && (
@@ -88,7 +88,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
       </div>
 
       {/* Título de la Perícopa */}
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors mb-3 leading-snug">
+      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors mb-3 leading-snug">
         {entry.title}
       </h3>
 
@@ -104,7 +104,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           }
           if (paragraph.startsWith('* ') || paragraph.startsWith('1. ')) {
             return (
-              <div key={idx} className="pl-4 border-l-2 border-amber-500/30 space-y-1.5 text-zinc-700 dark:text-zinc-300">
+              <div key={idx} className="pl-4 border-l-2 border-zinc-300 dark:border-zinc-700 space-y-1.5 text-zinc-700 dark:text-zinc-300">
                 {paragraph.split('\n').map((line, lIdx) => (
                   <p key={lIdx} className="leading-relaxed">
                     {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''), scriptureOptions)}

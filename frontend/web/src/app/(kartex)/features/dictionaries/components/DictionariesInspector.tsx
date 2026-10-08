@@ -39,7 +39,7 @@ export const DictionariesInspector: React.FC = () => {
     <StudySidePanel
       side="right"
       title={tStudio('toggleDictionariesInspector') || tDict('inspectorTitle')}
-      icon={<BookMarked className="w-4 h-4 text-amber-500" />}
+      icon={<BookMarked className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
       storageKey="kartex_dictionaries_inspector_w"
       defaultWidth={360}
       collapseTitle={tStudio('closeInspector') || tDict('closeInspector')}
@@ -50,7 +50,7 @@ export const DictionariesInspector: React.FC = () => {
             {/* Ficha del Término y Etimología */}
             <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">
+                <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">
                   {tDict('inspectorTitle')}
                 </span>
                 <span className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
@@ -111,7 +111,7 @@ export const DictionariesInspector: React.FC = () => {
                       className="p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs space-y-1"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-amber-700 dark:text-amber-400">
+                        <span className="font-mono font-bold text-zinc-900 dark:text-zinc-100">
                           {ref.reference}
                         </span>
                       </div>
@@ -136,7 +136,7 @@ export const DictionariesInspector: React.FC = () => {
                       key={idx}
                       type="button"
                       onClick={() => setSearchQuery(term)}
-                      className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-amber-500"
+                      className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-zinc-500"
                     >
                       {term}
                     </button>

@@ -5,4 +5,5 @@ export * from './components/CommentaryCard';
 export * from './components/CommentariesDashboard';
 export * from './components/CommentariesSidebar';
 export * from './components/CommentariesInspector';
+export * from './components/CommentariesPassageNavigator';
 export * from './utils/bibleReferenceParser';

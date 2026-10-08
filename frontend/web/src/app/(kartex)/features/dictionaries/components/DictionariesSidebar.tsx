@@ -38,7 +38,7 @@ export const DictionariesSidebar: React.FC = () => {
     <StudySidePanel
       side="left"
       title={tStudio('toggleDictionariesSidebar') || tDict('sidebarTitle')}
-      icon={<BookMarked className="w-4 h-4 text-amber-500" />}
+      icon={<BookMarked className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
       storageKey="kartex_dictionaries_sidebar_w"
       defaultWidth={320}
       collapseTitle={tStudio('closeSidebar') || tDict('closeSidebar')}
@@ -94,8 +94,8 @@ export const DictionariesSidebar: React.FC = () => {
               }}
               className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
                 selectedDictionaryId === 'all'
-                  ? 'border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-200 font-semibold shadow-xs'
-                  : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-amber-400 dark:hover:border-amber-600'
+                  ? 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                  : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700'
               }`}
             >
               <div className="space-y-0.5">
@@ -107,7 +107,7 @@ export const DictionariesSidebar: React.FC = () => {
                 </span>
               </div>
               {selectedDictionaryId === 'all' && (
-                <Check className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                <Check className="w-4 h-4 text-zinc-900 dark:text-zinc-100 shrink-0" />
               )}
             </button>
 
@@ -126,8 +126,8 @@ export const DictionariesSidebar: React.FC = () => {
                   }}
                   className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-2 group ${
                     isSelected
-                      ? 'border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-200 font-semibold shadow-xs'
-                      : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-amber-400 dark:hover:border-amber-600'
+                      ? 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                      : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700'
                   }`}
                 >
                   <div className="space-y-1 min-w-0 flex-1">
@@ -142,7 +142,7 @@ export const DictionariesSidebar: React.FC = () => {
                     </span>
                   </div>
                   {isSelected && (
-                    <Check className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                    <Check className="w-4 h-4 text-zinc-900 dark:text-zinc-100 shrink-0 mt-0.5" />
                   )}
                 </button>
               );
@@ -180,13 +180,13 @@ export const DictionariesSidebar: React.FC = () => {
                     }}
                     className={`w-full text-left p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2 group ${
                       isSelected
-                        ? 'border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-200 font-semibold shadow-xs'
-                        : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-amber-400 dark:hover:border-amber-600'
+                        ? 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                        : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700'
                     }`}
                   >
                     <div className="space-y-0.5 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-400">
+                        <span className="text-[10px] font-mono font-bold text-zinc-700 dark:text-zinc-300">
                           [{entry.letter}]
                         </span>
                         <span className="text-xs font-semibold truncate">
@@ -202,7 +202,7 @@ export const DictionariesSidebar: React.FC = () => {
                     <ChevronRight
                       className={`w-3.5 h-3.5 shrink-0 ${
                         isSelected
-                          ? 'text-amber-500'
+                          ? 'text-zinc-900 dark:text-zinc-100'
                           : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-200'
                       }`}
                     />

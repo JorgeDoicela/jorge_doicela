@@ -81,8 +81,8 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
       onClick={onSelect}
       className={`group relative p-6 rounded-2xl border transition-all duration-200 cursor-pointer ${
         isSelected
-          ? 'bg-amber-500/5 dark:bg-zinc-900/90 border-amber-500/60 dark:border-amber-500/60 shadow-lg shadow-amber-500/5 dark:shadow-black/40 ring-1 ring-amber-500/40'
-          : 'bg-white dark:bg-[#121214] border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
+          ? 'bg-zinc-100/80 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 shadow-xs ring-1 ring-zinc-300 dark:ring-zinc-700'
+          : 'bg-white dark:bg-[#121214] border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
       }`}
     >
       {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
@@ -106,7 +106,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
       </div>
 
       {/* Término Principal */}
-      <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors mb-2 font-serif leading-snug">
+      <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors mb-2 font-serif leading-snug">
         {entry.term}
       </h3>
 
@@ -132,7 +132,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           }
           if (paragraph.startsWith('* ') || paragraph.startsWith('1. ')) {
             return (
-              <div key={idx} className="pl-4 border-l-2 border-amber-500/30 space-y-1.5 text-zinc-700 dark:text-zinc-300">
+              <div key={idx} className="pl-4 border-l-2 border-zinc-300 dark:border-zinc-700 space-y-1.5 text-zinc-700 dark:text-zinc-300">
                 {paragraph.split('\n').map((line, lIdx) => (
                   <p key={lIdx} className="leading-relaxed">
                     {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''))}
@@ -162,7 +162,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
                 <span
                   key={rIdx}
                   title={ref.context}
-                  className="font-mono text-xs text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 underline underline-offset-2 decoration-amber-500/30 transition-colors"
+                  className="font-mono text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 transition-colors"
                 >
                   {ref.reference}
                 </span>
@@ -184,7 +184,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
                     e.stopPropagation();
                     onSelectRelatedTerm?.(term);
                   }}
-                  className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-amber-500"
+                  className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-zinc-500"
                 >
                   {term}
                 </button>

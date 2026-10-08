@@ -6,7 +6,7 @@
   "Nav": {
     "landing": "Inicio",
     "back": "Atrás",
-    "backToKartex": "Volver al inicio",
+    "backToKartex": "Volver",
     "portal": "Volver a jorgedoicela.com",
     "portalShort": "Portal",
     "modularKartex": "Kartex",
@@ -1033,7 +1033,6 @@
     "toggleDictionariesSidebar": "Diccionarios & Términos",
     "toggleDictionariesInspector": "Ficha Léxico-Enciclopédica",
     "dictionariesTitle": "Diccionarios Bíblicos Clásicos",
-    "openInDictionaries": "Explorar en Diccionarios",
     "toggleEvangelismSidebar": "Rutas y Objeciones",
     "toggleEvangelismInspector": "Guía Ministerial y Pasajes",
     "toggleObjectionsSidebar": "Categorías de Objeciones",

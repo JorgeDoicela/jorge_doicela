@@ -4,33 +4,39 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { BookOpen, User, Tag, Sparkles } from 'lucide-react';
 import { CommentaryEntry, CommentaryAuthor } from '../types';
+import { renderLinkedScriptureText, ScriptureClickOptions } from '../utils/bibleReferenceParser';
+import { useKartexPassageSafe } from '../../../entities/passage';
 
 interface CommentaryCardProps {
   entry: CommentaryEntry;
   author?: CommentaryAuthor;
   isSelected?: boolean;
   onSelect?: () => void;
+  onSelectPassage?: (bookId: number, chapter: number, verse?: number) => void;
   bookName?: string;
 }
 
-function renderFormattedText(text: string): React.ReactNode {
+function renderFormattedText(
+  text: string,
+  options?: ScriptureClickOptions,
+): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
         <strong key={index} className="font-semibold text-zinc-900 dark:text-zinc-100">
-          {part.slice(2, -2)}
+          {renderLinkedScriptureText(part.slice(2, -2), options)}
         </strong>
       );
     }
     if (part.startsWith('*') && part.endsWith('*')) {
       return (
         <em key={index} className="italic text-zinc-800 dark:text-zinc-200">
-          {part.slice(1, -1)}
+          {renderLinkedScriptureText(part.slice(1, -1), options)}
         </em>
       );
     }
-    return part;
+    return renderLinkedScriptureText(part, options);
   });
 }
 
@@ -39,9 +45,16 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
   author,
   isSelected = false,
   onSelect,
+  onSelectPassage,
   bookName,
 }) => {
   const tComm = useTranslations('Commentaries');
+  const passageContext = useKartexPassageSafe();
+
+  const handleSelectPassage = onSelectPassage || passageContext?.setPassage;
+  const scriptureOptions: ScriptureClickOptions = {
+    onSelectPassage: handleSelectPassage,
+  };
   const verseRangeText = entry.verseEnd && entry.verseEnd !== entry.verseStart
     ? `${entry.verseStart}-${entry.verseEnd}`
     : `${entry.verseStart}`;
@@ -85,7 +98,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           if (paragraph.startsWith('### ')) {
             return (
               <h4 key={idx} className="text-sm font-sans font-semibold text-zinc-900 dark:text-zinc-100 mt-4 mb-2">
-                {renderFormattedText(paragraph.replace('### ', ''))}
+                {renderFormattedText(paragraph.replace('### ', ''), scriptureOptions)}
               </h4>
             );
           }
@@ -94,7 +107,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
               <div key={idx} className="pl-4 border-l-2 border-amber-500/30 space-y-1.5 text-zinc-700 dark:text-zinc-300">
                 {paragraph.split('\n').map((line, lIdx) => (
                   <p key={lIdx} className="leading-relaxed">
-                    {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''))}
+                    {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''), scriptureOptions)}
                   </p>
                 ))}
               </div>
@@ -102,7 +115,7 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           }
           return (
             <p key={idx} className="leading-relaxed">
-              {renderFormattedText(paragraph)}
+              {renderFormattedText(paragraph, scriptureOptions)}
             </p>
           );
         })}

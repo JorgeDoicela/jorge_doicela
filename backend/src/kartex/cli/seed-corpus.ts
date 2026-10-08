@@ -288,6 +288,7 @@ export function seedCorpus(
     DROP TABLE IF EXISTS evangelism_objections;
     DROP TABLE IF EXISTS evangelism_tracts;
     DROP TABLE IF EXISTS commentary_entries;
+    DROP TABLE IF EXISTS commentary_entries_fts;
     DROP TABLE IF EXISTS commentary_authors;
     DROP TABLE IF EXISTS bible_dictionary_entries;
     DROP TABLE IF EXISTS bible_dictionaries;
@@ -483,6 +484,35 @@ export function seedCorpus(
     );
     CREATE INDEX IF NOT EXISTS IDX_commentary_passage ON commentary_entries(bookId, chapter, verseStart, verseEnd);
     CREATE INDEX IF NOT EXISTS IDX_commentary_author ON commentary_entries(authorId, language);
+
+    -- Motor de búsqueda textual de alto rendimiento FTS5 con tokenizador unicode sin acentos
+    DROP TABLE IF EXISTS commentary_entries_fts;
+    CREATE VIRTUAL TABLE IF NOT EXISTS commentary_entries_fts USING fts5(
+      id,
+      language,
+      authorId,
+      bookId,
+      title,
+      contentMarkdown,
+      tokenize='unicode61 remove_diacritics 2'
+    );
+
+    CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_ai AFTER INSERT ON commentary_entries BEGIN
+      INSERT INTO commentary_entries_fts(rowid, id, language, authorId, bookId, title, contentMarkdown)
+      VALUES (new.rowid, new.id, new.language, new.authorId, new.bookId, new.title, new.contentMarkdown);
+    END;
+
+    CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_ad AFTER DELETE ON commentary_entries BEGIN
+      INSERT INTO commentary_entries_fts(commentary_entries_fts, rowid, id, language, authorId, bookId, title, contentMarkdown)
+      VALUES ('delete', old.rowid, old.id, old.language, old.authorId, old.bookId, old.title, old.contentMarkdown);
+    END;
+
+    CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_au AFTER UPDATE ON commentary_entries BEGIN
+      INSERT INTO commentary_entries_fts(commentary_entries_fts, rowid, id, language, authorId, bookId, title, contentMarkdown)
+      VALUES ('delete', old.rowid, old.id, old.language, old.authorId, old.bookId, old.title, old.contentMarkdown);
+      INSERT INTO commentary_entries_fts(rowid, id, language, authorId, bookId, title, contentMarkdown)
+      VALUES (new.rowid, new.id, new.language, new.authorId, new.bookId, new.title, new.contentMarkdown);
+    END;
 
     CREATE TABLE bible_dictionaries (
       id VARCHAR(64) NOT NULL,

@@ -67,9 +67,31 @@ export class CommentariesService {
     }
 
     if (query.q && query.q.trim()) {
-      qb.andWhere('(entry.title LIKE :q OR entry.contentMarkdown LIKE :q)', {
-        q: `%${query.q.trim()}%`,
-      });
+      const rawTerm = query.q.trim();
+      const cleanFtsTerm = rawTerm
+        .replace(/["*()^:;{}[\]\\]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const ftsQuery = cleanFtsTerm ? `"${cleanFtsTerm}"*` : '';
+
+      if (ftsQuery) {
+        qb.andWhere(
+          `((entry.id, entry.language) IN (
+              SELECT fts.id, fts.language 
+              FROM commentary_entries_fts fts 
+              WHERE fts.language = :lang AND commentary_entries_fts MATCH :ftsQuery
+           ) OR entry.title LIKE :q OR entry.contentMarkdown LIKE :q)`,
+          {
+            lang: targetLang,
+            ftsQuery,
+            q: `%${rawTerm}%`,
+          },
+        );
+      } else {
+        qb.andWhere('(entry.title LIKE :q OR entry.contentMarkdown LIKE :q)', {
+          q: `%${rawTerm}%`,
+        });
+      }
     }
 
     qb.orderBy('entry.bookId', 'ASC')

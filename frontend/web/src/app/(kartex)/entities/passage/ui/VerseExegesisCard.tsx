@@ -618,22 +618,23 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
         ) : verseCommentaries.length > 0 ? (
           <div className="space-y-2.5">
             {verseCommentaries.map((comm) => (
-              <div
+              <Link
                 key={comm.id}
-                className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] space-y-2"
+                href={`/study/commentaries?book=${canonicalAbbr}&chapter=${chapter}&verse=${verseNumber}&author=${comm.authorId}`}
+                className="block p-3.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#0a0a0a] hover:border-amber-500/50 dark:hover:border-amber-500/50 transition-colors space-y-2 group/comm"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 font-serif">
+                  <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 font-serif group-hover/comm:text-amber-600 dark:group-hover/comm:text-amber-400 transition-colors">
                     {comm.title}
                   </span>
                   <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-500 shrink-0 uppercase">
                     {comm.authorId}
                   </span>
                 </div>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-serif line-clamp-4">
-                  {comm.contentMarkdown.replace(/^#+\s+/gm, '').slice(0, 300)}...
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-serif line-clamp-3">
+                  {comm.contentMarkdown.replace(/^#+\s+/gm, '').slice(0, 260)}...
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

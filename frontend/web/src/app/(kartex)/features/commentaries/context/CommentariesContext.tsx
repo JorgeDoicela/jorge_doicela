@@ -42,6 +42,13 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
   const [entries, setEntries] = useState<CommentaryEntry[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Sincronizar reactivamente si cambia el autor en los query params
+  useEffect(() => {
+    if (authorParam && authorParam !== selectedAuthorId) {
+      setSelectedAuthorId(authorParam);
+    }
+  }, [authorParam]);
+
   // Obtener abreviatura del libro actual del pasaje (ej. 'GEN', 'JHN')
   const currentBookAbbr = useMemo(() => {
     if (!passageContext?.selectedBookId) return undefined;

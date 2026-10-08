@@ -6,7 +6,7 @@
   "Nav": {
     "landing": "Home",
     "back": "Back",
-    "backToKartex": "Back to home",
+    "backToKartex": "Back",
     "portal": "Back to jorgedoicela.com",
     "portalShort": "Portal",
     "modularKartex": "Kartex",
@@ -1033,7 +1033,6 @@
     "toggleDictionariesSidebar": "Dictionaries & Terms",
     "toggleDictionariesInspector": "Lexical-Encyclopedic Profile",
     "dictionariesTitle": "Classical Biblical Dictionaries",
-    "openInDictionaries": "Explore in Dictionaries",
     "toggleEvangelismSidebar": "Pathways & Objections",
     "toggleEvangelismInspector": "Ministry Guide & Passages",
     "toggleObjectionsSidebar": "Objection Categories",

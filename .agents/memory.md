@@ -461,5 +461,17 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     5. En `dictionariesApiService.ts`, se estandarizó la extracción defensiva de datos (`json?.data ?? json`) para total resiliencia ante variaciones en el interceptor de respuestas o renderizado en servidor.
   - **Verificación:** Base de datos `kartex.sqlite` re-sembrada limpiamente en 111 ms, compilación estricta TypeScript aprobada al 100% (`tsc --noEmit` en backend y web con código 0), pruebas unitarias de Jest superadas con código 0, y build de producción de Next.js 16 (`next build`) finalizado exitosamente con las 33 rutas compiladas y optimizadas.
 
+* **Motor de Búsqueda FTS5 e Hipervínculos Canónicos en Suite de Comentarios (`commentaries`):**
+  - **Causa Raíz de Búsqueda Secuencial:** El servicio backend realizaba búsquedas por texto libre mediante `LIKE %:q%` sobre `title` y `contentMarkdown`. Al escalar a decenas de miles de notas extensas de los 66 libros bíblicos, este enfoque provocaría un *table scan* intensivo en disco.
+  - **Solución Backend y Persistencia:**
+    1. En `seed-corpus.ts`, se incorporó la tabla virtual FTS5 `commentary_entries_fts` con tokenizador `unicode61 remove_diacritics 2` (soporte insensible a tildes/diacríticos en español e inglés).
+    2. Se crearon tres disparadores automáticos (`trg_commentary_entries_ai`, `trg_commentary_entries_ad`, `trg_commentary_entries_au`) para mantener la tabla virtual sincronizada atómicamente ante cualquier inserción, eliminación o actualización.
+    3. En `CommentariesService.ts`, se optimizó la consulta textual para priorizar coincidencia indexada $O(\log N)$ vía subconsulta `(entry.id, entry.language) IN (SELECT fts.id, fts.language FROM commentary_entries_fts fts WHERE fts.language = :lang AND commentary_entries_fts MATCH :ftsQuery)` con fallback resiliente por subcadena `LIKE`.
+  - **Frontend (Hipervínculos Canónicos Interactivos y Cruce Intermódulos):**
+    1. Se implementó la utilidad [`bibleReferenceParser.tsx`](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(kartex)/features/commentaries/utils/bibleReferenceParser.tsx) con mapeo canónico de los 66 libros bíblicos en español e inglés y detección regex de citas (`Génesis 1:1`, `Jn 1:1`, `Rom 8:28`, `Col 1:16`, etc.).
+    2. En `CommentaryCard.tsx`, se integró `renderLinkedScriptureText` dentro del formateador de Markdown para convertir citas bíblicas citadas por los comentaristas en enlaces interactivos con estilo Geist/ámbar, navegables fluidamente hacia `/study/standard` o mediante `setPassage` del contexto de Kartex sin recarga.
+    3. En `VerseExegesisCard.tsx`, se convirtieron las tarjetas de notas del versículo en accesos directos interactivos que enlazan con precisión a `/study/commentaries?book=...&chapter=...&verse=...&author=...`.
+  - **Verificación:** Sembrado de `kartex.sqlite` superado en 162 ms con consultas FTS5 probadas; `typecheck` aprobado con código 0 en `backend` y `web`.
+
 
 

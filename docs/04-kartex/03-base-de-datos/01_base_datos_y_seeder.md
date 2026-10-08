@@ -96,6 +96,8 @@ La base de datos física `kartex.sqlite` está optimizada para lecturas ultra-r�
                                  ├────────────────────────────────────────────────────────┤
                                  │ INDEX(bookId, chapter, verseStart, verseEnd)           │
                                  │ INDEX(authorId, language)                              │
+                                 │ VIRTUAL TABLE FTS5: commentary_entries_fts             │
+                                 │ (unicode61 remove_diacritics 2 + auto sync triggers)   │
                                  └────────────────────────────────────────────────────────┘
 ```
 
@@ -141,12 +143,12 @@ La persistencia del corpus bíblico e histórico sigue el principio de **Ingesti
 ### 3.1 Flujo de Recreación Limpia
 Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
 
-1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las 15 tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`, `commentary_entries`, `commentary_authors`, `bible_dictionary_entries`, `bible_dictionaries`).
-2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas e índices únicos e índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`, `IDX_commentary_passage`, `IDX_commentary_author`, `IDX_dict_term_lang`, `IDX_dict_letter`, `IDX_dict_category`), empleando claves primarias compuestas `(id, language)` para soporte multilingüe.
+1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`, `commentary_entries_fts`, `commentary_entries`, `commentary_authors`, `bible_dictionary_entries`, `bible_dictionaries`).
+2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas, índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`, `IDX_commentary_passage`, `IDX_commentary_author`, `IDX_dict_term_lang`, `IDX_dict_letter`, `IDX_dict_category`) y la tabla virtual FTS5 `commentary_entries_fts` con tokenizador `unicode61 remove_diacritics 2` y triggers de sincronización atómica (`ai`, `ad`, `au`).
 3. **Sembrado Canónico y Textual por Lotes:** Inserta los 66 libros canónicos, versiones y procesa los versículos por lotes transaccionales (`better-sqlite3`).
 4. **Sembrado de Contexto Histórico Bilingüe:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía en español e inglés.
 5. **Sembrado de Evangelización y Apologética:** Inserta rutas salvíficas estructuradas, banco de objeciones exegéticas y tratados listos para predicar.
-6. **Sembrado de Comentarios Bíblicos Clásicos:** Inserta el catálogo de obras/autores clásicos en dominio público y las notas exegéticas granulares versículo por versículo indexadas por coordenadas bíblicas.
+6. **Sembrado de Comentarios Bíblicos Clásicos:** Inserta el catálogo de obras/autores clásicos en dominio público y las notas exegéticas granulares versículo por versículo indexadas por coordenadas bíblicas con replicación automática en el índice invertido FTS5.
 7. **Sembrado de Diccionarios Bíblicos Clásicos:** Inserta las obras enciclopédicas históricas (Easton, Smith, Hitchcock) y sus artículos lexicográficos/teológicos con términos normalizados, desglose etimológico e hipervínculos relacionados.
 
 

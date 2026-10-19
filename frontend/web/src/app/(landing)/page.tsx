@@ -97,6 +97,29 @@ export default async function LandingPage() {
                             <span className="font-semibold text-foreground">{tLanding('philosophyRef')}</span>
                         </div>
                     </BentoCard>
+
+                    {/* ── INICIO BLOQUE TEMPORAL CAISEB (ELIMINAR CUANDO TERMINE) ── */}
+                    <Link
+                        href="/caiseb"
+                        className="md:col-span-2 group block outline-none focus:outline-none"
+                    >
+                        <BentoCard className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all duration-300 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/5 cursor-pointer">
+                            <div className="space-y-1.5">
+                                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-indigo-400 transition-colors">
+                                    Ateneo
+                                </h3>
+                                <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                                    Material complementario de la ponencia: especificaciones técnicas, repositorio de código fuente y modelos de IA.
+                                </p>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-indigo-400 group-hover:translate-x-1 transition-transform shrink-0 self-end sm:self-auto">
+                                <span>Ver recursos</span>
+                                <span>→</span>
+                            </div>
+                        </BentoCard>
+                    </Link>
+                    {/* ── FIN BLOQUE TEMPORAL CAISEB ── */}
                 </section>
 
             </main>

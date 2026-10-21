@@ -48,24 +48,24 @@ export const DictionariesInspector: React.FC = () => {
         {activeEntry ? (
           <div className="space-y-4">
             {/* Ficha del Término y Etimología */}
-            <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 space-y-2.5">
+            <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 sepia:border-border bg-zinc-50/50 dark:bg-zinc-900/50 sepia:bg-inner-card space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">
+                <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 sepia:text-accents-5 font-bold uppercase tracking-wider">
                   {tDict('inspectorTitle')}
                 </span>
-                <span className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+                <span className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-500 dark:text-zinc-400 sepia:text-accents-5">
                   {tDict('letterBadge', { letter: activeEntry.letter })}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 font-serif leading-snug">
+              <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 sepia:text-foreground font-serif leading-snug">
                 {activeEntry.term}
               </h3>
               {activeEntry.etymology && (
-                <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 space-y-1">
-                  <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">
+                <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 sepia:border-border space-y-1">
+                  <span className="text-[10px] font-mono text-zinc-400 sepia:text-accents-4 uppercase tracking-wider block">
                     {tDict('etymology')}
                   </span>
-                  <p className="text-xs text-zinc-700 dark:text-zinc-300 font-mono">
+                  <p className="text-xs text-zinc-700 dark:text-zinc-300 sepia:text-accents-6 font-mono">
                     {activeEntry.etymology}
                   </p>
                 </div>
@@ -74,22 +74,22 @@ export const DictionariesInspector: React.FC = () => {
 
             {/* Ficha de la Obra de Referencia */}
             {dictionary && (
-              <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2 text-xs">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
+              <div className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 sepia:border-border bg-white dark:bg-zinc-950 sepia:bg-card-bg space-y-2 text-xs">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 sepia:text-accents-4 font-semibold block">
                   {tDict('dictionaryWork')}
                 </span>
-                <div className="space-y-1 text-zinc-600 dark:text-zinc-300">
-                  <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                <div className="space-y-1 text-zinc-600 dark:text-zinc-300 sepia:text-accents-6">
+                  <p className="font-semibold text-zinc-900 dark:text-zinc-100 sepia:text-foreground">
                     {dictionary.title}
                   </p>
-                  <p className="text-zinc-500 dark:text-zinc-400 font-mono text-[11px]">
+                  <p className="text-zinc-500 dark:text-zinc-400 sepia:text-accents-5 font-mono text-[11px]">
                     {dictionary.author} ({dictionary.year})
                   </p>
-                  <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-[11px]">
+                  <p className="text-zinc-600 dark:text-zinc-300 sepia:text-accents-6 leading-relaxed text-[11px]">
                     {dictionary.theologicalFocus}
                   </p>
                 </div>
-                <div className="pt-1.5 border-t border-zinc-100 dark:border-zinc-800/80">
+                <div className="pt-1.5 border-t border-zinc-100 dark:border-zinc-800/80 sepia:border-border">
                   <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5" />
                     {dictionary.license}

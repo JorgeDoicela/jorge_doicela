@@ -58,7 +58,7 @@ export const ParallelSidebar: React.FC = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-1 gap-1">
               {PARALLEL_PRESETS.map((preset) => {
                 const isActive = parallel?.activePresetId === preset.id;
                 return (
@@ -66,10 +66,10 @@ export const ParallelSidebar: React.FC = () => {
                     key={preset.id}
                     type="button"
                     onClick={() => parallel?.applyPreset(preset.id)}
-                    className={`w-full text-left p-2.5 rounded-xl border transition-all duration-150 cursor-pointer ${
+                    className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-zinc-100/90 dark:bg-zinc-900/90 border-zinc-400 dark:border-zinc-600 shadow-xs'
-                        : 'bg-zinc-50/50 dark:bg-zinc-950/40 border-zinc-200/70 dark:border-zinc-800/70 hover:border-zinc-300 dark:hover:border-zinc-700'
+                        ? 'bg-accents-2 text-foreground font-semibold'
+                        : 'text-accents-6 hover:bg-accents-1 hover:text-foreground'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -77,11 +77,11 @@ export const ParallelSidebar: React.FC = () => {
                         {preset.name}
                         {isActive && <Check className="w-3.5 h-3.5 text-foreground" />}
                       </span>
-                      <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 font-medium">
+                      <span className="text-[10px] font-mono text-accents-4 font-medium">
                         {preset.badge}
                       </span>
                     </div>
-                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                    <p className="text-[11px] text-accents-5 line-clamp-1">
                       {preset.description}
                     </p>
                   </button>
@@ -93,21 +93,21 @@ export const ParallelSidebar: React.FC = () => {
           {/* SECCIÓN 2: GESTOR DE COLUMNAS ACTIVAS */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-accents-4">
                 {tParallel('columnsOnCanvas', { count: activeColumns.length })}
               </span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {activeColumns.map((col, index) => {
                 const trans = translations.find((t) => t.id === col.translationId);
                 return (
                   <div
                     key={col.id}
-                    className="p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-background flex items-center justify-between gap-2 shadow-2xs"
+                    className="p-2.5 rounded-xl border border-border bg-inner-card flex items-center justify-between gap-2"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="w-5 h-5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-[10px] font-mono text-zinc-500 font-bold shrink-0">
+                      <span className="w-5 h-5 rounded-full bg-accents-2 border border-border flex items-center justify-center text-[10px] font-mono text-foreground font-bold shrink-0">
                         {index + 1}
                       </span>
                       <div className="min-w-0">
@@ -115,11 +115,11 @@ export const ParallelSidebar: React.FC = () => {
                           <span className="text-xs font-bold font-mono text-foreground">
                             {trans?.abbreviation || `ID ${col.translationId}`}
                           </span>
-                          <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase font-mono">
+                          <span className="text-[10px] text-accents-4 uppercase font-mono">
                             ({trans?.language || 'es'})
                           </span>
                         </div>
-                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">
+                        <p className="text-[11px] text-accents-5 truncate">
                           {trans?.name || tParallel('translationFallback')}
                         </p>
                       </div>
@@ -130,7 +130,7 @@ export const ParallelSidebar: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => parallel?.removeColumn(col.id)}
-                          className="p-1.5 rounded-lg text-zinc-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-accents-4 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                           title={tParallel('removeColumnTooltip')}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -145,7 +145,7 @@ export const ParallelSidebar: React.FC = () => {
             {/* AÑADIR NUEVA VERSIÓN */}
             {activeColumns.length < 4 && availableToAdd.length > 0 && (
               <div className="pt-2">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-2">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-accents-4 block mb-2">
                   {tParallel('addToCanvas')}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -154,9 +154,9 @@ export const ParallelSidebar: React.FC = () => {
                       key={tr.id}
                       type="button"
                       onClick={() => parallel?.addColumn(tr.id)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-foreground bg-zinc-50 dark:bg-zinc-900/60 text-foreground transition-all cursor-pointer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono rounded-lg border border-border hover:border-accents-5 bg-inner-card text-foreground transition-all cursor-pointer"
                     >
-                      <Plus className="w-3 h-3 text-zinc-400" />
+                      <Plus className="w-3 h-3 text-accents-4" />
                       <span>{tr.abbreviation}</span>
                     </button>
                   ))}
@@ -166,17 +166,17 @@ export const ParallelSidebar: React.FC = () => {
           </div>
 
           {/* SECCIÓN 3: PASAJE ACTIVO Y NAVEGACIÓN RÁPIDA */}
-          <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800/80 space-y-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+          <div className="pt-2 border-t border-border space-y-2.5">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-accents-4">
               {tParallel('syncedPassage')}
             </span>
 
-            <div className="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/60 dark:bg-zinc-950/40 space-y-2">
+            <div className="p-3 rounded-xl border border-border bg-inner-card space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-foreground">
                   {selectedBook?.name || tParallel('genesisFallback')} {selectedChapter}
                 </span>
-                <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400">
+                <span className="text-[10px] font-mono text-accents-5">
                   {selectedBook?.testament === 'NT' ? tStudio('newTestament') : tStudio('oldTestament')}
                 </span>
               </div>
@@ -186,14 +186,14 @@ export const ParallelSidebar: React.FC = () => {
                   type="button"
                   onClick={() => passageContext?.prevChapter()}
                   disabled={selectedChapter <= 1}
-                  className="flex-1 py-1 text-xs font-medium rounded-lg border border-zinc-200 dark:border-zinc-800 bg-background hover:bg-zinc-100 dark:hover:bg-zinc-900 disabled:opacity-40 transition-colors cursor-pointer text-center"
+                  className="flex-1 py-1 text-xs font-medium rounded-lg border border-border bg-card-bg hover:bg-accents-1 disabled:opacity-40 transition-colors cursor-pointer text-center text-foreground"
                 >
                   {tParallel('prevChapterShort')}
                 </button>
                 <button
                   type="button"
                   onClick={() => passageContext?.nextChapter()}
-                  className="flex-1 py-1 text-xs font-medium rounded-lg border border-zinc-200 dark:border-zinc-800 bg-background hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-center"
+                  className="flex-1 py-1 text-xs font-medium rounded-lg border border-border bg-card-bg hover:bg-accents-1 transition-colors cursor-pointer text-center text-foreground"
                 >
                   {tParallel('nextChapterShort')}
                 </button>

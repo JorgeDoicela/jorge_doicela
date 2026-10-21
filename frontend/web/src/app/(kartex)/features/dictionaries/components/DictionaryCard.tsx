@@ -81,8 +81,8 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
       onClick={onSelect}
       className={`group relative p-6 rounded-2xl border transition-all duration-200 cursor-pointer ${
         isSelected
-          ? 'bg-zinc-100/80 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 shadow-xs ring-1 ring-zinc-300 dark:ring-zinc-700'
-          : 'bg-white dark:bg-[#121214] border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
+          ? 'bg-zinc-100/80 dark:bg-zinc-900 sepia:bg-card-hover border-zinc-300 dark:border-zinc-700 sepia:border-border shadow-xs ring-1 ring-zinc-300 dark:ring-zinc-700 sepia:ring-border'
+          : 'bg-white dark:bg-[#121214] sepia:bg-card-bg border-zinc-200/80 dark:border-zinc-800/80 sepia:border-border hover:border-zinc-300 dark:hover:border-zinc-700 sepia:hover:border-card-hover-border hover:shadow-xs'
       }`}
     >
       {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
@@ -93,27 +93,27 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           </span>
           {dictionary && (
             <>
-              <span className="text-zinc-300 dark:text-zinc-700 select-none">·</span>
-              <span className="text-zinc-600 dark:text-zinc-400 font-medium">
+              <span className="text-zinc-300 dark:text-zinc-700 sepia:text-accents-3 select-none">·</span>
+              <span className="text-zinc-600 dark:text-zinc-400 sepia:text-accents-5 font-medium">
                 {dictionary.author} ({dictionary.year})
               </span>
             </>
           )}
         </div>
-        <span className="text-zinc-400 dark:text-zinc-500 font-mono text-[11px]">
+        <span className="text-zinc-400 dark:text-zinc-500 sepia:text-accents-4 font-mono text-[11px]">
           {tDict('letterBadge', { letter: entry.letter })}
         </span>
       </div>
 
       {/* Término Principal */}
-      <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors mb-2 font-serif leading-snug">
+      <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 sepia:text-foreground group-hover:text-zinc-700 dark:group-hover:text-zinc-300 sepia:group-hover:text-foreground transition-colors mb-2 font-serif leading-snug">
         {entry.term}
       </h3>
 
       {/* Etimología / Raíz */}
       {entry.etymology && (
-        <div className="mb-4 text-xs font-mono text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-zinc-100 dark:border-zinc-800/60">
-          <span className="font-semibold text-zinc-700 dark:text-zinc-300 mr-1.5">
+        <div className="mb-4 text-xs font-mono text-zinc-600 dark:text-zinc-400 sepia:text-accents-6 bg-zinc-50 dark:bg-zinc-900/60 sepia:bg-inner-card px-3 py-1.5 rounded-lg border border-zinc-200/60 dark:border-zinc-800/60 sepia:border-border">
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200 sepia:text-foreground mr-1.5">
             {tDict('etymology')}:
           </span>
           {entry.etymology}
@@ -162,7 +162,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
                 <span
                   key={rIdx}
                   title={ref.context}
-                  className="font-mono text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 transition-colors"
+                  className="font-mono text-xs text-zinc-700 dark:text-zinc-300 sepia:text-accents-6 hover:text-zinc-900 dark:hover:text-zinc-100 sepia:hover:text-foreground underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 sepia:decoration-border transition-colors"
                 >
                   {ref.reference}
                 </span>
@@ -173,7 +173,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           {/* Términos Relacionados */}
           {entry.relatedTerms && entry.relatedTerms.length > 0 && (
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs">
-              <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold mr-0.5">
+              <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 sepia:text-accents-4 uppercase tracking-wider font-semibold mr-0.5">
                 {tDict('relatedTerms')}:
               </span>
               {entry.relatedTerms.map((term, tIdx) => (
@@ -184,7 +184,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
                     e.stopPropagation();
                     onSelectRelatedTerm?.(term);
                   }}
-                  className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-zinc-500"
+                  className="text-xs text-zinc-600 dark:text-zinc-400 sepia:text-accents-5 hover:text-zinc-900 dark:hover:text-zinc-100 sepia:hover:text-foreground transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 sepia:decoration-border hover:decoration-zinc-500"
                 >
                   {term}
                 </button>

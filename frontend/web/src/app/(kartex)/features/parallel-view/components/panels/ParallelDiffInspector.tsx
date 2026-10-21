@@ -124,14 +124,14 @@ export const ParallelDiffInspector: React.FC = () => {
         </div>
 
         {/* Selector de Pestañas: Diff Textual vs Morfología Strong */}
-        <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+        <div className="grid grid-cols-2 rounded-lg border border-border divide-x divide-border overflow-hidden">
           <button
             type="button"
             onClick={() => setActiveTab('diff')}
             className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
               activeTab === 'diff'
-                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                ? 'bg-accents-2 text-foreground font-semibold'
+                : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
             }`}
           >
             <ArrowRightLeft className="w-3.5 h-3.5" />
@@ -142,8 +142,8 @@ export const ParallelDiffInspector: React.FC = () => {
             onClick={() => setActiveTab('strong')}
             className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
               activeTab === 'strong'
-                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                ? 'bg-accents-2 text-foreground font-semibold'
+                : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
             }`}
           >
             <Languages className="w-3.5 h-3.5" />

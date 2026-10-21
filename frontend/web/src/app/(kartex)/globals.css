@@ -129,14 +129,47 @@ html.sepia,
   --button-primary-fg: #FAF6EE;
   --button-secondary-bg: #FAF6EE;
   --button-secondary-fg: #6E5A44;
+
+  /* Redefinición de tokens base de Tailwind v4 en modo Sepia */
+  --color-white: #FAF6EE;
+  --color-zinc-50: #F4EFE6;
+  --color-zinc-100: #EAE2D0;
+  --color-zinc-200: #E8DEC8;
+  --color-zinc-300: #D4C3A3;
+  --color-zinc-400: #A8947C;
+  --color-zinc-500: #8C765C;
+  --color-zinc-600: #6E5A44;
+  --color-zinc-700: #4D3C2D;
+  --color-zinc-800: #382C24;
+  --color-zinc-900: #2C221E;
+  --color-zinc-950: #1E1612;
 }
 
 /* ==========================================================================
    Normalización Integral de Superficies y Contrastes en Modo Sepia
    ========================================================================== */
 :root[class~="theme-sepia"] .bg-white,
-:root[class~="sepia"] .bg-white {
+:root[class~="sepia"] .bg-white,
+:root[class~="theme-sepia"] [class*="bg-white/"],
+:root[class~="sepia"] [class*="bg-white/"] {
   background-color: var(--card-bg) !important;
+}
+
+:root[class~="theme-sepia"] select,
+:root[class~="theme-sepia"] input,
+:root[class~="theme-sepia"] textarea,
+:root[class~="sepia"] select,
+:root[class~="sepia"] input,
+:root[class~="sepia"] textarea {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+:root[class~="theme-sepia"] select option,
+:root[class~="sepia"] select option {
+  background-color: var(--card-bg);
+  color: var(--foreground);
 }
 
 :root[class~="theme-sepia"] .bg-zinc-50,
@@ -157,9 +190,11 @@ html.sepia,
 :root[class~="theme-sepia"] .border-zinc-100,
 :root[class~="theme-sepia"] .border-zinc-200,
 :root[class~="theme-sepia"] .border-zinc-300,
+:root[class~="theme-sepia"] [class*="border-zinc-"],
 :root[class~="sepia"] .border-zinc-100,
 :root[class~="sepia"] .border-zinc-200,
-:root[class~="sepia"] .border-zinc-300 {
+:root[class~="sepia"] .border-zinc-300,
+:root[class~="sepia"] [class*="border-zinc-"] {
   border-color: var(--border) !important;
 }
 

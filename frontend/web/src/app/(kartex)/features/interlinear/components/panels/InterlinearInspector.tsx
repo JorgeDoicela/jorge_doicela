@@ -98,14 +98,14 @@ export const InterlinearInspector: React.FC = () => {
       collapseTitle={tStudio('closeInspector') || 'Ocultar inspector'}
     >
       <StudySidePanel.Toolbar>
-        <div className="grid grid-cols-2 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+        <div className="grid grid-cols-2 rounded-lg border border-border divide-x divide-border overflow-hidden">
           <button
             type="button"
             onClick={() => setActiveTab('morphology')}
             className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
               activeTab === 'morphology'
-                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                ? 'bg-accents-2 text-foreground font-semibold'
+                : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -116,8 +116,8 @@ export const InterlinearInspector: React.FC = () => {
             onClick={() => setActiveTab('verse')}
             className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
               activeTab === 'verse'
-                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                ? 'bg-accents-2 text-foreground font-semibold'
+                : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />

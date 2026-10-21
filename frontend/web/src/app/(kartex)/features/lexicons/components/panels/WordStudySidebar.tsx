@@ -49,14 +49,14 @@ export const WordStudySidebar: React.FC = () => {
     >
       <StudySidePanel.Toolbar className="p-4 space-y-3">
         {/* Selector de Lengua */}
-        <div className="grid grid-cols-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200/60 dark:border-zinc-800/60">
+        <div className="grid grid-cols-2 rounded-lg border border-border divide-x divide-border overflow-hidden">
           <button
             type="button"
             onClick={() => setActiveLanguage('hebrew')}
-            className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+            className={`py-1.5 text-xs font-medium transition-colors cursor-pointer text-center ${
               activeLanguage === 'hebrew'
-                ? 'bg-background text-foreground shadow-xs font-semibold'
-                : 'text-zinc-500 hover:text-foreground'
+                ? 'bg-accents-2 text-foreground font-semibold'
+                : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
             }`}
           >
             Hebreo (AT)
@@ -64,10 +64,10 @@ export const WordStudySidebar: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveLanguage('greek')}
-            className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+            className={`py-1.5 text-xs font-medium transition-colors cursor-pointer text-center ${
               activeLanguage === 'greek'
-                ? 'bg-background text-foreground shadow-xs font-semibold'
-                : 'text-zinc-500 hover:text-foreground'
+                ? 'bg-accents-2 text-foreground font-semibold'
+                : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
             }`}
           >
             Griego (NT)
@@ -75,26 +75,26 @@ export const WordStudySidebar: React.FC = () => {
         </div>
 
         {/* Buscador de Vocablos */}
-        <div className="relative">
-          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <div className="relative flex items-center">
+          <Search className="w-3.5 h-3.5 text-accents-4 absolute left-3 pointer-events-none" />
           <input
             type="text"
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}
             placeholder={tWord('searchPlaceholder')}
-            className="w-full text-xs pl-8.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-background text-foreground placeholder:text-zinc-400 focus:outline-hidden focus:border-foreground transition-colors"
+            className="w-full text-xs pl-8.5 pr-3 py-2 rounded-xl border border-border bg-inner-card text-foreground placeholder:text-accents-4 focus:outline-none focus:border-accents-5 transition-colors"
           />
         </div>
       </StudySidePanel.Toolbar>
 
       <StudySidePanel.Body className="p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-accents-4">
               Términos Teológicos Clave ({filteredTerms.length})
             </span>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             {filteredTerms.map((term) => {
               const isSelected = selectedStrong === term.strong;
               return (
@@ -102,10 +102,10 @@ export const WordStudySidebar: React.FC = () => {
                   key={term.strong}
                   type="button"
                   onClick={() => selectTerm(term)}
-                  className={`w-full text-left p-3 rounded-2xl border transition-all duration-150 cursor-pointer ${
+                  className={`w-full text-left p-3 rounded-xl transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-zinc-100/90 dark:bg-zinc-900/90 border-zinc-400 dark:border-zinc-600 shadow-xs'
-                      : 'bg-background border-zinc-200/60 dark:border-zinc-800/60 hover:border-zinc-300 dark:hover:border-zinc-700'
+                      ? 'bg-accents-2 text-foreground font-semibold'
+                      : 'text-accents-6 hover:bg-accents-1 hover:text-foreground'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1.5">

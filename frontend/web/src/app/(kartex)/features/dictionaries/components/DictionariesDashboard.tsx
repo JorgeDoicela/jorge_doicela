@@ -63,16 +63,16 @@ export const DictionariesDashboard: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       {/* Banner Superior Enciclopédico */}
-      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-[#121214]/80 p-6 sm:p-8 backdrop-blur-sm shadow-xs">
+      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 sepia:border-border bg-white/80 dark:bg-[#121214]/80 sepia:bg-card-bg/90 p-6 sm:p-8 backdrop-blur-sm shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-bold block">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400 sepia:text-accents-5 font-bold block">
               {tDict('title')}
             </span>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white font-serif">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white sepia:text-foreground font-serif">
               {activeDictionary?.title || tDict('allDictionaries')}
             </h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 sepia:text-accents-6 max-w-2xl leading-relaxed">
               {tDict('subtitle')}
             </p>
           </div>
@@ -80,28 +80,28 @@ export const DictionariesDashboard: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             {/* Buscador en tiempo real */}
             <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 sepia:text-accents-4" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={tDict('searchPlaceholder')}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 sepia:bg-inner-card border border-zinc-200 dark:border-zinc-800 sepia:border-border text-sm text-zinc-900 dark:text-zinc-100 sepia:text-foreground placeholder-zinc-400 dark:placeholder-zinc-500 sepia:placeholder:text-accents-4 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 sepia:focus:border-foreground transition-colors"
               />
             </div>
           </div>
         </div>
 
         {/* Selector Horizontal Alfabético A-Z */}
-        <div className="mt-6 pt-5 border-t border-zinc-100 dark:border-zinc-800/80 space-y-3">
+        <div className="mt-6 pt-5 border-t border-zinc-100 dark:border-zinc-800/80 sepia:border-border space-y-3">
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
             <button
               type="button"
               onClick={() => setSelectedLetter('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-all cursor-pointer ${
                 selectedLetter === 'all'
-                  ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 shadow-xs'
-                  : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 border border-zinc-200 dark:border-zinc-800'
+                  ? 'bg-zinc-900 dark:bg-zinc-100 sepia:bg-foreground text-white dark:text-zinc-950 sepia:text-background shadow-xs'
+                  : 'bg-zinc-100 dark:bg-zinc-900 sepia:bg-inner-card text-zinc-600 dark:text-zinc-400 sepia:text-accents-6 hover:text-zinc-900 dark:hover:text-zinc-200 sepia:hover:text-foreground border border-zinc-200 dark:border-zinc-800 sepia:border-border'
               }`}
             >
               {tDict('allLetters')}
@@ -118,10 +118,10 @@ export const DictionariesDashboard: React.FC = () => {
                   onClick={() => setSelectedLetter(letter)}
                   className={`w-8 h-8 rounded-lg text-xs font-mono font-bold shrink-0 transition-all flex items-center justify-center cursor-pointer ${
                     isSelected
-                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-xs scale-105'
+                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 sepia:bg-foreground sepia:text-background shadow-xs scale-105'
                       : hasItems
-                      ? 'bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600'
-                      : 'bg-zinc-50 dark:bg-zinc-950/50 text-zinc-300 dark:text-zinc-700 border border-transparent cursor-not-allowed opacity-40'
+                      ? 'bg-white dark:bg-zinc-900 sepia:bg-card-bg text-zinc-800 dark:text-zinc-200 sepia:text-foreground border border-zinc-200 dark:border-zinc-800 sepia:border-border hover:border-zinc-400 dark:hover:border-zinc-600 sepia:hover:border-card-hover-border'
+                      : 'bg-zinc-50 dark:bg-zinc-950/50 sepia:bg-inner-card/50 text-zinc-300 dark:text-zinc-700 sepia:text-accents-3 border border-transparent cursor-not-allowed opacity-40'
                   }`}
                 >
                   {letter}
@@ -132,8 +132,8 @@ export const DictionariesDashboard: React.FC = () => {
 
           {/* Filtros de Categorías */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
-            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center gap-1 shrink-0 mr-1">
-              <Filter className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 sepia:text-accents-5 flex items-center gap-1 shrink-0 mr-1">
+              <Filter className="w-3.5 h-3.5 text-zinc-400 sepia:text-accents-4" />
               {tDict('filterByCategory')}
             </span>
             {categories.map((cat) => (
@@ -143,8 +143,8 @@ export const DictionariesDashboard: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                   selectedCategory === cat.id
-                    ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 font-semibold shadow-xs'
-                    : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+                    ? 'bg-zinc-900 dark:bg-zinc-100 sepia:bg-foreground text-white dark:text-zinc-950 sepia:text-background font-semibold shadow-xs'
+                    : 'bg-zinc-100 dark:bg-zinc-900 sepia:bg-inner-card text-zinc-600 dark:text-zinc-400 sepia:text-accents-6 hover:text-zinc-900 dark:hover:text-zinc-200 sepia:hover:text-foreground border border-zinc-200 dark:border-zinc-800 sepia:border-border hover:border-zinc-300 dark:hover:border-zinc-700 sepia:hover:border-card-hover-border'
                 }`}
               >
                 {cat.label}

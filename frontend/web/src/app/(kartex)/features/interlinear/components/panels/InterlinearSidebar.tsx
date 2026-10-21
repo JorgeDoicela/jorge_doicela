@@ -135,14 +135,14 @@ export const InterlinearSidebar: React.FC = () => {
         </div>
 
           {/* Selector de Tradición Lingüística (Hebreo AT vs Griego NT) */}
-          <div className="grid grid-cols-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200/60 dark:border-zinc-800/60">
+          <div className="grid grid-cols-2 rounded-lg border border-border divide-x divide-border overflow-hidden">
             <button
               type="button"
               onClick={() => interlinear?.setActiveCanon('OT')}
-              className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              className={`py-1.5 text-xs font-medium transition-colors cursor-pointer text-center ${
                 activeCanon === 'OT'
-                  ? 'bg-background text-foreground shadow-xs font-semibold'
-                  : 'text-zinc-500 hover:text-foreground'
+                  ? 'bg-accents-2 text-foreground font-semibold'
+                  : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
               }`}
             >
               Hebreo / Arameo (AT)
@@ -150,10 +150,10 @@ export const InterlinearSidebar: React.FC = () => {
             <button
               type="button"
               onClick={() => interlinear?.setActiveCanon('NT')}
-              className={`py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              className={`py-1.5 text-xs font-medium transition-colors cursor-pointer text-center ${
                 activeCanon === 'NT'
-                  ? 'bg-background text-foreground shadow-xs font-semibold'
-                  : 'text-zinc-500 hover:text-foreground'
+                  ? 'bg-accents-2 text-foreground font-semibold'
+                  : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
               }`}
             >
               Griego Koiné (NT)
@@ -161,14 +161,14 @@ export const InterlinearSidebar: React.FC = () => {
           </div>
 
           {/* Subpestañas del Sidebar: Corpus Canónico vs Capas Morfológicas */}
-          <div className="grid grid-cols-2 gap-1 pt-1 border-t border-zinc-100 dark:border-zinc-800/60">
+          <div className="grid grid-cols-2 gap-1 pt-1 border-t border-border">
             <button
               type="button"
               onClick={() => setActiveSubTab('corpus')}
               className={`py-1 text-[11px] font-medium rounded-md transition-colors cursor-pointer text-center ${
                 activeSubTab === 'corpus'
                   ? 'text-foreground border-b-2 border-foreground font-semibold'
-                  : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
+                  : 'text-accents-5 hover:text-foreground'
               }`}
             >
               Libros del Canon
@@ -179,7 +179,7 @@ export const InterlinearSidebar: React.FC = () => {
               className={`py-1 text-[11px] font-medium rounded-md transition-colors cursor-pointer text-center ${
                 activeSubTab === 'layers'
                   ? 'text-foreground border-b-2 border-foreground font-semibold'
-                  : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
+                  : 'text-accents-5 hover:text-foreground'
               }`}
             >
               Capas & Ajustes
@@ -188,16 +188,16 @@ export const InterlinearSidebar: React.FC = () => {
       </StudySidePanel.Toolbar>
 
       {/* CONTENIDO CON SCROLL */}
-      <StudySidePanel.Body className="space-y-5">
+      <StudySidePanel.Body className="space-y-4">
           {activeSubTab === 'corpus' && (
             <div className="space-y-4">
               {currentGroups.map((group) => (
-                <div key={group.id} className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block">
+                <div key={group.id} className="space-y-1.5">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-accents-4 block px-1">
                     {group.name}
                   </span>
 
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     {group.books.map((b) => {
                       const isSelected = selectedBookId === b.id;
                       return (
@@ -207,14 +207,14 @@ export const InterlinearSidebar: React.FC = () => {
                           onClick={() => {
                             passageContext?.setPassage(b.id, 1);
                           }}
-                          className={`w-full text-left px-3 py-2 rounded-xl border transition-all duration-150 flex items-center justify-between cursor-pointer ${
+                          className={`w-full text-left px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
                             isSelected
-                              ? 'bg-zinc-100/90 dark:bg-zinc-900/90 border-zinc-400 dark:border-zinc-600 shadow-2xs'
-                              : 'bg-background border-zinc-200/60 dark:border-zinc-800/60 hover:border-zinc-300 dark:hover:border-zinc-700'
+                              ? 'bg-accents-2 text-foreground font-semibold'
+                              : 'text-accents-6 hover:bg-accents-1 hover:text-foreground'
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-bold text-zinc-500">
+                            <span className="text-xs font-mono font-bold text-accents-4 w-7 text-left shrink-0">
                               {b.abbr}
                             </span>
                             <span className="text-xs font-semibold text-foreground">

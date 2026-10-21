@@ -63,32 +63,32 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
       onClick={onSelect}
       className={`group relative p-6 rounded-2xl border transition-all duration-200 cursor-pointer ${
         isSelected
-          ? 'bg-zinc-100/80 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 shadow-xs ring-1 ring-zinc-300 dark:ring-zinc-700'
-          : 'bg-white dark:bg-[#121214] border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xs'
+          ? 'bg-zinc-100/80 dark:bg-zinc-900 sepia:bg-card-hover border-zinc-300 dark:border-zinc-700 sepia:border-border shadow-xs ring-1 ring-zinc-300 dark:ring-zinc-700 sepia:ring-border'
+          : 'bg-white dark:bg-[#121214] sepia:bg-card-bg border-zinc-200/80 dark:border-zinc-800/80 sepia:border-border hover:border-zinc-300 dark:hover:border-zinc-700 sepia:hover:border-card-hover-border hover:shadow-xs'
       }`}
     >
       {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2.5 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
+          <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100 sepia:text-foreground">
             {bookName || entry.bookId} {entry.chapter}:{verseRangeText}
           </span>
           {author && (
             <>
-              <span className="text-zinc-300 dark:text-zinc-700 select-none">·</span>
-              <span className="text-zinc-600 dark:text-zinc-400 font-medium">
+              <span className="text-zinc-300 dark:text-zinc-700 sepia:text-accents-3 select-none">·</span>
+              <span className="text-zinc-600 dark:text-zinc-400 sepia:text-accents-5 font-medium">
                 {author.author}
               </span>
             </>
           )}
         </div>
-        <span className="text-zinc-400 dark:text-zinc-500 font-mono text-[11px]">
+        <span className="text-zinc-400 dark:text-zinc-500 sepia:text-accents-4 font-mono text-[11px]">
           {author?.era || tComm('classicalExegesisFallback')}
         </span>
       </div>
 
       {/* Título de la Perícopa */}
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors mb-3 leading-snug">
+      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 sepia:text-foreground group-hover:text-zinc-700 dark:group-hover:text-zinc-300 sepia:group-hover:text-foreground transition-colors mb-3 leading-snug">
         {entry.title}
       </h3>
 

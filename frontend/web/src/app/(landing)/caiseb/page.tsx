@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { getLocale } from 'next-intl/server';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Sparkles, User } from 'lucide-react';
 
 function GithubIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
@@ -55,12 +55,20 @@ const BILINGUAL_CONTENT: Record<'es' | 'en', LocaleContent> = {
         tag: 'GitHub',
       },
       {
-        title: 'DoicelaDev en Hugging Face',
-        subtitle: 'Organización con modelos de lenguaje, datasets, pipelines y artefactos de inteligencia artificial.',
+        title: 'Modelos de IA en Hugging Face',
+        subtitle: 'Colección de modelos de lenguaje, datasets, pipelines y artefactos de inteligencia artificial.',
         url: 'https://huggingface.co/doiceladev',
         category: 'Modelos & IA',
         icon: Sparkles,
         tag: 'Hugging Face',
+      },
+      {
+        title: 'Jorge Doicela',
+        subtitle: 'Desarrollador de software, estudiante de Ingeniería en IA y Ciberseguridad. Portafolio, proyectos y contacto.',
+        url: 'https://portfolio.jorgedoicela.com',
+        category: 'Autor & Ponente',
+        icon: User,
+        tag: 'Portafolio',
       },
     ],
   },
@@ -80,12 +88,20 @@ const BILINGUAL_CONTENT: Record<'es' | 'en', LocaleContent> = {
         tag: 'GitHub',
       },
       {
-        title: 'DoicelaDev on Hugging Face',
-        subtitle: 'Organization hosting language models, datasets, pipelines, and artificial intelligence artifacts.',
+        title: 'AI Models on Hugging Face',
+        subtitle: 'Collection of language models, datasets, pipelines, and artificial intelligence artifacts.',
         url: 'https://huggingface.co/doiceladev',
         category: 'Models & AI',
         icon: Sparkles,
         tag: 'Hugging Face',
+      },
+      {
+        title: 'Jorge Doicela',
+        subtitle: 'Software developer, AI Engineering and Cybersecurity student. Portfolio, projects, and contact.',
+        url: 'https://portfolio.jorgedoicela.com',
+        category: 'Author & Speaker',
+        icon: User,
+        tag: 'Portfolio',
       },
     ],
   },
@@ -122,7 +138,7 @@ export default async function CaisebPage() {
       {/* Contenido Principal */}
       <main
         id="main-content"
-        className="w-full max-w-4xl mx-auto z-10 flex-grow flex flex-col justify-center items-center pt-20 sm:pt-24 pb-8 outline-none focus:outline-none my-auto"
+        className="w-full max-w-6xl mx-auto z-10 flex-grow flex flex-col justify-center items-center pt-20 sm:pt-24 pb-8 outline-none focus:outline-none my-auto"
         tabIndex={-1}
       >
         {/* Encabezado de la Sección */}
@@ -135,8 +151,8 @@ export default async function CaisebPage() {
           </p>
         </div>
 
-        {/* Cuadrícula de 2 Columnas: Izquierda y Derecha */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch">
+        {/* Cuadrícula de 3 Columnas Adaptativa */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
           {t.links.map((link) => {
             const IconComponent = link.icon;
             return (

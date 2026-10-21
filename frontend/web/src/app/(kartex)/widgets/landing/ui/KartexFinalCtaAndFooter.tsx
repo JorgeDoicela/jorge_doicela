@@ -17,10 +17,10 @@ export function KartexFinalCtaAndFooter({ studyUrl = '/study' }: KartexFinalCtaA
             {/* CTA Final */}
             <section className="py-28 sm:py-36 text-center space-y-6 w-full">
                 <div className="w-full px-4 sm:px-6 lg:px-8 space-y-4 max-w-4xl mx-auto">
-                    <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-[#202124] dark:text-zinc-100">
+                    <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-foreground">
                         {tLanding('ctaTitle')}
                     </h2>
-                    <p className="text-base sm:text-[18px] text-[#3c4043] dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
+                    <p className="text-base sm:text-[18px] text-accents-6 max-w-xl mx-auto leading-relaxed">
                         {tLanding('ctaSubtitle')}
                     </p>
                     <div className="pt-4">

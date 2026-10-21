@@ -60,8 +60,8 @@ export const TimelineSidebar: React.FC = () => {
             onClick={() => setActiveTab('eras')}
             className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
               activeTab === 'eras'
-                ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                ? 'bg-background text-foreground font-semibold shadow-xs'
+                : 'text-zinc-500 hover:text-foreground'
             }`}
           >
             <span>{tTimeline('biblicalEras')}</span>
@@ -71,8 +71,8 @@ export const TimelineSidebar: React.FC = () => {
             onClick={() => setActiveTab('tracks')}
             className={`py-1.5 px-3 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center ${
               activeTab === 'tracks'
-                ? 'bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                ? 'bg-background text-foreground font-semibold shadow-xs'
+                : 'text-zinc-500 hover:text-foreground'
             }`}
           >
             <span>{tTimeline('historicalTracks')}</span>
@@ -99,7 +99,7 @@ export const TimelineSidebar: React.FC = () => {
                     passageContext?.toggleLeftSidebar();
                   }
                 }}
-                className="w-full text-left p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-amber-400 dark:hover:border-amber-600 transition-all cursor-pointer flex flex-col gap-0.5 group"
+                className="w-full text-left p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-card-bg text-zinc-700 dark:text-zinc-300 hover:border-amber-400 dark:hover:border-amber-600 transition-all cursor-pointer flex flex-col gap-0.5 group"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
@@ -134,7 +134,7 @@ export const TimelineSidebar: React.FC = () => {
                   onClick={() => timeline.toggleTrack(track.id)}
                   className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
                     isVisible
-                      ? 'border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-medium text-zinc-900 dark:text-zinc-100 shadow-xs'
+                      ? 'border-zinc-300 dark:border-zinc-700 bg-background font-medium text-foreground shadow-xs'
                       : 'border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/50 text-zinc-400 dark:text-zinc-600 opacity-60'
                   }`}
                 >

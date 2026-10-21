@@ -64,8 +64,9 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
   milestones = [],
   isLoading = false,
 }) => {
-  const { resolvedTheme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const isSepia = resolvedTheme === 'sepia' || theme === 'sepia';
   const t = useTranslations('Timeline');
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,15 +121,17 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
   }
 
   // Colores SVG adaptados
-  const guideLineColor = isDark ? '#1e293b' : '#e2e8f0';
-  const rulerLineColor = isDark ? '#334155' : '#cbd5e1';
-  const rulerTextColor = isDark ? '#94a3b8' : '#475569';
+  const guideLineColor = isDark ? '#1e293b' : isSepia ? '#E8DEC8' : '#e2e8f0';
+  const rulerLineColor = isDark ? '#334155' : isSepia ? '#D4C3A3' : '#cbd5e1';
+  const rulerTextColor = isDark ? '#94a3b8' : isSepia ? '#8C765C' : '#475569';
+  const trackTitleColor = isDark ? '#f1f5f9' : isSepia ? '#2C221E' : '#0f172a';
+  const haloStrokeColor = isDark ? '#070b14' : isSepia ? '#FAF6EE' : '#ffffff';
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${className || 'h-[500px]'} rounded-xl border border-accents-2 overflow-hidden select-none shadow-inner transition-colors duration-200 touch-none ${
-        isDark ? 'bg-[#070b14]' : 'bg-[#ffffff]'
+      className={`relative w-full ${className || 'h-[500px]'} rounded-xl border border-accents-2 overflow-hidden select-none shadow-inner transition-colors duration-200 touch-none bg-background ${
+        isDark ? 'dark:bg-[#070b14]' : isSepia ? 'bg-[#FAF6EE]' : ''
       } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
@@ -228,7 +231,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
               y="14"
               fontSize="9"
               fontWeight="bold"
-              fill={isDark ? '#f1f5f9' : '#0f172a'}
+              fill={trackTitleColor}
               fontFamily="monospace"
               className="select-none"
             >
@@ -288,7 +291,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
               y="14"
               fontSize="9"
               fontWeight="bold"
-              fill={isDark ? '#f1f5f9' : '#0f172a'}
+              fill={trackTitleColor}
               fontFamily="monospace"
               className="select-none"
             >
@@ -347,7 +350,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
               y="14"
               fontSize="9"
               fontWeight="bold"
-              fill={isDark ? '#f1f5f9' : '#0f172a'}
+              fill={trackTitleColor}
               fontFamily="monospace"
               className="select-none"
             >
@@ -407,7 +410,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
               y="14"
               fontSize="9"
               fontWeight="bold"
-              fill={isDark ? '#f1f5f9' : '#0f172a'}
+              fill={trackTitleColor}
               fontFamily="monospace"
               className="select-none"
             >
@@ -466,7 +469,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
               y="14"
               fontSize="9"
               fontWeight="bold"
-              fill={isDark ? '#f1f5f9' : '#0f172a'}
+              fill={trackTitleColor}
               fontFamily="monospace"
               className="select-none"
             >
@@ -504,7 +507,7 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
                     cy={labelY}
                     r="4.5"
                     fill="#f59e0b"
-                    stroke={isDark ? '#070b14' : '#ffffff'}
+                    stroke={haloStrokeColor}
                     strokeWidth="1.2"
                   />
                   {/* Texto de alto contraste con halo */}
@@ -513,8 +516,8 @@ export const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
                     y={labelY + 3.5}
                     fontSize="8.5"
                     fontWeight="600"
-                    fill={isDark ? '#f1f5f9' : '#0f172a'}
-                    stroke={isDark ? '#070b14' : '#ffffff'}
+                    fill={trackTitleColor}
+                    stroke={haloStrokeColor}
                     strokeWidth={isDark ? '0.4' : '0.8'}
                     paintOrder="stroke fill"
                     className="select-none font-sans"

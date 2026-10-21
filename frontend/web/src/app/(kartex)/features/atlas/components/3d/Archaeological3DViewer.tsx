@@ -8,8 +8,9 @@ import { AncientStructureId } from '../../types';
 
 export const Archaeological3DViewer: React.FC = () => {
   const t = useTranslations('Atlas');
-  const { resolvedTheme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const isSepia = resolvedTheme === 'sepia' || theme === 'sepia';
 
   const {
     structures,
@@ -61,9 +62,9 @@ export const Archaeological3DViewer: React.FC = () => {
     };
   };
 
-  const floorGlowCenter = isDark ? '#1e293b' : '#e2e8f0';
-  const floorGlowOuter = isDark ? '#070b14' : '#ffffff';
-  const gridLineColor = isDark ? '#334155' : '#cbd5e1';
+  const floorGlowCenter = isDark ? '#1e293b' : isSepia ? '#E8DEC8' : '#e2e8f0';
+  const floorGlowOuter = isDark ? '#070b14' : isSepia ? '#FAF6EE' : '#ffffff';
+  const gridLineColor = isDark ? '#334155' : isSepia ? '#D4C3A3' : '#cbd5e1';
 
   if (!activeStructure) {
     return (
@@ -106,8 +107,8 @@ export const Archaeological3DViewer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Visor 3D Interactivo Canvas SVG Adaptable */}
         <div
-          className={`lg:col-span-8 relative h-[520px] rounded-xl border border-accents-2 overflow-hidden select-none shadow-2xl transition-colors duration-200 ${
-            isDark ? 'bg-[#070b14]' : 'bg-[#ffffff]'
+          className={`lg:col-span-8 relative h-[520px] rounded-xl border border-accents-2 overflow-hidden select-none shadow-2xl transition-colors duration-200 bg-background ${
+            isDark ? 'dark:bg-[#070b14]' : isSepia ? 'bg-[#FAF6EE]' : ''
           } ${isOrbiting ? 'cursor-grabbing' : 'cursor-grab'}`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}

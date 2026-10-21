@@ -6,7 +6,6 @@ import { LanguageToggle } from '../components/LanguageToggle';
 import { BackToPortalButton } from '../components/BackToPortalButton';
 import { TypewriterRole } from '../components/TypewriterRole';
 import { ValuesPhilosophySection } from '../components/ValuesPhilosophySection';
-import { PortfolioFooterLinks } from '../components/PortfolioFooterLinks';
 import { getLocale, getTranslations } from 'next-intl/server';
 import {
     Mail,
@@ -66,6 +65,7 @@ export default async function PortfolioPage() {
     const tTools = await getTranslations('Tools');
     const tContact = await getTranslations('Contact');
     const tTerm = await getTranslations('Terminal');
+    const tFooter = await getTranslations('Footer');
     const projects = await getPortfolioProjects(locale);
 
     return (
@@ -451,9 +451,8 @@ export default async function PortfolioPage() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full max-w-7xl mx-auto mt-20 border-t border-border/60 pt-8 pb-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
-                <span>Jorge Ismael Doicela Molina &copy; {new Date().getFullYear()}</span>
-                <PortfolioFooterLinks />
+            <footer className="w-full max-w-7xl mx-auto mt-20 border-t border-border/60 pt-8 pb-12 flex items-center justify-center text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
+                <span>{tFooter('copyright', { year: new Date().getFullYear().toString() })}</span>
             </footer>
 
         </div>

@@ -144,7 +144,7 @@ export function KartexSelect<T extends string | number = string | number>({
   // Calibración de tamaños
   const sizeClasses = {
     xs: 'px-2 py-1 text-[11px] h-7',
-    sm: 'px-2.5 sm:px-3 py-1.5 text-xs h-8',
+    sm: 'px-2 sm:px-3 py-1.5 text-xs h-8',
     md: 'px-3.5 py-2 text-sm h-10',
   }[size];
 
@@ -157,7 +157,7 @@ export function KartexSelect<T extends string | number = string | number>({
   return (
     <div
       ref={containerRef}
-      className={`relative text-left select-none ${className || 'w-full'}`}
+      className={`relative text-left select-none ${isOpen ? 'z-50' : ''} ${className || 'w-full'}`}
       title={title}
     >
       {/* Botón Trigger con Estética Geist Vercel OLED */}
@@ -170,31 +170,29 @@ export function KartexSelect<T extends string | number = string | number>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={ariaLabel || title || selectedOption?.label || placeholder}
-        className={`w-full flex items-center justify-between gap-2 rounded-lg font-medium transition-all duration-150 cursor-pointer text-left
-          bg-white dark:bg-[#0a0a0a]
-          border border-zinc-200/90 dark:border-zinc-800/90
-          text-zinc-900 dark:text-zinc-100
-          hover:border-zinc-300 dark:hover:border-zinc-700
-          hover:bg-zinc-50 dark:hover:bg-zinc-900/60
-          focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600 focus:border-zinc-400 dark:focus:border-zinc-600
-          shadow-xs
-          active:scale-[0.99]
+        className={`w-full flex items-center justify-between gap-1.5 sm:gap-2 rounded-lg font-medium transition-colors cursor-pointer text-left
+          border shadow-xs
           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
+          ${
+            isOpen
+              ? 'border-foreground bg-accents-2 text-foreground ring-2 ring-foreground/10 font-semibold'
+              : 'border-border bg-card-bg text-foreground hover:border-accents-4 hover:bg-accents-1'
+          }
           ${sizeClasses}`}
       >
-        <span className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
-          {icon && <span className="shrink-0 text-zinc-400 dark:text-zinc-500">{icon}</span>}
+        <span className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1 overflow-hidden">
+          {icon && <span className="shrink-0 text-accents-4">{icon}</span>}
           {selectedOption ? (
             <>
               {selectedOption.badge && (
-                <span className="shrink-0 font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                <span className="shrink-0 font-bold tracking-tight text-foreground">
                   {selectedOption.badge}
                 </span>
               )}
               <span
                 className={`truncate ${
                   hideLabelOnMobile && selectedOption.badge
-                    ? 'hidden sm:inline text-zinc-500 dark:text-zinc-400 font-normal'
+                    ? 'hidden sm:inline text-accents-5 font-normal'
                     : 'block'
                 }`}
               >
@@ -202,13 +200,13 @@ export function KartexSelect<T extends string | number = string | number>({
               </span>
             </>
           ) : (
-            <span className="text-zinc-400 dark:text-zinc-500 truncate block">{placeholder}</span>
+            <span className="text-accents-4 truncate block">{placeholder}</span>
           )}
         </span>
 
         <ChevronDown
-          className={`shrink-0 text-zinc-400 dark:text-zinc-500 transition-transform duration-200 ml-1 ${chevronSizes} ${
-            isOpen ? 'rotate-180 text-zinc-900 dark:text-zinc-100' : ''
+          className={`shrink-0 text-accents-4 transition-transform duration-200 ml-0.5 sm:ml-1 ${chevronSizes} ${
+            isOpen ? 'rotate-180 text-foreground' : ''
           }`}
           strokeWidth={1.5}
         />
@@ -223,12 +221,14 @@ export function KartexSelect<T extends string | number = string | number>({
           aria-activedescendant={
             focusedIndex >= 0 ? `kartex-select-opt-${id}-${focusedIndex}` : undefined
           }
-          className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-1.5 z-50 w-max min-w-full max-w-[calc(100vw-2rem)] sm:max-w-xs max-h-64 overflow-y-auto overscroll-contain
-            rounded-xl p-1
-            bg-white dark:bg-[#0a0a0a]
-            border border-zinc-200/90 dark:border-zinc-800/90
-            shadow-2xl shadow-black/15 dark:shadow-black/70
-            animate-in fade-in zoom-in-[0.98] duration-150
+          className={`absolute left-1/2 -translate-x-1/2 sm:translate-x-0 ${
+            align === 'right' ? 'sm:left-auto sm:right-0' : 'sm:left-0 sm:right-auto'
+          } top-full mt-1.5 z-50 w-[290px] sm:w-80 max-w-[calc(100vw-1.5rem)] max-h-72 overflow-y-auto overscroll-contain
+            rounded-xl p-1.5
+            bg-card-bg
+            border border-border
+            shadow-2xl
+            animate-in fade-in zoom-in-95 duration-100
             kartex-scrollbar-slim
             ${menuClassName}`}
         >
@@ -254,15 +254,15 @@ export function KartexSelect<T extends string | number = string | number>({
                     option.disabled
                       ? 'opacity-40 cursor-not-allowed'
                       : isSelected
-                      ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                      ? 'bg-accents-2 text-foreground font-semibold'
                       : isFocused
-                      ? 'bg-zinc-50 dark:bg-zinc-900/60 text-zinc-900 dark:text-zinc-100'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/60'
+                      ? 'bg-accents-1 text-foreground'
+                      : 'text-accents-6 hover:text-foreground hover:bg-accents-1'
                   }`}
               >
-                <div className="flex items-center gap-3 min-w-0 truncate">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   {option.badge && (
-                    <span className="shrink-0 font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                    <span className="shrink-0 font-bold tracking-tight text-foreground font-mono text-xs w-9">
                       {option.badge}
                     </span>
                   )}

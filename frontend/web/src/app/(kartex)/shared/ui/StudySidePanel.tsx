@@ -44,7 +44,7 @@ const StudySidePanelToolbar: React.FC<StudySidePanelToolbarProps> = ({
     children,
 }) => {
     return (
-        <div className={`p-3 border-b border-zinc-100 dark:border-zinc-800/80 shrink-0 ${className}`}>
+        <div className={`p-3 border-b border-border/60 shrink-0 ${className}`}>
             {children}
         </div>
     );
@@ -66,7 +66,7 @@ const StudySidePanelFooter: React.FC<StudySidePanelFooterProps> = ({
     children,
 }) => {
     return (
-        <div className={`p-3 border-t border-zinc-100 dark:border-zinc-800/80 shrink-0 ${className}`}>
+        <div className={`p-3 border-t border-border/60 shrink-0 ${className}`}>
             {children}
         </div>
     );
@@ -203,7 +203,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                         opacity: dragOpacity,
                     } as React.CSSProperties
                 }
-                className={`absolute inset-y-0 ${borderClass} z-40 h-full lg:relative lg:inset-auto lg:z-20 w-[88vw] max-w-[380px] sm:max-w-[420px] lg:w-[var(--active-panel-w)] lg:max-w-none flex-shrink-0 flex flex-col print:hidden bg-white dark:bg-[#121214] border-zinc-200 dark:border-zinc-800 lg:shadow-none overflow-hidden ${transitionClass} ${isOpen
+                className={`absolute inset-y-0 ${borderClass} z-40 h-full lg:relative lg:inset-auto lg:z-20 w-[88vw] max-w-[380px] sm:max-w-[420px] lg:w-[var(--active-panel-w)] lg:max-w-none flex-shrink-0 flex flex-col print:hidden bg-card-bg border-border text-foreground lg:shadow-none overflow-hidden ${transitionClass} ${isOpen
                         ? 'pointer-events-auto lg:overflow-visible translate-x-0 opacity-100 visible shadow-[0_0_50px_rgba(0,0,0,0.2)] dark:shadow-[0_0_60px_rgba(0,0,0,0.7)]'
                         : isLeft
                             ? '-translate-x-full lg:translate-x-0 pointer-events-none opacity-0 invisible lg:visible shadow-none lg:border-transparent'
@@ -235,10 +235,10 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                 >
                     {/* Cabecera Móvil Unificada (si se define title y showMobileHeader está activo) */}
                     {title && showMobileHeader && (
-                        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/80 shrink-0">
+                        <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
                             <div className="flex items-center gap-2 min-w-0">
                                 {icon && <span className="shrink-0">{icon}</span>}
-                                <span className="font-semibold text-xs tracking-wider uppercase text-zinc-600 dark:text-zinc-400 truncate">
+                                <span className="font-semibold text-xs tracking-wider uppercase text-accents-5 truncate">
                                     {title}
                                 </span>
                                 {badge}
@@ -247,7 +247,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                                 type="button"
                                 onClick={handleClose}
                                 aria-label={collapseTitle || 'Cerrar panel'}
-                                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 active:scale-95"
+                                className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0 active:scale-95"
                             >
                                 <X className="w-4 h-4" />
                             </button>

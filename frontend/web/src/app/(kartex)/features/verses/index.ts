@@ -8,7 +8,6 @@ export type {
   ReaderLayoutMode,
   ReaderFontSize,
   ReaderFontFamily,
-  ReaderTone,
   ReaderSettings,
 } from './types';
 export { useVerses } from './hooks/useVerses';

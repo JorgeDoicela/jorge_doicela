@@ -399,12 +399,12 @@ export const AppleDetailExplorer: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Área Inferior con altura constante fija: Evita layout shift o cambios de tamaño entre estado cerrado y abierto */}
-                    <div className="w-full h-[125px] sm:h-[135px] flex items-center justify-center px-1 sm:px-4">
+                    {/* Área Inferior: Evita layout shift entre estado cerrado y abierto */}
+                    <div className="w-full min-h-[110px] sm:min-h-[125px] flex items-center justify-center px-1 sm:px-4">
                         {isExpanded ? (
-                            /* Modo Detalle Abierto: Bocadillo con bordes super redondeados y flechas flotantes laterales */
-                            <div className="relative w-full max-w-[390px] mx-auto animate-fade-slide px-5 sm:px-6">
-                                {/* Flecha Izquierda Flotante (Touch Target 40px) */}
+                            /* Modo Detalle Abierto: Bocadillo con bordes super redondeados y flechas flotantes ergonómicas */
+                            <div className="relative w-full max-w-[420px] mx-auto animate-fade-slide px-6 sm:px-7">
+                                {/* Flecha Izquierda Flotante */}
                                 <button
                                     onClick={handlePrev}
                                     className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"
@@ -414,14 +414,14 @@ export const AppleDetailExplorer: React.FC = () => {
                                 </button>
 
                                 {/* Bocadillo Descriptivo Apple Style */}
-                                <div className="w-full rounded-[1.6rem] sm:rounded-[1.8rem] bg-btn-sec border border-card-border p-4 sm:p-5 text-left shadow-sm backdrop-blur-2xl">
+                                <div className="w-full rounded-[1.6rem] sm:rounded-[1.8rem] bg-btn-sec border border-card-border px-5 py-3.5 sm:px-6 sm:py-4 text-left shadow-sm backdrop-blur-2xl">
                                     <p className="text-xs sm:text-sm text-foreground leading-relaxed">
                                         <span className="font-semibold">{current.title}. </span>
                                         <span className="text-text-muted font-normal">{current.description}</span>
                                     </p>
                                 </div>
 
-                                {/* Flecha Derecha Flotante (Touch Target 40px) */}
+                                {/* Flecha Derecha Flotante */}
                                 <button
                                     onClick={handleNext}
                                     className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-btn-sec border border-card-border flex items-center justify-center text-foreground hover:bg-btn-sec-hover active:scale-95 transition-all shadow-md z-20 cursor-pointer"

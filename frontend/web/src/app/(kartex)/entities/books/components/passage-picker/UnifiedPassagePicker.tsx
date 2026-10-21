@@ -154,14 +154,14 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   };
 
   return (
-    <div className={`relative inline-flex items-center gap-1 shrink-0 ${isOpen ? 'z-50' : ''} ${className}`} ref={containerRef}>
+    <div className={`relative inline-flex items-center gap-0.5 sm:gap-1 shrink min-w-0 ${isOpen ? 'z-50' : ''} ${className}`} ref={containerRef}>
       {/* Botón de capítulo anterior si está disponible */}
       {onPrevChapter && (
         <button
           type="button"
           onClick={onPrevChapter}
           disabled={selectedChapter !== null && selectedChapter <= 1}
-          className={`h-8 w-8 rounded-lg border border-accents-2 bg-background flex items-center justify-center transition-all cursor-pointer ${
+          className={`h-8 w-7 sm:w-8 shrink-0 rounded-lg border border-accents-2 bg-background flex items-center justify-center transition-all cursor-pointer ${
             selectedChapter !== null && selectedChapter <= 1
               ? 'opacity-30 cursor-not-allowed text-accents-4'
               : 'hover:border-foreground text-accents-6 hover:text-foreground shadow-xs'
@@ -181,13 +181,13 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           setIsOpen(!isOpen);
           setSelectedBookForChapters(null);
         }}
-        className={`px-3 h-8 rounded-lg border transition-all flex items-center gap-2 cursor-pointer shadow-xs ${
+        className={`px-2 sm:px-3 h-8 min-w-0 rounded-lg border transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer shadow-xs ${
           isOpen
             ? 'border-foreground bg-accents-1 text-foreground ring-2 ring-foreground/10'
             : 'border-accents-2 bg-background hover:border-foreground text-foreground'
         } ${size === 'sm' ? 'text-xs' : 'text-xs sm:text-sm font-semibold'}`}
       >
-        <span className="font-bold tracking-tight truncate max-w-[140px] sm:max-w-none">
+        <span className="font-bold tracking-tight truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
           {currentBook ? `${getBookDisplayName(currentBook)} ${selectedChapter || 1}` : t('selectPassage')}
         </span>
 
@@ -209,7 +209,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           type="button"
           onClick={onNextChapter}
           disabled={selectedChapter !== null && selectedChapter >= totalChapters}
-          className={`h-8 w-8 rounded-lg border border-accents-2 bg-background flex items-center justify-center transition-all cursor-pointer ${
+          className={`h-8 w-7 sm:w-8 shrink-0 rounded-lg border border-accents-2 bg-background flex items-center justify-center transition-all cursor-pointer ${
             selectedChapter !== null && selectedChapter >= totalChapters
               ? 'opacity-30 cursor-not-allowed text-accents-4'
               : 'hover:border-foreground text-accents-6 hover:text-foreground shadow-xs'
@@ -224,7 +224,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
 
       {/* Modal Desplegable / Popover */}
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 z-50 w-[calc(100vw-2rem)] max-w-sm sm:w-96 p-3 rounded-2xl border border-accents-2 bg-white dark:bg-[#0a0a0a] shadow-2xl space-y-3 animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute top-full left-0 mt-2 z-50 w-[calc(100vw-2rem)] max-w-sm sm:w-96 p-3 rounded-2xl border border-accents-2 bg-card-bg shadow-2xl space-y-3 animate-in fade-in zoom-in-95 duration-100">
           {/* Vista 1: Selector de Libros */}
           {!selectedBookForChapters ? (
             <>

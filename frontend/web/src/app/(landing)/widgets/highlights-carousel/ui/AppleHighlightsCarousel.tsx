@@ -181,7 +181,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
         <section
             ref={sectionRef}
             id="highlights"
-            className="w-screen relative left-1/2 -translate-x-1/2 flex flex-col gap-6 py-8 overflow-hidden scroll-mt-16 sm:scroll-mt-24 md:scroll-mt-32 [--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)] [--card-gap:1.25rem] sm:[--card-gap:1.75rem] md:[--card-gap:2.25rem]"
+            className="w-screen relative left-1/2 -translate-x-1/2 flex flex-col gap-6 py-8 overflow-hidden scroll-mt-16 sm:scroll-mt-24 md:scroll-mt-32 [--card-w:86vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)] [--card-gap:1rem] sm:[--card-gap:1.75rem] md:[--card-gap:2.25rem]"
         >
             {/* Título de Sección Estilo Oficial Apple */}
             <div className="w-full max-w-5xl mx-auto flex flex-col items-start px-5 sm:px-8">
@@ -247,7 +247,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                     }
                                 }}
                                 style={{ width: 'var(--card-w)', marginRight: 'var(--card-gap)' }}
-                                className="shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border !shadow-none p-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[480px] sm:h-[500px] md:h-[520px] cursor-pointer group opacity-100"
+                                className="shrink-0 rounded-[2rem] sm:rounded-[2.4rem] md:rounded-[2.8rem] bg-card border border-card-border !shadow-none px-5 py-6 sm:p-10 md:p-12 backdrop-blur-2xl transition-all duration-700 relative overflow-hidden flex flex-col justify-between h-[525px] sm:h-[510px] md:h-[520px] cursor-pointer group opacity-100"
                             >
                                 {/* Cabecera: Limpia, directa, alineada a la izquierda */}
                                 <div className="flex flex-col text-left max-w-2xl gap-1.5 mb-2">
@@ -265,7 +265,7 @@ export const AppleHighlightsCarousel: React.FC<AppleHighlightsCarouselProps> = (
                                 </div>
 
                                 {/* Botón de Enlace Directo Simple Alineado a la Derecha */}
-                                <div className="flex items-center justify-end pt-2 sm:pt-3">
+                                <div className="flex items-center justify-end shrink-0 pt-2 sm:pt-3">
                                     <a
                                         href={slide.linkUrl}
                                         onClick={(e) => {

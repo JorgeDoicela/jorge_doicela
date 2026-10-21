@@ -16,7 +16,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 > * **Aislamiento de Estilos y Tipografías:** Estilos independientes en `frontend/web/src/app/(landing)/globals.css` (**Bento Grid** con micro-interacciones) y fuentes locales auto-hospedadas bajo `(landing)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` bajo licencia **SIL OFL 1.1** (Zero-External Network Fonts).
 > * **Feature-Sliced Design (FSD Canónico en 6 Capas):** Estructura desacoplada y escalable:
 >   * `providers/`: Envoltorios de montaje global en layout (`theme-provider`, `LanguageProvider`, `PerformanceProvider`).
->   * `shared/`: UI Kit agnóstico (`BentoCard`, `CustomSelect`, `QuitoClockBadge`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`), utilitarios/hooks (`useSubdomainUrl`, `api`) y contextos/hooks globales (`useLanguage`, `usePerformanceTier`).
+>   * `shared/`: UI Kit agnóstico (`BentoCard`, `CustomSelect`, `SkipToContent`), SEO (`PersonJsonLd`), PWA (`PwaRegister`), utilitarios/hooks (`useSubdomainUrl`, `api`) y contextos/hooks globales (`useLanguage`, `usePerformanceTier`).
 >   * `entities/`: Modelos del dominio (`highlights`, `profile/TypewriterRole`, `links`).
 >   * `features/`: Casos de uso e interacciones (`ai-assistant`, `language-toggle`, `theme-toggle`, `share-profile`).
 >   * `widgets/`: Bloques visuales complejos (`landing-header`, `landing-footer`, `highlights-carousel` con `slides/`, `highlights-explorer`, `cosmic-canvas`, `consulta-section`, `links-showcase`).
@@ -29,7 +29,6 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Arquitectura Server-First (Next.js App Router):** `page.tsx`, `consulta/page.tsx` y `links/page.tsx` operan como **Server Components nativos asíncronos**, entregando el 100% de la semántica HTML (Hero, titulares, Bento Grid, enlaces y metadatos con `generateMetadata()`) en el primer byte (SSR) sin spinners bloqueantes ni anti-patrones de montaje.
 * **Arquitectura de Islas de Interactividad (FSD):** Los efectos dinámicos se desacoplan en componentes clientes modulares encapsulados en sus respectivas capas FSD:
   * `widgets/cosmic-canvas`: Fondos cinemáticos ThreeJS/Canvas (`LandingVisualEffects`, `ParallaxBackground`, `InteractiveParticles`, `CinematicSpiralGalaxy`).
-  * `shared/ui/QuitoClockBadge`: Reloj en vivo de Quito.
   * `features/language-toggle`: Selector de idioma con `useLanguage()`.
   * `widgets/highlights-carousel`: Carrusel interactivo y Hero.
   * `widgets/highlights-explorer`: Modal/Drawer inmersivo de proyectos.
@@ -49,11 +48,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **SSR (Primer Byte):** Enlaces directos a producción (`https://*.jorgedoicela.com`) garantizando máxima indexabilidad para buscadores y crawlers.
 * **Entornos de Desarrollo:** En cliente, `AppleHighlightsCarousel` adapta dinámicamente los subdominios hacia `*.localhost:[port]` sin alterar el renderizado en servidor.
 
-### 3.2 Widget de Reloj de Quito (`QuitoClockBadge`)
-* **Zona Horaria:** Formateado explícitamente con `'America/Guayaquil'` (UTC-5), mostrando siempre la hora local en Quito independientemente de dónde se encuentre el visitante.
-* **Aislamiento e Hidratación:** Renderizado seguro con `suppressHydrationWarning` para erradicar cualquier parpadeo de hidratación sin bloquear la pintura inicial del DOM.
-
-### 3.3 Internacionalización (next-intl Unificado + SSR & SEO Gold Standard)
+### 3.2 Internacionalización (next-intl Unificado + SSR & SEO Gold Standard)
 * **Unificación Total en next-intl:** Arquitectura 100% estandarizada con `useTranslations` de `next-intl`. Se eliminó por completo el archivo `translations.ts` manual obsoleto, erradicando duplicidades y garantizando paridad bilingüe estricta entre `src/messages/es.json` y `src/messages/en.json`.
 * **LanguageContext Desacoplado:** El proveedor de contexto de idioma gestiona exclusivamente el estado de locale ('es' | 'en'), cookies `NEXT_LOCALE` y transiciones atómicas (`useTransition`), delegando todas las cadenas de texto a los diccionarios reactivos de `next-intl`.
 * **Arquitectura de Servidor y Carga Determinista:** Configuración en `src/i18n/request.ts` integrada mediante `createNextIntlPlugin` en `next.config.ts`. Implementa un mapeo de importaciones estáticas y explícitas por proyecto e idioma (`loadProjectMessages`), eliminando expresiones dinámicas con plantillas de strings frágiles (`(${subdomain})`) y garantizando que Turbopack y Next.js Standalone empaqueten el 100% de los diccionarios `.json` en los chunks del servidor, erradicando fallos de `MISSING_MESSAGE` o 500 en SSR.
@@ -62,12 +57,12 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * **Persistencia Reactiva:** El selector de idioma sincroniza la cookie `NEXT_LOCALE` y ejecuta `router.refresh()` para re-renderizado instantáneo en el servidor.
 * **Diccionarios Estructurados:** Archivos JSON organizados en `src/app/(subdominio)/messages/es.json` y `en.json`.
 
-### 3.4 Progressive Web App (PWA)
+### 3.3 Progressive Web App (PWA)
 * Manifiesto W3C `manifest.json` (`#09090b`, modo `standalone`).
 * Service Worker nativo `sw.js` con estrategia *Network-First* para páginas y *Cache-First* para assets.
 * Registro del cliente en `PwaRegister.tsx`.
 
-### 3.5 Metadatos SEO Internacionales y Datos Estructurados (Schema.org JSON-LD)
+### 3.4 Metadatos SEO Internacionales y Datos Estructurados (Schema.org JSON-LD)
 * **`generateMetadata()` Dinámica:** Títulos, descripciones y Open Graph localizados por idioma.
 * **Etiquetas `hreflang` para Google:** Mapeo de `alternates.languages` (`es-EC` y `en-US`) para posicionamiento bilingüe en buscadores web.
 * Componente `PersonJsonLd.tsx` con especificación de Schema.org (`Person`, `WebSite`, formación en `ISTPET`, áreas de conocimiento `knowsAbout` y enlaces `sameAs`).
@@ -76,17 +71,17 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 * `sitemap.ts` y `robots.ts` nativos de Next.js optimizados para rastreadores de IA sin sobrecargar la memoria RAM.
 
 
-### 3.6 Accesibilidad (WCAG 2.1 AA / ARIA 1.2)
+### 3.5 Accesibilidad (WCAG 2.1 AA / ARIA 1.2)
 * Botón de atajo `SkipToContent.tsx` para saltar al contenido principal con la tecla Tab.
 * Anillos de enfoque visibles y soporte de lectores de pantalla.
 
-### 3.7 Tipografías Locales Auto-Hospedadas (Zero-External Network Fonts)
+### 3.6 Tipografías Locales Auto-Hospedadas (Zero-External Network Fonts)
 * **Encapsulación Física:** Binarios `Geist-Variable.woff2` y `GeistMono-Variable.woff2` alojados dentro de `src/app/(landing)/fonts/`.
 * **Carga Relativa con Next.js:** Inyectadas en `(landing)/layout.tsx` mediante `next/font/local({ src: "./fonts/..." })` con `--font-geist-sans` y `--font-geist-mono`.
 * **Licenciamiento para Producción:** Licencia **SIL Open Font License 1.1** (código abierto, uso comercial ilimitado y sin pago de licencias).
 * **Independencia de Caja Negra:** Cero consultas a servidores de Google Fonts o CDNs externos; la Landing Page puede migrarse a cualquier VPS sin alterar la configuración de fuentes.
 
-### 3.8 Asistente de Inteligencia Artificial Oficial (Route Handler & Guardrails)
+### 3.7 Asistente de Inteligencia Artificial Oficial (Route Handler & Guardrails)
 * **Arquitectura:** Endpoint servidor en `(landing)/api/chat/route.ts` con streaming en tiempo real vía Groq LPU (modelos OSS de alta velocidad).
 * **Frontera de Dominio Estricta:** Acotado 100% a la representación de Jorge Doicela, sus plataformas en producción (`kartex`, `doiceladev`, `portfolio`, `landing`), su arquitectura en 1 GB de RAM y propuestas técnicas en `/consulta`.
 * **Protección contra Consultas Fuera de Alcance:** Rechazo sistemático y profesional ante temas ajenos (cursos desde cero, tareas, cocina, entretenimiento, política) redirigiendo al [Formulario de Consulta](/consulta).
@@ -132,7 +127,7 @@ Este documento detalla la arquitectura macro y micro, funcionamiento, componente
 ## 4. Estética Visual y Bento Grid
 
 * **Disposición Modular Bento Grid:** Cuadrícula asimétrica y responsiva con tarjetas de tamaños jerárquicos (`col-span-*`, `row-span-*`) que presentan de forma balanceada las diferentes facetas, enlaces a subdominios y proyectos.
-* **Apple Highlights Carousel:** Vitrina central de proyectos con estilo oficial Apple, tarjetas centradas y asomadas en los bordes (`[--card-w:78vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)]`), soporte de arrastre por ratón/touch y tipografía refinada.
+* **Apple Highlights Carousel:** Vitrina central de proyectos con estilo oficial Apple, tarjetas centradas y asomadas en los bordes (`[--card-w:86vw] sm:[--card-w:82vw] md:[--card-w:min(82vw,960px)]`), soporte de arrastre por ratón/touch y tipografía refinada.
 * **Static & Interactive Bento Cards:** Tarjetas modulares con micro-animaciones al hacer hover (elevación sutil, iluminación de bordes y desplazamiento interactivo de flechas).
 * **Fondo de Profundidad Sutil:** Elipses degradadas con desenfoque suave (`blur-[130px]`) que aportan tridimensionalidad moderna sin penalizar el rendimiento ni la GPU.
-* **Compatibilidad de Temas (Dark & Light Mode):** Soporte integral y desacoplado para modo oscuro (`dark`, Apple Dark Slate & Deep Cosmos) y modo claro (`light`, Apple Impoluto #fafafc) mediante `ThemeProvider` local (`next-themes`) en `layout.tsx` y el componente unificado `LandingHeader` (con `ThemeToggle` y `QuitoClockBadge`) en todas las páginas (`/`, `/consulta`, `/links`).
+* **Compatibilidad de Temas (Dark & Light Mode):** Soporte integral y desacoplado para modo oscuro (`dark`, Apple Dark Slate & Deep Cosmos) y modo claro (`light`, Apple Impoluto #fafafc) mediante `ThemeProvider` local (`next-themes`) en `layout.tsx` y el componente unificado `LandingHeader` (con `LanguageToggleButton` y `ThemeToggle`) en todas las páginas (`/`, `/consulta`, `/links`).

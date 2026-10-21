@@ -8,18 +8,22 @@ import { KartexSelect, KartexSelectOption } from '../../../../shared/ui';
 interface TranslationSelectorProps {
   selectedTranslationId: number | null;
   onSelectTranslation: (id: number | null) => void;
+  align?: 'left' | 'right';
+  className?: string;
 }
 
 export function TranslationSelector({
   selectedTranslationId,
   onSelectTranslation,
+  align = 'right',
+  className = 'w-fit sm:w-56 shrink-0',
 }: TranslationSelectorProps) {
   const t = useI18n('Toolbar');
   const { translations, loading, error } = useTranslations();
 
   if (loading) {
     return (
-      <div className="h-8 w-36 animate-pulse bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-800 rounded-lg" />
+      <div className="h-8 w-16 sm:w-36 animate-pulse bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-800 rounded-lg" />
     );
   }
 
@@ -40,7 +44,8 @@ export function TranslationSelector({
       value={activeId}
       onChange={(newId: number) => onSelectTranslation(newId)}
       options={options}
-      className="w-fit sm:w-56 shrink-0"
+      className={className}
+      align={align}
       hideLabelOnMobile={true}
       size="sm"
       title={t('selectTranslation')}

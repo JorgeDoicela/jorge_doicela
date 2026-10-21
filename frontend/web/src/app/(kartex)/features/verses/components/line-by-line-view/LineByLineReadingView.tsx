@@ -3,14 +3,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
-import { Verse, ReaderFontSize, ReaderFontFamily, ReaderTone } from '../../types';
+import { Verse, ReaderFontSize, ReaderFontFamily } from '../../types';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 
 interface LineByLineReadingViewProps {
   verses: Verse[];
   fontSize: ReaderFontSize;
   fontFamily: ReaderFontFamily;
-  readerTone?: ReaderTone;
   bookName?: string;
   bookAbbr?: string;
   chapter?: number | null;
@@ -21,7 +20,6 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
   verses,
   fontSize,
   fontFamily,
-  readerTone = 'system',
   bookName,
   bookAbbr,
   chapter,
@@ -90,54 +88,18 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
     copiedTimeoutRef.current = setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const getToneContainerClass = (tone: ReaderTone) => {
-    switch (tone) {
-      case 'sepia':
-        return 'bg-[#FAF6EE] dark:bg-[#1E1A16] border-[#E8DEC8] dark:border-[#382E24] divide-[#E8DEC8]/60 dark:divide-[#382E24] text-[#2C221E] dark:text-[#EAE0D0] shadow-sm';
-      case 'dark':
-        return 'bg-black border-zinc-800 divide-zinc-800/80 text-zinc-100 shadow-none';
-      case 'system':
-      default:
-        return 'bg-white dark:bg-[#0a0a0a] border-zinc-200/80 dark:border-zinc-800/80 divide-zinc-100 dark:divide-zinc-800/80 text-zinc-900 dark:text-zinc-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]';
-    }
-  };
-
-  const getToneTextClass = (tone: ReaderTone) => {
-    switch (tone) {
-      case 'sepia':
-        return 'text-[#2C221E] dark:text-[#EAE0D0] selection:bg-[#EADAB8] selection:text-[#2C221E]';
-      case 'dark':
-        return 'text-zinc-200 selection:bg-zinc-800 selection:text-white';
-      case 'system':
-      default:
-        return 'text-zinc-800 dark:text-zinc-200 selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900';
-    }
-  };
-
-  const getToneHoverClass = (tone: ReaderTone) => {
-    switch (tone) {
-      case 'sepia':
-        return 'hover:bg-[#F4ECE0]/70 dark:hover:bg-[#2A231C]/70';
-      case 'dark':
-        return 'hover:bg-zinc-900/60';
-      case 'system':
-      default:
-        return 'hover:bg-zinc-50 dark:hover:bg-zinc-900/40';
-    }
-  };
-
   return (
     <div className="w-full space-y-3">
       {/* Cabecera compacta editorial */}
-      <div className="flex justify-between items-center px-4 py-2 text-xs font-mono text-zinc-400 dark:text-zinc-500">
-        <span className="font-medium text-zinc-600 dark:text-zinc-300">
+      <div className="flex justify-between items-center px-4 py-2 text-xs font-mono text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C]">
+        <span className="font-medium text-zinc-600 dark:text-zinc-300 sepia:text-[#2C221E]">
           {localizedBookName} {chapter !== null ? `• ${t('chapter')} ${chapter}` : ''}
         </span>
         <span>{t('versesCountAnalytical', { count: verses.length })}</span>
       </div>
 
       {/* Lista versículo a versículo en tarjeta elevada */}
-      <div className={`divide-y border rounded-2xl overflow-hidden transition-colors duration-200 ${getToneContainerClass(readerTone)}`}>
+      <div className="divide-y border rounded-2xl overflow-hidden transition-colors duration-200 bg-card-bg border-card-border divide-border/60 text-foreground shadow-xs">
         {verses.map((verse) => {
           const isInspected =
             (passageContext?.isRightInspectorOpen ?? false) &&
@@ -164,13 +126,13 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
               }}
               className={`p-4 sm:p-5 transition-colors duration-150 flex items-start gap-4 group cursor-pointer ${
                 isInspected
-                  ? 'bg-zinc-100/70 dark:bg-zinc-900/80 ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700'
-                  : getToneHoverClass(readerTone)
+                  ? 'bg-zinc-100/70 dark:bg-zinc-900/80 sepia:bg-[#EADAB8]/70 ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700 sepia:ring-[#8C765C]/40'
+                  : 'hover:bg-zinc-50 dark:hover:bg-zinc-900/40 sepia:hover:bg-[#F4ECE0]/70'
               }`}
             >
             {/* Columna con número de versículo */}
             <div className="shrink-0 w-10 text-right pt-0.5">
-              <span className={`font-mono text-xs font-semibold ${readerTone === 'sepia' ? 'text-[#8C765C] dark:text-[#A8947C]' : 'text-zinc-400 dark:text-zinc-500'} group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors`}>
+              <span className="font-mono text-xs font-semibold text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C] group-hover:text-zinc-900 dark:group-hover:text-zinc-100 sepia:group-hover:text-[#2C221E] transition-colors">
                 {verse.verseNumber}
               </span>
             </div>
@@ -180,7 +142,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
               <p
                 className={`${getFontSizeClass(fontSize)} ${getFontFamilyClass(
                   fontFamily,
-                )} ${getToneTextClass(readerTone)} leading-relaxed`}
+                )} text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E] leading-relaxed selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
               >
                 {verse.text}
               </p>

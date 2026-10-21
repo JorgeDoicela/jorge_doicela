@@ -11,28 +11,6 @@ interface KartexFinalCtaAndFooterProps {
 
 export function KartexFinalCtaAndFooter({ studyUrl = '/study' }: KartexFinalCtaAndFooterProps) {
     const tLanding = useTranslations('Landing');
-    const [isLocal, setIsLocal] = React.useState(false);
-    const [port, setPort] = React.useState('');
-
-    React.useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const hostname = window.location.hostname;
-            setIsLocal(hostname.includes('localhost') || hostname.includes('127.0.0.1'));
-            setPort(window.location.port ? `:${window.location.port}` : '');
-        }
-    }, []);
-
-    const getSubdomainUrl = (subdomain: string) => {
-        return isLocal
-            ? `http://${subdomain}.localhost${port || ':3001'}`
-            : `https://${subdomain}.jorgedoicela.com`;
-    };
-
-    const getLandingUrl = () => {
-        return isLocal
-            ? `http://localhost${port || ':3001'}`
-            : 'https://jorgedoicela.com';
-    };
 
     return (
         <>
@@ -59,17 +37,8 @@ export function KartexFinalCtaAndFooter({ studyUrl = '/study' }: KartexFinalCtaA
 
             {/* Footer */}
             <footer className="border-t border-accents-2 w-full py-8 bg-background">
-                <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-4">
+                <div className="w-full px-4 sm:px-6 lg:px-8 flex justify-center items-center text-center text-xs text-accents-5">
                     <div>{tLanding('footerCopyright', { year: new Date().getFullYear().toString() })}</div>
-                    <div className="flex flex-wrap items-center justify-center gap-3">
-                        <a href={getLandingUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerHome')}</a>
-                        <span className="text-accents-2">•</span>
-                        <a href={getSubdomainUrl('portfolio')} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerPortfolio')}</a>
-                        <span className="text-accents-2">•</span>
-                        <a href={getSubdomainUrl('doiceladev')} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerDoiceladev')}</a>
-                        <span className="text-accents-2">•</span>
-                        <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{tLanding('footerLlms')}</a>
-                    </div>
                 </div>
             </footer>
         </>

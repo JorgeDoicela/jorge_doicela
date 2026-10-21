@@ -264,5 +264,8 @@
     "kartex": "Kartex",
     "toggleLang": "Cambiar idioma",
     "toggleTheme": "Cambiar tema"
+  },
+  "Footer": {
+    "copyright": "© {year} Jorge Doicela. Todos los derechos reservados."
   }
 }

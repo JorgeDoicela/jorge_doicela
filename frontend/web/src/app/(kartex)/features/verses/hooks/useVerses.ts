@@ -50,7 +50,6 @@ export function useVerses(
     fontSize: 'md',
     fontFamily: 'serif',
     showVerseNumbers: true,
-    readerTone: 'system',
     focusMode: false,
   });
 
@@ -80,7 +79,6 @@ export function useVerses(
           fontSize: updated.fontSize,
           fontFamily: updated.fontFamily,
           showVerseNumbers: updated.showVerseNumbers,
-          readerTone: updated.readerTone,
         }));
       } catch {
         // Fallback si localStorage no está disponible
@@ -104,11 +102,6 @@ export function useVerses(
     [updateReaderSettings],
   );
 
-  const setReaderTone = useCallback(
-    (readerTone: 'system' | 'sepia' | 'dark') => updateReaderSettings({ readerTone }),
-    [updateReaderSettings],
-  );
-
   const toggleFocusMode = useCallback(() => {
     setReaderSettings((prev) => ({ ...prev, focusMode: !prev.focusMode }));
   }, []);
@@ -126,7 +119,6 @@ export function useVerses(
           fontSize: updated.fontSize,
           fontFamily: updated.fontFamily,
           showVerseNumbers: updated.showVerseNumbers,
-          readerTone: updated.readerTone,
         }));
       } catch {
         // Fallback
@@ -244,7 +236,6 @@ export function useVerses(
     setLayoutMode,
     setFontSize,
     setFontFamily,
-    setReaderTone,
     toggleFocusMode,
     setFocusMode,
     toggleVerseNumbers,

@@ -475,7 +475,7 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
   * **Restablecimiento Instantáneo:** Soporte de doble clic sobre la manija de redimensionamiento (`ResizeBorderHandle`) para revertir inmediatamente cualquier panel a su valor de fábrica predeterminado.
 
 * **Botones Flotantes de Acceso Rápido y Ergonómicos en Móvil (`DraggableEdgeTab.tsx`):**
-  - **Transformación Responsiva Contextual:** En pantallas móviles (`< lg`), las lengüetas laterales a media altura se convierten en **dos botones circulares flotantes** (`w-12 h-12 rounded-full`, sombra flotante difusa, borde sutil y fondo translúcido con blur OLED) ubicados en las esquinas inferiores (`bottom: 20px left: 16px` para el panel izquierdo y `bottom: 20px right: 16px` para el inspector derecho).
+  - **Transformación Responsiva Contextual:** En pantallas móviles (`< lg`), las lengüetas laterales a media altura se convierten en **dos botones circulares flotantes** (`w-12 h-12 rounded-full`, sombra flotante difusa, borde sutil y fondo translúcido con glassmorphism) ubicados en las esquinas inferiores (`bottom: 20px left: 16px` para el panel izquierdo y `bottom: 20px right: 16px` para el inspector derecho).
   - **Física de Arrastre 2D Libre:** El usuario puede tocar y arrastrar libremente el círculo en cualquier dirección si necesita despejar u observar una línea de texto situada debajo.
   - **Snap-Back Magnético Obligatorio hacia la Base Inferior:** Al soltar el puntero (`handlePointerUp` / `handlePointerCancel`), el botón ejecuta una transición elástica suave (`320ms cubic-bezier(0.16, 1, 0.3, 1)`), **regresando siempre y de forma obligatoria a su anclaje inferior**. No se queda flotando en medio del texto bíblico.
   - **Discriminación de Tap vs Arrastre:** Un toque limpio sin desplazamiento (< 6px) abre instantáneamente el panel/drawer correspondiente. Si hubo arrastre, se ignora la apertura y solo se ejecuta el snap-back.
@@ -489,5 +489,14 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
       - *Chromium / WebKit (Chrome, Edge, Safari):* Se evitó declarar `scrollbar-width` de forma directa en el selector principal, resolviendo el conflicto de la especificación *W3C CSS Scrollbars Level 1* donde Chromium ignora `::-webkit-scrollbar` y renderiza la barra nativa gruesa de Windows (~12px).
       - *Firefox:* Reglas aisladas bajo la condición `@supports not selector(::-webkit-scrollbar)` con `scrollbar-width: thin` y `scrollbar-color`.
     * **Implementación Sistémica:** Integrado directamente en el contenedor central de lectura `<main>` en `study/layout.tsx` y en el contenedor base `StudySidePanelBody` en `StudySidePanel.tsx`, garantizando que todos los paneles laterales (los 8 módulos de estudio) y los inspectores exegéticos compartan de forma homogénea el mismo estándar visual.
+
+* **Arquitectura de 3 Temas Globales Sistémicos (`Claro`, `Sepia`, `Oscuro`):**
+  - **Unificación Arquitectónica:** Se eliminaron los selectores locales aislados de tono de lectura (`Auto`, `Sepia`, `OLED`) dentro de la barra de herramientas del lector bíblico (`ReaderToolbar.tsx`, `ContinuousReadingView.tsx`, `LineByLineReadingView.tsx`), unificando la experiencia visual bajo 3 temas globales a nivel de todo el sistema Kartex.
+  - **Gobernanza con `next-themes`:** `ThemeProvider` en `(kartex)/layout.tsx` registra explícitamente `themes={['light', 'dark', 'sepia']}` junto con el mapeo de clase `value={{ light: 'light', dark: 'dark', sepia: 'theme-sepia' }}`. Esto aísla por completo el tema sepia de la clase utilitaria fotográfica `.sepia` de Tailwind CSS (`filter: sepia(1)`), garantizando renderizado cromático fiel y persistencia atómica en `localStorage`.
+  - **Tokens de Diseño y Variantes Tailwind en `globals.css`:**
+    * *Modo Claro (`:root`):* Fondo `#ffffff`, texto `#000000`, acentos en escala de grises Geist.
+    * *Modo Oscuro Geist (`:root[class~="dark"]`):* Fondo `#000000` con bordes sutiles y tarjetas `#0a0a0a`.
+    * *Modo Sepia Editorial (`:root[class~="theme-sepia"], :root[class~="sepia"]`):* Fondo y tarjeta `#FAF6EE`, texto espresso `#2C221E`, acentos `#F4EFE6` - `#E8DEC8`, números y subtítulos exegéticos en avellana `#8C765C`, y reset explícito de filtros `filter: none !important`.
+  - **Conmutador Global Unificado (`ThemeToggle.tsx`):** Ubicado en la cabecera principal (`KartexLandingHeader.tsx` y `KartexHeaderNav.tsx`), cicla fluidamente en 3 estados (`light` → `sepia` → `dark` → `light`) mostrando iconografía semántica adaptada (`Sun`, `BookOpen`, `Moon`) con tooltips y atributos de accesibilidad bilingües.
 
 

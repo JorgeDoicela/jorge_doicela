@@ -42,7 +42,6 @@ frontend/web/src/app/(portfolio)/
 │   ├── LanguageToggle.tsx     # Selector de idioma (ES/EN)
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
 │   ├── ValuesPhilosophySection.tsx # Sección de valores y ética
-│   ├── PortfolioFooterLinks.tsx   # Enlaces entre subdominios y llms.txt en el pie de página
 │   └── PortfolioJsonLd.tsx        # Marcado estructurado Schema.org ProfilePage
 │
 ├── features/                  # FEATURE-SLICED DESIGN (FSD)

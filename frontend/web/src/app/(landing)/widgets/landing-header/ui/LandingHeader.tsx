@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { QuitoClockBadge } from '../../../shared';
 import { LanguageToggleButton } from '../../../features/language-toggle';
 import { ThemeToggle } from '../../../features/theme-toggle';
 import { useLandingHeaderScroll } from '../hooks/useLandingHeaderScroll';
@@ -88,10 +87,8 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
         )}
       </div>
 
-      {/* Controles Derecha: Reloj de Quito, Selector de Idioma y Modo Claro/Oscuro */}
+      {/* Controles Derecha: Selector de Idioma y Modo Claro/Oscuro */}
       <div className={`flex items-center gap-2 sm:gap-3 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-        <QuitoClockBadge />
-        <div className="hidden sm:block w-px h-3.5 bg-card-border/60 mx-0.5" aria-hidden="true" />
         <LanguageToggleButton />
         <ThemeToggle />
       </div>

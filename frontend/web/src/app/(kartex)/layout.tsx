@@ -115,7 +115,13 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full flex flex-col overflow-x-clip">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            themes={["light", "dark", "sepia"]}
+            value={{ light: "light", dark: "dark", sepia: "theme-sepia" }}
+          >
             {children}
           </ThemeProvider>
         </NextIntlClientProvider>

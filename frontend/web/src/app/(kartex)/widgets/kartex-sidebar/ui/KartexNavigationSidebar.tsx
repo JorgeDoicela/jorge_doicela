@@ -108,7 +108,7 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
     <StudySidePanel
       side="left"
       title={tStudio('toggleSidebar')}
-      icon={<BookOpen className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
+      icon={<BookOpen className="w-4 h-4 text-foreground" />}
       ariaLabel={tStudio('toggleSidebar')}
       isOpen={isOpen}
       onClose={handleClose}
@@ -120,7 +120,7 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
     >
       <StudySidePanel.Toolbar className="p-3 space-y-3">
         {/* Selector de Testamentos Geist Plano (Vercel Style) */}
-        <div className="grid grid-cols-3 rounded-lg border border-zinc-200 dark:border-zinc-800 divide-x divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+        <div className="grid grid-cols-3 rounded-lg border border-border divide-x divide-border overflow-hidden">
           {(['ALL', 'OT', 'NT'] as const).map((tab) => (
             <button
               key={tab}
@@ -128,8 +128,8 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
               onClick={() => setActiveTab(tab)}
               className={`py-1.5 text-xs font-medium transition-colors cursor-pointer text-center truncate px-1 ${
                 activeTab === tab
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                  : 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                  ? 'bg-accents-2 text-foreground font-semibold'
+                  : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
               }`}
             >
               {tab === 'ALL' && tStudio('allBooks')}
@@ -141,19 +141,19 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
 
         {/* Buscador Rápido de Libros */}
         <div className="relative flex items-center">
-          <Search className="absolute left-3 w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
+          <Search className="absolute left-3 w-3.5 h-3.5 text-accents-4 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={tStudio('searchBook')}
-            className="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200/80 dark:border-zinc-800 rounded-xl pl-8.5 pr-8 py-2 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors"
+            className="w-full bg-inner-card border border-border rounded-xl pl-8.5 pr-8 py-2 text-xs text-foreground placeholder:text-accents-4 focus:outline-none focus:border-accents-5 transition-colors"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 p-0.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+              className="absolute right-2.5 p-0.5 text-accents-4 hover:text-foreground cursor-pointer"
             >
               <X className="w-3 h-3" />
             </button>
@@ -180,12 +180,12 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                   onClick={() => setExpandedBookId(isExpanded ? null : book.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
-                      : 'text-zinc-700 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/60 hover:text-zinc-900 dark:hover:text-zinc-100'
+                      ? 'bg-accents-2 text-foreground font-semibold'
+                      : 'text-accents-6 hover:bg-accents-1 hover:text-foreground'
                   }`}
                 >
                   <div className="flex items-center gap-2 truncate min-w-0">
-                    <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 w-6 text-left shrink-0">
+                    <span className="font-mono text-[11px] text-accents-4 w-6 text-left shrink-0">
                       {book.abbreviation}
                     </span>
                     <span className="truncate font-medium">{localizedName}</span>
@@ -213,7 +213,7 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
 
                 {/* Acordeón de Capítulos en Cuadrícula Ergonómica DIITRA Style */}
                 {isExpanded && (
-                  <div className="p-3 bg-zinc-50/80 dark:bg-black border-y border-zinc-100 dark:border-zinc-800/80 my-1 rounded-xl">
+                  <div className="p-3 bg-inner-card border-y border-border/80 my-1 rounded-xl">
                     <div className="grid grid-cols-5 gap-1.5">
                       {Array.from({ length: totalChapters }, (_, i) => i + 1).map((chap) => {
                         const isCurrentChapter = isSelected && selectedChapter === chap;
@@ -224,8 +224,8 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                             onClick={() => handleSelectPassage(book.id, chap)}
                             className={`h-8 rounded-lg text-xs font-mono font-medium transition-colors flex items-center justify-center cursor-pointer ${
                               isCurrentChapter
-                                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-bold'
-                                : 'border border-zinc-200/90 dark:border-zinc-800/90 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                                ? 'bg-foreground text-background font-bold'
+                                : 'border border-border bg-card-bg text-foreground hover:border-accents-4 hover:bg-accents-1'
                             }`}
                           >
                             {chap}
@@ -236,16 +236,16 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
 
                     {/* Enlace Cruzado al Lector cuando se está en Historia o Evangelismo */}
                     {(isHistoricalContext || isEvangelism) && (
-                      <div className="mt-2.5 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between">
+                      <div className="mt-2.5 pt-2 border-t border-border/60 flex items-center justify-between">
                         <Link
                           href={`/study/standard?book=${book.id}&chapter=${selectedChapter || 1}`}
-                          className="text-[11px] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center gap-1 transition-colors font-medium group"
+                          className="text-[11px] text-accents-5 hover:text-foreground flex items-center gap-1 transition-colors font-medium group"
                         >
-                          <BookOpen className="w-3 h-3 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />
+                          <BookOpen className="w-3 h-3 text-accents-4 group-hover:text-foreground" />
                           <span>{tNav('readInReader')}</span>
                           <ArrowRight className="w-3 h-3 opacity-60 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
-                        <span className="text-[10px] font-mono text-zinc-400">
+                        <span className="text-[10px] font-mono text-accents-4">
                           {totalChapters} caps
                         </span>
                       </div>

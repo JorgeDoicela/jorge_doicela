@@ -203,7 +203,7 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
         }}
         title={computedTitle}
         aria-label={computedTitle}
-        className={`fixed z-40 w-12 h-12 rounded-full flex items-center justify-center select-none print:hidden border shadow-lg cursor-pointer transition-[opacity,transform,background-color,border-color,box-shadow] duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121214] text-foreground hover:scale-105 active:scale-90 ${
+        className={`fixed z-40 w-12 h-12 rounded-full flex items-center justify-center select-none print:hidden border shadow-lg cursor-pointer transition-[opacity,transform,background-color,border-color,box-shadow] duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] border-border bg-card-bg text-foreground hover:scale-105 active:scale-90 ${
           isOpen
             ? 'opacity-0 pointer-events-none scale-75'
             : 'opacity-100 pointer-events-auto scale-100'
@@ -249,10 +249,10 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
           : 'opacity-100 pointer-events-auto'
       } ${
         isDragging
-          ? 'w-10 h-10 rounded-xl border-zinc-300 dark:border-zinc-600 shadow-xl cursor-grabbing bg-white dark:bg-[#18181b] text-zinc-900 dark:text-white scale-105'
+          ? 'w-10 h-10 rounded-xl border-border shadow-xl cursor-grabbing bg-card-bg text-foreground scale-105'
           : isLeft
-          ? 'w-5 h-24 rounded-r-md border-l-0 border-r border-y pl-0.5 shadow-2xs border-zinc-200 dark:border-zinc-800 cursor-grab active:cursor-grabbing bg-white dark:bg-[#121214] hover:w-5.5 hover:border-zinc-400/80 dark:hover:border-zinc-600/80 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
-          : 'w-5 h-24 rounded-l-md border-r-0 border-l border-y pr-0.5 shadow-2xs border-zinc-200 dark:border-zinc-800 cursor-grab active:cursor-grabbing bg-white dark:bg-[#121214] hover:w-5.5 hover:border-zinc-400/80 dark:hover:border-zinc-600/80 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+          ? 'w-5 h-24 rounded-r-md border-l-0 border-r border-y pl-0.5 shadow-2xs border-border cursor-grab active:cursor-grabbing bg-card-bg hover:w-5.5 hover:border-accents-4 hover:bg-accents-1 text-accents-4 hover:text-foreground'
+          : 'w-5 h-24 rounded-l-md border-r-0 border-l border-y pr-0.5 shadow-2xs border-border cursor-grab active:cursor-grabbing bg-card-bg hover:w-5.5 hover:border-accents-4 hover:bg-accents-1 text-accents-4 hover:text-foreground'
       }`}
     >
       <DesktopIcon

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { LandingFooterLinks } from './LandingFooterLinks';
 
 export interface LandingFooterProps {
   variant?: 'full' | 'compact';
@@ -28,11 +27,10 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({
 
   return (
     <footer
-      className={`animate-fade-in-up w-full max-w-5xl mt-16 border-t border-card-border/30 pt-8 pb-12 px-2 md:px-0 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-subtitle font-normal tracking-tight ${className}`.trim()}
+      className={`animate-fade-in-up w-full max-w-5xl mt-16 border-t border-card-border/30 pt-8 pb-12 px-2 md:px-0 flex items-center justify-center text-center text-xs text-text-subtitle font-normal tracking-tight ${className}`.trim()}
       style={{ animationDelay: '800ms' }}
     >
       <span>{tCommon('footer', { year: currentYear })}</span>
-      <LandingFooterLinks />
     </footer>
   );
 };

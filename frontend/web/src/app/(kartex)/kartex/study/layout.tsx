@@ -217,7 +217,7 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     : Languages;
 
   return (
-    <div className="h-screen bg-zinc-50/60 dark:bg-black text-foreground flex flex-col overflow-hidden selection:bg-primary/10">
+    <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden selection:bg-primary/10">
       {/* Header Superior con Auto-Hide Inteligente y Suave */}
       <KartexHeaderNav isVisible={isHeaderVisible} />
 
@@ -279,14 +279,14 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Footer Editorial al final del Canvas de Lectura */}
-          <footer className="border-t border-zinc-200/80 dark:border-zinc-800/80 w-full py-6 mt-12 bg-transparent print:hidden max-w-[1780px] mx-auto">
-            <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+          <footer className="border-t border-border/80 w-full py-6 mt-12 bg-transparent print:hidden max-w-[1780px] mx-auto">
+            <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-5">
               <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
               <div className="flex gap-4">
                 <Link href="/" className="hover:text-foreground transition-colors duration-150">
                   {t('presentation')}
                 </Link>
-                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                <span className="text-accents-3">|</span>
                 <span className="hover:text-foreground transition-colors duration-150 cursor-default">
                   {t('holyScriptures')}
                 </span>
@@ -328,7 +328,7 @@ export default function KartexStudyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-zinc-50/60 dark:bg-black" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <KartexPassageProvider>
         <ScopedModuleProviders>
           <KartexStudyWorkspace>{children}</KartexStudyWorkspace>

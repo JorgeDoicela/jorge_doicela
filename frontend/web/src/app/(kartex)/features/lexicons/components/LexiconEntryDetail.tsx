@@ -66,13 +66,13 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
             </div>
 
             {/* Selector de Fuente Léxica Hebrea */}
-            <div className="inline-flex rounded-lg border border-accents-2 bg-background p-1 text-xs">
+            <div className="inline-flex rounded-full border border-border/80 bg-inner-card p-0.5 text-xs shadow-2xs">
               <button
                 type="button"
                 onClick={() => setHebrewSource('BDB')}
-                className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                   hebrewSource === 'BDB'
-                    ? 'bg-foreground text-background font-bold shadow-xs'
+                    ? 'bg-foreground text-background font-bold shadow-2xs'
                     : 'text-accents-4 hover:text-foreground'
                 }`}
               >
@@ -81,9 +81,9 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
               <button
                 type="button"
                 onClick={() => setHebrewSource('Gesenius')}
-                className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                   hebrewSource === 'Gesenius'
-                    ? 'bg-foreground text-background font-bold shadow-xs'
+                    ? 'bg-foreground text-background font-bold shadow-2xs'
                     : 'text-accents-4 hover:text-foreground'
                 }`}
               >
@@ -92,9 +92,9 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
               <button
                 type="button"
                 onClick={() => setHebrewSource('DTAT')}
-                className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                   hebrewSource === 'DTAT'
-                    ? 'bg-foreground text-background font-bold shadow-xs'
+                    ? 'bg-foreground text-background font-bold shadow-2xs'
                     : 'text-accents-4 hover:text-foreground'
                 }`}
               >
@@ -343,13 +343,13 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
           </div>
 
           {/* Selector de Fuente Léxica Griega */}
-          <div className="inline-flex flex-wrap rounded-lg border border-accents-2 bg-background p-1 text-xs">
+          <div className="inline-flex flex-wrap rounded-full border border-border/80 bg-inner-card p-0.5 text-xs shadow-2xs">
             <button
               type="button"
               onClick={() => setGreekSource('Thayer')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                 greekSource === 'Thayer'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
+                  ? 'bg-foreground text-background font-bold shadow-2xs'
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
@@ -358,9 +358,9 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
             <button
               type="button"
               onClick={() => setGreekSource('LSJ')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                 greekSource === 'LSJ'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
+                  ? 'bg-foreground text-background font-bold shadow-2xs'
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
@@ -369,9 +369,9 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
             <button
               type="button"
               onClick={() => setGreekSource('Robertson')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                 greekSource === 'Robertson'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
+                  ? 'bg-foreground text-background font-bold shadow-2xs'
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
@@ -380,9 +380,9 @@ export const LexiconEntryDetail: React.FC<LexiconEntryDetailProps> = ({
             <button
               type="button"
               onClick={() => setGreekSource('Vincent')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                 greekSource === 'Vincent'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
+                  ? 'bg-foreground text-background font-bold shadow-2xs'
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >

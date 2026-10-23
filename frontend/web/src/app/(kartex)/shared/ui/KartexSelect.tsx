@@ -143,9 +143,9 @@ export function KartexSelect<T extends string | number = string | number>({
 
   // Calibración de tamaños
   const sizeClasses = {
-    xs: 'px-2 py-1 text-[11px] h-7',
-    sm: 'px-2 sm:px-3 py-1.5 text-xs h-8',
-    md: 'px-3.5 py-2 text-sm h-10',
+    xs: 'px-2.5 py-1 text-[11px] h-7',
+    sm: 'px-3 sm:px-3.5 py-1.5 text-xs h-8',
+    md: 'px-4 py-2 text-sm h-10',
   }[size];
 
   const chevronSizes = {
@@ -170,13 +170,13 @@ export function KartexSelect<T extends string | number = string | number>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={ariaLabel || title || selectedOption?.label || placeholder}
-        className={`w-full flex items-center justify-between gap-1.5 sm:gap-2 rounded-lg font-medium transition-colors cursor-pointer text-left
-          border shadow-xs
-          disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
+        className={`w-full flex items-center justify-between gap-1.5 sm:gap-2 rounded-full font-medium transition-colors cursor-pointer text-left
+          border shadow-2xs
+          disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-[0.98]
           ${
             isOpen
               ? 'border-foreground bg-accents-2 text-foreground ring-2 ring-foreground/10 font-semibold'
-              : 'border-border bg-card-bg text-foreground hover:border-accents-4 hover:bg-accents-1'
+              : 'border-border/80 bg-inner-card/90 text-foreground hover:border-accents-4 hover:bg-inner-card'
           }
           ${sizeClasses}`}
       >
@@ -249,7 +249,7 @@ export function KartexSelect<T extends string | number = string | number>({
                   }
                 }}
                 onMouseEnter={() => !option.disabled && setFocusedIndex(idx)}
-                className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer select-none
+                className={`flex items-center justify-between gap-2 px-3 py-1.5 rounded-full text-xs transition-colors cursor-pointer select-none
                   ${
                     option.disabled
                       ? 'opacity-40 cursor-not-allowed'

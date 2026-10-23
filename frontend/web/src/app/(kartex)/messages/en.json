@@ -1283,5 +1283,16 @@
     "exitFocusEsc": "Exit Focus Mode (Esc)",
     "exitEsc": "Exit (Esc)",
     "shortcutNavKeys": "← / → or J / K"
+  },
+  "MobileDock": {
+    "booksNav": "Book Navigation",
+    "inspector": "Exegesis Inspector",
+    "books": "Books",
+    "version": "Version",
+    "format": "Format",
+    "exegesis": "Exegesis",
+    "appearance": "Appearance",
+    "navigation": "Navigation",
+    "details": "Details"
   }
 }

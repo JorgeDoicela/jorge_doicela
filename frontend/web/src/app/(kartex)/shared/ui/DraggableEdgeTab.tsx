@@ -13,6 +13,7 @@ interface DraggableEdgeTabProps {
   defaultTop?: number;
   title?: string;
   hideOnDesktop?: boolean;
+  hideOnMobile?: boolean;
 }
 
 export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
@@ -25,6 +26,7 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
   defaultTop = 180,
   title,
   hideOnDesktop = false,
+  hideOnMobile = true,
 }) => {
   const isLeft = side === 'left';
   const BUTTON_HEIGHT = 96; // Altura del tirador vertical esbelto h-24 (96px)
@@ -190,8 +192,10 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
 
   const computedTitle = title || (label ? `Abrir (${label})` : 'Abrir panel');
 
-  // En móvil: Botones flotantes inferiores ergonómicos con respuesta táctil inmediata
+  // En móvil: Si hideOnMobile está activo (predeterminado al integrarse con KartexMobileStudyDock), no colisionar con la lectura
   if (isMobile) {
+    if (hideOnMobile) return null;
+
     return (
       <button
         type="button"

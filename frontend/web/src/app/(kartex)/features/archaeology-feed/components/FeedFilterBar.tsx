@@ -48,7 +48,7 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
             value={searchQuery}
             onChange={(e) => onChangeSearchQuery(e.target.value)}
             placeholder={t('searchPlaceholder')}
-            className="w-full pl-8 pr-3 py-1.5 text-xs bg-background border border-accents-2 rounded-lg text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground transition-all"
+            className="w-full pl-8 pr-3 py-1.5 text-xs bg-inner-card border border-border/80 rounded-full shadow-2xs text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground transition-all"
           />
           <svg
             className="w-3.5 h-3.5 text-accents-4 absolute left-2.5 top-1/2 -translate-y-1/2"
@@ -61,13 +61,13 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
         </div>
 
         {/* Toggle Artículos / Catálogo de Manuscritos */}
-        <div className="flex items-center gap-1 bg-accents-1 border border-accents-2 p-1 rounded-lg text-xs">
+        <div className="flex items-center gap-0.5 bg-inner-card border border-border/80 p-0.5 rounded-full text-xs shadow-2xs">
           <button
             type="button"
             onClick={() => onChangeViewMode('articles')}
-            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full transition-all cursor-pointer active:scale-95 ${
               feedViewMode === 'articles'
-                ? 'bg-background text-foreground font-semibold shadow-xs'
+                ? 'bg-foreground text-background font-semibold shadow-2xs'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -76,9 +76,9 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
           <button
             type="button"
             onClick={() => onChangeViewMode('manuscripts')}
-            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full transition-all cursor-pointer active:scale-95 ${
               feedViewMode === 'manuscripts'
-                ? 'bg-background text-foreground font-semibold shadow-xs'
+                ? 'bg-foreground text-background font-semibold shadow-2xs'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -91,17 +91,17 @@ export const FeedFilterBar: React.FC<FeedFilterBarProps> = ({
       {feedViewMode === 'articles' && (
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-accents-2/70 text-xs">
           {/* Filtro por Categoría */}
-          <div className="flex flex-wrap items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-[11px] font-mono text-accents-4 mr-1">{t('section')}</span>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => onChangeCategory(cat.id)}
-                className={`px-2.5 py-0.5 rounded-md text-[11px] transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full text-[11px] transition-all cursor-pointer border active:scale-95 ${
                   selectedCategory === cat.id
-                    ? 'bg-foreground text-background font-semibold'
-                    : 'text-accents-5 hover:text-foreground bg-accents-1/50 hover:bg-accents-1'
+                    ? 'bg-foreground text-background font-semibold border-foreground shadow-2xs'
+                    : 'text-accents-5 hover:text-foreground bg-inner-card border-border/80 hover:border-accents-4 shadow-2xs'
                 }`}
               >
                 {cat.label}

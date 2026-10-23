@@ -118,7 +118,7 @@ export default function ParallelStudyPage() {
         alwaysShowPicker
         rightBadge={
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono text-accents-4 bg-accents-1 px-2.5 py-1 rounded-lg border border-accents-2">
+            <span className="text-[11px] font-mono text-accents-5 bg-inner-card/90 px-3 py-1 rounded-full border border-border/80 shadow-2xs">
               {columns.length === 1
                 ? t('parallelCountSingle')
                 : t('parallelCountMulti', { count: columns.length })}
@@ -127,7 +127,7 @@ export default function ParallelStudyPage() {
               <button
                 type="button"
                 onClick={() => addColumn(nextAvailableTranslation.id)}
-                className="px-2.5 py-1 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:border-foreground text-foreground transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                className="px-3 py-1 text-xs font-medium rounded-full border border-border/80 bg-inner-card/90 hover:bg-accents-2 text-foreground transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
                 title={t('addVersionTooltip')}
               >
                 <svg className="w-3.5 h-3.5 text-accents-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

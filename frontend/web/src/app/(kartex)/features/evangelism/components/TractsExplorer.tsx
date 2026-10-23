@@ -71,10 +71,10 @@ export const TractsExplorer: React.FC<TractsExplorerProps> = ({
                 key={tract.id}
                 type="button"
                 onClick={() => onSelectTract(tract.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer border active:scale-95 ${
                   isSelected
-                    ? 'bg-foreground text-background font-semibold shadow-xs'
-                    : 'bg-accents-1 text-accents-5 hover:text-foreground hover:bg-accents-2 border border-accents-2'
+                    ? 'bg-foreground text-background font-semibold border-foreground shadow-2xs'
+                    : 'bg-inner-card text-accents-5 hover:text-foreground hover:bg-inner-card border-border/80 hover:border-accents-4 shadow-2xs'
                 }`}
               >
                 {tract.title}
@@ -87,7 +87,7 @@ export const TractsExplorer: React.FC<TractsExplorerProps> = ({
         <button
           type="button"
           onClick={handleCopyFullTract}
-          className="h-8 px-3 rounded-lg border border-accents-2 bg-background hover:bg-accents-1 text-xs font-medium text-foreground flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-2xs"
+          className="h-8 px-4 rounded-full border border-border/80 bg-inner-card hover:bg-inner-card hover:border-accents-4 text-xs font-medium text-foreground flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-2xs active:scale-95"
         >
           {copied ? (
             <>

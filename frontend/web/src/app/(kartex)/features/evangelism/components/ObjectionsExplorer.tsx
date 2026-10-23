@@ -61,7 +61,7 @@ export const ObjectionsExplorer: React.FC<ObjectionsExplorerProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t('searchObjectionPlaceholder')}
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-accents-2 bg-background hover:border-accents-3 focus:border-foreground text-xs text-foreground placeholder:text-accents-4 transition-all outline-hidden"
+            className="w-full h-10 pl-10 pr-4 rounded-full border border-border/80 bg-inner-card shadow-2xs hover:border-accents-3 focus:border-foreground text-xs text-foreground placeholder:text-accents-4 transition-all outline-hidden"
           />
         </div>
 
@@ -74,10 +74,10 @@ export const ObjectionsExplorer: React.FC<ObjectionsExplorerProps> = ({
                 key={cat.key}
                 type="button"
                 onClick={() => onSelectCategory(cat.key)}
-                className={`h-7 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                className={`h-7 px-3.5 rounded-full text-xs font-medium transition-all cursor-pointer border active:scale-95 ${
                   isActive
-                    ? 'bg-foreground text-background font-semibold shadow-2xs'
-                    : 'bg-accents-1 text-accents-5 hover:text-foreground hover:bg-accents-2 border border-accents-2'
+                    ? 'bg-foreground text-background font-semibold border-foreground shadow-2xs'
+                    : 'bg-inner-card text-accents-5 hover:text-foreground hover:bg-inner-card border-border/80 hover:border-accents-4 shadow-2xs'
                 }`}
               >
                 {cat.label}
@@ -165,7 +165,7 @@ export const ObjectionsExplorer: React.FC<ObjectionsExplorerProps> = ({
                                 type="button"
                                 onClick={() => handleCopy(v.ref, v.text)}
                                 title={t('copyVerseTooltip')}
-                                className="p-1.5 rounded text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0"
+                                className="p-1.5 rounded-full text-accents-4 hover:text-foreground hover:bg-inner-card border border-transparent hover:border-border/80 transition-all cursor-pointer shrink-0 active:scale-95"
                               >
                                 {copiedRef === v.ref ? (
                                   <Check className="w-3.5 h-3.5 text-foreground" />

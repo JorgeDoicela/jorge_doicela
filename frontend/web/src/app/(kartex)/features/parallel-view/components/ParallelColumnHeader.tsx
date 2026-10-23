@@ -55,7 +55,7 @@ export const ParallelColumnHeader: React.FC<ParallelColumnHeaderProps> = ({
 
       <div className="flex items-center gap-1.5 flex-shrink-0">
         {currentTranslation?.language && (
-          <span className="hidden sm:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded bg-accents-1 text-accents-4 border border-accents-2">
+          <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-accents-1 text-accents-4 border border-border/70 shadow-2xs">
             {currentTranslation.language}
           </span>
         )}
@@ -64,7 +64,7 @@ export const ParallelColumnHeader: React.FC<ParallelColumnHeaderProps> = ({
           <button
             type="button"
             onClick={() => onRemoveColumn(columnId)}
-            className="p-1 rounded-md text-accents-4 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="p-1 rounded-full text-accents-4 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer active:scale-95"
             title={t('closeColumnTooltip')}
             aria-label={t('closeColumn')}
           >

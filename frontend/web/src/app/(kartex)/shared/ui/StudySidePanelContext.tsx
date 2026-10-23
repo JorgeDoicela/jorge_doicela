@@ -13,6 +13,7 @@ export interface StudyPanelState {
     width?: number;
     onResize?: (width: number) => void;
     onReset?: () => void;
+    isHeaderVisible?: boolean;
 }
 
 export interface StudySidePanelContextValue {

@@ -64,14 +64,14 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-2">
         {/* Modos Predefinidos de Visualizacion */}
         {onSetPresetMode && (
-          <div className="flex items-center gap-1 p-1 bg-accents-1 border border-accents-2 rounded-lg text-xs">
-            <span className="text-[10px] font-mono text-accents-4 uppercase px-1.5 hidden md:inline">{t('mode')}</span>
+          <div className="flex items-center gap-0.5 p-0.5 bg-inner-card border border-border/80 rounded-full text-xs shadow-2xs">
+            <span className="text-[10px] font-mono text-accents-4 uppercase px-2 hidden md:inline">{t('mode')}</span>
             <button
               type="button"
               onClick={() => onSetPresetMode('all')}
-              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs transition-all cursor-pointer active:scale-95 ${
                 isAllVisible
-                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  ? 'bg-foreground text-background font-semibold shadow-2xs'
                   : 'text-accents-5 hover:text-foreground'
               }`}
               title={t('allSyncedTooltip')}
@@ -81,9 +81,9 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             <button
               type="button"
               onClick={() => onSetPresetMode('kings_prophets')}
-              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs transition-all cursor-pointer active:scale-95 ${
                 isKingsProphetsOnly
-                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  ? 'bg-foreground text-background font-semibold shadow-2xs'
                   : 'text-accents-5 hover:text-foreground'
               }`}
               title={t('kingsProphetsTooltip')}
@@ -93,9 +93,9 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             <button
               type="button"
               onClick={() => onSetPresetMode('bible_archaeology')}
-              className={`px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs transition-all cursor-pointer active:scale-95 ${
                 isArchaeologyOnly
-                  ? 'bg-background text-foreground font-semibold shadow-xs'
+                  ? 'bg-foreground text-background font-semibold shadow-2xs'
                   : 'text-accents-5 hover:text-foreground'
               }`}
               title={t('bibleArchaeologyTooltip')}
@@ -106,14 +106,14 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
         )}
 
         {/* Atajos de Eras Bíblicas */}
-        <div className="flex flex-wrap items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[11px] font-mono text-accents-4 uppercase mr-1">{t('eraLabel')}</span>
           {shortcuts.map((shortcut) => (
             <button
               key={shortcut.id}
               type="button"
               onClick={() => onSelectShortcut(shortcut)}
-              className="px-2 py-0.5 rounded-md text-[11px] bg-accents-1/80 hover:bg-accents-2 text-accents-5 hover:text-foreground transition-all cursor-pointer font-medium"
+              className="px-2.5 py-1 rounded-full text-[11px] bg-inner-card border border-border/80 shadow-2xs hover:border-accents-4 hover:bg-inner-card text-accents-5 hover:text-foreground transition-all cursor-pointer font-medium active:scale-95"
               title={shortcut.description}
             >
               {shortcut.label}
@@ -123,11 +123,11 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
 
         {/* Controles de Zoom y Pantalla Completa */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-accents-1 border border-accents-2 p-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-inner-card border border-border/80 p-0.5 rounded-full shadow-2xs">
             <button
               type="button"
               onClick={onZoomOut}
-              className="w-7 h-7 flex items-center justify-center rounded text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer"
+              className="w-6 h-6 flex items-center justify-center rounded-full text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer active:scale-95"
               title={t('zoomOutTooltip')}
             >
               −
@@ -138,7 +138,7 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             <button
               type="button"
               onClick={onZoomIn}
-              className="w-7 h-7 flex items-center justify-center rounded text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer"
+              className="w-6 h-6 flex items-center justify-center rounded-full text-accents-5 hover:text-foreground hover:bg-background transition-colors text-sm font-bold cursor-pointer active:scale-95"
               title={t('zoomInTooltip')}
             >
               +
@@ -149,10 +149,10 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
             <button
               type="button"
               onClick={onToggleFullscreen}
-              className={`h-9 px-2.5 flex items-center gap-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
+              className={`h-8 px-3 flex items-center gap-1.5 rounded-full border border-border/80 text-xs font-semibold shadow-2xs transition-all cursor-pointer active:scale-95 ${
                 isFullscreen
                   ? 'bg-foreground text-background border-foreground shadow-sm hover:opacity-90'
-                  : 'bg-background hover:bg-accents-1 text-accents-5 hover:text-foreground border-accents-2 shadow-2xs'
+                  : 'bg-inner-card hover:bg-accents-1 text-accents-5 hover:text-foreground hover:border-accents-4'
               }`}
               title={isFullscreen ? t('restoreNormalView') : t('expandView')}
             >
@@ -184,10 +184,10 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('judah')}
-            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1 rounded-full text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border active:scale-95 ${
               visibleTracks.judah
-                ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
-                : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
+                ? 'bg-inner-card text-foreground border-border/80 shadow-2xs font-semibold'
+                : 'text-accents-4 bg-inner-card/40 border-transparent hover:bg-inner-card hover:text-foreground opacity-50'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-blue-500" />
@@ -197,10 +197,10 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('israel')}
-            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1 rounded-full text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border active:scale-95 ${
               visibleTracks.israel
-                ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
-                : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
+                ? 'bg-inner-card text-foreground border-border/80 shadow-2xs font-semibold'
+                : 'text-accents-4 bg-inner-card/40 border-transparent hover:bg-inner-card hover:text-foreground opacity-50'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-rose-500" />
@@ -210,10 +210,10 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('prophets')}
-            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1 rounded-full text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border active:scale-95 ${
               visibleTracks.prophets
-                ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
-                : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
+                ? 'bg-inner-card text-foreground border-border/80 shadow-2xs font-semibold'
+                : 'text-accents-4 bg-inner-card/40 border-transparent hover:bg-inner-card hover:text-foreground opacity-50'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -223,10 +223,10 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('empires')}
-            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1 rounded-full text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border active:scale-95 ${
               visibleTracks.empires
-                ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
-                : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
+                ? 'bg-inner-card text-foreground border-border/80 shadow-2xs font-semibold'
+                : 'text-accents-4 bg-inner-card/40 border-transparent hover:bg-inner-card hover:text-foreground opacity-50'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-purple-500" />
@@ -236,10 +236,10 @@ export const TimelineControls: React.FC<TimelineControlsProps> = ({
           <button
             type="button"
             onClick={() => onToggleTrack('milestones')}
-            className={`px-2.5 py-1 rounded-md text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1 rounded-full text-[11px] transition-all flex items-center gap-1.5 cursor-pointer border active:scale-95 ${
               visibleTracks.milestones
-                ? 'bg-background text-foreground border-accents-2 shadow-2xs font-semibold'
-                : 'text-accents-4 bg-transparent border-transparent hover:bg-accents-1 hover:text-foreground opacity-50'
+                ? 'bg-inner-card text-foreground border-border/80 shadow-2xs font-semibold'
+                : 'text-accents-4 bg-inner-card/40 border-transparent hover:bg-inner-card hover:text-foreground opacity-50'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-amber-500" />

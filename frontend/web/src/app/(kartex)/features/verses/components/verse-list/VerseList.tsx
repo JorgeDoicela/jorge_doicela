@@ -184,8 +184,9 @@ export const VerseList: React.FC<VerseListProps> = ({
   // MODO ESTÁNDAR INTEGRADO EN EL WORKSPACE
   return (
     <div className="w-full max-w-4xl mx-auto space-y-4">
-      {/* Barra de herramientas integrada del lector */}
+      {/* Barra de herramientas integrada del lector: en móvil se unifica en la cabecera superior y dock inferior */}
       <ReaderToolbar
+        className="hidden lg:block"
         readerSettings={readerSettings}
         onLayoutModeChange={onLayoutModeChange}
         onFontSizeChange={onFontSizeChange}

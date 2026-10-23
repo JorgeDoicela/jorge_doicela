@@ -480,6 +480,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
       width: leftSidebarWidth,
       onResize: setLeftSidebarWidth,
       onReset: resetLeftSidebarWidth,
+      isHeaderVisible,
     },
     right: {
       isOpen: isRightInspectorOpen,
@@ -487,6 +488,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
       width: rightInspectorWidth,
       onResize: setRightInspectorWidth,
       onReset: resetRightInspectorWidth,
+      isHeaderVisible,
     },
   }), [
     isLeftSidebarOpen,
@@ -499,6 +501,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     rightInspectorWidth,
     setRightInspectorWidth,
     resetRightInspectorWidth,
+    isHeaderVisible,
   ]);
 
   return (

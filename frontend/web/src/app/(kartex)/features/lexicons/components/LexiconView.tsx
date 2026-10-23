@@ -211,16 +211,16 @@ export const LexiconView: React.FC = () => {
           <span className="text-xs font-semibold text-accents-4 uppercase tracking-wider">
             {t('languageLabel')}
           </span>
-          <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-1 text-xs">
+          <div className="inline-flex rounded-full border border-border/80 bg-inner-card p-0.5 text-xs shadow-2xs">
             <button
               type="button"
               onClick={() => {
                 setActiveTab('hebrew');
                 setSearchQuery('');
               }}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                 activeTab === 'hebrew'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
+                  ? 'bg-foreground text-background font-bold shadow-2xs'
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
@@ -232,9 +232,9 @@ export const LexiconView: React.FC = () => {
                 setActiveTab('greek');
                 setSearchQuery('');
               }}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${
                 activeTab === 'greek'
-                  ? 'bg-foreground text-background font-bold shadow-xs'
+                  ? 'bg-foreground text-background font-bold shadow-2xs'
                   : 'text-accents-4 hover:text-foreground'
               }`}
             >
@@ -254,7 +254,7 @@ export const LexiconView: React.FC = () => {
                 ? t('searchPlaceholderHebrew')
                 : t('searchPlaceholderGreek')
             }
-            className="w-full px-3.5 py-2 rounded-lg bg-accents-1 border border-accents-2 text-xs text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground/40 transition-colors"
+            className="w-full px-4 py-2 rounded-full bg-inner-card border border-border/80 text-xs text-foreground placeholder:text-accents-4 shadow-2xs focus:outline-none focus:border-foreground/40 transition-colors"
           />
           {searchQuery && (
             <button

@@ -11,5 +11,7 @@ export type {
   ReaderSettings,
 } from './types';
 export { useVerses } from './hooks/useVerses';
+export { useReaderAppearanceSettings } from './hooks/useReaderAppearanceSettings';
 export { useReaderKeybindings } from './hooks/useReaderKeybindings';
+export { ReaderAppearancePopover } from './components/reader-appearance-popover/ReaderAppearancePopover';
 export { BOOK_CHAPTERS, getChapterCountForBook } from '../../shared/data/canonData';

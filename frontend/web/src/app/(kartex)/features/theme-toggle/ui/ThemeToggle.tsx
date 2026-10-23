@@ -17,7 +17,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-8 h-8 rounded-lg bg-transparent" />
+      <div className="w-8 h-8 rounded-full bg-transparent" />
     );
   }
 
@@ -42,7 +42,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="flex items-center justify-center w-8 h-8 rounded-md bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1 transition-all duration-150 cursor-pointer focus-visible:ring-1 focus-visible:ring-foreground focus:outline-none"
+      className="flex items-center justify-center w-8 h-8 rounded-full bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1 transition-colors duration-150 cursor-pointer active:scale-95 focus-visible:ring-1 focus-visible:ring-foreground focus:outline-none"
       aria-label={`${t('changeTheme')} - ${getThemeLabel()}`}
       title={`${t('changeTheme')} (${getThemeLabel()})`}
     >

@@ -28,8 +28,8 @@ export const KartexPassageToolbar: React.FC<KartexPassageToolbarProps> = ({
   const isHidden = !alwaysShowPicker && isLeftSidebarOpen;
 
   return (
-    <section className="relative z-30 border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
-      <div className="flex items-center gap-2">
+    <section className={`relative z-30 border border-accents-2 rounded-xl bg-background p-2 sm:p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5 ${!rightBadge ? 'hidden lg:flex' : ''}`}>
+      <div className="hidden lg:flex items-center gap-2">
         <div className={`flex items-center gap-2 ${isHidden ? 'lg:hidden' : 'animate-in fade-in duration-200'}`}>
           <span className="text-[11px] font-mono uppercase tracking-wider text-accents-5 hidden sm:inline whitespace-nowrap">
             {t('activePassage')}

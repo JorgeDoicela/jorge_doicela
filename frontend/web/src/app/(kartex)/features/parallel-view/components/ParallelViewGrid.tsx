@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Columns2, Rows3 } from 'lucide-react';
 import { ParallelColumn, ParallelVerseRow } from '../types';
 import { ParallelColumnHeader } from './ParallelColumnHeader';
 import { Translation } from '../../../entities/translations';
@@ -32,6 +32,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
   onInspectRow,
 }) => {
   const t = useTranslations('Parallel');
+  const [mobileLayout, setMobileLayout] = useState<'stacked' | 'columns'>('stacked');
 
   if (error) {
     return (
@@ -43,8 +44,113 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
 
   return (
     <div className="rounded-xl border border-accents-2 bg-background overflow-hidden shadow-xs">
-      {/* Contenedor con scroll horizontal para soportar múltiples columnas en pantallas de cualquier tamaño */}
-      <div className="overflow-x-auto scrollbar-none" style={{ scrollbarWidth: 'none' }}>
+      {/* Switcher de visualización móvil: Apilado vs Columnas deslizantes */}
+      <div className="md:hidden flex items-center justify-between px-3 py-2 border-b border-border/80 bg-accents-1/40">
+        <span className="text-[11px] font-mono font-medium text-accents-5">
+          Vista móvil
+        </span>
+        <div className="flex items-center rounded-full border border-border/80 p-0.5 bg-background shadow-2xs">
+          <button
+            type="button"
+            onClick={() => setMobileLayout('stacked')}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer ${
+              mobileLayout === 'stacked'
+                ? 'bg-foreground text-background font-semibold shadow-xs'
+                : 'text-accents-4 hover:text-foreground'
+            }`}
+          >
+            <Rows3 className="w-3 h-3" />
+            <span>Apilado</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileLayout('columns')}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer ${
+              mobileLayout === 'columns'
+                ? 'bg-foreground text-background font-semibold shadow-xs'
+                : 'text-accents-4 hover:text-foreground'
+            }`}
+          >
+            <Columns2 className="w-3 h-3" />
+            <span>Columnas</span>
+          </button>
+        </div>
+      </div>
+      {/* 1. MODO APILADO ERGONÓMICO EN MÓVILES (< md) */}
+      {!loading && rows.length > 0 && mobileLayout === 'stacked' && (
+        <div className="md:hidden divide-y divide-border/60">
+          {rows.map((row) => (
+            <div key={row.verseNumber} className="p-3.5 space-y-2.5 bg-background">
+              {/* Encabezado del versículo con acciones inmediatas */}
+              <div className="flex items-center justify-between pb-1.5 border-b border-border/60">
+                <span className="text-xs font-mono font-bold text-foreground bg-accents-2 px-2.5 py-0.5 rounded-full border border-border/70 shadow-2xs">
+                  v. {row.verseNumber}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  {onCompareRow && (
+                    <button
+                      type="button"
+                      onClick={() => onCompareRow(row)}
+                      className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-inner-card hover:bg-accents-2 text-foreground border border-border/80 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                    >
+                      ± {t('variants')}
+                    </button>
+                  )}
+                  {onInspectRow && (
+                    <button
+                      type="button"
+                      onClick={() => onInspectRow(row)}
+                      className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-inner-card hover:bg-accents-2 text-foreground border border-border/80 shadow-2xs transition-all flex items-center gap-1 active:scale-95 cursor-pointer"
+                    >
+                      <span>Exégesis</span>
+                      <Sparkles className="w-3 h-3 text-primary" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Tarjetas apiladas por versión */}
+              <div className="space-y-2">
+                {columns.map((col) => {
+                  const verseData = row.translations[col.translationId];
+                  return (
+                    <div
+                      key={col.id}
+                      className="p-3 rounded-xl border border-border/70 bg-card-bg/60 space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between text-[11px] font-mono">
+                        <span className="font-bold text-xs uppercase text-foreground bg-accents-2 px-2 py-0.5 rounded-full border border-border/70 shadow-2xs">
+                          {verseData?.translationAbbreviation || '---'}
+                        </span>
+                        <span className="text-accents-4 text-[10px] truncate max-w-[200px]">
+                          {verseData?.translationName}
+                        </span>
+                      </div>
+                      {verseData ? (
+                        <p className="text-sm font-serif leading-relaxed text-foreground/90">
+                          {verseData.text}
+                        </p>
+                      ) : (
+                        <p className="text-xs italic text-accents-4 py-1">
+                          {t('verseUnavailable')}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 2. MODO TABULAR EN ESCRITORIO O COLUMNAS EN MÓVIL */}
+      <div
+        className={`overflow-x-auto scrollbar-none ${
+          mobileLayout === 'stacked' ? 'hidden md:block' : 'block'
+        }`}
+        style={{ scrollbarWidth: 'none' }}
+      >
         <div style={{ minWidth: columns.length > 1 ? `${columns.length * 280}px` : '100%' }}>
           {/* Cabecera pegajosa con selectores de versión */}
           <div
@@ -97,7 +203,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
             </div>
           )}
 
-          {/* Filas alineadas por versículo */}
+          {/* Filas alineadas por versículo en columnas */}
           {!loading && rows.length > 0 && (
             <div className="divide-y divide-accents-2">
               {rows.map((row) => (
@@ -111,14 +217,14 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                       <button
                         type="button"
                         onClick={() => onInspectRow(row)}
-                        className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-background border border-accents-2 text-accents-5 hover:text-foreground hover:border-foreground transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+                        className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-inner-card border border-border/80 text-foreground hover:bg-accents-2 transition-all shadow-2xs flex items-center gap-1 cursor-pointer active:scale-95"
                         title={t('inspectVerseRight')}
                       >
                         <span>v.{row.verseNumber}</span>
                         <Sparkles className="w-2.5 h-2.5 text-primary" />
                       </button>
                     ) : (
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-background border border-accents-2 text-accents-5 shadow-xs">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-inner-card border border-border/80 text-foreground shadow-2xs">
                         v.{row.verseNumber}
                       </span>
                     )}
@@ -127,7 +233,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                       <button
                         type="button"
                         onClick={() => onCompareRow(row)}
-                        className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-background hover:bg-accents-2 text-foreground border border-accents-2 shadow-xs transition-all flex items-center gap-1 cursor-pointer"
+                        className="text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-inner-card hover:bg-accents-2 text-foreground border border-border/80 shadow-2xs transition-all flex items-center gap-1 cursor-pointer active:scale-95"
                         title={t('variantsTooltip', { verse: row.verseNumber })}
                       >
                         <span className="font-mono font-bold text-blue-500">±</span>

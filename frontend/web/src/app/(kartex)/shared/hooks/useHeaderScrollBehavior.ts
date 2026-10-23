@@ -1,29 +1,33 @@
-import { useRef } from 'react';
+'use client';
 
-interface UseHeaderScrollBehaviorOptions {
-  /** Zona superior donde la cabecera es inamovible (px). Default: 200 */
+import { useRef, useCallback } from 'react';
+
+export interface UseHeaderScrollBehaviorOptions {
+  /** Zona superior donde las barras permanecen visibles en reposo (px). Default: 40 */
   reposeZonePx?: number;
-  /** Desplazamiento acumulado hacia abajo para ocultar la cabecera (px). Default: 80 */
+  /** Desplazamiento acumulado hacia abajo para ocultar las barras con suavidad (px). Default: 30 */
   hideIntentPx?: number;
-  /** Desplazamiento acumulado hacia arriba para revelar la cabecera (px). Default: 25 */
+  /** Desplazamiento acumulado hacia arriba para revelar las barras (px). Default: 15 */
   revealIntentPx?: number;
+  /** Margen inferior en px para revelar automáticamente las barras al final del pasaje. Default: 160 */
+  bottomThresholdPx?: number;
+  /** Deshabilitar el comportamiento de ocultamiento */
+  disabled?: boolean;
 }
 
 /**
  * useHeaderScrollBehavior
- * Gestiona la visibilidad de la cabecera en función del comportamiento de scroll
- * del elemento de contenido principal del workspace de estudio bíblico.
- *
- * - Zona de reposo superior: la cabecera permanece fija en los primeros reposeZonePx.
- * - Scroll sostenido hacia abajo: oculta la cabecera tras hideIntentPx acumulados.
- * - Cualquier intento de subir: revela la cabecera de forma inmediata y sensible.
+ * Gestiona la visibilidad sincronizada de la barra superior y dock inferior
+ * mediante traslación fluida por GPU sin alterar el flujo del documento ni provocar saltos de margen.
  */
 export function useHeaderScrollBehavior(
-  setIsHeaderVisible: ((v: boolean) => void) | undefined,
+  setIsVisible: ((v: boolean) => void) | undefined,
   {
-    reposeZonePx = 200,
-    hideIntentPx = 80,
-    revealIntentPx = 25,
+    reposeZonePx = 40,
+    hideIntentPx = 30,
+    revealIntentPx = 15,
+    bottomThresholdPx = 160,
+    disabled = false,
   }: UseHeaderScrollBehaviorOptions = {},
 ) {
   const mainRef = useRef<HTMLElement>(null);
@@ -31,57 +35,64 @@ export function useHeaderScrollBehavior(
   const accumulatedDeltaRef = useRef(0);
   const scrollDirectionRef = useRef<'up' | 'down'>('up');
 
-  const handleMainScroll = () => {
+  const handleMainScroll = useCallback(() => {
     const mainEl = mainRef.current;
-    if (!mainEl || !setIsHeaderVisible) return;
+    if (!mainEl || !setIsVisible || disabled) return;
 
     const currentScrollTop = Math.max(0, mainEl.scrollTop);
     const delta = currentScrollTop - lastScrollTopRef.current;
 
-    // Ignorar micro-vibraciones (< 2px)
+    // Ignorar micro-vibraciones menores a 2px
     if (Math.abs(delta) < 2) return;
 
-    // 1. Zona de reposo superior: la cabecera permanece fija y serena
+    // 1. Zona de reposo inicial en la parte superior: siempre visible
     if (currentScrollTop <= reposeZonePx) {
-      setIsHeaderVisible(true);
+      setIsVisible(true);
       accumulatedDeltaRef.current = 0;
       scrollDirectionRef.current = 'up';
-    } else if (delta > 0) {
-      // Desplazamiento hacia abajo más allá de la zona de reposo
+      lastScrollTopRef.current = currentScrollTop;
+      return;
+    }
+
+    // 2. Proximidad al final del capítulo: revelar barras para permitir navegación al siguiente libro/capítulo
+    const scrollDistanceToBottom =
+      mainEl.scrollHeight - currentScrollTop - mainEl.clientHeight;
+    if (scrollDistanceToBottom <= bottomThresholdPx) {
+      setIsVisible(true);
+      accumulatedDeltaRef.current = 0;
+      scrollDirectionRef.current = 'up';
+      lastScrollTopRef.current = currentScrollTop;
+      return;
+    }
+
+    // 3. Desplazamiento hacia abajo (lectura inmersiva)
+    if (delta > 0) {
       if (scrollDirectionRef.current !== 'down') {
         scrollDirectionRef.current = 'down';
         accumulatedDeltaRef.current = 0;
       }
+      accumulatedDeltaRef.current += delta;
 
-      const effectiveDelta =
-        lastScrollTopRef.current <= reposeZonePx
-          ? currentScrollTop - reposeZonePx
-          : delta;
-
-      if (effectiveDelta > 0) {
-        accumulatedDeltaRef.current += effectiveDelta;
-      }
-
-      // Ocultar únicamente tras una intención de lectura sostenida y deliberada
+      // Ocultar de forma inmediata y natural en el primer scroll deliberado
       if (accumulatedDeltaRef.current >= hideIntentPx) {
-        setIsHeaderVisible(false);
+        setIsVisible(false);
       }
     } else if (delta < 0) {
-      // Desplazamiento hacia arriba
+      // 4. Desplazamiento hacia arriba (intención de navegación del usuario)
       if (scrollDirectionRef.current !== 'up') {
         scrollDirectionRef.current = 'up';
         accumulatedDeltaRef.current = 0;
       }
       accumulatedDeltaRef.current += Math.abs(delta);
 
-      // Reaparecer con intención de navegación hacia arriba ágil
+      // Reaparecer de inmediato con un leve gesto ascendente
       if (accumulatedDeltaRef.current >= revealIntentPx) {
-        setIsHeaderVisible(true);
+        setIsVisible(true);
       }
     }
 
     lastScrollTopRef.current = currentScrollTop;
-  };
+  }, [disabled, hideIntentPx, reposeZonePx, revealIntentPx, bottomThresholdPx, setIsVisible]);
 
   return { mainRef, handleMainScroll };
 }

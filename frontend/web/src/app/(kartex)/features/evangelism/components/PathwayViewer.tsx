@@ -63,10 +63,10 @@ export const PathwayViewer: React.FC<PathwayViewerProps> = ({
                 key={pathway.id}
                 type="button"
                 onClick={() => onSelectPathway(pathway.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer border active:scale-95 ${
                   isSelected
-                    ? 'bg-foreground text-background font-semibold shadow-xs'
-                    : 'bg-accents-1 text-accents-5 hover:text-foreground hover:bg-accents-2 border border-accents-2'
+                    ? 'bg-foreground text-background font-semibold border-foreground shadow-2xs'
+                    : 'bg-inner-card text-accents-5 hover:text-foreground hover:bg-inner-card border-border/80 hover:border-accents-4 shadow-2xs'
                 }`}
               >
                 {pathway.title}
@@ -76,13 +76,13 @@ export const PathwayViewer: React.FC<PathwayViewerProps> = ({
         </div>
 
         {/* Alternador de Modo de Vista */}
-        <div className="flex items-center gap-1 border border-accents-2 rounded-lg p-0.5 bg-accents-1">
+        <div className="flex items-center gap-0.5 border border-border/80 rounded-full p-0.5 bg-inner-card shadow-2xs">
           <button
             type="button"
             onClick={() => setViewMode('stepper')}
-            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-colors cursor-pointer ${
+            className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer active:scale-95 ${
               viewMode === 'stepper'
-                ? 'bg-background text-foreground shadow-2xs font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
@@ -91,9 +91,9 @@ export const PathwayViewer: React.FC<PathwayViewerProps> = ({
           <button
             type="button"
             onClick={() => setViewMode('full')}
-            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-colors cursor-pointer ${
+            className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer active:scale-95 ${
               viewMode === 'full'
-                ? 'bg-background text-foreground shadow-2xs font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
@@ -214,7 +214,7 @@ export const PathwayViewer: React.FC<PathwayViewerProps> = ({
                 type="button"
                 onClick={onPrevStep}
                 disabled={isFirstStep}
-                className="h-8 px-3 rounded-lg border border-accents-2 bg-background hover:bg-accents-1 text-xs font-semibold text-foreground flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                className="h-8 px-4 rounded-full border border-border/80 bg-inner-card hover:bg-accents-1 text-xs font-semibold text-foreground flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer shadow-2xs active:scale-95"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>{t('previous')}</span>
@@ -232,7 +232,7 @@ export const PathwayViewer: React.FC<PathwayViewerProps> = ({
                 type="button"
                 onClick={onNextStep}
                 disabled={isLastStep}
-                className="h-8 px-4 rounded-lg bg-foreground text-background hover:opacity-90 text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                className="h-8 px-4 rounded-full bg-foreground text-background hover:opacity-90 text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer shadow-2xs active:scale-95"
               >
                 <span>{isLastStep ? t('finished') : t('next')}</span>
                 <ChevronRight className="w-4 h-4" />

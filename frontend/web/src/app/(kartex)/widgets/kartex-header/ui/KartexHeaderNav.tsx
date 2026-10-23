@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { KartexLogo, BackToKartexButton } from '../../../shared/ui';
 import { ThemeToggle } from '../../../features/theme-toggle';
 import { LanguageToggle } from '../../../features/language-toggle';
+import { useKartexPassageSafe } from '../../../entities/passage';
 import { ChevronDown, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -34,6 +35,7 @@ interface KartexHeaderNavProps {
 export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = true }) => {
   const t = useTranslations('Nav');
   const pathname = usePathname() || '';
+  const passageContext = useKartexPassageSafe();
 
   const searchParams = useSearchParams();
   const queryString = searchParams?.toString() ? `?${searchParams.toString()}` : '';
@@ -89,7 +91,7 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
     };
   }, [mobileMenuOpen]);
 
-  // Si la cabecera se oculta por auto-hide, cerrar el menú flotante
+  // Si la cabecera se oculta, cerrar el menú desplegable móvil
   useEffect(() => {
     if (!isVisible) {
       setMobileMenuOpen(false);
@@ -98,10 +100,8 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
 
   return (
     <header
-      className={`relative shrink-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] print:hidden ${
-        isVisible
-          ? 'h-14 mb-0 opacity-100 translate-y-0 border-b border-border/80 bg-background/85 backdrop-blur-xl shadow-xs'
-          : 'h-14 -mb-14 opacity-0 -translate-y-full pointer-events-none border-b border-transparent shadow-none'
+      className={`fixed top-0 inset-x-0 z-40 h-14 border-b border-border/80 bg-background/90 dark:bg-card-bg/95 backdrop-blur-xl shadow-xs transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] print:hidden select-none ${
+        isVisible ? 'translate-y-0' : '-translate-y-full pointer-events-none lg:translate-y-0 lg:pointer-events-auto'
       }`}
     >
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
@@ -123,11 +123,11 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
         <div className="md:hidden absolute left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-auto" ref={mobileMenuRef}>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border bg-inner-card text-foreground text-xs font-medium cursor-pointer shadow-xs active:scale-95 transition-all max-w-[170px] sm:max-w-none"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/80 bg-inner-card/90 text-foreground text-xs font-medium cursor-pointer shadow-2xs active:scale-95 transition-all"
             aria-expanded={mobileMenuOpen}
             aria-label={t('studyMode')}
           >
-            <span className="truncate">{t(activeTab.key as any)}</span>
+            <span className="truncate max-w-[140px]">{t(activeTab.key as any)}</span>
             <ChevronDown className={`w-3.5 h-3.5 text-accents-4 shrink-0 transition-transform duration-200 ${mobileMenuOpen ? 'rotate-180' : ''}`} />
           </button>
 
@@ -212,7 +212,7 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
         </div>
 
         {/* Derecha: Selector de Idioma y Tema */}
-        <div className="shrink-0 flex items-center gap-2 pl-1">
+        <div className="shrink-0 flex items-center gap-1 sm:gap-2 pl-1">
           <LanguageToggle />
           <ThemeToggle />
         </div>

@@ -27,6 +27,7 @@ import { KartexPassageProvider, useKartexPassageSafe } from '../../entities/pass
 import { KartexHeaderNav } from '../../widgets/kartex-header';
 import { KartexNavigationSidebar } from '../../widgets/kartex-sidebar';
 import { KartexExegesisInspector } from '../../widgets/exegesis-inspector';
+import { KartexMobileStudyDock } from '../../widgets/kartex-mobile-dock';
 import { DraggableEdgeTab } from '../../shared/ui';
 import { AtlasProvider, AtlasSidebar, AtlasInspector } from '../../features/atlas';
 import { TimelineProvider, TimelineSidebar, TimelineInspector } from '../../features/timeline';
@@ -45,7 +46,7 @@ import {
   DictionariesSidebar,
   DictionariesInspector,
 } from '../../features/dictionaries';
-import { useHeaderScrollBehavior } from '../../shared/hooks';
+import { useTouchSwipe, useHeaderScrollBehavior } from '../../shared/hooks';
 
 function ScopedModuleProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';
@@ -118,15 +119,31 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
   const isRightOpen = passageContext?.isRightInspectorOpen ?? false;
   const isHeaderVisible = passageContext?.isHeaderVisible ?? true;
   const setIsHeaderVisible = passageContext?.setIsHeaderVisible;
+  const selectedBookId = passageContext?.selectedBookId;
+  const selectedChapter = passageContext?.selectedChapter;
 
-  const { mainRef, handleMainScroll } = useHeaderScrollBehavior(setIsHeaderVisible);
+  const { mainRef, handleMainScroll } = useHeaderScrollBehavior(setIsHeaderVisible, {
+    disabled: isAtlas,
+  });
 
-  // Al abrir cualquiera de los paneles laterales en móvil o desktop, asegurar que la cabecera superior permanezca visible
+  // Asegurar que las barras reaparezcan de inmediato al cambiar de libro o capítulo
+  useEffect(() => {
+    setIsHeaderVisible?.(true);
+  }, [selectedBookId, selectedChapter, setIsHeaderVisible]);
+
+  // Si se abre cualquier panel lateral en móvil o escritorio, mantener visible la cabecera
   useEffect(() => {
     if (isLeftOpen || isRightOpen) {
       setIsHeaderVisible?.(true);
     }
   }, [isLeftOpen, isRightOpen, setIsHeaderVisible]);
+
+  // Gestos táctiles horizontales (swipe) para avanzar o retroceder de capítulo en móvil
+  const swipeHandlers = useTouchSwipe({
+    onSwipeLeft: () => passageContext?.nextChapter(),
+    onSwipeRight: () => passageContext?.prevChapter(),
+    disabled: isAtlas, // Deshabilitar en Atlas para navegación panorámica en mapas
+  });
 
   const leftTabTitle = isAtlas
     ? tStudio('toggleAtlasSidebar')
@@ -216,9 +233,60 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? BarChart3
     : Languages;
 
+  const isReaderView =
+    !isAtlas &&
+    !isTimeline &&
+    !isArchaeology &&
+    !isCommentaries &&
+    !isDictionaries &&
+    !isEvangelism &&
+    !isParallel &&
+    !isInterlinear &&
+    !isWordStudy;
+
+  const mobileLeftLabel = isAtlas
+    ? 'Lugares'
+    : isTimeline
+    ? 'Épocas'
+    : isArchaeology
+    ? 'Hallazgos'
+    : isCommentaries
+    ? 'Comentarios'
+    : isDictionaries
+    ? 'Artículos'
+    : isEvangelism
+    ? 'Guías'
+    : isParallel
+    ? 'Versiones'
+    : isInterlinear
+    ? 'Original'
+    : isWordStudy
+    ? 'Términos'
+    : undefined;
+
+  const mobileRightLabel = isAtlas
+    ? 'Ficha'
+    : isTimeline
+    ? 'Detalles'
+    : isArchaeology
+    ? 'Ficha'
+    : isCommentaries
+    ? 'Detalles'
+    : isDictionaries
+    ? 'Definición'
+    : isEvangelism
+    ? 'Recursos'
+    : isParallel
+    ? 'Diferencias'
+    : isInterlinear
+    ? 'Morfología'
+    : isWordStudy
+    ? 'Concordancia'
+    : undefined;
+
   return (
     <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden selection:bg-primary/10">
-      {/* Header Superior con Auto-Hide Inteligente y Suave */}
+      {/* Header Superior Fijo y Deslizable con Auto-Hide por GPU */}
       <KartexHeaderNav isVisible={isHeaderVisible} />
 
       {/* Pestaña Lateral Izquierda Discreta en Borde (Aparece al colapsar el selector de libros) */}
@@ -244,7 +312,7 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
       />
 
       {/* Workspace Studio FSD: Panel Izquierdo + Canvas Central + Inspector Derecho */}
-      <div className="flex-1 flex flex-row w-full min-h-0 overflow-hidden relative">
+      <div className="flex-1 flex flex-row w-full h-full min-h-0 overflow-hidden relative lg:pt-14">
         {/* Panel Lateral Izquierdo Especializado por Módulo */}
         {isAtlas ? (
           <AtlasSidebar />
@@ -268,11 +336,12 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
           <KartexNavigationSidebar />
         )}
 
-        {/* Canvas Central de Contenido y Herramientas de Estudio con Scroll Independiente y Centrado Simétrico */}
+        {/* Canvas Central de Contenido y Herramientas de Estudio con Scroll Fluido y Centrado Simétrico */}
         <main
           ref={mainRef}
           onScroll={handleMainScroll}
-          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-2 pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0 kartex-scrollbar-slim"
+          {...swipeHandlers}
+          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-16 pb-24 sm:pb-20 lg:pt-4 lg:pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0 kartex-scrollbar-slim"
         >
           <div className="w-full max-w-[1780px] mx-auto space-y-4">
             {children}
@@ -318,6 +387,18 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
           <KartexExegesisInspector />
         )}
       </div>
+
+      {/* Dock Inferior Ergonómico para Dispositivos Móviles (Estilo Geist / Vercel Style) */}
+      <KartexMobileStudyDock
+        isVisible={isHeaderVisible}
+        leftIcon={leftTabIcon}
+        rightIcon={rightTabIcon}
+        leftTitle={leftTabTitle}
+        rightTitle={rightTabTitle}
+        leftLabel={mobileLeftLabel}
+        rightLabel={mobileRightLabel}
+        isReaderView={isReaderView}
+      />
     </div>
   );
 }

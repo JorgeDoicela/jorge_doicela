@@ -31,13 +31,13 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         <span className="text-[11px] font-mono text-accents-4 uppercase tracking-wider">
           {t('mode')}
         </span>
-        <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-1">
+        <div className="inline-flex rounded-full border border-border/80 bg-inner-card p-0.5 shadow-2xs">
           <button
             type="button"
             onClick={() => onChangeSettings({ ...settings, layout: 'reverse_interlinear' })}
-            className={`px-3 py-1 rounded-md font-medium text-xs transition-all cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full font-medium text-xs transition-all cursor-pointer active:scale-95 ${
               settings.layout === 'reverse_interlinear'
-                ? 'bg-foreground text-background font-bold shadow-xs'
+                ? 'bg-foreground text-background font-bold shadow-2xs'
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
@@ -46,9 +46,9 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
           <button
             type="button"
             onClick={() => onChangeSettings({ ...settings, layout: 'cards' })}
-            className={`px-3 py-1 rounded-md font-medium text-xs transition-all cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full font-medium text-xs transition-all cursor-pointer active:scale-95 ${
               settings.layout === 'cards'
-                ? 'bg-foreground text-background font-bold shadow-xs'
+                ? 'bg-foreground text-background font-bold shadow-2xs'
                 : 'text-accents-4 hover:text-foreground'
             }`}
           >
@@ -58,7 +58,7 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
       </div>
 
       {/* Opciones de visualización */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-1.5">
         <span className="text-[11px] font-mono text-accents-4 uppercase tracking-wider mr-1 hidden lg:inline">
           {t('layers')}
         </span>
@@ -66,10 +66,10 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         <button
           type="button"
           onClick={() => toggleSetting('showNikkud')}
-          className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+          className={`px-3 py-1 rounded-full border border-border/80 shadow-2xs transition-all cursor-pointer text-xs font-medium active:scale-95 ${
             settings.showNikkud
               ? 'bg-foreground text-background font-semibold border-foreground'
-              : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
+              : 'bg-inner-card/90 text-accents-5 hover:text-foreground hover:border-accents-4'
           }`}
           title={t('nikkudTooltip')}
         >
@@ -79,10 +79,10 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         <button
           type="button"
           onClick={() => toggleSetting('showTransliteration')}
-          className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+          className={`px-3 py-1 rounded-full border border-border/80 shadow-2xs transition-all cursor-pointer text-xs font-medium active:scale-95 ${
             settings.showTransliteration
               ? 'bg-foreground text-background font-semibold border-foreground'
-              : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
+              : 'bg-inner-card/90 text-accents-5 hover:text-foreground hover:border-accents-4'
           }`}
           title={t('transliterationTooltip')}
         >
@@ -92,10 +92,10 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         <button
           type="button"
           onClick={() => toggleSetting('showGloss')}
-          className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+          className={`px-3 py-1 rounded-full border border-border/80 shadow-2xs transition-all cursor-pointer text-xs font-medium active:scale-95 ${
             settings.showGloss
               ? 'bg-foreground text-background font-semibold border-foreground'
-              : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
+              : 'bg-inner-card/90 text-accents-5 hover:text-foreground hover:border-accents-4'
           }`}
           title={t('glossTooltip')}
         >
@@ -105,10 +105,10 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         <button
           type="button"
           onClick={() => toggleSetting('showStrong')}
-          className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+          className={`px-3 py-1 rounded-full border border-border/80 shadow-2xs transition-all cursor-pointer text-xs font-medium active:scale-95 ${
             settings.showStrong
               ? 'bg-foreground text-background font-semibold border-foreground'
-              : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
+              : 'bg-inner-card/90 text-accents-5 hover:text-foreground hover:border-accents-4'
           }`}
           title={t('strongTooltip')}
         >
@@ -118,10 +118,10 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         <button
           type="button"
           onClick={() => toggleSetting('showMorphologyTag')}
-          className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+          className={`px-3 py-1 rounded-full border border-border/80 shadow-2xs transition-all cursor-pointer text-xs font-medium active:scale-95 ${
             settings.showMorphologyTag
               ? 'bg-foreground text-background font-semibold border-foreground'
-              : 'bg-accents-1 text-accents-4 border-accents-2 hover:text-foreground'
+              : 'bg-inner-card/90 text-accents-5 hover:text-foreground hover:border-accents-4'
           }`}
           title={t('morphologyTooltip')}
         >
@@ -134,15 +134,15 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         {/* Velocidad de Audio */}
         <div className="flex items-center gap-1">
           <span className="text-[11px] font-mono text-accents-4">{t('audio')}</span>
-          <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-0.5">
+          <div className="inline-flex rounded-full border border-border/80 bg-inner-card p-0.5 shadow-2xs">
             {[1.0, 0.75].map((speed) => (
               <button
                 key={speed}
                 type="button"
                 onClick={() => onChangeSettings({ ...settings, audioSpeed: speed })}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono transition-all ${
+                className={`px-2 py-0.5 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 ${
                   settings.audioSpeed === speed
-                    ? 'bg-background text-foreground font-bold shadow-xs'
+                    ? 'bg-foreground text-background font-bold shadow-2xs'
                     : 'text-accents-4 hover:text-foreground'
                 }`}
                 title={t('speedTooltip', { speed })}
@@ -156,15 +156,15 @@ export const InterlinearControls: React.FC<InterlinearControlsProps> = ({
         {/* Tamaño de fuente */}
         <div className="flex items-center gap-1">
           <span className="text-[11px] font-mono text-accents-4">{t('fontSize')}</span>
-          <div className="inline-flex rounded-lg border border-accents-2 bg-accents-1 p-0.5">
+          <div className="inline-flex rounded-full border border-border/80 bg-inner-card p-0.5 shadow-2xs">
             {(['base', 'lg', 'xl', '2xl'] as const).map((size) => (
               <button
                 key={size}
                 type="button"
                 onClick={() => onChangeSettings({ ...settings, fontSize: size })}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase transition-all ${
+                className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase transition-all cursor-pointer active:scale-95 ${
                   settings.fontSize === size
-                    ? 'bg-background text-foreground font-bold shadow-xs'
+                    ? 'bg-foreground text-background font-bold shadow-2xs'
                     : 'text-accents-4 hover:text-foreground'
                 }`}
               >

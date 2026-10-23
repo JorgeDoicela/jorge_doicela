@@ -50,7 +50,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Selector de Ruta Histórica */}
-      <div className="flex flex-wrap items-center gap-2 p-2 rounded-xl border border-accents-2 bg-background/60">
+      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-2xl border border-accents-2 bg-background/60">
         {allRoutes.map((route) => {
           const isSelected = route.id === selectedRouteId;
           return (
@@ -58,10 +58,10 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               key={route.id}
               type="button"
               onClick={() => handleSelectRoute(route.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-2 cursor-pointer border active:scale-95 ${
                 isSelected
-                  ? 'bg-foreground text-background font-semibold shadow-sm'
-                  : 'text-accents-5 hover:text-foreground bg-accents-1/50 hover:bg-accents-1'
+                  ? 'bg-foreground text-background font-semibold border-foreground shadow-2xs'
+                  : 'text-accents-5 hover:text-foreground bg-inner-card border-border/80 hover:border-accents-4 shadow-2xs'
               }`}
             >
               <span
@@ -194,7 +194,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               <button
                 type="button"
                 onClick={handlePrevStop}
-                className="w-8 h-8 rounded-lg border border-accents-2 bg-accents-1 hover:bg-accents-2 text-foreground flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full border border-border/80 bg-inner-card hover:bg-accents-2 text-foreground flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95"
                 title={t('prevStop')}
               >
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               <button
                 type="button"
                 onClick={handleTogglePlay}
-                className={`px-4 h-8 rounded-lg font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+                className={`px-4 h-8 rounded-full font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95 ${
                   isPlaying
                     ? 'bg-amber-500 text-black font-semibold'
                     : 'bg-foreground text-background font-semibold'
@@ -231,7 +231,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               <button
                 type="button"
                 onClick={handleNextStop}
-                className="w-8 h-8 rounded-lg border border-accents-2 bg-accents-1 hover:bg-accents-2 text-foreground flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full border border-border/80 bg-inner-card hover:bg-accents-2 text-foreground flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95"
                 title={t('nextStop')}
               >
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -247,7 +247,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
               </span>
 
               {/* Selector de Velocidad */}
-              <div className="flex items-center gap-1 bg-accents-1 border border-accents-2 p-0.5 rounded-md text-[10px] font-mono">
+              <div className="flex items-center gap-0.5 bg-inner-card border border-border/80 p-0.5 rounded-full text-[10px] font-mono shadow-2xs">
                 {[
                   { label: '1x', ms: 4500 },
                   { label: '2x', ms: 2500 },
@@ -257,9 +257,9 @@ export const HistoricalRoutesPlayer: React.FC = () => {
                     key={speed.label}
                     type="button"
                     onClick={() => setPlaybackSpeedMs(speed.ms)}
-                    className={`px-1.5 py-0.5 rounded ${
+                    className={`px-2 py-0.5 rounded-full transition-all cursor-pointer active:scale-95 ${
                       playbackSpeedMs === speed.ms
-                        ? 'bg-background text-foreground font-bold shadow-xs'
+                        ? 'bg-foreground text-background font-bold shadow-2xs'
                         : 'text-accents-4 hover:text-foreground'
                     }`}
                   >

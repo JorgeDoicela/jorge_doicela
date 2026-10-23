@@ -1,4 +1,6 @@
 export { TranslationSelector } from './components/translation-selector/TranslationSelector';
+export { MobileTranslationPopover } from './components/mobile-translation-popover/MobileTranslationPopover';
+export type { MobileTranslationPopoverProps } from './components/mobile-translation-popover/MobileTranslationPopover';
 export { useTranslations } from './hooks/useTranslations';
 export type { Translation } from './types';
 export {

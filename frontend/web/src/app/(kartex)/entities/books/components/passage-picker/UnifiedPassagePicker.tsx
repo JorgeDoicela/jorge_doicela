@@ -161,10 +161,10 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           type="button"
           onClick={onPrevChapter}
           disabled={selectedChapter !== null && selectedChapter <= 1}
-          className={`h-8 w-7 sm:w-8 shrink-0 rounded-lg border border-accents-2 bg-background flex items-center justify-center transition-all cursor-pointer ${
+          className={`h-8 w-8 shrink-0 rounded-full border border-border/80 bg-inner-card flex items-center justify-center transition-all cursor-pointer shadow-2xs ${
             selectedChapter !== null && selectedChapter <= 1
               ? 'opacity-30 cursor-not-allowed text-accents-4'
-              : 'hover:border-foreground text-accents-6 hover:text-foreground shadow-xs'
+              : 'hover:bg-accents-2 text-foreground active:scale-90'
           }`}
           title={t('prevChapterTooltip')}
         >
@@ -181,10 +181,10 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           setIsOpen(!isOpen);
           setSelectedBookForChapters(null);
         }}
-        className={`px-2 sm:px-3 h-8 min-w-0 rounded-lg border transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer shadow-xs ${
+        className={`px-3.5 h-8 min-w-0 rounded-full border border-border/80 bg-inner-card/90 transition-all flex items-center gap-2 cursor-pointer shadow-2xs active:scale-95 ${
           isOpen
-            ? 'border-foreground bg-accents-1 text-foreground ring-2 ring-foreground/10'
-            : 'border-accents-2 bg-background hover:border-foreground text-foreground'
+            ? 'bg-accents-2 text-foreground font-semibold ring-2 ring-foreground/10'
+            : 'hover:bg-accents-1 text-foreground'
         } ${size === 'sm' ? 'text-xs' : 'text-xs sm:text-sm font-semibold'}`}
       >
         <span className="font-bold tracking-tight truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
@@ -209,10 +209,10 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           type="button"
           onClick={onNextChapter}
           disabled={selectedChapter !== null && selectedChapter >= totalChapters}
-          className={`h-8 w-7 sm:w-8 shrink-0 rounded-lg border border-accents-2 bg-background flex items-center justify-center transition-all cursor-pointer ${
+          className={`h-8 w-8 shrink-0 rounded-full border border-border/80 bg-inner-card flex items-center justify-center transition-all cursor-pointer shadow-2xs ${
             selectedChapter !== null && selectedChapter >= totalChapters
               ? 'opacity-30 cursor-not-allowed text-accents-4'
-              : 'hover:border-foreground text-accents-6 hover:text-foreground shadow-xs'
+              : 'hover:bg-accents-2 text-foreground active:scale-90'
           }`}
           title={t('nextChapterTooltip')}
         >
@@ -237,10 +237,10 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDownSearch}
-                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-accents-2 bg-accents-1 text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-all"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs rounded-full border border-border/80 bg-accents-1 text-foreground placeholder:text-accents-4 focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-all"
                 />
                 <svg
-                  className="w-3.5 h-3.5 text-accents-4 absolute left-2.5 top-1/2 -translate-y-1/2"
+                  className="w-3.5 h-3.5 text-accents-4 absolute left-3 top-1/2 -translate-y-1/2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -250,11 +250,11 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
               </div>
 
               {/* Tabs Canónicos */}
-              <div className="flex gap-1 bg-accents-1 p-0.5 rounded-xl border border-accents-2 text-xs">
+              <div className="flex gap-1 bg-accents-1 p-0.5 rounded-full border border-border/80 text-xs">
                 <button
                   type="button"
                   onClick={() => setActiveTab('ALL')}
-                  className={`flex-1 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                  className={`flex-1 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer ${
                     activeTab === 'ALL'
                       ? 'bg-background text-foreground font-bold shadow-xs'
                       : 'text-accents-5 hover:text-foreground'
@@ -265,7 +265,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('OT')}
-                  className={`flex-1 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                  className={`flex-1 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer ${
                     activeTab === 'OT'
                       ? 'bg-background text-foreground font-bold shadow-xs'
                       : 'text-accents-5 hover:text-foreground'
@@ -276,7 +276,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('NT')}
-                  className={`flex-1 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                  className={`flex-1 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer ${
                     activeTab === 'NT'
                       ? 'bg-background text-foreground font-bold shadow-xs'
                       : 'text-accents-5 hover:text-foreground'

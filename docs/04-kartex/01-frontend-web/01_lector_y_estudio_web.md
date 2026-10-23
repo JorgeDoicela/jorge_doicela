@@ -59,7 +59,7 @@ frontend/web/src/app/(kartex)/
 ├── shared/                    # CAPA DE ELEMENTOS COMPARTIDOS (FSD SHARED)
 │   ├── context/               # KartexPassageContext (sincroniza bookId, chapter y trans con URL)
 │   ├── data/                  # canonData.ts (categorías canónicas, recuentos de capítulos por ID y abreviación)
-│   ├── hooks/                 # useHeaderScrollBehavior, useKartexKeybindings
+│   ├── hooks/                 # useKartexKeybindings, useTouchSwipe
 │   ├── seo/                   # KartexJsonLd (Schema.org estructurado)
 │   ├── ui/                    # BackToKartexButton, BackToPortalButton, KartexLogo, KartexSelect, DraggableEdgeTab, OngoingExpansionNotice, ResizeBorderHandle, EdgePeekStrip
 │   └── index.ts               # Barrel export unificado de shared
@@ -69,9 +69,10 @@ frontend/web/src/app/(kartex)/
 │   └── translations/          # useTranslations, TranslationSelector (API /kartex/translations)
 │
 ├── widgets/                   # CAPA DE COMPONENTES COMPUESTOS (FSD WIDGETS)
-│   ├── kartex-header/         # KartexHeaderNav (cabecera con auto-hide de scroll y selector móvil)
+│   ├── kartex-header/         # KartexHeaderNav (cabecera fija y estable con selector móvil de modo y versión)
 │   ├── kartex-sidebar/        # KartexNavigationSidebar (navegador canónico de 66 libros con buscador)
 │   ├── kartex-passage-toolbar/ # KartexPassageToolbar (barra ergonómica de pasaje activo)
+│   ├── kartex-mobile-dock/    # KartexMobileStudyDock (barra inferior ergonómica y táctil Geist en móvil)
 │   ├── exegesis-inspector/    # KartexExegesisInspector, StrongMorphologyInspector, ParallelVerseInspector, BookHistoricalProfile
 │   ├── landing/               # 9 secciones atómicas de la Landing Page
 │   └── index.ts               # Barrel export de widgets
@@ -275,6 +276,65 @@ La arquitectura de paneles laterales (izquierdo y derecho) implementa un diseño
   * El contenido central se envuelve en un contenedor **`max-w-[1780px] mx-auto`** con espaciado simétrico `lg:px-12` (48px), aprovechando al máximo el ancho horizontal hacia afuera para acomodar las herramientas exegéticas complejas (interlineal, lectura paralela, léxicos, mapas y cronologías) de forma uniforme en todos los módulos sin sentirse encogido ni colisionar con las lengüetas laterales.
   * **Navegación Secuencial Editorial Integrada (`ChapterNavigator.tsx`):** Se erradicaron los botones flotantes fijos en mitad de pantalla (`fixed top-1/2`) que quedaban aislados ("volando") en los márgenes exteriores. La navegación entre capítulos y libros continuos se ubica de forma elegante al final del pasaje de lectura mediante un bloque semántico `<nav>` con tarjetas de acceso directo (*«← Capítulo Anterior | Capítulo Siguiente →»*), manteniendo además intactos los listeners globales de atajos de teclado (`ArrowLeft` / `ArrowRight`).
 
+### 6.2 Arquitectura del Modo Móvil Táctil: 1 Barra Superior, 1 Barra Inferior (Dock) y Gestos
+
+Para erradicar la duplicidad de barras superiores y maximizar el área de lectura en smartphones (`< 1024px`), Kartex implementa una arquitectura estricta de **dos barras**:
+
+* **Unificación en 1 Única Barra Superior ([`KartexHeaderNav.tsx`](../../../frontend/web/src/app/(kartex)/widgets/kartex-header/ui/KartexHeaderNav.tsx)):**
+  - En móviles (`< lg`), la cabecera absorbe de forma compacta los controles contextuales esenciales:
+    - *Izquierda:* Retorno al portal (`BackToKartexButton`) y logotipo oficial.
+    - *Centro:* Selector del modo de estudio (`Lector ▾`, `Paralelo ▾`, etc.) junto al selector de traducción bíblica (`TranslationSelector`, ej. `NBLA ▾`).
+    - *Derecha:* Popover de ajustes tipográficos ([`ReaderAppearancePopover.tsx`](../../../frontend/web/src/app/(kartex)/features/verses/components/reader-appearance-popover/ReaderAppearancePopover.tsx), selector de fuente serif/sans, tamaños y modo párrafo/versículo) y conmutador de tema (`ThemeToggle`).
+  - **Eliminación de la Segunda Barra en el Canvas:** [`ReaderToolbar.tsx`](../../../frontend/web/src/app/(kartex)/features/verses/components/reader-toolbar/ReaderToolbar.tsx) y [`KartexPassageToolbar.tsx`](../../../frontend/web/src/app/(kartex)/widgets/kartex-passage-toolbar/ui/KartexPassageToolbar.tsx) aplican `hidden lg:block` / `hidden lg:flex`, erradicando la segunda barra intermedia y permitiendo que el texto bíblico comience inmediatamente bajo la cabecera.
+
+* **1 Única Barra Inferior: Dock Táctil Minimalista ([`KartexMobileStudyDock.tsx`](../../../frontend/web/src/app/(kartex)/widgets/kartex-mobile-dock/ui/KartexMobileStudyDock.tsx)):**
+  - Barra anclada en la base (`fixed bottom-0 inset-x-0 z-30 lg:hidden`) con acabado translúcido (`bg-background/92 backdrop-blur-xl border-t border-border/80`) y soporte estricto de áreas seguras (`pb-[calc(0.5rem+env(safe-area-inset-bottom))]`).
+  - **Distribución en 5 Puntos de Contacto Ergonómicos:**
+    1. *Acceso a Navegación:* Abre el selector de libros o navegación del módulo activo con estado visual iluminado al estar abierto.
+    2. *Capítulo Anterior:* Botón `ChevronLeft` con respuesta háptica CSS (`active:scale-90`).
+    3. *Cápsula Central de Pasaje:* Chip interactivo (`rounded-full px-3 py-1.5 bg-accents-1 border border-border/80`) que muestra el libro y capítulo en curso (ej. `Gén. 1`, `Jn. 3`) y abre el selector rápido al ser pulsado.
+    4. *Capítulo Siguiente:* Botón `ChevronRight`.
+    5. *Inspector Exegético / Herramientas:* Abre la ficha exegética o panel derecho, con un indicador luminoso pulsante (`w-2 h-2 rounded-full bg-blue-500 animate-pulse`) si existe un versículo bajo inspección activa.
+  - **Supresión de Botones Flotantes Invasivos:** Los antiguos FABs circulares en las esquinas inferiores ([`DraggableEdgeTab.tsx`](../../../frontend/web/src/app/(kartex)/shared/ui/DraggableEdgeTab.tsx)) se desactivan automáticamente en móvil (`hideOnMobile = true`), cediendo el control total al Dock sin estorbar la lectura.
+  - **Margen de Desplazamiento Holgado:** El contenedor `<main>` en `layout.tsx` aplica `pb-24 sm:pb-20 lg:pb-16`, impidiendo que el último versículo o el footer queden tapados.
+
+* **Inspector Exegético como Bottom Sheet Deslizable ([`StudySidePanel.tsx`](../../../frontend/web/src/app/(kartex)/shared/ui/StudySidePanel.tsx)):**
+  - En móviles (`< lg`), el inspector exegético derecho (`side="right"`) transmuta automáticamente de un Drawer lateral invasivo de 88vw a un **Bottom Sheet vertical** (`mobileVariant="bottom-sheet"`).
+  - Posicionamiento inferior acoplado (`fixed inset-x-0 bottom-0 top-auto z-50 w-full max-h-[85vh] rounded-t-2xl border-t border-border shadow-[0_-10px_40px_rgba(0,0,0,0.3)]`).
+  - **Gesto de Arrastre hacia Abajo (*Pull-Down Dismiss*):** Incorpora una manija de arrastre superior tipo cápsula (`w-12 h-1.5 rounded-full bg-accents-3 mx-auto mt-2.5 mb-1`) que detecta deslizamiento vertical táctil (`deltaY > 50px`) para cerrar el modal suavemente.
+  - En escritorio (`lg:`), preserva intacto el comportamiento como panel lateral redimensionable con `ResizeBorderHandle`.
+
+* **Navegación de Capítulos por Gestos Táctiles (*Swipe Gestures*, [`useTouchSwipe.ts`](../../../frontend/web/src/app/(kartex)/shared/hooks/useTouchSwipe.ts)):**
+  - Hook desacoplado integrado en el contenedor principal `<main>` de `layout.tsx`.
+  - Distingue síncronamente gestos horizontales (`Math.abs(deltaX) >= 64px`) de desplazamientos verticales habituales (`Math.abs(deltaY) <= 48px`).
+  - Deslizar hacia la izquierda avanza al siguiente capítulo; deslizar hacia la derecha retrocede al capítulo anterior.
+  - Se auto-desactiva preventivamente sobre inputs, selectores o dentro del módulo Atlas para no interferir con la navegación 3D o mapas interactivos.
+
+* **Modo Paralelo Apilado en Pantallas Pequeñas ([`ParallelViewGrid.tsx`](../../../frontend/web/src/app/(kartex)/features/parallel-view/components/ParallelViewGrid.tsx)):**
+  - Switcher integrado en cabecera móvil (`md:hidden`) que permite alternar entre:
+    * *Modo Apilado (Predeterminado en móvil):* Cada versículo agrupa las traducciones en tarjetas verticales homogéneas sin requerir desplazamiento horizontal.
+    * *Modo Columnas:* Grilla tabular tradicional con desplazamiento horizontal sincronizado.
+
+### 6.3 Ocultamiento y Revelado Automático Fluido por GPU (*Headroom Pattern* sin CLS)
+
+Para ofrecer una experiencia de lectura bíblica inmersiva sin distracciones tanto en móvil como en escritorio, Kartex implementa el patrón *Headroom* sincronizado entre la barra superior y el dock inferior a través del hook [`useHeaderScrollBehavior.ts`](../../../frontend/web/src/app/(kartex)/shared/hooks/useHeaderScrollBehavior.ts):
+
+* **Traslación 100% por GPU sin Reflow (CLS = 0):**
+  - **Eliminación Total de Márgenes Negativos:** Se erradicaron las técnicas de márgenes dinámicos (`-mb-14`) que provocaban saltos bruscos de 56px en el texto bíblico mientras el usuario leía.
+  - La cabecera superior ([`KartexHeaderNav.tsx`](../../../frontend/web/src/app/(kartex)/widgets/kartex-header/ui/KartexHeaderNav.tsx)) se posiciona fija (`fixed top-0 inset-x-0 z-40 h-14`) y se traslada fuera de pantalla mediante `translateY(-100%)`.
+  - El dock inferior ([`KartexMobileStudyDock.tsx`](../../../frontend/web/src/app/(kartex)/widgets/kartex-mobile-dock/ui/KartexMobileStudyDock.tsx)) se traslada fuera de pantalla mediante `translateY(100%)`.
+  - En escritorio (`lg:`), los paneles laterales abiertos ([`StudySidePanel.tsx`](../../../frontend/web/src/app/(kartex)/shared/ui/StudySidePanel.tsx)) se sincronizan trasladándose `translateY(-56px)` en perfecta armonía con la cabecera, de modo que sus barras de herramientas se anclan a `y = 0` sin saltos ni espacios vacíos.
+  - El contenedor de lectura `<main>` mantiene un padding superior e inferior fijo y permanente (`pt-16 pb-24 sm:pb-20 lg:pt-16 lg:pb-16`), por lo que las coordenadas del texto jamás se mueven durante el desplazamiento.
+  - Toda la cinemática opera en el hilo compositor de la GPU a 120 FPS con curva de desaceleración `cubic-bezier(0.16, 1, 0.3, 1)` y duración de 300ms.
+
+* **Calibración Ergonómica de Umbrales:**
+  - **Respuesta Inmediata en el Primer Scroll:** Se eliminó el retardo del "segundo scroll" (el umbral anterior de 200px + 100px requería múltiples gestos). El nuevo umbral activa el deslizamiento suave tras solo **30px sostenidos hacia abajo** (`hideIntentPx = 30`).
+  - **Reaparición Instantánea:** Un leve gesto de **15px hacia arriba** (`revealIntentPx = 15`) reabre inmediatamente las barras de control.
+  - **Zona de Reposo Superior (`scrollTop <= 40px`):** En la cabecera del capítulo, las barras permanecen siempre visibles.
+  - **Revelado Automático al Final del Capítulo (`bottomThresholdPx = 160px`):** Al aproximarse al final del pasaje, las barras emergen automáticamente para permitir al usuario avanzar de capítulo o acceder a las herramientas sin fricción.
+  - **Restauración en Cambio de Pasaje o Apertura de Paneles:** Al cambiar de libro o capítulo, o al abrir cualquier panel lateral o menú desplegable, las barras se restauran a estado visible de forma determinista.
+  - **Inmunidad en Atlas:** En el módulo interactivo de mapas (`/study/atlas`), el comportamiento se inhabilita preventivamente para permitir zoom y paneo continuo.
+
 ---
 
 ## 7. Refinamientos de Alta Precisión Exegética
@@ -346,16 +406,20 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
   * Al transicionar de móvil a PC (`>= 1024px`), el sistema restaura fluidamente la vista de 3 columnas abierta por defecto (o según la preferencia guardada en `localStorage`).
 * **Aislamiento de Persistencia:** Los toggles manuales solo escriben en `localStorage` (`kartex_left_sidebar_open` y `kartex_right_inspector_open`) cuando el usuario opera en desktop (`>= 1024px`), evitando que aperturas efímeras en móviles sobreescriban la configuración de escritorio.
 
-### 7.8 Arquitectura Desacoplada App Shell y Auto-Hide Inteligente (`layout.tsx`, `KartexHeaderNav.tsx`)
+### 7.8 Arquitectura Desacoplada App Shell y Auto-Hide Diferenciado por Factor de Forma (`layout.tsx`, `KartexHeaderNav.tsx`, `StudySidePanel.tsx`)
 * **Patrón App Shell de Estudio Profesional (Cero Layout Shifts - CLS = 0):** El workspace de estudio adopta la arquitectura canónica de IDEs y suites profesionales (Geist, Linear, VS Code):
   * **Marco Raíz Inamovible:** `h-screen flex flex-col overflow-hidden`. La ventana del navegador nunca produce scroll global ni desacomoda los paneles laterales.
-  * **Auto-Hide Inteligente de Cabecera Acelerado por GPU (`KartexHeaderNav.tsx`):** La barra de 56px (`h-14`) cuenta con animación de deslizamiento inercial suave mediante traslación por hardware y margen inferior sincronizado (`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] -translate-y-full -mb-14 opacity-0`), erradicando el desfase de velocidades, el recorte de contenido y los recálculos de layout forzados (*layout reflow*). Al retornar (`translate-y-0 mb-0 opacity-100`), incorpora cristal esmerilado translúcido (*backdrop-blur-xl* al 85%), borde refinado y sombra ligera flotante.
-    * **Zona de Reposo Serena (`scrollTop <= 200px`):** Los primeros 200px permanecen fijos para que el lector examine el título, la barra de herramientas o el pasaje sin que nada desaparezca.
-    * **Ocultamiento por Intención Real (`>= 80px` continuos hacia abajo):** Solo al rebasar la zona de reposo y demostrar lectura continuada, la barra se desliza fluidamente hacia arriba fuera del viewport.
-    * **Reaparición Inmediata (`>= 25px` hacia arriba):** Cualquier retroceso o gesto ascendente restaura la cabecera al instante.
-  * **Expansión Automática del Workspace:** Al retraerse la cabecera, la fila del workspace (`flex-1 min-h-0 overflow-hidden`) asciende suavemente a pantalla completa (`100vh`) sin saltos de lectura.
-  * **Blindaje Total de Paneles Laterales (`KartexNavigationSidebar.tsx` e `Inspector`):** En desktop (`lg:`), actúan como columnas fijas acopladas (`lg:static lg:h-full`). Sus cabeceras (`[Todos | AT | NT]` y `[Morfología Strong]`) son `shrink-0` y residen siempre al tope de la fila, por lo que **jamás se cortan ni se empujan fuera de pantalla**.
-  * **Canvas Central de Lectura (`<main>`):** Ocupa el espacio central (`flex-1 h-full overflow-y-auto`). La lectura de versículos se desplaza a 120 FPS sin colisiones y dispara los eventos de intención de forma nativa.
+  * **Comportamiento en Dispositivos Móviles (`< lg`):**
+    * **Auto-Hide por GPU sin Desplazamiento de Fondo:** La cabecera superior (`KartexHeaderNav.tsx`, `h-14`) y el dock inferior ergonómico (`KartexMobileStudyDock.tsx`) se ocultan reactivamente mediante transformaciones por hardware (`translate-y` al 100% / `-100%`) con `transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]`.
+    * **Inmutabilidad del Lienzo Trasero:** El contenedor de lectura `<main>` permanece con su padding natural (`pt-16 pb-24 sm:pb-20`). Los versículos y elementos de fondo no sufren traslación vertical ni movimientos bruscos hacia arriba o hacia abajo al ocultarse las barras perimetrales, garantizando una lectura inmersiva serena.
+  * **Comportamiento en Escritorio / PC (`>= lg`):**
+    * **Cabecera Anclada Permanente:** `KartexHeaderNav.tsx` permanece firmemente visible en `top-0` (`lg:translate-y-0 lg:pointer-events-auto`) con cristal esmerilado (*backdrop-blur-xl*), garantizando acceso instantáneo a las 10 suites exegéticas sin desaparecer al hacer scroll.
+    * **Laterales Estáticos de Altura Completa y Líneas de Separación Continuas (`StudySidePanel.tsx`):** Tanto el panel izquierdo (`KartexNavigationSidebar`) como el inspector derecho (`KartexExegesisInspector`) operan como columnas fijas acopladas (`lg:relative lg:inset-auto lg:z-20 lg:h-full lg:self-stretch lg:translate-x-0 lg:translate-y-0 lg:rounded-none lg:border-t-0`).
+      * **Línea de Separación Izquierda:** `lg:border-r lg:border-border` continuo de 1px a lo largo de toda la columna del navegador canónico.
+      * **Línea de Separación Derecha:** `lg:border-l lg:border-border` continuo de 1px que anula el estilo Bottom Sheet móvil (`border-t` y esquinas redondeadas), extendiéndose sin cortes desde la cabecera hasta el límite inferior del viewport.
+      * Al colapsar cualquier panel (`isOpen === false`), su borde conmuta a `lg:border-transparent` para disolverse limpiamente.
+    * **Contenedor del Workspace Calibrado:** El flex row principal en `layout.tsx` aplica `lg:pt-14 h-full` para posicionarse de forma exacta bajo los 56px de la cabecera y garantizar que las columnas hijas se estiren al 100% de la altura de la ventana.
+    * **Canvas Central de Lectura (`<main>`):** Ocupa el espacio central (`flex-1 h-full overflow-y-auto lg:pt-4 lg:pb-16`). La lectura de versículos se desplaza a 120 FPS sin colisiones ni movimientos de fondo.
   * **Footer Editorial Integrado:** El pie de página con información legal y enlaces canónicos se aloja al final del canvas de lectura (`<main>`).
 
 ### 7.9 Botones Flotantes Laterales de Cambio de Capítulo Adaptables (`ChapterNavigator.tsx`)
@@ -474,6 +538,21 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
   * **Límites de Seguridad Físicos (`clamp`):** Todos los paneles operan bajo límites elásticos entre `200px` (mínimo) y `480px` (máximo) para salvaguardar la visibilidad y ergonomía del canvas central en cualquier resolución.
   * **Restablecimiento Instantáneo:** Soporte de doble clic sobre la manija de redimensionamiento (`ResizeBorderHandle`) para revertir inmediatamente cualquier panel a su valor de fábrica predeterminado.
 
+* **Bottom Navigation Bar Móvil Nativo y Ergonómico (`KartexMobileStudyDock.tsx`):**
+  - **Erradicación de Cajas Rígidas y Adopción de Tab Bar Nativo:** Se eliminaron las cajas con bordes y fondos individuales (`border border-border/80 bg-inner-card`) que fragmentaban visualmente la barra. Se adoptó el patrón estándar de Bottom Navigation / Tab Bar profesional (estilo YouVersion y Apple iOS adaptado a Geist Vercel): pestañas verticales limpias con icono superior (20px) y etiqueta tipográfica inferior (10px, font-medium, leading-none), feedback háptico táctil (`active:scale-90`) y barra continua translúcida (`backdrop-blur-xl border-t border-border/80`).
+  - **Traslado de Traducciones Bíblicas al Dock Inferior (`MobileTranslationPopover.tsx`):**
+    * El selector de versiones bíblicas se reubicó desde la cabecera superior hacia el dock inferior al alcance del pulgar, liberando por completo la cabecera móvil (`KartexHeaderNav.tsx`), la cual ahora mantiene de forma unificada y centrada únicamente el selector global de modo de estudio (`[ Modo ∨ ]`) en los 10 módulos.
+    * El popover de traducciones se despliega hacia arriba (`direction="up"`, `bottom-full mb-2`) centrado en pantalla, con listado completo de versiones canónicas, sigla en monospace y check interactivo.
+  - **Distribución Contextual Especializada:**
+    * *Lector Estándar (`/study/standard`):* Cuatro pestañas ergonómicas equidistantes:
+      1. **Libros (`[ 📖 ]` / `Libros`):** Abre el drawer del selector canónico de 66 libros y capítulos.
+      2. **Versión (`[ 🌐 ]` / `{sigla}`):** Despliega el popover de traducciones bíblicas hacia arriba mostrando la versión activa (ej. `NTV`, `RVR60`).
+      3. **Formato (`[ Aa ]` / `Formato`):** Despliega `ReaderAppearancePopover` hacia arriba para ajustar tamaño tipográfico, familia Serif/Sans, modo versículo a versículo vs continuo y alternar números.
+      4. **Exégesis (`[ 🔍 ]` / `Exégesis`):** Abre el inspector exegético con indicador luminoso azul pulsante si hay un versículo seleccionado en el canvas.
+    * *Módulo Paralelo (`/study/parallel`):* Al cotejarse múltiples versiones en simultáneo administradas desde el panel lateral, no se muestra un selector de versión individual en el dock. Dispone de dos pestañas ergonómicas simétricas: `[ 📖 Versiones ]` (gestor de columnas cotejadas en `ParallelSidebar`) e `[ 🔀 Diferencias ]` (análisis de diff textual LCS en `ParallelDiffInspector`).
+    * *Módulos de Investigación Especializada (Atlas, Cronología, Arqueología, Diccionarios, Comentarios, etc.):* Dos pestañas amplias y simétricas adaptadas al contexto de cada suite (`[ 🗺️ ]` / `Lugares`, `[ ℹ️ ]` / `Ficha`, etc.).
+  - **Microinteracciones y Safe Area:** Soporte para muesca de dispositivos móviles (`pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]`), estados activos en `text-foreground font-semibold` y auto-ocultamiento sincronizado con el scroll del usuario mediante `useHeaderScrollBehavior`.
+
 * **Botones Flotantes de Acceso Rápido y Ergonómicos en Móvil (`DraggableEdgeTab.tsx`):**
   - **Transformación Responsiva Contextual:** En pantallas móviles (`< lg`), las lengüetas laterales a media altura se convierten en **dos botones circulares flotantes** (`w-12 h-12 rounded-full`, sombra flotante difusa, borde sutil y fondo translúcido con glassmorphism) ubicados en las esquinas inferiores (`bottom: 20px left: 16px` para el panel izquierdo y `bottom: 20px right: 16px` para el inspector derecho).
   - **Física de Arrastre 2D Libre:** El usuario puede tocar y arrastrar libremente el círculo en cualquier dirección si necesita despejar u observar una línea de texto situada debajo.
@@ -499,4 +578,23 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
     * *Modo Sepia Editorial (`:root[class~="theme-sepia"], :root[class~="sepia"]`):* Fondo y tarjeta `#FAF6EE`, texto espresso `#2C221E`, acentos `#F4EFE6` - `#E8DEC8`, números y subtítulos exegéticos en avellana `#8C765C`, y reset explícito de filtros `filter: none !important`.
   - **Conmutador Global Unificado (`ThemeToggle.tsx`):** Ubicado en la cabecera principal (`KartexLandingHeader.tsx` y `KartexHeaderNav.tsx`), cicla fluidamente en 3 estados (`light` → `sepia` → `dark` → `light`) mostrando iconografía semántica adaptada (`Sun`, `BookOpen`, `Moon`) con tooltips y atributos de accesibilidad bilingües.
 
-
+* **Estándar Unificado de Controles Interactivos en Cápsula (`rounded-full` / Pill UI):**
+  - **Erradicación de Esquinas Rígidas y Bordes Toscos:** Se reemplazaron sistemáticamente los contenedores y botones de esquinas angulosas (`rounded-md`, `rounded-lg`) y bordes contrastados toscos (`border-accents-2`) en todos los controles interactivos, selectores segmentados, badges, chips y botones de acción en las 10 suites de Kartex.
+  - **Geometría de Cápsula y Tokens de Estilo:**
+    * **Controles y Botones Interactivos:** Adoptan `rounded-full` con bordes sutiles (`border border-border/80`), fondo base `bg-inner-card/90`, micro-sombras de elevación Geist (`shadow-2xs`), feedback táctil elástico al pulsar (`active:scale-95` o `active:scale-[0.98]`) y transiciones fluidas de color (`transition-all`).
+    * **Selectores Segmentados (Segmented Switchers):** Contenedor píldora exterior con `rounded-full border border-border/80 bg-inner-card p-0.5 shadow-2xs` y botones internos en `rounded-full px-3 py-1 text-xs font-medium` donde el estado activo se destaca con `bg-foreground text-background font-semibold shadow-2xs` o `bg-accents-2 text-foreground font-semibold`.
+    * **Dropdowns y Menús Flotantes (`KartexSelect.tsx`):** El trigger selector global se unificó a `rounded-full px-3.5 sm:px-4 border border-border/80 bg-inner-card/90 shadow-2xs`, y sus opciones interiores adoptaron `rounded-full px-3 py-1.5` para garantizar uniformidad visual continua en todo el flujo de interacción.
+  - **Componentes Armonizados en todo el Ecosistema:**
+    1. *`KartexHeaderNav.tsx`:* Selector central de modo de estudio (`[ Lector ∨ ]`), botón de retorno (`BackToKartexButton`), selector de idioma (`LanguageToggle`) y conmutador de tema (`ThemeToggle`).
+    2. *`UnifiedPassagePicker.tsx`:* Disparador del selector de pasajes, botones prev/next de capítulo, buscador y tabs canónicos (`[ Todos | AT | NT ]`).
+    3. *`ReaderToolbar.tsx` & `ReaderAppearancePopover.tsx`:* Disparador tipográfico `[ Aa ]`, conmutadores de modo continuo vs versículo por versículo, familia Serif/Sans, tamaños S/M/L/XL, conmutador ON/OFF y botones de acción (enfoque, copiar, imprimir).
+    4. *`ParallelToolbar.tsx`, `ParallelViewGrid.tsx` & `ParallelColumnHeader.tsx`:* Switchers de modo, botón `[ + Versión ]`, selector móvil apilado/columnas, badges de versículo, botones de variantes textuales y exégesis.
+    5. *`TimelineControls.tsx`:* Selector de sincronización de pistas, atajos de eras bíblicas, botones de zoom y conmutadores individuales de reyes/profetas/imperios.
+    6. *`InterlinearControls.tsx`:* Conmutador interlineal invertido vs tarjetas morfológicas, toggles de capas léxicas (nikkud, transliteración, glosa, Strong, morfología) y selectores de velocidad/fuente.
+    7. *`LexiconView.tsx` & `LexiconEntryDetail.tsx`:* Conmutador de lengua hebreo/griego, buscador de raíz y tabs de diccionarios (BDB, Gesenius, DTAT, Thayer, LSJ, Robertson, Vincent).
+    8. *`PathwayViewer.tsx`, `ObjectionsExplorer.tsx` & `TractsExplorer.tsx`:* Selectores de rutas evangelísticas, modo paso a paso vs vista completa, chips temáticos apologéticos, botones de navegación y copiado.
+    9. *`FeedFilterBar.tsx`:* Buscador, conmutador de artículos vs manuscritos y chips de categorías.
+    10. *`HistoricalRoutesPlayer.tsx`:* Selector de rutas de peregrinación, controles multimedia prev/play/next y selector de velocidad.
+  - **Diferenciación entre Controles de Selección vs. Botones de Icono / Utilidades (Ghost Buttons):**
+    * **Controles que llevan borde de cápsula (`border border-border/80 bg-inner-card/90 shadow-2xs`):** Exclusivo para selectores desplegables principales (`Lector ∨`, `KartexSelect`), botones de acción destacados (`[ + Versión ]`), contenedores segmentados (`[ Todos | AT | NT ]`), atajos de eras y chips/badges de datos.
+    * **Botones de Icono y Utilidades Limpios (Ghost Buttons):** Elementos de barra como la flecha de retorno (`BackToKartexButton`), selector de tema (`ThemeToggle`), selector de idioma (`LanguageToggle`) y botones de herramientas del lector (`[ Aa ]`, modo enfoque, copiar e imprimir en `ReaderToolbar`) no tienen cajas ni marcos permanentes en reposo (`bg-transparent border-none`); mantienen una presencia limpia y minimalista, con feedback táctil y fondo hover suave en cápsula (`rounded-full hover:bg-accents-1 active:scale-95`).

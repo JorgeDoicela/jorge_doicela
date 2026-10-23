@@ -42,13 +42,13 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
     <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl border border-accents-2 bg-background/60 backdrop-blur-sm">
       {/* Selector de Modo de Estudio */}
       <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex flex-wrap p-1 rounded-lg bg-accents-1 border border-accents-2 gap-0.5">
+        <div className="inline-flex flex-wrap p-0.5 rounded-full bg-inner-card border border-border/80 gap-0.5 shadow-2xs">
           <button
             type="button"
             onClick={() => onChangeStudyMode('standard')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer active:scale-95 ${
               studyMode === 'standard'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -57,9 +57,9 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           <button
             type="button"
             onClick={() => onChangeStudyMode('parallel')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer active:scale-95 ${
               studyMode === 'parallel'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -68,9 +68,9 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           <button
             type="button"
             onClick={() => onChangeStudyMode('interlinear')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
               studyMode === 'interlinear'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -80,9 +80,9 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           <button
             type="button"
             onClick={() => onChangeStudyMode('word-study')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
               studyMode === 'word-study'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -92,9 +92,9 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
           <button
             type="button"
             onClick={() => onChangeStudyMode('atlas')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
               studyMode === 'atlas' || studyMode === 'timeline' || studyMode === 'archaeology'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
+                ? 'bg-foreground text-background shadow-2xs font-semibold'
                 : 'text-accents-5 hover:text-foreground'
             }`}
           >
@@ -104,7 +104,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
         </div>
 
         {studyMode === 'parallel' && (
-          <span className="hidden sm:inline-flex text-[11px] font-mono text-accents-4 px-2 py-0.5 rounded border border-accents-2">
+          <span className="hidden sm:inline-flex text-[11px] font-mono text-accents-4 px-2.5 py-0.5 rounded-full border border-border/80 bg-inner-card/90 shadow-2xs">
             {t('columnsCount', { count: columnCount })}
           </span>
         )}
@@ -117,7 +117,7 @@ export const ParallelToolbar: React.FC<ParallelToolbarProps> = ({
             <button
               type="button"
               onClick={() => onAddColumn(nextAvailableTranslation.id)}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg border border-accents-2 bg-background hover:bg-accents-1 text-foreground transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+              className="px-3.5 py-1.5 text-xs font-medium rounded-full border border-border/80 bg-inner-card/90 hover:bg-inner-card hover:border-accents-4 text-foreground transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
               title={t('addColumnTooltip')}
             >
               <svg

@@ -53,21 +53,31 @@ export function useVerses(
     focusMode: false,
   });
 
-  // Cargar configuraciones guardadas en localStorage
+  // Cargar y sincronizar configuraciones guardadas en localStorage
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('kartex_reader_settings');
-      if (saved) {
-        const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
-        setReaderSettings((prev) => ({
-          ...prev,
-          ...parsed,
-          focusMode: false, // Iniciar siempre en modo estándar al recargar
-        }));
+    const syncSettings = () => {
+      try {
+        const saved = localStorage.getItem('kartex_reader_settings');
+        if (saved) {
+          const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
+          setReaderSettings((prev) => ({
+            ...prev,
+            ...parsed,
+            focusMode: prev.focusMode, // Conservar estado de focusMode local
+          }));
+        }
+      } catch {
+        // Ignorar errores de parsing
       }
-    } catch {
-      // Ignorar errores de parsing
-    }
+    };
+
+    syncSettings();
+    window.addEventListener('kartex_reader_settings_changed', syncSettings);
+    window.addEventListener('storage', syncSettings);
+    return () => {
+      window.removeEventListener('kartex_reader_settings_changed', syncSettings);
+      window.removeEventListener('storage', syncSettings);
+    };
   }, []);
 
   const updateReaderSettings = useCallback((newSettings: Partial<ReaderSettings>) => {
@@ -80,6 +90,7 @@ export function useVerses(
           fontFamily: updated.fontFamily,
           showVerseNumbers: updated.showVerseNumbers,
         }));
+        window.dispatchEvent(new Event('kartex_reader_settings_changed'));
       } catch {
         // Fallback si localStorage no está disponible
       }

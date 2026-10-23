@@ -16,6 +16,7 @@ import { LineByLineReadingView } from '../line-by-line-view/LineByLineReadingVie
 import { ChapterNavigator } from '../chapter-navigator/ChapterNavigator';
 import { OngoingExpansionNotice } from '../../../../shared/ui';
 import { useReaderKeybindings } from '../../hooks/useReaderKeybindings';
+import { useVerseHighlights } from '../../hooks/useVerseHighlights';
 import { X, Minimize2, Sparkles, BookOpen } from 'lucide-react';
 
 interface VerseListProps {
@@ -91,6 +92,8 @@ export const VerseList: React.FC<VerseListProps> = ({
     onFontSizeChange,
   });
 
+  const { getHighlight, setHighlight, removeHighlight } = useVerseHighlights();
+
   const readingContent = (
     <>
       {readerSettings.layoutMode === 'continuous' ? (
@@ -104,6 +107,9 @@ export const VerseList: React.FC<VerseListProps> = ({
           chapter={selectedChapter}
           translationName={activeTranslationName}
           translationAbbr={activeTranslationAbbr}
+          getHighlight={getHighlight}
+          onSetHighlight={setHighlight}
+          onRemoveHighlight={removeHighlight}
         />
       ) : (
         <LineByLineReadingView
@@ -114,6 +120,9 @@ export const VerseList: React.FC<VerseListProps> = ({
           bookAbbr={selectedBookAbbr}
           chapter={selectedChapter}
           translationAbbr={activeTranslationAbbr}
+          getHighlight={getHighlight}
+          onSetHighlight={setHighlight}
+          onRemoveHighlight={removeHighlight}
         />
       )}
 
@@ -183,7 +192,7 @@ export const VerseList: React.FC<VerseListProps> = ({
 
   // MODO ESTÁNDAR INTEGRADO EN EL WORKSPACE
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4">
+    <div className="w-full max-w-5xl xl:max-w-6xl mx-auto space-y-4">
       {/* Barra de herramientas integrada del lector: en móvil se unifica en la cabecera superior y dock inferior */}
       <ReaderToolbar
         className="hidden lg:block"

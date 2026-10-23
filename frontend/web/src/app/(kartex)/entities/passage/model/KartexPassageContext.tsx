@@ -77,6 +77,7 @@ interface KartexPassageContextValue {
 
   inspectedWord: InspectedWordData | null;
   inspectedVerse: InspectedVerseData | null;
+  setInspectedVerse: (verse: InspectedVerseData | null) => void;
   openInspectorWithWord: (word: InspectedWordData) => void;
   openInspectorWithVerse: (verse: InspectedVerseData) => void;
   clearInspectedVerse: () => void;
@@ -251,11 +252,16 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   const toggleLeftSidebar = useCallback(() => {
     setIsLeftSidebarOpen((prev) => {
       const next = !prev;
-      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-        try {
-          localStorage.setItem('kartex_left_sidebar_open', String(next));
-        } catch {
-          // fallback
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth >= 1024) {
+          try {
+            localStorage.setItem('kartex_left_sidebar_open', String(next));
+          } catch {
+            // fallback
+          }
+        } else if (next) {
+          // En móvil (< 1024px), si se abre el panel izquierdo, cerrar el inspector derecho para evitar superposición
+          setIsRightInspectorOpen(false);
         }
       }
       return next;
@@ -264,11 +270,15 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
 
   const setLeftSidebarOpen = useCallback((open: boolean) => {
     setIsLeftSidebarOpen(open);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      try {
-        localStorage.setItem('kartex_left_sidebar_open', String(open));
-      } catch {
-        // fallback
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) {
+        try {
+          localStorage.setItem('kartex_left_sidebar_open', String(open));
+        } catch {
+          // fallback
+        }
+      } else if (open) {
+        setIsRightInspectorOpen(false);
       }
     }
   }, []);
@@ -290,11 +300,16 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   const toggleRightInspector = useCallback(() => {
     setIsRightInspectorOpen((prev) => {
       const next = !prev;
-      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-        try {
-          localStorage.setItem('kartex_right_inspector_open', String(next));
-        } catch {
-          // fallback
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth >= 1024) {
+          try {
+            localStorage.setItem('kartex_right_inspector_open', String(next));
+          } catch {
+            // fallback
+          }
+        } else if (next) {
+          // En móvil (< 1024px), si se abre el inspector derecho, cerrar el panel izquierdo para evitar superposición
+          setIsLeftSidebarOpen(false);
         }
       }
       return next;
@@ -305,11 +320,15 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     setInspectedWord(word);
     setActiveInspectorTab('strong');
     setIsRightInspectorOpen(true);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      try {
-        localStorage.setItem('kartex_right_inspector_open', 'true');
-      } catch {
-        // Ignorar fallo de almacenamiento en modo incógnito
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) {
+        try {
+          localStorage.setItem('kartex_right_inspector_open', 'true');
+        } catch {
+          // Ignorar fallo de almacenamiento en modo incógnito
+        }
+      } else {
+        setIsLeftSidebarOpen(false);
       }
     }
   }, []);
@@ -318,11 +337,15 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     setInspectedVerse(verse);
     setActiveInspectorTab('versions');
     setIsRightInspectorOpen(true);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      try {
-        localStorage.setItem('kartex_right_inspector_open', 'true');
-      } catch {
-        // Ignorar fallo de almacenamiento en modo incógnito
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) {
+        try {
+          localStorage.setItem('kartex_right_inspector_open', 'true');
+        } catch {
+          // Ignorar fallo de almacenamiento en modo incógnito
+        }
+      } else {
+        setIsLeftSidebarOpen(false);
       }
     }
   }, []);
@@ -333,11 +356,15 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
 
   const setRightInspectorOpen = useCallback((open: boolean) => {
     setIsRightInspectorOpen(open);
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      try {
-        localStorage.setItem('kartex_right_inspector_open', String(open));
-      } catch {
-        // fallback
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) {
+        try {
+          localStorage.setItem('kartex_right_inspector_open', String(open));
+        } catch {
+          // fallback
+        }
+      } else if (open) {
+        setIsLeftSidebarOpen(false);
       }
     }
   }, []);
@@ -540,6 +567,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         setActiveInspectorTab,
         inspectedWord,
         inspectedVerse,
+        setInspectedVerse,
         openInspectorWithWord,
         openInspectorWithVerse,
         clearInspectedVerse,

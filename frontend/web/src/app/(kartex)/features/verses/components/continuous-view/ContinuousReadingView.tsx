@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Verse, ReaderFontSize, ReaderFontFamily } from '../../types';
+import { Verse, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
 import { useKartexPassageSafe } from '../../../../entities/passage';
+import {
+  VerseSelectionToolbar,
+  VERSE_HIGHLIGHT_STYLES,
+} from '../verse-action-toolbar/VerseSelectionToolbar';
 
 interface ContinuousReadingViewProps {
   verses: Verse[];
@@ -16,6 +20,9 @@ interface ContinuousReadingViewProps {
   chapter?: number | null;
   translationName?: string;
   translationAbbr?: string;
+  getHighlight?: (bookId: number, chapter: number, verseNumber: number) => VerseHighlightColor | undefined;
+  onSetHighlight?: (bookId: number, chapter: number, verseNumber: number, color: VerseHighlightColor) => void;
+  onRemoveHighlight?: (bookId: number, chapter: number, verseNumber: number) => void;
 }
 
 export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
@@ -28,16 +35,32 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   chapter,
   translationName,
   translationAbbr,
+  getHighlight,
+  onSetHighlight,
+  onRemoveHighlight,
 }) => {
   const t = useTranslations('ReadingView');
   const tBooks = useTranslations('Books');
   const passageContext = useKartexPassageSafe();
+
+  const [selectedVerseNumbers, setSelectedVerseNumbers] = useState<number[]>([]);
+  const [toolbarPosition, setToolbarPosition] = useState<{
+    top: number;
+    left: number;
+    placement?: 'top' | 'bottom';
+  } | null>(null);
 
   const rawAbbr =
     bookAbbr ||
     (typeof verses[0]?.book === 'object' && verses[0]?.book !== null
       ? verses[0]?.book.abbreviation
       : undefined);
+
+  // Cerrar toolbar y limpiar selección al cambiar de pasaje
+  useEffect(() => {
+    setSelectedVerseNumbers([]);
+    setToolbarPosition(null);
+  }, [chapter, rawAbbr]);
 
   const localizedBookTitle = useMemo(() => {
     if (rawAbbr && tBooks.has(rawAbbr as any)) {
@@ -69,17 +92,74 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     return family === 'serif' ? 'font-serif' : 'font-sans';
   };
 
-  const isVerseActive = (verse: Verse) => {
-    return (
-      (passageContext?.isRightInspectorOpen ?? false) &&
-      passageContext?.inspectedVerse?.verseNumber === verse.verseNumber
+  const selectedVerses = useMemo(() => {
+    return verses.filter((v) => selectedVerseNumbers.includes(v.verseNumber));
+  }, [verses, selectedVerseNumbers]);
+
+  const bookIdFallback =
+    typeof verses[0]?.book === 'object' && verses[0]?.book !== null
+      ? verses[0]?.book.id
+      : passageContext?.selectedBookId || 1;
+
+  const sharedHighlightColor = useMemo(() => {
+    if (selectedVerses.length === 0) return undefined;
+    const colors = selectedVerses.map((v) =>
+      getHighlight?.(
+        typeof v.book === 'object' && v.book !== null ? v.book.id : bookIdFallback,
+        v.chapter,
+        v.verseNumber,
+      ),
     );
+    const first = colors[0];
+    return colors.every((c) => c === first) ? first : undefined;
+  }, [selectedVerses, getHighlight, bookIdFallback]);
+
+  const handleVerseClick = (verse: Verse, e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    const isAlreadySelected = selectedVerseNumbers.includes(verse.verseNumber);
+
+    let nextSelected: number[];
+    if (isAlreadySelected) {
+      // Toggle off: deseleccionar
+      nextSelected = selectedVerseNumbers.filter((n) => n !== verse.verseNumber);
+    } else {
+      // Toggle on: sumar a la selección de versículos
+      nextSelected = [...selectedVerseNumbers, verse.verseNumber];
+    }
+
+    setSelectedVerseNumbers(nextSelected);
+
+    if (nextSelected.length === 0) {
+      setToolbarPosition(null);
+      return;
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const placement: 'top' | 'bottom' = rect.top < 90 ? 'bottom' : 'top';
+    const top = placement === 'top' ? rect.top - 8 : rect.bottom + 8;
+    const left = rect.left + rect.width / 2;
+
+    setToolbarPosition({ top, left, placement });
+
+    const bId =
+      typeof verse.book === 'object' && verse.book !== null
+        ? verse.book.id
+        : passageContext?.selectedBookId || 1;
+
+    // Si el inspector derecho ya está abierto en escritorio, mantenerlo sincronizado
+    if (passageContext?.isRightInspectorOpen) {
+      passageContext.setInspectedVerse({
+        bookId: bId,
+        bookName: localizedBookTitle,
+        chapter: verse.chapter,
+        verseNumber: verse.verseNumber,
+        text: verse.text,
+      });
+    }
   };
 
-  const handleToggleVerse = (verse: Verse) => {
-    if (isVerseActive(verse)) {
-      passageContext?.clearInspectedVerse?.();
-    } else if (passageContext) {
+  const handleOpenExegesis = (verse: Verse) => {
+    if (passageContext) {
       const bId =
         typeof verse.book === 'object' && verse.book !== null
           ? verse.book.id
@@ -92,6 +172,8 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
         text: verse.text,
       });
     }
+    setSelectedVerseNumbers([]);
+    setToolbarPosition(null);
   };
 
   return (
@@ -126,22 +208,37 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       >
         <p className="space-x-1 text-justify sm:text-left">
           {verses.map((verse) => {
-            const isSelected = isVerseActive(verse);
+            const bId =
+              typeof verse.book === 'object' && verse.book !== null
+                ? verse.book.id
+                : passageContext?.selectedBookId || 1;
+
+            const highlight = getHighlight?.(bId, verse.chapter, verse.verseNumber);
+            const isSelected = selectedVerseNumbers.includes(verse.verseNumber);
+            const isInspected =
+              (passageContext?.isRightInspectorOpen ?? false) &&
+              passageContext?.inspectedVerse?.verseNumber === verse.verseNumber;
+
+            const highlightStyle = highlight ? VERSE_HIGHLIGHT_STYLES[highlight] : null;
+
             return (
               <span
                 key={verse.id}
-                onClick={() => handleToggleVerse(verse)}
-                className={`inline rounded-md px-1 py-0.5 relative group cursor-pointer transition-all duration-150 ${
-                  isSelected
-                    ? 'bg-zinc-200/90 dark:bg-zinc-800 sepia:bg-[#EADAB8]/90 text-zinc-950 dark:text-zinc-100 sepia:text-[#2C221E] ring-1 ring-zinc-300 dark:ring-zinc-700 sepia:ring-[#8C765C]/40 font-medium rounded-md shadow-xs'
+                data-verse-item="true"
+                onClick={(e) => handleVerseClick(verse, e)}
+                className={`inline [box-decoration-break:clone] px-1.5 py-[2px] rounded-md sm:rounded-lg relative group cursor-pointer transition-all duration-150 ${
+                  highlightStyle
+                    ? `${highlightStyle.bgClass} ${isSelected ? 'brightness-95 contrast-105' : ''}`
+                    : isSelected
+                    ? 'bg-zinc-200/85 dark:bg-zinc-800 sepia:bg-[#E2D2AD]/90 text-zinc-950 dark:text-zinc-100 sepia:text-[#2C221E] font-medium'
                     : 'hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60 sepia:hover:bg-[#F4ECE0]/70'
                 }`}
               >
                 {showVerseNumbers && (
                   <sup
                     className={`font-mono text-[10px] font-semibold select-none mr-1.5 ml-0.5 align-super transition-colors ${
-                      isSelected
-                        ? 'text-zinc-600 dark:text-zinc-300 sepia:text-[#2C221E] font-bold'
+                      isSelected || highlightStyle
+                        ? 'text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E] font-bold'
                         : 'text-zinc-400/80 dark:text-zinc-500 sepia:text-[#8C765C] group-hover:text-zinc-900 dark:group-hover:text-zinc-100 sepia:group-hover:text-[#2C221E]'
                     }`}
                     title={t('verseTooltip', { number: verse.verseNumber })}
@@ -155,6 +252,40 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
           })}
         </p>
       </div>
+
+      {/* Barra flotante de acciones unificada para los versículos seleccionados */}
+      {selectedVerses.length > 0 && toolbarPosition && (
+        <VerseSelectionToolbar
+          verses={selectedVerses}
+          bookName={localizedBookTitle}
+          translationAbbr={translationAbbr}
+          currentColor={sharedHighlightColor}
+          onSetHighlight={(color) => {
+            selectedVerses.forEach((v) => {
+              const bId =
+                typeof v.book === 'object' && v.book !== null
+                  ? v.book.id
+                  : passageContext?.selectedBookId || 1;
+              onSetHighlight?.(bId, v.chapter, v.verseNumber, color);
+            });
+          }}
+          onRemoveHighlight={() => {
+            selectedVerses.forEach((v) => {
+              const bId =
+                typeof v.book === 'object' && v.book !== null
+                  ? v.book.id
+                  : passageContext?.selectedBookId || 1;
+              onRemoveHighlight?.(bId, v.chapter, v.verseNumber);
+            });
+          }}
+          onOpenExegesis={() => handleOpenExegesis(selectedVerses[0])}
+          onClose={() => {
+            setSelectedVerseNumbers([]);
+            setToolbarPosition(null);
+          }}
+          position={toolbarPosition}
+        />
+      )}
 
       {/* Nota de Atribución Legal Oficial */}
       <div className="pt-8 mt-8 border-t border-border/60 text-center">

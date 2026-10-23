@@ -52,24 +52,33 @@ export function useReaderAppearanceSettings() {
   }, []);
 
   const update = useCallback((partial: Partial<ReaderSettings>) => {
-    setSettings((prev) => {
-      const next = { ...prev, ...partial };
-      try {
-        localStorage.setItem(
-          'kartex_reader_settings',
-          JSON.stringify({
-            layoutMode: next.layoutMode,
-            fontSize: next.fontSize,
-            fontFamily: next.fontFamily,
-            showVerseNumbers: next.showVerseNumbers,
-          }),
-        );
+    // 1. Persistir limpiamente en localStorage
+    try {
+      const saved = localStorage.getItem('kartex_reader_settings');
+      const current = saved ? JSON.parse(saved) : DEFAULT_READER_SETTINGS;
+      const next = { ...current, ...partial };
+      localStorage.setItem(
+        'kartex_reader_settings',
+        JSON.stringify({
+          layoutMode: next.layoutMode,
+          fontSize: next.fontSize,
+          fontFamily: next.fontFamily,
+          showVerseNumbers: next.showVerseNumbers,
+        }),
+      );
+    } catch {
+      // Fallback si almacenamiento no disponible
+    }
+
+    // 2. Función pura de actualización de estado local
+    setSettings((prev) => ({ ...prev, ...partial }));
+
+    // 3. Notificar a otros componentes de forma diferida en microtask para evitar setState durante render
+    if (typeof window !== 'undefined') {
+      queueMicrotask(() => {
         window.dispatchEvent(new Event('kartex_reader_settings_changed'));
-      } catch {
-        // Fallback si almacenamiento no disponible
-      }
-      return next;
-    });
+      });
+    }
   }, []);
 
   const setLayoutMode = useCallback(

@@ -32,3 +32,13 @@ export interface ReaderSettings {
   showVerseNumbers: boolean;
   focusMode: boolean;
 }
+
+export type VerseHighlightColor = 'yellow' | 'green' | 'blue' | 'purple' | 'orange';
+
+export interface VerseHighlight {
+  bookId: number;
+  chapter: number;
+  verseNumber: number;
+  color: VerseHighlightColor;
+}
+

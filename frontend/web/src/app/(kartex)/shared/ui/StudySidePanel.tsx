@@ -56,7 +56,7 @@ const StudySidePanelBody: React.FC<StudySidePanelBodyProps> = ({
     children,
 }) => {
     return (
-        <div className={`flex-1 overflow-y-auto p-4 space-y-4 min-w-0 kartex-scrollbar-slim ${className}`}>
+        <div className={`flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 min-w-0 kartex-scrollbar-slim pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] ${className}`}>
             {children}
         </div>
     );
@@ -98,7 +98,8 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
     children,
 }) => {
     const isLeft = side === 'left';
-    const variant = mobileVariant ?? (side === 'right' ? 'bottom-sheet' : 'drawer');
+    // Por defecto en móvil (< lg) todo panel (izquierdo y derecho) se abre como Bottom Sheet moderno nativo
+    const variant = mobileVariant ?? 'bottom-sheet';
     const isBottomSheet = variant === 'bottom-sheet';
     const panelState = useStudySidePanelState(side);
 
@@ -148,6 +149,29 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         }
         touchStartYRef.current = null;
     }, [handleClose]);
+
+    // Bloqueo de scroll de la página de fondo en móvil mientras el Bottom Sheet está abierto
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (isOpen && isBottomSheet && window.innerWidth < 1024) {
+            const originalOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = originalOverflow;
+            };
+        }
+    }, [isOpen, isBottomSheet]);
+
+    // Cierre accesible con tecla Escape
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isOpen) {
+                handleClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, handleClose]);
 
     // Si el panel se cierra por cualquier vía externa, asegurar que ningún elemento hijo retenga el foco
     useEffect(() => {
@@ -199,9 +223,9 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         ? Math.max(0.2, Math.min(1, (currentWidth - 100) / 90))
         : undefined;
 
-    // Shell móvil (< lg): Bottom Sheet con esquinas redondeadas o Drawer lateral
+    // Shell móvil (< lg): Bottom Sheet modal moderno (ancho completo, esquinas superiores redondeadas, sombra profunda)
     const mobileLayoutClass = isBottomSheet
-        ? 'fixed inset-x-0 bottom-0 top-auto z-50 w-full max-h-[85vh] rounded-t-2xl border-t border-border shadow-[0_-10px_40px_rgba(0,0,0,0.3)]'
+        ? 'fixed inset-x-0 bottom-0 top-auto z-50 w-full h-[85vh] max-h-[88vh] rounded-t-3xl sm:rounded-t-[28px] border-t border-border/80 shadow-[0_-12px_48px_rgba(0,0,0,0.35)] dark:shadow-[0_-12px_48px_rgba(0,0,0,0.7)]'
         : `absolute inset-y-0 ${isLeft ? 'border-r left-0' : 'border-l right-0'} z-40 h-full w-[88vw] max-w-[380px] sm:max-w-[420px] border-border`;
 
     const mobileStateClass = isBottomSheet
@@ -227,7 +251,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
             <div
                 onClick={handleClose}
                 aria-hidden="true"
-                className={`fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-40 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                     }`}
             />
 
@@ -264,17 +288,17 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                     <div
                         onTouchStart={handleSheetTouchStart}
                         onTouchEnd={handleSheetTouchEnd}
-                        className="w-full pt-2.5 pb-1 flex justify-center items-center lg:hidden cursor-grab active:cursor-grabbing select-none shrink-0"
+                        className="w-full pt-3 pb-1.5 flex justify-center items-center lg:hidden cursor-grab active:cursor-grabbing select-none shrink-0"
                         aria-hidden="true"
                     >
-                        <div className="w-12 h-1.5 rounded-full bg-accents-3 dark:bg-zinc-700" />
+                        <div className="w-10 h-1.5 rounded-full bg-border/80 dark:bg-zinc-700" />
                     </div>
                 )}
 
                 {/* Contenedor Interior: En desktop mantiene el micro-slide de 16px con fade; en móvil permanece al 100% */}
                 <div
                     style={{ width: undefined }}
-                    className={`h-full w-full lg:w-[var(--sidebar-w,340px)] min-w-0 flex flex-col overflow-hidden shrink-0 lg:transition-[transform,opacity] lg:duration-250 lg:ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen
+                    className={`h-full w-full ${isLeft ? 'lg:w-[var(--sidebar-w,280px)]' : 'lg:w-[var(--inspector-w,340px)]'} min-w-0 flex flex-col overflow-hidden shrink-0 lg:transition-[transform,opacity] lg:duration-250 lg:ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen
                             ? 'opacity-100 translate-x-0'
                             : isLeft
                                 ? 'lg:opacity-0 lg:-translate-x-4'
@@ -286,11 +310,11 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                         <div
                             onTouchStart={isBottomSheet ? handleSheetTouchStart : undefined}
                             onTouchEnd={isBottomSheet ? handleSheetTouchEnd : undefined}
-                            className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-border/60 shrink-0"
+                            className="flex lg:hidden items-center justify-between px-4 py-2.5 border-b border-border/60 shrink-0 select-none"
                         >
-                            <div className="flex items-center gap-2 min-w-0">
-                                {icon && <span className="shrink-0">{icon}</span>}
-                                <span className="font-semibold text-xs tracking-wider uppercase text-accents-5 truncate">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                                {icon && <span className="shrink-0 text-foreground">{icon}</span>}
+                                <span className="font-semibold text-xs tracking-wider uppercase text-foreground truncate">
                                     {title}
                                 </span>
                                 {badge}
@@ -299,7 +323,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                                 type="button"
                                 onClick={handleClose}
                                 aria-label={collapseTitle || 'Cerrar panel'}
-                                className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0 active:scale-95"
+                                className="p-1.5 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0 active:scale-95"
                             >
                                 <X className="w-4 h-4" />
                             </button>

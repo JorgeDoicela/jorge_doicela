@@ -81,21 +81,30 @@ export function useVerses(
   }, []);
 
   const updateReaderSettings = useCallback((newSettings: Partial<ReaderSettings>) => {
-    setReaderSettings((prev) => {
-      const updated = { ...prev, ...newSettings };
-      try {
-        localStorage.setItem('kartex_reader_settings', JSON.stringify({
+    try {
+      const saved = localStorage.getItem('kartex_reader_settings');
+      const current = saved ? JSON.parse(saved) : {};
+      const updated = { ...current, ...newSettings };
+      localStorage.setItem(
+        'kartex_reader_settings',
+        JSON.stringify({
           layoutMode: updated.layoutMode,
           fontSize: updated.fontSize,
           fontFamily: updated.fontFamily,
           showVerseNumbers: updated.showVerseNumbers,
-        }));
+        }),
+      );
+    } catch {
+      // Fallback si localStorage no está disponible
+    }
+
+    setReaderSettings((prev) => ({ ...prev, ...newSettings }));
+
+    if (typeof window !== 'undefined') {
+      queueMicrotask(() => {
         window.dispatchEvent(new Event('kartex_reader_settings_changed'));
-      } catch {
-        // Fallback si localStorage no está disponible
-      }
-      return updated;
-    });
+      });
+    }
   }, []);
 
   const setLayoutMode = useCallback(
@@ -122,21 +131,8 @@ export function useVerses(
   }, []);
 
   const toggleVerseNumbers = useCallback(() => {
-    setReaderSettings((prev) => {
-      const updated = { ...prev, showVerseNumbers: !prev.showVerseNumbers };
-      try {
-        localStorage.setItem('kartex_reader_settings', JSON.stringify({
-          layoutMode: updated.layoutMode,
-          fontSize: updated.fontSize,
-          fontFamily: updated.fontFamily,
-          showVerseNumbers: updated.showVerseNumbers,
-        }));
-      } catch {
-        // Fallback
-      }
-      return updated;
-    });
-  }, []);
+    updateReaderSettings({ showVerseNumbers: !readerSettings.showVerseNumbers });
+  }, [updateReaderSettings, readerSettings.showVerseNumbers]);
 
   const fetchVerses = useCallback(
     async (

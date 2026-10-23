@@ -39,7 +39,6 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
 
   const isLeftOpen = passageContext?.isLeftSidebarOpen ?? false;
   const isRightOpen = passageContext?.isRightInspectorOpen ?? false;
-  const inspectedVerse = passageContext?.inspectedVerse;
 
   const handleToggleLeft = () => {
     if (onOpenLeft) {
@@ -164,15 +163,7 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
           }`}
           title={rightTitle || displayRightLabel}
         >
-          <div className="relative">
-            <RightIcon className="w-5 h-5 shrink-0" strokeWidth={isRightOpen ? 2.25 : 1.75} />
-            {inspectedVerse && !isRightOpen && (
-              <span
-                className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-blue-500 animate-pulse ring-2 ring-background"
-                aria-hidden="true"
-              />
-            )}
-          </div>
+          <RightIcon className="w-5 h-5 shrink-0" strokeWidth={isRightOpen ? 2.25 : 1.75} />
           <span className="text-[10px] tracking-tight font-medium leading-none truncate max-w-full">
             {displayRightLabel}
           </span>

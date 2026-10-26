@@ -7,7 +7,8 @@ import { KartexLogo, BackToKartexButton } from '../../../shared/ui';
 import { ThemeToggle } from '../../../features/theme-toggle';
 import { LanguageToggle } from '../../../features/language-toggle';
 import { useKartexPassageSafe } from '../../../entities/passage';
-import { ChevronDown, Check } from 'lucide-react';
+import { KartexAudioControlsPopover } from '../../../features/verses';
+import { ChevronDown, Check, Volume2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface NavTabItem {
@@ -48,6 +49,8 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [audioSheetOpen, setAudioSheetOpen] = useState(false);
+  const audioNavRef = useRef<HTMLDivElement>(null);
   const [homeUrl, setHomeUrl] = useState('/');
 
   useEffect(() => {
@@ -82,25 +85,33 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
 
   const activeTab = NAV_TABS.find((tab) => isCurrentTab(tab.path)) || NAV_TABS[0];
 
-  // Cerrar el menú flotante móvil al hacer clic fuera
+  // Cerrar menús flotantes al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | PointerEvent) => {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setMobileMenuOpen(false);
       }
+      if (audioNavRef.current && !audioNavRef.current.contains(event.target as Node)) {
+        const target = event.target as HTMLElement | null;
+        if (target && target.closest('[data-kartex-audio-modal]')) {
+          return;
+        }
+        setAudioSheetOpen(false);
+      }
     };
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || audioSheetOpen) {
       document.addEventListener('pointerdown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, audioSheetOpen]);
 
-  // Si la cabecera se oculta, cerrar el menú desplegable móvil
+  // Si la cabecera se oculta, cerrar menús desplegables
   useEffect(() => {
     if (!isVisible) {
       setMobileMenuOpen(false);
+      setAudioSheetOpen(false);
     }
   }, [isVisible]);
 
@@ -217,8 +228,36 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
           </nav>
         </div>
 
-        {/* Derecha: Selector de Idioma y Tema */}
+        {/* Derecha: Audio Bíblico, Selector de Idioma y Tema */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-2 pl-1">
+          {passageContext && (
+            <div className={`relative ${audioSheetOpen ? 'z-50' : ''}`} ref={audioNavRef}>
+              <button
+                type="button"
+                onClick={() => setAudioSheetOpen((prev) => !prev)}
+                className={`p-1.5 sm:px-2 sm:py-1 rounded-full transition-colors cursor-pointer flex items-center gap-1 active:scale-95 ${
+                  audioSheetOpen || passageContext.isPlayingAudio
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                }`}
+                title="Audio Bíblico"
+                aria-label="Controles de audio bíblico"
+              >
+                <Volume2 className="w-4 h-4 shrink-0" />
+                {passageContext.isPlayingAudio && (
+                  <span className="font-semibold text-[11px] font-mono hidden xs:inline">
+                    {passageContext.currentAudioVerse ? `v.${passageContext.currentAudioVerse}` : 'Audio'}
+                  </span>
+                )}
+              </button>
+
+              <KartexAudioControlsPopover
+                isOpen={audioSheetOpen}
+                onClose={() => setAudioSheetOpen(false)}
+                align="right"
+              />
+            </div>
+          )}
           <LanguageToggle />
           <ThemeToggle />
         </div>

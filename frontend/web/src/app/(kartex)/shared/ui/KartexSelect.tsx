@@ -175,7 +175,7 @@ export function KartexSelect<T extends string | number = string | number>({
           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-[0.98]
           ${
             isOpen
-              ? 'border-foreground bg-accents-2 text-foreground ring-2 ring-foreground/10 font-semibold'
+              ? 'border-border bg-accents-2 text-foreground font-semibold shadow-xs'
               : 'border-border/80 bg-inner-card/90 text-foreground hover:border-accents-4 hover:bg-inner-card'
           }
           ${sizeClasses}`}

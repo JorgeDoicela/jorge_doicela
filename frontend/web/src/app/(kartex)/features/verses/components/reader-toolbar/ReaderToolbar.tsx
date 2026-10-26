@@ -12,8 +12,9 @@ import {
 } from '../../types';
 import { UnifiedPassagePicker, getChaptersForBookId, Book } from '../../../../entities/books';
 import { TranslationSelector } from '../../../../entities/translations';
-import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2, MoreHorizontal } from 'lucide-react';
+import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2, MoreHorizontal, Volume2 } from 'lucide-react';
 import { useKartexPassageSafe } from '../../../../entities/passage';
+import { KartexAudioControlsPopover } from '../audio-controls';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;
@@ -68,8 +69,10 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   const isLeftOpen = passageContext?.isLeftSidebarOpen ?? false;
   const [copied, setCopied] = useState(false);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const [audioOpen, setAudioOpen] = useState(false);
   const [moreOptionsOpen, setMoreOptionsOpen] = useState(false);
   const appearanceRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLDivElement>(null);
   const moreOptionsRef = useRef<HTMLDivElement>(null);
 
   // Cerrar popovers al hacer clic afuera
@@ -78,17 +81,20 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
       if (appearanceRef.current && !appearanceRef.current.contains(e.target as Node)) {
         setAppearanceOpen(false);
       }
+      if (audioRef.current && !audioRef.current.contains(e.target as Node)) {
+        setAudioOpen(false);
+      }
       if (moreOptionsRef.current && !moreOptionsRef.current.contains(e.target as Node)) {
         setMoreOptionsOpen(false);
       }
     };
-    if (appearanceOpen || moreOptionsOpen) {
+    if (appearanceOpen || audioOpen || moreOptionsOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [appearanceOpen, moreOptionsOpen]);
+  }, [appearanceOpen, audioOpen, moreOptionsOpen]);
 
   const totalChapters = useMemo(() => {
     if (!selectedBookId) return 50;
@@ -159,8 +165,36 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
           )}
         </div>
 
-        {/* Lado Derecho: Apariencia Tipográfica y Acciones */}
+        {/* Lado Derecho: Audio Bíblico, Apariencia Tipográfica y Acciones */}
         <div className="flex items-center gap-0.5 sm:gap-1.5 shrink-0 pl-1">
+          {/* Menú Flotante de Audio Bíblico Nativo (Popover Geist) */}
+          <div className={`relative ${audioOpen ? 'z-50' : ''}`} ref={audioRef}>
+            <button
+              type="button"
+              onClick={() => setAudioOpen((prev) => !prev)}
+              className={`px-2 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer flex items-center gap-1 sm:gap-1.5 active:scale-95 ${
+                audioOpen || passageContext?.isPlayingAudio
+                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-2xs'
+                  : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+              }`}
+              title="Audio Bíblico"
+              aria-label="Controles de audio bíblico"
+            >
+              <Volume2 className="w-3.5 h-3.5 shrink-0" />
+              {passageContext?.isPlayingAudio && (
+                <span className="font-semibold text-[11px] font-mono">
+                  {passageContext.currentAudioVerse ? `v.${passageContext.currentAudioVerse}` : 'Audio'}
+                </span>
+              )}
+            </button>
+
+            <KartexAudioControlsPopover
+              isOpen={audioOpen}
+              onClose={() => setAudioOpen(false)}
+              align="right"
+            />
+          </div>
+
           {/* Menú Flotante de Apariencia Tipográfica (Popover Geist Aa) */}
           <div className={`relative ${appearanceOpen ? 'z-50' : ''}`} ref={appearanceRef}>
             <button

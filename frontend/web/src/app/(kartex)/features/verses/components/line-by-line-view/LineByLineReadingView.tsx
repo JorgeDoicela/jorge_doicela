@@ -219,15 +219,24 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
             (passageContext?.isRightInspectorOpen ?? false) &&
             passageContext?.inspectedVerse?.verseNumber === verse.verseNumber;
 
+          const isAudioActive =
+            Boolean(passageContext?.isPlayingAudio) &&
+            passageContext?.currentAudioVerse === verse.verseNumber;
+
           const highlightStyle = highlight ? VERSE_HIGHLIGHT_STYLES[highlight] : null;
 
           return (
             <div
               key={verse.id}
               data-verse-item="true"
+              data-verse-number={verse.verseNumber}
               onClick={(e) => handleVerseClick(verse, e)}
-              className={`relative py-3 sm:py-4 px-1 sm:px-3 lg:px-4 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer hover:bg-zinc-500/5 sepia:hover:bg-[#F4ECE0]/60 border-l-2 ${
-                isSelected ? 'border-foreground' : 'border-transparent'
+              className={`relative py-3 sm:py-4 px-1 sm:px-3 lg:px-4 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer border-l-2 ${
+                isAudioActive
+                  ? 'bg-foreground/5 dark:bg-white/10 sepia:bg-[#8C765C]/15 border-foreground'
+                  : isSelected
+                  ? 'border-foreground'
+                  : 'border-transparent hover:bg-zinc-500/5 sepia:hover:bg-[#F4ECE0]/60'
               }`}
             >
               {/* Columna con número de versículo compacta y ergonómica */}

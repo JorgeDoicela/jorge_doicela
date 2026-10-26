@@ -21,5 +21,6 @@ export {
   VerseSelectionToolbar,
   VERSE_HIGHLIGHT_STYLES,
 } from './components/verse-action-toolbar/VerseSelectionToolbar';
+export { KartexAudioControlsPopover } from './components/audio-controls';
 export { BOOK_CHAPTERS, getChapterCountForBook } from '../../shared/data/canonData';
 

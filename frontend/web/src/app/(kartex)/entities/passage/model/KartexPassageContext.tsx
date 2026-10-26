@@ -82,6 +82,25 @@ interface KartexPassageContextValue {
   openInspectorWithVerse: (verse: InspectedVerseData) => void;
   clearInspectedVerse: () => void;
   closeInspector: () => void;
+
+  // Reproductor de Audio Bíblico Nativo (Web Speech API Accesible y de Alta Fidelidad)
+  isPlayingAudio: boolean;
+  isAudioPaused: boolean;
+  currentAudioVerse: number | null;
+  audioSpeed: number;
+  setAudioSpeed: (speed: number) => void;
+  sleepTimerMinutes: number | null;
+  sleepTimerRemainingSeconds: number | null;
+  setSleepTimer: (minutes: number | null) => void;
+  availableVoices: SpeechSynthesisVoice[];
+  selectedVoiceURI: string | null;
+  setSelectedVoiceURI: (uri: string | null) => void;
+  playNextVerse: () => void;
+  playPrevVerse: () => void;
+  pauseAudio: () => void;
+  resumeAudio: () => void;
+  toggleAudio: (verses?: { verseNumber: number; text: string }[]) => void;
+  stopAudio: () => void;
 }
 
 export const DEFAULT_LEFT_SIDEBAR_WIDTH = 280;
@@ -472,7 +491,325 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     }
   }, [searchParams]);
 
+  // Control de Audio Bíblico Nativo (Web Speech API Accesible y de Alta Fidelidad)
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [isAudioPaused, setIsAudioPaused] = useState<boolean>(false);
+  const [currentAudioVerse, setCurrentAudioVerse] = useState<number | null>(null);
+  const [audioSpeed, setAudioSpeedState] = useState<number>(1.0);
+  const [sleepTimerMinutes, setSleepTimerMinutes] = useState<number | null>(null);
+  const [sleepTimerRemainingSeconds, setSleepTimerRemainingSeconds] = useState<number | null>(null);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoiceURI, setSelectedVoiceURIState] = useState<string | null>(null);
+
+  const audioQueueRef = useRef<{ verseNumber: number; text: string }[]>([]);
+  const currentAudioIndexRef = useRef<number>(0);
+  const audioSpeedRef = useRef<number>(1.0);
+  const selectedVoiceURIRef = useRef<string | null>(null);
+
+  // Mantener referencias actualizadas para callbacks asíncronos de SpeechSynthesis
+  useEffect(() => {
+    audioSpeedRef.current = audioSpeed;
+  }, [audioSpeed]);
+
+  useEffect(() => {
+    selectedVoiceURIRef.current = selectedVoiceURI;
+  }, [selectedVoiceURI]);
+
+  // Recuperar preferencias de velocidad y voz desde localStorage post-hidratación
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const savedSpeed = localStorage.getItem('kartex_audio_speed');
+      if (savedSpeed) {
+        const parsed = parseFloat(savedSpeed);
+        if (!isNaN(parsed) && parsed >= 0.5 && parsed <= 3.0) {
+          setAudioSpeedState(parsed);
+          audioSpeedRef.current = parsed;
+        }
+      }
+      const savedVoice = localStorage.getItem('kartex_audio_voice');
+      if (savedVoice) {
+        setSelectedVoiceURIState(savedVoice);
+        selectedVoiceURIRef.current = savedVoice;
+      }
+    } catch {
+      // Ignorar fallback seguro
+    }
+  }, []);
+
+  // Inicializar y escuchar catálogo de voces del sistema operativo
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    const updateVoices = () => {
+      const allVoices = window.speechSynthesis.getVoices();
+      if (allVoices.length > 0) {
+        // Deduplicar voces por voiceURI para evitar instancias duplicadas en Chromium/Windows
+        const uniqueMap = new Map<string, SpeechSynthesisVoice>();
+        for (const voice of allVoices) {
+          const key = voice.voiceURI || `${voice.name}-${voice.lang}`;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, voice);
+          }
+        }
+        setAvailableVoices(Array.from(uniqueMap.values()));
+      }
+    };
+    updateVoices();
+    window.speechSynthesis.onvoiceschanged = updateVoices;
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = null;
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  // Seleccionar la mejor voz neuronal disponible del dispositivo
+  const getBestVoice = useCallback((lang: string = 'es'): SpeechSynthesisVoice | null => {
+    const voices = availableVoices.length > 0
+      ? availableVoices
+      : (typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis.getVoices() : []);
+
+    if (voices.length === 0) return null;
+
+    // Si el usuario seleccionó una voz explícita, priorizarla
+    if (selectedVoiceURIRef.current) {
+      const explicit = voices.find((v) => v.voiceURI === selectedVoiceURIRef.current);
+      if (explicit) return explicit;
+    }
+
+    const cleanLang = lang.toLowerCase().startsWith('en') ? 'en' : 'es';
+    const langVoices = voices.filter((v) => v.lang.toLowerCase().startsWith(cleanLang));
+
+    if (langVoices.length === 0) return voices[0] || null;
+
+    // Prioridad 1: Voces Neuronales / Naturales / Online (Edge, Windows, macOS, Chrome)
+    const neuralVoice = langVoices.find((v) => {
+      const n = v.name.toLowerCase();
+      return (
+        n.includes('natural') ||
+        n.includes('neural') ||
+        n.includes('online') ||
+        n.includes('enhanced') ||
+        n.includes('mejorada')
+      );
+    });
+    if (neuralVoice) return neuralVoice;
+
+    // Prioridad 2: Voces de alta calidad Google / Apple / Microsoft
+    const qualityVoice = langVoices.find((v) => {
+      const n = v.name.toLowerCase();
+      return (
+        n.includes('google') ||
+        n.includes('siri') ||
+        n.includes('paulina') ||
+        n.includes('mónica') ||
+        n.includes('jorge') ||
+        n.includes('alvaro')
+      );
+    });
+    if (qualityVoice) return qualityVoice;
+
+    return langVoices[0];
+  }, [availableVoices]);
+
+  const stopAudio = useCallback(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsPlayingAudio(false);
+    setIsAudioPaused(false);
+    setCurrentAudioVerse(null);
+    currentAudioIndexRef.current = 0;
+    audioQueueRef.current = [];
+    setSleepTimerMinutes(null);
+    setSleepTimerRemainingSeconds(null);
+  }, []);
+
+  const playVerseAtIndex = useCallback((index: number) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    const queue = audioQueueRef.current;
+    if (index >= queue.length) {
+      stopAudio();
+      return;
+    }
+
+    const item = queue[index];
+    currentAudioIndexRef.current = index;
+    setCurrentAudioVerse(item.verseNumber);
+    setIsAudioPaused(false);
+
+    // Sincronización visual y scroll suave con el versículo en reproducción
+    if (typeof document !== 'undefined') {
+      const verseEl = document.querySelector(`[data-verse-number="${item.verseNumber}"]`);
+      if (verseEl) {
+        verseEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(item.text);
+    const targetLang = locale && locale.toLowerCase().startsWith('en') ? 'en-US' : 'es-ES';
+    utterance.lang = targetLang;
+    utterance.rate = audioSpeedRef.current;
+    utterance.pitch = 1.0;
+
+    const bestVoice = getBestVoice(targetLang);
+    if (bestVoice) {
+      utterance.voice = bestVoice;
+    }
+
+    utterance.onend = () => {
+      playVerseAtIndex(index + 1);
+    };
+
+    utterance.onerror = (e) => {
+      if (e.error !== 'interrupted' && e.error !== 'canceled') {
+        stopAudio();
+      }
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }, [getBestVoice, locale, stopAudio]);
+
+  const setAudioSpeed = useCallback((speed: number) => {
+    setAudioSpeedState(speed);
+    audioSpeedRef.current = speed;
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('kartex_audio_speed', String(speed));
+      } catch {
+        // Ignorar
+      }
+    }
+    // Si se encuentra en reproducción activa, reiniciar el versículo actual con la nueva velocidad
+    if (isPlayingAudio && !isAudioPaused && audioQueueRef.current.length > 0) {
+      playVerseAtIndex(currentAudioIndexRef.current);
+    }
+  }, [isAudioPaused, isPlayingAudio, playVerseAtIndex]);
+
+  const setSelectedVoiceURI = useCallback((uri: string | null) => {
+    setSelectedVoiceURIState(uri);
+    selectedVoiceURIRef.current = uri;
+    if (typeof window !== 'undefined') {
+      try {
+        if (uri) {
+          localStorage.setItem('kartex_audio_voice', uri);
+        } else {
+          localStorage.removeItem('kartex_audio_voice');
+        }
+      } catch {
+        // Ignorar
+      }
+    }
+    // Si está reproduciendo, reiniciar el versículo actual con el nuevo timbre de voz
+    if (isPlayingAudio && !isAudioPaused && audioQueueRef.current.length > 0) {
+      playVerseAtIndex(currentAudioIndexRef.current);
+    }
+  }, [isAudioPaused, isPlayingAudio, playVerseAtIndex]);
+
+  const setSleepTimer = useCallback((minutes: number | null) => {
+    setSleepTimerMinutes(minutes);
+    if (minutes === null || minutes <= 0) {
+      setSleepTimerRemainingSeconds(null);
+    } else {
+      setSleepTimerRemainingSeconds(minutes * 60);
+    }
+  }, []);
+
+  // Temporizador regresivo de apagado de audio en segundo plano
+  useEffect(() => {
+    if (!isPlayingAudio || isAudioPaused || sleepTimerRemainingSeconds === null) return;
+    if (sleepTimerRemainingSeconds <= 0) {
+      stopAudio();
+      return;
+    }
+    const interval = setInterval(() => {
+      setSleepTimerRemainingSeconds((prev) => {
+        if (prev === null || prev <= 1) {
+          stopAudio();
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isPlayingAudio, isAudioPaused, sleepTimerRemainingSeconds, stopAudio]);
+
+  const pauseAudio = useCallback(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window && isPlayingAudio && !isAudioPaused) {
+      window.speechSynthesis.pause();
+      setIsAudioPaused(true);
+    }
+  }, [isAudioPaused, isPlayingAudio]);
+
+  const resumeAudio = useCallback(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window && isPlayingAudio && isAudioPaused) {
+      window.speechSynthesis.resume();
+      setIsAudioPaused(false);
+    }
+  }, [isAudioPaused, isPlayingAudio]);
+
+  const playNextVerse = useCallback(() => {
+    if (audioQueueRef.current.length > 0) {
+      const nextIdx = currentAudioIndexRef.current + 1;
+      if (nextIdx < audioQueueRef.current.length) {
+        playVerseAtIndex(nextIdx);
+      } else {
+        stopAudio();
+      }
+    }
+  }, [playVerseAtIndex, stopAudio]);
+
+  const playPrevVerse = useCallback(() => {
+    if (audioQueueRef.current.length > 0) {
+      const prevIdx = Math.max(0, currentAudioIndexRef.current - 1);
+      playVerseAtIndex(prevIdx);
+    }
+  }, [playVerseAtIndex]);
+
+  const toggleAudio = useCallback((explicitVerses?: { verseNumber: number; text: string }[]) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    if (isPlayingAudio) {
+      if (isAudioPaused) {
+        resumeAudio();
+        return;
+      }
+      stopAudio();
+      return;
+    }
+
+    let versesToPlay = explicitVerses;
+    if (!versesToPlay || versesToPlay.length === 0) {
+      const elements = document.querySelectorAll<HTMLElement>('[data-verse-item="true"]');
+      const extracted: { verseNumber: number; text: string }[] = [];
+      elements.forEach((el, idx) => {
+        const numAttr = el.getAttribute('data-verse-number');
+        const vNum = numAttr ? parseInt(numAttr, 10) : idx + 1;
+        const clone = el.cloneNode(true) as HTMLElement;
+        clone.querySelectorAll('sup').forEach((sup) => sup.remove());
+        const cleanText = clone.textContent?.trim();
+        if (cleanText) {
+          extracted.push({ verseNumber: vNum, text: cleanText });
+        }
+      });
+      versesToPlay = extracted;
+    }
+
+    if (!versesToPlay || versesToPlay.length === 0) return;
+
+    audioQueueRef.current = versesToPlay;
+    currentAudioIndexRef.current = 0;
+    setIsPlayingAudio(true);
+    setIsAudioPaused(false);
+    playVerseAtIndex(0);
+  }, [isAudioPaused, isPlayingAudio, playVerseAtIndex, resumeAudio, stopAudio]);
+
   const setPassage = (bookId: number, chapter: number) => {
+    stopAudio();
     setSelectedBookId(bookId);
     setSelectedChapter(chapter);
     setIsHeaderVisible(true);
@@ -600,6 +937,25 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         openInspectorWithVerse,
         clearInspectedVerse,
         closeInspector,
+
+        // Reproductor de Audio Bíblico Nativo
+        isPlayingAudio,
+        isAudioPaused,
+        currentAudioVerse,
+        audioSpeed,
+        setAudioSpeed,
+        sleepTimerMinutes,
+        sleepTimerRemainingSeconds,
+        setSleepTimer,
+        availableVoices,
+        selectedVoiceURI,
+        setSelectedVoiceURI,
+        playNextVerse,
+        playPrevVerse,
+        pauseAudio,
+        resumeAudio,
+        toggleAudio,
+        stopAudio,
       }}
     >
       <StudySidePanelContextProvider value={sidePanelValue}>

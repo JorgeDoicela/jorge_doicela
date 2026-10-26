@@ -220,15 +220,24 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
               (passageContext?.isRightInspectorOpen ?? false) &&
               passageContext?.inspectedVerse?.verseNumber === verse.verseNumber;
 
+            const isAudioActive =
+              Boolean(passageContext?.isPlayingAudio) &&
+              passageContext?.currentAudioVerse === verse.verseNumber;
+
             const highlightStyle = highlight ? VERSE_HIGHLIGHT_STYLES[highlight] : null;
 
             return (
               <span
                 key={verse.id}
                 data-verse-item="true"
+                data-verse-number={verse.verseNumber}
                 onClick={(e) => handleVerseClick(verse, e)}
                 className={`inline [box-decoration-break:clone] px-1.5 py-[2px] rounded-md sm:rounded-lg relative group cursor-pointer transition-all duration-150 ${
-                  highlightStyle ? highlightStyle.bgClass : 'hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 sepia:hover:bg-[#F4ECE0]/60'
+                  isAudioActive
+                    ? 'bg-foreground/10 dark:bg-white/15 sepia:bg-[#8C765C]/20 ring-1 ring-foreground/30 shadow-2xs'
+                    : highlightStyle
+                    ? highlightStyle.bgClass
+                    : 'hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 sepia:hover:bg-[#F4ECE0]/60'
                 }`}
               >
                 {showVerseNumbers && (

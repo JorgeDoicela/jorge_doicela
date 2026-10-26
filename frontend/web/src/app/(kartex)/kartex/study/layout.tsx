@@ -126,10 +126,13 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     disabled: isAtlas,
   });
 
-  // Asegurar que las barras reaparezcan de inmediato al cambiar de libro o capítulo
+  // Asegurar que las barras reaparezcan de inmediato y el scroll regrese al inicio al cambiar de pasaje
   useEffect(() => {
     setIsHeaderVisible?.(true);
-  }, [selectedBookId, selectedChapter, setIsHeaderVisible]);
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [selectedBookId, selectedChapter, setIsHeaderVisible, mainRef]);
 
   // Si se abre cualquier panel lateral en móvil o escritorio, mantener visible la cabecera
   useEffect(() => {
@@ -341,7 +344,7 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
           ref={mainRef}
           onScroll={handleMainScroll}
           {...swipeHandlers}
-          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-16 pb-24 sm:pb-20 lg:pt-4 lg:pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0 kartex-scrollbar-slim"
+          className="flex-1 min-w-0 lg:min-w-[440px] h-full overflow-y-auto pt-16 pb-36 sm:pb-28 lg:pt-4 lg:pb-16 space-y-4 overflow-x-hidden px-3 sm:px-6 lg:px-8 print:p-0 print:m-0 print:pb-0 kartex-scrollbar-slim"
         >
           <div className="w-full max-w-[1780px] mx-auto space-y-4">
             {children}

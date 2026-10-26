@@ -150,6 +150,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
 
     if (nextSelected.length === 0) {
       setToolbarPosition(null);
+      passageContext?.clearInspectedVerse();
       return;
     }
 
@@ -160,21 +161,23 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
 
     setToolbarPosition({ top, left, placement });
 
+    const activeVerseNumber = isAlreadySelected
+      ? nextSelected[nextSelected.length - 1]
+      : verse.verseNumber;
+    const activeVerse = verses.find((v) => v.verseNumber === activeVerseNumber) || verse;
     const bId =
-      typeof verse.book === 'object' && verse.book !== null
-        ? verse.book.id
+      typeof activeVerse.book === 'object' && activeVerse.book !== null
+        ? activeVerse.book.id
         : passageContext?.selectedBookId || 1;
 
-    // Si el inspector derecho ya está abierto en escritorio, mantenerlo sincronizado
-    if (passageContext?.isRightInspectorOpen) {
-      passageContext.setInspectedVerse({
-        bookId: bId,
-        bookName: localizedBookName,
-        chapter: verse.chapter,
-        verseNumber: verse.verseNumber,
-        text: verse.text,
-      });
-    }
+    // Sincronizar siempre el versículo seleccionado en el contexto para que el dock móvil o inspector lateral tengan el versículo activo
+    passageContext?.setInspectedVerse({
+      bookId: bId,
+      bookName: localizedBookName,
+      chapter: activeVerse.chapter,
+      verseNumber: activeVerse.verseNumber,
+      text: activeVerse.text,
+    });
   };
 
   const handleOpenExegesis = (verse: Verse) => {
@@ -198,12 +201,12 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
       {/* Cabecera compacta editorial */}
       <div className="px-3 sm:px-4 py-1.5 text-xs font-mono text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C]">
         <span className="font-medium text-zinc-700 dark:text-zinc-300 sepia:text-[#2C221E]">
-          {localizedBookName} {chapter !== null ? `• ${t('chapter')} ${chapter}` : ''}
+          {localizedBookName} {(chapter ?? verses[0]?.chapter) !== null ? `• ${t('chapter')} ${chapter ?? verses[0]?.chapter}` : ''}
         </span>
       </div>
 
-      {/* Lista versículo a versículo en tarjeta elevada */}
-      <div className="divide-y border rounded-2xl overflow-hidden transition-colors duration-200 bg-card-bg border-card-border divide-border/60 text-foreground shadow-xs">
+      {/* Lista versículo a versículo en lienzo continuo */}
+      <div className="divide-y divide-border/40 transition-colors duration-200 text-foreground">
         {verses.map((verse) => {
           const bId =
             typeof verse.book === 'object' && verse.book !== null
@@ -223,15 +226,19 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
               key={verse.id}
               data-verse-item="true"
               onClick={(e) => handleVerseClick(verse, e)}
-              className={`relative p-3 sm:p-4.5 lg:p-5 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer ${
-                isSelected
-                  ? 'bg-zinc-100/80 dark:bg-zinc-900/80 sepia:bg-[#EADAB8]/60 border-l-2 border-foreground'
-                  : 'hover:bg-zinc-50 dark:hover:bg-zinc-900/40 sepia:hover:bg-[#F4ECE0]/70 border-l-2 border-transparent'
+              className={`relative py-3 sm:py-4 px-1 sm:px-3 lg:px-4 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer hover:bg-zinc-500/5 sepia:hover:bg-[#F4ECE0]/60 border-l-2 ${
+                isSelected ? 'border-foreground' : 'border-transparent'
               }`}
             >
               {/* Columna con número de versículo compacta y ergonómica */}
               <div className="shrink-0 w-6 sm:w-8 text-right pt-0.5 select-none">
-                <span className="font-mono text-xs font-semibold text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C] group-hover:text-zinc-900 dark:group-hover:text-zinc-100 sepia:group-hover:text-[#2C221E] transition-colors">
+                <span
+                  className={`font-mono text-xs select-none transition-colors ${
+                    isSelected
+                      ? 'font-bold text-zinc-950 dark:text-zinc-50 sepia:text-[#1F1713] underline decoration-dotted decoration-2 underline-offset-[2px] decoration-zinc-800/80 dark:decoration-zinc-200/80 sepia:decoration-[#6B533E]/90'
+                      : 'text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C] font-semibold group-hover:text-zinc-900 dark:group-hover:text-zinc-100 sepia:group-hover:text-[#2C221E]'
+                  }`}
+                >
                   {verse.verseNumber}
                 </span>
               </div>
@@ -243,6 +250,10 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
                     highlightStyle
                       ? `${highlightStyle.bgClass} px-2 py-0.5 rounded-md sm:rounded-lg`
                       : 'text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E]'
+                  } ${
+                    isSelected
+                      ? 'underline decoration-dotted decoration-2 underline-offset-[4px] decoration-zinc-800/80 dark:decoration-zinc-200/80 sepia:decoration-[#6B533E]/90'
+                      : ''
                   } leading-relaxed selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
                 >
                   {verse.text}

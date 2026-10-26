@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, useRef, ReactNode } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useBooks, Book } from '../../books';
 import { getChaptersForBookId } from '../../../shared/data/canonData';
@@ -99,8 +99,6 @@ interface KartexPassageProviderProps {
 }
 
 export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ children }) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
 
@@ -383,6 +381,24 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     }
   }, []);
 
+  // Sincronizar cambios en la barra de URL de forma determinista (0 ms) sin activar el enrutador asíncrono de Next.js ni suspense
+  const updateUrlParams = useCallback((bookId: number, chapter: number, transId: number | null) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('book', bookId.toString());
+      url.searchParams.set('chapter', chapter.toString());
+      if (transId) {
+        url.searchParams.set('trans', transId.toString());
+      } else {
+        url.searchParams.delete('trans');
+      }
+      window.history.replaceState(window.history.state, '', url.pathname + url.search);
+    } catch {
+      // Ignorar fallback seguro
+    }
+  }, []);
+
   // Reaccionar al cambio de idioma de la interfaz (ES <-> EN) de manera inmediata y fluida
   useEffect(() => {
     const cleanLocale = locale && locale.toLowerCase().startsWith('en') ? 'en' : 'es';
@@ -394,55 +410,67 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     if (currentGroup && currentGroup !== 'ancient' && currentGroup !== cleanLocale) {
       const preferredId = resolveInitialTranslationId({ locale: cleanLocale });
       setSelectedTranslationId(preferredId);
-
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('book', selectedBookId.toString());
-      params.set('chapter', selectedChapter.toString());
-      params.set('trans', preferredId.toString());
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      updateUrlParams(selectedBookId, selectedChapter, preferredId);
     }
-  }, [locale, selectedTranslationId, selectedBookId, selectedChapter, searchParams, pathname, router]);
+  }, [locale, selectedTranslationId, selectedBookId, selectedChapter, updateUrlParams]);
 
-  // Sincronizar reactivamente el pasaje cuando cambian los search params de la URL
+  // Manejar navegación nativa del navegador (Botón Atrás / Adelante vía popstate)
   useEffect(() => {
-    const bookParam = searchParams.get('book');
-    const chapterParam = searchParams.get('chapter');
+    if (typeof window === 'undefined') return;
 
-    if (bookParam) {
-      const parsedBookId = parseInt(bookParam, 10);
-      if (!isNaN(parsedBookId) && parsedBookId > 0 && parsedBookId !== selectedBookId) {
-        setSelectedBookId(parsedBookId);
-      } else if (isNaN(parsedBookId) && books.length > 0) {
-        const match = books.find(
-          (b) => b.abbreviation.toLowerCase() === bookParam.toLowerCase() ||
-                 b.name.toLowerCase() === bookParam.toLowerCase()
-        );
-        if (match && match.id !== selectedBookId) {
-          setSelectedBookId(match.id);
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const bookParam = params.get('book');
+      const chapterParam = params.get('chapter');
+      const transParam = params.get('trans');
+
+      if (bookParam) {
+        const parsedBook = parseInt(bookParam, 10);
+        if (!isNaN(parsedBook) && parsedBook > 0) {
+          setSelectedBookId(parsedBook);
         }
       }
-    }
 
-    if (chapterParam) {
-      const parsedChapter = parseInt(chapterParam, 10);
-      if (!isNaN(parsedChapter) && parsedChapter > 0 && parsedChapter !== selectedChapter) {
-        setSelectedChapter(parsedChapter);
+      if (chapterParam) {
+        const parsedChap = parseInt(chapterParam, 10);
+        if (!isNaN(parsedChap) && parsedChap > 0) {
+          setSelectedChapter(parsedChap);
+        }
       }
-    }
-  }, [searchParams, books, selectedBookId, selectedChapter]);
 
-  // Sincronizar cambios en los search params de la URL de forma fluida
-  const updateUrlParams = (bookId: number, chapter: number, transId: number | null) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('book', bookId.toString());
-    params.set('chapter', chapter.toString());
-    if (transId) {
-      params.set('trans', transId.toString());
-    } else {
-      params.delete('trans');
+      if (transParam) {
+        const parsedTrans = parseInt(transParam, 10);
+        if (!isNaN(parsedTrans) && parsedTrans > 0) {
+          setSelectedTranslationId(parsedTrans);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Sincronizar cuando se navega externamente a través de un <Link> entre módulos con query params
+  const lastSynchronizedSearchRef = useRef<string>(searchParams.toString());
+  useEffect(() => {
+    const currentSearch = searchParams.toString();
+    if (currentSearch === lastSynchronizedSearchRef.current) return;
+    lastSynchronizedSearchRef.current = currentSearch;
+
+    const bookParam = searchParams.get('book');
+    const chapterParam = searchParams.get('chapter');
+    if (!bookParam && !chapterParam) return;
+
+    const parsedBookId = bookParam ? parseInt(bookParam, 10) : null;
+    const parsedChapter = chapterParam ? parseInt(chapterParam, 10) : null;
+
+    if (parsedBookId && !isNaN(parsedBookId) && parsedBookId > 0) {
+      setSelectedBookId((prev) => (prev !== parsedBookId ? parsedBookId : prev));
     }
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+    if (parsedChapter && !isNaN(parsedChapter) && parsedChapter > 0) {
+      setSelectedChapter((prev) => (prev !== parsedChapter ? parsedChapter : prev));
+    }
+  }, [searchParams]);
 
   const setPassage = (bookId: number, chapter: number) => {
     setSelectedBookId(bookId);

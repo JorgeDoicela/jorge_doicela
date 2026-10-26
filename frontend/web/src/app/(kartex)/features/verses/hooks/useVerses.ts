@@ -9,40 +9,43 @@ import {
 import { API_URL } from '../../../../config';
 import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../../entities/translations';
 
+// Caché en memoria a nivel de módulo para navegación con latencia cero (0 ms)
+const verseCache = new Map<string, Verse[]>();
+
+function getVerseCacheKey(
+  bookId: number | null,
+  chapter: number | null,
+  translationId: number | null,
+): string {
+  return `${bookId ?? 1}_${chapter ?? 1}_${translationId ?? 3}`;
+}
+
 export function useVerses(
   externalBookId?: number | null,
   externalChapter?: number | null,
   externalTranslationId?: number | null,
 ) {
-  const [verses, setVerses] = useState<Verse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Por defecto: Génesis (id: 1), NBLA o traducción persistida/contextual, Capítulo 1
-  const [selectedBookId, setSelectedBookId] = useState<number | null>(
-    externalBookId !== undefined ? externalBookId : 1,
+  // Estado interno de fallback solo si no se proveen props externas
+  const [internalBookId, setInternalBookId] = useState<number | null>(1);
+  const [internalChapter, setInternalChapter] = useState<number | null>(1);
+  const [internalTranslationId, setInternalTranslationId] = useState<number | null>(() =>
+    resolveInitialTranslationId(),
   );
-  const [selectedTranslationId, setSelectedTranslationId] = useState<number | null>(() => {
-    if (externalTranslationId !== undefined && externalTranslationId !== null) {
-      return externalTranslationId;
-    }
-    return resolveInitialTranslationId();
+
+  const effectiveBookId = externalBookId !== undefined ? externalBookId : internalBookId;
+  const effectiveChapter = externalChapter !== undefined ? externalChapter : internalChapter;
+  const effectiveTranslationId =
+    externalTranslationId !== undefined ? externalTranslationId : internalTranslationId;
+
+  const cacheKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
+
+  const [verses, setVerses] = useState<Verse[]>(() => {
+    return verseCache.get(cacheKey) || [];
   });
-  const [selectedChapter, setSelectedChapter] = useState<number | null>(
-    externalChapter !== undefined ? externalChapter : 1,
-  );
-
-  useEffect(() => {
-    if (externalBookId !== undefined) setSelectedBookId(externalBookId);
-  }, [externalBookId]);
-
-  useEffect(() => {
-    if (externalChapter !== undefined) setSelectedChapter(externalChapter);
-  }, [externalChapter]);
-
-  useEffect(() => {
-    if (externalTranslationId !== undefined) setSelectedTranslationId(externalTranslationId);
-  }, [externalTranslationId]);
+  const [loading, setLoading] = useState<boolean>(() => {
+    return !verseCache.has(cacheKey);
+  });
+  const [error, setError] = useState<string | null>(null);
 
   // Configuraciones de visualización del lector
   const [readerSettings, setReaderSettings] = useState<ReaderSettings>({
@@ -63,7 +66,7 @@ export function useVerses(
           setReaderSettings((prev) => ({
             ...prev,
             ...parsed,
-            focusMode: prev.focusMode, // Conservar estado de focusMode local
+            focusMode: prev.focusMode,
           }));
         }
       } catch {
@@ -95,7 +98,7 @@ export function useVerses(
         }),
       );
     } catch {
-      // Fallback si localStorage no está disponible
+      // Fallback
     }
 
     setReaderSettings((prev) => ({ ...prev, ...newSettings }));
@@ -134,111 +137,173 @@ export function useVerses(
     updateReaderSettings({ showVerseNumbers: !readerSettings.showVerseNumbers });
   }, [updateReaderSettings, readerSettings.showVerseNumbers]);
 
-  const fetchVerses = useCallback(
-    async (
-      bookId: number | null,
-      translationId: number | null,
-      chapter: number | null,
-    ) => {
-      setLoading(true);
-      setError(null);
-      try {
-        let url = `${API_URL}/kartex/verses`;
-        const params = new URLSearchParams();
+  // Función atómica de consulta a la API con persistencia en caché
+  const fetchVersesData = useCallback(
+    async (bId: number | null, ch: number | null, transId: number | null): Promise<Verse[]> => {
+      let url = `${API_URL}/kartex/verses`;
+      const params = new URLSearchParams();
 
-        if (bookId !== null) {
-          params.append('bookId', bookId.toString());
-        }
-        if (translationId !== null) {
-          params.append('translationId', translationId.toString());
-        }
-        if (chapter !== null) {
-          params.append('chapter', chapter.toString());
-        }
-        params.append('limit', '200');
+      if (bId !== null) params.append('bookId', bId.toString());
+      if (transId !== null) params.append('translationId', transId.toString());
+      if (ch !== null) params.append('chapter', ch.toString());
+      params.append('limit', '200');
 
-        const queryString = params.toString();
-        if (queryString) {
-          url += `?${queryString}`;
-        }
+      const queryString = params.toString();
+      if (queryString) url += `?${queryString}`;
 
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error(`Servidor respondió con código ${res.status}: No se pudieron cargar los versículos`);
-        }
-        const data = await res.json();
-        const serverVerses = (data.data as Verse[]) || [];
-        setVerses(serverVerses);
-      } catch (err: unknown) {
-        const isNetworkError =
-          err instanceof TypeError && err.message.toLowerCase().includes('failed to fetch');
-
-        if (isNetworkError) {
-          console.warn(
-            '[Kartex:useVerses] No se pudo conectar con el backend en localhost:3000. Asegúrese de que el servidor NestJS esté en ejecución.',
-          );
-          setError(
-            'No se pudo conectar con el servidor de datos (localhost:3000). Verifique que el servicio backend NestJS esté en ejecución.',
-          );
-        } else {
-          console.error('[Kartex:useVerses] Error al cargar los versículos:', err);
-          setError(err instanceof Error ? err.message : 'Error de conexión con el servidor');
-        }
-        setVerses([]);
-      } finally {
-        setLoading(false);
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Servidor respondió con código ${res.status}: No se pudieron cargar los versículos`);
       }
+      const data = await res.json();
+      return (data.data as Verse[]) || [];
     },
     [],
   );
 
-  const refetch = useCallback(() => {
-    void fetchVerses(selectedBookId, selectedTranslationId, selectedChapter);
-  }, [fetchVerses, selectedBookId, selectedTranslationId, selectedChapter]);
+  // Pre-fetching proactivo en segundo plano de capítulos adyacentes
+  const prefetchAdjacentChapters = useCallback(
+    (bId: number | null, ch: number | null, transId: number | null) => {
+      if (!ch || !bId || typeof window === 'undefined') return;
 
-  // Al cambiar de libro, seleccionar el capítulo 1 por defecto
+      const schedulePrefetch = (chapterToFetch: number) => {
+        const nextKey = getVerseCacheKey(bId, chapterToFetch, transId);
+        if (verseCache.has(nextKey)) return;
+
+        const execute = async () => {
+          try {
+            const data = await fetchVersesData(bId, chapterToFetch, transId);
+            if (data.length > 0) {
+              verseCache.set(nextKey, data);
+            }
+          } catch {
+            // Silencioso para pre-fetch
+          }
+        };
+
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(execute, { timeout: 1500 });
+        } else {
+          setTimeout(execute, 200);
+        }
+      };
+
+      // Precargar siguiente capítulo
+      schedulePrefetch(ch + 1);
+      // Precargar capítulo anterior si ch > 1
+      if (ch > 1) {
+        schedulePrefetch(ch - 1);
+      }
+    },
+    [fetchVersesData],
+  );
+
+  // Efecto principal reactivo ante cambio de libro, capítulo o versión
+  useEffect(() => {
+    let active = true;
+    const currentKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
+
+    // 1. Si los datos ya existen en caché, resolución instantánea en 0 ms
+    if (verseCache.has(currentKey)) {
+      setVerses(verseCache.get(currentKey)!);
+      setLoading(false);
+      setError(null);
+      prefetchAdjacentChapters(effectiveBookId, effectiveChapter, effectiveTranslationId);
+      return;
+    }
+
+    // 2. Si no están en caché, solicitar a la API
+    setLoading(true);
+    setError(null);
+
+    const load = async () => {
+      try {
+        const serverVerses = await fetchVersesData(
+          effectiveBookId,
+          effectiveChapter,
+          effectiveTranslationId,
+        );
+
+        if (!active) return;
+
+        verseCache.set(currentKey, serverVerses);
+        setVerses(serverVerses);
+        setLoading(false);
+        prefetchAdjacentChapters(effectiveBookId, effectiveChapter, effectiveTranslationId);
+      } catch (err: unknown) {
+        if (!active) return;
+
+        const isNetworkError =
+          err instanceof TypeError && err.message.toLowerCase().includes('failed to fetch');
+
+        if (isNetworkError) {
+          setError('No se pudo conectar con el servidor de datos (localhost:3000).');
+        } else {
+          setError(err instanceof Error ? err.message : 'Error de conexión con el servidor');
+        }
+        setLoading(false);
+      }
+    };
+
+    void load();
+
+    return () => {
+      active = false;
+    };
+  }, [
+    effectiveBookId,
+    effectiveChapter,
+    effectiveTranslationId,
+    fetchVersesData,
+    prefetchAdjacentChapters,
+  ]);
+
   const handleSelectBook = useCallback((id: number | null) => {
-    setSelectedBookId(id);
-    setSelectedChapter(id !== null ? 1 : null);
+    setInternalBookId(id);
+    setInternalChapter(id !== null ? 1 : null);
   }, []);
 
   const nextChapter = useCallback((maxChapters: number = 150) => {
-    setSelectedChapter((prev) => {
+    setInternalChapter((prev) => {
       if (prev === null) return 1;
       return prev < maxChapters ? prev + 1 : prev;
     });
   }, []);
 
   const prevChapter = useCallback(() => {
-    setSelectedChapter((prev) => {
+    setInternalChapter((prev) => {
       if (prev === null || prev <= 1) return 1;
       return prev - 1;
     });
   }, []);
 
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      if (active) {
-        await fetchVerses(selectedBookId, selectedTranslationId, selectedChapter);
-      }
-    };
-    void load();
-    return () => {
-      active = false;
-    };
-  }, [fetchVerses, selectedBookId, selectedTranslationId, selectedChapter]);
+  const refetch = useCallback(() => {
+    const currentKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
+    verseCache.delete(currentKey);
+    setLoading(true);
+    void fetchVersesData(effectiveBookId, effectiveChapter, effectiveTranslationId)
+      .then((data) => {
+        verseCache.set(currentKey, data);
+        setVerses(data);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : 'Error al recargar');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [effectiveBookId, effectiveChapter, effectiveTranslationId, fetchVersesData]);
 
   return {
     verses,
     loading,
     error,
-    selectedBookId,
+    selectedBookId: effectiveBookId,
     setSelectedBookId: handleSelectBook,
-    selectedTranslationId,
-    setSelectedTranslationId,
-    selectedChapter,
-    setSelectedChapter,
+    selectedTranslationId: effectiveTranslationId,
+    setSelectedTranslationId: setInternalTranslationId,
+    selectedChapter: effectiveChapter,
+    setSelectedChapter: setInternalChapter,
     readerSettings,
     setLayoutMode,
     setFontSize,
@@ -248,6 +313,6 @@ export function useVerses(
     toggleVerseNumbers,
     nextChapter,
     prevChapter,
-    refetch: () => fetchVerses(selectedBookId, selectedTranslationId, selectedChapter),
+    refetch,
   };
 }

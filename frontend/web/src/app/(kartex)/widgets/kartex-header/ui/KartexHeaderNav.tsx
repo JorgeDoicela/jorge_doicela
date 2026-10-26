@@ -38,7 +38,13 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
   const passageContext = useKartexPassageSafe();
 
   const searchParams = useSearchParams();
-  const queryString = searchParams?.toString() ? `?${searchParams.toString()}` : '';
+  const queryString = React.useMemo(() => {
+    if (passageContext?.selectedBookId && passageContext?.selectedChapter) {
+      const trans = passageContext.selectedTranslationId ? `&trans=${passageContext.selectedTranslationId}` : '';
+      return `?book=${passageContext.selectedBookId}&chapter=${passageContext.selectedChapter}${trans}`;
+    }
+    return searchParams?.toString() ? `?${searchParams.toString()}` : '';
+  }, [passageContext?.selectedBookId, passageContext?.selectedChapter, passageContext?.selectedTranslationId, searchParams]);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);

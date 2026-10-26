@@ -249,6 +249,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         <>
             {/* Cortina oscura backdrop en Móviles (< lg) con transición gradual suave */}
             <div
+                data-study-panel-backdrop="true"
                 onClick={handleClose}
                 aria-hidden="true"
                 className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-40 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -257,6 +258,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
 
             <aside
                 ref={panelRef}
+                data-study-panel="true"
                 id={isLeft ? 'kartex-study-left-sidebar' : 'kartex-study-right-inspector'}
                 aria-label={effectiveAriaLabel}
                 aria-hidden={!isOpen ? true : undefined}

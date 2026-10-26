@@ -173,8 +173,8 @@ export const VerseList: React.FC<VerseListProps> = ({
 
         {/* Contenido en ancho óptimo de lectura */}
         <div className="w-full max-w-4xl space-y-4">
-          {loading && (
-            <div className="w-full rounded-2xl border border-border/60 p-8 sm:p-12 space-y-4 animate-pulse">
+          {loading && verses.length === 0 && (
+            <div className="w-full py-8 sm:py-12 space-y-4 animate-pulse">
               <div className="h-6 w-48 bg-accents-2 rounded mx-auto mb-6" />
               <div className="space-y-3">
                 <div className="h-4 bg-accents-2 rounded w-full" />
@@ -184,7 +184,11 @@ export const VerseList: React.FC<VerseListProps> = ({
             </div>
           )}
 
-          {!loading && !error && verses.length > 0 && readingContent}
+          {!error && verses.length > 0 && (
+            <div className={`transition-opacity duration-150 ${loading ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
+              {readingContent}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -218,9 +222,9 @@ export const VerseList: React.FC<VerseListProps> = ({
         activeTranslationName={activeTranslationName}
       />
 
-      {/* Estado de carga con Skeleton editorial */}
-      {loading && (
-        <div className="w-full bg-background rounded-2xl border border-accents-2 p-8 sm:p-12 space-y-4 animate-pulse">
+      {/* Estado de carga con Skeleton editorial (solo en carga inicial sin datos) */}
+      {loading && verses.length === 0 && (
+        <div className="w-full py-8 sm:py-12 space-y-4 animate-pulse">
           <div className="h-6 w-48 bg-accents-1 rounded mx-auto mb-6" />
           <div className="space-y-3">
             <div className="h-4 bg-accents-1 rounded w-full" />
@@ -256,8 +260,12 @@ export const VerseList: React.FC<VerseListProps> = ({
         />
       )}
 
-      {/* Renderizado de Lectura según el modo seleccionado */}
-      {!loading && !error && verses.length > 0 && readingContent}
+      {/* Renderizado de Lectura según el modo seleccionado con transición fluida */}
+      {!error && verses.length > 0 && (
+        <div className={`transition-opacity duration-150 ${loading ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
+          {readingContent}
+        </div>
+      )}
     </div>
   );
 };

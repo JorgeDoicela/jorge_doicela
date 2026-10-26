@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Verse,
+  Pericope,
   ReaderLayoutMode,
   ReaderFontSize,
   ReaderFontFamily,
@@ -8,9 +9,11 @@ import {
 } from '../types';
 import { API_URL } from '../../../../config';
 import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../../entities/translations';
+import { fetchPericopes } from '../services/pericopesApiService';
 
 // Caché en memoria a nivel de módulo para navegación con latencia cero (0 ms)
 const verseCache = new Map<string, Verse[]>();
+const pericopeCache = new Map<string, Pericope[]>();
 
 function getVerseCacheKey(
   bookId: number | null,
@@ -18,6 +21,10 @@ function getVerseCacheKey(
   translationId: number | null,
 ): string {
   return `${bookId ?? 1}_${chapter ?? 1}_${translationId ?? 3}`;
+}
+
+function getPericopeCacheKey(bookId: number | null, chapter: number | null): string {
+  return `${bookId ?? 1}_${chapter ?? 1}`;
 }
 
 export function useVerses(
@@ -38,9 +45,13 @@ export function useVerses(
     externalTranslationId !== undefined ? externalTranslationId : internalTranslationId;
 
   const cacheKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
+  const pCacheKey = getPericopeCacheKey(effectiveBookId, effectiveChapter);
 
   const [verses, setVerses] = useState<Verse[]>(() => {
     return verseCache.get(cacheKey) || [];
+  });
+  const [pericopes, setPericopes] = useState<Pericope[]>(() => {
+    return pericopeCache.get(pCacheKey) || [];
   });
   const [loading, setLoading] = useState<boolean>(() => {
     return !verseCache.has(cacheKey);
@@ -53,6 +64,7 @@ export function useVerses(
     fontSize: 'md',
     fontFamily: 'serif',
     showVerseNumbers: true,
+    showPericopes: true,
     focusMode: false,
   });
 
@@ -95,6 +107,7 @@ export function useVerses(
           fontSize: updated.fontSize,
           fontFamily: updated.fontFamily,
           showVerseNumbers: updated.showVerseNumbers,
+          showPericopes: updated.showPericopes,
         }),
       );
     } catch {
@@ -136,6 +149,10 @@ export function useVerses(
   const toggleVerseNumbers = useCallback(() => {
     updateReaderSettings({ showVerseNumbers: !readerSettings.showVerseNumbers });
   }, [updateReaderSettings, readerSettings.showVerseNumbers]);
+
+  const togglePericopes = useCallback(() => {
+    updateReaderSettings({ showPericopes: !readerSettings.showPericopes });
+  }, [updateReaderSettings, readerSettings.showPericopes]);
 
   // Función atómica de consulta a la API con persistencia en caché
   const fetchVersesData = useCallback(
@@ -203,7 +220,19 @@ export function useVerses(
     let active = true;
     const currentKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
 
-    // 1. Si los datos ya existen en caché, resolución instantánea en 0 ms
+    // 1. Carga de perícopas canónicas asociadas al capítulo
+    const pKey = getPericopeCacheKey(effectiveBookId, effectiveChapter);
+    if (pericopeCache.has(pKey)) {
+      setPericopes(pericopeCache.get(pKey)!);
+    } else if (effectiveBookId && effectiveChapter) {
+      void fetchPericopes(effectiveBookId, effectiveChapter).then((pData) => {
+        if (!active) return;
+        pericopeCache.set(pKey, pData);
+        setPericopes(pData);
+      });
+    }
+
+    // 2. Si los datos de versículos ya existen en caché, resolución instantánea en 0 ms
     if (verseCache.has(currentKey)) {
       setVerses(verseCache.get(currentKey)!);
       setLoading(false);
@@ -212,7 +241,7 @@ export function useVerses(
       return;
     }
 
-    // 2. Si no están en caché, solicitar a la API
+    // 3. Si no están en caché, solicitar a la API
     setLoading(true);
     setError(null);
 
@@ -279,8 +308,18 @@ export function useVerses(
 
   const refetch = useCallback(() => {
     const currentKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
+    const currentPKey = getPericopeCacheKey(effectiveBookId, effectiveChapter);
     verseCache.delete(currentKey);
+    pericopeCache.delete(currentPKey);
     setLoading(true);
+
+    if (effectiveBookId && effectiveChapter) {
+      void fetchPericopes(effectiveBookId, effectiveChapter).then((pData) => {
+        pericopeCache.set(currentPKey, pData);
+        setPericopes(pData);
+      });
+    }
+
     void fetchVersesData(effectiveBookId, effectiveChapter, effectiveTranslationId)
       .then((data) => {
         verseCache.set(currentKey, data);
@@ -296,6 +335,7 @@ export function useVerses(
 
   return {
     verses,
+    pericopes,
     loading,
     error,
     selectedBookId: effectiveBookId,
@@ -311,6 +351,7 @@ export function useVerses(
     toggleFocusMode,
     setFocusMode,
     toggleVerseNumbers,
+    togglePericopes,
     nextChapter,
     prevChapter,
     refetch,

@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, servicios, controladores, 
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `VersesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `CommentariesController`, `AtlasController`, `TimelineController`, `ArchaeologyController`, `EvangelismController`.
->   2. *Lógica de Negocio:* `VersesService`, `BooksService`, `MorphologyService`, `CommentariesService`, `AtlasService`, `TimelineService`, `ArchaeologyService`, `EvangelismService`.
->   3. *Acceso a Datos:* Entidades `Verse`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `CommentaryAuthorEntity`, `CommentaryEntryEntity`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `EvangelismPathwayEntity`, `EvangelismObjectionEntity`, `EvangelismTractEntity`.
+>   1. *Presentación:* `VersesController`, `PericopesController`, `BooksController`, `TranslationsController`, `MorphologyController`, `CommentariesController`, `AtlasController`, `TimelineController`, `ArchaeologyController`, `EvangelismController`.
+>   2. *Lógica de Negocio:* `VersesService`, `PericopesService`, `BooksService`, `MorphologyService`, `CommentariesService`, `AtlasService`, `TimelineService`, `ArchaeologyService`, `EvangelismService`.
+>   3. *Acceso a Datos:* Entidades `Verse`, `Pericope`, `Book`, `Translation`, `MorphologyToken`, `LexiconEntry`, `CommentaryAuthorEntity`, `CommentaryEntryEntity`, `HistoricalPlaceEntity`, `TimelineEventEntity`, `ArchaeologyArticleEntity`, `EvangelismPathwayEntity`, `EvangelismObjectionEntity`, `EvangelismTractEntity`.
 
 ---
 

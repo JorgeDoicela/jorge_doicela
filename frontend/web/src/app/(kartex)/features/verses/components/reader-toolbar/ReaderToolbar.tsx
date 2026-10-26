@@ -23,6 +23,7 @@ interface ReaderToolbarProps {
   onFontFamilyChange: (family: ReaderFontFamily) => void;
   onToggleFocusMode?: () => void;
   onToggleVerseNumbers: () => void;
+  onTogglePericopes?: () => void;
   books?: (BookInfo | Book | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
   onSelectPassage?: (bookId: number, chapter: number) => void;
@@ -47,6 +48,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   onFontFamilyChange,
   onToggleFocusMode,
   onToggleVerseNumbers,
+  onTogglePericopes,
   books = [],
   selectedBookId,
   onSelectPassage,
@@ -300,6 +302,26 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     ))}
                   </div>
                 </div>
+
+                {/* Alternar Subtítulos Temáticos */}
+                {onTogglePericopes && (
+                  <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between">
+                    <span className="text-xs text-zinc-500 font-medium">
+                      {t('pericopes')}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={onTogglePericopes}
+                      className={`px-3 py-0.5 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${
+                        readerSettings.showPericopes
+                          ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
+                          : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
+                      }`}
+                    >
+                      {readerSettings.showPericopes ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                )}
 
                 {/* Alternar Números de Versículo */}
                 <div className="pt-2 border-t border-border flex items-center justify-between">

@@ -23,6 +23,7 @@ export interface KartexSelectProps<T extends string | number = string | number> 
   menuClassName?: string;
   size?: 'xs' | 'sm' | 'md';
   align?: 'left' | 'right';
+  direction?: 'auto' | 'up' | 'down';
   icon?: React.ReactNode;
   hideLabelOnMobile?: boolean;
 }
@@ -39,14 +40,44 @@ export function KartexSelect<T extends string | number = string | number>({
   menuClassName = '',
   size = 'sm',
   align = 'left',
+  direction = 'auto',
   icon,
   hideLabelOnMobile = false,
 }: KartexSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
+  const [resolvedPlacement, setResolvedPlacement] = useState<'down' | 'up'>('down');
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const id = useId();
+
+  // Cálculo inteligente de dirección de apertura (Auto-Dropup / Auto-Flip)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (direction === 'up') {
+      setResolvedPlacement('up');
+      return;
+    }
+    if (direction === 'down') {
+      setResolvedPlacement('down');
+      return;
+    }
+
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      // Si abajo quedan menos de 260px y arriba hay más espacio, abrir hacia arriba
+      if (spaceBelow < 260 && spaceAbove > spaceBelow) {
+        setResolvedPlacement('up');
+      } else {
+        setResolvedPlacement('down');
+      }
+    }
+  }, [isOpen, direction]);
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -223,7 +254,11 @@ export function KartexSelect<T extends string | number = string | number>({
           }
           className={`absolute left-1/2 -translate-x-1/2 sm:translate-x-0 ${
             align === 'right' ? 'sm:left-auto sm:right-0' : 'sm:left-0 sm:right-auto'
-          } top-full mt-1.5 z-50 w-[290px] sm:w-80 max-w-[calc(100vw-1.5rem)] max-h-72 overflow-y-auto overscroll-contain
+          } ${
+            resolvedPlacement === 'up'
+              ? 'bottom-full mb-1.5 slide-in-from-bottom-2'
+              : 'top-full mt-1.5 slide-in-from-top-2'
+          } z-50 w-[290px] sm:w-80 max-w-[calc(100vw-1.5rem)] max-h-72 overflow-y-auto overscroll-contain
             rounded-xl p-1.5
             bg-card-bg
             border border-border

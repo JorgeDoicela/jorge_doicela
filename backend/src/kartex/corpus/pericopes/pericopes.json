@@ -1,0 +1,258 @@
+[
+  {
+    "bookAbbr": "GEN",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 31,
+    "title": "La creación de los cielos y de la tierra",
+    "titleEn": "The Creation of the Heavens and the Earth"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 2,
+    "startVerse": 1,
+    "endVerse": 3,
+    "title": "El día de reposo de Dios",
+    "titleEn": "God Rests on the Seventh Day"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 2,
+    "startVerse": 4,
+    "endVerse": 25,
+    "title": "El hombre y la mujer en el huerto del Edén",
+    "titleEn": "The Man and the Woman in the Garden of Eden"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 3,
+    "startVerse": 1,
+    "endVerse": 13,
+    "title": "La tentación y la caída del hombre",
+    "titleEn": "The Temptation and Fall of Man"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 3,
+    "startVerse": 14,
+    "endVerse": 24,
+    "title": "El juicio de Dios y la promesa de redención",
+    "titleEn": "God's Judgment and the Promise of Redemption"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 4,
+    "startVerse": 1,
+    "endVerse": 16,
+    "title": "Caín y Abel",
+    "titleEn": "Cain and Abel"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 4,
+    "startVerse": 17,
+    "endVerse": 26,
+    "title": "Los descendientes de Caín",
+    "titleEn": "The Descendants of Cain"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 6,
+    "startVerse": 1,
+    "endVerse": 8,
+    "title": "La maldad de los hombres",
+    "titleEn": "The Wickedness of Humanity"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 6,
+    "startVerse": 9,
+    "endVerse": 22,
+    "title": "Noé construye el arca",
+    "titleEn": "Noah Builds the Ark"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 11,
+    "startVerse": 1,
+    "endVerse": 9,
+    "title": "La torre de Babel",
+    "titleEn": "The Tower of Babel"
+  },
+  {
+    "bookAbbr": "GEN",
+    "chapter": 12,
+    "startVerse": 1,
+    "endVerse": 9,
+    "title": "El llamamiento de Abram",
+    "titleEn": "The Call of Abram"
+  },
+  {
+    "bookAbbr": "SAL",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 6,
+    "title": "El justo y los pecadores",
+    "titleEn": "The Righteous and the Wicked"
+  },
+  {
+    "bookAbbr": "SAL",
+    "chapter": 23,
+    "startVerse": 1,
+    "endVerse": 6,
+    "title": "El Señor es mi pastor",
+    "titleEn": "The Lord is My Shepherd"
+  },
+  {
+    "bookAbbr": "SAL",
+    "chapter": 91,
+    "startVerse": 1,
+    "endVerse": 16,
+    "title": "Morando bajo la sombra del Omnipotente",
+    "titleEn": "Abiding Under the Shadow of the Almighty"
+  },
+  {
+    "bookAbbr": "PRO",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 7,
+    "title": "El principio de la sabiduría",
+    "titleEn": "The Beginning of Wisdom"
+  },
+  {
+    "bookAbbr": "PRO",
+    "chapter": 3,
+    "startVerse": 1,
+    "endVerse": 12,
+    "title": "Confianza en el Señor de todo corazón",
+    "titleEn": "Trust in the Lord with All Your Heart"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 17,
+    "title": "Genealogía de Jesucristo",
+    "titleEn": "The Genealogy of Jesus Christ"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 1,
+    "startVerse": 18,
+    "endVerse": 25,
+    "title": "El nacimiento de Jesucristo",
+    "titleEn": "The Birth of Jesus Christ"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 5,
+    "startVerse": 1,
+    "endVerse": 12,
+    "title": "Las Bienaventuranzas",
+    "titleEn": "The Beatitudes"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 5,
+    "startVerse": 13,
+    "endVerse": 16,
+    "title": "La sal de la tierra y la luz del mundo",
+    "titleEn": "Salt of the Earth and Light of the World"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 5,
+    "startVerse": 17,
+    "endVerse": 20,
+    "title": "Jesús y el cumplimiento de la ley",
+    "titleEn": "Christ Fulfills the Law"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 6,
+    "startVerse": 5,
+    "endVerse": 15,
+    "title": "Jesús enseña a orar: El Padre Nuestro",
+    "titleEn": "Jesus Teaches How to Pray: The Lord's Prayer"
+  },
+  {
+    "bookAbbr": "MAT",
+    "chapter": 6,
+    "startVerse": 25,
+    "endVerse": 34,
+    "title": "El afán y la ansiedad",
+    "titleEn": "Do Not Be Anxious"
+  },
+  {
+    "bookAbbr": "JUA",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 18,
+    "title": "El Verbo encarnado",
+    "titleEn": "The Word Became Flesh"
+  },
+  {
+    "bookAbbr": "JUA",
+    "chapter": 1,
+    "startVerse": 19,
+    "endVerse": 28,
+    "title": "El testimonio de Juan el Bautista",
+    "titleEn": "The Testimony of John the Baptist"
+  },
+  {
+    "bookAbbr": "JUA",
+    "chapter": 1,
+    "startVerse": 29,
+    "endVerse": 34,
+    "title": "El Cordero de Dios",
+    "titleEn": "The Lamb of God"
+  },
+  {
+    "bookAbbr": "JUA",
+    "chapter": 3,
+    "startVerse": 1,
+    "endVerse": 21,
+    "title": "Jesús y Nicodemo: Nacer de nuevo",
+    "titleEn": "Jesus and Nicodemus: Born Again"
+  },
+  {
+    "bookAbbr": "ROM",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 17,
+    "title": "El llamamiento apostólico y el poder del evangelio",
+    "titleEn": "The Apostolic Calling and the Power of the Gospel"
+  },
+  {
+    "bookAbbr": "ROM",
+    "chapter": 1,
+    "startVerse": 18,
+    "endVerse": 32,
+    "title": "La culpabilidad de la humanidad ante Dios",
+    "titleEn": "God's Wrath Against Unrighteousness"
+  },
+  {
+    "bookAbbr": "ROM",
+    "chapter": 8,
+    "startVerse": 1,
+    "endVerse": 17,
+    "title": "Vida en el Espíritu y adopción filial",
+    "titleEn": "Life in the Spirit and Children of God"
+  },
+  {
+    "bookAbbr": "ROM",
+    "chapter": 8,
+    "startVerse": 18,
+    "endVerse": 30,
+    "title": "La gloria futura y el propósito eterno",
+    "titleEn": "Future Glory and Eternal Purpose"
+  },
+  {
+    "bookAbbr": "ROM",
+    "chapter": 8,
+    "startVerse": 31,
+    "endVerse": 39,
+    "title": "Más que vencedores en Cristo Jesús",
+    "titleEn": "More Than Conquerors Through Christ"
+  }
+]

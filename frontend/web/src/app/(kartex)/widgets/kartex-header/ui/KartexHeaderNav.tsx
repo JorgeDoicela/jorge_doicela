@@ -235,17 +235,17 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
               <button
                 type="button"
                 onClick={() => setAudioSheetOpen((prev) => !prev)}
-                className={`p-1.5 sm:px-2 sm:py-1 rounded-full transition-colors cursor-pointer flex items-center gap-1 active:scale-95 ${
+                className={`flex items-center justify-center w-8 h-8 sm:w-auto sm:px-2.5 sm:py-1 rounded-full transition-colors duration-150 cursor-pointer active:scale-95 gap-1.5 ${
                   audioSheetOpen || passageContext.isPlayingAudio
-                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-semibold shadow-2xs'
-                    : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                    ? 'text-foreground bg-transparent hover:bg-accents-1 sm:bg-accents-2 sm:font-medium'
+                    : 'text-accents-5 hover:text-foreground hover:bg-accents-1 bg-transparent'
                 }`}
                 title="Audio Bíblico"
                 aria-label="Controles de audio bíblico"
               >
-                <Volume2 className="w-4 h-4 shrink-0" />
+                <Volume2 className={`w-4 h-4 shrink-0 ${passageContext.isPlayingAudio ? 'text-foreground' : 'text-accents-5'}`} />
                 {passageContext.isPlayingAudio && (
-                  <span className="font-semibold text-[11px] font-mono hidden xs:inline">
+                  <span className="font-semibold text-[11px] font-mono hidden sm:inline text-foreground">
                     {passageContext.currentAudioVerse ? `v.${passageContext.currentAudioVerse}` : 'Audio'}
                   </span>
                 )}

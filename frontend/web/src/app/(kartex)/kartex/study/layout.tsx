@@ -22,6 +22,7 @@ import {
   Library,
   BookMarked,
   BookCheck,
+  BookOpenCheck,
 } from 'lucide-react';
 import { KartexPassageProvider, useKartexPassageSafe } from '../../entities/passage';
 import { KartexHeaderNav } from '../../widgets/kartex-header';
@@ -234,7 +235,7 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
     ? Languages
     : isWordStudy
     ? BarChart3
-    : Languages;
+    : BookOpenCheck;
 
   const isReaderView =
     !isAtlas &&

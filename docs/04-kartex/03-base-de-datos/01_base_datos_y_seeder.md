@@ -186,3 +186,7 @@ Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
   [CorpusSeeder] Completado con éxito: 161 versículos indexados en 110 ms. Consumo de RAM: 177.60 MB.
   ```
 * **Automatización CI/CD:** Se ejecuta automáticamente tras cada despliegue en GitHub Actions para mantener `kartex.sqlite` sincronizada con el repositorio.
+
+
+### 8. Tabla de Perícopas y Subtítulos Temáticos (`pericopes`)
+Almacena las divisiones y encabezados de sección canónicos universales mapeados por libro, capítulo y versículo de inicio (`startVerse`), con soporte bilingüe (`title` y `titleEn`) y orden de secuencia.

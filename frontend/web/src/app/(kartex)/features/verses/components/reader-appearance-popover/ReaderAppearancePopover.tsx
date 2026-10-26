@@ -18,6 +18,7 @@ export interface ReaderAppearancePopoverProps {
   onFontSizeChange?: (size: ReaderFontSize) => void;
   onFontFamilyChange?: (family: ReaderFontFamily) => void;
   onToggleVerseNumbers?: () => void;
+  onTogglePericopes?: () => void;
   align?: 'left' | 'right' | 'center';
   direction?: 'up' | 'down';
   className?: string;
@@ -31,6 +32,7 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
   onFontSizeChange: propOnFontSizeChange,
   onFontFamilyChange: propOnFontFamilyChange,
   onToggleVerseNumbers: propOnToggleVerseNumbers,
+  onTogglePericopes: propOnTogglePericopes,
   align = 'right',
   direction = 'down',
   className = '',
@@ -45,6 +47,7 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
   const onFontSizeChange = propOnFontSizeChange ?? hook.setFontSize;
   const onFontFamilyChange = propOnFontFamilyChange ?? hook.setFontFamily;
   const onToggleVerseNumbers = propOnToggleVerseNumbers ?? hook.toggleVerseNumbers;
+  const onTogglePericopes = propOnTogglePericopes ?? hook.togglePericopes;
 
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -252,6 +255,24 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
             </div>
           </div>
 
+                    {/* Alternar Subtítulos Temáticos */}
+          <div className="pt-2 border-t border-border flex items-center justify-between">
+            <span className="text-xs text-accents-6 font-medium">
+              {t('pericopes')}
+            </span>
+            <button
+              type="button"
+              onClick={onTogglePericopes}
+              className={`px-3 py-1 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${
+                settings.showPericopes
+                  ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
+                  : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
+              }`}
+            >
+              {settings.showPericopes ? 'ON' : 'OFF'}
+            </button>
+          </div>
+
           {/* Alternar Números de Versículo */}
           <div className="pt-2 border-t border-border flex items-center justify-between">
             <span className="text-xs text-accents-6 font-medium">
@@ -391,6 +412,24 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
                 </button>
               ))}
             </div>
+          </div>
+
+                    {/* Alternar Subtítulos Temáticos */}
+          <div className="pt-2 border-t border-border flex items-center justify-between">
+            <span className="text-xs text-accents-6 font-medium">
+              {t('pericopes')}
+            </span>
+            <button
+              type="button"
+              onClick={onTogglePericopes}
+              className={`px-3 py-0.5 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${
+                settings.showPericopes
+                  ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
+                  : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
+              }`}
+            >
+              {settings.showPericopes ? 'ON' : 'OFF'}
+            </button>
           </div>
 
           {/* Alternar Números de Versículo */}

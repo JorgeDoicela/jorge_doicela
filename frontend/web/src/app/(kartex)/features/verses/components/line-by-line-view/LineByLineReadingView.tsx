@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { BookOpen } from 'lucide-react';
-import { Verse, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
+import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import {
   VerseSelectionToolbar,
@@ -18,6 +18,8 @@ interface LineByLineReadingViewProps {
   bookAbbr?: string;
   chapter?: number | null;
   translationAbbr?: string;
+  pericopes?: Pericope[];
+  showPericopes?: boolean;
   getHighlight?: (bookId: number, chapter: number, verseNumber: number) => VerseHighlightColor | undefined;
   onSetHighlight?: (bookId: number, chapter: number, verseNumber: number, color: VerseHighlightColor) => void;
   onRemoveHighlight?: (bookId: number, chapter: number, verseNumber: number) => void;
@@ -31,6 +33,8 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
   bookAbbr,
   chapter,
   translationAbbr,
+  pericopes = [],
+  showPericopes = true,
   getHighlight,
   onSetHighlight,
   onRemoveHighlight,
@@ -39,6 +43,18 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
   const tBooks = useTranslations('Books');
   const tStudio = useTranslations('Studio');
   const passageContext = useKartexPassageSafe();
+  const locale = useLocale();
+  const isEn = locale === 'en';
+  const pericopesByStartVerse = useMemo(() => {
+    const map = new Map<number, Pericope>();
+    if (pericopes && Array.isArray(pericopes)) {
+      for (const p of pericopes) {
+        map.set(p.startVerse, p);
+      }
+    }
+    return map;
+  }, [pericopes]);
+
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const copiedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -196,18 +212,29 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
     }
   };
 
+  const currentChapterNum = chapter ?? verses[0]?.chapter ?? 1;
+  const isFirstChapter = currentChapterNum === 1;
+
   return (
     <div className="w-full space-y-3">
       {/* Cabecera compacta editorial */}
-      <div className="px-3 sm:px-4 py-1.5 text-xs font-mono text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C]">
+      <div className="px-3 sm:px-4 py-1.5 text-xs font-mono text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C] select-none">
         <span className="font-medium text-zinc-700 dark:text-zinc-300 sepia:text-[#2C221E]">
-          {localizedBookName} {(chapter ?? verses[0]?.chapter) !== null ? `• ${t('chapter')} ${chapter ?? verses[0]?.chapter}` : ''}
+          {isFirstChapter
+            ? `${localizedBookName} • ${t('chapter')} 1`
+            : `${t('chapter')} ${currentChapterNum}`}
         </span>
+        {translationAbbr && (
+          <span className="ml-2 text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C]">
+            • {translationAbbr}
+          </span>
+        )}
       </div>
 
       {/* Lista versículo a versículo en lienzo continuo */}
       <div className="divide-y divide-border/40 transition-colors duration-200 text-foreground">
         {verses.map((verse) => {
+          const pericope = showPericopes ? pericopesByStartVerse.get(verse.verseNumber) : undefined;
           const bId =
             typeof verse.book === 'object' && verse.book !== null
               ? verse.book.id

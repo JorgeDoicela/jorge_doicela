@@ -77,7 +77,8 @@
     "focusModeKey": "Modo Enfoque Inmersivo [F]",
     "readingMode": "Modo de Lectura",
     "fontFamily": "Familia Tipográfica",
-    "shortcutNavKeys": "← / → ó J / K"
+    "shortcutNavKeys": "← / → ó J / K",
+    "pericopes": "Subtítulos temáticos"
   },
   "PassagePicker": {
     "selectPassage": "Seleccionar Pasaje",

@@ -28,6 +28,7 @@ export default function StandardStudyPage() {
 
   const {
     verses,
+    pericopes,
     loading: versesLoading,
     error: versesError,
     readerSettings,
@@ -36,6 +37,7 @@ export default function StandardStudyPage() {
     setFontFamily,
     toggleFocusMode,
     toggleVerseNumbers,
+    togglePericopes,
     refetch,
   } = useVerses(selectedBookId, selectedChapter, selectedTranslationId);
 
@@ -43,6 +45,7 @@ export default function StandardStudyPage() {
     <div className="space-y-2">
       <VerseList
         verses={verses}
+        pericopes={pericopes}
         loading={versesLoading}
         error={versesError}
         onRetry={refetch}
@@ -52,6 +55,7 @@ export default function StandardStudyPage() {
         onFontFamilyChange={setFontFamily}
         onToggleFocusMode={toggleFocusMode}
         onToggleVerseNumbers={toggleVerseNumbers}
+        onTogglePericopes={togglePericopes}
         books={books}
         selectedBookId={selectedBookId}
         onSelectPassage={(bookId, chap) => {

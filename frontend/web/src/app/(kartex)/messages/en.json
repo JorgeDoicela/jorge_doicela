@@ -77,7 +77,8 @@
     "focusModeKey": "Immersive Focus Mode [F]",
     "readingMode": "Reading Mode",
     "fontFamily": "Font Family",
-    "shortcutNavKeys": "← / → or J / K"
+    "shortcutNavKeys": "← / → or J / K",
+    "pericopes": "Section Headings"
   },
   "PassagePicker": {
     "selectPassage": "Select Passage",

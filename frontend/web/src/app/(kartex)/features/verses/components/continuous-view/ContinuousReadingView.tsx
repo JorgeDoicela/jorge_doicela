@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useMemo, useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
-import { Verse, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
+import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import {
   VerseSelectionToolbar,
@@ -15,6 +15,8 @@ interface ContinuousReadingViewProps {
   fontSize: ReaderFontSize;
   fontFamily: ReaderFontFamily;
   showVerseNumbers: boolean;
+  pericopes?: Pericope[];
+  showPericopes?: boolean;
   bookName?: string;
   bookAbbr?: string;
   chapter?: number | null;
@@ -30,6 +32,8 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   fontSize,
   fontFamily,
   showVerseNumbers,
+  pericopes = [],
+  showPericopes = true,
   bookName,
   bookAbbr,
   chapter,
@@ -42,6 +46,18 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   const t = useTranslations('ReadingView');
   const tBooks = useTranslations('Books');
   const passageContext = useKartexPassageSafe();
+  const locale = useLocale();
+  const isEn = locale === 'en';
+  const pericopesByStartVerse = useMemo(() => {
+    const map = new Map<number, Pericope>();
+    if (pericopes && Array.isArray(pericopes)) {
+      for (const p of pericopes) {
+        map.set(p.startVerse, p);
+      }
+    }
+    return map;
+  }, [pericopes]);
+
 
   const [selectedVerseNumbers, setSelectedVerseNumbers] = useState<number[]>([]);
   const [toolbarPosition, setToolbarPosition] = useState<{
@@ -177,38 +193,38 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     }
   };
 
+  const currentChapterNum = chapter ?? verses[0]?.chapter ?? 1;
+  const isFirstChapter = currentChapterNum === 1;
+
   return (
     <article className="w-full text-foreground relative py-3 sm:py-6 px-0.5 sm:px-2 md:px-4 print:p-0 print:m-0 print:bg-transparent transition-colors duration-200">
-      {/* Cabecera Editorial del Capítulo */}
-      <header className="text-center pb-6 mb-8 border-b border-border/40">
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-          {localizedBookTitle}
-        </h2>
-        <div className="flex items-center justify-center gap-2 mt-2">
-          {(chapter ?? verses[0]?.chapter) !== null && (
-            <span className="text-xs font-mono font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C]">
-              {t('chapter')} {chapter ?? verses[0]?.chapter}
-            </span>
+      {/* Cabecera Editorial del Libro (Exclusiva del Capítulo 1) */}
+      {isFirstChapter && (
+        <header className="text-center pb-2 mb-6 sm:mb-8 select-none">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            {localizedBookTitle}
+          </h2>
+          <div className="w-16 sm:w-24 h-px bg-border/60 mx-auto mt-4" aria-hidden="true" />
+          {showPericopes && pericopesByStartVerse.has(1) && (
+            <div className="text-center pt-3 pb-1 select-none">
+              <h3 className={`text-base sm:text-lg ${getFontFamilyClass(fontFamily)} font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
+                {isEn && pericopesByStartVerse.get(1)?.titleEn
+                  ? pericopesByStartVerse.get(1)!.titleEn
+                  : pericopesByStartVerse.get(1)!.title}
+              </h3>
+            </div>
           )}
-          {(translationAbbr || translationName) && (
-            <>
-              <span className="select-none text-zinc-300 dark:text-zinc-700 sepia:text-[#D4C3A3]">•</span>
-              <span className="text-xs font-mono font-medium tracking-wider text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C]">
-                {translationAbbr || translationName}
-              </span>
-            </>
-          )}
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Prosa Continua en Ancho Completo */}
       <div
-        className={`w-full ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
+        className={`w-full ${!isFirstChapter ? 'pt-6 sm:pt-10' : ''} ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
           fontFamily,
         )} text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E] select-text leading-relaxed sm:leading-loose selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
       >
         <p className="space-x-1 text-justify sm:text-left">
-          {verses.map((verse) => {
+          {verses.map((verse, idx) => {
             const bId =
               typeof verse.book === 'object' && verse.book !== null
                 ? verse.book.id
@@ -227,12 +243,43 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
             const highlightStyle = highlight ? VERSE_HIGHLIGHT_STYLES[highlight] : null;
 
             return (
-              <span
-                key={verse.id}
-                data-verse-item="true"
-                data-verse-number={verse.verseNumber}
-                onClick={(e) => handleVerseClick(verse, e)}
-                className={`inline [box-decoration-break:clone] px-1.5 py-[2px] rounded-md sm:rounded-lg relative group cursor-pointer transition-all duration-150 ${
+              <React.Fragment key={verse.id}>
+                                {/* Subtítulo Temático (Perícopa) */}
+                {showPericopes && pericopesByStartVerse.has(verse.verseNumber) && (
+                  idx === 0 && !isFirstChapter ? (
+                    <span className="block w-full pb-3.5 mb-2 text-left select-none clear-both">
+                      <span className={`block text-base sm:text-lg ${getFontFamilyClass(fontFamily)} font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
+                        {isEn && pericopesByStartVerse.get(verse.verseNumber)?.titleEn
+                          ? pericopesByStartVerse.get(verse.verseNumber)!.titleEn
+                          : pericopesByStartVerse.get(verse.verseNumber)!.title}
+                      </span>
+                    </span>
+                  ) : idx > 0 ? (
+                    <span className="block w-full pt-6 pb-2.5 my-3 text-left select-none clear-both border-t border-border/30">
+                      <span className={`block text-base sm:text-lg ${getFontFamilyClass(fontFamily)} font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
+                        {isEn && pericopesByStartVerse.get(verse.verseNumber)?.titleEn
+                          ? pericopesByStartVerse.get(verse.verseNumber)!.titleEn
+                          : pericopesByStartVerse.get(verse.verseNumber)!.title}
+                      </span>
+                    </span>
+                  ) : null
+                )}
+
+                {/* Número Capitular Editorial al inicio de cada capítulo */}
+                {idx === 0 && (
+                  <span
+                    className={`inline-block ${getFontFamilyClass(fontFamily)} text-5xl sm:text-6xl font-extrabold text-foreground mr-2.5 sm:mr-3 select-none leading-none align-baseline tracking-tight`}
+                    title={`${t('chapter')} ${currentChapterNum}`}
+                    aria-label={`${t('chapter')} ${currentChapterNum}`}
+                  >
+                    {currentChapterNum}
+                  </span>
+                )}
+                <span
+                  data-verse-item="true"
+                  data-verse-number={verse.verseNumber}
+                  onClick={(e) => handleVerseClick(verse, e)}
+                  className={`inline [box-decoration-break:clone] px-1.5 py-[2px] rounded-md sm:rounded-lg relative group cursor-pointer transition-all duration-150 ${
                   isAudioActive
                     ? 'bg-foreground/10 dark:bg-white/15 sepia:bg-[#8C765C]/20 ring-1 ring-foreground/30 shadow-2xs'
                     : highlightStyle
@@ -264,8 +311,9 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                   {verse.text}{' '}
                 </span>
               </span>
-            );
-          })}
+            </React.Fragment>
+          );
+        })}
         </p>
       </div>
 

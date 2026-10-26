@@ -1205,6 +1205,76 @@ export function seedCorpus(
     }
   }
 
+  // ==========================================
+  // 10. Perícopas y Subtítulos Temáticos Canónicos
+  // ==========================================
+  const pericopesPath = path.join(corpusDir, 'pericopes', 'pericopes.json');
+  if (fs.existsSync(pericopesPath)) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS pericopes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        chapter INTEGER NOT NULL,
+        startVerse INTEGER NOT NULL,
+        endVerse INTEGER,
+        title TEXT NOT NULL,
+        titleEn TEXT,
+        orderIndex INTEGER DEFAULT 0,
+        bookId INTEGER,
+        FOREIGN KEY (bookId) REFERENCES books (id) ON DELETE CASCADE
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS IDX_pericopes_book_chapter_start
+      ON pericopes (bookId, chapter, startVerse);
+    `);
+
+    interface SeedPericopeItem {
+      bookAbbr: string;
+      chapter: number;
+      startVerse: number;
+      endVerse?: number;
+      title: string;
+      titleEn?: string;
+      orderIndex?: number;
+    }
+
+    const pericopesData = JSON.parse(
+      fs.readFileSync(pericopesPath, 'utf8'),
+    ) as SeedPericopeItem[];
+    const getBookStmt = db.prepare(
+      'SELECT id FROM books WHERE abbreviation = ? LIMIT 1',
+    );
+    const insertPericope = db.prepare(`
+      INSERT OR REPLACE INTO pericopes (bookId, chapter, startVerse, endVerse, title, titleEn, orderIndex)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    const txPericopes = db.transaction((items: SeedPericopeItem[]) => {
+      let count = 0;
+      for (const item of items) {
+        const bookRow = getBookStmt.get(item.bookAbbr) as
+          | { id: number }
+          | undefined;
+        if (bookRow) {
+          insertPericope.run(
+            bookRow.id,
+            item.chapter,
+            item.startVerse,
+            item.endVerse ?? null,
+            item.title,
+            item.titleEn ?? null,
+            item.orderIndex ?? 0,
+          );
+          count++;
+        }
+      }
+      return count;
+    });
+
+    const totalP = txPericopes(pericopesData);
+    console.log(
+      `[PericopesSeeder] -> ${totalP} perícopas temáticas indexadas.`,
+    );
+  }
+
   const elapsed = Date.now() - startTime;
 
   const memoryUsageMB = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(

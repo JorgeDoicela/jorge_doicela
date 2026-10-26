@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Verse,
+  Pericope,
   ReaderSettings,
   ReaderLayoutMode,
   ReaderFontSize,
@@ -29,6 +30,8 @@ interface VerseListProps {
   onFontFamilyChange: (family: ReaderFontFamily) => void;
   onToggleFocusMode?: () => void;
   onToggleVerseNumbers: () => void;
+  pericopes?: Pericope[];
+  onTogglePericopes?: () => void;
   books?: (BookInfo | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
   onSelectPassage?: (bookId: number, chapter: number) => void;
@@ -56,6 +59,8 @@ export const VerseList: React.FC<VerseListProps> = ({
   onFontFamilyChange,
   onToggleFocusMode,
   onToggleVerseNumbers,
+  pericopes = [],
+  onTogglePericopes,
   books = [],
   selectedBookId,
   onSelectPassage,
@@ -102,6 +107,8 @@ export const VerseList: React.FC<VerseListProps> = ({
           fontSize={readerSettings.fontSize}
           fontFamily={readerSettings.fontFamily}
           showVerseNumbers={readerSettings.showVerseNumbers}
+          pericopes={pericopes}
+          showPericopes={readerSettings.showPericopes}
           bookName={selectedBookName}
           bookAbbr={selectedBookAbbr}
           chapter={selectedChapter}
@@ -116,6 +123,8 @@ export const VerseList: React.FC<VerseListProps> = ({
           verses={verses}
           fontSize={readerSettings.fontSize}
           fontFamily={readerSettings.fontFamily}
+          pericopes={pericopes}
+          showPericopes={readerSettings.showPericopes}
           bookName={selectedBookName}
           bookAbbr={selectedBookAbbr}
           chapter={selectedChapter}
@@ -206,6 +215,7 @@ export const VerseList: React.FC<VerseListProps> = ({
         onFontFamilyChange={onFontFamilyChange}
         onToggleFocusMode={onToggleFocusMode}
         onToggleVerseNumbers={onToggleVerseNumbers}
+        onTogglePericopes={onTogglePericopes}
         books={books}
         selectedBookId={selectedBookId}
         onSelectPassage={onSelectPassage}

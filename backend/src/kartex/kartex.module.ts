@@ -15,6 +15,7 @@ import { CommentaryAuthorEntity } from './commentaries/entities/commentary-autho
 import { CommentaryEntryEntity } from './commentaries/entities/commentary-entry.entity';
 import { BibleDictionaryEntity } from './dictionaries/entities/bible-dictionary.entity';
 import { BibleDictionaryEntryEntity } from './dictionaries/entities/bible-dictionary-entry.entity';
+import { Pericope } from './pericopes/entities/pericope.entity';
 import { VersesModule } from './verses/verses.module';
 import { BooksModule } from './books/books.module';
 import { TranslationsModule } from './translations/translations.module';
@@ -25,6 +26,7 @@ import { ArchaeologyModule } from './archaeology/archaeology.module';
 import { EvangelismModule } from './evangelism/evangelism.module';
 import { CommentariesModule } from './commentaries/commentaries.module';
 import { DictionariesModule } from './dictionaries/dictionaries.module';
+import { PericopesModule } from './pericopes/pericopes.module';
 import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
@@ -59,6 +61,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         CommentaryEntryEntity,
         BibleDictionaryEntity,
         BibleDictionaryEntryEntity,
+        Pericope,
       ],
       synchronize: true,
     }),
@@ -72,6 +75,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     EvangelismModule,
     CommentariesModule,
     DictionariesModule,
+    PericopesModule,
   ],
 })
 export class KartexModule {}

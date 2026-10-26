@@ -21,6 +21,17 @@ export interface Verse {
   text: string;
 }
 
+export interface Pericope {
+  id: number;
+  chapter: number;
+  startVerse: number;
+  endVerse?: number;
+  title: string;
+  titleEn?: string;
+  orderIndex?: number;
+  book?: BookInfo | { id: number };
+}
+
 export type ReaderLayoutMode = 'continuous' | 'verse-by-verse';
 export type ReaderFontSize = 'sm' | 'md' | 'lg' | 'xl';
 export type ReaderFontFamily = 'sans' | 'serif';
@@ -30,6 +41,7 @@ export interface ReaderSettings {
   fontSize: ReaderFontSize;
   fontFamily: ReaderFontFamily;
   showVerseNumbers: boolean;
+  showPericopes: boolean;
   focusMode: boolean;
 }
 
@@ -41,4 +53,3 @@ export interface VerseHighlight {
   verseNumber: number;
   color: VerseHighlightColor;
 }
-

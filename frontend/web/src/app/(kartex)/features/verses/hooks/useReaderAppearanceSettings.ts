@@ -13,6 +13,7 @@ export const DEFAULT_READER_SETTINGS: ReaderSettings = {
   fontSize: 'md',
   fontFamily: 'serif',
   showVerseNumbers: true,
+  showPericopes: true,
   focusMode: false,
 };
 
@@ -64,6 +65,7 @@ export function useReaderAppearanceSettings() {
           fontSize: next.fontSize,
           fontFamily: next.fontFamily,
           showVerseNumbers: next.showVerseNumbers,
+          showPericopes: next.showPericopes,
         }),
       );
     } catch {
@@ -101,12 +103,18 @@ export function useReaderAppearanceSettings() {
     [update, settings.showVerseNumbers],
   );
 
+  const togglePericopes = useCallback(
+    () => update({ showPericopes: !settings.showPericopes }),
+    [update, settings.showPericopes],
+  );
+
   return {
     settings,
     setLayoutMode,
     setFontSize,
     setFontFamily,
     toggleVerseNumbers,
+    togglePericopes,
     update,
   };
 }

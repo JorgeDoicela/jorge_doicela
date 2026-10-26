@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Languages } from 'lucide-react';
+import { BookOpenCheck } from 'lucide-react';
 import {
   useKartexPassageSafe,
   InspectedWordData,
@@ -73,7 +73,7 @@ export const KartexExegesisInspector: React.FC<KartexExegesisInspectorProps> = (
     <StudySidePanel
       side="right"
       title={tStudio('verseExegesisTitle')}
-      icon={<Languages className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
+      icon={<BookOpenCheck className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
       ariaLabel={tStudio('verseExegesisTitle')}
       isOpen={isOpen}
       onClose={handleClose}

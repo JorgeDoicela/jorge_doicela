@@ -162,7 +162,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
               <TranslationSelector
                 selectedTranslationId={selectedTranslationId ?? null}
                 onSelectTranslation={onSelectTranslation}
-                align="right"
+                align="left"
               />
             </div>
           )}

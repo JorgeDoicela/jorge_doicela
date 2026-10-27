@@ -231,7 +231,7 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
         {/* Derecha: Audio Bíblico, Selector de Idioma y Tema */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-2 pl-1">
           {passageContext && (
-            <div className={`relative ${audioSheetOpen ? 'z-50' : ''}`} ref={audioNavRef}>
+            <div className={`hidden sm:block relative ${audioSheetOpen ? 'z-50' : ''}`} ref={audioNavRef}>
               <button
                 type="button"
                 onClick={() => setAudioSheetOpen((prev) => !prev)}
@@ -243,7 +243,14 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
                 title="Audio Bíblico"
                 aria-label="Controles de audio bíblico"
               >
-                <Volume2 className={`w-4 h-4 shrink-0 ${passageContext.isPlayingAudio ? 'text-foreground' : 'text-accents-5'}`} />
+                <Volume2
+                  className={`w-4 h-4 shrink-0 ${
+                    audioSheetOpen || passageContext.isPlayingAudio
+                      ? 'text-foreground'
+                      : 'text-accents-5'
+                  }`}
+                  strokeWidth={1.75}
+                />
                 {passageContext.isPlayingAudio && (
                   <span className="font-semibold text-[11px] font-mono hidden sm:inline text-foreground">
                     {passageContext.currentAudioVerse ? `v.${passageContext.currentAudioVerse}` : 'Audio'}

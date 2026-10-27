@@ -15,7 +15,7 @@ interface TranslationSelectorProps {
 export function TranslationSelector({
   selectedTranslationId,
   onSelectTranslation,
-  align = 'right',
+  align = 'left',
   className = 'w-fit sm:w-56 shrink-0',
 }: TranslationSelectorProps) {
   const t = useI18n('Toolbar');

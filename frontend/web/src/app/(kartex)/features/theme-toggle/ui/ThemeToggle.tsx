@@ -47,11 +47,11 @@ export function ThemeToggle() {
       title={`${t('changeTheme')} (${getThemeLabel()})`}
     >
       {currentTheme === 'dark' ? (
-        <Moon className="h-[15px] w-[15px]" strokeWidth={1.5} />
+        <Moon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
       ) : currentTheme === 'sepia' ? (
-        <BookOpen className="h-[15px] w-[15px]" strokeWidth={1.5} />
+        <BookOpen className="w-4 h-4 shrink-0" strokeWidth={1.75} />
       ) : (
-        <Sun className="h-[15px] w-[15px]" strokeWidth={1.5} />
+        <Sun className="w-4 h-4 shrink-0" strokeWidth={1.75} />
       )}
     </button>
   );

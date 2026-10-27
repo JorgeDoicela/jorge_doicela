@@ -252,8 +252,8 @@ export function KartexSelect<T extends string | number = string | number>({
           aria-activedescendant={
             focusedIndex >= 0 ? `kartex-select-opt-${id}-${focusedIndex}` : undefined
           }
-          className={`absolute left-1/2 -translate-x-1/2 sm:translate-x-0 ${
-            align === 'right' ? 'sm:left-auto sm:right-0' : 'sm:left-0 sm:right-auto'
+          className={`absolute ${
+            align === 'right' ? 'right-0 sm:right-0 sm:left-auto' : 'left-0 sm:left-0 sm:right-auto'
           } ${
             resolvedPlacement === 'up'
               ? 'bottom-full mb-1.5 slide-in-from-bottom-2'

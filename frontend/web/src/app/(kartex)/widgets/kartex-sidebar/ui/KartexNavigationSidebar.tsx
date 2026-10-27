@@ -178,10 +178,12 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                 <button
                   type="button"
                   onClick={() => setExpandedBookId(isExpanded ? null : book.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-accents-2 text-foreground font-semibold'
-                      : 'text-accents-6 hover:bg-accents-1 hover:text-foreground'
+                  className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-all cursor-pointer ${
+                    isExpanded
+                      ? 'bg-accents-2 text-foreground font-semibold rounded-t-xl'
+                      : isSelected
+                      ? 'bg-accents-2 text-foreground font-semibold rounded-xl'
+                      : 'text-accents-6 hover:bg-accents-1 hover:text-foreground rounded-xl'
                   }`}
                 >
                   <div className="flex items-center gap-2 truncate min-w-0">
@@ -211,9 +213,9 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                   </div>
                 </button>
 
-                {/* Acordeón de Capítulos en Cuadrícula Ergonómica DIITRA Style */}
+                {/* Acordeón de Capítulos en Fusión Cromática Continua */}
                 {isExpanded && (
-                  <div className="p-3 bg-inner-card border-y border-border/80 my-1 rounded-xl">
+                  <div className="p-3 bg-accents-2 rounded-b-xl">
                     <div className="grid grid-cols-5 gap-1.5">
                       {Array.from({ length: totalChapters }, (_, i) => i + 1).map((chap) => {
                         const isCurrentChapter = isSelected && selectedChapter === chap;
@@ -224,8 +226,8 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                             onClick={() => handleSelectPassage(book.id, chap)}
                             className={`h-8 rounded-lg text-xs font-mono font-medium transition-colors flex items-center justify-center cursor-pointer ${
                               isCurrentChapter
-                                ? 'bg-foreground text-background font-bold'
-                                : 'border border-border bg-card-bg text-foreground hover:border-accents-4 hover:bg-accents-1'
+                                ? 'bg-foreground text-background font-bold shadow-xs'
+                                : 'bg-white dark:bg-card-bg text-foreground border border-white/60 dark:border-white/10 shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-accents-4'
                             }`}
                           >
                             {chap}

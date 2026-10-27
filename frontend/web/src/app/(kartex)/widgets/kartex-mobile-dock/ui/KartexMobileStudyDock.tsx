@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { LucideIcon, BookOpen, Languages, ChevronLeft, ChevronRight, Play, Pause, BookOpenCheck } from 'lucide-react';
+import { LucideIcon, BookOpen, Languages, ChevronLeft, ChevronRight, BookOpenCheck, Volume2 } from 'lucide-react';
 import { useKartexPassageSafe } from '../../../entities/passage';
 import { MobileTranslationPopover } from '../../../entities/translations';
-import { ReaderAppearancePopover } from '../../../features/verses';
+import { ReaderAppearancePopover, KartexAudioControlsPopover } from '../../../features/verses';
 import { getChapterCountForBook } from '../../../shared/data/canonData';
 
 export interface KartexMobileStudyDockProps {
@@ -44,17 +44,7 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
 
   const isPlayingAudio = passageContext?.isPlayingAudio ?? false;
   const isAudioPaused = passageContext?.isAudioPaused ?? false;
-
-  const handleToggleAudio = () => {
-    if (!passageContext) return;
-    if (!isPlayingAudio) {
-      passageContext.toggleAudio();
-    } else if (isAudioPaused) {
-      passageContext.resumeAudio();
-    } else {
-      passageContext.pauseAudio();
-    }
-  };
+  const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
 
   const currentChapter = passageContext?.selectedChapter || 1;
   const maxChapters = useMemo(() => {
@@ -117,30 +107,11 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
     >
       {/* Contenedor Unificado Integrado (Estilo Geist / Vercel Style) */}
       <div className="w-full pointer-events-auto bg-background/95 dark:bg-black/95 sepia:bg-[#FAF6EE]/95 backdrop-blur-xl border-t border-border/80 shadow-[0_-8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.4)] max-w-lg mx-auto sm:rounded-t-2xl sm:border-x">
-        {/* Nivel Superior: Audio Rápido y Navegación Canónica de Capítulos (Modo Lector) */}
+        {/* Nivel Superior: Navegación Canónica de Capítulos (Modo Lector) */}
         {isReaderView && passageContext && (
-          <div className="pt-2 pb-1 px-3 flex items-center justify-between gap-2.5 select-none">
-            {/* Botón Circular Rápido de Play / Pausa */}
-            <button
-              type="button"
-              onClick={handleToggleAudio}
-              aria-label={isPlayingAudio && !isAudioPaused ? 'Pausar audio bíblico' : 'Reproducir audio bíblico'}
-              title={isPlayingAudio && !isAudioPaused ? 'Pausar audio bíblico' : 'Escuchar capítulo'}
-              className={`w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-all duration-150 active:scale-95 shrink-0 border border-border/80 shadow-2xs ${
-                isPlayingAudio && !isAudioPaused
-                  ? 'bg-foreground text-background border-foreground shadow-xs'
-                  : 'bg-accents-1 hover:bg-accents-2 text-foreground'
-              }`}
-            >
-              {isPlayingAudio && !isAudioPaused ? (
-                <Pause className="w-4 h-4 fill-current stroke-none" />
-              ) : (
-                <Play className="w-4 h-4 fill-current stroke-none ml-0.5" />
-              )}
-            </button>
-
+          <div className="pt-2 pb-1 px-3 flex items-center justify-center select-none">
             {/* Cápsula de Navegación Canónica para Cambiar el Texto/Capítulo */}
-            <div className="flex-1 h-9 rounded-full bg-accents-1 border border-border/80 hover:border-accents-3/60 flex items-center justify-between px-2 select-none shadow-2xs transition-colors">
+            <div className="w-full h-9 rounded-full bg-accents-1 border border-border/80 hover:border-accents-3/60 flex items-center justify-between px-2 select-none shadow-2xs transition-colors">
               {/* Capítulo anterior */}
               <button
                 type="button"
@@ -158,7 +129,7 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
                 onClick={handleToggleLeft}
                 aria-expanded={isLeftOpen}
                 aria-label={`Selector de libros: pasaje actual ${bookDisplayName} ${currentChapter}`}
-                className={`px-3 py-1 text-xs font-mono font-bold tracking-wider uppercase truncate rounded-full transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 ${
+                className={`px-4 py-1 text-xs font-mono font-bold tracking-wider uppercase truncate rounded-full transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 ${
                   isLeftOpen
                     ? 'bg-foreground text-background shadow-2xs'
                     : 'text-foreground hover:bg-accents-2/60'
@@ -234,7 +205,44 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
           />
         )}
 
-        {/* 3. Control de Apariencia y Tipografía (Solo en Lector Estándar) */}
+        {/* 3. Audio Bíblico (Solo en Lector Estándar) */}
+        {isReaderView && passageContext && (
+          <div className="flex-1 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setAudioPopoverOpen((prev) => !prev)}
+              aria-expanded={audioPopoverOpen}
+              aria-label={tDock('audio')}
+              title={tDock('audio')}
+              className={`flex flex-col items-center justify-center gap-1 py-1 px-1.5 transition-all select-none cursor-pointer w-full active:scale-90 ${
+                audioPopoverOpen || (isPlayingAudio && !isAudioPaused)
+                  ? 'text-foreground font-semibold'
+                  : 'text-accents-4 hover:text-foreground'
+              }`}
+            >
+              <div className="relative">
+                <Volume2
+                  className="w-5 h-5 shrink-0"
+                  strokeWidth={audioPopoverOpen || isPlayingAudio ? 2.25 : 1.75}
+                />
+                {isPlayingAudio && !isAudioPaused && (
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                )}
+              </div>
+              <span className="text-[10px] tracking-tight font-medium leading-none truncate max-w-full">
+                {tDock('audio')}
+              </span>
+            </button>
+
+            <KartexAudioControlsPopover
+              isOpen={audioPopoverOpen}
+              onClose={() => setAudioPopoverOpen(false)}
+              isMobileModal={true}
+            />
+          </div>
+        )}
+
+        {/* 4. Control de Apariencia y Tipografía (Solo en Lector Estándar) */}
         {isReaderView && (
           <ReaderAppearancePopover
             align="center"

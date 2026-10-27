@@ -12,7 +12,6 @@ import {
   Gauge,
   Mic,
   Volume2,
-  X,
 } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useKartexPassageSafe } from '../../../../entities/passage';
@@ -34,12 +33,14 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
   isMobileModal = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const touchStartYRef = useRef<number | null>(null);
   const locale = useLocale();
   const passageContext = useKartexPassageSafe();
 
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [dragOffsetY, setDragOffsetY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartYRef = useRef<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -76,18 +77,25 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
     };
   }, [isOpen, onClose]);
 
-  // Gesto táctil swipe down para cerrar el Bottom Sheet en móvil
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartYRef.current = e.touches[0].clientY;
+  // Gestos de arrastre táctil / puntero para cerrar el Bottom Sheet en móvil
+  const handleDragStart = (clientY: number) => {
+    dragStartYRef.current = clientY;
+    setIsDragging(true);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartYRef.current === null) return;
-    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-    if (deltaY > 50) {
+  const handleDragMove = (clientY: number) => {
+    if (dragStartYRef.current === null) return;
+    const deltaY = clientY - dragStartYRef.current;
+    setDragOffsetY(deltaY > 0 ? deltaY : 0);
+  };
+
+  const handleDragEnd = () => {
+    if (dragStartYRef.current !== null && dragOffsetY > 45) {
       onClose();
     }
-    touchStartYRef.current = null;
+    dragStartYRef.current = null;
+    setIsDragging(false);
+    setDragOffsetY(0);
   };
 
   const isPlayingAudio = passageContext?.isPlayingAudio ?? false;
@@ -314,6 +322,7 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
         {/* Backdrop Oscuro con Desenfoque */}
         <div
           onClick={onClose}
+          onPointerDown={onClose}
           aria-hidden="true"
           data-kartex-audio-modal="backdrop"
           className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 animate-in fade-in duration-200"
@@ -321,20 +330,55 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
 
         {/* Modal Deslizable desde Abajo (Bottom Sheet) */}
         <div
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
           role="dialog"
           data-kartex-audio-modal="content"
           aria-label="Panel de control de audio bíblico"
+          style={{
+            transform: dragOffsetY > 0 ? `translateY(${dragOffsetY}px)` : undefined,
+            transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
           className="fixed inset-x-0 bottom-0 z-50 w-full max-h-[85vh] flex flex-col rounded-t-3xl border-t border-border bg-background dark:bg-card-bg shadow-[0_-12px_48px_rgba(0,0,0,0.5)] animate-in slide-in-from-bottom duration-300 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] overflow-hidden select-none"
         >
-          {/* Manija táctil superior */}
-          <div className="w-full pt-3 pb-1 flex justify-center items-center cursor-grab shrink-0">
-            <div className="w-10 h-1.5 rounded-full bg-border/80 dark:bg-zinc-700" />
+          {/* Manija táctil superior (Tocar o deslizar hacia abajo para cerrar) */}
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Cerrar panel de audio"
+            onClick={onClose}
+            onPointerDown={(e) => {
+              (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+              handleDragStart(e.clientY);
+            }}
+            onPointerMove={(e) => {
+              if (isDragging) handleDragMove(e.clientY);
+            }}
+            onPointerUp={(e) => {
+              if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                e.currentTarget.releasePointerCapture(e.pointerId);
+              }
+              handleDragEnd();
+            }}
+            onPointerCancel={handleDragEnd}
+            onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
+            onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
+            onTouchEnd={handleDragEnd}
+            className="w-full pt-3.5 pb-2 flex justify-center items-center cursor-pointer select-none touch-none shrink-0 group active:opacity-60"
+          >
+            <div className="w-12 h-1.5 rounded-full bg-border hover:bg-accents-4 transition-colors" />
           </div>
 
           {/* Cabecera del Bottom Sheet */}
-          <div className="flex items-center justify-between px-5 py-2.5 border-b border-border/60 shrink-0 select-none">
+          <div
+            onPointerDown={(e) => handleDragStart(e.clientY)}
+            onPointerMove={(e) => {
+              if (isDragging) handleDragMove(e.clientY);
+            }}
+            onPointerUp={handleDragEnd}
+            onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
+            onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
+            onTouchEnd={handleDragEnd}
+            className="flex items-center justify-between px-5 py-2.5 border-b border-border/60 shrink-0 select-none cursor-grab active:cursor-grabbing touch-none"
+          >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-6 h-6 rounded-full bg-foreground/5 flex items-center justify-center text-foreground shrink-0">
                 <Volume2 className="w-3.5 h-3.5" />
@@ -369,14 +413,6 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
                   ? 'En pausa'
                   : 'Detenido'}
               </span>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Cerrar panel de audio"
-                className="p-1.5 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0 active:scale-95"
-              >
-                <X className="w-4 h-4" />
-              </button>
             </div>
           </div>
 

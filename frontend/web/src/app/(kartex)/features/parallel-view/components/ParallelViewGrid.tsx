@@ -7,6 +7,8 @@ import { ParallelColumn, ParallelVerseRow } from '../types';
 import { ParallelColumnHeader } from './ParallelColumnHeader';
 import { Translation } from '../../../entities/translations';
 import { OngoingExpansionNotice } from '../../../shared/ui';
+import { useReaderAppearanceSettings } from '../../verses/hooks/useReaderAppearanceSettings';
+import { getReaderFontClass } from '../../verses/config/readerFonts';
 
 interface ParallelViewGridProps {
   columns: ParallelColumn[];
@@ -33,6 +35,8 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
 }) => {
   const t = useTranslations('Parallel');
   const [mobileLayout, setMobileLayout] = useState<'stacked' | 'columns'>('stacked');
+  const { settings: readerSettings } = useReaderAppearanceSettings();
+  const readerFontClass = getReaderFontClass(readerSettings.fontFamily);
 
   if (error) {
     return (
@@ -127,7 +131,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
                         </span>
                       </div>
                       {verseData ? (
-                        <p className="text-sm font-serif leading-relaxed text-foreground/90">
+                        <p className={`text-sm ${readerFontClass} leading-relaxed text-foreground/90`}>
                           {verseData.text}
                         </p>
                       ) : (
@@ -283,7 +287,7 @@ export const ParallelViewGrid: React.FC<ParallelViewGridProps> = ({
 
                           {verseData ? (
                             <div className="space-y-2">
-                              <p className="text-foreground/90 font-serif md:text-[15px] leading-relaxed selection:bg-blue-500/20">
+                              <p className={`text-foreground/90 ${readerFontClass} md:text-[15px] leading-relaxed selection:bg-blue-500/20`}>
                                 {verseData.text}
                               </p>
                               <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-accents-4">

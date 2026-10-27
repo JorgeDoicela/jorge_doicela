@@ -17,12 +17,16 @@ import { useKartexPassageSafe, StrongMorphologyInspector } from '../../../../ent
 import { useParallelContextSafe } from '../../context/ParallelContext';
 import { computeWordDiff, TRANSLATION_APPROACHES } from '../../textual-diff';
 import { StudySidePanel } from '../../../../shared/ui';
+import { useReaderAppearanceSettings } from '../../../verses/hooks/useReaderAppearanceSettings';
+import { getReaderFontClass } from '../../../verses/config/readerFonts';
 
 export const ParallelDiffInspector: React.FC = () => {
   const passageContext = useKartexPassageSafe();
   const parallel = useParallelContextSafe();
   const tStudio = useTranslations('Studio');
   const tParallel = useTranslations('Parallel');
+  const { settings: readerSettings } = useReaderAppearanceSettings();
+  const readerFontClass = getReaderFontClass(readerSettings.fontFamily);
 
   const [activeTab, setActiveTab] = useState<'diff' | 'strong'>('diff');
   const [copied, setCopied] = useState(false);
@@ -252,7 +256,7 @@ export const ParallelDiffInspector: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs sm:text-[13px] leading-relaxed font-serif text-zinc-800 dark:text-zinc-200 flex flex-wrap items-baseline gap-x-1 gap-y-1.5 break-words">
+                    <div className={`text-xs sm:text-[13px] leading-relaxed ${readerFontClass} text-zinc-800 dark:text-zinc-200 flex flex-wrap items-baseline gap-x-1 gap-y-1.5 break-words`}>
                       {diffResult.tokensA.map((tok, i) => {
                         if (tok.type === 'REMOVED') {
                           return (
@@ -286,7 +290,7 @@ export const ParallelDiffInspector: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs sm:text-[13px] leading-relaxed font-serif text-zinc-800 dark:text-zinc-200 flex flex-wrap items-baseline gap-x-1 gap-y-1.5 break-words">
+                    <div className={`text-xs sm:text-[13px] leading-relaxed ${readerFontClass} text-zinc-800 dark:text-zinc-200 flex flex-wrap items-baseline gap-x-1 gap-y-1.5 break-words`}>
                       {diffResult.tokensB.map((tok, i) => {
                         if (tok.type === 'ADDED') {
                           return (

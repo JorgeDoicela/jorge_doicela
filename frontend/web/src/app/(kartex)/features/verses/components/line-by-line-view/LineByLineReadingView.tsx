@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { BookOpen } from 'lucide-react';
 import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
+import { getReaderFontClass } from '../../config/readerFonts';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import {
   VerseSelectionToolbar,
@@ -107,10 +108,6 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
       default:
         return 'text-base leading-relaxed';
     }
-  };
-
-  const getFontFamilyClass = (family: ReaderFontFamily) => {
-    return family === 'serif' ? 'font-serif' : 'font-sans';
   };
 
   const selectedVerses = useMemo(() => {
@@ -253,19 +250,26 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
           const highlightStyle = highlight ? VERSE_HIGHLIGHT_STYLES[highlight] : null;
 
           return (
-            <div
-              key={verse.id}
-              data-verse-item="true"
-              data-verse-number={verse.verseNumber}
-              onClick={(e) => handleVerseClick(verse, e)}
-              className={`relative py-3 sm:py-4 px-1 sm:px-3 lg:px-4 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer border-l-2 ${
-                isAudioActive
-                  ? 'bg-foreground/5 dark:bg-white/10 sepia:bg-[#8C765C]/15 border-foreground'
-                  : isSelected
-                  ? 'border-foreground'
-                  : 'border-transparent hover:bg-zinc-500/5 sepia:hover:bg-[#F4ECE0]/60'
-              }`}
-            >
+            <React.Fragment key={verse.id}>
+              {pericope && (
+                <div className="pt-6 pb-2.5 px-1 sm:px-3 lg:px-4 select-none clear-both border-t border-border/30 first:border-t-0 first:pt-1">
+                  <span className={`block text-base sm:text-lg ${getReaderFontClass(fontFamily)} font-bold italic tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
+                    {isEn && pericope.titleEn ? pericope.titleEn : pericope.title}
+                  </span>
+                </div>
+              )}
+              <div
+                data-verse-item="true"
+                data-verse-number={verse.verseNumber}
+                onClick={(e) => handleVerseClick(verse, e)}
+                className={`relative py-3 sm:py-4 px-1 sm:px-3 lg:px-4 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer border-l-2 ${
+                  isAudioActive
+                    ? 'bg-foreground/5 dark:bg-white/10 sepia:bg-[#8C765C]/15 border-foreground'
+                    : isSelected
+                    ? 'border-foreground'
+                    : 'border-transparent hover:bg-zinc-500/5 sepia:hover:bg-[#F4ECE0]/60'
+                }`}
+              >
               {/* Columna con número de versículo compacta y ergonómica */}
               <div className="shrink-0 w-6 sm:w-8 text-right pt-0.5 select-none">
                 <span
@@ -282,7 +286,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
               {/* Contenido textual que aprovecha todo el ancho disponible */}
               <div className="flex-1 min-w-0 pr-1 sm:group-hover:pr-14 transition-[padding] duration-150">
                 <p
-                  className={`${getFontSizeClass(fontSize)} ${getFontFamilyClass(fontFamily)} ${
+                  className={`${getFontSizeClass(fontSize)} ${getReaderFontClass(fontFamily)} ${
                     highlightStyle
                       ? `${highlightStyle.bgClass} px-2 py-0.5 rounded-md sm:rounded-lg`
                       : 'text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E]'
@@ -335,7 +339,8 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
                 </button>
               </div>
             </div>
-          );
+          </React.Fragment>
+        );
         })}
       </div>
 

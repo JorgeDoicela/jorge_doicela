@@ -15,6 +15,7 @@ import { TranslationSelector } from '../../../../entities/translations';
 import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize2, MoreHorizontal, Volume2 } from 'lucide-react';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import { KartexAudioControlsPopover } from '../audio-controls';
+import { ReaderFontFamilySelector } from '../font-family-selector/ReaderFontFamilySelector';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;
@@ -254,30 +255,11 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-1.5">
                     {t('fontFamily')}
                   </span>
-                  <div className="flex p-0.5 rounded-full border border-border/80 bg-inner-card/60 gap-0.5">
-                    <button
-                      type="button"
-                      onClick={() => onFontFamilyChange('serif')}
-                      className={`flex-1 py-1 px-2.5 rounded-full text-xs font-serif transition-all cursor-pointer text-center ${
-                        readerSettings.fontFamily === 'serif'
-                          ? 'bg-foreground text-background font-semibold shadow-2xs'
-                          : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                      }`}
-                    >
-                      {t('serif')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onFontFamilyChange('sans')}
-                      className={`flex-1 py-1 px-2.5 rounded-full text-xs font-sans transition-all cursor-pointer text-center ${
-                        readerSettings.fontFamily === 'sans'
-                          ? 'bg-foreground text-background font-semibold shadow-2xs'
-                          : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                      }`}
-                    >
-                      {t('sans')}
-                    </button>
-                  </div>
+                  <ReaderFontFamilySelector
+                    value={readerSettings.fontFamily}
+                    onChange={(family) => onFontFamilyChange(family)}
+                    size="sm"
+                  />
                 </div>
 
                 {/* Tamaño de Fuente */}

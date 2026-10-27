@@ -11,6 +11,7 @@ import {
   ReaderSettings,
 } from '../../types';
 import { useReaderAppearanceSettings } from '../../hooks/useReaderAppearanceSettings';
+import { ReaderFontFamilySelector } from '../font-family-selector/ReaderFontFamilySelector';
 
 export interface ReaderAppearancePopoverProps {
   readerSettings?: ReaderSettings;
@@ -206,30 +207,11 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
             <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
               {t('fontFamily')}
             </span>
-            <div className="flex p-0.5 rounded-full border border-border/80 bg-inner-card/60 gap-1">
-              <button
-                type="button"
-                onClick={() => onFontFamilyChange('serif')}
-                className={`flex-1 py-1.5 px-3 rounded-full text-xs font-serif transition-all cursor-pointer text-center ${
-                  settings.fontFamily === 'serif'
-                    ? 'bg-foreground text-background font-semibold shadow-2xs'
-                    : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                }`}
-              >
-                {t('serif')}
-              </button>
-              <button
-                type="button"
-                onClick={() => onFontFamilyChange('sans')}
-                className={`flex-1 py-1.5 px-3 rounded-full text-xs font-sans transition-all cursor-pointer text-center ${
-                  settings.fontFamily === 'sans'
-                    ? 'bg-foreground text-background font-semibold shadow-2xs'
-                    : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                }`}
-              >
-                {t('sans')}
-              </button>
-            </div>
+            <ReaderFontFamilySelector
+              value={settings.fontFamily}
+              onChange={(family) => onFontFamilyChange(family)}
+              size="md"
+            />
           </div>
 
           {/* Tamaño de Fuente */}
@@ -365,30 +347,11 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
             <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-1.5">
               {t('fontFamily')}
             </span>
-            <div className="flex p-0.5 rounded-full border border-border/80 bg-inner-card/60 gap-0.5">
-              <button
-                type="button"
-                onClick={() => onFontFamilyChange('serif')}
-                className={`flex-1 py-1 px-2.5 rounded-full text-xs font-serif transition-all cursor-pointer text-center ${
-                  settings.fontFamily === 'serif'
-                    ? 'bg-foreground text-background font-semibold shadow-2xs'
-                    : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                }`}
-              >
-                {t('serif')}
-              </button>
-              <button
-                type="button"
-                onClick={() => onFontFamilyChange('sans')}
-                className={`flex-1 py-1 px-2.5 rounded-full text-xs font-sans transition-all cursor-pointer text-center ${
-                  settings.fontFamily === 'sans'
-                    ? 'bg-foreground text-background font-semibold shadow-2xs'
-                    : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                }`}
-              >
-                {t('sans')}
-              </button>
-            </div>
+            <ReaderFontFamilySelector
+              value={settings.fontFamily}
+              onChange={(family) => onFontFamilyChange(family)}
+              size="sm"
+            />
           </div>
 
           {/* Tamaño de Fuente */}

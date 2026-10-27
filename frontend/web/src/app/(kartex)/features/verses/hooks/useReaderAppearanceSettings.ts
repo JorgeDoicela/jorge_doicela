@@ -7,11 +7,12 @@ import {
   ReaderFontSize,
   ReaderFontFamily,
 } from '../types';
+import { DEFAULT_READER_FONT_ID, isValidReaderFont } from '../config/readerFonts';
 
 export const DEFAULT_READER_SETTINGS: ReaderSettings = {
   layoutMode: 'continuous',
   fontSize: 'md',
-  fontFamily: 'serif',
+  fontFamily: DEFAULT_READER_FONT_ID,
   showVerseNumbers: true,
   showPericopes: true,
   focusMode: false,
@@ -23,7 +24,11 @@ export function useReaderAppearanceSettings() {
     try {
       const saved = localStorage.getItem('kartex_reader_settings');
       if (saved) {
-        return { ...DEFAULT_READER_SETTINGS, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        if (parsed.fontFamily && !isValidReaderFont(parsed.fontFamily)) {
+          parsed.fontFamily = DEFAULT_READER_FONT_ID;
+        }
+        return { ...DEFAULT_READER_SETTINGS, ...parsed };
       }
     } catch {
       // Fallback a configuración por defecto
@@ -37,6 +42,9 @@ export function useReaderAppearanceSettings() {
         const saved = localStorage.getItem('kartex_reader_settings');
         if (saved) {
           const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
+          if (parsed.fontFamily && !isValidReaderFont(parsed.fontFamily)) {
+            parsed.fontFamily = DEFAULT_READER_FONT_ID;
+          }
           setSettings((prev) => ({ ...prev, ...parsed }));
         }
       } catch {

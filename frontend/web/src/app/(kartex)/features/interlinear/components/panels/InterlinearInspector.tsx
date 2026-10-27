@@ -170,7 +170,7 @@ export const InterlinearInspector: React.FC = () => {
                     <div className="text-center py-2">
                       <div
                         dir={isHebrew ? 'rtl' : 'ltr'}
-                        className={`text-3xl sm:text-4xl font-serif text-foreground font-medium ${
+                        className={`text-3xl sm:text-4xl ${isHebrew ? 'font-hebrew' : 'font-greek'} text-foreground font-medium ${
                           isHebrew ? 'tracking-normal' : 'tracking-wide'
                         }`}
                       >
@@ -217,7 +217,7 @@ export const InterlinearInspector: React.FC = () => {
                       {root && (
                         <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/60">
                           <span className="text-zinc-400">{tInter('semiticRoot')}</span>
-                          <span className="font-serif font-bold text-foreground">{root}</span>
+                          <span className="font-hebrew font-bold text-foreground">{root}</span>
                         </div>
                       )}
 

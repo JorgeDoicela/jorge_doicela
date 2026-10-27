@@ -14,6 +14,7 @@ html.sepia,
   --font-serif: var(--font-lora), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-hebrew: var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif;
   --font-greek: var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif;
+  --font-cardo: var(--font-greek), "Cardo", "Gentium Plus", serif;
 }
 
 :root {
@@ -260,6 +261,7 @@ html.sepia,
   --font-serif: var(--font-lora);
   --font-hebrew: var(--font-hebrew);
   --font-greek: var(--font-greek);
+  --font-cardo: var(--font-greek);
 }
 
 

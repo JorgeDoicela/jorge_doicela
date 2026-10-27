@@ -168,7 +168,7 @@ export const StrongLexiconDrawer: React.FC<StrongLexiconDrawerProps> = ({
             {entry.root && (
               <div className="p-3 rounded-xl bg-accents-1 border border-accents-2">
                 <span className="text-[10px] font-mono text-accents-4 block">{t('lexicalRoot')}</span>
-                <span className="font-serif font-bold text-foreground" dir={isHebrewSemitic ? 'rtl' : 'ltr'}>
+                <span className={`${isHebrewSemitic ? 'font-hebrew' : 'font-greek'} font-bold text-foreground`} dir={isHebrewSemitic ? 'rtl' : 'ltr'}>
                   {entry.root}
                 </span>
               </div>

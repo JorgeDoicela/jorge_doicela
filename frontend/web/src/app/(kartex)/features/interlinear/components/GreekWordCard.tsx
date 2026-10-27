@@ -108,7 +108,7 @@ export const GreekWordCard: React.FC<GreekWordCardProps> = ({
       {/* Texto Griego Politónico */}
       <div
         lang="el"
-        className={`w-full font-serif font-medium tracking-normal text-foreground my-1 leading-snug select-text ${getFontSizeClass()}`}
+        className={`w-full font-greek font-medium tracking-normal text-foreground my-1 leading-snug select-text ${getFontSizeClass()}`}
         style={{
           fontFamily:
             'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif',

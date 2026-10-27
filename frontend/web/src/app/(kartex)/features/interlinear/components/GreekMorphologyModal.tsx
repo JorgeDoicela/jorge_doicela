@@ -55,7 +55,7 @@ export const GreekMorphologyModal: React.FC<GreekMorphologyModalProps> = ({
           <div className="text-center p-4 rounded-xl bg-accents-1/40 border border-accents-2 space-y-2">
             <div
               lang="el"
-              className="text-4xl font-serif text-foreground"
+              className="text-4xl font-greek text-foreground"
               style={{
                 fontFamily:
                   'var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif',

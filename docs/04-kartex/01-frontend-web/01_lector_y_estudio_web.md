@@ -145,7 +145,9 @@ Inspirada en las proporciones y jerarquía métrica exacta de *Google Perfil de 
 1. **Lector Bíblico Central (`features/verses/`):** Consume `GET /kartex/verses?bookId=&chapter=&translationId=`. Soporta dos modalidades de visualización: Lectura Continua en Prosa (`ContinuousReadingView`) y Lectura Versículo por Versículo (`LineByLineReadingView`). Erradica tarjetas encajonadas, bordes pesados y sombras artificiales, adoptando un **Lienzo Editorial Continuo (*Edge-to-Edge*)** que fluye limpio directamente sobre el fondo del lienzo: en móvil aprovecha el 100% del ancho útil sin paddings asfixiantes, y en escritorio optimiza la longitud de línea tipográfica de forma serena. Integra controles tipográficos (Serif / Sans, tamaños de escala con `+`/`-`), modos de tono de lectura (Auto / Sistema, Sepia / Papel Cálido `#FAF6EE`, Dark / OLED `#000000`), Modo Enfoque Inmersivo a pantalla completa sin distracciones (tecla `F` o botón de foco, salida con `Esc`), navegación por atajos de teclado (`←`/`→`, `J`/`K`), persistencia de preferencias (`kartex_reader_settings` en `localStorage`), notas de atribución legal de copyright oficiales al pie de cada capítulo, e integración con el lateral derecho (`KartexExegesisInspector`).
    * **Arquitectura de Latencia Cero y Caché en Memoria (`useVerses.ts`):** Para erradicar desincronizaciones entre el número canónico de la cápsula y los versículos en pantalla:
      - *Caché en Memoria a Nivel de Módulo (`verseCache`):* Los capítulos consultados se almacenan en un `Map` indexado por `bookId_chapter_translationId`. Al revisitar o navegar entre capítulos ya cargados, la resolución es instantánea en **0 ms** sin llamadas repetidas de red.
-     - *Pre-fetching Proactivo Adyacente:* Al proyectar un capítulo `C`, se pre-cargan en segundo plano (`requestIdleCallback`) los capítulos contiguos `C + 1` y `C - 1`. Al pulsar `<` o `>`, los versículos ya residen en memoria, cambiando el número y el texto en el **mismo frame de renderizado**.
+      - *Pre-fetching Proactivo Adyacente Concurrente:* Al proyectar un capítulo `C`, se pre-cargan en segundo plano (`requestIdleCallback`) tanto versículos como perícopas de los capítulos contiguos `C + 1` y `C - 1`. Al pulsar `<` o `>`, ambos conjuntos de datos ya residen en memoria, cambiando número, subtítulos y texto en el **mismo frame de renderizado**.
+      - *Sincronización Atómica en Render-Time (`loadedKey`):* Ante un cambio de capítulo o libro, `useVerses` sincroniza síncronamente durante el render: si los datos están cacheados se inyectan en 0 ms en el primer frame; si no lo están, se limpian los versículos del capítulo previo de inmediato y se proyecta el skeleton para impedir mezclas visuales transitorias.
+      - *Reconciliación Limpia con Key de Pasaje (`VerseList.tsx`):* El contenedor de lectura renderiza con clave única `key={`passage_${bookId}_${chapter}_${translationId}`}`, garantizando desmontaje y montaje atómico en cada cambio de capítulo.
      - *Supresión de Estados Duplicados:* Se eliminó la sincronización en cascada de `useEffect` en `useVerses`, adoptando derivación directa de props para eliminar re-renders intermedios desfasados.
      - *Sincronización Atómica de Cabeceras:* Las cabeceras editoriales calculan el capítulo a partir de `chapter ?? verses[0]?.chapter`, impidiendo desajustes entre el título y el cuerpo del texto.
      - *Erradicación Definitiva de Rebotes (`window.history.replaceState` y `popstate` en `KartexPassageContext.tsx`):* Se eliminó el uso de `router.replace` de Next.js para la sincronización interna del pasaje. En Next.js App Router, `router.replace` desencadenaba una navegación asíncrona con fetch RSC y suspensión de `<Suspense>`, provocando una reversión transitoria de estado (2 -> 1 -> 2). Al adoptar `window.history.replaceState` y un listener nativo de `popstate` para el historial del navegador, la sincronización entre el estado React y la URL se ejecuta de forma sincrónica en 0 ms sin roundtrips de red ni transiciones de router.
@@ -654,6 +656,29 @@ Integrado a través del hook [`useKartexKeybindings.ts`](../../../frontend/web/s
   - **Tradición Editorial Bíblica de Alta Fidelidad:** Se eliminó la repetición monótona del nombre del libro en cada pantalla de lectura consecutiva.
   - **Capítulo 1 (Apertura Canónica del Libro):** Muestra el título principal monumental del libro bíblico (`text-3xl sm:text-4xl font-extrabold`), ej. **Génesis**, con el subtítulo secundario `CAPÍTULO 1 • {VERSIÓN}`.
   - **Capítulos 2 en adelante:** Se suprime la cabecera centrada y la línea divisoria superior. En su lugar, el **número de capítulo capitular** (`text-3xl sm:text-4xl font-extrabold font-serif`), ej. **2**, se proyecta directamente al inicio del texto antes del primer versículo (`2 ¹ Así fueron acabados...`). Esto maximiza el área vertical visible de lectura, elimina redundancias visuales y emula la estética de las ediciones bíblicas impresas de referencia.
+
+* **Arquitectura Extensible de Tipografías Bíblicas y Resaltado de Perícopas (`readerFonts.ts` & `ReaderFontFamilySelector`):**
+  - **Identidad Tipográfica Compartida (Perícopas y Versículos al Unísono):** Las perícopas temáticas y el cuerpo de los versículos bíblicos comparten dinámicamente la misma familia tipográfica activa (`getReaderFontClass(fontFamily)`), erradicando mezclas arbitrarias de fuentes. Para establecer una jerarquía editorial canónica, las perícopas se destacan uniformemente en **negrita y cursiva** (`font-bold italic tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`) tanto en la lectura continua (`ContinuousReadingView`) como en la lectura versículo a versículo (`LineByLineReadingView`).
+  - **Registro Centralizado como Fuente Única de Verdad (`features/verses/config/readerFonts.ts`):** En lugar de comprobaciones ternarias cableadas o botones JSX duplicados en desktop y móvil, todas las tipografías del lector se registran en el catálogo canónico `READER_FONTS` bajo la interfaz `ReaderFontDefinition`:
+    ```typescript
+    export interface ReaderFontDefinition {
+      id: string;          // Clave única (ej. 'serif', 'sans', 'cardo')
+      labelKey: string;    // Clave en messages/{es,en}.json (namespace 'Toolbar')
+      defaultLabel: string;// Etiqueta fallback
+      cssClass: string;    // Clase utilitaria Tailwind (ej. 'font-serif', 'font-sans', 'font-cardo')
+      cssVariable: string; // Variable CSS nativa (ej. '--font-lora', '--font-geist-sans')
+      category: 'serif' | 'sans';
+      description?: string;
+    }
+    ```
+  - **Selector Tipográfico Agnóstico (`ReaderFontFamilySelector.tsx`):** Componente accesible (`role="radiogroup"`, `role="radio"`) que mapea dinámicamente sobre `READER_FONTS`, alimentando automáticamente tanto al Bottom Sheet móvil (`ReaderAppearancePopover` en Portal) como a los menús de escritorio (`ReaderToolbar` y popover flotante).
+  - **Protocolo Libre de Parches para Añadir Nuevas Fuentes:**
+    1. Depositar el archivo `.woff2` o `.ttf` bajo `src/app/(kartex)/fonts/` (SIL OFL 1.1).
+    2. Cargar la fuente con `localFont` en `src/app/(kartex)/layout.tsx` e inyectar su variable en `<html>`.
+    3. Registrar la variable en `src/app/(kartex)/globals.css` dentro de `@theme` (ej. `--font-literata`).
+    4. Agregar la entrada descriptiva en `READER_FONTS` en `readerFonts.ts`.
+    5. Agregar las traducciones correspondientes en `messages/es.json` y `messages/en.json`.
+    *Cualquier nueva fuente queda 100% operativa en todo el ecosistema (selectores, persistencia en localStorage, sincronización entre pestañas y vistas de lectura) sin tocar un solo archivo de componentes.*
 
 * **Sincronización Desacoplada de Configuraciones de Lectura (`useReaderAppearanceSettings` & `useVerses`):**
   - **Causa Raíz de Colisiones de Renderizado Evitada:** En React, disparar eventos síncronos (`window.dispatchEvent`) dentro del updater callback de `setState` provoca que componentes oyentes ejecuten su propio `setState` mientras el componente emisor se encuentra aún en fase de renderizado (`Cannot update a component while rendering a different component`).

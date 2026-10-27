@@ -11,6 +11,8 @@ import {
 } from '../types';
 import { Volume2, Sparkles } from 'lucide-react';
 import { biblicalAudioService } from '../services/biblicalAudioService';
+import { useReaderAppearanceSettings } from '../../verses/hooks/useReaderAppearanceSettings';
+import { getReaderFontClass } from '../../verses/config/readerFonts';
 
 interface ReverseInterlinearReaderProps {
   hebrewVerse?: InterlinearVerse;
@@ -35,6 +37,8 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
   const isOT = !!hebrewVerse;
   const verse = isOT ? hebrewVerse! : greekVerse!;
   const tokens = verse.tokens;
+  const { settings: readerSettings } = useReaderAppearanceSettings();
+  const readerFontClass = getReaderFontClass(readerSettings.fontFamily);
 
   const [playingId, setPlayingId] = useState<string | null>(null);
 
@@ -98,7 +102,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
           </span>
         </div>
 
-        <div className="p-5 rounded-xl bg-accents-1/40 border border-accents-2 text-base sm:text-lg leading-loose text-foreground font-serif">
+        <div className={`p-5 rounded-xl bg-accents-1/40 border border-accents-2 text-base sm:text-lg leading-loose text-foreground ${readerFontClass}`}>
           {tokens.map((tok) => {
             const isHovered = activeTokenId === tok.id;
             const isSelected = activeTokenId === tok.id;
@@ -129,7 +133,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
             <div className="flex items-center gap-3">
               <span
                 dir={isOT ? 'rtl' : 'ltr'}
-                className="text-2xl font-serif font-bold text-foreground"
+                className={`text-2xl ${isOT ? 'font-hebrew' : 'font-greek'} font-bold text-foreground`}
               >
                 {'greek' in activeToken ? activeToken.greek : activeToken.hebrew}
               </span>
@@ -213,7 +217,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
                 {/* Palabra original */}
                 <div
                   dir={isOT ? 'rtl' : 'ltr'}
-                  className="text-lg sm:text-xl font-serif font-bold text-foreground leading-tight"
+                  className={`text-lg sm:text-xl ${isOT ? 'font-hebrew' : 'font-greek'} font-bold text-foreground leading-tight`}
                 >
                   {originalText}
                 </div>

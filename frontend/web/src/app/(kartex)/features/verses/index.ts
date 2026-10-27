@@ -23,4 +23,13 @@ export {
 } from './components/verse-action-toolbar/VerseSelectionToolbar';
 export { KartexAudioControlsPopover } from './components/audio-controls';
 export { BOOK_CHAPTERS, getChapterCountForBook } from '../../shared/data/canonData';
+export {
+  READER_FONTS,
+  DEFAULT_READER_FONT_ID,
+  getReaderFontClass,
+  getReaderFontDefinition,
+  isValidReaderFont,
+} from './config/readerFonts';
+export type { ReaderFontDefinition, ReaderFontId } from './config/readerFonts';
+export { ReaderFontFamilySelector } from './components/font-family-selector/ReaderFontFamilySelector';
 

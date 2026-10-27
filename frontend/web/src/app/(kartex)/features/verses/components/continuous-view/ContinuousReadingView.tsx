@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 
 import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
+import { getReaderFontClass } from '../../config/readerFonts';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import {
   VerseSelectionToolbar,
@@ -104,10 +105,6 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     }
   };
 
-  const getFontFamilyClass = (family: ReaderFontFamily) => {
-    return family === 'serif' ? 'font-serif' : 'font-sans';
-  };
-
   const selectedVerses = useMemo(() => {
     return verses.filter((v) => selectedVerseNumbers.includes(v.verseNumber));
   }, [verses, selectedVerseNumbers]);
@@ -205,21 +202,12 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
             {localizedBookTitle}
           </h2>
           <div className="w-16 sm:w-24 h-px bg-border/60 mx-auto mt-4" aria-hidden="true" />
-          {showPericopes && pericopesByStartVerse.has(1) && (
-            <div className="text-center pt-3 pb-1 select-none">
-              <h3 className={`text-base sm:text-lg ${getFontFamilyClass(fontFamily)} font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
-                {isEn && pericopesByStartVerse.get(1)?.titleEn
-                  ? pericopesByStartVerse.get(1)!.titleEn
-                  : pericopesByStartVerse.get(1)!.title}
-              </h3>
-            </div>
-          )}
         </header>
       )}
 
       {/* Prosa Continua en Ancho Completo */}
       <div
-        className={`w-full ${!isFirstChapter ? 'pt-6 sm:pt-10' : ''} ${getFontSizeClass(fontSize)} ${getFontFamilyClass(
+        className={`w-full ${!isFirstChapter ? 'pt-6 sm:pt-10' : ''} ${getFontSizeClass(fontSize)} ${getReaderFontClass(
           fontFamily,
         )} text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E] select-text leading-relaxed sm:leading-loose selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
       >
@@ -244,31 +232,33 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 
             return (
               <React.Fragment key={verse.id}>
-                                {/* Subtítulo Temático (Perícopa) */}
+                {/* Subtítulo Temático (Perícopa) */}
                 {showPericopes && pericopesByStartVerse.has(verse.verseNumber) && (
-                  idx === 0 && !isFirstChapter ? (
+                  idx === 0 ? (
                     <span className="block w-full pb-3.5 mb-2 text-left select-none clear-both">
-                      <span className={`block text-base sm:text-lg ${getFontFamilyClass(fontFamily)} font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
+                      <span className={`block text-base sm:text-lg ${getReaderFontClass(fontFamily)} font-bold italic tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
                         {isEn && pericopesByStartVerse.get(verse.verseNumber)?.titleEn
                           ? pericopesByStartVerse.get(verse.verseNumber)!.titleEn
                           : pericopesByStartVerse.get(verse.verseNumber)!.title}
                       </span>
                     </span>
-                  ) : idx > 0 ? (
+                  ) : (
                     <span className="block w-full pt-6 pb-2.5 my-3 text-left select-none clear-both border-t border-border/30">
-                      <span className={`block text-base sm:text-lg ${getFontFamilyClass(fontFamily)} font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
+                      <span className={`block text-base sm:text-lg ${getReaderFontClass(fontFamily)} font-bold italic tracking-tight text-zinc-900 dark:text-zinc-100 sepia:text-[#2C221E]`}>
                         {isEn && pericopesByStartVerse.get(verse.verseNumber)?.titleEn
                           ? pericopesByStartVerse.get(verse.verseNumber)!.titleEn
                           : pericopesByStartVerse.get(verse.verseNumber)!.title}
                       </span>
                     </span>
-                  ) : null
+                  )
                 )}
 
-                {/* Número Capitular Editorial al inicio de cada capítulo */}
+                {/* Número Capitular Editorial al inicio de cada capítulo (Drop-cap estilizado de 3 líneas) */}
                 {idx === 0 && (
                   <span
-                    className={`inline-block ${getFontFamilyClass(fontFamily)} text-5xl sm:text-6xl font-extrabold text-foreground mr-2.5 sm:mr-3 select-none leading-none align-baseline tracking-tight`}
+                    className={`float-left ${getReaderFontClass(
+                      fontFamily,
+                    )} text-7xl sm:text-8xl font-medium text-foreground mr-4 sm:mr-5 mt-0.5 sm:mt-1 mb-2 select-none leading-none tracking-tight`}
                     title={`${t('chapter')} ${currentChapterNum}`}
                     aria-label={`${t('chapter')} ${currentChapterNum}`}
                   >

@@ -59,7 +59,7 @@ export const MorphologyDetailModal: React.FC<MorphologyDetailModalProps> = ({
             <div
               dir="rtl"
               lang="he"
-              className="text-4xl font-serif text-foreground"
+              className="text-4xl font-hebrew text-foreground"
               style={{
                 fontFamily:
                   'var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif',
@@ -89,7 +89,7 @@ export const MorphologyDetailModal: React.FC<MorphologyDetailModalProps> = ({
               {token.root && (
                 <div className="p-2.5 rounded-lg bg-accents-1 border border-accents-2">
                   <span className="text-accents-4 block text-[10px] font-mono">{t('semiticRoot')}</span>
-                  <span className="font-serif font-bold text-foreground" dir="rtl">
+                  <span className="font-hebrew font-bold text-foreground" dir="rtl">
                     {token.root}
                   </span>
                 </div>

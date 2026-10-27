@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { VerseComparisonData } from '../types';
 import { computeWordDiff, TRANSLATION_APPROACHES } from '../utils/diffEngine';
+import { useReaderAppearanceSettings } from '../../../verses/hooks/useReaderAppearanceSettings';
+import { getReaderFontClass } from '../../../verses/config/readerFonts';
 
 interface TextualDiffViewerProps {
   comparisonData: VerseComparisonData;
@@ -14,6 +16,8 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
 }) => {
   const t = useTranslations('TextualDiff');
   const [viewMode, setViewMode] = useState<'sideBySide' | 'inline'>('sideBySide');
+  const { settings: readerSettings } = useReaderAppearanceSettings();
+  const readerFontClass = getReaderFontClass(readerSettings.fontFamily);
 
   const { translationA, translationB, bookName, chapter, verseNumber } =
     comparisonData;
@@ -126,7 +130,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
               )}
             </div>
 
-            <div className="text-sm font-serif leading-relaxed space-x-1">
+            <div className={`text-sm ${readerFontClass} leading-relaxed space-x-1`}>
               {diffResult.tokensA.map((token, idx) => (
                 <span
                   key={idx}
@@ -168,7 +172,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
               )}
             </div>
 
-            <div className="text-sm font-serif leading-relaxed space-x-1">
+            <div className={`text-sm ${readerFontClass} leading-relaxed space-x-1`}>
               {diffResult.tokensB.map((token, idx) => (
                 <span
                   key={idx}
@@ -213,7 +217,7 @@ export const TextualDiffViewer: React.FC<TextualDiffViewerProps> = ({
             </div>
           </div>
 
-          <div className="text-sm font-serif leading-loose space-x-1.5">
+          <div className={`text-sm ${readerFontClass} leading-loose space-x-1.5`}>
             {diffResult.inlineTokens.map((token, idx) => {
               if (token.type === 'EQUAL') {
                 return (

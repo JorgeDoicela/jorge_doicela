@@ -7,6 +7,7 @@ import {
   ReaderFontFamily,
   ReaderSettings,
 } from '../types';
+import { DEFAULT_READER_FONT_ID, isValidReaderFont } from '../config/readerFonts';
 import { API_URL } from '../../../../config';
 import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../../entities/translations';
 import { fetchPericopes } from '../services/pericopesApiService';
@@ -57,12 +58,38 @@ export function useVerses(
     return !verseCache.has(cacheKey);
   });
   const [error, setError] = useState<string | null>(null);
+  const [loadedKey, setLoadedKey] = useState<string>(cacheKey);
+
+  // Sincronización atómica durante el render (elimina cualquier desfase o mezcla entre capítulos)
+  if (cacheKey !== loadedKey) {
+    setLoadedKey(cacheKey);
+    const cachedVerses = verseCache.get(cacheKey);
+    const cachedPericopes = pericopeCache.get(pCacheKey);
+
+    if (cachedVerses && cachedPericopes) {
+      setVerses(cachedVerses);
+      setPericopes(cachedPericopes);
+      setLoading(false);
+      setError(null);
+    } else if (cachedVerses) {
+      setVerses(cachedVerses);
+      setPericopes([]);
+      setLoading(false);
+      setError(null);
+    } else {
+      // Limpiar datos del capítulo previo mientras se cargan los nuevos
+      setVerses([]);
+      setPericopes(cachedPericopes || []);
+      setLoading(true);
+      setError(null);
+    }
+  }
 
   // Configuraciones de visualización del lector
   const [readerSettings, setReaderSettings] = useState<ReaderSettings>({
     layoutMode: 'continuous',
     fontSize: 'md',
-    fontFamily: 'serif',
+    fontFamily: DEFAULT_READER_FONT_ID,
     showVerseNumbers: true,
     showPericopes: true,
     focusMode: false,
@@ -75,6 +102,9 @@ export function useVerses(
         const saved = localStorage.getItem('kartex_reader_settings');
         if (saved) {
           const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
+          if (parsed.fontFamily && !isValidReaderFont(parsed.fontFamily)) {
+            parsed.fontFamily = DEFAULT_READER_FONT_ID;
+          }
           setReaderSettings((prev) => ({
             ...prev,
             ...parsed,
@@ -178,21 +208,40 @@ export function useVerses(
     [],
   );
 
-  // Pre-fetching proactivo en segundo plano de capítulos adyacentes
+  // Pre-fetching proactivo en segundo plano de capítulos adyacentes (versículos y perícopas canónicas)
   const prefetchAdjacentChapters = useCallback(
     (bId: number | null, ch: number | null, transId: number | null) => {
       if (!ch || !bId || typeof window === 'undefined') return;
 
       const schedulePrefetch = (chapterToFetch: number) => {
         const nextKey = getVerseCacheKey(bId, chapterToFetch, transId);
-        if (verseCache.has(nextKey)) return;
+        const nextPKey = getPericopeCacheKey(bId, chapterToFetch);
+
+        if (verseCache.has(nextKey) && pericopeCache.has(nextPKey)) return;
 
         const execute = async () => {
           try {
-            const data = await fetchVersesData(bId, chapterToFetch, transId);
-            if (data.length > 0) {
-              verseCache.set(nextKey, data);
+            const promises: Promise<unknown>[] = [];
+
+            if (!verseCache.has(nextKey)) {
+              promises.push(
+                fetchVersesData(bId, chapterToFetch, transId).then((data) => {
+                  if (data.length > 0) {
+                    verseCache.set(nextKey, data);
+                  }
+                }),
+              );
             }
+
+            if (!pericopeCache.has(nextPKey)) {
+              promises.push(
+                fetchPericopes(bId, chapterToFetch).then((pData) => {
+                  pericopeCache.set(nextPKey, pData);
+                }),
+              );
+            }
+
+            await Promise.allSettled(promises);
           } catch {
             // Silencioso para pre-fetch
           }
@@ -219,44 +268,50 @@ export function useVerses(
   useEffect(() => {
     let active = true;
     const currentKey = getVerseCacheKey(effectiveBookId, effectiveChapter, effectiveTranslationId);
-
-    // 1. Carga de perícopas canónicas asociadas al capítulo
     const pKey = getPericopeCacheKey(effectiveBookId, effectiveChapter);
-    if (pericopeCache.has(pKey)) {
-      setPericopes(pericopeCache.get(pKey)!);
-    } else if (effectiveBookId && effectiveChapter) {
-      void fetchPericopes(effectiveBookId, effectiveChapter).then((pData) => {
-        if (!active) return;
-        pericopeCache.set(pKey, pData);
-        setPericopes(pData);
-      });
-    }
 
-    // 2. Si los datos de versículos ya existen en caché, resolución instantánea en 0 ms
-    if (verseCache.has(currentKey)) {
+    const isVersesCached = verseCache.has(currentKey);
+    const isPericopesCached = pericopeCache.has(pKey);
+
+    // 1. Si ambos ya existen en caché, resolución instantánea en 0 ms
+    if (isVersesCached && isPericopesCached) {
       setVerses(verseCache.get(currentKey)!);
+      setPericopes(pericopeCache.get(pKey)!);
       setLoading(false);
       setError(null);
       prefetchAdjacentChapters(effectiveBookId, effectiveChapter, effectiveTranslationId);
       return;
     }
 
-    // 3. Si no están en caché, solicitar a la API
-    setLoading(true);
+    // 2. Si no están completos en caché, solicitar concurrentemente
+    setLoading(!isVersesCached);
     setError(null);
 
     const load = async () => {
       try {
-        const serverVerses = await fetchVersesData(
-          effectiveBookId,
-          effectiveChapter,
-          effectiveTranslationId,
-        );
+        const versesPromise = isVersesCached
+          ? Promise.resolve(verseCache.get(currentKey)!)
+          : fetchVersesData(effectiveBookId, effectiveChapter, effectiveTranslationId);
+
+        const pericopesPromise = isPericopesCached
+          ? Promise.resolve(pericopeCache.get(pKey)!)
+          : effectiveBookId && effectiveChapter
+          ? fetchPericopes(effectiveBookId, effectiveChapter)
+          : Promise.resolve([]);
+
+        const [serverVerses, serverPericopes] = await Promise.all([
+          versesPromise,
+          pericopesPromise,
+        ]);
 
         if (!active) return;
 
         verseCache.set(currentKey, serverVerses);
+        pericopeCache.set(pKey, serverPericopes);
+
+        // Actualización atómica en el mismo ciclo de renderizado
         setVerses(serverVerses);
+        setPericopes(serverPericopes);
         setLoading(false);
         prefetchAdjacentChapters(effectiveBookId, effectiveChapter, effectiveTranslationId);
       } catch (err: unknown) {

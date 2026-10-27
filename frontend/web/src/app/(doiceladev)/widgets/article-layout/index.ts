@@ -4,3 +4,6 @@ export * from './ui/ExploreTopicsSidebarCard';
 export * from './ui/FeaturedPostsSidebarCard';
 export * from './ui/PopularTagsSidebarCard';
 export * from './ui/StayInformedCard';
+export * from './ui/ArticleTags';
+export * from './ui/ArticleShareActions';
+export * from './ui/RelatedArticlesNav';

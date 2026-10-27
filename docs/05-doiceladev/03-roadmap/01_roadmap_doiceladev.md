@@ -18,6 +18,10 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 
 ---
 
+## 2. Especialización de Infraestructura y Servidores Linux
+- [x] **Delimitación Estricta al Ecosistema Debian / Ubuntu:** Enfoque técnico exclusivo en **Ubuntu Server (LTS 22.04 / 24.04)** y **Debian GNU/Linux (12 / 13)** para servidores en la nube, garantizando coherencia con el 70%+ del mercado cloud, UFW en Netfilter, `apt` y systemd.
+- [ ] **Producción Audiovisual (YouTube & Shorts/TikTok):** Adaptación de publicaciones de infraestructura (`firewall-linux-ufw`, Docker bypass, hardening de SSH) en guías paso a paso de terminal y cápsulas técnicas de alto impacto orientadas a la familia Debian/Ubuntu.
+
 ---
 
 ## 3. Internacionalización y SEO (next-intl)

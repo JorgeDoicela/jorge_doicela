@@ -62,6 +62,7 @@ export default async function TutorialDetailPage({ params }: Params) {
       subtitle={tutorial.excerpt}
       date={formattedDate}
       author={tutorial.author}
+      tags={tutorial.tags}
     >
       <div className="space-y-8">
         {tutorial.description && (

@@ -12,6 +12,9 @@ import { StayInformedCard } from './StayInformedCard';
 import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
 import { ExploreTopicsSidebarCard } from './ExploreTopicsSidebarCard';
 import { PopularTagsSidebarCard } from './PopularTagsSidebarCard';
+import { ArticleTags } from './ArticleTags';
+import { ArticleShareActions } from './ArticleShareActions';
+import { RelatedArticlesNav } from './RelatedArticlesNav';
 import { DoiceladevSection } from '../../category-nav/ui/CategoryNav';
 
 export interface BreadcrumbItem {
@@ -31,6 +34,7 @@ export interface DoiceladevArticleLayoutProps {
   badge?: React.ReactNode;
   callout?: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
+  tags?: string[] | string;
   children: React.ReactNode;
 }
 
@@ -47,6 +51,7 @@ export function DoiceladevArticleLayout({
   badge,
   callout,
   breadcrumbs,
+  tags,
   children,
 }: DoiceladevArticleLayoutProps) {
   const tNav = useTranslations('Nav');
@@ -68,145 +73,150 @@ export function DoiceladevArticleLayout({
         {/* Cuadrícula Principal (8 cols contenido unificado + 4 cols barra lateral, o 12 cols expandido) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Columna Izquierda: Contenedor Editorial Unificado Continuo (Estilo MalwareTech) */}
-          <article
-            className={`relative p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl transition-all duration-300 ${
+          {/* Columna Izquierda: Contenido Principal */}
+          <div
+            className={`space-y-8 transition-all duration-300 order-1 lg:row-start-1 ${
               isSidebarCollapsed ? 'lg:col-span-12' : 'lg:col-span-8'
             }`}
           >
-            {/* Borde interactivo derecho sutil (cursor col-resize para alternar barra lateral) */}
-            <button
-              type="button"
-              onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-              className="hidden lg:block absolute top-0 -right-2 w-4 h-full cursor-col-resize z-20 focus:outline-none select-none"
-              title={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
-              aria-label={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
-            />
-            
-            {/* Cabecera Editorial del Artículo (Hero Centrado con Divisor) */}
-            <header className="space-y-6 text-center border-b border-black/5 dark:border-white/5 pb-8">
+            {/* Contenedor Editorial del Artículo */}
+            <article className="relative p-6 sm:p-10 md:p-12 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-8 shadow-xl">
+              {/* Borde interactivo derecho sutil (cursor col-resize para alternar barra lateral) */}
+              <button
+                type="button"
+                onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+                className="hidden lg:block absolute top-0 -right-2 w-4 h-full cursor-col-resize z-20 focus:outline-none select-none"
+                title={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
+                aria-label={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
+              />
               
-              {/* Barra Jerárquica de Navegación Centrada */}
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-xs select-none">
-                {/* Migas de Pan (Breadcrumbs) Embebidas */}
-                <nav aria-label={tArticle('breadcrumb')} className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400">
-                  <Link
-                    href="/"
-                    className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
-                    title={tNav('home')}
-                  >
-                    <Home className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
-                    <span>{tNav('home')}</span>
-                  </Link>
+              {/* Cabecera Editorial del Artículo (Hero Centrado con Divisor) */}
+              <header className="space-y-6 text-center border-b border-black/5 dark:border-white/5 pb-8">
+                
+                {/* Barra Jerárquica de Navegación Centrada */}
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-xs select-none">
+                  {/* Migas de Pan (Breadcrumbs) Embebidas */}
+                  <nav aria-label={tArticle('breadcrumb')} className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                      title={tNav('home')}
+                    >
+                      <Home className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
+                      <span>{tNav('home')}</span>
+                    </Link>
 
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
 
-                  <Link
-                    href={categoryHref}
-                    className="text-blue-600 dark:text-blue-400 hover:underline font-semibold transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
-                  >
-                    {categoryLabel}
-                  </Link>
+                    <Link
+                      href={categoryHref}
+                      className="text-blue-600 dark:text-blue-400 hover:underline font-semibold transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                    >
+                      {categoryLabel}
+                    </Link>
 
-                  {breadcrumbs?.map((bc, idx) => (
-                    <React.Fragment key={idx}>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
-                      {bc.href ? (
-                        <Link href={bc.href} className="hover:text-[var(--foreground)] transition-colors py-0.5">
-                          {bc.label}
-                        </Link>
-                      ) : (
-                        <span className="text-slate-700 dark:text-zinc-300 font-medium">{bc.label}</span>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </nav>
+                    {breadcrumbs?.map((bc, idx) => (
+                      <React.Fragment key={idx}>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
+                        {bc.href ? (
+                          <Link href={bc.href} className="hover:text-[var(--foreground)] transition-colors py-0.5">
+                            {bc.label}
+                          </Link>
+                        ) : (
+                          <span className="text-slate-700 dark:text-zinc-300 font-medium">{bc.label}</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </nav>
 
-                {/* Badge contextual opcional */}
-                {badge && (
-                  <div className="inline-flex items-center ml-1">
-                    {badge}
-                  </div>
-                )}
-              </div>
-
-              {/* Título Principal H1 Centrado */}
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] leading-[1.15] tracking-tight max-w-4xl mx-auto">
-                {title}
-              </h1>
-
-              {/* Subtítulo / Extracto Destacado Centrado */}
-              {subtitle && (
-                <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed max-w-2xl mx-auto">
-                  {subtitle}
-                </p>
-              )}
-
-              {/* Byline Editorial Centrado: Autor, Avatar y Fecha */}
-              {(author || date) && (
-                <div className="flex items-center justify-center gap-3 pt-1 text-xs select-none">
-                  {author && (
-                    <div className="inline-flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
-                        <Image
-                          src={authorImage}
-                          alt={author}
-                          width={24}
-                          height={24}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <span className="font-mono text-xs font-semibold text-slate-900 dark:text-zinc-200">
-                        {author}
-                      </span>
+                  {/* Badge contextual opcional */}
+                  {badge && (
+                    <div className="inline-flex items-center ml-1">
+                      {badge}
                     </div>
                   )}
-
-                  {author && date && (
-                    <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
-                  )}
-
-                  {date && (
-                    <time dateTime={date} className="font-mono text-slate-500 dark:text-zinc-400">
-                      {date}
-                    </time>
-                  )}
                 </div>
-              )}
 
-              {/* Callout opcional (Avisos de seguridad, notas, CVE) */}
-              {callout && (
-                <div className="pt-2 text-left">
-                  {callout}
-                </div>
-              )}
-            </header>
+                {/* Título Principal H1 Centrado */}
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[var(--header-title)] leading-[1.15] tracking-tight max-w-4xl mx-auto">
+                  {title}
+                </h1>
 
-            {/* Cuerpo del Artículo (Renderizado Fluido) */}
-            <div className="leading-relaxed">
-              {children}
-            </div>
-          </article>
+                {/* Subtítulo / Extracto Destacado Centrado */}
+                {subtitle && (
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed max-w-2xl mx-auto">
+                    {subtitle}
+                  </p>
+                )}
 
-          {/* Columna Derecha: Barra Lateral Fija (Sidebar con Jerarquía Editorial MalwareTech) */}
+                {/* Byline Editorial Centrado: Autor, Avatar y Fecha */}
+                {(author || date) && (
+                  <div className="flex items-center justify-center gap-3 pt-1 text-xs select-none">
+                    {author && (
+                      <div className="inline-flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
+                          <Image
+                            src={authorImage}
+                            alt={author}
+                            width={24}
+                            height={24}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <span className="font-mono text-xs font-semibold text-slate-900 dark:text-zinc-200">
+                          {author}
+                        </span>
+                      </div>
+                    )}
+
+                    {author && date && (
+                      <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
+                    )}
+
+                    {date && (
+                      <time dateTime={date} className="font-mono text-slate-500 dark:text-zinc-400">
+                        {date}
+                      </time>
+                    )}
+                  </div>
+                )}
+
+                {/* Callout opcional (Avisos de seguridad, notas, CVE) */}
+                {callout && (
+                  <div className="pt-2 text-left">
+                    {callout}
+                  </div>
+                )}
+              </header>
+
+              {/* Cuerpo del Artículo (Renderizado Fluido) */}
+              <div className="leading-relaxed">
+                {children}
+              </div>
+
+              {/* 1. Bloque de Tags y Temas Técnicos */}
+              {tags && <ArticleTags tags={tags} />}
+
+              {/* 2. Barra de Acciones y Compartir */}
+              <ArticleShareActions title={title} />
+            </article>
+          </div>
+
+          {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo (En móvil va después de las lecturas recomendadas) */}
           {!isSidebarCollapsed && (
-            <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8 animate-in fade-in duration-300">
-              {/* 1. Perfil y Biografía de Jorge Doicela */}
+            <aside className="lg:col-span-4 space-y-6 lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
               <AuthorSidebarCard />
-
-              {/* 2. Publicaciones Destacadas con Miniaturas (Inspiración MalwareTech) */}
               <FeaturedPostsSidebarCard />
-
-              {/* 3. Explorador de Especialidades Técnicas con Contadores (Inspiración MalwareTech) */}
               <ExploreTopicsSidebarCard />
-
-              {/* 4. Etiquetas Populares / Temas Técnicos (Nivel 3) */}
               <PopularTagsSidebarCard />
-
-              {/* 5. Boletín / Mantente Informado */}
               <StayInformedCard />
             </aside>
           )}
+
+          {/* Bloque de Lecturas Recomendadas: En móvil orden 2 (debajo del artículo), en desktop orden 3 fila 2 (ancho completo 12 cols) */}
+          <div className="col-span-1 lg:col-span-12 w-full p-6 sm:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2">
+            <RelatedArticlesNav currentCategory={category} currentTitle={title} limit={3} />
+          </div>
 
         </div>
 

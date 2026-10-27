@@ -103,7 +103,7 @@ body,
   margin: 0 !important;
   padding: 0 !important;
   min-height: 100vh !important;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
 }
 
 body {
@@ -224,6 +224,15 @@ body {
 .glass-input-neumorphic:focus {
   border-color: rgba(99, 102, 241, 0.5);
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Utilidad para ocultar barras de scroll preservando la funcionalidad */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* ─── INDICADORES LED DE ESTADO ──────────────────────────────────── */

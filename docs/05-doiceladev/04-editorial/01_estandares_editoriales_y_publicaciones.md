@@ -119,5 +119,19 @@ Las imágenes de portada de cada publicación (`coverImage` en `frontend/web/pub
   * *Ciberseguridad / Acceso SSH:* Llave física de seguridad criptográfica de titanio y candado industrial de acero endurecido.
   * *Infraestructura / Perímetro Linux:* Servidor rack 1U con escudo perimetral translúcido Netfilter.
 
+---
 
+## 7. Delimitación de Alcance en Servidores Linux e Infraestructura
 
+En el área temática de **Infraestructura y Servidores Linux** (`infrastructure`, `security`, `hardening`), el contenido técnico, los laboratorios, guías paso a paso y producción audiovisual se delimitan de forma estricta y exclusiva a la **Familia Debian y Ubuntu**:
+
+* **Distribuciones Oficiales:**
+  * **Ubuntu Server (LTS 22.04 / 24.04)**
+  * **Debian GNU/Linux (Stable 12 Bookworm / 13 Trixie)**
+* **Justificación de Arquitectura y Mercado:**
+  * Representan más del 70% de las instancias desplegadas en nubes públicas (AWS EC2 / Lightsail, GCP, Azure, DigitalOcean, Hetzner).
+  * Garantiza consistencia absoluta de comandos, rutas de configuración (`/etc/default/`, `/etc/ufw/`, `/etc/sysctl.d/`), gestión de paquetes (`apt`, repositorios `.deb`) y servicios (`systemd`).
+* **Estándar de Seguridad y Firewall:**
+  * El firewall perimetral predeterminado es **UFW** (*Uncomplicated Firewall*) operando sobre Netfilter hooks en espacio de kernel.
+  * Mitigación de intrusiones mediante `fail2ban` integrado con el backend `systemd`.
+* **Prohibición de Dispersión:** No se cubren herramientas o familias dispares (como `firewalld`, `dnf`, `rpm` o `SELinux` de RHEL/CentOS/Rocky), salvo mención contextual mínima si un análisis comparativo lo exigiera. Todo el foco técnico práctico y ejecutable permanece 100% en el stack Debian/Ubuntu.

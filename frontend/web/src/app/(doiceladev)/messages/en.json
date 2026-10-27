@@ -435,6 +435,15 @@
     "expandReading": "Expand reading view (hide sidebar)",
     "restoreSidebar": "Restore sidebar",
     "popularTags": "Popular Tags",
-    "breadcrumb": "Breadcrumb"
+    "breadcrumb": "Breadcrumb",
+    "topicsTitle": "Topics & Technologies",
+    "searchTagHint": "Explore all about #{tag}",
+    "shareTitle": "Share this article",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!",
+    "shareOnX": "Share on X",
+    "shareOnLinkedIn": "Share on LinkedIn",
+    "relatedArticlesTitle": "Recommended Reading",
+    "readArticle": "Read publication"
   }
 }

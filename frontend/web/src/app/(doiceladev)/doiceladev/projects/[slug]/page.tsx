@@ -63,6 +63,7 @@ export default async function ProjectDetailPage({ params }: Params) {
       subtitle={project.description}
       date={formattedDate}
       author={project.author}
+      tags={project.techStack}
     >
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (

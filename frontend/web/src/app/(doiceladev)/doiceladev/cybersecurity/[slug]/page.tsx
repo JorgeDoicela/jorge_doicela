@@ -62,6 +62,7 @@ export default async function CybersecurityDetailPage({ params }: Params) {
       subtitle={post.excerpt}
       date={formattedDate}
       author={post.author}
+      tags={post.tags}
     >
       <MarkdownRenderer content={post.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

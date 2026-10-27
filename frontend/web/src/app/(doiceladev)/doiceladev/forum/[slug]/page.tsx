@@ -62,6 +62,7 @@ export default async function ForumTopicDetailPage({ params }: Params) {
       title={topic.title}
       date={formattedDate}
       author={topic.author}
+      tags={topic.category}
     >
       {/* Contenido del Hilo Principal — Server */}
       <MarkdownRenderer content={topic.content} glossaryTerms={glossary || []} />

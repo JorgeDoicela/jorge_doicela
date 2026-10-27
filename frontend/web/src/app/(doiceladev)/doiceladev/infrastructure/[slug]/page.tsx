@@ -62,6 +62,7 @@ export default async function InfrastructureDetailPage({ params }: Params) {
       subtitle={post.subtitle}
       date={formattedDate}
       author={post.author}
+      tags={post.tags}
     >
       <MarkdownRenderer content={post.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

@@ -48,6 +48,11 @@ export default async function AiDetailPage({ params }: Params) {
 
   if (!resource) notFound();
 
+  const formattedDate = new Date(resource.publishedAt || resource.createdAt).toLocaleDateString(
+    locale === 'es' ? 'es-ES' : 'en-US',
+    { day: '2-digit', month: 'long', year: 'numeric' },
+  );
+
   return (
     <DoiceladevArticleLayout
       category="ai"
@@ -55,7 +60,9 @@ export default async function AiDetailPage({ params }: Params) {
       categoryHref="/ai"
       title={resource.name}
       subtitle={resource.description}
+      date={formattedDate}
       author={resource.author}
+      tags={resource.tags}
     >
       <MarkdownRenderer content={resource.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

@@ -62,6 +62,7 @@ export default async function BlogDetailPage({ params }: Params) {
       subtitle={post.subtitle || post.excerpt}
       date={formattedDate}
       author={post.author}
+      tags={post.tags}
     >
       <MarkdownRenderer content={post.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

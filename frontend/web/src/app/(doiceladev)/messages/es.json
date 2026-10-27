@@ -435,6 +435,15 @@
     "expandReading": "Expandir lectura (ocultar barra lateral)",
     "restoreSidebar": "Restaurar barra lateral",
     "popularTags": "Etiquetas Populares",
-    "breadcrumb": "Miga de pan"
+    "breadcrumb": "Miga de pan",
+    "topicsTitle": "Temas y Tecnologías",
+    "searchTagHint": "Ver todo sobre #{tag}",
+    "shareTitle": "Compartir este artículo",
+    "copyLink": "Copiar enlace",
+    "linkCopied": "¡Enlace copiado!",
+    "shareOnX": "Compartir en X",
+    "shareOnLinkedIn": "Compartir en LinkedIn",
+    "relatedArticlesTitle": "Lecturas Recomendadas",
+    "readArticle": "Leer publicación"
   }
 }

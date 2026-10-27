@@ -62,6 +62,7 @@ export default async function NewsDetailPage({ params }: Params) {
       subtitle={article.excerpt}
       date={formattedDate}
       author={article.author}
+      tags={article.tags}
     >
       <MarkdownRenderer content={article.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

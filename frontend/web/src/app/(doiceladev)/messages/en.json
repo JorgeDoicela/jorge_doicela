@@ -21,7 +21,7 @@
     "exploreTopics": "Explore Topics",
     "viewAllInCategory": "View all in {category} →",
     "noPostsInCategory": "No publications yet",
-    "headerSrTitle": "DoicelaDev | Jorge Doicela - DevSecOps Specialist",
+    "headerSrTitle": "DoicelaDev | Jorge Doicela - Full Stack, Cloud & Systems Security",
     "headerLogoAlt": "DoicelaDev - Jorge Doicela"
   },
   "Search": {
@@ -74,11 +74,14 @@
     "slideOf": "Page {current} of {total}"
   },
   "AuthorCard": {
-    "role": "DevSecOps & Cloud Specialist",
-    "bio": "Engineer focused on decoupled architectures, high availability in constrained environments, and perimeter security.",
+    "role": "Full Stack, Cloud & Systems Security",
+    "bio": "End-to-end software solutions: web and native development (Next.js, NestJS, Expo), advanced Debian/Ubuntu server administration, language model integration, and secure infrastructure as code.",
     "githubAria": "Jorge Doicela's GitHub",
     "linkedinAria": "Jorge Doicela's LinkedIn",
-    "emailTitle": "Send email"
+    "youtubeAria": "Jorge Doicela's YouTube Channel",
+    "tiktokAria": "Jorge Doicela's TikTok",
+    "portfolioAria": "Jorge Doicela's Official Portfolio",
+    "emailTitle": "Send email to Jorge Doicela"
   },
   "Newsletter": {
     "title": "Stay Informed",

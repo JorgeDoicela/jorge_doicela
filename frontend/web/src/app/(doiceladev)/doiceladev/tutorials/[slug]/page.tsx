@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Tutorial, TutorialStepWizard } from '../../../entities/tutorials';
 import type { GlossaryTerm } from '../../../entities/glossary/types';
+import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -41,9 +43,17 @@ export default async function TutorialDetailPage({ params }: Params) {
   const locale = await getLocale();
   const tNav = await getTranslations('Nav');
 
-  const [tutorial, glossary] = await Promise.all([
+  const cookieStore = await cookies();
+  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
+
+  const [tutorial, glossary, recommendations] = await Promise.all([
     serverGet<Tutorial>(`/doiceladev/tutorials/${slug}?lang=${locale}`),
     serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+    serverGet<RecommendationCard[]>(
+      `/doiceladev/recommendations?module=tutorials&slug=${slug}&lang=${locale}${
+        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
+      }`,
+    ).catch(() => [] as RecommendationCard[]),
   ]);
 
   if (!tutorial) notFound();
@@ -55,6 +65,7 @@ export default async function TutorialDetailPage({ params }: Params) {
 
   return (
     <DoiceladevArticleLayout
+      slug={slug}
       category="tutorials"
       categoryLabel={tNav('tutorials')}
       categoryHref="/tutorials"
@@ -63,6 +74,7 @@ export default async function TutorialDetailPage({ params }: Params) {
       date={formattedDate}
       author={tutorial.author}
       tags={tutorial.tags}
+      recommendations={recommendations || []}
     >
       <div className="space-y-8">
         {tutorial.description && (

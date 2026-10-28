@@ -316,3 +316,29 @@ Para garantizar un servidor ultra-eficiente en el VPS de 1 GB de RAM y evitar du
 
 
 
+
+---
+
+## 8. Motor de Recomendaciones y Similitud de Contenido (`RecommendationsModule`)
+
+Para erradicar soluciones provisionales y proveer recomendaciones contextuales precisas ("según la noticia" y "según la persona") sin sobrecargar el VPS de 1 GB de RAM:
+
+### 8.1 Entidades Relacionales de Etiquetas
+* **`Tag` (`tags`):** Modelo TypeORM en `backend/src/doiceladev/common/entities/tag.entity.ts` (`id`, `slug` UNIQUE, `label`).
+* **`ContentTag` (`content_tags`):** Tabla puente polimórfica en `backend/src/doiceladev/common/entities/content-tag.entity.ts` con clave primaria compuesta `(content_type, content_id, tag_id)` e índices B-Tree `IDX_content_tags_tag` y `IDX_content_tags_content`.
+
+### 8.2 Endpoint de Recomendaciones (`GET /doiceladev/recommendations`)
+* **Parámetros de Consulta:**
+  * `slug` (string, obligatorio): Identificador único del artículo fuente.
+  * `module` (string, opcional): Submódulo de origen (`infrastructure`, `cybersecurity`, etc.).
+  * `lang` (string, opcional, por defecto `'es'`): Idioma de consulta.
+  * `exclude` (string, opcional): Lista separada por comas de slugs ya leídos por el usuario para supresión de fatiga.
+  * `limit` (number, opcional, por defecto `3`, máximo `10`): Número de tarjetas a retornar.
+* **Algoritmo de Similitud Relacional:**
+  1. Identifica el artículo fuente y extrae su vector de etiquetas $T_A$ mediante `content_tags`.
+  2. Evalúa los candidatos en los 8 submódulos que compartan etiquetas en el mismo idioma.
+  3. Calcula el coeficiente de Jaccard sobre etiquetas:
+     $$J(A, B) = \frac{|T_A \cap T_B|}{|T_A \cup T_B|}$$
+  4. Pondera afinidad de categoría (bono de $+0.30$ si comparte subcategoría técnica y bono por dominio afín) junto con desempate por calidad editorial (`smartScore` normalizado).
+  5. Aplica filtro antifatiga excluyendo publicaciones presentes en `exclude`. Si no hay suficientes publicaciones no leídas para cubrir el cupo, incorpora publicaciones de mayor afinidad como respaldo.
+  6. Retorna un payload ultraligero (< 1 KB) conformado por `RecommendationCardDto[]`.

@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { SecurityPost } from '../../../entities/cybersecurity';
 import type { GlossaryTerm } from '../../../entities/glossary/types';
+import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -41,9 +43,17 @@ export default async function CybersecurityDetailPage({ params }: Params) {
   const locale = await getLocale();
   const tNav = await getTranslations('Nav');
 
-  const [post, glossary] = await Promise.all([
+  const cookieStore = await cookies();
+  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
+
+  const [post, glossary, recommendations] = await Promise.all([
     serverGet<SecurityPost>(`/doiceladev/cybersecurity/${slug}?lang=${locale}`),
     serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+    serverGet<RecommendationCard[]>(
+      `/doiceladev/recommendations?module=cybersecurity&slug=${slug}&lang=${locale}${
+        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
+      }`,
+    ).catch(() => [] as RecommendationCard[]),
   ]);
 
   if (!post) notFound();
@@ -55,6 +65,7 @@ export default async function CybersecurityDetailPage({ params }: Params) {
 
   return (
     <DoiceladevArticleLayout
+      slug={slug}
       category="cybersecurity"
       categoryLabel={tNav('cybersecurity')}
       categoryHref="/cybersecurity"
@@ -63,6 +74,7 @@ export default async function CybersecurityDetailPage({ params }: Params) {
       date={formattedDate}
       author={post.author}
       tags={post.tags}
+      recommendations={recommendations || []}
     >
       <MarkdownRenderer content={post.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

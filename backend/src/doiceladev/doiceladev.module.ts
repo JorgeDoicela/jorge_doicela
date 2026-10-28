@@ -13,6 +13,8 @@ import { TutorialStep } from './tutorials/entities/tutorial-step.entity';
 import { Project } from './projects/entities/project.entity';
 import { InfrastructurePost } from './infrastructure/entities/infrastructure-post.entity';
 import { GlossaryTerm } from './glossary/entities/glossary-term.entity';
+import { Tag } from './common/entities/tag.entity';
+import { ContentTag } from './common/entities/content-tag.entity';
 
 // Submódulos Verticales Desacoplados
 import { NewsModule } from './news/news.module';
@@ -25,6 +27,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { PortalModule } from './portal/portal.module';
 import { GlossaryModule } from './glossary/glossary.module';
+import { RecommendationsModule } from './recommendations/recommendations.module';
 import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
@@ -58,6 +61,8 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         Project,
         InfrastructurePost,
         GlossaryTerm,
+        Tag,
+        ContentTag,
       ],
       synchronize: true,
     }),
@@ -71,6 +76,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     InfrastructureModule,
     PortalModule,
     GlossaryModule,
+    RecommendationsModule,
   ],
 })
 export class DoiceladevModule {}

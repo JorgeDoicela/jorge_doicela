@@ -22,6 +22,17 @@ export interface PortalFeedItem {
   smartScore: number;
 }
 
+export interface RecommendationCard {
+  id: string;
+  href: string;
+  title: string;
+  category: DoiceladevArticleCategory;
+  categoryMeta: string;
+  coverImage?: string;
+  tag?: string;
+  score: number;
+}
+
 export interface PortalSpotlightData {
   news: NewsArticle[];
   posts: BlogPost[];

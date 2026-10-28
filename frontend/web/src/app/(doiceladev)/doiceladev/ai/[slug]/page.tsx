@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { AiResource } from '../../../entities/ai';
 import type { GlossaryTerm } from '../../../entities/glossary/types';
+import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -41,9 +43,17 @@ export default async function AiDetailPage({ params }: Params) {
   const locale = await getLocale();
   const tNav = await getTranslations('Nav');
 
-  const [resource, glossary] = await Promise.all([
+  const cookieStore = await cookies();
+  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
+
+  const [resource, glossary, recommendations] = await Promise.all([
     serverGet<AiResource>(`/doiceladev/ai/${slug}?lang=${locale}`),
     serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+    serverGet<RecommendationCard[]>(
+      `/doiceladev/recommendations?module=ai&slug=${slug}&lang=${locale}${
+        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
+      }`,
+    ).catch(() => [] as RecommendationCard[]),
   ]);
 
   if (!resource) notFound();
@@ -55,6 +65,7 @@ export default async function AiDetailPage({ params }: Params) {
 
   return (
     <DoiceladevArticleLayout
+      slug={slug}
       category="ai"
       categoryLabel={tNav('ai')}
       categoryHref="/ai"
@@ -63,6 +74,7 @@ export default async function AiDetailPage({ params }: Params) {
       date={formattedDate}
       author={resource.author}
       tags={resource.tags}
+      recommendations={recommendations || []}
     >
       <MarkdownRenderer content={resource.contentMarkdown} glossaryTerms={glossary || []} />
     </DoiceladevArticleLayout>

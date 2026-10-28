@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Project, ProjectActions } from '../../../entities/projects';
+import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MermaidBlock, CalloutBlock } from '../../../shared/markdown';
@@ -41,7 +43,17 @@ export default async function ProjectDetailPage({ params }: Params) {
   const tNav = await getTranslations('Nav');
   const tDetail = await getTranslations('Detail');
 
-  const project = await serverGet<Project>(`/doiceladev/projects/${slug}?lang=${locale}`);
+  const cookieStore = await cookies();
+  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
+
+  const [project, recommendations] = await Promise.all([
+    serverGet<Project>(`/doiceladev/projects/${slug}?lang=${locale}`),
+    serverGet<RecommendationCard[]>(
+      `/doiceladev/recommendations?module=projects&slug=${slug}&lang=${locale}${
+        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
+      }`,
+    ).catch(() => [] as RecommendationCard[]),
+  ]);
 
   if (!project) notFound();
 
@@ -56,6 +68,7 @@ export default async function ProjectDetailPage({ params }: Params) {
 
   return (
     <DoiceladevArticleLayout
+      slug={slug}
       category="projects"
       categoryLabel={tNav('projects')}
       categoryHref="/projects"
@@ -64,6 +77,7 @@ export default async function ProjectDetailPage({ params }: Params) {
       date={formattedDate}
       author={project.author}
       tags={project.techStack}
+      recommendations={recommendations || []}
     >
       {/* Badges de Tecnologías */}
       {techList.length > 0 && (

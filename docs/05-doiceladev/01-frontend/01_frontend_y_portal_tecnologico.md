@@ -332,3 +332,27 @@ Para garantizar que los popovers explicativos nunca se corten por límites de pa
 
 
 
+
+---
+
+## 9. Arquitectura de Recomendaciones Inteligentes en SSR y Telemetría de Lectura
+
+Para resolver la recirculación editorial con cero parches, cero parpadeo visual y cero sobrecarga de red:
+
+### 9.1 Renderizado de Servidor Síncrono (RSC)
+En lugar de forzar descargas en el cliente (`useEffect` / `useDoiceladevPortal`), todas las páginas de detalle (`[slug]/page.tsx`) en los 8 módulos resuelven las recomendaciones síncronamente en el servidor:
+1. **Lectura de Cookie de Historial (`cookies()`):** Lee la cookie HTTP `doicela_read_history` sin latencia de red.
+2. **Petición Concurrente:** Ejecuta en paralelo dentro de `Promise.all`:
+   ```ts
+   serverGet<RecommendationCard[]>(
+     `/doiceladev/recommendations?module=${module}&slug=${slug}&lang=${locale}${
+       readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
+     }`
+   )
+   ```
+3. **Inyección en Layout:** Las tarjetas se entregan pre-renderizadas en el HTML a [`DoiceladevArticleLayout`](/doiceladev/widgets/article-layout/ui/DoiceladevArticleLayout.tsx) y [`RelatedArticlesNav`](/doiceladev/widgets/article-layout/ui/RelatedArticlesNav.tsx), garantizando paridad 1:1 entre SSR y el cliente (cero warnings de hidratación).
+
+### 9.2 Telemetría Anónima Antifatiga (`ReaderHistoryTracker`)
+* **Componente Aislado:** [`ReaderHistoryTracker.tsx`](/doiceladev/features/reader-history/ui/ReaderHistoryTracker.tsx) opera como un observador puro de cliente.
+* **Almacenamiento Efímero en Cookie:** Mantiene un búfer FIFO de hasta 10 identificadores `slug` leídos recientemente (`max-age=30 días`, `SameSite=Lax`, < 150 bytes).
+* **Cero Impacto en VPS:** No requiere persistencia de sesiones en el servidor ni genera escrituras en `doiceladev.sqlite`, blindando la memoria del servidor de 1 GB de RAM.

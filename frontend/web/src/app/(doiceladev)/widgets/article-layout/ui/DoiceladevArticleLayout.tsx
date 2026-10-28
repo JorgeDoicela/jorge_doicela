@@ -16,6 +16,8 @@ import { ArticleTags } from './ArticleTags';
 import { ArticleShareActions } from './ArticleShareActions';
 import { RelatedArticlesNav } from './RelatedArticlesNav';
 import { DoiceladevSection } from '../../category-nav/ui/CategoryNav';
+import { ReaderHistoryTracker } from '../../../features/reader-history';
+import { RecommendationCard } from '../../../entities/portal/types';
 
 export interface BreadcrumbItem {
   label: string;
@@ -23,6 +25,7 @@ export interface BreadcrumbItem {
 }
 
 export interface DoiceladevArticleLayoutProps {
+  slug?: string;
   category: DoiceladevSection;
   categoryLabel: string;
   categoryHref: string;
@@ -35,11 +38,12 @@ export interface DoiceladevArticleLayoutProps {
   callout?: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
   tags?: string[] | string;
+  recommendations?: RecommendationCard[];
   children: React.ReactNode;
 }
 
-
 export function DoiceladevArticleLayout({
+  slug,
   category,
   categoryLabel,
   categoryHref,
@@ -52,6 +56,7 @@ export function DoiceladevArticleLayout({
   callout,
   breadcrumbs,
   tags,
+  recommendations = [],
   children,
 }: DoiceladevArticleLayoutProps) {
   const tNav = useTranslations('Nav');
@@ -60,6 +65,9 @@ export function DoiceladevArticleLayout({
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
+      {/* Telemetría anónima de historial de lectura en cookie HTTP (0 overhead de servidor) */}
+      {slug && <ReaderHistoryTracker slug={slug} />}
+
       <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-6 sm:px-6 lg:px-8 flex-1 pb-16 md:pb-24 space-y-6 sm:space-y-8">
         
         {/* Cabecera Editorial Reutilizable */}
@@ -202,7 +210,7 @@ export function DoiceladevArticleLayout({
             </article>
           </div>
 
-          {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo (En móvil va después de las lecturas recomendadas) */}
+          {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo */}
           {!isSidebarCollapsed && (
             <aside className="lg:col-span-4 space-y-6 lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
               <AuthorSidebarCard />
@@ -213,9 +221,14 @@ export function DoiceladevArticleLayout({
             </aside>
           )}
 
-          {/* Bloque de Lecturas Recomendadas: En móvil orden 2 (debajo del artículo), en desktop orden 3 fila 2 (ancho completo 12 cols) */}
+          {/* Bloque de Lecturas Recomendadas (100% SSR, Similitud de Contenido + Antifatiga) */}
           <div className="col-span-1 lg:col-span-12 w-full p-6 sm:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2">
-            <RelatedArticlesNav currentCategory={category} currentTitle={title} limit={3} />
+            <RelatedArticlesNav
+              currentCategory={category}
+              currentTitle={title}
+              recommendations={recommendations}
+              limit={3}
+            />
           </div>
 
         </div>
@@ -227,4 +240,3 @@ export function DoiceladevArticleLayout({
     </div>
   );
 }
-

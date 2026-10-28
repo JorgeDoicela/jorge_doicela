@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { ForumTopic, ForumReply } from '../../../entities/forum';
 import type { GlossaryTerm } from '../../../entities/glossary/types';
+import type { RecommendationCard } from '../../../entities/portal/types';
 import { ForumReplyForm } from '../../../features/forum-reply';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
@@ -42,9 +44,17 @@ export default async function ForumTopicDetailPage({ params }: Params) {
   const tNav = await getTranslations('Nav');
   const tDetail = await getTranslations('Detail');
 
-  const [topic, glossary] = await Promise.all([
+  const cookieStore = await cookies();
+  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
+
+  const [topic, glossary, recommendations] = await Promise.all([
     serverGet<ForumTopic>(`/doiceladev/forum/${slug}?lang=${locale}`),
     serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
+    serverGet<RecommendationCard[]>(
+      `/doiceladev/recommendations?module=forum&slug=${slug}&lang=${locale}${
+        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
+      }`,
+    ).catch(() => [] as RecommendationCard[]),
   ]);
 
   if (!topic) notFound();
@@ -56,6 +66,7 @@ export default async function ForumTopicDetailPage({ params }: Params) {
 
   return (
     <DoiceladevArticleLayout
+      slug={slug}
       category="forum"
       categoryLabel={tNav('forum')}
       categoryHref="/forum"
@@ -63,6 +74,7 @@ export default async function ForumTopicDetailPage({ params }: Params) {
       date={formattedDate}
       author={topic.author}
       tags={topic.category}
+      recommendations={recommendations || []}
     >
       {/* Contenido del Hilo Principal — Server */}
       <MarkdownRenderer content={topic.content} glossaryTerms={glossary || []} />

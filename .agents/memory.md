@@ -40,6 +40,16 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - **Internacionalización 100% Simétrica:** Namespaces `Dictionaries`, `Studio` y `Nav` sincronizados al 100% en `messages/es.json` y `messages/en.json`. Cero textos quemados.
 
 
+* **Screen Wake Lock en el Entorno de Estudio de KARTEX (`useScreenWakeLock`):**
+  - **Dominio y Motivación:** Prevención de apagado y suspensión brusca de pantalla durante sesiones de lectura continua y análisis exegético en los 10 módulos de estudio (`/study/*`).
+  - **Cero Dependencias y 100% Nativo:** Implementación basada en la Screen Wake Lock API nativa (`navigator.wakeLock`) del W3C, encapsulada en `(kartex)/shared/hooks/useScreenWakeLock.ts`. 0 KB de paquetes externos y 0 carga en memoria heap en el VPS de 1 GB RAM.
+  - **Principio de Cajas Negras y Delimitación:** Activación exclusiva dentro del espacio de estudio de Kartex (`(kartex)/kartex/study/layout.tsx`). No afecta la landing (`/kartex`) para preservar batería en equipos portátiles y dispositivos móviles. Cero interferencia con `(landing)`, `(portfolio)` o `(doiceladev)`.
+  - **Resiliencia de Ciclo de Vida:** Control reactivo ante eventos `visibilitychange` para re-adquirir el bloqueo al volver a primer plano tras minimizar o alternar pestañas, liberación limpia de recursos (`release()`) en desmontaje y degradación elegante silenciosa ante navegadores sin soporte o restricciones del sistema operativo.
+
+* **Limpieza Automática de Búsqueda Canónica en KARTEX (`searchQuery` Reset):**
+  - **Problema de UX Resuelto:** Al realizar una búsqueda en la barra lateral de Navegación Canónica (`KartexNavigationSidebar`), en el navegador de pasajes de comentarios (`CommentariesPassageNavigator`) o en el selector unificado (`UnifiedPassagePicker`), el término buscado persistía en el input al seleccionar un libro/capítulo o al cerrar/salir del panel, forzando al usuario a borrar manualmente el texto para volver a ver el canon completo.
+  - **Solución Arquitectónica:** Sincronización reactiva del ciclo de vida del estado `searchQuery`: limpieza inmediata (`setSearchQuery('')`) al confirmar selección de pasaje, al hacer clic en enlaces directos al lector, y ante cualquier evento de cierre (`onClose`, `!isOpen`, clic exterior o tecla Escape), garantizando que el panel siempre se reabra en estado limpio y canónico completo.
+
 * **Auditoría Integral y Corrección de KARTEX post-refactorización:**
   - Sincronización de rutas canónicas en `sitemap.ts`: se actualizaron las URLs a la estructura canónica `/study/standard`, `/study/parallel`, `/study/interlinear`, `/study/word-study`, `/study/atlas`, `/study/timeline`, `/study/archaeology`, `/study/evangelism`, eliminando endpoints obsoletos (`/reader`, `/lexicon`, `/exegesis`).
   - Navegación reactiva en `KartexNavigationSidebar`: se corrigió el enlace al lector para enviar `book.id` en lugar de `book.abbreviation`, y en `KartexPassageContext` se sincronizó reactivamente el estado ante mutaciones de `searchParams` en cliente tanto para IDs numéricos como para abreviaturas canónicas.

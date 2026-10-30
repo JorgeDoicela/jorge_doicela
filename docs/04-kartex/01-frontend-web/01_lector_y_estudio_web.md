@@ -59,7 +59,7 @@ frontend/web/src/app/(kartex)/
 ├── shared/                    # CAPA DE ELEMENTOS COMPARTIDOS (FSD SHARED)
 │   ├── context/               # KartexPassageContext (sincroniza bookId, chapter y trans con URL)
 │   ├── data/                  # canonData.ts (categorías canónicas, recuentos de capítulos por ID y abreviación)
-│   ├── hooks/                 # useKartexKeybindings, useTouchSwipe
+│   ├── hooks/                 # useKartexKeybindings, useTouchSwipe, useHeaderScrollBehavior, useScreenWakeLock
 │   ├── seo/                   # KartexJsonLd (Schema.org estructurado)
 │   ├── ui/                    # BackToKartexButton, BackToPortalButton, KartexLogo, KartexSelect, DraggableEdgeTab, OngoingExpansionNotice, ResizeBorderHandle, EdgePeekStrip
 │   └── index.ts               # Barrel export unificado de shared

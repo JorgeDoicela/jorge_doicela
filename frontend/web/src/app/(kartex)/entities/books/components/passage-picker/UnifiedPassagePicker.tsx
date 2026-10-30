@@ -61,11 +61,19 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     [selectedBookForChapters, currentBook],
   );
 
+  // Limpiar búsqueda automáticamente al cerrar el selector
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchQuery('');
+    }
+  }, [isOpen]);
+
   // Cerrar al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
+        setSearchQuery('');
         setSelectedBookForChapters(null);
       }
     };
@@ -149,6 +157,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     }
     if (e.key === 'Escape') {
       setIsOpen(false);
+      setSearchQuery('');
       setSelectedBookForChapters(null);
     }
   };
@@ -178,6 +187,9 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
       <button
         type="button"
         onClick={() => {
+          if (isOpen) {
+            setSearchQuery('');
+          }
           setIsOpen(!isOpen);
           setSelectedBookForChapters(null);
         }}

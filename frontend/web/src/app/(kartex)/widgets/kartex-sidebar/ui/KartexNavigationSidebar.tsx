@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -57,7 +57,13 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
   const isOpen = propIsOpen !== undefined ? propIsOpen : (passageContext?.isLeftSidebarOpen ?? false);
   const handleClose = propOnClose ?? passageContext?.toggleLeftSidebar ?? (() => {});
 
+  const onPanelClose = () => {
+    setSearchQuery('');
+    handleClose();
+  };
+
   const handleSelectPassage = (bookId: number, chapter: number) => {
+    setSearchQuery('');
     if (propOnSelectPassage) {
       propOnSelectPassage(bookId, chapter);
     } else if (passageContext) {
@@ -72,6 +78,20 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
   const [activeTab, setActiveTab] = useState<TestamentTab>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedBookId, setExpandedBookId] = useState<number | null>(selectedBookId || 1);
+
+  // Limpiar texto de búsqueda automáticamente cada vez que el sidebar se cierra o se sale de él
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchQuery('');
+    }
+  }, [isOpen]);
+
+  // Sincronizar libro expandido cuando cambia selectedBookId
+  useEffect(() => {
+    if (selectedBookId) {
+      setExpandedBookId(selectedBookId);
+    }
+  }, [selectedBookId]);
 
   // Obtener nombre localizado de libro
   const getBookTitle = (b: Book): string => {
@@ -111,7 +131,7 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
       icon={<BookOpen className="w-4 h-4 text-foreground" />}
       ariaLabel={tStudio('toggleSidebar')}
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onPanelClose}
       width={leftSidebarWidth}
       onResize={setLeftSidebarWidth}
       onReset={resetLeftSidebarWidth}
@@ -241,6 +261,12 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
                       <div className="mt-2.5 pt-2 border-t border-border/60 flex items-center justify-between">
                         <Link
                           href={`/study/standard?book=${book.id}&chapter=${selectedChapter || 1}`}
+                          onClick={() => {
+                            setSearchQuery('');
+                            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                              handleClose();
+                            }
+                          }}
                           className="text-[11px] text-accents-5 hover:text-foreground flex items-center gap-1 transition-colors font-medium group"
                         >
                           <BookOpen className="w-3 h-3 text-accents-4 group-hover:text-foreground" />

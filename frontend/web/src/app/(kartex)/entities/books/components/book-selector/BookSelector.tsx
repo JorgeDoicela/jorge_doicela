@@ -110,7 +110,10 @@ export function BookSelector({ selectedBookId, onSelectBook }: BookSelectorProps
             <button
               key={book.id}
               type="button"
-              onClick={() => onSelectBook(book.id)}
+              onClick={() => {
+                onSelectBook(book.id);
+                setSearchQuery('');
+              }}
               className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all text-left flex items-center justify-between cursor-pointer ${
                 selectedBookId === book.id
                   ? 'bg-foreground text-background border-foreground font-bold shadow-xs'

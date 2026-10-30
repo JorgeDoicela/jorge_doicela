@@ -47,7 +47,7 @@ import {
   DictionariesSidebar,
   DictionariesInspector,
 } from '../../features/dictionaries';
-import { useTouchSwipe, useHeaderScrollBehavior } from '../../shared/hooks';
+import { useTouchSwipe, useHeaderScrollBehavior, useScreenWakeLock } from '../../shared/hooks';
 
 function ScopedModuleProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';
@@ -126,6 +126,9 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
   const { mainRef, handleMainScroll } = useHeaderScrollBehavior(setIsHeaderVisible, {
     disabled: isAtlas,
   });
+
+  // Mantener la pantalla activa (Screen Wake Lock) durante la lectura y estudio analítico
+  useScreenWakeLock({ enabled: true });
 
   // Asegurar que las barras reaparezcan de inmediato y el scroll regrese al inicio al cambiar de pasaje
   useEffect(() => {

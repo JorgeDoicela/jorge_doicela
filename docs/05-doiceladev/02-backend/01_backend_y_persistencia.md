@@ -268,7 +268,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 | **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.jpg` |
 | **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.jpg` |
 | **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.jpg` |
-| **Ciberseguridad** | `security.json` | `guia-bastionado-ssh-seguridad-linux` | `/doiceladev/images/covers/cybersecurity/bastionado-ssh-linux.jpg` |
+| **Ciberseguridad** | `security.json` | `vulnerabilidades-php-cve-2024-4577-parchado-seguridad` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.jpg` |
 | **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.jpg` |
 | **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.jpg` |
 | **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.jpg` |

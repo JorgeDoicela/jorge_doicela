@@ -372,5 +372,71 @@
     "caseSensitive": false,
     "language": "en",
     "orderPriority": 40
+  },
+  {
+    "slug": "sapi",
+    "term": "SAPI",
+    "aliases": "sapi, server api, php sapi",
+    "category": "backend",
+    "shortDefinition": "Capa de abstracción que define cómo interactúa el intérprete PHP con el servidor web (como fpm-fcgi, cli, apache2handler o cgi-fcgi).",
+    "keyDifference": "A diferencia de un framework o librería, SAPI determina la arquitectura física de ejecución del proceso y el paso de variables de entorno.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 80
+  },
+  {
+    "slug": "sapi",
+    "term": "SAPI",
+    "aliases": "sapi, server api, php sapi",
+    "category": "backend",
+    "shortDefinition": "Abstraction interface defining how the PHP runtime communicates with the host web server (e.g. fpm-fcgi, cli, apache2handler, or cgi-fcgi).",
+    "keyDifference": "Unlike frameworks or libraries, SAPI dictates the physical process execution model and environment variable passing.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 80
+  },
+  {
+    "slug": "php-fpm",
+    "term": "PHP-FPM",
+    "aliases": "php-fpm, fpm, fastcgi process manager",
+    "category": "backend",
+    "shortDefinition": "Gestor avanzado de procesos FastCGI para PHP que mantiene un pool persistente de workers en memoria para alto tráfico.",
+    "keyDifference": "A diferencia de CGI tradicional que arranca un binario por petición, PHP-FPM atiende solicitudes mediante sockets UNIX o TCP sin invocar la consola del SO.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 85
+  },
+  {
+    "slug": "php-fpm",
+    "term": "PHP-FPM",
+    "aliases": "php-fpm, fpm, fastcgi process manager",
+    "category": "backend",
+    "shortDefinition": "Advanced FastCGI Process Manager maintaining a persistent worker pool in memory for high-concurrency web workloads.",
+    "keyDifference": "Unlike legacy CGI which spawns an OS process per request, PHP-FPM processes FastCGI packets over UNIX or TCP sockets without shell invocation.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 85
+  },
+  {
+    "slug": "best-fit-mapping",
+    "term": "Best-Fit Mapping",
+    "aliases": "best-fit mapping, best-fit, best fit",
+    "category": "security",
+    "shortDefinition": "Mecanismo del sistema operativo donde caracteres Unicode sin correspondencia exacta son convertidos a su carácter ASCII visualmente más similar.",
+    "keyDifference": "A diferencia del rechazo estricto (strict byte decoding), el mapeo permisivo puede transformar caracteres como el guion suave (0xAD) en guiones ASCII (-) habilitando inyecciones.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 75
+  },
+  {
+    "slug": "best-fit-mapping",
+    "term": "Best-Fit Mapping",
+    "aliases": "best-fit mapping, best-fit, best fit",
+    "category": "security",
+    "shortDefinition": "Operating system character conversion routine where unmapped Unicode characters are converted to their closest visual ASCII equivalent.",
+    "keyDifference": "Unlike strict byte validation, permissive mapping can translate non-ASCII characters like soft hyphens (0xAD) into ASCII hyphens (-), enabling argument injection.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 75
   }
 ]

@@ -17,6 +17,7 @@ import {
   Maximize2,
   ZoomIn,
   ZoomOut,
+  RotateCcw,
   X,
 } from 'lucide-react';
 
@@ -75,8 +76,9 @@ function detectDiagramType(chart: string): DiagramCategory {
 function extractSvgDimensions(svgString: string): { width: number; height: number } | null {
   if (!svgString) return null;
 
+  // viewBox="0 0 800 1200" o con comas intermedias
   const viewBoxMatch = svgString.match(
-    /viewBox=["']\s*([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)\s*["']/i
+    /viewBox=["']\s*([0-9.-]+)[,\s]+([0-9.-]+)[,\s]+([0-9.-]+)[,\s]+([0-9.-]+)\s*["']/i
   );
   if (viewBoxMatch && viewBoxMatch[3] && viewBoxMatch[4]) {
     const width = parseFloat(viewBoxMatch[3]);
@@ -158,24 +160,82 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   const diagramCategory = useMemo(() => detectDiagramType(chart), [chart]);
   const DiagramIcon = useMemo(() => getDiagramIcon(diagramCategory), [diagramCategory]);
 
+  /**
+   * Cálculo determinista del "Fit to Screen" (Ajuste a pantalla completo).
+   * Evalúa las dimensiones intrínsecas del diagrama contra el viewport actual,
+   * asegurando que diagramas largos (verticales) o anchos (horizontales) queden
+   * 100% visibles de extremo a extremo sin recortes al abrir el visor.
+   */
+  const calculateFitScale = useCallback(
+    (dims?: { width: number; height: number } | null) => {
+      if (typeof window === 'undefined') return 1;
+
+      const w = dims?.width || dimensions?.width || 800;
+      const h = dims?.height || dimensions?.height || 600;
+
+      const vWidth = window.innerWidth;
+      const vHeight = window.innerHeight;
+
+      // Márgenes de respiración del viewport (espacio para la barra de herramientas superior en desktop/mobile)
+      const marginX = vWidth < 640 ? 24 : 80;
+      const marginY = vHeight < 640 ? 80 : 120;
+
+      // Padding interno de la tarjeta (p-6 a p-10)
+      const cardPaddingX = vWidth < 640 ? 48 : 80;
+      const cardPaddingY = vWidth < 640 ? 48 : 80;
+
+      const totalCardWidth = Math.max(w, 360) + cardPaddingX;
+      const totalCardHeight = h + cardPaddingY;
+
+      const availableWidth = Math.max(vWidth - marginX, 200);
+      const availableHeight = Math.max(vHeight - marginY, 200);
+
+      const scaleX = availableWidth / totalCardWidth;
+      const scaleY = availableHeight / totalCardHeight;
+
+      // Escala que garantiza que el 100% del card quepa en pantalla (ambos ejes)
+      const fit = Math.min(scaleX, scaleY);
+
+      // Si el diagrama cabe naturalmente en escala 1.0, respetamos 1.0 como escala inicial;
+      // si excede la pantalla, aplicamos el factor de reducción óptimo (mínimo 0.15)
+      return Math.min(1.0, Math.max(0.15, Number(fit.toFixed(2))));
+    },
+    [dimensions]
+  );
+
   const handleZoomIn = useCallback(() => {
     setScale((prev) => Math.min(5, Number((prev * 1.25).toFixed(2))));
   }, []);
 
   const handleZoomOut = useCallback(() => {
-    setScale((prev) => Math.max(0.3, Number((prev * 0.8).toFixed(2))));
+    setScale((prev) => Math.max(0.15, Number((prev * 0.8).toFixed(2))));
   }, []);
 
-  const handleReset = useCallback(() => {
-    setScale(1);
+  const handleFitToScreen = useCallback(() => {
+    const fit = calculateFitScale(dimensions);
+    setScale(fit);
     setPosition({ x: 0, y: 0 });
-  }, []);
+  }, [calculateFitScale, dimensions]);
+
+  const handleToggleFit = useCallback(() => {
+    const fit = calculateFitScale(dimensions);
+    // Si la escala actual está cercana al fit óptimo, expandir al 100% (1:1)
+    if (Math.abs(scale - fit) < 0.05 && scale < 0.95) {
+      setScale(1.0);
+    } else {
+      // Si está en 1.0 o en otro nivel de zoom, reajustar a pantalla completa
+      setScale(fit);
+      setPosition({ x: 0, y: 0 });
+    }
+  }, [calculateFitScale, dimensions, scale]);
 
   const openModal = useCallback(() => {
-    setScale(1);
+    const initialFit = calculateFitScale(dimensions);
+    setScale(initialFit);
     setPosition({ x: 0, y: 0 });
+    hasMovedRef.current = false;
     setIsExpanded(true);
-  }, []);
+  }, [calculateFitScale, dimensions]);
 
   const closeModal = useCallback(() => {
     setIsExpanded(false);
@@ -186,6 +246,22 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Recalcular el ajuste a pantalla si la ventana cambia de tamaño mientras el visor está abierto
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    const handleResize = () => {
+      if (!hasMovedRef.current) {
+        const fit = calculateFitScale(dimensions);
+        setScale(fit);
+        setPosition({ x: 0, y: 0 });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isExpanded, calculateFitScale, dimensions]);
 
   useEffect(() => {
     let isMounted = true;
@@ -203,7 +279,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
         const mermaid = (await import('mermaid')).default;
         const isDark = resolvedTheme === 'dark';
 
-        // Configuración universal calibrada para Mermaid 12 (Commit aa831c0204b697c5ca00c78a984f7c1a3345cd20)
+        // Configuración universal calibrada para Mermaid 12
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'loose',
@@ -300,7 +376,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
       const factor = e.deltaY < 0 ? 1.15 : 0.87;
       setScale((prev) => {
         const next = prev * factor;
-        return Math.min(5, Math.max(0.3, Number(next.toFixed(2))));
+        return Math.min(5, Math.max(0.15, Number(next.toFixed(2))));
       });
     };
 
@@ -311,7 +387,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
     };
   }, [isExpanded]);
 
-  // Manejo de teclado (Escape, +, -, 0) y bloqueo absoluto del scroll del documento
+  // Manejo de teclado (Escape, +, -, 0, f, 1) y bloqueo absoluto del scroll del documento
   useEffect(() => {
     if (!isExpanded) return;
 
@@ -322,8 +398,11 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
         handleZoomIn();
       } else if (e.key === '-' || e.key === '_') {
         handleZoomOut();
-      } else if (e.key === '0') {
-        handleReset();
+      } else if (e.key === '0' || e.key.toLowerCase() === 'f') {
+        handleFitToScreen();
+      } else if (e.key === '1') {
+        setScale(1.0);
+        setPosition({ x: 0, y: 0 });
       }
     };
 
@@ -343,7 +422,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
       document.body.style.touchAction = originalTouchAction;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isExpanded, closeModal, handleZoomIn, handleZoomOut, handleReset]);
+  }, [isExpanded, closeModal, handleZoomIn, handleZoomOut, handleFitToScreen]);
 
   // Manejadores de arrastre con ratón (Pan en Desktop)
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -376,7 +455,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
     setIsInteracting(false);
   };
 
-  // Manejadores táctiles nativos con passive: false para smartphones y tablets (Touch Pan & Pinch Zoom fluido)
+  // Manejadores táctiles nativos con passive: false para smartphones y tablets
   useEffect(() => {
     if (!isExpanded) return;
 
@@ -475,7 +554,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
           };
         } else {
           const factor = dist / touchGesture.startDist;
-          const nextScale = Math.min(5, Math.max(0.3, touchGesture.baseScale * factor));
+          const nextScale = Math.min(5, Math.max(0.15, touchGesture.baseScale * factor));
           setScale(nextScale);
 
           const deltaMidX = midX - touchGesture.startMidX;
@@ -540,14 +619,18 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
 
   // En la vista del artículo:
   // Se respeta el ancho natural del diagrama (tope 1020px en desktop) y max-width 100%.
-  // En móvil se adapta de forma fluida para verse COMPLETO de inicio a fin sin cortes laterales.
   const naturalWidth = dimensions?.width || 680;
   const targetInlineWidth = Math.min(Math.round(naturalWidth), 1020);
+
+  // En el modal inmersivo:
+  // Respetamos el ancho intrínseco natural del SVG (mínimo 360px) sin forzar ensanchamientos artificiales
+  // que distorsionen la altura de los diagramas verticales.
+  const modalTargetWidth = dimensions?.width ? Math.max(dimensions.width, 360) : 800;
 
   return (
     <>
       <div className="my-6 rounded-2xl bg-white dark:bg-[#12161f] border border-black/[0.08] dark:border-white/[0.08] overflow-hidden transition-all duration-300">
-        {/* Cabecera Técnica Minimalista: Solo Iconos de Acción */}
+        {/* Cabecera Técnica Minimalista */}
         <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 bg-black/[0.02] dark:bg-white/[0.02] border-b border-black/[0.06] dark:border-white/[0.06] select-none">
           <div className="flex items-center gap-2.5 min-w-0">
             <DiagramIcon className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
@@ -557,7 +640,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
           </div>
 
           <div className="flex items-center gap-1">
-            {/* Botón Expandir (Solo Icono) */}
+            {/* Botón Expandir */}
             <button
               onClick={openModal}
               className="p-1.5 rounded-lg text-slate-500 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 shrink-0"
@@ -650,7 +733,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
 
                 <button
                   type="button"
-                  onClick={handleReset}
+                  onClick={handleToggleFit}
                   className="px-2 sm:px-2.5 py-1 text-xs font-mono font-bold text-slate-700 dark:text-zinc-200 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
                   title={t('resetZoom')}
                 >
@@ -665,6 +748,16 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
                   aria-label={t('zoomIn')}
                 >
                   <ZoomIn className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleFitToScreen}
+                  className="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none"
+                  title={t('fitToScreen')}
+                  aria-label={t('fitToScreen')}
+                >
+                  <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </div>
 
@@ -690,7 +783,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
-              onDoubleClick={handleReset}
+              onDoubleClick={handleToggleFit}
               className={`w-full h-full flex items-center justify-center overflow-hidden touch-none select-none ${
                 isInteracting ? 'cursor-grabbing' : 'cursor-default'
               }`}
@@ -698,7 +791,7 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
               <div
                 onClick={(e) => e.stopPropagation()}
                 style={{
-                  width: `${Math.max(dimensions?.width || 800, 720)}px`,
+                  width: `${modalTargetWidth}px`,
                   transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
                   transformOrigin: 'center center',
                   transition: isInteracting ? 'none' : 'transform 180ms cubic-bezier(0, 0, 0.2, 1)',

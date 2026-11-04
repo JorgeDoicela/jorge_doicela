@@ -400,6 +400,8 @@
     "zoomIn": "Zoom In",
     "zoomOut": "Zoom Out",
     "resetZoom": "Reset view (100%)",
+    "fitToScreen": "Fit to screen",
+    "actualSize": "Actual size (100%)",
     "calloutNote": "NOTE",
     "calloutTip": "TIP",
     "calloutImportant": "IMPORTANT",

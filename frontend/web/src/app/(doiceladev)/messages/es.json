@@ -400,6 +400,8 @@
     "zoomIn": "Acercar",
     "zoomOut": "Alejar",
     "resetZoom": "Restablecer vista (100%)",
+    "fitToScreen": "Ajustar a pantalla",
+    "actualSize": "Tamaño real (100%)",
     "calloutNote": "NOTA",
     "calloutTip": "CONSEJO",
     "calloutImportant": "IMPORTANTE",

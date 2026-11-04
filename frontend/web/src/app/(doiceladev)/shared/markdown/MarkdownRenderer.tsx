@@ -219,7 +219,7 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             return (
               <li
                 className={`text-slate-700 dark:text-zinc-300 font-sans font-normal leading-relaxed ${
-                  isTaskList ? 'list-none -ml-5 flex items-start gap-2.5 my-1.5' : ''
+                  isTaskList ? 'list-none -ml-5 my-1.5' : ''
                 }`}
                 {...props}
               >
@@ -233,7 +233,7 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
                 <input
                   type="checkbox"
                   disabled
-                  className="mt-1 h-4 w-4 rounded border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-blue-500 accent-blue-600 dark:accent-blue-500 focus:ring-0 cursor-default pointer-events-none shrink-0"
+                  className="mr-2.5 h-4 w-4 rounded border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-blue-500 accent-blue-600 dark:accent-blue-500 focus:ring-0 align-[-2px] cursor-default pointer-events-none inline-block"
                   {...props}
                 />
               );

@@ -39,12 +39,12 @@ export function RelatedArticlesNav({
         </h4>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="flex sm:grid overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none no-scrollbar gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 -mx-1 px-1 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
         {displayItems.map((item) => (
           <Link
             key={item.id || item.href}
             href={item.href}
-            className="group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl glass-convex-panel border border-black/5 dark:border-white/5 hover:border-cyan-500/30 transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
+            className="shrink-0 w-[84%] sm:w-auto snap-start group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl glass-convex-panel border border-black/5 dark:border-white/5 hover:border-cyan-500/30 transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
           >
             <div className="space-y-3">
               {/* Portada / Imagen de la publicación */}

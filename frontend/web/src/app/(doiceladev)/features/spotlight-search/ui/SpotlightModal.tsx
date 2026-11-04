@@ -2,7 +2,9 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Search, X, ArrowRight } from 'lucide-react';
 import { SpotlightSearchResult } from '../../../shared/types/spotlight';
 import { NewsArticle } from '../../../entities/news';
 import { BlogPost } from '../../../entities/blog';
@@ -44,8 +46,12 @@ export function SpotlightModal({
   const tNav = useTranslations('Nav');
   const tSearch = useTranslations('Search');
   const tCard = useTranslations('CardActions');
+  const router = useRouter();
+
   const [query, setQuery] = useState(initialQuery);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // Escuchar tecla escape y Cmd+K globalmente
   useEffect(() => {
@@ -64,10 +70,26 @@ export function SpotlightModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Bloquear scroll de la página de fondo (body y documentElement) cuando el buscador esté abierto
+  useEffect(() => {
+    if (isOpen) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
+    }
+  }, [isOpen]);
+
   // Autofoco y sincronización de query al abrir
   useEffect(() => {
     if (isOpen) {
       setQuery(initialQuery || '');
+      setSelectedIndex(0);
       setTimeout(() => {
         inputRef.current?.focus();
         if (initialQuery) {
@@ -76,6 +98,7 @@ export function SpotlightModal({
       }, 50);
     } else {
       setQuery('');
+      setSelectedIndex(0);
     }
   }, [isOpen, initialQuery]);
 
@@ -200,7 +223,7 @@ export function SpotlightModal({
 
   const filteredResults = useMemo(() => {
     if (!query.trim()) {
-      return allSearchableItems.slice(0, 8); // Mostrar sugerencias iniciales
+      return allSearchableItems.slice(0, 8);
     }
     const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
     return allSearchableItems.filter(
@@ -212,6 +235,34 @@ export function SpotlightModal({
     );
   }, [allSearchableItems, query]);
 
+  // Navegación por teclado dentro del input
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) => Math.min(prev + 1, Math.max(filteredResults.length - 1, 0)));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) => Math.max(prev - 1, 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const current = filteredResults[selectedIndex];
+      if (current) {
+        router.push(current.href);
+        onClose();
+      }
+    }
+  };
+
+  // Scroll automático hacia el elemento seleccionado con flechas
+  useEffect(() => {
+    if (listRef.current) {
+      const activeEl = listRef.current.children[selectedIndex] as HTMLElement;
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [selectedIndex]);
+
   if (!isOpen) return null;
 
   return (
@@ -219,96 +270,120 @@ export function SpotlightModal({
       role="dialog"
       aria-modal="true"
       aria-label={t('commandPalette')}
-      className="fixed inset-0 z-50 flex items-start justify-center pt-20 md:pt-28 px-4 bg-black/60 backdrop-blur-md transition-all duration-300"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-14 sm:pt-20 px-4 bg-slate-900/40 dark:bg-black/75 backdrop-blur-md overscroll-contain transition-all duration-200"
       onClick={onClose}
     >
+      {/* Contenedor Modal OPACO (Sin transparencias invasivas, acabado sólido idéntico a las tarjetas del sidebar) */}
       <div
-        className="w-full max-w-2xl rounded-3xl glass-convex-panel overflow-hidden border border-black/10 dark:border-white/15 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+        className="w-full max-w-2xl rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/10 shadow-2xl shadow-slate-900/15 dark:shadow-black/80 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150 select-none"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Barra de Búsqueda Input */}
-        <div className="p-4 border-b border-black/10 dark:border-white/10 flex items-center gap-3">
-          <span className="font-mono text-zinc-500 dark:text-zinc-400 text-sm font-bold pl-2">⌥</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={tSearch('placeholder')}
-            className="w-full bg-transparent text-sm md:text-base text-[var(--foreground)] placeholder-zinc-400 dark:placeholder-zinc-500 outline-none font-mono"
-          />
-          {query && (
-            <button
-              onClick={() => setQuery('')}
-              className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 font-mono px-2 py-1 rounded bg-black/5 dark:bg-white/5 cursor-pointer"
-            >
-              {t('clear')}
-            </button>
-          )}
-          <button
-            onClick={onClose}
-            className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 px-2 py-1 rounded-lg glass-btn-neumorphic cursor-pointer"
-          >
-            ESC
-          </button>
+        {/* Cabecera del Buscador con Superficie Sólida */}
+        <div className="p-4 sm:p-5 bg-white dark:bg-[#0c121e] border-b border-slate-200/70 dark:border-white/5">
+          {/* Input en Cápsula Sólida Cóncava */}
+          <div className="w-full py-2.5 px-3.5 rounded-2xl bg-slate-100/90 dark:bg-[#121824] border border-slate-200/80 dark:border-white/10 flex items-center gap-3">
+            <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 shrink-0" aria-hidden="true" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setSelectedIndex(0);
+              }}
+              onKeyDown={handleInputKeyDown}
+              placeholder={tSearch('placeholder')}
+              className="w-full bg-transparent text-sm text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 outline-none font-mono"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery('');
+                  setSelectedIndex(0);
+                }}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                title={t('clear')}
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Resultados */}
-        <div className="max-h-[60vh] overflow-y-auto p-3 space-y-1.5 scrollbar-thin">
+        {/* Lista de Resultados 100% Opaca */}
+        <div ref={listRef} className="max-h-[62vh] overflow-y-auto p-3 sm:p-4 pb-4 sm:pb-5 space-y-1 bg-white dark:bg-[#0c121e] no-scrollbar overscroll-contain">
           {filteredResults.length === 0 ? (
-            <div className="py-12 text-center text-zinc-500 text-xs">
-              {t('noResults', { query })}
+            <div className="py-14 text-center space-y-2">
+              <Search className="w-8 h-8 mx-auto text-slate-300 dark:text-zinc-600 stroke-[1.5]" />
+              <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                {t('noResults', { query })}
+              </p>
             </div>
           ) : (
-            filteredResults.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={onClose}
-                className="group flex items-center justify-between p-3 rounded-2xl glass-concave-panel hover:bg-black/5 dark:hover:bg-white/5 border border-transparent hover:border-black/10 dark:hover:border-white/20 transition-all block"
-              >
-                <div className="space-y-1 pr-4 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                      [{item.categoryLabel}]
-                    </span>
-                    {item.tag && (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded border border-black/10 dark:border-white/10 text-zinc-600 dark:text-zinc-400">
-                        {item.tag}
-                      </span>
-                    )}
-                    {(() => {
-                      const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
-                      if (!cleanQuery) return null;
-                      const matchedTag = item.tags?.find((t) => t.includes(cleanQuery));
-                      if (!matchedTag) return null;
-                      return (
-                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 font-semibold flex items-center gap-0.5">
-                          <span>#</span>
-                          <span>{matchedTag}</span>
-                        </span>
-                      );
-                    })()}
-                  </div>
-                  <p className="text-xs md:text-sm font-bold text-[var(--header-title)] truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                    {item.title}
-                  </p>
-                  <p className="text-[11px] text-zinc-600 dark:text-zinc-400 line-clamp-1 font-light">
-                    {item.snippet}
-                  </p>
-                </div>
-                <span className="text-xs font-mono text-zinc-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-1 transition-all shrink-0">
-                  {t('go')}
-                </span>
-              </Link>
-            ))
-          )}
-        </div>
+            filteredResults.map((item, idx) => {
+              const isSelected = idx === selectedIndex;
+              const moduleLabel = item.categoryLabel.toUpperCase();
+              const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
+              const matchedTag = cleanQuery && item.tags?.find((t) => t.includes(cleanQuery));
 
-        {/* Footer de Ayuda */}
-        <div className="px-4 py-2.5 bg-slate-100/80 dark:bg-black/20 border-t border-slate-200/80 dark:border-white/5 flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-500 font-mono">
-          <span>{t('resultsAvailable', { count: filteredResults.length })}</span>
-          <span>{t('escHint')}</span>
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={onClose}
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  className={`group flex items-start justify-between gap-3 p-3 rounded-2xl transition-all duration-150 cursor-pointer border ${
+                    isSelected
+                      ? 'bg-slate-100/90 dark:bg-white/[0.08] border-slate-200/90 dark:border-white/10 shadow-xs'
+                      : 'border-transparent hover:bg-slate-50 dark:hover:bg-white/[0.04]'
+                  }`}
+                >
+                  {/* Título y metadatos */}
+                  <div className="flex-1 min-w-0 space-y-1">
+                    {/* Metadatos en tipografía mono sobria */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                        {moduleLabel}
+                      </span>
+                      {matchedTag && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 font-semibold">
+                          #{matchedTag}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Título */}
+                    <h6
+                      className={`text-xs sm:text-[13px] font-bold transition-colors line-clamp-2 leading-snug ${
+                        isSelected
+                          ? 'text-blue-600 dark:text-cyan-400'
+                          : 'text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-cyan-400'
+                      }`}
+                    >
+                      {item.title}
+                    </h6>
+
+                    {/* Snippet descriptivo */}
+                    {item.snippet && (
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1 font-light leading-relaxed">
+                        {item.snippet}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Flecha terminal */}
+                  <ArrowRight
+                    className={`w-3.5 h-3.5 mt-1 transition-all duration-150 shrink-0 ${
+                      isSelected
+                        ? 'text-blue-600 dark:text-cyan-400 translate-x-1'
+                        : 'text-slate-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-cyan-400 group-hover:translate-x-1'
+                    }`}
+                  />
+                </Link>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

@@ -111,9 +111,6 @@
     "commandPalette": "Spotlight Command Palette",
     "clear": "Clear",
     "noResults": "No results found for “{query}”",
-    "go": "Go →",
-    "resultsAvailable": "{count} results available",
-    "escHint": "Press ESC to exit",
     "searchTitle": "Search (Ctrl + K)",
     "searchAria": "Search"
   },

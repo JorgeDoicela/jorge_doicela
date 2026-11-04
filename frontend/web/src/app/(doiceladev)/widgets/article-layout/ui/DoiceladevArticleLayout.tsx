@@ -222,7 +222,7 @@ export function DoiceladevArticleLayout({
           )}
 
           {/* Bloque de Lecturas Recomendadas (100% SSR, Similitud de Contenido + Antifatiga) */}
-          <div className="col-span-1 lg:col-span-12 w-full p-6 sm:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2">
+          <div className="col-span-1 lg:col-span-12 w-full p-4 sm:p-8 lg:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2">
             <RelatedArticlesNav
               currentCategory={category}
               currentTitle={title}

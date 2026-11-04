@@ -111,9 +111,6 @@
     "commandPalette": "Paleta de comandos Spotlight",
     "clear": "Limpiar",
     "noResults": "No se encontraron resultados para “{query}”",
-    "go": "Ir →",
-    "resultsAvailable": "{count} resultados disponibles",
-    "escHint": "Presiona ESC para salir",
     "searchTitle": "Buscar (Ctrl + K)",
     "searchAria": "Buscar"
   },

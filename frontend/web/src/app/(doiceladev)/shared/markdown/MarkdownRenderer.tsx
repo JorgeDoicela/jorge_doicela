@@ -111,19 +111,10 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             return (
               <h2
                 id={id || undefined}
-                className="group scroll-mt-24 text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5 flex items-center justify-between gap-2"
+                className="scroll-mt-24 text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5"
                 {...props}
               >
-                <span>{children}</span>
-                {id && (
-                  <a
-                    href={`#${id}`}
-                    aria-label={text ? `Enlace a ${text}` : "Enlace a esta sección"}
-                    className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 text-base font-normal transition-opacity cursor-pointer select-none shrink-0"
-                  >
-                    #
-                  </a>
-                )}
+                {children}
               </h2>
             );
           },
@@ -133,19 +124,10 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             return (
               <h2
                 id={id || undefined}
-                className="group scroll-mt-24 text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5 flex items-center justify-between gap-2"
+                className="scroll-mt-24 text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5"
                 {...props}
               >
-                <span>{children}</span>
-                {id && (
-                  <a
-                    href={`#${id}`}
-                    aria-label={text ? `Enlace a ${text}` : "Enlace a esta sección"}
-                    className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 text-base font-normal transition-opacity cursor-pointer select-none shrink-0"
-                  >
-                    #
-                  </a>
-                )}
+                {children}
               </h2>
             );
           },
@@ -155,19 +137,10 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             return (
               <h3
                 id={id || undefined}
-                className="group scroll-mt-24 text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight pt-5 pb-1 flex items-center justify-between gap-2"
+                className="scroll-mt-24 text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight pt-5 pb-1"
                 {...props}
               >
-                <span>{children}</span>
-                {id && (
-                  <a
-                    href={`#${id}`}
-                    aria-label={text ? `Enlace a ${text}` : "Enlace a esta sección"}
-                    className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-normal transition-opacity cursor-pointer select-none shrink-0"
-                  >
-                    #
-                  </a>
-                )}
+                {children}
               </h3>
             );
           },

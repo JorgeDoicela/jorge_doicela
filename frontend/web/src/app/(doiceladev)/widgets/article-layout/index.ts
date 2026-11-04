@@ -7,3 +7,4 @@ export * from './ui/StayInformedCard';
 export * from './ui/ArticleTags';
 export * from './ui/ArticleShareActions';
 export * from './ui/RelatedArticlesNav';
+export * from './ui/SmartSidebar';

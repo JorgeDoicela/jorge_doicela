@@ -7,6 +7,7 @@ import { Home, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { DoiceladevHeaderNav } from '../../doiceladev-header/ui/DoiceladevHeaderNav';
 import { DoiceladevFooter } from '../../doiceladev-footer/ui/DoiceladevFooter';
+import { SmartSidebar } from './SmartSidebar';
 import { AuthorSidebarCard } from './AuthorSidebarCard';
 import { StayInformedCard } from './StayInformedCard';
 import { FeaturedPostsSidebarCard } from './FeaturedPostsSidebarCard';
@@ -212,13 +213,13 @@ export function DoiceladevArticleLayout({
 
           {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo */}
           {!isSidebarCollapsed && (
-            <aside className="lg:col-span-4 space-y-6 lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
+            <SmartSidebar className="lg:col-span-4 lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
               <AuthorSidebarCard />
               <FeaturedPostsSidebarCard />
               <ExploreTopicsSidebarCard />
               <PopularTagsSidebarCard />
               <StayInformedCard />
-            </aside>
+            </SmartSidebar>
           )}
 
           {/* Bloque de Lecturas Recomendadas (100% SSR, Similitud de Contenido + Antifatiga) */}

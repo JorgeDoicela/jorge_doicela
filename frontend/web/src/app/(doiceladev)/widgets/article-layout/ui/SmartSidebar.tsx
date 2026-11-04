@@ -8,94 +8,107 @@ interface SmartSidebarProps {
 }
 
 /**
- * Sidebar editorial inteligente con límites físicos estrictos y desplazamiento fluido.
+ * Sidebar editorial inteligente de alto rendimiento con sincronización directa al DOM.
  *
- * Mantiene intacta la posición estética original anclada al fondo:
- * (lg:sticky lg:bottom-8 lg:self-end) sin barras de scroll ni recortes de tarjetas.
+ * Mantiene intacto el anclaje estético al fondo (lg:sticky lg:bottom-8 lg:self-end)
+ * sin barras de scroll visibles ni contenedores rígidos con overflow.
  *
- * Al situar el cursor sobre el sidebar y usar la rueda del ratón hacia arriba,
- * desplaza el contenido suavemente hacia abajo para revelar las tarjetas superiores.
- * Se detiene con precisión milimétrica en el margen superior de lectura (16px),
- * eliminando cualquier espacio en blanco vacío y conservando la posición sin retornos bruscos.
+ * Elimina cualquier rebote, temblor o desfase visual al coordinar directamente
+ * los estilos transform con el ciclo de refresco del navegador (sin la latencia
+ * de re-renderizado asíncrono de React y sin transiciones CSS compitiendo con el
+ * scroll nativo de la página).
  */
 export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
   const asideRef = React.useRef<HTMLElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const [offsetY, setOffsetY] = React.useState(0);
   const offsetYRef = React.useRef(0);
-
-  offsetYRef.current = offsetY;
+  const wheelTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   React.useEffect(() => {
     const aside = asideRef.current;
     const content = contentRef.current;
     if (!aside || !content) return;
 
-    // Margen superior exacto de lectura (16px para alinear con la cuadrícula sin espacio en blanco)
-    const TARGET_TOP = 16;
+    const TARGET_TOP = 24;
+
+    const applyOffset = (newOffset: number, withTransition: boolean) => {
+      offsetYRef.current = newOffset;
+      content.style.transition = withTransition ? 'transform 70ms ease-out' : 'none';
+      content.style.transform = newOffset > 0 ? `translate3d(0, ${newOffset}px, 0)` : '';
+      content.style.willChange = newOffset > 0 ? 'transform' : '';
+    };
 
     const handleWheel = (e: WheelEvent) => {
-      // Activo exclusivamente en resoluciones de escritorio (lg: >= 1024px)
       if (window.innerWidth < 1024) return;
 
-      const firstChild = content.firstElementChild as HTMLElement | null;
-      if (!firstChild) return;
-
-      const currentFirstTop = firstChild.getBoundingClientRect().top;
+      const asideTop = aside.getBoundingClientRect().top;
+      const maxOffset = Math.max(0, TARGET_TOP - asideTop);
       const currentOffset = offsetYRef.current;
 
       if (e.deltaY < 0) {
-        // Rueda hacia arriba: desplazar contenido para revelar tarjetas superiores
-        const distanceToTop = TARGET_TOP - currentFirstTop;
-
-        if (distanceToTop > 0.5) {
+        // Rueda hacia arriba: desplazar hacia abajo para revelar tarjetas superiores
+        if (currentOffset < maxOffset - 0.5) {
           e.preventDefault();
-          const step = Math.min(distanceToTop, Math.max(12, Math.abs(e.deltaY) * 0.7));
-          setOffsetY((prev) => prev + step);
+          const nextOffset = Math.min(maxOffset, currentOffset + Math.abs(e.deltaY) * 0.85);
+          applyOffset(nextOffset, true);
+
+          if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
+          wheelTimeoutRef.current = setTimeout(() => {
+            if (contentRef.current) {
+              contentRef.current.style.transition = 'none';
+            }
+          }, 80);
         }
       } else if (e.deltaY > 0) {
-        // Rueda hacia abajo: retroceder hacia la posición inferior original (fondo exacto)
-        if (currentOffset > 0) {
+        // Rueda hacia abajo: retroceder hacia la posición inferior natural
+        if (currentOffset > 0.5) {
           e.preventDefault();
-          const step = Math.min(currentOffset, Math.max(12, e.deltaY * 0.7));
-          setOffsetY((prev) => Math.max(0, prev - step));
+          const nextOffset = Math.max(0, Math.min(maxOffset, currentOffset - e.deltaY * 0.85));
+          applyOffset(nextOffset, true);
+
+          if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
+          wheelTimeoutRef.current = setTimeout(() => {
+            if (contentRef.current) {
+              contentRef.current.style.transition = 'none';
+            }
+          }, 80);
         }
+      }
+    };
+
+    // Al scrollear la página principal, bloquear cualquier transición y fijar al píxel exacto
+    const handleWindowScroll = () => {
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current);
+      }
+
+      if (offsetYRef.current <= 0) return;
+
+      const asideTop = aside.getBoundingClientRect().top;
+      const maxOffset = Math.max(0, TARGET_TOP - asideTop);
+
+      if (offsetYRef.current > maxOffset) {
+        applyOffset(maxOffset, false);
       }
     };
 
     aside.addEventListener('wheel', handleWheel, { passive: false });
-
-    // Cuando el usuario realiza scroll en la página principal:
-    // Solo si el artículo sube tanto que el aside natural ya está arriba del todo, normalizar
-    const handleWindowScroll = () => {
-      const asideTop = aside.getBoundingClientRect().top;
-      if (asideTop >= TARGET_TOP && offsetYRef.current > 0) {
-        setOffsetY(0);
-      }
-    };
-
     window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    window.addEventListener('resize', handleWindowScroll, { passive: true });
 
     return () => {
       aside.removeEventListener('wheel', handleWheel);
       window.removeEventListener('scroll', handleWindowScroll);
+      window.removeEventListener('resize', handleWindowScroll);
+      if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
     };
   }, []);
 
   return (
     <aside ref={asideRef} className={className}>
-      <div
-        ref={contentRef}
-        style={{
-          transform: offsetY > 0 ? `translateY(${offsetY}px)` : undefined,
-          transition: 'transform 80ms ease-out',
-          willChange: offsetY > 0 ? 'transform' : undefined,
-        }}
-        className="space-y-6"
-      >
+      <div ref={contentRef} className="space-y-6">
         {children}
       </div>
     </aside>
   );
 }
-

@@ -56,6 +56,31 @@ function normalizeMarkdownContent(raw: string): string {
   );
 }
 
+/**
+ * Extrae recursivamente el texto plano de un nodo React para generar IDs de anclaje deterministas.
+ */
+function getNodeText(node: React.ReactNode): string {
+  if (typeof node === 'string') return node;
+  if (typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(getNodeText).join('');
+  if (React.isValidElement(node) && (node.props as { children?: React.ReactNode })) {
+    return getNodeText((node.props as { children?: React.ReactNode }).children);
+  }
+  return '';
+}
+
+/**
+ * Convierte un texto a slug limpio para navegación de anclas (#seccion-tecnica).
+ */
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
 export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRendererProps) {
   const sanitizedContent = useMemo(() => normalizeMarkdownContent(content), [content]);
 
@@ -80,24 +105,72 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
         components={{
           // Defensa en profundidad: La cabecera editorial (DoiceladevArticleLayout) es el único H1 del documento.
           // Cualquier H1 dentro del cuerpo Markdown se degrada a H2 semántico para cumplir con WCAG 2.1 y Google SEO.
-          h1: ({ node: _node, ...props }) => (
-            <h2
-              className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5"
-              {...props}
-            />
-          ),
-          h2: ({ node: _node, ...props }) => (
-            <h2
-              className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5"
-              {...props}
-            />
-          ),
-          h3: ({ node: _node, ...props }) => (
-            <h3
-              className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight pt-5 pb-1"
-              {...props}
-            />
-          ),
+          h1: ({ node: _node, children, ...props }) => {
+            const text = getNodeText(children);
+            const id = slugifyHeading(text);
+            return (
+              <h2
+                id={id || undefined}
+                className="group scroll-mt-24 text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5 flex items-center justify-between gap-2"
+                {...props}
+              >
+                <span>{children}</span>
+                {id && (
+                  <a
+                    href={`#${id}`}
+                    aria-label={text ? `Enlace a ${text}` : "Enlace a esta sección"}
+                    className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 text-base font-normal transition-opacity cursor-pointer select-none shrink-0"
+                  >
+                    #
+                  </a>
+                )}
+              </h2>
+            );
+          },
+          h2: ({ node: _node, children, ...props }) => {
+            const text = getNodeText(children);
+            const id = slugifyHeading(text);
+            return (
+              <h2
+                id={id || undefined}
+                className="group scroll-mt-24 text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-8 pb-1.5 flex items-center justify-between gap-2"
+                {...props}
+              >
+                <span>{children}</span>
+                {id && (
+                  <a
+                    href={`#${id}`}
+                    aria-label={text ? `Enlace a ${text}` : "Enlace a esta sección"}
+                    className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 text-base font-normal transition-opacity cursor-pointer select-none shrink-0"
+                  >
+                    #
+                  </a>
+                )}
+              </h2>
+            );
+          },
+          h3: ({ node: _node, children, ...props }) => {
+            const text = getNodeText(children);
+            const id = slugifyHeading(text);
+            return (
+              <h3
+                id={id || undefined}
+                className="group scroll-mt-24 text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight pt-5 pb-1 flex items-center justify-between gap-2"
+                {...props}
+              >
+                <span>{children}</span>
+                {id && (
+                  <a
+                    href={`#${id}`}
+                    aria-label={text ? `Enlace a ${text}` : "Enlace a esta sección"}
+                    className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-normal transition-opacity cursor-pointer select-none shrink-0"
+                  >
+                    #
+                  </a>
+                )}
+              </h3>
+            );
+          },
           h4: ({ node: _node, ...props }) => (
             <h4
               className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight pt-4 pb-1"
@@ -141,9 +214,53 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
           ol: ({ node: _node, ...props }) => (
             <ol className="my-3 space-y-2 pl-5 list-decimal text-blue-600 dark:text-blue-400 font-mono font-medium" {...props} />
           ),
-          li: ({ node: _node, ...props }) => (
-            <li className="text-slate-700 dark:text-zinc-300 font-sans font-normal leading-relaxed" {...props} />
-          ),
+          li: ({ node: _node, className, children, ...props }) => {
+            const isTaskList = className?.includes('task-list-item');
+            return (
+              <li
+                className={`text-slate-700 dark:text-zinc-300 font-sans font-normal leading-relaxed ${
+                  isTaskList ? 'list-none -ml-5 flex items-start gap-2.5 my-1.5' : ''
+                }`}
+                {...props}
+              >
+                {children}
+              </li>
+            );
+          },
+          input: ({ node: _node, type, ...props }) => {
+            if (type === 'checkbox') {
+              return (
+                <input
+                  type="checkbox"
+                  disabled
+                  className="mt-1 h-4 w-4 rounded border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-blue-500 accent-blue-600 dark:accent-blue-500 focus:ring-0 cursor-default pointer-events-none shrink-0"
+                  {...props}
+                />
+              );
+            }
+            return <input type={type} {...props} />;
+          },
+          img: ({ node: _node, src, alt, ...props }) => {
+            if (!src) return null;
+            return (
+              <figure className="my-8 mx-auto max-w-full space-y-2.5 text-center">
+                <div className="relative inline-block overflow-hidden rounded-2xl glass-convex-panel border border-black/[0.08] dark:border-white/[0.08] shadow-lg">
+                  <img
+                    src={src}
+                    alt={alt || ''}
+                    loading="lazy"
+                    className="max-h-[560px] w-auto max-w-full rounded-2xl object-contain mx-auto"
+                    {...props}
+                  />
+                </div>
+                {alt && (
+                  <figcaption className="text-center font-mono text-[12px] text-slate-500 dark:text-zinc-400 font-medium select-text">
+                    {alt}
+                  </figcaption>
+                )}
+              </figure>
+            );
+          },
           a: ({ node: _node, ...props }) => (
             <a
               target="_blank"
@@ -165,10 +282,10 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             <tbody className="divide-y divide-black/5 dark:divide-white/5" {...props} />
           ),
           tr: ({ node: _node, ...props }) => (
-            <tr className="hover:bg-blue-500/[0.035] dark:hover:bg-blue-400/[0.04] transition-colors" {...props} />
+            <tr {...props} />
           ),
           td: ({ node: _node, ...props }) => (
-            <td className="px-5 py-4 text-slate-700 dark:text-zinc-300 font-normal leading-relaxed align-top first:font-mono first:font-semibold first:text-slate-900 dark:first:text-zinc-100 first:bg-black/[0.015] dark:first:bg-white/[0.015] first:w-[28%] first:border-r first:border-black/5 dark:first:border-white/5" {...props} />
+            <td className="px-5 py-4 text-slate-700 dark:text-zinc-300 font-normal leading-relaxed align-top first:font-mono first:font-semibold first:text-slate-900 dark:first:text-zinc-100 first:bg-black/[0.015] dark:first:bg-white/[0.015] first:w-[28%] first:border-r first:border-black/5 dark:first:border-white/5 first:[&_code]:bg-transparent first:[&_code]:p-0 first:[&_code]:text-inherit" {...props} />
           ),
           pre: ({ children }) => <>{children}</>,
           code: ({ node: _node, className, children, ...props }) => {

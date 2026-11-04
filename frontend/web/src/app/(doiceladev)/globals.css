@@ -437,3 +437,25 @@ body {
 }
 
 
+
+/* Soporte específico de alta fidelidad para Git Diffs */
+.language-diff .token.deleted,
+code[class*="language-diff"] .token.deleted {
+  color: #cf222e !important;
+  background-color: rgba(207, 34, 46, 0.08);
+}
+.language-diff .token.inserted,
+code[class*="language-diff"] .token.inserted {
+  color: #116329 !important;
+  background-color: rgba(17, 99, 41, 0.08);
+}
+.dark .language-diff .token.deleted,
+.dark code[class*="language-diff"] .token.deleted {
+  color: #ff7b72 !important;
+  background-color: rgba(248, 81, 73, 0.12);
+}
+.dark .language-diff .token.inserted,
+.dark code[class*="language-diff"] .token.inserted {
+  color: #7ee787 !important;
+  background-color: rgba(46, 160, 67, 0.12);
+}

@@ -20,6 +20,16 @@ import 'prismjs/components/prism-nginx';
 import 'prismjs/components/prism-docker';
 import 'prismjs/components/prism-markdown';
 import 'prismjs/components/prism-ini';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-csharp';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-rust';
+import 'prismjs/components/prism-diff';
+import 'prismjs/components/prism-toml';
+import 'prismjs/components/prism-graphql';
+import 'prismjs/components/prism-protobuf';
+import 'prismjs/components/prism-hcl';
 
 export interface CodeBlockProps {
   code: string;
@@ -50,6 +60,25 @@ const LANGUAGE_LABELS: Record<string, string> = {
   md: 'Markdown',
   markdown: 'Markdown',
   ini: 'INI Config',
+  rs: 'Rust',
+  rust: 'Rust',
+  go: 'Go',
+  golang: 'Go',
+  c: 'C',
+  cpp: 'C++',
+  'c++': 'C++',
+  cs: 'C#',
+  csharp: 'C#',
+  diff: 'Git Diff',
+  patch: 'Git Diff',
+  toml: 'TOML',
+  hcl: 'HCL / Terraform',
+  tf: 'Terraform',
+  terraform: 'Terraform',
+  proto: 'Protobuf',
+  protobuf: 'Protobuf',
+  gql: 'GraphQL',
+  graphql: 'GraphQL',
   text: 'logs / output',
   plaintext: 'logs / output',
 };
@@ -192,7 +221,7 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
 export function InlineCode({ children, ...props }: React.HTMLAttributes<HTMLElement>) {
   return (
     <code
-      className="px-1.5 py-0.5 rounded-md bg-black/[0.05] dark:bg-white/[0.08] text-slate-900 dark:text-zinc-100 font-mono text-[12px] border border-black/[0.08] dark:border-white/[0.1] font-medium select-text"
+      className="px-1.5 py-0.5 rounded-md bg-slate-100/80 dark:bg-zinc-800/60 text-slate-800 dark:text-zinc-200 font-mono text-[0.875em] font-medium tracking-tight align-baseline select-text border-0"
       {...props}
     >
       {children}

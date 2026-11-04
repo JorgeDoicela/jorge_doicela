@@ -7,4 +7,5 @@ export interface SpotlightSearchResult {
   href: string;
   tag?: string;
   tags?: string[];
+  extraSearchTerms?: string;
 }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Search, X, ArrowRight } from 'lucide-react';
+import Fuse, { type IFuseOptions } from 'fuse.js';
 import { SpotlightSearchResult } from '../../../shared/types/spotlight';
 import { NewsArticle } from '../../../entities/news';
 import { BlogPost } from '../../../entities/blog';
@@ -29,6 +30,80 @@ interface SpotlightModalProps {
   infraPosts?: InfrastructurePost[];
 }
 
+interface SearchResultEntry {
+  item: SpotlightSearchResult;
+  titleMatches?: readonly [number, number][];
+  snippetMatches?: readonly [number, number][];
+  matchedTag?: string;
+}
+
+interface HighlightedTextProps {
+  text: string;
+  indices?: readonly [number, number][];
+  className?: string;
+  highlightClassName?: string;
+}
+
+/**
+ * Renderizador de texto con resaltado de coincidencias seguro (Zero XSS).
+ * Somete los intervalos a fusión defensiva para prevenir fragmentación de etiquetas.
+ */
+function HighlightedText({
+  text,
+  indices,
+  className = '',
+  highlightClassName = 'text-blue-600 dark:text-cyan-400 font-bold',
+}: HighlightedTextProps) {
+  if (!text) return null;
+  if (!indices || indices.length === 0) {
+    return <span className={className}>{text}</span>;
+  }
+
+  const sorted = [...indices].sort((a, b) => a[0] - b[0]);
+  const merged: [number, number][] = [];
+  for (const [start, end] of sorted) {
+    if (merged.length === 0) {
+      merged.push([start, end]);
+    } else {
+      const last = merged[merged.length - 1];
+      if (start <= last[1] + 1) {
+        last[1] = Math.max(last[1], end);
+      } else {
+        merged.push([start, end]);
+      }
+    }
+  }
+
+  const nodes: React.ReactNode[] = [];
+  let cursor = 0;
+
+  merged.forEach(([start, end], idx) => {
+    const validStart = Math.max(0, Math.min(start, text.length));
+    const validEnd = Math.max(0, Math.min(end + 1, text.length));
+
+    if (validStart > cursor) {
+      nodes.push(text.slice(cursor, validStart));
+    }
+    if (validEnd > validStart) {
+      nodes.push(
+        <mark
+          key={`m-${idx}-${validStart}`}
+          className={`bg-transparent p-0 ${highlightClassName}`}
+        >
+          {text.slice(validStart, validEnd)}
+        </mark>
+      );
+    }
+    cursor = validEnd;
+  });
+
+  if (cursor < text.length) {
+    nodes.push(text.slice(cursor));
+  }
+
+  return <span className={className}>{nodes}</span>;
+}
+
 export function SpotlightModal({
   isOpen,
   onClose,
@@ -45,7 +120,6 @@ export function SpotlightModal({
   const t = useTranslations('Spotlight');
   const tNav = useTranslations('Nav');
   const tSearch = useTranslations('Search');
-  const tCard = useTranslations('CardActions');
   const router = useRouter();
 
   const [query, setQuery] = useState(initialQuery);
@@ -102,16 +176,22 @@ export function SpotlightModal({
     }
   }, [isOpen, initialQuery]);
 
-  // Helper puro para parsear etiquetas CSV de SQLite
-  const parseTags = (raw?: string): string[] => {
-    if (!raw || typeof raw !== 'string') return [];
-    return raw
-      .split(',')
-      .map((t) => t.trim().toLowerCase())
-      .filter(Boolean);
+  // Helper defensivo para parsear etiquetas CSV o arrays
+  const parseTags = (raw?: string | string[]): string[] => {
+    if (!raw) return [];
+    if (Array.isArray(raw)) {
+      return raw.map((t) => String(t).trim().toLowerCase()).filter(Boolean);
+    }
+    if (typeof raw === 'string') {
+      return raw
+        .split(',')
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
+    }
+    return [];
   };
 
-  // Indexar todo el contenido de los 8 dominios con sus tags correspondientes
+  // Indexar todo el catálogo de los 8 dominios con metadatos contextuales ampliados
   const allSearchableItems: SpotlightSearchResult[] = useMemo(() => {
     const items: SpotlightSearchResult[] = [];
 
@@ -123,8 +203,8 @@ export function SpotlightModal({
         categoryLabel: tNav('news'),
         snippet: n.excerpt,
         href: `/news/${n.slug}`,
-        tag: n.isBreaking ? 'BREAKING' : undefined,
         tags: parseTags(n.tags),
+        extraSearchTerms: [n.author, n.category].filter(Boolean).join(' '),
       });
     });
 
@@ -137,6 +217,7 @@ export function SpotlightModal({
         snippet: p.excerpt,
         href: `/blog/${p.slug}`,
         tags: parseTags(p.tags),
+        extraSearchTerms: [p.author, p.category].filter(Boolean).join(' '),
       });
     });
 
@@ -148,8 +229,8 @@ export function SpotlightModal({
         categoryLabel: tNav('ai'),
         snippet: a.description,
         href: `/ai/${a.slug}`,
-        tag: a.category.toUpperCase(),
         tags: parseTags(a.tags),
+        extraSearchTerms: [a.provider, a.category, a.license].filter(Boolean).join(' '),
       });
     });
 
@@ -161,8 +242,8 @@ export function SpotlightModal({
         categoryLabel: tNav('cybersecurity'),
         snippet: s.excerpt,
         href: `/cybersecurity/${s.slug}`,
-        tag: s.severity.toUpperCase(),
         tags: parseTags(s.tags),
+        extraSearchTerms: [s.cveId, s.affectedSystems, s.severity, s.category].filter(Boolean).join(' '),
       });
     });
 
@@ -172,10 +253,10 @@ export function SpotlightModal({
         title: t.title,
         category: 'tutorials',
         categoryLabel: tNav('tutorials'),
-        snippet: t.description,
+        snippet: t.description || t.excerpt,
         href: `/tutorials/${t.slug}`,
-        tag: t.difficulty.toUpperCase(),
         tags: parseTags(t.tags),
+        extraSearchTerms: [t.difficulty, t.category, t.techStack, t.prerequisites].filter(Boolean).join(' '),
       });
     });
 
@@ -187,8 +268,8 @@ export function SpotlightModal({
         categoryLabel: tNav('forum'),
         snippet: top.content.slice(0, 100) + '...',
         href: `/forum/${top.slug}`,
-        tag: tCard('repliesCount', { count: top.repliesCount }),
         tags: parseTags(top.category),
+        extraSearchTerms: [top.author, top.category].filter(Boolean).join(' '),
       });
     });
 
@@ -200,8 +281,8 @@ export function SpotlightModal({
         categoryLabel: tNav('projects'),
         snippet: prj.description,
         href: `/projects/${prj.slug}`,
-        tag: prj.status.toUpperCase(),
         tags: parseTags(prj.techStack),
+        extraSearchTerms: [prj.category, prj.techStack, prj.status].filter(Boolean).join(' '),
       });
     });
 
@@ -213,27 +294,62 @@ export function SpotlightModal({
         categoryLabel: tNav('infrastructure'),
         snippet: inf.subtitle || inf.architectureOverview || inf.contentMarkdown.slice(0, 100),
         href: `/infrastructure/${inf.slug}`,
-        tag: inf.environment.toUpperCase(),
         tags: parseTags(inf.tags),
+        extraSearchTerms: [inf.environment, inf.category, inf.architectureOverview].filter(Boolean).join(' '),
       });
     });
 
     return items;
-  }, [news, posts, topics, aiResources, secPosts, tutorials, projects, infraPosts, tNav, tCard]);
+  }, [news, posts, topics, aiResources, secPosts, tutorials, projects, infraPosts, tNav]);
 
-  const filteredResults = useMemo(() => {
-    if (!query.trim()) {
-      return allSearchableItems.slice(0, 8);
+  // Configuración del motor de búsqueda difusa (Fuse.js)
+  const fuseOptions = useMemo<IFuseOptions<SpotlightSearchResult>>(() => ({
+    keys: [
+      { name: 'title', weight: 2.5 },
+      { name: 'tags', weight: 1.8 },
+      { name: 'categoryLabel', weight: 1.2 },
+      { name: 'extraSearchTerms', weight: 1.0 },
+      { name: 'snippet', weight: 0.8 },
+    ],
+    threshold: 0.35,
+    distance: 100,
+    ignoreLocation: true,
+    minMatchCharLength: 1,
+    includeMatches: true,
+    includeScore: true,
+    shouldSort: true,
+  }), []);
+
+  const fuse = useMemo(() => new Fuse(allSearchableItems, fuseOptions), [allSearchableItems, fuseOptions]);
+
+  // Resultados calculados con ranking de relevancia y extracción de rangos de coincidencia
+  const filteredResults: SearchResultEntry[] = useMemo(() => {
+    const raw = query.trim();
+    if (!raw) {
+      return allSearchableItems.slice(0, 8).map((item) => ({ item }));
     }
-    const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
-    return allSearchableItems.filter(
-      (item) =>
-        item.title.toLowerCase().includes(cleanQuery) ||
-        item.snippet.toLowerCase().includes(cleanQuery) ||
-        item.categoryLabel.toLowerCase().includes(cleanQuery) ||
-        (item.tags && item.tags.some((t) => t.includes(cleanQuery)))
-    );
-  }, [allSearchableItems, query]);
+
+    const cleanQuery = raw.startsWith('#') ? raw.slice(1).trim() : raw;
+    if (!cleanQuery) {
+      return allSearchableItems.slice(0, 8).map((item) => ({ item }));
+    }
+
+    const searchResults = fuse.search(cleanQuery);
+    return searchResults.slice(0, 12).map((res) => {
+      const titleMatch = res.matches?.find((m) => m.key === 'title');
+      const snippetMatch = res.matches?.find((m) => m.key === 'snippet');
+      const tagMatch = res.matches?.find((m) => m.key === 'tags');
+      const cleanLower = cleanQuery.toLowerCase();
+      const matchedTag = tagMatch?.value || res.item.tags?.find((t) => t.includes(cleanLower));
+
+      return {
+        item: res.item,
+        titleMatches: titleMatch?.indices,
+        snippetMatches: snippetMatch?.indices,
+        matchedTag,
+      };
+    });
+  }, [allSearchableItems, fuse, query]);
 
   // Navegación por teclado dentro del input
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -247,7 +363,7 @@ export function SpotlightModal({
       e.preventDefault();
       const current = filteredResults[selectedIndex];
       if (current) {
-        router.push(current.href);
+        router.push(current.item.href);
         onClose();
       }
     }
@@ -321,11 +437,10 @@ export function SpotlightModal({
               </p>
             </div>
           ) : (
-            filteredResults.map((item, idx) => {
+            filteredResults.map((entry, idx) => {
+              const { item, titleMatches, snippetMatches, matchedTag } = entry;
               const isSelected = idx === selectedIndex;
               const moduleLabel = item.categoryLabel.toUpperCase();
-              const cleanQuery = query.toLowerCase().replace(/^#/, '').trim();
-              const matchedTag = cleanQuery && item.tags?.find((t) => t.includes(cleanQuery));
 
               return (
                 <Link
@@ -353,7 +468,7 @@ export function SpotlightModal({
                       )}
                     </div>
 
-                    {/* Título */}
+                    {/* Título con resaltado seguro de términos coincidentes */}
                     <h6
                       className={`text-xs sm:text-[13px] font-bold transition-colors line-clamp-2 leading-snug ${
                         isSelected
@@ -361,13 +476,25 @@ export function SpotlightModal({
                           : 'text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-cyan-400'
                       }`}
                     >
-                      {item.title}
+                      <HighlightedText
+                        text={item.title}
+                        indices={titleMatches}
+                        highlightClassName={
+                          isSelected
+                            ? 'text-blue-700 dark:text-cyan-300 font-black'
+                            : 'text-blue-600 dark:text-cyan-400 font-black'
+                        }
+                      />
                     </h6>
 
-                    {/* Snippet descriptivo */}
+                    {/* Snippet descriptivo con resaltado sutil */}
                     {item.snippet && (
                       <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1 font-light leading-relaxed">
-                        {item.snippet}
+                        <HighlightedText
+                          text={item.snippet}
+                          indices={snippetMatches}
+                          highlightClassName="text-slate-900 dark:text-zinc-200 font-medium"
+                        />
                       </p>
                     )}
                   </div>

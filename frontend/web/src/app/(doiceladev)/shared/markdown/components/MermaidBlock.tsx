@@ -76,7 +76,7 @@ function detectDiagramType(chart: string): DiagramCategory {
 function extractSvgDimensions(svgString: string): { width: number; height: number } | null {
   if (!svgString) return null;
 
-  // viewBox="0 0 800 1200" o con comas intermedias
+  // 1. Extraer de viewBox: viewBox="0 0 800 1200" o con comas intermedias
   const viewBoxMatch = svgString.match(
     /viewBox=["']\s*([0-9.-]+)[,\s]+([0-9.-]+)[,\s]+([0-9.-]+)[,\s]+([0-9.-]+)\s*["']/i
   );
@@ -88,6 +88,7 @@ function extractSvgDimensions(svgString: string): { width: number; height: numbe
     }
   }
 
+  // 2. Extraer de width / height directos
   const widthMatch = svgString.match(/width=["']\s*([0-9.-]+)(?:px)?\s*["']/i);
   const heightMatch = svgString.match(/height=["']\s*([0-9.-]+)(?:px)?\s*["']/i);
   if (widthMatch && heightMatch && widthMatch[1] && heightMatch[1]) {
@@ -161,10 +162,10 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   const DiagramIcon = useMemo(() => getDiagramIcon(diagramCategory), [diagramCategory]);
 
   /**
-   * Cálculo determinista del "Fit to Screen" (Ajuste a pantalla completo).
-   * Evalúa las dimensiones intrínsecas del diagrama contra el viewport actual,
-   * asegurando que diagramas largos (verticales) o anchos (horizontales) queden
-   * 100% visibles de extremo a extremo sin recortes al abrir el visor.
+   * Cálculo determinista del "Fit to Screen" inteligente.
+   * - Diagramas grandes (altos o anchos): reduce proporcionalmente para encajar en el viewport sin recortes.
+   * - Diagramas pequeños o estrechos: escala hacia arriba (hasta 1.65x) para que ocupen un área visual
+   *   cómoda, prominente y legible, evitando que aparezcan como tarjetas diminutas en monitores grandes.
    */
   const calculateFitScale = useCallback(
     (dims?: { width: number; height: number } | null) => {
@@ -176,15 +177,16 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
       const vWidth = window.innerWidth;
       const vHeight = window.innerHeight;
 
-      // Márgenes de respiración del viewport (espacio para la barra de herramientas superior en desktop/mobile)
+      // Márgenes de respiración del viewport (espacio para la barra de herramientas superior y bordes)
       const marginX = vWidth < 640 ? 24 : 80;
       const marginY = vHeight < 640 ? 80 : 120;
 
-      // Padding interno de la tarjeta (p-6 a p-10)
+      // Padding interior de la tarjeta
       const cardPaddingX = vWidth < 640 ? 48 : 80;
       const cardPaddingY = vWidth < 640 ? 48 : 80;
 
-      const totalCardWidth = Math.max(w, 360) + cardPaddingX;
+      const cardWidth = Math.max(w, 320);
+      const totalCardWidth = cardWidth + cardPaddingX;
       const totalCardHeight = h + cardPaddingY;
 
       const availableWidth = Math.max(vWidth - marginX, 200);
@@ -193,12 +195,16 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
       const scaleX = availableWidth / totalCardWidth;
       const scaleY = availableHeight / totalCardHeight;
 
-      // Escala que garantiza que el 100% del card quepa en pantalla (ambos ejes)
+      // Factor de ajuste para encajar completamente en la pantalla
       const fit = Math.min(scaleX, scaleY);
 
-      // Si el diagrama cabe naturalmente en escala 1.0, respetamos 1.0 como escala inicial;
-      // si excede la pantalla, aplicamos el factor de reducción óptimo (mínimo 0.15)
-      return Math.min(1.0, Math.max(0.15, Number(fit.toFixed(2))));
+      // Si el diagrama es grande (fit < 1), reducimos exactamente a fit (mínimo 0.15).
+      // Si el diagrama es pequeño (fit >= 1), escalamos hacia arriba hasta 1.65x para legibilidad óptima.
+      const optimalScale = fit < 1.0
+        ? Math.max(0.15, Number(fit.toFixed(2)))
+        : Math.min(1.65, Number(fit.toFixed(2)));
+
+      return optimalScale;
     },
     [dimensions]
   );
@@ -219,11 +225,11 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
 
   const handleToggleFit = useCallback(() => {
     const fit = calculateFitScale(dimensions);
-    // Si la escala actual está cercana al fit óptimo, expandir al 100% (1:1)
-    if (Math.abs(scale - fit) < 0.05 && scale < 0.95) {
+    // Si la escala actual está cercana al fit óptimo, alternar a 1.0 (tamaño base 1:1)
+    if (Math.abs(scale - fit) < 0.05) {
       setScale(1.0);
     } else {
-      // Si está en 1.0 o en otro nivel de zoom, reajustar a pantalla completa
+      // Reajustar al fit óptimo centrado
       setScale(fit);
       setPosition({ x: 0, y: 0 });
     }
@@ -617,15 +623,12 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
     }
   }, [diagramCategory, t]);
 
-  // En la vista del artículo:
-  // Se respeta el ancho natural del diagrama (tope 1020px en desktop) y max-width 100%.
+  // En la vista del artículo: ancho natural tope 1020px en desktop
   const naturalWidth = dimensions?.width || 680;
   const targetInlineWidth = Math.min(Math.round(naturalWidth), 1020);
 
-  // En el modal inmersivo:
-  // Respetamos el ancho intrínseco natural del SVG (mínimo 360px) sin forzar ensanchamientos artificiales
-  // que distorsionen la altura de los diagramas verticales.
-  const modalTargetWidth = dimensions?.width ? Math.max(dimensions.width, 360) : 800;
+  // En el modal inmersivo: ancho natural base (mínimo 320px)
+  const modalTargetWidth = dimensions?.width ? Math.max(dimensions.width, 320) : 800;
 
   return (
     <>

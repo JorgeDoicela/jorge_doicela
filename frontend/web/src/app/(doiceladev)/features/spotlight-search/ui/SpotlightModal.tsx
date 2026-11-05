@@ -123,9 +123,17 @@ export function SpotlightModal({
   const router = useRouter();
 
   const [query, setQuery] = useState(initialQuery);
+  const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  // Sincronización atómica síncrona en el ciclo de render (eliminando el parpadeo de useEffect)
+  if (initialQuery !== prevInitialQuery) {
+    setPrevInitialQuery(initialQuery);
+    setQuery(initialQuery);
+    setSelectedIndex(0);
+  }
 
   // Escuchar tecla escape y Cmd+K globalmente
   useEffect(() => {
@@ -159,20 +167,15 @@ export function SpotlightModal({
     }
   }, [isOpen]);
 
-  // Autofoco y sincronización de query al abrir
+  // Autofoco al abrir
   useEffect(() => {
     if (isOpen) {
-      setQuery(initialQuery || '');
-      setSelectedIndex(0);
       setTimeout(() => {
         inputRef.current?.focus();
         if (initialQuery) {
           inputRef.current?.select();
         }
       }, 50);
-    } else {
-      setQuery('');
-      setSelectedIndex(0);
     }
   }, [isOpen, initialQuery]);
 

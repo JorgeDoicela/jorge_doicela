@@ -44,7 +44,12 @@ export function SpotlightProvider({ children }: SpotlightProviderProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        setIsOpen((prev) => {
+          if (!prev) {
+            setSearchQuery('');
+          }
+          return !prev;
+        });
       }
     };
 
@@ -68,19 +73,21 @@ export function SpotlightProvider({ children }: SpotlightProviderProps) {
   return (
     <SpotlightContext.Provider value={{ isOpen, openSpotlight, closeSpotlight }}>
       {children}
-      <SpotlightModal
-        isOpen={isOpen}
-        initialQuery={searchQuery}
-        onClose={closeSpotlight}
-        news={spotlightData.news}
-        posts={spotlightData.posts}
-        topics={spotlightData.topics}
-        aiResources={spotlightData.aiResources}
-        secPosts={spotlightData.secPosts}
-        tutorials={spotlightData.tutorials}
-        projects={spotlightData.projects}
-        infraPosts={spotlightData.infraPosts}
-      />
+      {isOpen && (
+        <SpotlightModal
+          isOpen={isOpen}
+          initialQuery={searchQuery}
+          onClose={closeSpotlight}
+          news={spotlightData.news}
+          posts={spotlightData.posts}
+          topics={spotlightData.topics}
+          aiResources={spotlightData.aiResources}
+          secPosts={spotlightData.secPosts}
+          tutorials={spotlightData.tutorials}
+          projects={spotlightData.projects}
+          infraPosts={spotlightData.infraPosts}
+        />
+      )}
     </SpotlightContext.Provider>
   );
 }

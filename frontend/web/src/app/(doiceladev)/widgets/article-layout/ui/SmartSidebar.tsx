@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-interface SmartSidebarProps {
+export interface SmartSidebarProps {
   children: React.ReactNode;
   className?: string;
 }
@@ -26,6 +26,7 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
   const asideRef = React.useRef<HTMLElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
   const offsetYRef = React.useRef(0);
+  const isPinnedToTopRef = React.useRef(false);
   const wheelTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   React.useEffect(() => {
@@ -82,9 +83,11 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
         const step = Math.max(16, Math.abs(deltaY) * 0.85);
 
         if (currentOffset + step < maxOffset - 0.5) {
+          isPinnedToTopRef.current = false;
           applyOffset(currentOffset + step, true);
           scheduleTransitionReset();
         } else {
+          isPinnedToTopRef.current = true;
           if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
 
           const remainingSidebarMove = Math.max(0, maxOffset - currentOffset);
@@ -98,6 +101,8 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
         }
       } else {
         // Rueda hacia abajo: regresar el sidebar hacia su anclaje inferior natural
+        isPinnedToTopRef.current = false;
+
         if (currentOffset > 0.5) {
           e.preventDefault();
 
@@ -130,13 +135,45 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
       if (offsetYRef.current <= 0) return;
 
       const maxOffset = getMaxOffset();
-      if (offsetYRef.current > maxOffset) {
+
+      // Si el sidebar ya había alcanzado el tope, sincronizar continuamente su transform con el
+      // movimiento del contenedor para evitar saltos o despegues hacia abajo al subir la página.
+      const isAtTop = isPinnedToTopRef.current || Math.abs(offsetYRef.current - maxOffset) < 2;
+
+      if (isAtTop) {
+        isPinnedToTopRef.current = true;
         applyOffset(maxOffset, false);
+      } else if (offsetYRef.current > maxOffset) {
+        applyOffset(maxOffset, false);
+      }
+    };
+
+    const handleWindowWheel = (e: WheelEvent): void => {
+      // Aplicar el mismo mecanismo atómico del commit 7f68e35c a toda la pantalla:
+      if (e.ctrlKey || e.metaKey || window.innerWidth < DESKTOP_BREAKPOINT) return;
+      if (offsetYRef.current <= 0) return;
+      if (aside.contains(e.target as Node)) return; // Ya lo atiende handleWheel
+
+      const deltaY = normalizeWheelDelta(e);
+      if (deltaY >= 0) return; // Solo hacia arriba cuando el sidebar ya está en el tope
+
+      const maxOffset = getMaxOffset();
+      const isAtTop = isPinnedToTopRef.current || Math.abs(offsetYRef.current - maxOffset) < 3;
+
+      if (isAtTop && window.scrollY > 0) {
+        // Bloquear el scroll desacoplado del navegador y sincronizar síncronamente en el mismo frame
+        e.preventDefault();
+        if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
+
+        isPinnedToTopRef.current = true;
+        window.scrollBy({ top: deltaY, behavior: 'instant' });
+        applyOffset(getMaxOffset(), false);
       }
     };
 
     const handleResize = (): void => {
       if (window.innerWidth < DESKTOP_BREAKPOINT) {
+        isPinnedToTopRef.current = false;
         if (offsetYRef.current !== 0) {
           applyOffset(0, false);
         }
@@ -146,11 +183,13 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
     };
 
     aside.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('wheel', handleWindowWheel, { passive: false });
     window.addEventListener('scroll', handleWindowScroll, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
       aside.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('wheel', handleWindowWheel);
       window.removeEventListener('scroll', handleWindowScroll);
       window.removeEventListener('resize', handleResize);
       if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);

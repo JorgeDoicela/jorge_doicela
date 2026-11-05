@@ -246,7 +246,7 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             <TableBlock {...props}>{children}</TableBlock>
           ),
           thead: ({ node: _node, ...props }) => (
-            <thead className="bg-slate-100/90 dark:bg-zinc-800/80 backdrop-blur-md border-b-2 border-blue-500/30 select-none" {...props} />
+            <thead className="bg-slate-100/90 dark:bg-zinc-800/80 backdrop-blur-md border-b border-black/10 dark:border-white/10 select-none" {...props} />
           ),
           th: ({ node: _node, ...props }) => (
             <th className="px-5 py-3.5 font-mono font-bold text-slate-900 dark:text-zinc-100 uppercase text-[11px] tracking-wider" {...props} />

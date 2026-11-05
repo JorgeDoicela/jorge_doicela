@@ -88,7 +88,7 @@ export function DoiceladevArticleLayout({
           
           {/* Columna Izquierda: Contenido Principal */}
           <div
-            className={`space-y-8 transition-all duration-300 order-1 lg:row-start-1 min-w-0 ${
+            className={`space-y-8 transition-all duration-300 min-w-0 ${
               isSidebarCollapsed ? 'lg:col-span-1' : ''
             }`}
           >
@@ -217,7 +217,7 @@ export function DoiceladevArticleLayout({
 
           {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo */}
           {!isSidebarCollapsed && (
-            <SmartSidebar className="w-full lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
+            <SmartSidebar className="w-full lg:sticky lg:bottom-8 lg:self-end">
               <AuthorSidebarCard />
               <FeaturedPostsSidebarCard />
               <ExploreTopicsSidebarCard />
@@ -225,21 +225,16 @@ export function DoiceladevArticleLayout({
               <StayInformedCard />
             </SmartSidebar>
           )}
+        </div>
 
-          {/* Bloque de Lecturas Recomendadas (100% SSR, Similitud de Contenido + Antifatiga) */}
-          <div
-            className={`col-span-1 w-full p-4 sm:p-8 lg:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2 ${
-              isSidebarCollapsed ? 'lg:col-span-1' : 'lg:col-span-2'
-            }`}
-          >
-            <RelatedArticlesNav
-              currentCategory={category}
-              currentTitle={title}
-              recommendations={recommendations}
-              limit={3}
-            />
-          </div>
-
+        {/* Bloque de Lecturas Recomendadas (100% Ancho Completo, Fuera de la Cuadrícula del Artículo) */}
+        <div className="w-full p-4 sm:p-8 lg:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl">
+          <RelatedArticlesNav
+            currentCategory={category}
+            currentTitle={title}
+            recommendations={recommendations}
+            limit={3}
+          />
         </div>
 
       </div>

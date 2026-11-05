@@ -12,15 +12,18 @@ const TOP_VIEWPORT_MARGIN = 24;
 const LINE_HEIGHT_PX = 33;
 
 /**
- * Sidebar editorial inteligente con sincronización de frame atómica.
+ * Sidebar editorial inteligente con sincronización atómica y límite de grilla.
  *
- * Mantiene el anclaje al fondo (lg:sticky lg:bottom-8 lg:self-end) y permite
- * revelar las tarjetas superiores con la rueda del ratón paso a paso.
- *
- * Cuando el cursor está sobre el panel y se alcanza el límite superior o inferior,
- * el desplazamiento de la ventana (`window.scrollBy`) y el ajuste de `transform`
- * se ejecutan de forma 100% síncrona en el mismo ciclo de pintado, eliminando
- * cualquier desfase de 1 frame entre el compositor del navegador y `window.scroll`.
+ * Combina desplazamiento independiente por rueda de ratón con anclaje al fondo:
+ * 1. Mantiene el anclaje firme al fondo (lg:sticky lg:bottom-8 lg:self-end) sin
+ *    vibraciones en el scroll nativo de la página.
+ * 2. Permite mover el sidebar de forma 100% independiente con la rueda del ratón
+ *    para explorar las tarjetas superiores (Autor, Destacados) paso a paso.
+ * 3. Al alcanzar el tope o la base del panel, sincroniza atómicamente el scroll de la
+ *    ventana (`window.scrollBy`) en el mismo frame de pintado, sin desfases de GPU.
+ * 4. Límite infranqueable de grilla: `getMaxOffset` verifica que el contenido jamás
+ *    pueda descender más allá de la base del artículo (`gridBottom - asideBottom`),
+ *    impidiendo cualquier invasión o deslizamiento sobre las lecturas recomendadas.
  */
 export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
   const asideRef = React.useRef<HTMLElement>(null);
@@ -39,7 +42,17 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
       const gridTop = grid ? grid.getBoundingClientRect().top : TOP_VIEWPORT_MARGIN;
       const targetTop = Math.max(TOP_VIEWPORT_MARGIN, gridTop);
       const asideTop = aside.getBoundingClientRect().top;
-      return Math.max(0, targetTop - asideTop);
+      const topOffset = Math.max(0, targetTop - asideTop);
+
+      // Límite infranqueable: jamás permitir que el contenido descienda más allá de la base del artículo
+      if (grid) {
+        const gridBottom = grid.getBoundingClientRect().bottom;
+        const asideBottom = aside.getBoundingClientRect().bottom;
+        const maxBottomOffset = Math.max(0, gridBottom - asideBottom);
+        return Math.min(topOffset, maxBottomOffset);
+      }
+
+      return topOffset;
     };
 
     const applyOffset = (newOffset: number, withTransition: boolean): void => {
@@ -67,7 +80,7 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
     };
 
     const handleWheel = (e: WheelEvent): void => {
-      // Respetar el zoom nativo del navegador (Ctrl/Cmd + Rueda) y vistas móviles/tablet
+      // Respetar zoom nativo del navegador y vistas móviles/tablet
       if (e.ctrlKey || e.metaKey || window.innerWidth < DESKTOP_BREAKPOINT) return;
 
       const deltaY = normalizeWheelDelta(e);
@@ -77,7 +90,7 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
       const currentOffset = offsetYRef.current;
 
       if (deltaY < 0) {
-        // Rueda hacia arriba: desplazar el sidebar hacia abajo para revelar tarjetas superiores
+        // Rueda hacia arriba: desplazar el panel de forma independiente para revelar tarjetas superiores
         e.preventDefault();
 
         const step = Math.max(16, Math.abs(deltaY) * 0.85);
@@ -100,7 +113,7 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
           applyOffset(getMaxOffset(), false);
         }
       } else {
-        // Rueda hacia abajo: regresar el sidebar hacia su anclaje inferior natural
+        // Rueda hacia abajo: regresar el panel de forma independiente hacia su anclaje inferior natural
         isPinnedToTopRef.current = false;
 
         if (currentOffset > 0.5) {
@@ -136,32 +149,29 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
 
       const maxOffset = getMaxOffset();
 
-      // Si el sidebar ya había alcanzado el tope, sincronizar continuamente su transform con el
-      // movimiento del contenedor para evitar saltos o despegues hacia abajo al subir la página.
-      const isAtTop = isPinnedToTopRef.current || Math.abs(offsetYRef.current - maxOffset) < 2;
-
-      if (isAtTop) {
-        isPinnedToTopRef.current = true;
+      if (offsetYRef.current > maxOffset) {
         applyOffset(maxOffset, false);
-      } else if (offsetYRef.current > maxOffset) {
-        applyOffset(maxOffset, false);
+      } else {
+        const isAtTop = isPinnedToTopRef.current || Math.abs(offsetYRef.current - maxOffset) < 2;
+        if (isAtTop) {
+          isPinnedToTopRef.current = true;
+          applyOffset(maxOffset, false);
+        }
       }
     };
 
     const handleWindowWheel = (e: WheelEvent): void => {
-      // Aplicar el mismo mecanismo atómico del commit 7f68e35c a toda la pantalla:
       if (e.ctrlKey || e.metaKey || window.innerWidth < DESKTOP_BREAKPOINT) return;
       if (offsetYRef.current <= 0) return;
-      if (aside.contains(e.target as Node)) return; // Ya lo atiende handleWheel
+      if (aside.contains(e.target as Node)) return; // Atendido por handleWheel
 
       const deltaY = normalizeWheelDelta(e);
-      if (deltaY >= 0) return; // Solo hacia arriba cuando el sidebar ya está en el tope
+      if (deltaY >= 0) return;
 
       const maxOffset = getMaxOffset();
       const isAtTop = isPinnedToTopRef.current || Math.abs(offsetYRef.current - maxOffset) < 3;
 
       if (isAtTop && window.scrollY > 0) {
-        // Bloquear el scroll desacoplado del navegador y sincronizar síncronamente en el mismo frame
         e.preventDefault();
         if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
 

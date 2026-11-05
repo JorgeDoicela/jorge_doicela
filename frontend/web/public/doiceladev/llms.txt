@@ -33,7 +33,7 @@
 - **Descripción:** Matriz de avisos de seguridad, análisis de vulnerabilidades (CVEs) y guías prácticas de remediación y endurecimiento de servidores.
 - **Capacidades:** Clasificación por severidad (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`), sistemas afectados y recetas de bastionado para Linux Debian/Arch.
 - **Publicaciones Destacadas:**
-  - *Vulnerabilidades Críticas en PHP: Análisis de Causa Raíz de CVE-2024-4577, Remediación y Hardening de Servidores* (/cybersecurity/vulnerabilidades-php-cve-2024-4577-parchado-seguridad): Análisis de Best-Fit Mapping en PHP-CGI, remediación en PHP 8.1+, mitigación perimetral en Nginx y blindaje con PHP-FPM.
+  - *Seguridad en PHP: Análisis Crítico de CVE-2024-8927 y CVE-2024-9026* (/cybersecurity/seguridad-php-cve-2024-8927-cve-2024-9026): Análisis de causa raíz del bypass de cgi.force_redirect y alteración de logs en PHP-FPM, remediación en PHP 8.1/8.2/8.3, mitigación en Nginx y blindaje defensivo.
 
 ### 6. Tutoriales Prácticos Paso a Paso (`/tutorials`)
 - **Descripción:** Manuales reproducibles de ingeniería de software y DevOps con código listo para producción.

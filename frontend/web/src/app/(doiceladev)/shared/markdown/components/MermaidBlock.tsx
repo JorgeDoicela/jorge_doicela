@@ -162,10 +162,9 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   const DiagramIcon = useMemo(() => getDiagramIcon(diagramCategory), [diagramCategory]);
 
   /**
-   * Cálculo determinista del "Fit to Screen" inteligente.
-   * - Diagramas grandes (altos o anchos): reduce proporcionalmente para encajar en el viewport sin recortes.
-   * - Diagramas pequeños o estrechos: escala hacia arriba (hasta 1.65x) para que ocupen un área visual
-   *   cómoda, prominente y legible, evitando que aparezcan como tarjetas diminutas en monitores grandes.
+   * Cálculo determinista del "Fit to Screen" (Ajuste a pantalla 100% libre de cortes).
+   * Mide el viewport real del navegador y garantiza que el diagrama se vea completo
+   * de borde a borde sin salirse nunca por arriba, abajo o los costados.
    */
   const calculateFitScale = useCallback(
     (dims?: { width: number; height: number } | null) => {
@@ -177,34 +176,25 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
       const vWidth = window.innerWidth;
       const vHeight = window.innerHeight;
 
-      // Márgenes de respiración del viewport (espacio para la barra de herramientas superior y bordes)
-      const marginX = vWidth < 640 ? 24 : 80;
-      const marginY = vHeight < 640 ? 80 : 120;
+      // Márgenes exteriores respecto al borde de la ventana y barra superior
+      const marginX = vWidth < 640 ? 20 : 64;
+      const marginY = vHeight < 640 ? 72 : 110;
 
-      // Padding interior de la tarjeta
-      const cardPaddingX = vWidth < 640 ? 48 : 80;
-      const cardPaddingY = vWidth < 640 ? 48 : 80;
+      // Padding interior exacto de la tarjeta (p-4 = 32px total, sm:p-6 = 48px, md:p-8 = 64px)
+      const cardPadding = vWidth < 640 ? 32 : vWidth < 768 ? 48 : 64;
 
-      const cardWidth = Math.max(w, 320);
-      const totalCardWidth = cardWidth + cardPaddingX;
-      const totalCardHeight = h + cardPaddingY;
+      const totalContentWidth = w + cardPadding;
+      const totalContentHeight = h + cardPadding;
 
       const availableWidth = Math.max(vWidth - marginX, 200);
       const availableHeight = Math.max(vHeight - marginY, 200);
 
-      const scaleX = availableWidth / totalCardWidth;
-      const scaleY = availableHeight / totalCardHeight;
+      const scaleX = availableWidth / totalContentWidth;
+      const scaleY = availableHeight / totalContentHeight;
 
-      // Factor de ajuste para encajar completamente en la pantalla
+      // Escala real que ajusta el 100% del contenedor (SVG + padding) al viewport disponible
       const fit = Math.min(scaleX, scaleY);
-
-      // Si el diagrama es grande (fit < 1), reducimos exactamente a fit (mínimo 0.15).
-      // Si el diagrama es pequeño (fit >= 1), escalamos hacia arriba hasta 1.65x para legibilidad óptima.
-      const optimalScale = fit < 1.0
-        ? Math.max(0.15, Number(fit.toFixed(2)))
-        : Math.min(1.65, Number(fit.toFixed(2)));
-
-      return optimalScale;
+      return Number(Math.min(1.0, Math.max(0.15, fit)).toFixed(2));
     },
     [dimensions]
   );
@@ -225,19 +215,18 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
 
   const handleToggleFit = useCallback(() => {
     const fit = calculateFitScale(dimensions);
-    // Si la escala actual está cercana al fit óptimo, alternar a 1.0 (tamaño base 1:1)
-    if (Math.abs(scale - fit) < 0.05) {
+    // Alternar entre ajuste total a pantalla y tamaño 100% (1:1)
+    if (Math.abs(scale - fit) < 0.05 && scale < 0.95) {
       setScale(1.0);
     } else {
-      // Reajustar al fit óptimo centrado
       setScale(fit);
       setPosition({ x: 0, y: 0 });
     }
   }, [calculateFitScale, dimensions, scale]);
 
   const openModal = useCallback(() => {
-    const initialFit = calculateFitScale(dimensions);
-    setScale(initialFit);
+    const fit = calculateFitScale(dimensions);
+    setScale(fit);
     setPosition({ x: 0, y: 0 });
     hasMovedRef.current = false;
     setIsExpanded(true);
@@ -627,8 +616,8 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
   const naturalWidth = dimensions?.width || 680;
   const targetInlineWidth = Math.min(Math.round(naturalWidth), 1020);
 
-  // En el modal inmersivo: ancho natural base (mínimo 320px)
-  const modalTargetWidth = dimensions?.width ? Math.max(dimensions.width, 320) : 800;
+  // En el modal inmersivo: ancho natural base del SVG
+  const modalTargetWidth = dimensions?.width || 800;
 
   return (
     <>
@@ -795,13 +784,14 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   width: `${modalTargetWidth}px`,
+                  boxSizing: 'content-box',
                   transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
                   transformOrigin: 'center center',
                   transition: isInteracting ? 'none' : 'transform 180ms cubic-bezier(0, 0, 0.2, 1)',
                 }}
-                className={`inline-block p-6 sm:p-10 md:p-12 rounded-3xl bg-white dark:bg-[#12161f] shadow-2xl border border-black/10 dark:border-white/10 select-none pointer-events-auto touch-none ${
+                className={`shrink-0 p-4 sm:p-6 md:p-8 rounded-3xl bg-white dark:bg-[#12161f] shadow-2xl border border-black/10 dark:border-white/10 select-none pointer-events-auto touch-none ${
                   isInteracting ? 'cursor-grabbing' : 'cursor-grab'
-                } [&_*]:cursor-inherit [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-none [&_svg]:block [&_svg]:pointer-events-none [&_svg_*]:pointer-events-none`}
+                } [&_*]:cursor-inherit [&_svg]:w-full [&_svg]:h-auto [&_svg]:!max-w-none [&_svg]:block [&_svg]:pointer-events-none [&_svg_*]:pointer-events-none`}
                 dangerouslySetInnerHTML={{ __html: svgContent }}
               />
             </div>

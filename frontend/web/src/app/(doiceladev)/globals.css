@@ -459,3 +459,15 @@ code[class*="language-diff"] .token.inserted {
   color: #7ee787 !important;
   background-color: rgba(46, 160, 67, 0.12);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DISPOSICIÓN EDITORIAL DOICELADEV (ARTÍCULOS + SMART SIDEBAR)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .article-layout-grid {
+    grid-template-columns: minmax(0, 1fr) 430px;
+  }
+  .article-layout-grid-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

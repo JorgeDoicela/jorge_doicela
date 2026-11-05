@@ -79,13 +79,17 @@ export function DoiceladevArticleLayout({
           backLabel={categoryLabel}
         />
 
-        {/* Cuadrícula Principal (8 cols contenido unificado + 4 cols barra lateral, o 12 cols expandido) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Cuadrícula Principal: Proporción balanceada 1fr 430px con anclaje al fondo */}
+        <div
+          className={`grid grid-cols-1 gap-8 items-start ${
+            isSidebarCollapsed ? 'article-layout-grid-collapsed' : 'article-layout-grid'
+          }`}
+        >
           
           {/* Columna Izquierda: Contenido Principal */}
           <div
-            className={`space-y-8 transition-all duration-300 order-1 lg:row-start-1 ${
-              isSidebarCollapsed ? 'lg:col-span-12' : 'lg:col-span-8'
+            className={`space-y-8 transition-all duration-300 order-1 lg:row-start-1 min-w-0 ${
+              isSidebarCollapsed ? 'lg:col-span-1' : ''
             }`}
           >
             {/* Contenedor Editorial del Artículo */}
@@ -213,7 +217,7 @@ export function DoiceladevArticleLayout({
 
           {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo */}
           {!isSidebarCollapsed && (
-            <SmartSidebar className="lg:col-span-4 lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
+            <SmartSidebar className="w-full lg:sticky lg:bottom-8 lg:self-end order-3 lg:order-2 lg:row-start-1">
               <AuthorSidebarCard />
               <FeaturedPostsSidebarCard />
               <ExploreTopicsSidebarCard />
@@ -223,7 +227,11 @@ export function DoiceladevArticleLayout({
           )}
 
           {/* Bloque de Lecturas Recomendadas (100% SSR, Similitud de Contenido + Antifatiga) */}
-          <div className="col-span-1 lg:col-span-12 w-full p-4 sm:p-8 lg:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2">
+          <div
+            className={`col-span-1 w-full p-4 sm:p-8 lg:p-10 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 shadow-xl order-2 lg:order-3 lg:row-start-2 ${
+              isSidebarCollapsed ? 'lg:col-span-1' : 'lg:col-span-2'
+            }`}
+          >
             <RelatedArticlesNav
               currentCategory={category}
               currentTitle={title}

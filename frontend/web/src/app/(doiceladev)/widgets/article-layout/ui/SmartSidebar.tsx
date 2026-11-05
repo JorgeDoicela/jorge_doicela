@@ -37,6 +37,28 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
     const content = contentRef.current;
     if (!aside || !content) return;
 
+    let prevHeight = content.offsetHeight;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === content) {
+          const currentHeight = entry.contentRect.height;
+          const heightDiff = currentHeight - prevHeight;
+          prevHeight = currentHeight;
+
+          if (Math.abs(heightDiff) > 0.5) {
+            const maxOffset = getMaxOffset();
+            const nextOffset = Math.max(0, Math.min(maxOffset, offsetYRef.current + heightDiff));
+            if (Math.abs(nextOffset - offsetYRef.current) > 0.5) {
+              applyOffset(nextOffset, false);
+            }
+          }
+        }
+      }
+    });
+
+    resizeObserver.observe(content);
+
     const getMaxOffset = (): number => {
       const grid = aside.parentElement;
       const gridTop = grid ? grid.getBoundingClientRect().top : TOP_VIEWPORT_MARGIN;
@@ -198,6 +220,7 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
     window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
+      resizeObserver.disconnect();
       aside.removeEventListener('wheel', handleWheel);
       window.removeEventListener('wheel', handleWindowWheel);
       window.removeEventListener('scroll', handleWindowScroll);

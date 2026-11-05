@@ -34,6 +34,7 @@ import 'prismjs/components/prism-hcl';
 export interface CodeBlockProps {
   code: string;
   language?: string;
+  meta?: string;
   className?: string;
 }
 
@@ -81,6 +82,14 @@ const LANGUAGE_LABELS: Record<string, string> = {
   graphql: 'GraphQL',
   text: 'logs / output',
   plaintext: 'logs / output',
+  log: 'logs / output',
+  logs: 'logs / output',
+  output: 'logs / output',
+  out: 'logs / output',
+  console: 'logs / output',
+  terminal: 'logs / output',
+  stdout: 'logs / output',
+  stderr: 'logs / output',
 };
 
 /**
@@ -96,7 +105,158 @@ function extractFilename(code: string): string | null {
   return null;
 }
 
-export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
+/**
+ * Determina inteligentemente si un bloque de código debe ofrecer la acción de copiar.
+ * Se basa en 3 capas:
+ * 1. Meta directivas explícitas en markdown o comentarios mágicos (# output, // no-copy, # copy)
+ * 2. Existencia de un archivo de configuración real (ej. 99-hardening.conf, .env, nginx.conf)
+ * 3. Inspección semántica de lenguaje y contenido (logs de kernel/firewall, timestamps, trazas vs comandos ejecutables)
+ */
+function isBlockCopyable({
+  code,
+  language,
+  meta,
+  hasFilename,
+}: {
+  code: string;
+  language: string;
+  meta?: string;
+  hasFilename: boolean;
+}): boolean {
+  if (!code) return false;
+
+  const normalizedLang = language.toLowerCase().trim();
+  const normalizedMeta = (meta || '').toLowerCase().trim();
+  const firstLines = code.split('\n').slice(0, 5).map((l) => l.trim());
+  const firstLine = firstLines[0] || '';
+
+  // 1. Directivas explícitas en meta de Markdown (ej: ```bash output o ```text no-copy o ```text copy)
+  if (
+    normalizedMeta.includes('no-copy') ||
+    normalizedMeta.includes('nocopy') ||
+    normalizedMeta.includes('output') ||
+    normalizedMeta.includes('readonly')
+  ) {
+    return false;
+  }
+  if (normalizedMeta.includes('copy')) {
+    return true;
+  }
+
+  // 2. Directivas explícitas en comentarios mágicos en la primera línea
+  if (/^(?:\/\/|#|\/\*)\s*(?:no-copy|nocopy|output|readonly)\b/i.test(firstLine)) {
+    return false;
+  }
+  if (/^(?:\/\/|#|\/\*)\s*copy\b/i.test(firstLine)) {
+    return true;
+  }
+
+  // 3. Si tiene un nombre de archivo válido extraído (ej: 99-hardening.conf, nginx.conf), siempre es copiable
+  if (hasFilename) {
+    return true;
+  }
+
+  // 4. Si el lenguaje es explícitamente de salida o logs (text, plaintext, log, output, console, etc.)
+  const isOutputLanguage =
+    normalizedLang === 'text' ||
+    normalizedLang === 'plaintext' ||
+    normalizedLang === 'log' ||
+    normalizedLang === 'logs' ||
+    normalizedLang === 'output' ||
+    normalizedLang === 'out' ||
+    normalizedLang === 'console' ||
+    normalizedLang === 'terminal' ||
+    normalizedLang === 'stdout' ||
+    normalizedLang === 'stderr' ||
+    !normalizedLang;
+
+  // 5. Patrones exhaustivos de trazas de logs, volcados de diagnóstico, tablas y salidas del sistema
+  const outputOrDiagnosticPatterns = [
+    // 5.1 Logs de Kernel, Firewall y Auditoría
+    /^\[UFW\s+(?:BLOCK|ALLOW|AUDIT|LIMIT)\]/i,                      // Netfilter / UFW logs
+    /^kernel:\s*\[/i,                                              // Linux kernel dmesg
+    /^(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d+/i,  // Timestamps syslog (/var/log/*)
+    /^\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}/,                    // Timestamps ISO estándar
+    /^(?:TRACE|DEBUG|INFO|WARN|ERROR|FATAL)\s*[:\]]/i,             // Prefijos estándar de logs
+
+    // 5.2 Salidas de Estado y Comandos de Inspección
+    /^Status:\s*(?:active|inactive)\b/i,                           // `ufw status`
+    /^(?:PORT|STATE|SERVICE|REASON)\s+(?:STATE|SERVICE)/i,          // `nmap` port scan table
+    /^(?:USER|PID|%CPU|%MEM|VSZ|RSS)\s+/i,                          // `ps aux` / `top` table
+    /^(?:CONTAINER ID|IMAGE|COMMAND|CREATED|STATUS)\s+/i,          // `docker ps` table
+    /^(?:Proto|Recv-Q|Send-Q|Local Address)\s+/i,                   // `netstat` / `ss` table
+    /^(?:Filesystem|S\.ficheros)\s+(?:1K-blocks|Size|Used|Tamaño)/i,// `df -h` table
+
+    // 5.3 Salidas de Control de Versiones (Git)
+    /^On branch\s+\S+/i,                                           // `git status`
+    /^Your branch is\s+/i,                                         // `git status`
+    /^nothing to commit\b/i,                                       // `git status`
+    /^commit\s+[0-9a-f]{7,40}\b/i,                                 // `git log`
+    /^Author:\s+.+<.+>/i,                                          // `git log`
+
+    // 5.4 Salidas de Red y Protocolos
+    /^PING\s+\S+\s+\(/i,                                           // `ping`
+    /^\d+\s+bytes from\s+/i,                                       // `ping` replies
+    /^---\s+\S+\s+ping statistics\s+---/i,                         // `ping` summary
+    /^traceroute to\s+\S+/i,                                       // `traceroute`
+    /^HTTP\/(?:1\.[01]|2(?:\.0)?)\s+\d{3}\b/i,                     // HTTP response headers
+    /^;; (?:QUESTION|ANSWER|AUTHORITY|ADDITIONAL) SECTION:/i,      // `dig` DNS output
+
+    // 5.5 Salidas de Sistemas de Archivos y Listados
+    /^total\s+\d+$/i,                                              // `ls -l` header
+    /^[-dcbpsl][rwx-]{9}/,                                         // Permisos `ls -l` (drwxr-xr-x...)
+
+    // 5.6 Salidas de Gestores de Paquetes y Test Runners
+    /^Reading package lists\.\.\./i,                               // `apt update`
+    /^Building dependency tree\.\.\./i,                            // `apt update`
+    /^Setting up\s+\S+/i,                                          // `dpkg` / `apt install`
+    /^(?:PASS|FAIL)\s+\S+\.(?:spec|test)\b/i,                      // Jest / Vitest test runner
+    /^(?:Tests?|Test Suites?):\s+\d+\s+(?:passed|failed)/i,        // Test summary
+
+    // 5.7 Tablas ASCII de Bases de Datos y Estructuras de Árbol
+    /^\+[-+]+\+$/,                                                 // Tablas SQL (+-----+-----+)
+    /^\([0-9]+\s+rows?\)$/i,                                       // PostgreSQL / MySQL `(5 rows)`
+    /^[│├└─\s]*[├──└──]/,                                          // Árboles de directorios (`tree`)
+    /^\+={3,}\+/,                                                  // Bordes de tablas Markdown/ASCII
+
+    // 5.8 Excepciones y Trazas de Error
+    /^Traceback \(most recent call last\):/i,                      // Python stack trace
+    /^Error:\s+\w+/i,                                              // Node.js / JS stack trace
+    /^\s+at\s+(?:.+?\s+\()?.+?:\d+:\d+\)?/i,                       // Stack frame (`at Module._compile`)
+    /^npm ERR!/i,                                                  // npm error log
+    /^panic:\s+/i,                                                 // Go panic
+  ];
+
+  const hasOutputOrDiagnosticPattern = firstLines.some((line) =>
+    outputOrDiagnosticPatterns.some((pattern) => pattern.test(line))
+  );
+
+  if (hasOutputOrDiagnosticPattern) {
+    return false;
+  }
+
+  // Si fue etiquetado como lenguaje de salida/texto y no tiene comandos ejecutables ni código
+  if (isOutputLanguage) {
+    // Si contiene comandos bash estándar identificables (ej: sudo, apt, systemctl, etc.)
+    const hasExecutableCommands = firstLines.some((line) =>
+      /^(?:sudo|systemctl|docker|git|pnpm|npm|npx|apt|apt-get|curl|wget|chmod|chown|mkdir|cat|echo|export|grep|sed|awk)\s+/i.test(
+        line.replace(/^[$#]\s*/, '')
+      )
+    );
+
+    if (hasExecutableCommands) {
+      return true;
+    }
+
+    // Por defecto, bloques text/plaintext/log sin comandos ni archivo son salidas no copiables
+    return false;
+  }
+
+  // 6. Lenguajes de programación, scripts y configuración son copiables
+  return true;
+}
+
+export function CodeBlock({ code, language = 'text', meta }: CodeBlockProps) {
   const t = useTranslations('Markdown');
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -113,10 +273,19 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
     normalizedLang === 'sh' ||
     normalizedLang === 'zsh' ||
     normalizedLang === 'shell';
-  const isLogOrText =
-    normalizedLang === 'text' || normalizedLang === 'plaintext' || !normalizedLang;
   const displayLabel = LANGUAGE_LABELS[normalizedLang] || normalizedLang;
   const detectedFilename = extractFilename(cleanCode);
+
+  const copyable = useMemo(
+    () =>
+      isBlockCopyable({
+        code: cleanCode,
+        language: normalizedLang,
+        meta,
+        hasFilename: !!detectedFilename,
+      }),
+    [cleanCode, normalizedLang, meta, detectedFilename]
+  );
 
   // Resaltado de sintaxis con Prism
   const highlightedHtml = useMemo(() => {
@@ -133,7 +302,12 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(cleanCode);
+      // Limpiar prefijo de prompt '$ ' si el bloque contiene comandos con prompt
+      const textToCopy = isBashOrShell && /^\$\s+/.test(cleanCode)
+        ? cleanCode.replace(/^\$\s+/gm, '')
+        : cleanCode;
+
+      await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -156,18 +330,18 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
                 {displayLabel}
               </span>
             </>
+          ) : !copyable ? (
+            <>
+              <Terminal className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400 shrink-0" />
+              <span className="text-[11px] font-mono font-medium text-slate-700 dark:text-zinc-300">
+                {t('terminal')}
+              </span>
+            </>
           ) : isBashOrShell ? (
             <>
               <Terminal className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
               <span className="text-[11px] font-mono font-semibold text-slate-700 dark:text-zinc-300">
                 {displayLabel}
-              </span>
-            </>
-          ) : isLogOrText ? (
-            <>
-              <Terminal className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400 shrink-0" />
-              <span className="text-[11px] font-mono font-medium text-slate-700 dark:text-zinc-300">
-                {t('terminal')}
               </span>
             </>
           ) : (
@@ -180,20 +354,22 @@ export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
           )}
         </div>
 
-        {/* Botón Copiar con confirmación (Solo icono) */}
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="p-1 rounded-md text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 shrink-0"
-          title={copied ? t('copied') : t('copyCodeAria')}
-          aria-label={t('copyCodeAria')}
-        >
-          {copied ? (
-            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-          ) : (
-            <Copy className="w-3.5 h-3.5" />
-          )}
-        </button>
+        {/* Botón Copiar con confirmación: Solo se renderiza en bloques de acción/código */}
+        {copyable && (
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="p-1 rounded-md text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 shrink-0"
+            title={copied ? t('copied') : t('copyCodeAria')}
+            aria-label={t('copyCodeAria')}
+          >
+            {copied ? (
+              <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Cuerpo del código */}

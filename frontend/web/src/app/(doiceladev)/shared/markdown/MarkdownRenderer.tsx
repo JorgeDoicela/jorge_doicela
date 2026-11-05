@@ -271,7 +271,24 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             }
 
             const language = match ? match[1] : 'text';
-            return <CodeBlock code={rawContent} language={language} className={className} />;
+            const meta =
+              _node &&
+              'data' in _node &&
+              typeof _node.data === 'object' &&
+              _node.data &&
+              'meta' in _node.data &&
+              typeof _node.data.meta === 'string'
+                ? _node.data.meta
+                : undefined;
+
+            return (
+              <CodeBlock
+                code={rawContent}
+                language={language}
+                meta={meta}
+                className={className}
+              />
+            );
           },
         }}
       >

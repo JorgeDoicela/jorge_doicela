@@ -188,18 +188,41 @@ export function SmartSidebar({ children, className = '' }: SmartSidebarProps) {
       if (aside.contains(e.target as Node)) return; // Atendido por handleWheel
 
       const deltaY = normalizeWheelDelta(e);
-      if (deltaY >= 0) return;
+      if (deltaY === 0) return;
 
       const maxOffset = getMaxOffset();
       const isAtTop = isPinnedToTopRef.current || Math.abs(offsetYRef.current - maxOffset) < 3;
 
-      if (isAtTop && window.scrollY > 0) {
+      if (isAtTop) {
+        if (deltaY < 0 && window.scrollY > 0) {
+          e.preventDefault();
+          if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
+
+          isPinnedToTopRef.current = true;
+          window.scrollBy({ top: deltaY, behavior: 'instant' });
+          applyOffset(getMaxOffset(), false);
+        } else if (deltaY > 0) {
+          const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+          if (window.scrollY < maxScrollY - 0.5) {
+            e.preventDefault();
+            if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
+
+            isPinnedToTopRef.current = true;
+            window.scrollBy({ top: deltaY, behavior: 'instant' });
+            const nextMax = getMaxOffset();
+            if (nextMax > 0.5) {
+              applyOffset(nextMax, false);
+            } else {
+              isPinnedToTopRef.current = false;
+              applyOffset(0, false);
+            }
+          }
+        }
+      } else if (deltaY > 0 && offsetYRef.current > maxOffset) {
         e.preventDefault();
         if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
-
-        isPinnedToTopRef.current = true;
         window.scrollBy({ top: deltaY, behavior: 'instant' });
-        applyOffset(getMaxOffset(), false);
+        applyOffset(Math.max(0, getMaxOffset()), false);
       }
     };
 

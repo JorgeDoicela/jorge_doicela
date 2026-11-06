@@ -171,7 +171,7 @@ Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaD
 * **Regla Inviolable de UI en Tarjetas (`DoiceladevCard.tsx`):**
   La línea de metadatos técnicos superior se renderiza siempre de forma 100% dinámica desde SQLite sin cadenas quemadas:
   $$\text{Nivel 1 (Módulo)} \bullet \text{Nivel 2 (Categoría)}$$
-  Ejemplo: `TUTORIALES • WEB`, `CIBERSEGURIDAD • HARDENING`, `INFRAESTRUCTURA • CONTAINERS`. Ante textos extensos en titular o resumen, `DoiceladevHoverPreview` permite la inspección en hover sin layout shift.
+  Ejemplo: `TUTORIALES • WEB`, `CIBERSEGURIDAD • HARDENING`, `INFRAESTRUCTURA • CONTAINERS`.
 * **Prohibición de "Subcategorías":** No existe la columna ni el concepto `subCategory`. Cualquier intento de crear o consumir `subCategory` está estrictamente prohibido.
 
 ---

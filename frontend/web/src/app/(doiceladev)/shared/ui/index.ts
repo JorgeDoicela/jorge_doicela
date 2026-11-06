@@ -4,4 +4,3 @@ export * from './ScrollToTopButton';
 export * from './ArticleCover';
 export * from './CategoryFilterBar';
 export * from './DoiceladevSelect';
-export * from './DoiceladevHoverPreview';

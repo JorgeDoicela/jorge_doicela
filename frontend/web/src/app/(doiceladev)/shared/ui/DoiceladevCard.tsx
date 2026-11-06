@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArticleCover, DoiceladevArticleCategory } from './ArticleCover';
-import { DoiceladevHoverPreview } from './DoiceladevHoverPreview';
 
 export interface DoiceladevCardProps {
   href: string;
@@ -36,8 +35,7 @@ export interface DoiceladevCardExcerptProps {
 
 /**
  * DoiceladevCardMeta - Nivel 1 (Módulo) y Nivel 2 (Categoría)
- * Mantiene 100% la estética original (tipografía mono sobria sin pastillas invasivas)
- * con soporte para inspección completa en hover si el texto se recorta.
+ * Mantiene 100% la estética original (tipografía mono sobria).
  */
 export function DoiceladevCardMeta({
   categoryMeta,
@@ -71,34 +69,15 @@ export function DoiceladevCardMeta({
     return categoryMeta;
   }, [categoryMeta, formatSegment]);
 
-  const metaString = typeof formattedCategoryMeta === 'string' ? formattedCategoryMeta.toUpperCase() : '';
-
   return (
-    <DoiceladevHoverPreview
-      enabled={metaString.length > 38}
-      content={
-        <div className="space-y-1">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-semibold">
-            Jerarquía Técnica
-          </p>
-          <p className="font-mono text-xs font-bold text-cyan-600 dark:text-cyan-400">
-            {metaString}
-          </p>
-        </div>
-      }
-      delayMs={150}
-      maxWidth={380}
-      className="w-full min-w-0"
-    >
-      <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium ${className}`}>
-        {formattedCategoryMeta}
-      </p>
-    </DoiceladevHoverPreview>
+    <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium ${className}`}>
+      {formattedCategoryMeta}
+    </p>
   );
 }
 
 /**
- * DoiceladevCardTitle - Titular editorial con inspección en hover si supera las dos líneas.
+ * DoiceladevCardTitle - Titular editorial con truncamiento en dos líneas.
  */
 export function DoiceladevCardTitle({
   title,
@@ -106,34 +85,17 @@ export function DoiceladevCardTitle({
   className = '',
 }: DoiceladevCardTitleProps) {
   return (
-    <DoiceladevHoverPreview
-      enabled={title.length > 65}
-      content={
-        <div className="space-y-1">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
-            Titular Completo
-          </p>
-          <h4 className="text-xs sm:text-sm font-bold leading-snug text-slate-900 dark:text-white">
-            {title}
-          </h4>
-        </div>
-      }
-      delayMs={220}
-      maxWidth={460}
-      className="w-full"
+    <h3
+      title={title}
+      className={`text-base font-bold text-slate-900 dark:text-[var(--header-title)] group-hover:text-blue-600 dark:${accentHoverColor} transition-colors leading-snug line-clamp-2 mt-1.5 ${className}`}
     >
-      <h3
-        title={title}
-        className={`text-base font-bold text-slate-900 dark:text-[var(--header-title)] group-hover:text-blue-600 dark:${accentHoverColor} transition-colors leading-snug line-clamp-2 mt-1.5 ${className}`}
-      >
-        {title}
-      </h3>
-    </DoiceladevHoverPreview>
+      {title}
+    </h3>
   );
 }
 
 /**
- * DoiceladevCardExcerpt - Sinopsis / extracto con previsualización completa en hover.
+ * DoiceladevCardExcerpt - Sinopsis / extracto con truncamiento en dos líneas.
  */
 export function DoiceladevCardExcerpt({
   excerpt,
@@ -142,28 +104,9 @@ export function DoiceladevCardExcerpt({
   if (!excerpt) return null;
 
   return (
-    <DoiceladevHoverPreview
-      content={
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-1.5 border-b border-black/5 dark:border-white/10 pb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">
-              Resumen Técnico Completo
-            </span>
-          </div>
-          <p className="text-xs sm:text-[13px] leading-relaxed text-slate-700 dark:text-zinc-200 font-normal">
-            {excerpt}
-          </p>
-        </div>
-      }
-      delayMs={200}
-      maxWidth={500}
-      className="w-full"
-    >
-      <p className={`text-xs text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5 ${className}`}>
-        {excerpt}
-      </p>
-    </DoiceladevHoverPreview>
+    <p className={`text-xs text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5 ${className}`}>
+      {excerpt}
+    </p>
   );
 }
 

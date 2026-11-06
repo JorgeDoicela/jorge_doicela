@@ -305,8 +305,7 @@ Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaD
 ### 7.1 Regla Universal de Presentación en UI (Frontend)
 Para garantizar una jerarquía visual sobria, limpia y predecible en todo el sistema:
 1. **Línea de Metadatos de Tarjetas (`categoryMeta`):** Se restringe estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)** (ej. `PROYECTOS • WEB`, `TUTORIALES • WEB`, `INFRAESTRUCTURA • CONTAINERS`). Preserva la estética original en tipografía mono sin pastillas grises invasivas.
-2. **Inspección sin Truncamiento (`DoiceladevHoverPreview`):** Si un titular o extracto es extenso, el usuario puede inspeccionar el contenido íntegro pasando el cursor sobre el texto, el cual se proyecta en un popover flotante Neumorphic Glassmorphic (`createPortal`) sin provocar saltos de diseño (*layout shifts*).
-3. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra exclusivamente el **Nivel 1 (Módulo)** en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
+2. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra la jerarquía técnica en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
 4. **Prohibición de "Subcategorías":** No existe ninguna columna, tabla o entidad llamada `subCategory` ni en persistencia ni en contratos de API; cualquier concepto secundario corresponde estrictamente al Nivel 2 (`category`).
 5. **Estandarización Unificada de la Barra de Filtros (`CategoryFilterBar`):** En los 8 módulos de la plataforma, la barra de pastillas neumórficas filtra unívocamente por el **Nivel 2 (Categoría Temática)** (`web`, `backend`, `devops`, `hardening`, `servers`, `llm`, `frameworks`, etc.), garantizando una experiencia de usuario perfectamente simétrica y predecible.
 

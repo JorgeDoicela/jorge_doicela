@@ -17,7 +17,6 @@ import {
   Maximize2,
   ZoomIn,
   ZoomOut,
-  RotateCcw,
   X,
 } from 'lucide-react';
 
@@ -740,16 +739,6 @@ export function MermaidBlock({ chart }: MermaidBlockProps) {
                   aria-label={t('zoomIn')}
                 >
                   <ZoomIn className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleFitToScreen}
-                  className="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none"
-                  title={t('fitToScreen')}
-                  aria-label={t('fitToScreen')}
-                >
-                  <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </div>
 

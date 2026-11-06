@@ -28,6 +28,7 @@ export interface RecommendationCard {
   category: DoiceladevArticleCategory;
   categoryMeta: string;
   coverImage?: string;
+  excerpt?: string | null;
   score: number;
 }
 

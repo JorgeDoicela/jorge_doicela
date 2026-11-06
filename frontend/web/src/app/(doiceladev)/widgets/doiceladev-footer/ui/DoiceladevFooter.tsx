@@ -46,6 +46,8 @@ export function DoiceladevFooter() {
               <li><Link href="/news" className="hover:text-cyan-400 transition-colors">{t('techNews')}</Link></li>
               <li><Link href="/blog" className="hover:text-blue-400 transition-colors">{t('archEssays')}</Link></li>
               <li><Link href="/tutorials" className="hover:text-slate-300 transition-colors">{t('handsOnTutorials')}</Link></li>
+              <li><Link href="/categories" className="hover:text-blue-400 transition-colors">Categorías</Link></li>
+              <li><Link href="/tags" className="hover:text-cyan-400 transition-colors">Etiquetas</Link></li>
             </ul>
           </div>
 

@@ -51,7 +51,7 @@ frontend/web/src/app/(doiceladev)/
 │   ├── lib/                          # api, serverFetch, fetchJson
 │   └── types/                        # spotlight.ts
 │
-├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown (8 Categorías + Portal/Feed)
+├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown
 │   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
 │   ├── blog/                         # BlogCard, BlogGrid, useBlog, drafts/, types.ts, index.ts
 │   ├── forum/                        # TopicCard, useForum, drafts/, types.ts, index.ts
@@ -60,7 +60,9 @@ frontend/web/src/app/(doiceladev)/
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
-│   └── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
+│   ├── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
+│   ├── categories/                   # Hub de Categorías (Nivel 2): useCategoriesHub, useCategoryArticles, types.ts, index.ts
+│   └── tags/                         # Hub de Etiquetas (Nivel 3): useTagsHub, useTagArticles, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
@@ -70,10 +72,10 @@ frontend/web/src/app/(doiceladev)/
 │
 ├── widgets/                          # CAPA 3: Bloques Visuales Autónomos Complejos y Shells
 │   ├── doiceladev-header/            # DoiceladevHeaderNav (Lupa conectada a useSpotlight)
-│   ├── doiceladev-footer/            # DoiceladevFooter
+│   ├── doiceladev-footer/            # DoiceladevFooter (Enlaces a /categories y /tags)
 │   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
 │   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
-│   ├── article-layout/               # DoiceladevArticleLayout + Sidebars (Author, ExploreTopics, PopularTags con useSpotlight, FeaturedPosts, StayInformed)
+│   ├── article-layout/               # DoiceladevArticleLayout + Sidebars (Author, ExploreTopics, PopularTags, FeaturedPosts, StayInformed)
 │   └── page-layout/                  # DoiceladevPageLayout
 │
 └── doiceladev/                       # CAPAS 2 & 1: Enrutamiento y Páginas del App Router de Next.js
@@ -85,7 +87,9 @@ frontend/web/src/app/(doiceladev)/
     ├── cybersecurity/                # Matriz de avisos y remediación (/cybersecurity, /cybersecurity/[slug])
     ├── tutorials/                    # Malla de tutoriales y asistente interactivo (/tutorials, /tutorials/[slug])
     ├── projects/                     # Showcase de proyectos (/projects, /projects/[slug])
-    └── infrastructure/               # Guías y especificaciones de servidores (/infrastructure, /infrastructure/[slug])
+    ├── infrastructure/               # Guías y especificaciones de servidores (/infrastructure, /infrastructure/[slug])
+    ├── categories/                   # Directorio (/categories) y Hub de Categoría (/categories/[slug])
+    └── tags/                         # Directorio (/tags) y Hub de Etiqueta (/tags/[slug])
 ```
 
 ---
@@ -400,3 +404,22 @@ En lugar de forzar descargas en el cliente (`useEffect` / `useDoiceladevPortal`)
 * **Componente Aislado:** [`ReaderHistoryTracker.tsx`](/doiceladev/features/reader-history/ui/ReaderHistoryTracker.tsx) opera como un observador puro de cliente.
 * **Almacenamiento Efímero en Cookie:** Mantiene un búfer FIFO de hasta 10 identificadores `slug` leídos recientemente (`max-age=30 días`, `SameSite=Lax`, < 150 bytes).
 * **Cero Impacto en VPS:** No requiere persistencia de sesiones en el servidor ni genera escrituras en `doiceladev.sqlite`, blindando la memoria del servidor de 1 GB de RAM.
+
+---
+
+## 10. Toolbar Maestro de Filtros (`ModuleFilterToolbar`) y Directorios Transversales
+
+### 10.1 Toolbar Maestro de Contenido (`shared/ui/ModuleFilterToolbar.tsx`)
+Para erradicar la duplicación de código en las cabeceras de los módulos de contenido (`infrastructure`, `tutorials`, `cybersecurity`, `ai`, `blog`, `forum`, `news`, `projects`) y garantizar simetría estética permanente con los títulos centrados:
+* **Inmunidad a Deformaciones (`shrink-0` y `max-w-md`):** El contenedor del buscador neumórfico (`glass-concave-panel`) cuenta con blindaje estricto contra compresión.
+* **Disposición Vertical Centrada Universal:**
+  - **Arriba:** Buscador neumórfico siempre centrado (`w-full max-w-md mx-auto`).
+  - **Abajo:** Barra de pastillas de filtros siempre centrada (`w-fit max-w-full mx-auto`) con scroll horizontal fluido.
+  - Elimina separaciones excesivas, asimetrías o colisiones en cualquier resolución de pantalla.
+* **Acentos Dinámicos de Foco:** Conexión semántica de `focus:ring` según la paleta del módulo (`blue`, `cyan`, `purple`, `amber`, `emerald`, `rose`).
+* **Integración con `CategoryFilterBar`:** Mantiene el selector táctil desplegable neumórfico (`DoiceladevSelect`) en pantallas móviles (`< sm`) y pestañas horizontales con scroll fluido en pantallas de escritorio.
+
+### 10.2 Directorios y Hubs Taxonómicos Transversales (`/categories` y `/tags`)
+* **Directorio de Especialidades (`/categories/page.tsx`):** Vista de catálogo que expone todas las categorías técnicas consolidadas en una grilla de tarjetas neumórficas convexas (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`). Cada cuadro indica el nombre de la especialidad, el conteo de artículos, insignias de los módulos de origen y enlace `Ver publicaciones →` hacia `/categories/[slug]`.
+* **Directorio de Tecnologías (`/tags/page.tsx`):** Catálogo de etiquetas indexadas con contador y numeral `#`, ordenadas orgánicamente con enlace hacia `/tags/[slug]`.
+* **Hubs de Artículos Filtrados (`/categories/[slug]` y `/tags/[slug]`):** Server Components de alto rendimiento que resuelven síncronamente los artículos asociados mediante `serverGet` y los presentan en la grilla oficial con [`DoiceladevCard`](/doiceladev/shared/ui/DoiceladevCard.tsx) y botón de retorno al directorio general.

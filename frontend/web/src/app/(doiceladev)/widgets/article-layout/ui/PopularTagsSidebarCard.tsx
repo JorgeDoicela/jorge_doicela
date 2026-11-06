@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
-import { useSpotlight } from '../../../features/spotlight-search';
 
 interface PopularTagsSidebarCardProps {
   className?: string;
@@ -20,7 +20,6 @@ export function PopularTagsSidebarCard({
   limit = 8,
 }: PopularTagsSidebarCardProps) {
   const t = useTranslations('ArticleLayout');
-  const { openSpotlight } = useSpotlight();
   const { spotlightData, loading } = useDoiceladevPortal();
 
   // Cálculo reactivo puro y memoizado de los tags más frecuentes
@@ -87,10 +86,9 @@ export function PopularTagsSidebarCard({
         /* Lista vertical limpia de etiquetas sin marco invasivo de píldora */
         <div className="space-y-1" role="list" aria-label={t('popularTags')}>
           {popularTags.map(({ name, count }) => (
-            <button
+            <Link
               key={name}
-              type="button"
-              onClick={() => openSpotlight(name)}
+              href={`/tags/${encodeURIComponent(name)}`}
               role="listitem"
               className="group flex items-center justify-between w-full py-2 px-3 rounded-xl hover:bg-black/[0.035] dark:hover:bg-white/[0.035] transition-all duration-200 text-left cursor-pointer active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
               title={`#${name} (${count})`}
@@ -109,7 +107,7 @@ export function PopularTagsSidebarCard({
               <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono glass-concave-panel text-slate-500 dark:text-zinc-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 shrink-0 transition-colors">
                 {count}
               </span>
-            </button>
+            </Link>
           ))}
         </div>
       )}

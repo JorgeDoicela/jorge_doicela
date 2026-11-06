@@ -110,15 +110,33 @@ backend/src/doiceladev/
 │   ├── entities/glossary-term.entity.ts
 │   └── dto/get-glossary-query.dto.ts
 │
-└── portal/                           # 10. AGREGACIÓN EDITORIAL CONSOLIDADA (FEED / PORTAL GLOBAL)
-    ├── portal.module.ts
-    ├── controllers/
-    │   └── portal.controller.ts      # GET /doiceladev/portal con GetPortalQueryDto validado
-    ├── dto/
-    │   ├── portal-response.dto.ts    # PortalFeedItem, PortalSpotlightData, PortalResponseDto
-    │   └── get-portal-query.dto.ts   # Validación class-validator (?lang, ?search)
-    └── services/
-        └── portal.service.ts         # Consulta consolidada resiliente (SmartScore + feed cronológico + Spotlight)
+├── portal/                           # 10. AGREGACIÓN EDITORIAL CONSOLIDADA (FEED / PORTAL GLOBAL)
+│   ├── portal.module.ts
+│   ├── controllers/
+│   │   └── portal.controller.ts      # GET /doiceladev/portal con GetPortalQueryDto validado
+│   ├── dto/
+│   │   ├── portal-response.dto.ts    # PortalFeedItem, PortalSpotlightData, PortalResponseDto
+│   │   └── get-portal-query.dto.ts   # Validación class-validator (?lang, ?search)
+│   └── services/
+│       └── portal.service.ts         # Consulta consolidada resiliente (SmartScore + feed cronológico + Spotlight)
+│
+├── recommendations/                  # 11. MOTOR ANTIFATIGA DE RECOMENDACIONES
+│   ├── recommendations.module.ts
+│   ├── controllers/recommendations.controller.ts # GET /doiceladev/recommendations (?slug, ?lang, ?limit, ?exclude)
+│   ├── dto/{get-recommendations-query.dto.ts, recommendation-card.dto.ts}
+│   └── services/recommendations.service.ts
+│
+├── categories/                       # 12. HUB TRANSVERSAL DE CATEGORÍAS (NIVEL 2)
+│   ├── categories.module.ts
+│   ├── controllers/categories.controller.ts # GET /doiceladev/categories, GET /doiceladev/categories/:slug
+│   ├── dto/{get-categories-query.dto.ts, get-category-articles-query.dto.ts}
+│   └── services/categories.service.ts # Agrupación indexada de las 8 tablas de contenido
+│
+└── tags/                             # 13. HUB TRANSVERSAL DE ETIQUETAS (NIVEL 3)
+    ├── tags.module.ts
+    ├── controllers/tags.controller.ts # GET /doiceladev/tags, GET /doiceladev/tags/:slug
+    ├── dto/{get-tags-query.dto.ts, get-tag-articles-query.dto.ts}
+    └── services/tags.service.ts      # Cruce relacional normalizado mediante tags y content_tags
 ```
 
 ---

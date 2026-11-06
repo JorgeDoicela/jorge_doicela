@@ -13,6 +13,8 @@
     "projects": "Projects",
     "blog": "Blog",
     "forum": "Forum",
+    "categories": "Categories",
+    "tags": "Tags",
     "home": "Home",
     "backToDoiceladev": "← Back to DoicelaDev",
     "portal": "Back to jorgedoicela.com",
@@ -421,5 +423,29 @@
     "shareOnLinkedIn": "Share on LinkedIn",
     "relatedArticlesTitle": "Recommended Reading",
     "readArticle": "Read publication"
+  },
+  "CategoriesHub": {
+    "title": "Categories & Specialties",
+    "subtitle": "Publications, projects, and architecture resources organized across technical specialties.",
+    "searchPlaceholder": "Search publications by category...",
+    "articlesCount": "{count, plural, =1 {1 publication} other {# publications}}",
+    "emptySearch": "No publications found matching your search.",
+    "viewCategory": "View publications →",
+    "allCategories": "All Categories",
+    "hubTitle": "Category: {category}",
+    "hubSubtitle": "All publications and resources classified under the {category} specialty.",
+    "noArticles": "No publications available in this category currently."
+  },
+  "TagsHub": {
+    "title": "Tags & Technologies",
+    "subtitle": "Browse all publications indexed by technical concepts, tools, and frameworks.",
+    "searchPlaceholder": "Search publications by tag...",
+    "articlesCount": "{count, plural, =1 {1 publication} other {# publications}}",
+    "emptySearch": "No publications found matching your search.",
+    "viewTag": "View everything on #{tag} →",
+    "allTags": "All Tags",
+    "hubTitle": "Tag: #{tag}",
+    "hubSubtitle": "Technical publications, guides, and resources linked to #{tag}.",
+    "noArticles": "No publications associated with this tag currently."
   }
 }

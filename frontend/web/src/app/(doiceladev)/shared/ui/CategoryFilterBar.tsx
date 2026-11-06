@@ -106,7 +106,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
   }, [options, showCount, getOptionLabel]);
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`w-fit max-w-full mx-auto ${className}`}>
       {/* 1. Selector Dropdown Táctil Neumórfico (Exclusivo para Móvil: < sm) */}
       <div className="sm:hidden w-full max-w-xs mx-auto flex justify-center">
         {loading && options.length === 0 ? (
@@ -127,7 +127,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
       <div
         role="tablist"
         aria-label={t('categoryFilterAria')}
-        className="hidden sm:flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none min-h-[38px]"
+        className="hidden sm:flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none min-h-[38px] w-fit max-w-full mx-auto"
       >
         {loading && options.length === 0 ? (
           <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
                 role="tab"
                 aria-selected={isSelected}
                 onClick={() => onSelect(option.id)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer select-none shrink-0 ${
                   isSelected
                     ? styles.active
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'
@@ -154,10 +154,10 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
                 <span>{getOptionLabel(option)}</span>
                 {showCount && typeof option.count === 'number' && option.count > 0 && (
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
+                    className={`text-[10px] font-mono font-medium ${
                       isSelected
-                        ? styles.badge
-                        : 'bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-400'
+                        ? `${styles.badge} px-1.5 py-0.2 rounded-full`
+                        : 'text-zinc-400 dark:text-zinc-500 ml-0.5'
                     }`}
                   >
                     {option.count}

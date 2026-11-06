@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useSpotlight } from '../../../features/spotlight-search';
 
 interface ArticleTagsProps {
   tags?: string[] | string;
@@ -11,7 +11,6 @@ interface ArticleTagsProps {
 
 export function ArticleTags({ tags, className = '' }: ArticleTagsProps) {
   const t = useTranslations('ArticleLayout');
-  const { openSpotlight } = useSpotlight();
 
   const parsedTags = React.useMemo(() => {
     if (!tags) return [];
@@ -37,10 +36,9 @@ export function ArticleTags({ tags, className = '' }: ArticleTagsProps) {
 
       <div className="flex flex-wrap items-center gap-2">
         {parsedTags.map((tag) => (
-          <button
+          <Link
             key={tag}
-            type="button"
-            onClick={() => openSpotlight(tag)}
+            href={`/tags/${encodeURIComponent(tag)}`}
             className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/30 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
             title={t('searchTagHint', { tag })}
           >
@@ -48,7 +46,7 @@ export function ArticleTags({ tags, className = '' }: ArticleTagsProps) {
               #
             </span>
             <span>{tag}</span>
-          </button>
+          </Link>
         ))}
       </div>
     </section>

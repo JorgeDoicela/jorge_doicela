@@ -10,6 +10,7 @@ interface ContentTableConfig {
   categoryDomain: string;
   routePrefix: string;
   titleCol: string;
+  descCol: string;
   featCol: string;
   tagCol?: string;
 }
@@ -19,6 +20,7 @@ interface ContentRow {
   slug: string;
   category?: string;
   title: string;
+  excerpt?: string;
   coverImage?: string;
   featured: number | boolean;
   orderPriority?: number;
@@ -46,6 +48,7 @@ export class RecommendationsService {
       categoryDomain: 'infrastructure',
       routePrefix: '/infrastructure',
       titleCol: 'title',
+      descCol: "COALESCE(subtitle, architectureOverview, '')",
       featCol: 'featured',
     },
     {
@@ -54,6 +57,7 @@ export class RecommendationsService {
       categoryDomain: 'cybersecurity',
       routePrefix: '/cybersecurity',
       titleCol: 'title',
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {
@@ -62,6 +66,7 @@ export class RecommendationsService {
       categoryDomain: 'tutorials',
       routePrefix: '/tutorials',
       titleCol: 'title',
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {
@@ -70,6 +75,7 @@ export class RecommendationsService {
       categoryDomain: 'blog',
       routePrefix: '/blog',
       titleCol: 'title',
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {
@@ -78,6 +84,7 @@ export class RecommendationsService {
       categoryDomain: 'news',
       routePrefix: '/news',
       titleCol: 'title',
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {
@@ -86,6 +93,7 @@ export class RecommendationsService {
       categoryDomain: 'ai',
       routePrefix: '/ai',
       titleCol: 'name',
+      descCol: 'description',
       featCol: 'featured',
     },
     {
@@ -94,6 +102,7 @@ export class RecommendationsService {
       categoryDomain: 'projects',
       routePrefix: '/projects',
       titleCol: 'name',
+      descCol: 'description',
       featCol: 'featured',
     },
     {
@@ -102,6 +111,7 @@ export class RecommendationsService {
       categoryDomain: 'forum',
       routePrefix: '/forum',
       titleCol: 'title',
+      descCol: 'content',
       featCol: 'isPinned',
     },
   ];
@@ -205,7 +215,7 @@ export class RecommendationsService {
 
       for (const config of this.tableConfigs) {
         const rows: ContentRow[] = await this.dataSource.query<ContentRow[]>(
-          `SELECT id, slug, category, ${config.titleCol} AS title, coverImage, ${config.featCol} AS featured, 
+          `SELECT id, slug, category, ${config.titleCol} AS title, ${config.descCol} AS excerpt, coverImage, ${config.featCol} AS featured, 
                   orderPriority, views, ${config.tagCol ? config.tagCol + ' AS metaTag' : "'' AS metaTag"}
            FROM ${config.table} 
            WHERE language = ?`,
@@ -276,6 +286,7 @@ export class RecommendationsService {
               categoryMeta: subLabel
                 ? `${moduleLabel} • ${subLabel}`
                 : moduleLabel,
+              excerpt: row.excerpt || null,
               coverImage: row.coverImage,
               score: Math.round(totalScore * 100) / 100,
             },

@@ -15,7 +15,9 @@ export type DoiceladevSection =
     | 'infrastructure'
     | 'projects'
     | 'blog'
-    | 'forum';
+    | 'forum'
+    | 'categories'
+    | 'tags';
 
 interface CategoryNavProps {
     selectedCategory: DoiceladevSection;
@@ -33,9 +35,11 @@ export const CATEGORY_ROUTES: Record<DoiceladevSection, string> = {
     projects: '/projects',
     blog: '/blog',
     forum: '/forum',
+    categories: '/categories',
+    tags: '/tags',
 };
 
-export const DOICELADEV_CATEGORY_KEYS: { id: DoiceladevSection; key: DoiceladevSection }[] = [
+export const DOICELADEV_CATEGORY_KEYS: { id: DoiceladevSection; key: string }[] = [
     { id: 'all', key: 'all' },
     { id: 'tutorials', key: 'tutorials' },
     { id: 'news', key: 'news' },
@@ -47,6 +51,11 @@ export const DOICELADEV_CATEGORY_KEYS: { id: DoiceladevSection; key: DoiceladevS
     { id: 'forum', key: 'forum' },
 ];
 
+export const DOICELADEV_TAXONOMY_KEYS: { id: DoiceladevSection; key: string }[] = [
+    { id: 'categories', key: 'categories' },
+    { id: 'tags', key: 'tags' },
+];
+
 export function CategoryNav({
     selectedCategory,
     onSelectCategory,
@@ -56,10 +65,15 @@ export function CategoryNav({
     const router = useRouter();
 
     const categoryOptions: SelectOption<DoiceladevSection>[] = React.useMemo(() => {
-        return DOICELADEV_CATEGORY_KEYS.map((cat) => ({
+        const primary = DOICELADEV_CATEGORY_KEYS.map((cat) => ({
             value: cat.id,
-            label: t(cat.key),
+            label: t(cat.key as any),
         }));
+        const taxonomies = DOICELADEV_TAXONOMY_KEYS.map((tax) => ({
+            value: tax.id,
+            label: t(tax.key as any),
+        }));
+        return [...primary, ...taxonomies];
     }, [t]);
 
     const handleSelectCategory = (nextCat: DoiceladevSection) => {
@@ -91,6 +105,7 @@ export function CategoryNav({
                         : 'p-1.5 rounded-2xl glass-concave-panel w-fit max-w-full'
                     }`}
             >
+                {/* 2.1 Formatos de Contenido */}
                 {DOICELADEV_CATEGORY_KEYS.map((cat) => {
                     const isSelected = selectedCategory === cat.id;
                     const href = CATEGORY_ROUTES[cat.id];
@@ -105,12 +120,40 @@ export function CategoryNav({
                                     onSelectCategory(cat.id);
                                 }
                             }}
-                            className={`px-3.5 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${isSelected
+                            className={`px-3 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${isSelected
                                     ? 'glass-convex-panel text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
                                     : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
                         >
-                            <span>{t(cat.key)}</span>
+                            <span>{t(cat.key as any)}</span>
+                        </Link>
+                    );
+                })}
+
+                {/* 2.2 Separador Vertical Sutil */}
+                <div className="h-4 w-px bg-slate-300/80 dark:bg-white/10 mx-0.5 shrink-0" aria-hidden="true" />
+
+                {/* 2.3 Hubs Taxonómicos Transversales */}
+                {DOICELADEV_TAXONOMY_KEYS.map((tax) => {
+                    const isSelected = selectedCategory === tax.id;
+                    const href = CATEGORY_ROUTES[tax.id];
+
+                    return (
+                        <Link
+                            key={tax.id}
+                            href={href}
+                            onClick={(e) => {
+                                if (onSelectCategory) {
+                                    e.preventDefault();
+                                    onSelectCategory(tax.id);
+                                }
+                            }}
+                            className={`px-3 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${isSelected
+                                    ? 'glass-convex-panel text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
+                                    : 'text-zinc-500 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
+                                }`}
+                        >
+                            <span>{t(tax.key as any)}</span>
                         </Link>
                     );
                 })}

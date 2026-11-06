@@ -28,6 +28,8 @@ import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { PortalModule } from './portal/portal.module';
 import { GlossaryModule } from './glossary/glossary.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
+import { CategoriesModule } from './categories/categories.module';
+import { TagsModule } from './tags/tags.module';
 import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
@@ -77,6 +79,8 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
     PortalModule,
     GlossaryModule,
     RecommendationsModule,
+    CategoriesModule,
+    TagsModule,
   ],
 })
 export class DoiceladevModule {}

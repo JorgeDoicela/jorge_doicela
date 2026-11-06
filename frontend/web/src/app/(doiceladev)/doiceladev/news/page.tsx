@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
 import { NewsGrid, useNews, useNewsCategories } from '../../entities/news';
-import { CategoryFilterBar } from '../../shared/ui';
+import { ModuleFilterToolbar } from '../../shared/ui';
 
 export default function NewsCategoryPage() {
   const tNav = useTranslations('Nav');
@@ -31,25 +31,17 @@ export default function NewsCategoryPage() {
             {t('subtitle')}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <div className="relative w-full max-w-xs">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('searchPlaceholder')}
-                className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 shadow-inner"
-              />
-            </div>
-
-            <CategoryFilterBar
-              options={categories}
-              selectedId={category}
-              onSelect={setCategory}
-              loading={categoriesLoading}
-              accentColor="cyan"
-            />
-          </div>
+          {/* Controles de Búsqueda y Categorías Unificados */}
+          <ModuleFilterToolbar
+            search={search}
+            onSearchChange={setSearch}
+            searchPlaceholder={t('searchPlaceholder')}
+            options={categories}
+            selectedId={category}
+            onSelect={setCategory}
+            loading={categoriesLoading}
+            accentColor="cyan"
+          />
         </header>
 
 

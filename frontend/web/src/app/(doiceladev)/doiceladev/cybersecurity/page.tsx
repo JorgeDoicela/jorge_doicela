@@ -16,7 +16,7 @@ export default function CybersecurityCategoryPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useCybersecurityCategories();
-  const { posts, loading, error } = useCybersecurity(category, undefined, search);
+  const { posts, loading, error } = useCybersecurity(category, search);
 
   return (
     <DoiceladevPageLayout

@@ -19,18 +19,12 @@ export function SecurityCard({ post }: SecurityCardProps) {
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 
-  const sevKey = post.severity?.toLowerCase() || '';
-  const sevLabel = sevKey
-    ? (tFilters.has(sevKey as any) ? tFilters(sevKey as any) : post.severity).toUpperCase()
-    : '';
-
   return (
     <DoiceladevCard
       href={`/cybersecurity/${post.slug}`}
       title={post.title}
       category="cybersecurity"
       coverImage={post.coverImage}
-      tag={post.cveId || sevLabel}
       categoryMeta={metaText}
       excerpt={post.excerpt}
       accentHoverColor="group-hover:text-rose-300"

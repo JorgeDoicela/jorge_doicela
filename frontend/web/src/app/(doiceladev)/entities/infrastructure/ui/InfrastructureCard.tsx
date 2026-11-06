@@ -19,11 +19,6 @@ export function InfrastructureCard({ post }: InfrastructureCardProps) {
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 
-  const envKey = post.environment?.toLowerCase() || '';
-  const envLabel = envKey
-    ? (tFilters.has(envKey as any) ? tFilters(envKey as any) : envKey.replace(/_/g, ' ')).toUpperCase()
-    : '';
-
   return (
     <DoiceladevCard
       href={`/infrastructure/${post.slug}`}
@@ -31,7 +26,6 @@ export function InfrastructureCard({ post }: InfrastructureCardProps) {
       category="infrastructure"
       coverImage={post.coverImage}
       topicCategory={post.category}
-      tag={envLabel}
       categoryMeta={metaText}
       excerpt={post.subtitle || post.architectureOverview}
       accentHoverColor="group-hover:text-cyan-300"

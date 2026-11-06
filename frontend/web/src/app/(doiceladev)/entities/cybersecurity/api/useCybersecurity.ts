@@ -8,7 +8,6 @@ import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useCybersecurity(
   category?: string,
-  severity?: string,
   search: string = '',
 ) {
   const locale = useLocale();
@@ -23,7 +22,6 @@ export function useCybersecurity(
 
       try {
         const params = new URLSearchParams();
-        if (severity && severity !== 'all') params.append('severity', severity);
         if (category && category !== 'all') params.append('category', category);
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
@@ -43,7 +41,7 @@ export function useCybersecurity(
     };
 
     fetchSecurity();
-  }, [severity, category, search, locale]);
+  }, [category, search, locale]);
 
   return { posts, loading, error };
 }

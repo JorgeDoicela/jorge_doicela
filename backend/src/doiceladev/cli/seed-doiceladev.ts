@@ -187,7 +187,6 @@ interface AiSeedItem {
 interface SecuritySeedItem {
   slug: string;
   title: string;
-  severity: string;
   category: SecurityCategory;
   cveId?: string;
   affectedSystems?: string;
@@ -213,7 +212,6 @@ interface TutorialsSeedData {
     excerpt: string;
     description: string;
     category: TutorialCategory;
-    difficulty: string;
     prerequisites?: string;
     techStack: string;
     author: string;
@@ -262,8 +260,6 @@ interface InfrastructureSeedItem {
   title: string;
   subtitle?: string;
   category: InfrastructureCategory;
-  environment: string;
-  difficulty: string;
   techStack: string;
   architectureOverview?: string;
   specs?: string;
@@ -488,8 +484,6 @@ export function seedDoiceladev(
       id              INTEGER PRIMARY KEY AUTOINCREMENT,
       slug            TEXT    NOT NULL,
       title           TEXT    NOT NULL,
-      severity        TEXT    NOT NULL DEFAULT 'MEDIUM'
-                      CHECK (severity IN ('LOW','MEDIUM','HIGH','CRITICAL')),
       category        TEXT    NOT NULL DEFAULT 'advisory'
                       CHECK (category IN ('advisory','hardening_guide','writeup','cve_analysis','pentest')),
       cveId           TEXT,
@@ -511,7 +505,6 @@ export function seedDoiceladev(
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_security_posts_slug_lang  ON security_posts (slug, language);
     CREATE INDEX        IF NOT EXISTS IDX_security_posts_feed        ON security_posts (language, orderPriority DESC, publishedAt DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_security_posts_sev_feed    ON security_posts (language, severity, orderPriority DESC, publishedAt DESC);
     CREATE INDEX        IF NOT EXISTS IDX_security_posts_cat_feed    ON security_posts (language, category, orderPriority DESC, publishedAt DESC);
     CREATE INDEX        IF NOT EXISTS IDX_security_posts_feat_feed   ON security_posts (language, featured, orderPriority DESC, publishedAt DESC);
 
@@ -524,8 +517,6 @@ export function seedDoiceladev(
       description   TEXT    NOT NULL,
       category      TEXT    NOT NULL DEFAULT 'backend'
                     CHECK (category IN ('web','backend','devops','mobile','ai','databases','security','architecture')),
-      difficulty    TEXT    NOT NULL DEFAULT 'intermediate'
-                    CHECK (difficulty IN ('beginner','intermediate','advanced')),
       prerequisites TEXT,
       techStack     TEXT    NOT NULL DEFAULT 'TypeScript,Node.js',
       author        TEXT    NOT NULL DEFAULT 'Jorge Doicela',
@@ -543,7 +534,6 @@ export function seedDoiceladev(
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_tutorials_slug_lang   ON tutorials (slug, language);
     CREATE INDEX        IF NOT EXISTS IDX_tutorials_feed         ON tutorials (language, orderPriority DESC, publishedAt DESC);
     CREATE INDEX        IF NOT EXISTS IDX_tutorials_cat_feed     ON tutorials (language, category, orderPriority DESC, publishedAt DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_tutorials_diff_feed    ON tutorials (language, difficulty, orderPriority DESC, publishedAt DESC);
     CREATE INDEX        IF NOT EXISTS IDX_tutorials_feat_feed    ON tutorials (language, featured, orderPriority DESC, publishedAt DESC);
 
     CREATE TABLE IF NOT EXISTS tutorial_steps (
@@ -600,10 +590,6 @@ export function seedDoiceladev(
       subtitle             TEXT,
       category             TEXT    NOT NULL DEFAULT 'servers'
                            CHECK (category IN ('cloud','servers','containers','networking','ci_cd','hardening','zero_ram','monitoring','security')),
-      environment          TEXT    NOT NULL DEFAULT 'production'
-                           CHECK (environment IN ('production','edge','hybrid','vps','bare_metal')),
-      difficulty           TEXT    NOT NULL DEFAULT 'intermediate'
-                           CHECK (difficulty IN ('beginner','intermediate','advanced','expert')),
       techStack            TEXT    NOT NULL DEFAULT 'Debian, Linux, Nginx',
       architectureOverview TEXT,
       specs                TEXT,
@@ -623,7 +609,6 @@ export function seedDoiceladev(
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_infrastructure_posts_slug_lang ON infrastructure_posts (slug, language);
     CREATE INDEX        IF NOT EXISTS IDX_infrastructure_posts_feed       ON infrastructure_posts (language, orderPriority DESC, publishedAt DESC);
     CREATE INDEX        IF NOT EXISTS IDX_infrastructure_posts_cat_feed   ON infrastructure_posts (language, category, orderPriority DESC, publishedAt DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_infrastructure_posts_env_feed   ON infrastructure_posts (language, environment, orderPriority DESC, publishedAt DESC);
     CREATE INDEX        IF NOT EXISTS IDX_infrastructure_posts_feat_feed  ON infrastructure_posts (language, featured, orderPriority DESC, publishedAt DESC);
 
     -- ── GLOSARIO ────────────────────────────────────────────────────────────
@@ -888,16 +873,15 @@ export function seedDoiceladev(
     // ── 5. Ciberseguridad ───────────────────────────────────────────────────
     const insertSec = db.prepare(`
       INSERT INTO security_posts
-        (slug, title, severity, category, cveId, affectedSystems, remediation,
+        (slug, title, category, cveId, affectedSystems, remediation,
          excerpt, contentMarkdown, author, tags, language, coverImage,
          views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @title, @severity, @category, @cveId, @affectedSystems, @remediation,
+        (@slug, @title, @category, @cveId, @affectedSystems, @remediation,
          @excerpt, @contentMarkdown, @author, @tags, @language, @coverImage,
          @views, @likes, @featured, @orderPriority, @publishedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
-        severity        = excluded.severity,
         category        = excluded.category,
         cveId           = excluded.cveId,
         affectedSystems = excluded.affectedSystems,
@@ -943,17 +927,16 @@ export function seedDoiceladev(
     // ── 6. Tutoriales ───────────────────────────────────────────────────────
     const insertTutorial = db.prepare(`
       INSERT INTO tutorials
-        (id, slug, title, excerpt, description, category, difficulty, prerequisites,
+        (id, slug, title, excerpt, description, category, prerequisites,
          techStack, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@id, @slug, @title, @excerpt, @description, @category, @difficulty, @prerequisites,
+        (@id, @slug, @title, @excerpt, @description, @category, @prerequisites,
          @techStack, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         excerpt         = excluded.excerpt,
         description     = excluded.description,
         category        = excluded.category,
-        difficulty      = excluded.difficulty,
         prerequisites   = excluded.prerequisites,
         techStack       = excluded.techStack,
         author          = excluded.author,
@@ -1054,17 +1037,15 @@ export function seedDoiceladev(
     // ── 8. Infraestructura ──────────────────────────────────────────────────
     const insertInfra = db.prepare(`
       INSERT INTO infrastructure_posts
-        (slug, title, subtitle, category, environment, difficulty, techStack, architectureOverview,
+        (slug, title, subtitle, category, techStack, architectureOverview,
          specs, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
       VALUES
-        (@slug, @title, @subtitle, @category, @environment, @difficulty, @techStack, @architectureOverview,
+        (@slug, @title, @subtitle, @category, @techStack, @architectureOverview,
          @specs, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title                = excluded.title,
         subtitle             = excluded.subtitle,
         category             = excluded.category,
-        environment          = excluded.environment,
-        difficulty           = excluded.difficulty,
         techStack            = excluded.techStack,
         architectureOverview = excluded.architectureOverview,
         specs                = excluded.specs,

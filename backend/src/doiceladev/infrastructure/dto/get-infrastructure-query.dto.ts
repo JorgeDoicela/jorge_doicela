@@ -1,10 +1,6 @@
 import { IsOptional, IsIn } from 'class-validator';
 import { DoiceladevQueryDto } from '../../common/dto/doiceladev-query.dto';
-import type {
-  InfrastructureCategory,
-  InfrastructureEnvironment,
-  InfrastructureDifficulty,
-} from '../entities/infrastructure-post.entity';
+import type { InfrastructureCategory } from '../entities/infrastructure-post.entity';
 
 const CATEGORIES: Array<InfrastructureCategory | 'all'> = [
   'all',
@@ -17,28 +13,7 @@ const CATEGORIES: Array<InfrastructureCategory | 'all'> = [
   'zero_ram',
 ];
 
-const ENVIRONMENTS: InfrastructureEnvironment[] = [
-  'production',
-  'edge',
-  'hybrid',
-  'vps',
-  'bare_metal',
-];
-
-const DIFFICULTIES: InfrastructureDifficulty[] = [
-  'beginner',
-  'intermediate',
-  'advanced',
-  'expert',
-];
-
-const SORT_BY_OPTIONS = [
-  'smart',
-  'recent',
-  'views',
-  'likes',
-  'difficulty',
-] as const;
+const SORT_BY_OPTIONS = ['smart', 'recent', 'views', 'likes'] as const;
 export type InfraSortBy = (typeof SORT_BY_OPTIONS)[number];
 
 export class GetInfrastructureQueryDto extends DoiceladevQueryDto {
@@ -50,22 +25,8 @@ export class GetInfrastructureQueryDto extends DoiceladevQueryDto {
   category?: InfrastructureCategory | 'all';
 
   @IsOptional()
-  @IsIn(ENVIRONMENTS, {
-    message: 'El entorno debe ser: production, edge, hybrid, vps o bare_metal',
-  })
-  environment?: InfrastructureEnvironment;
-
-  @IsOptional()
-  @IsIn(DIFFICULTIES, {
-    message:
-      'La dificultad debe ser: beginner, intermediate, advanced o expert',
-  })
-  difficulty?: InfrastructureDifficulty;
-
-  @IsOptional()
   @IsIn(SORT_BY_OPTIONS, {
-    message:
-      'El ordenamiento debe ser: smart, recent, views, likes o difficulty',
+    message: 'El ordenamiento debe ser: smart, recent, views o likes',
   })
   sortBy?: InfraSortBy = 'smart';
 }

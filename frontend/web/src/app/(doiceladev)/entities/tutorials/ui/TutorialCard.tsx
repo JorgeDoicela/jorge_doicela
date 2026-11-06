@@ -12,10 +12,6 @@ interface TutorialCardProps {
 export function TutorialCard({ tutorial }: TutorialCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
-  const diffKey = tutorial.difficulty?.toLowerCase() || '';
-  const difficultyLabel = diffKey
-    ? (tFilters.has(diffKey as any) ? tFilters(diffKey as any) : tutorial.difficulty)
-    : '';
   const moduleLabel = tNav('tutorials').toUpperCase();
   const catKey = tutorial.category?.toLowerCase() || '';
   const catLabel = catKey
@@ -29,7 +25,6 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
       title={tutorial.title}
       category="tutorials"
       coverImage={tutorial.coverImage}
-      tag={difficultyLabel.toUpperCase()}
       categoryMeta={metaText}
       excerpt={tutorial.excerpt}
       accentHoverColor="group-hover:text-amber-300"

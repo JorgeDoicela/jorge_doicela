@@ -8,8 +8,6 @@ import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useInfrastructure(
   category?: string,
-  environment?: string,
-  difficulty?: string,
   search: string = '',
   sortBy?: string,
 ) {
@@ -25,8 +23,6 @@ export function useInfrastructure(
     try {
       const params = new URLSearchParams();
       if (category && category !== 'all') params.append('category', category);
-      if (environment && environment !== 'all') params.append('environment', environment);
-      if (difficulty && difficulty !== 'all') params.append('difficulty', difficulty);
       if (search.trim()) params.append('search', search.trim());
       if (sortBy) params.append('sortBy', sortBy);
       if (locale) params.append('lang', locale);
@@ -43,7 +39,7 @@ export function useInfrastructure(
     } finally {
       setLoading(false);
     }
-  }, [category, environment, difficulty, search, sortBy, locale]);
+  }, [category, search, sortBy, locale]);
 
   useEffect(() => {
     fetchInfrastructure();

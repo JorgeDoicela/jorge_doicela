@@ -246,7 +246,7 @@ export function SpotlightModal({
         snippet: s.excerpt,
         href: `/cybersecurity/${s.slug}`,
         tags: parseTags(s.tags),
-        extraSearchTerms: [s.cveId, s.affectedSystems, s.severity, s.category].filter(Boolean).join(' '),
+        extraSearchTerms: [s.cveId, s.affectedSystems, s.category].filter(Boolean).join(' '),
       });
     });
 
@@ -259,7 +259,7 @@ export function SpotlightModal({
         snippet: t.description || t.excerpt,
         href: `/tutorials/${t.slug}`,
         tags: parseTags(t.tags),
-        extraSearchTerms: [t.difficulty, t.category, t.techStack, t.prerequisites].filter(Boolean).join(' '),
+        extraSearchTerms: [t.category, t.techStack, t.prerequisites].filter(Boolean).join(' '),
       });
     });
 
@@ -298,7 +298,7 @@ export function SpotlightModal({
         snippet: inf.subtitle || inf.architectureOverview || inf.contentMarkdown.slice(0, 100),
         href: `/infrastructure/${inf.slug}`,
         tags: parseTags(inf.tags),
-        extraSearchTerms: [inf.environment, inf.category, inf.architectureOverview].filter(Boolean).join(' '),
+        extraSearchTerms: [inf.category, inf.architectureOverview].filter(Boolean).join(' '),
       });
     });
 

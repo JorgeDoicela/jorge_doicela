@@ -9,7 +9,6 @@ import { safeFetchJson } from '../../../shared/lib/fetchJson';
 export function useTutorials(
   category?: string,
   search: string = '',
-  difficulty?: string,
 ) {
   const locale = useLocale();
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
@@ -24,7 +23,6 @@ export function useTutorials(
       try {
         const params = new URLSearchParams();
         if (category && category !== 'all') params.append('category', category);
-        if (difficulty && difficulty !== 'all') params.append('difficulty', difficulty);
         if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
 
@@ -43,7 +41,7 @@ export function useTutorials(
     };
 
     fetchTutorials();
-  }, [category, difficulty, search, locale]);
+  }, [category, search, locale]);
 
   return { tutorials, loading, error };
 }

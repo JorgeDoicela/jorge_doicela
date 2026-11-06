@@ -13,7 +13,7 @@ export class CybersecurityService {
   ) {}
 
   async findAll(query: GetSecurityPostsQueryDto = {}): Promise<SecurityPost[]> {
-    const { severity, category, search, lang } = query;
+    const { category, search, lang } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -21,10 +21,6 @@ export class CybersecurityService {
 
     if (lang) {
       qb.andWhere('sec.language = :lang', { lang });
-    }
-
-    if (severity && severity !== 'all') {
-      qb.andWhere('sec.severity = :severity', { severity });
     }
 
     if (category && category !== 'all') {
@@ -38,9 +34,9 @@ export class CybersecurityService {
       );
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore con ponderación CVE)
+    // Algoritmo de Inteligencia Editorial (SmartScore)
     qb.addSelect(
-      `((sec.featured * 1000) + (CASE sec.severity WHEN 'CRITICAL' THEN 300 WHEN 'HIGH' THEN 150 WHEN 'MEDIUM' THEN 50 ELSE 0 END) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5))`,
+      `((sec.featured * 1000) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5))`,
       'smart_score',
     );
     qb.orderBy('smart_score', 'DESC');
@@ -96,7 +92,6 @@ export class CybersecurityService {
   ): Promise<SecurityPost> {
     const post = this.securityRepository.create({
       ...createSecurityPostDto,
-      severity: createSecurityPostDto.severity || 'MEDIUM',
       category: createSecurityPostDto.category || 'advisory',
     });
     return this.securityRepository.save(post);

@@ -153,11 +153,11 @@ backend/src/doiceladev/
 | `forum_topics` | Hilos con `isSolved`, `isPinned`, `repliesCount`, `views` |
 | `forum_replies` | Respuestas con FK `topicId`, `parentId` (anidado), `isAcceptedAnswer`, `likes` |
 | `ai_resources` | Catálogo con `type` (`llm`, `agent`, `framework`, `mcp_server`, `tool`), `provider`, `author`, `license` |
-| `security_posts` | Avisos con `severity` (`LOW` a `CRITICAL`), `postType`, `cveId`, `remediation`, `author` |
-| `tutorials` | Guías con `difficulty` (`beginner`/`intermediate`/`advanced`), `estimatedMinutes`, `author` |
+| `security_posts` | Avisos técnicos y guías de bastionado con `category`, `cveId`, `remediation`, `author` |
+| `tutorials` | Guías paso a paso con `category`, `prerequisites`, `author`, `techStack` |
 | `tutorial_steps` | Pasos con FK `tutorialId`, `stepOrder`, `codeSnippet`, `codeLanguage` |
 | `projects` | Showcase con `status`, `featured`, `stars`, `author`, `repoUrl`, `liveUrl` |
-| `infrastructure_posts` | Guías de infraestructura con `category`, `environment`, `specs`, `techStack`, `author`, `views`, `likes` |
+| `infrastructure_posts` | Guías de infraestructura con `category`, `specs`, `techStack`, `author`, `views`, `likes` |
 | `glossary_terms` | Catálogo bilingüe de conceptos técnicos interactivos con `aliases`, `shortDefinition`, `keyDifference` |
 
 ### 3.3 Arquitectura Taxonómica Oficial y Regla de Presentación de Metadatos
@@ -165,13 +165,13 @@ Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaD
 
 1. **Nivel 1 (Módulo / Especialidad):** Tabla física TypeORM (`tutorials`, `security_posts`, `projects`, etc.). Determina la subruta URL (`/tutorials`, `/projects`).
 2. **Nivel 2 (Categoría Temática):** Columna física `category` con restricción `CHECK` e índice en SQLite. **Gobierna de forma exclusiva la barra de filtros (`CategoryFilterBar`)** en los 8 módulos (`web`, `backend`, `devops`, `hardening`, `servers`, etc.).
-3. **Nivel 3 (Tags / Etiquetas):** Columna física `tags TEXT` + tablas `tags` y `content_tags`. Vocabulario universal para indexación y Spotlight `⌘K`.
-4. **Nivel 4 (Atributo Específico de Dominio):** Columnas físicas especializadas en SQLite (`tutorials.difficulty`, `security_posts.severity`, `projects.status`, `infrastructure_posts.environment`).
+3. **Nivel 3 (Tags / Etiquetas):** Columna física `tags TEXT` + tablas `tags` y `content_tags`. Vocabulario universal para indexación cruzada y Spotlight `⌘K`.
+> **Taxonomía Canónica:** El concepto de Nivel 4 ha sido completamente purgado y destruido de la base de datos y de todo el código de DoicelaDev.
 
 * **Regla Inviolable de UI en Tarjetas (`DoiceladevCard.tsx`):**
   La línea de metadatos técnicos superior se renderiza siempre de forma 100% dinámica desde SQLite sin cadenas quemadas:
-  $$\text{Nivel 1 (Módulo)} \bullet \text{Nivel 2 (Categoría)} \bullet \text{Nivel 4 (Atributo de Dominio)}$$
-  Ejemplo: `TUTORIALES • WEB • INTERMEDIO`, `SEGURIDAD • HARDENING_GUIDE • CRÍTICO`, `PROYECTOS • WEB • EN PRODUCCIÓN`.
+  $$\text{Nivel 1 (Módulo)} \bullet \text{Nivel 2 (Categoría)}$$
+  Ejemplo: `TUTORIALES • WEB`, `CIBERSEGURIDAD • HARDENING`, `INFRAESTRUCTURA • CONTAINERS`. Ante textos extensos en titular o resumen, `DoiceladevHoverPreview` permite la inspección en hover sin layout shift.
 * **Prohibición de "Subcategorías":** No existe la columna ni el concepto `subCategory`. Cualquier intento de crear o consumir `subCategory` está estrictamente prohibido.
 
 ---
@@ -268,7 +268,7 @@ pnpm run lint
 | Usar emojis decorativos en la UI | Inconsistencia con la estética profesional de DoicelaDev. | Usar tipografía, badges de texto y SVGs para indicadores visuales. |
 | Tratar un 404 de contenido editorial como bug de Next.js/middleware | Enmascara la causa raíz: el post o término no está sembrado en `doiceladev.sqlite` local tras un `git pull`. | Correr `pnpm seed:doiceladev` o validar el slug en SQLite antes de tocar cualquier archivo de frontend. |
 | Usar o inventar el campo `subCategory` | Introduce conceptos fantasma que no existen en el esquema físico relacional de SQLite. | La taxonomía solo tiene Nivel 1 (Módulo) y Nivel 2 (Categoría `category`). |
-| Filtrar la barra `CategoryFilterBar` por atributos de Nivel 4 (dificultad/severidad) | Rompe la simetría entre módulos y degrada la experiencia de navegación. | La barra filtra exclusivamente por el Nivel 2 (Categoría). El Nivel 4 se muestra en la línea de metadatos o como badge. |
+| Intentar revivir o consultar atributos de "Nivel 4" (dificultad/severidad/entorno) | El Nivel 4 fue completamente erradicado de la base de datos y del código. | La plataforma opera con una taxonomía canónica de 3 niveles: Nivel 1 (Módulo), Nivel 2 (Categoría) y Nivel 3 (Tags). |
 | Cargar fuentes desde Google Fonts o CDNs externos | Genera llamadas de red innecesarias, bloquea la renderización neumórfica y viola la autonomía de caja negra. | Mantener las tipografías variables locales en `(doiceladev)/fonts/` (SIL OFL 1.1) e importar vía `next/font/local`. |
 | Usar la palabra "hub" en interfaces, código o docs | Término impreciso, informal y vetado en los estándares del proyecto. | Emplear términos formales y canónicos: **Portal**, **Plataforma**, **Directorio** o **Feed**. |
 | Saturar párrafos con código en línea o negritas oracionales | Fatiga visual, aspecto amateur y destrucción de la jerarquía tipográfica. | Aplicar el estándar de 4 categorías: código solo para ejecución exacta y negrita para 1 a 3 palabras clave. |

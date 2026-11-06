@@ -87,7 +87,6 @@ export class PortalService {
         llm: { es: 'MODELOS LLM', en: 'LLM MODELS' },
         agent: { es: 'FRAMEWORKS AGÉNTICOS', en: 'AGENTIC FRAMEWORKS' },
         ci_cd: { es: 'CI/CD & DESPLIEGUES', en: 'CI/CD & DEPLOYMENTS' },
-        bare_metal: { es: 'BARE METAL', en: 'BARE METAL' },
         servers: { es: 'SERVIDORES & LINUX', en: 'SERVERS & LINUX' },
         containers: { es: 'CONTENEDORES', en: 'CONTAINERS' },
         clean_code: { es: 'CÓDIGO LIMPIO', en: 'CLEAN CODE' },
@@ -122,7 +121,6 @@ export class PortalService {
         title: item.title,
         category: 'news',
         coverImage: item.coverImage,
-        tag: item.isBreaking ? (isEn ? 'BREAKING' : 'URGENTE') : sub || module,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: item.excerpt,
         accentHoverColor: 'group-hover:text-cyan-300',
@@ -150,7 +148,6 @@ export class PortalService {
         title: item.title,
         category: 'blog',
         coverImage: item.coverImage,
-        tag: sub || module,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: item.excerpt,
         accentHoverColor: 'group-hover:text-blue-300',
@@ -170,15 +167,6 @@ export class PortalService {
       ).toISOString();
       const module = isEn ? 'SECURITY' : 'SEGURIDAD';
       const sub = formatSub(sec.category);
-      const sevMap: Record<string, string> = {
-        CRITICAL: isEn ? 'CRITICAL' : 'CRÍTICO',
-        HIGH: isEn ? 'HIGH' : 'ALTO',
-        MEDIUM: isEn ? 'MEDIUM' : 'MEDIO',
-        LOW: isEn ? 'LOW' : 'BAJO',
-      };
-      const sev = sec.severity
-        ? sevMap[sec.severity.toUpperCase()] || sec.severity
-        : '';
 
       return {
         id: `sec-${sec.id}`,
@@ -186,18 +174,12 @@ export class PortalService {
         title: sec.title,
         category: 'cybersecurity',
         coverImage: sec.coverImage,
-        tag: sec.cveId || sev,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: sec.excerpt,
         accentHoverColor: 'group-hover:text-rose-300',
         date: dateStr,
         smartScore:
           (sec.featured ? 600 : 0) +
-          (sec.severity === 'CRITICAL'
-            ? 350
-            : sec.severity === 'HIGH'
-              ? 150
-              : 50) +
           (sec.orderPriority || 0) * 20 +
           (sec.likes || 0) * 4 +
           (sec.views || 0) * 1.5 +
@@ -211,14 +193,6 @@ export class PortalService {
       ).toISOString();
       const module = isEn ? 'TUTORIALS' : 'TUTORIALES';
       const sub = formatSub(tut.category);
-      const diffMap: Record<string, string> = {
-        beginner: isEn ? 'BEGINNER' : 'PRINCIPIANTE',
-        intermediate: isEn ? 'INTERMEDIATE' : 'INTERMEDIO',
-        advanced: isEn ? 'ADVANCED' : 'AVANZADO',
-      };
-      const diff = tut.difficulty
-        ? diffMap[tut.difficulty.toLowerCase()] || tut.difficulty.toUpperCase()
-        : '';
 
       return {
         id: `tut-${tut.id}`,
@@ -226,7 +200,6 @@ export class PortalService {
         title: tut.title,
         category: 'tutorials',
         coverImage: tut.coverImage,
-        tag: diff,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: tut.excerpt,
         accentHoverColor: 'group-hover:text-amber-300',
@@ -246,16 +219,6 @@ export class PortalService {
       ).toISOString();
       const module = isEn ? 'INFRASTRUCTURE' : 'INFRAESTRUCTURA';
       const sub = formatSub(inf.category);
-      const envMap: Record<string, string> = {
-        production: isEn ? 'PRODUCTION' : 'PRODUCCIÓN',
-        staging: isEn ? 'STAGING' : 'STAGING',
-        homelab: isEn ? 'HOMELAB' : 'HOMELAB',
-        bare_metal: isEn ? 'BARE METAL' : 'BARE METAL',
-      };
-      const env = inf.environment
-        ? envMap[inf.environment.toLowerCase()] ||
-          inf.environment.replace(/_/g, ' ').toUpperCase()
-        : '';
 
       return {
         id: `infra-${inf.id}`,
@@ -263,7 +226,6 @@ export class PortalService {
         title: inf.title,
         category: 'infrastructure',
         coverImage: inf.coverImage,
-        tag: env,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: inf.subtitle || inf.architectureOverview,
         accentHoverColor: 'group-hover:text-emerald-300',
@@ -290,7 +252,6 @@ export class PortalService {
         title: res.name,
         category: 'ai',
         coverImage: res.coverImage,
-        tag: res.license?.toUpperCase() || '',
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: res.description,
         accentHoverColor: 'group-hover:text-indigo-300',
@@ -308,14 +269,6 @@ export class PortalService {
       const dateStr = new Date(proj.createdAt || Date.now()).toISOString();
       const module = isEn ? 'PROJECTS' : 'PROYECTOS';
       const sub = formatSub(proj.category);
-      const statusMap: Record<string, string> = {
-        active: isEn ? 'IN PRODUCTION' : 'EN PRODUCCIÓN',
-        wip: isEn ? 'IN DEVELOPMENT' : 'EN DESARROLLO',
-        archived: isEn ? 'ARCHIVED' : 'ARCHIVADO',
-      };
-      const stat = proj.status
-        ? statusMap[proj.status.toLowerCase()] || proj.status.toUpperCase()
-        : '';
 
       return {
         id: `proj-${proj.id}`,
@@ -323,7 +276,6 @@ export class PortalService {
         title: proj.name,
         category: 'projects',
         coverImage: proj.coverImage,
-        tag: stat,
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: proj.description,
         accentHoverColor: 'group-hover:text-blue-300',
@@ -348,7 +300,6 @@ export class PortalService {
         title: top.title,
         category: 'forum',
         coverImage: top.coverImage,
-        tag: isEn ? 'DISCUSSION' : 'DEBATE',
         categoryMeta: sub ? `${module} • ${sub}` : module,
         excerpt: top.content,
         accentHoverColor: 'group-hover:text-sky-300',

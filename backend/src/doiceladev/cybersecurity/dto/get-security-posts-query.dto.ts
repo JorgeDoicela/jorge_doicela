@@ -1,17 +1,6 @@
 import { IsOptional, IsIn } from 'class-validator';
 import { DoiceladevQueryDto } from '../../common/dto/doiceladev-query.dto';
-import type {
-  SecuritySeverity,
-  SecurityCategory,
-} from '../entities/security-post.entity';
-
-const SEVERITIES: Array<SecuritySeverity | 'all'> = [
-  'all',
-  'LOW',
-  'MEDIUM',
-  'HIGH',
-  'CRITICAL',
-];
+import type { SecurityCategory } from '../entities/security-post.entity';
 
 const SECURITY_CATEGORIES: Array<SecurityCategory | 'all'> = [
   'all',
@@ -23,12 +12,6 @@ const SECURITY_CATEGORIES: Array<SecurityCategory | 'all'> = [
 ];
 
 export class GetSecurityPostsQueryDto extends DoiceladevQueryDto {
-  @IsOptional()
-  @IsIn(SEVERITIES, {
-    message: 'La severidad debe ser LOW, MEDIUM, HIGH o CRITICAL',
-  })
-  severity?: SecuritySeverity | 'all';
-
   @IsOptional()
   @IsIn(SECURITY_CATEGORIES, {
     message:

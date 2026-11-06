@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { TutorialStep } from './tutorial-step.entity';
 
-export type TutorialDifficulty = 'beginner' | 'intermediate' | 'advanced';
 export type TutorialCategory =
   | 'web'
   | 'backend'
@@ -24,7 +23,6 @@ export type TutorialCategory =
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'publishedAt'])
 @Index(['language', 'category', 'orderPriority', 'publishedAt'])
-@Index(['language', 'difficulty', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class Tutorial {
   @PrimaryGeneratedColumn()
@@ -41,9 +39,6 @@ export class Tutorial {
 
   @Column({ type: 'text' })
   description: string;
-
-  @Column({ default: 'intermediate' })
-  difficulty: TutorialDifficulty;
 
   @Column({ default: 'backend' })
   category: TutorialCategory;

@@ -15,7 +15,7 @@ export class InfrastructureService {
   async findAll(
     query: GetInfrastructureQueryDto = {},
   ): Promise<InfrastructurePost[]> {
-    const { category, environment, difficulty, search, lang, sortBy } = query;
+    const { category, search, lang, sortBy } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -27,14 +27,6 @@ export class InfrastructureService {
 
     if (category && category !== 'all') {
       qb.andWhere('infra.category = :category', { category });
-    }
-
-    if (environment) {
-      qb.andWhere('infra.environment = :environment', { environment });
-    }
-
-    if (difficulty) {
-      qb.andWhere('infra.difficulty = :difficulty', { difficulty });
     }
 
     if (search) {
@@ -56,18 +48,6 @@ export class InfrastructureService {
       qb.orderBy('infra.likes', 'DESC');
       qb.addOrderBy('infra.views', 'DESC');
       qb.addOrderBy('infra.id', 'DESC');
-    } else if (sortBy === 'difficulty') {
-      // Ordenar por complejidad técnica (expert -> advanced -> intermediate -> beginner)
-      qb.orderBy(
-        `CASE infra.difficulty 
-          WHEN 'expert' THEN 4 
-          WHEN 'advanced' THEN 3 
-          WHEN 'intermediate' THEN 2 
-          WHEN 'beginner' THEN 1 
-          ELSE 0 END`,
-        'DESC',
-      );
-      qb.addOrderBy('infra.views', 'DESC');
     } else {
       // Algoritmo de Inteligencia Editorial ('smart' por defecto)
       // Prioriza: 1. Destacados (featured) -> 2. Peso Editorial (orderPriority) -> 3. Ponderación engagement (likes*3 + views) -> 4. Recientes
@@ -130,8 +110,6 @@ export class InfrastructureService {
     const post = this.infraRepository.create({
       ...createDto,
       category: createDto.category || 'servers',
-      environment: createDto.environment || 'production',
-      difficulty: createDto.difficulty || 'intermediate',
       featured: createDto.featured ?? false,
       orderPriority: createDto.orderPriority ?? 0,
       publishedAt: createDto.publishedAt

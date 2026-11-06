@@ -1,4 +1,3 @@
-export type TutorialDifficulty = 'beginner' | 'intermediate' | 'advanced';
 export type TutorialCategory =
   | 'web'
   | 'backend'
@@ -27,7 +26,6 @@ export interface Tutorial {
   excerpt: string;
   description: string;
   category: TutorialCategory;
-  difficulty: TutorialDifficulty;
   prerequisites?: string;
   techStack: string;
   author: string;

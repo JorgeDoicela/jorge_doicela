@@ -78,7 +78,6 @@ export function DoiceladevPortalFeed({
               title={item.title}
               category={item.category}
               coverImage={item.coverImage}
-              tag={item.tag}
               categoryMeta={item.categoryMeta}
               excerpt={item.excerpt}
               accentHoverColor={item.accentHoverColor}

@@ -29,7 +29,6 @@ export function NewsCard({ article }: NewsCardProps) {
     ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
-  const breakingTag = article.isBreaking ? (locale === 'es' ? 'URGENTE' : 'BREAKING') : undefined;
 
   return (
     <DoiceladevCard
@@ -37,7 +36,6 @@ export function NewsCard({ article }: NewsCardProps) {
       title={article.title}
       category="news"
       coverImage={article.coverImage}
-      tag={breakingTag}
       categoryMeta={metaText}
       excerpt={article.excerpt}
       accentHoverColor="group-hover:text-cyan-300"

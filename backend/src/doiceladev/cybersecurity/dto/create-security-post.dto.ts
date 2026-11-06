@@ -1,8 +1,5 @@
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import type {
-  SecuritySeverity,
-  SecurityCategory,
-} from '../entities/security-post.entity';
+import type { SecurityCategory } from '../entities/security-post.entity';
 
 export class CreateSecurityPostDto {
   @IsString()
@@ -12,10 +9,6 @@ export class CreateSecurityPostDto {
   @IsString()
   @IsNotEmpty()
   title: string;
-
-  @IsString()
-  @IsOptional()
-  severity?: SecuritySeverity;
 
   @IsString()
   @IsOptional()

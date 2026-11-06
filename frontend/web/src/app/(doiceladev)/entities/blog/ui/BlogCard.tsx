@@ -36,7 +36,6 @@ export function BlogCard({ post }: BlogCardProps) {
       title={post.title}
       category="blog"
       coverImage={post.coverImage}
-      tag={post.series || tNav('blog')}
       categoryMeta={metaText}
       excerpt={post.subtitle ? `${post.subtitle} — ${post.excerpt}` : post.excerpt}
       accentHoverColor="group-hover:text-blue-300"

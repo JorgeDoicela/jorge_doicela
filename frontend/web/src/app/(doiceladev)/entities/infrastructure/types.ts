@@ -7,19 +7,6 @@ export type InfrastructureCategory =
   | 'hardening'
   | 'zero_ram';
 
-export type InfrastructureEnvironment =
-  | 'production'
-  | 'edge'
-  | 'hybrid'
-  | 'vps'
-  | 'bare_metal';
-
-export type InfrastructureDifficulty =
-  | 'beginner'
-  | 'intermediate'
-  | 'advanced'
-  | 'expert';
-
 export interface InfrastructureSpecs {
   ram?: string;
   cpu?: string;
@@ -50,8 +37,6 @@ export interface InfrastructurePost {
   title: string;
   subtitle?: string;
   category: InfrastructureCategory;
-  environment: InfrastructureEnvironment;
-  difficulty: InfrastructureDifficulty;
   techStack: string;
   architectureOverview?: string;
   specs?: string;
@@ -69,12 +54,10 @@ export interface InfrastructurePost {
   updatedAt: string;
 }
 
-export type InfrastructureSortBy = 'smart' | 'recent' | 'views' | 'likes' | 'difficulty';
+export type InfrastructureSortBy = 'smart' | 'recent' | 'views' | 'likes';
 
 export interface InfrastructureFilter {
   category?: InfrastructureCategory | 'all';
-  environment?: InfrastructureEnvironment | 'all';
-  difficulty?: InfrastructureDifficulty | 'all';
   search?: string;
   sortBy?: InfrastructureSortBy;
 }

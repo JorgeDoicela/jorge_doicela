@@ -14,7 +14,6 @@ export interface PortalFeedItem {
   title: string;
   category: DoiceladevArticleCategory;
   coverImage?: string;
-  tag?: string;
   categoryMeta: string;
   excerpt?: string | null;
   accentHoverColor?: string;
@@ -29,7 +28,6 @@ export interface RecommendationCard {
   category: DoiceladevArticleCategory;
   categoryMeta: string;
   coverImage?: string;
-  tag?: string;
   score: number;
 }
 

@@ -52,7 +52,6 @@ export function RelatedArticlesNav({
                 title={item.title}
                 category={item.category}
                 coverImage={item.coverImage}
-                tag={item.tag}
               />
 
               {/* Categoría técnica en tipografía mono */}

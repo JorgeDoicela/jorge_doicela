@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArticleCover, DoiceladevArticleCategory } from './ArticleCover';
+import { DoiceladevHoverPreview } from './DoiceladevHoverPreview';
 
 export interface DoiceladevCardProps {
   href: string;
@@ -12,38 +13,39 @@ export interface DoiceladevCardProps {
   categoryMeta: React.ReactNode;
   excerpt?: string | null;
   coverImage?: string;
-  tag?: string;
   topicCategory?: string;
   priority?: boolean;
   accentHoverColor?: string;
 }
 
+export interface DoiceladevCardMetaProps {
+  categoryMeta: React.ReactNode;
+  className?: string;
+}
+
+export interface DoiceladevCardTitleProps {
+  title: string;
+  accentHoverColor?: string;
+  className?: string;
+}
+
+export interface DoiceladevCardExcerptProps {
+  excerpt?: string | null;
+  className?: string;
+}
 
 /**
- * DoiceladevCard - Componente de presentación normalizado para tarjetas de contenido técnico.
- * 
- * Estandariza la jerarquía visual de acuerdo con el sistema de diseño de DoicelaDev:
- * - Sección 1: Metadatos en 1 sola línea (11px font-mono text-zinc-400)
- * - Sección 2: Título en negrita (16px font-bold leading-snug line-clamp-2)
- * - Sección 3: Extracto descriptivo (12px text-xs line-clamp-2 leading-relaxed)
- * - Cero footers, cero divisores extras y contenedor simétrico con elevación neumórfica
+ * DoiceladevCardMeta - Nivel 1 (Módulo) y Nivel 2 (Categoría)
+ * Mantiene 100% la estética original (tipografía mono sobria sin pastillas invasivas)
+ * con soporte para inspección completa en hover si el texto se recorta.
  */
-export function DoiceladevCard({
-  href,
-  title,
-  category,
+export function DoiceladevCardMeta({
   categoryMeta,
-  excerpt,
-  coverImage,
-  tag,
-  topicCategory,
-  priority = false,
-  accentHoverColor = 'group-hover:text-cyan-300',
-}: DoiceladevCardProps) {
+  className = '',
+}: DoiceladevCardMetaProps) {
   const tFilters = useTranslations('Filters');
 
-  // Normalización e internacionalización de cada segmento de metadatos
-  const formatMetadataSegment = React.useCallback(
+  const formatSegment = React.useCallback(
     (segment: string): string => {
       const trimmed = segment.trim();
       if (!trimmed) return '';
@@ -63,28 +65,123 @@ export function DoiceladevCard({
     if (typeof categoryMeta === 'string') {
       return categoryMeta
         .split('•')
-        .map((part) => formatMetadataSegment(part))
+        .map((part) => formatSegment(part))
         .join(' • ');
     }
     return categoryMeta;
-  }, [categoryMeta, formatMetadataSegment]);
-
-  const formattedTag = React.useMemo(() => {
-    if (!tag) return undefined;
-    const trimmed = tag.trim();
-    const lower = trimmed.toLowerCase();
-    if (tFilters.has(lower as any)) {
-      return tFilters(lower as any).toUpperCase();
-    }
-    if (tFilters.has(trimmed as any)) {
-      return tFilters(trimmed as any).toUpperCase();
-    }
-    return trimmed.replace(/_/g, ' ');
-  }, [tag, tFilters]);
+  }, [categoryMeta, formatSegment]);
 
   const metaString = typeof formattedCategoryMeta === 'string' ? formattedCategoryMeta.toUpperCase() : '';
-  const showTag = formattedTag && (!metaString || !metaString.includes(formattedTag.toUpperCase()));
 
+  return (
+    <DoiceladevHoverPreview
+      enabled={metaString.length > 38}
+      content={
+        <div className="space-y-1">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-semibold">
+            Jerarquía Técnica
+          </p>
+          <p className="font-mono text-xs font-bold text-cyan-600 dark:text-cyan-400">
+            {metaString}
+          </p>
+        </div>
+      }
+      delayMs={150}
+      maxWidth={380}
+      className="w-full min-w-0"
+    >
+      <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium ${className}`}>
+        {formattedCategoryMeta}
+      </p>
+    </DoiceladevHoverPreview>
+  );
+}
+
+/**
+ * DoiceladevCardTitle - Titular editorial con inspección en hover si supera las dos líneas.
+ */
+export function DoiceladevCardTitle({
+  title,
+  accentHoverColor = 'group-hover:text-cyan-300',
+  className = '',
+}: DoiceladevCardTitleProps) {
+  return (
+    <DoiceladevHoverPreview
+      enabled={title.length > 65}
+      content={
+        <div className="space-y-1">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
+            Titular Completo
+          </p>
+          <h4 className="text-xs sm:text-sm font-bold leading-snug text-slate-900 dark:text-white">
+            {title}
+          </h4>
+        </div>
+      }
+      delayMs={220}
+      maxWidth={460}
+      className="w-full"
+    >
+      <h3
+        title={title}
+        className={`text-base font-bold text-slate-900 dark:text-[var(--header-title)] group-hover:text-blue-600 dark:${accentHoverColor} transition-colors leading-snug line-clamp-2 mt-1.5 ${className}`}
+      >
+        {title}
+      </h3>
+    </DoiceladevHoverPreview>
+  );
+}
+
+/**
+ * DoiceladevCardExcerpt - Sinopsis / extracto con previsualización completa en hover.
+ */
+export function DoiceladevCardExcerpt({
+  excerpt,
+  className = '',
+}: DoiceladevCardExcerptProps) {
+  if (!excerpt) return null;
+
+  return (
+    <DoiceladevHoverPreview
+      content={
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-1.5 border-b border-black/5 dark:border-white/10 pb-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">
+              Resumen Técnico Completo
+            </span>
+          </div>
+          <p className="text-xs sm:text-[13px] leading-relaxed text-slate-700 dark:text-zinc-200 font-normal">
+            {excerpt}
+          </p>
+        </div>
+      }
+      delayMs={200}
+      maxWidth={500}
+      className="w-full"
+    >
+      <p className={`text-xs text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5 ${className}`}>
+        {excerpt}
+      </p>
+    </DoiceladevHoverPreview>
+  );
+}
+
+/**
+ * DoiceladevCard - Componente compuesto para tarjetas de contenido técnico.
+ * Mantiene 100% el diseño visual y estandarizado previo.
+ */
+export function DoiceladevCard({
+  href,
+  title,
+  category,
+  categoryMeta,
+  excerpt,
+  coverImage,
+  topicCategory,
+  priority = false,
+  accentHoverColor = 'group-hover:text-cyan-300',
+}: DoiceladevCardProps) {
   return (
     <Link
       href={href}
@@ -95,34 +192,21 @@ export function DoiceladevCard({
           title={title}
           category={category}
           coverImage={coverImage}
-          tag={formattedTag}
           topicCategory={topicCategory}
           priority={priority}
         />
 
         <div>
-          <p className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium">
-            {formattedCategoryMeta}
-            {showTag && (
-              <>
-                <span className="mx-1 opacity-60">•</span>
-                <span>{formattedTag}</span>
-              </>
-            )}
-          </p>
-
-          <h3 className={`text-base font-bold text-slate-900 dark:text-[var(--header-title)] group-hover:text-blue-600 dark:${accentHoverColor} transition-colors leading-snug line-clamp-2 mt-1.5`}>
-            {title}
-          </h3>
-
-          {excerpt && (
-            <p className="text-xs text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5">
-              {excerpt}
-            </p>
-          )}
+          <DoiceladevCardMeta categoryMeta={categoryMeta} />
+          <DoiceladevCardTitle title={title} accentHoverColor={accentHoverColor} />
+          <DoiceladevCardExcerpt excerpt={excerpt} />
         </div>
       </div>
     </Link>
   );
 }
 
+// Vinculación de subcomponentes para composición desacoplada
+DoiceladevCard.Meta = DoiceladevCardMeta;
+DoiceladevCard.Title = DoiceladevCardTitle;
+DoiceladevCard.Excerpt = DoiceladevCardExcerpt;

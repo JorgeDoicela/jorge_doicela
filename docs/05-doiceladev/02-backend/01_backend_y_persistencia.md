@@ -150,24 +150,24 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `GET /doiceladev/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
 | | `POST /doiceladev/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
 | | `DELETE /doiceladev/ai/:id` | - | Eliminar recurso de IA por ID |
-| **Ciberseguridad** | `GET /doiceladev/cybersecurity` | `severity`, `category`, `search`, `lang` | Avisos por severidad, categoría, búsqueda e idioma |
-| | `GET /doiceladev/cybersecurity/categories` | `lang` | Severidades de seguridad activas en base a estándar CVSS con conteo |
+| **Ciberseguridad** | `GET /doiceladev/cybersecurity` | `category`, `search`, `lang` | Avisos técnicos y guías de bastionado por categoría, búsqueda e idioma |
+| | `GET /doiceladev/cybersecurity/categories` | `lang` | Categorías temáticas de seguridad activas con conteo |
 | | `GET /doiceladev/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
 | | `POST /doiceladev/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
 | | `DELETE /doiceladev/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
-| **Tutoriales** | `GET /doiceladev/tutorials` | `category`, `difficulty`, `search`, `lang` | Guías paso a paso filtrables por categoría temática, dificultad, búsqueda e idioma |
-| | `GET /doiceladev/tutorials/categories` | `lang` | Niveles y dificultades pedagógicas activas con conteo |
+| **Tutoriales** | `GET /doiceladev/tutorials` | `category`, `search`, `lang` | Guías paso a paso filtrables por categoría temática, búsqueda e idioma |
+| | `GET /doiceladev/tutorials/categories` | `lang` | Categorías temáticas pedagógicas activas con conteo |
 | | `GET /doiceladev/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
 | | `POST /doiceladev/tutorials` | - | Crear nuevo tutorial maestro |
 | | `POST /doiceladev/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
 | | `DELETE /doiceladev/tutorials/:id` | - | Eliminar tutorial por ID |
 | **Proyectos** | `GET /doiceladev/projects` | `category`, `status`, `search`, `lang` | Showcase filtrable por categoría temática, estado, búsqueda e idioma |
-| | `GET /doiceladev/projects/categories` | `lang` | Estados de proyectos activos con conteo |
+| | `GET /doiceladev/projects/categories` | `lang` | Categorías temáticas de proyectos activas con conteo |
 | | `GET /doiceladev/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
 | | `POST /doiceladev/projects` | - | Registrar nuevo proyecto showcase |
 | | `PATCH /doiceladev/projects/:id` | - | Actualizar campos o estado de un proyecto |
 | | `DELETE /doiceladev/projects/:id` | - | Eliminar proyecto por ID |
-| **Infraestructura** | `GET /doiceladev/infrastructure` | `category`, `environment`, `difficulty`, `search`, `lang` | Guías de servidores y cloud filtrables |
+| **Infraestructura** | `GET /doiceladev/infrastructure` | `category`, `search`, `sortBy`, `lang` | Guías de servidores y cloud filtrables por categoría, búsqueda y ordenamiento |
 | | `GET /doiceladev/infrastructure/categories` | `lang` | Categorías disponibles con conteo de guías |
 | | `GET /doiceladev/infrastructure/:idOrSlug` | `lang` | Detalle de guía técnica con specs e incremento de vistas |
 | | `GET /doiceladev/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
@@ -220,21 +220,21 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `ai_resources`: `id`, `slug`, `name`, `category`, `provider`, `author`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('llm', 'agent', 'framework', 'mcp_server', 'tool', 'dataset', 'platform'))`.  
   * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_cat_feed (language, category, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, createdAt DESC)`.
-* `security_posts`: `id`, `slug`, `title`, `severity`, `category`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricciones:** `CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL'))`, `CHECK (category IN ('advisory', 'hardening_guide', 'writeup', 'cve_analysis', 'pentest'))`.  
-  * **Índices:** `IDX_security_posts_slug_lang (slug, language) UNIQUE`, `IDX_security_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_sev_feed (language, severity, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
-* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `difficulty`, `category`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricciones:** `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced'))`, `CHECK (category IN ('web', 'backend', 'devops', 'mobile', 'ai', 'databases', 'security', 'architecture'))`.  
-  * **Índices:** `IDX_tutorials_slug_lang (slug, language) UNIQUE`, `IDX_tutorials_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_diff_feed (language, difficulty, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `security_posts`: `id`, `slug`, `title`, `category`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (category IN ('advisory', 'hardening_guide', 'writeup', 'cve_analysis', 'pentest'))`.  
+  * **Índices:** `IDX_security_posts_slug_lang (slug, language) UNIQUE`, `IDX_security_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `category`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (category IN ('web', 'backend', 'devops', 'mobile', 'ai', 'databases', 'security', 'architecture'))`.  
+  * **Índices:** `IDX_tutorials_slug_lang (slug, language) UNIQUE`, `IDX_tutorials_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (tutorialId) REFERENCES tutorials(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_tutorial_steps_tut (tutorialId)`, `IDX_tutorial_steps_tut_order (tutorialId, stepOrder ASC)`.
 * `projects`: `id`, `slug`, `name`, `description`, `category`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
   * **Restricciones:** `CHECK (status IN ('active', 'archived', 'wip'))`, `CHECK (category IN ('web', 'backend', 'mobile', 'devops', 'tools', 'ai', 'security', 'open_source'))`.  
   * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, stars DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, stars DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, stars DESC)`.
-* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `environment`, `difficulty`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram'))`, `CHECK (environment IN ('production', 'edge', 'hybrid', 'vps', 'bare_metal'))`, `CHECK (difficulty IN ('beginner', 'intermediate', 'advanced', 'expert'))`.  
-  * **Índices:** `IDX_infrastructure_posts_slug_lang (slug, language) UNIQUE`, `IDX_infrastructure_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_env_feed (language, environment, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram'))`.  
+  * **Índices:** `IDX_infrastructure_posts_slug_lang (slug, language) UNIQUE`, `IDX_infrastructure_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `glossary_terms`: `id`, `slug`, `term`, `aliases`, `category`, `shortDefinition`, `keyDifference`, `caseSensitive`, `language`, `orderPriority`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram', 'security', 'ai', 'architecture', 'general', 'database', 'linux'))`.  
   * **Índices:** `IDX_glossary_terms_term_lang (term, language) UNIQUE`, `IDX_glossary_terms_lang_prio (language, orderPriority DESC)`.
@@ -249,7 +249,7 @@ $$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\te
 
 * **Noticias (`NewsService`):** `(news.featured * 1000) + (news.isBreaking * 500) + (news.orderPriority * 20) + (news.likes * 4) + (news.views * 1.5)`
 * **Ensayos de Arquitectura (`BlogService`):** `(blog.featured * 1000) + (blog.orderPriority * 20) + (blog.likes * 4) + (blog.views * 1.5)`
-* **Ciberseguridad (`CybersecurityService`):** `(sec.featured * 1000) + (CASE sec.severity WHEN 'CRITICAL' THEN 300 WHEN 'HIGH' THEN 150 WHEN 'MEDIUM' THEN 50 ELSE 0 END) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5)`
+* **Ciberseguridad (`CybersecurityService`):** `(sec.featured * 1000) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5)`
 * **Tutoriales (`TutorialsService`):** `(tut.featured * 1000) + (tut.orderPriority * 20) + (tut.likes * 4) + (tut.views * 1.5)`
 * **Modelos IA & MCP (`AiService`):** `(ai.featured * 1000) + (ai.orderPriority * 20) + (ai.likes * 4) + (ai.views * 1.5)`
 * **Proyectos Showcase (`ProjectsService`):** `(proj.featured * 1000) + (proj.orderPriority * 20) + (proj.stars * 10) + (proj.views * 1.5)`
@@ -290,24 +290,25 @@ El script `seed-doiceladev.ts` está diseñado para reconstruir y reiniciar la b
 
 ---
 
-## 7. Arquitectura Taxonómica Oficial de 4 Niveles
+## 7. Arquitectura Taxonómica Oficial Canónica de 3 Niveles
 
-Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaDev se clasifica rigurosamente bajo una **jerarquía taxonómica estricta de 4 niveles**. Esta estructura elimina la ambigüedad, previene el acoplamiento cruzado de dominios y garantiza indexación atómica en `doiceladev.sqlite`:
+Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaDev se clasifica rigurosamente bajo una **jerarquía taxonómica canónica universal de 3 niveles**. Esta estructura elimina la ambigüedad, previene el acoplamiento cruzado de dominios y garantiza simetría absoluta en todo el sistema:
 
 | Nivel | Dimensión Taxonómica | Ámbito / Gobernanza | Mecanismo en SQLite | Propósito Técnico |
 | :--- | :--- | :--- | :--- | :--- |
 | **Nivel 1** | **Módulo / Especialidad** | 100% Propio (Vertical) | Tabla física TypeORM (`news_articles`, `blog_posts`, `tutorials`, etc.) | Define el formato físico del contenido, el submódulo backend y la subruta URL canónica (`/tutorials`, `/projects`, `/news`). |
 | **Nivel 2** | **Categoría Temática** | Estructural / Canónico | Columna `category` con restricción `CHECK` e índice | Clasifica el área funcional de la publicación (ej. `web`, `devops`, `ai`, `security`). Cada módulo posee su catálogo temático controlado. |
 | **Nivel 3** | **Tags / Etiquetas** | 100% Cruzado (Universal) | Tabla `tags` + tabla puente `content_tags` + columna `tags TEXT` | Vocabulario técnico controlado universal (ej. `#docker`, `#react`, `#linux`). Conecta transversalmente publicaciones de distintos módulos. |
-| **Nivel 4** | **Atributo Específico** | 100% Propio (Aislado) | Columnas especializadas por entidad | Atributos técnicos exclusivos del dominio: `difficulty` en tutoriales, `severity` en ciberseguridad, `status` en proyectos, `environment` en infraestructura. |
+
+> **Erradicación Definitiva de Nivel 4:** Se eliminaron permanentemente los atributos dispares de "Nivel 4" (`environment`, `severity`, `difficulty`) tanto de las tablas SQLite físicas como de entidades TypeORM, DTOs, corpus JSON y componentes del frontend. Esto asegura que la plataforma opere sobre una arquitectura 100% limpia, simétrica y libre de campos asimétricos entre módulos.
 
 ### 7.1 Regla Universal de Presentación en UI (Frontend)
 Para garantizar una jerarquía visual sobria, limpia y predecible en todo el sistema:
-1. **Línea de Metadatos de Tarjetas (`categoryMeta`):** Se restringe estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)** (ej. `PROYECTOS • WEB`, `TUTORIALES • WEB`, `INFRAESTRUCTURA • CONTAINERS`).
-2. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra exclusivamente el **Nivel 1 (Módulo)** en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
-3. **Badges Visuales Complementarios (`tag`):** Reservados para el Nivel 4 cuando aporta valor operativo inmediato (ej. badge `CRITICAL` en avisos de ciberseguridad, badge `INTERMEDIATE` en tutoriales o `BREAKING` en noticias).
-4. **Prohibición de "Subcategorías":** No existe ninguna columna, tabla o entidad llamada `subCategory` ni en persistencia ni en contratos de API; cualquier concepto secundario corresponde estrictamente al Nivel 2 (`category`) o Nivel 4 (atributo de entidad).
-5. **Estandarización Unificada de la Barra de Filtros (`CategoryFilterBar`):** En los 8 módulos de la plataforma, la barra de pastillas neumórficas filtra unívocamente por el **Nivel 2 (Categoría Temática)** (`web`, `backend`, `devops`, `hardening`, `servers`, `llm`, `frameworks`, etc.), garantizando una experiencia de usuario perfectamente simétrica y predecible. Los atributos de Nivel 4 (dificultad, severidad, estado) residen como badges informativos en las tarjetas.
+1. **Línea de Metadatos de Tarjetas (`categoryMeta`):** Se restringe estrictamente a **Nivel 1 (Módulo) • Nivel 2 (Categoría)** (ej. `PROYECTOS • WEB`, `TUTORIALES • WEB`, `INFRAESTRUCTURA • CONTAINERS`). Preserva la estética original en tipografía mono sin pastillas grises invasivas.
+2. **Inspección sin Truncamiento (`DoiceladevHoverPreview`):** Si un titular o extracto es extenso, el usuario puede inspeccionar el contenido íntegro pasando el cursor sobre el texto, el cual se proyecta en un popover flotante Neumorphic Glassmorphic (`createPortal`) sin provocar saltos de diseño (*layout shifts*).
+3. **Barra Lateral de Recirculación ([`FeaturedPostsSidebarCard.tsx`](/doiceladev/widgets/article-layout/ui/FeaturedPostsSidebarCard.tsx)):** Muestra exclusivamente el **Nivel 1 (Módulo)** en tipografía mono sobria (`text-[11px] font-mono uppercase tracking-wider`).
+4. **Prohibición de "Subcategorías":** No existe ninguna columna, tabla o entidad llamada `subCategory` ni en persistencia ni en contratos de API; cualquier concepto secundario corresponde estrictamente al Nivel 2 (`category`).
+5. **Estandarización Unificada de la Barra de Filtros (`CategoryFilterBar`):** En los 8 módulos de la plataforma, la barra de pastillas neumórficas filtra unívocamente por el **Nivel 2 (Categoría Temática)** (`web`, `backend`, `devops`, `hardening`, `servers`, `llm`, `frameworks`, etc.), garantizando una experiencia de usuario perfectamente simétrica y predecible.
 
 ### 7.2 Desacoplamiento de Internacionalización en Filtros de API (`/categories`)
 Para garantizar un servidor ultra-eficiente en el VPS de 1 GB de RAM y evitar duplicación de strings en memoria:

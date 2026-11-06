@@ -1,5 +1,4 @@
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import type { TutorialDifficulty } from '../entities/tutorial.entity';
 
 export class CreateTutorialDto {
   @IsString()
@@ -17,10 +16,6 @@ export class CreateTutorialDto {
   @IsString()
   @IsNotEmpty()
   description: string;
-
-  @IsString()
-  @IsOptional()
-  difficulty?: TutorialDifficulty;
 
   @IsString()
   @IsOptional()

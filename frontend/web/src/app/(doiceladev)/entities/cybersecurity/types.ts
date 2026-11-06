@@ -1,4 +1,3 @@
-export type SecuritySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type SecurityCategory =
   | 'advisory'
   | 'hardening_guide'
@@ -10,7 +9,6 @@ export interface SecurityPost {
   id: number;
   slug: string;
   title: string;
-  severity: SecuritySeverity;
   category: SecurityCategory;
   cveId?: string;
   affectedSystems?: string;

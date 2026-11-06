@@ -18,7 +18,6 @@ interface ArticleCoverProps {
   category: DoiceladevArticleCategory;
   topicCategory?: string;
   coverImage?: string;
-  tag?: string;
   priority?: boolean;
 }
 

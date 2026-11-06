@@ -27,7 +27,6 @@ export function AiCard({ resource }: AiCardProps) {
       title={resource.name}
       category="ai"
       coverImage={resource.coverImage}
-      tag={resource.license?.toUpperCase() || categoryLabel}
       categoryMeta={metaText}
       excerpt={resource.description}
       accentHoverColor="group-hover:text-purple-300"

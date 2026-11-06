@@ -47,7 +47,6 @@ export class RecommendationsService {
       routePrefix: '/infrastructure',
       titleCol: 'title',
       featCol: 'featured',
-      tagCol: 'environment',
     },
     {
       table: 'security_posts',
@@ -56,7 +55,6 @@ export class RecommendationsService {
       routePrefix: '/cybersecurity',
       titleCol: 'title',
       featCol: 'featured',
-      tagCol: 'severity',
     },
     {
       table: 'tutorials',
@@ -65,7 +63,6 @@ export class RecommendationsService {
       routePrefix: '/tutorials',
       titleCol: 'title',
       featCol: 'featured',
-      tagCol: 'difficulty',
     },
     {
       table: 'blog_posts',
@@ -74,7 +71,6 @@ export class RecommendationsService {
       routePrefix: '/blog',
       titleCol: 'title',
       featCol: 'featured',
-      tagCol: 'category',
     },
     {
       table: 'news_articles',
@@ -83,7 +79,6 @@ export class RecommendationsService {
       routePrefix: '/news',
       titleCol: 'title',
       featCol: 'featured',
-      tagCol: 'isBreaking',
     },
     {
       table: 'ai_resources',
@@ -92,7 +87,6 @@ export class RecommendationsService {
       routePrefix: '/ai',
       titleCol: 'name',
       featCol: 'featured',
-      tagCol: 'license',
     },
     {
       table: 'projects',
@@ -101,7 +95,6 @@ export class RecommendationsService {
       routePrefix: '/projects',
       titleCol: 'name',
       featCol: 'featured',
-      tagCol: 'status',
     },
     {
       table: 'forum_topics',
@@ -110,7 +103,6 @@ export class RecommendationsService {
       routePrefix: '/forum',
       titleCol: 'title',
       featCol: 'isPinned',
-      tagCol: 'category',
     },
   ];
 
@@ -275,8 +267,6 @@ export class RecommendationsService {
             isEn,
           );
           const subLabel = this.formatSubcategory(row.category, isEn);
-          const badgeTag = this.formatBadgeTag(row.metaTag, config.type, isEn);
-
           candidates.push({
             card: {
               id: `${config.type}-${row.id}`,
@@ -287,7 +277,6 @@ export class RecommendationsService {
                 ? `${moduleLabel} • ${subLabel}`
                 : moduleLabel,
               coverImage: row.coverImage,
-              tag: badgeTag,
               score: Math.round(totalScore * 100) / 100,
             },
             score: totalScore,
@@ -375,7 +364,6 @@ export class RecommendationsService {
       llm: { es: 'MODELOS LLM', en: 'LLM MODELS' },
       agent: { es: 'FRAMEWORKS AGÉNTICOS', en: 'AGENTIC FRAMEWORKS' },
       ci_cd: { es: 'CI/CD & DESPLIEGUES', en: 'CI/CD & DEPLOYMENTS' },
-      bare_metal: { es: 'BARE METAL', en: 'BARE METAL' },
       servers: { es: 'SERVIDORES & LINUX', en: 'SERVERS & LINUX' },
       containers: { es: 'CONTENEDORES', en: 'CONTAINERS' },
       clean_code: { es: 'CÓDIGO LIMPIO', en: 'CLEAN CODE' },
@@ -384,36 +372,5 @@ export class RecommendationsService {
     const found = map[cat.toLowerCase()];
     if (found) return isEn ? found.en : found.es;
     return cat.replace(/_/g, ' ').toUpperCase();
-  }
-
-  private formatBadgeTag(
-    metaTag: string | number | null | undefined,
-    type: string,
-    isEn: boolean,
-  ): string {
-    if (!metaTag && metaTag !== 0) return '';
-    if (type === 'news' && metaTag === 1) return isEn ? 'BREAKING' : 'URGENTE';
-    if (type === 'security') {
-      const map: Record<string, string> = {
-        CRITICAL: isEn ? 'CRITICAL' : 'CRÍTICO',
-        HIGH: isEn ? 'HIGH' : 'ALTO',
-        MEDIUM: isEn ? 'MEDIUM' : 'MEDIO',
-        LOW: isEn ? 'LOW' : 'BAJO',
-      };
-      return (
-        map[String(metaTag).toUpperCase()] || String(metaTag).toUpperCase()
-      );
-    }
-    if (type === 'tutorial') {
-      const map: Record<string, string> = {
-        beginner: isEn ? 'BEGINNER' : 'PRINCIPIANTE',
-        intermediate: isEn ? 'INTERMEDIATE' : 'INTERMEDIO',
-        advanced: isEn ? 'ADVANCED' : 'AVANZADO',
-      };
-      return (
-        map[String(metaTag).toLowerCase()] || String(metaTag).toUpperCase()
-      );
-    }
-    return String(metaTag).toUpperCase();
   }
 }

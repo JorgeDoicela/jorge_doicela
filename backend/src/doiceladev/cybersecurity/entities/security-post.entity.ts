@@ -7,7 +7,6 @@ import {
   Index,
 } from 'typeorm';
 
-export type SecuritySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type SecurityCategory =
   | 'advisory'
   | 'hardening_guide'
@@ -18,7 +17,6 @@ export type SecurityCategory =
 @Entity('security_posts')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'publishedAt'])
-@Index(['language', 'severity', 'orderPriority', 'publishedAt'])
 @Index(['language', 'category', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class SecurityPost {
@@ -30,9 +28,6 @@ export class SecurityPost {
 
   @Column()
   title: string;
-
-  @Column({ default: 'MEDIUM' })
-  severity: SecuritySeverity;
 
   @Column({ default: 'advisory' })
   category: SecurityCategory;

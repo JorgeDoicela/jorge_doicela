@@ -16,24 +16,10 @@ export type InfrastructureCategory =
   | 'hardening'
   | 'zero_ram';
 
-export type InfrastructureEnvironment =
-  | 'production'
-  | 'edge'
-  | 'hybrid'
-  | 'vps'
-  | 'bare_metal';
-
-export type InfrastructureDifficulty =
-  | 'beginner'
-  | 'intermediate'
-  | 'advanced'
-  | 'expert';
-
 @Entity('infrastructure_posts')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'orderPriority', 'publishedAt'])
 @Index(['language', 'category', 'orderPriority', 'publishedAt'])
-@Index(['language', 'environment', 'orderPriority', 'publishedAt'])
 @Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class InfrastructurePost {
   @PrimaryGeneratedColumn()
@@ -50,12 +36,6 @@ export class InfrastructurePost {
 
   @Column({ default: 'servers' })
   category: InfrastructureCategory;
-
-  @Column({ default: 'production' })
-  environment: InfrastructureEnvironment;
-
-  @Column({ default: 'intermediate' })
-  difficulty: InfrastructureDifficulty;
 
   @Column({ default: 'Debian, Linux, Nginx' })
   techStack: string;

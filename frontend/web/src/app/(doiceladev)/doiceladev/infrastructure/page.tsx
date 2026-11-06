@@ -16,7 +16,7 @@ export default function InfrastructureCategoryPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useInfrastructureCategories();
-  const { posts, loading, error } = useInfrastructure(category, undefined, undefined, search);
+  const { posts, loading, error } = useInfrastructure(category, search);
 
   return (
     <DoiceladevPageLayout

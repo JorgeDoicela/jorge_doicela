@@ -1,9 +1,5 @@
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import type {
-  InfrastructureCategory,
-  InfrastructureEnvironment,
-  InfrastructureDifficulty,
-} from '../entities/infrastructure-post.entity';
+import type { InfrastructureCategory } from '../entities/infrastructure-post.entity';
 
 export class CreateInfrastructurePostDto {
   @IsString()
@@ -21,14 +17,6 @@ export class CreateInfrastructurePostDto {
   @IsString()
   @IsOptional()
   category?: InfrastructureCategory;
-
-  @IsString()
-  @IsOptional()
-  environment?: InfrastructureEnvironment;
-
-  @IsString()
-  @IsOptional()
-  difficulty?: InfrastructureDifficulty;
 
   @IsString()
   @IsOptional()

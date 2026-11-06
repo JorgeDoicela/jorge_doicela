@@ -114,24 +114,14 @@ export class BlogService {
       qb.andWhere('blog.language = :lang', { lang });
     }
 
-    const allPosts = await qb.select(['blog.series', 'blog.tags']).getMany();
+    const allPosts = await qb.select(['blog.category']).getMany();
 
-    const seriesCountMap = new Map<string, number>();
-    const tagCountMap = new Map<string, number>();
+    const categoryCountMap = new Map<string, number>();
 
     for (const post of allPosts) {
-      if (post.series) {
-        const s = post.series.trim().toLowerCase();
-        seriesCountMap.set(s, (seriesCountMap.get(s) || 0) + 1);
-      }
-      if (post.tags) {
-        const splitTags = post.tags
-          .split(',')
-          .map((t) => t.trim().toLowerCase())
-          .filter(Boolean);
-        for (const t of splitTags) {
-          tagCountMap.set(t, (tagCountMap.get(t) || 0) + 1);
-        }
+      if (post.category) {
+        const cat = post.category.trim().toLowerCase();
+        categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
       }
     }
 
@@ -143,23 +133,12 @@ export class BlogService {
       },
     ];
 
-    // Series registradas
-    for (const [s, count] of seriesCountMap.entries()) {
-      if (s !== 'all') {
+    // Categorías primarias registradas
+    for (const [cat, count] of categoryCountMap.entries()) {
+      if (cat !== 'all') {
         result.push({
-          id: s,
-          label: s,
-          count,
-        });
-      }
-    }
-
-    // Tags que no estén duplicados
-    for (const [tag, count] of tagCountMap.entries()) {
-      if (!result.some((r) => r.id === tag)) {
-        result.push({
-          id: tag,
-          label: tag,
+          id: cat,
+          label: cat,
           count,
         });
       }

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { Home, ChevronRight } from 'lucide-react';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -50,15 +52,33 @@ export default async function CategoryHubPage({ params }: Params) {
     <DoiceladevPageLayout
       activeCategory="categories"
       backHref="/categories"
-      backLabel="← Categorías"
+      backLabel={tNav('categories')}
     >
       <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 shadow-2xl space-y-8">
-        <header className="text-center space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl glass-concave-panel text-xs font-mono uppercase tracking-wider text-blue-600 dark:text-cyan-400">
-            <span>{tNav('all')}</span>
-            <span>•</span>
-            <span>{category.label}</span>
-          </div>
+        <header className="text-center space-y-4">
+          {/* Miga de Pan (Breadcrumb) Adaptada */}
+          <nav
+            aria-label="Breadcrumb"
+            className="inline-flex items-center gap-1.5 font-sans font-medium text-slate-500 dark:text-zinc-400 text-xs sm:text-sm select-none"
+          >
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors py-0.5 rounded focus:outline-none"
+              title={tNav('home')}
+            >
+              <Home className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
+              <span>{tNav('home')}</span>
+            </Link>
+
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
+
+            <Link
+              href="/categories"
+              className="text-blue-600 dark:text-cyan-400 hover:underline font-semibold transition-colors py-0.5"
+            >
+              {tNav('categories')}
+            </Link>
+          </nav>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
             {category.label}
@@ -67,12 +87,6 @@ export default async function CategoryHubPage({ params }: Params) {
           <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-zinc-400 max-w-3xl mx-auto font-normal dark:font-light leading-relaxed">
             {t('hubSubtitle', { category: category.label })}
           </p>
-
-          <div className="pt-1">
-            <span className="px-3.5 py-1 rounded-full text-xs font-mono font-semibold glass-concave-panel text-slate-700 dark:text-zinc-300">
-              {t('articlesCount', { count: category.totalCount })}
-            </span>
-          </div>
         </header>
 
         <main>

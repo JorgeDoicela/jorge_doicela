@@ -29,7 +29,7 @@ export default function TagsDirectoryPage() {
       backLabel={tNav('home')}
     >
       <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 shadow-2xl space-y-8">
-        <header className="text-center space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
+        <header className="text-center space-y-4">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
             {t('title')}
           </h1>
@@ -81,16 +81,13 @@ export default function TagsDirectoryPage() {
                 <Link
                   key={tag.slug}
                   href={`/tags/${tag.slug}`}
-                  className="group inline-flex items-center gap-2 px-3.5 py-2 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-cyan-500/30 dark:hover:border-white/15 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer active:scale-95 shrink-0"
+                  className="group inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-cyan-500/30 dark:hover:border-white/15 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer active:scale-95 shrink-0"
                 >
                   <span className="text-cyan-600/70 dark:text-cyan-400/70 font-semibold font-mono text-xs">
                     #
                   </span>
                   <span className="text-xs sm:text-sm font-mono text-slate-800 dark:text-zinc-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                     {tag.label || tag.slug}
-                  </span>
-                  <span className="text-[11px] font-mono text-slate-400 dark:text-zinc-500 font-medium">
-                    {tag.count}
                   </span>
                 </Link>
               ))}

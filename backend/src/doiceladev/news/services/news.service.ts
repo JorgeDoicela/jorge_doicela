@@ -103,25 +103,15 @@ export class NewsService {
     // 1. Obtener todas las noticias del idioma correspondiente
     const allArticles = await this.newsRepository.find({
       where: { language: lang },
-      select: { id: true, category: true, tags: true },
+      select: { id: true, category: true },
     });
 
     const categoryCountMap = new Map<string, number>();
-    const tagCountMap = new Map<string, number>();
 
     for (const art of allArticles) {
       if (art.category) {
         const cat = art.category.trim().toLowerCase();
         categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
-      }
-      if (art.tags) {
-        const splitTags = art.tags
-          .split(',')
-          .map((t) => t.trim().toLowerCase())
-          .filter(Boolean);
-        for (const t of splitTags) {
-          tagCountMap.set(t, (tagCountMap.get(t) || 0) + 1);
-        }
       }
     }
 
@@ -139,17 +129,6 @@ export class NewsService {
         result.push({
           id: cat,
           label: cat,
-          count,
-        });
-      }
-    }
-
-    // Tags relevantes que no estén como categoría primaria
-    for (const [tag, count] of tagCountMap.entries()) {
-      if (!result.some((r) => r.id === tag)) {
-        result.push({
-          id: tag,
-          label: tag,
           count,
         });
       }

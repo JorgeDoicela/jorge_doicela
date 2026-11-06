@@ -30,7 +30,7 @@ export default function CategoriesDirectoryPage() {
       backLabel={tNav('home')}
     >
       <div className="p-6 sm:p-10 rounded-3xl glass-convex-panel border border-slate-200/80 dark:border-white/5 shadow-2xl space-y-8">
-        <header className="text-center space-y-4 pb-6 border-b border-black/5 dark:border-white/5">
+        <header className="text-center space-y-4">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">
             {t('title')}
           </h1>
@@ -85,34 +85,11 @@ export default function CategoriesDirectoryPage() {
                 <Link
                   key={cat.slug}
                   href={`/categories/${cat.slug}`}
-                  className="group p-5 sm:p-6 rounded-2xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-blue-500/30 dark:hover:border-white/15 transition-all duration-300 shadow-md hover:shadow-xl flex flex-col justify-between space-y-4"
+                  className="group p-5 sm:p-6 rounded-2xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-blue-500/30 dark:hover:border-white/15 transition-all duration-300 shadow-md hover:shadow-xl flex items-center cursor-pointer"
                 >
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
-                        {cat.label}
-                      </h2>
-                      <span className="text-xs font-mono font-semibold text-slate-400 dark:text-zinc-500 shrink-0">
-                        {cat.count}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {cat.modules.map((m) => (
-                        <span
-                          key={m}
-                          className="px-2 py-0.5 rounded-lg text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 bg-slate-100/80 dark:bg-zinc-800/60 border border-slate-200/60 dark:border-white/5"
-                        >
-                          {tNav(m as any)}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-black/[0.04] dark:border-white/[0.04] flex items-center justify-between text-xs font-mono text-slate-500 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
-                    <span>{t('viewCategory')}</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </div>
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
+                    {cat.label}
+                  </h2>
                 </Link>
               ))}
             </div>

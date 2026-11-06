@@ -425,27 +425,27 @@
     "readArticle": "Read publication"
   },
   "CategoriesHub": {
-    "title": "Categories & Specialties",
-    "subtitle": "Publications, projects, and architecture resources organized across technical specialties.",
+    "title": "Categories",
+    "subtitle": "Find articles, projects, and resources organized by topics and specialties.",
     "searchPlaceholder": "Search publications by category...",
     "articlesCount": "{count, plural, =1 {1 publication} other {# publications}}",
     "emptySearch": "No publications found matching your search.",
     "viewCategory": "View publications →",
     "allCategories": "All Categories",
     "hubTitle": "Category: {category}",
-    "hubSubtitle": "All publications and resources classified under the {category} specialty.",
+    "hubSubtitle": "Publications, projects, and resources organized under the {category} category.",
     "noArticles": "No publications available in this category currently."
   },
   "TagsHub": {
-    "title": "Tags & Technologies",
-    "subtitle": "Browse all publications indexed by technical concepts, tools, and frameworks.",
+    "title": "Tags",
+    "subtitle": "Find publications and guides based on the technologies, tools, and topics that interest you.",
     "searchPlaceholder": "Search publications by tag...",
     "articlesCount": "{count, plural, =1 {1 publication} other {# publications}}",
     "emptySearch": "No publications found matching your search.",
     "viewTag": "View everything on #{tag} →",
     "allTags": "All Tags",
     "hubTitle": "Tag: #{tag}",
-    "hubSubtitle": "Technical publications, guides, and resources linked to #{tag}.",
+    "hubSubtitle": "Publications, guides, and resources linked to #{tag}.",
     "noArticles": "No publications associated with this tag currently."
   }
 }

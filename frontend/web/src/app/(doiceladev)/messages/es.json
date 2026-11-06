@@ -425,27 +425,27 @@
     "readArticle": "Leer publicación"
   },
   "CategoriesHub": {
-    "title": "Categorías & Especialidades",
-    "subtitle": "Publicaciones, proyectos y recursos de arquitectura organizados transversalmente por especialidad técnica.",
+    "title": "Categorías",
+    "subtitle": "Encuentra artículos, proyectos y recursos organizados por temas y áreas de especialidad.",
     "searchPlaceholder": "Buscar publicaciones por categoría...",
     "articlesCount": "{count, plural, =1 {1 publicación} other {# publicaciones}}",
     "emptySearch": "No se encontraron publicaciones que coincidan con la búsqueda.",
     "viewCategory": "Ver publicaciones →",
     "allCategories": "Todas las Categorías",
     "hubTitle": "Categoría: {category}",
-    "hubSubtitle": "Todas las publicaciones y recursos clasificados bajo la especialidad {category}.",
+    "hubSubtitle": "Publicaciones, proyectos y recursos organizados en la categoría {category}.",
     "noArticles": "No hay publicaciones disponibles en esta categoría actualmente."
   },
   "TagsHub": {
-    "title": "Etiquetas & Tecnologías",
-    "subtitle": "Navega por todas las publicaciones clasificadas por tecnologías, herramientas y conceptos indexados.",
+    "title": "Etiquetas",
+    "subtitle": "Encuentra publicaciones y guías según las tecnologías, herramientas y temas que te interesen.",
     "searchPlaceholder": "Buscar publicaciones por etiqueta...",
     "articlesCount": "{count, plural, =1 {1 publicación} other {# publicaciones}}",
     "emptySearch": "No se encontraron publicaciones que coincidan con la búsqueda.",
     "viewTag": "Ver todo sobre #{tag} →",
     "allTags": "Todas las Etiquetas",
     "hubTitle": "Etiqueta: #{tag}",
-    "hubSubtitle": "Publicaciones, guías y recursos técnicos vinculados a #{tag}.",
+    "hubSubtitle": "Publicaciones, guías y recursos vinculados a la etiqueta #{tag}.",
     "noArticles": "No hay publicaciones asociadas a esta etiqueta actualmente."
   }
 }

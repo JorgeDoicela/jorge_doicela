@@ -61,7 +61,7 @@ export default async function TagHubPage({ params }: Params) {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors py-0.5 rounded focus:outline-none"
+              className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] transition-colors py-0.5 rounded focus:outline-none"
               title={tNav('home')}
             >
               <Home className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
@@ -72,7 +72,7 @@ export default async function TagHubPage({ params }: Params) {
 
             <Link
               href="/tags"
-              className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold transition-colors py-0.5"
+              className="text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] font-medium transition-colors py-0.5"
             >
               {tNav('tags')}
             </Link>

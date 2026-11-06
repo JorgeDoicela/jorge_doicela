@@ -424,3 +424,24 @@ Para erradicar la duplicación de código en las cabeceras de los módulos de co
 * **Directorio de Etiquetas (`/tags/page.tsx`):** Catálogo de etiquetas indexadas con numeral `#` y tipografía monoespaciada sin conteos numéricos superfluos, ordenadas orgánicamente con enlace hacia `/tags/[slug]`.
 * **Hubs de Artículos Filtrados (`/categories/[slug]` y `/tags/[slug]`):** Server Components de alto rendimiento que resuelven síncronamente los artículos asociados mediante `serverGet`. Incorporan miga de pan canónica (`Inicio > Categorías` / `Inicio > Etiquetas`) y botón de retorno limpio (`← Categorías` / `← Etiquetas`) sin caracteres de flecha duplicados, presentando los contenidos en la grilla oficial con [`DoiceladevCard`](/doiceladev/shared/ui/DoiceladevCard.tsx).
 * **Cabeceras de Módulo Despejadas:** Se erradicaron las líneas divisorias horizontales inferiores (`border-b border-black/5 dark:border-white/5`) en las cabeceras de todos los módulos temáticos y hubs, logrando una transición visual continua y limpia hacia las cuadrículas de contenido.
+
+### 10.3 Motor de Búsqueda Difusa en Cliente y Cero Parpadeo (`useFuzzyFilter`)
+Para solucionar de raíz el parpadeo de esqueletos (`animate-pulse`) durante la escritura y homologar la inteligencia de búsqueda con el buscador general (Spotlight):
+* **Carga Inicial Única:** Los hooks de entidad (`useInfrastructure`, `useNews`, `useTutorials`, `useCybersecurity`, `useAi`, `useBlog`, `useForum`, `useProjects`) obtienen los datos del módulo una única vez por idioma activo (`GET /doiceladev/[modulo]?lang=es|en`). El estado `loading: true` con esqueletos pulsantes se activa exclusivamente durante esta carga inicial.
+* **Filtrado Difuso Instantáneo en Memoria (`useFuzzyFilter.ts`):** Utiliza **Fuse.js** en memoria con tolerancia a fallos tipográficos (`threshold: 0.35`) y ponderación estricta por campos:
+  * **Título / Nombre:** Peso 2.5
+  * **Etiquetas / Tecnologías (`tags` / `techStack`):** Peso 1.8
+  * **Categoría (Nivel 2):** Peso 1.2
+  * **Extracto / Descripción:** Peso 0.8
+* **Eliminación Total de Parpadeo y Latencia:** La selección de categorías y la búsqueda por texto o numeral (`#`) se ejecutan síncronamente en `< 1 ms` sin disparar peticiones HTTP por pulsación de tecla ni alterar el estado de `loading`, preservando la estabilidad visual de la cuadrícula.
+
+### 10.4 Normalización Canónica de Slugs, Estética Neutra y Cero Destello
+* **Resolución Canónica Bidireccional de Categorías:**
+  - Las tarjetas (`SecurityCard`, `TutorialCard`, `BlogCard`, `NewsCard`, `AiCard`, `ProjectCard`) vinculan explícitamente el slug físico mediante `topicCategory={item.category}` (ej. `cve_analysis`).
+  - Tanto `DoiceladevCard.tsx` (`CANONICAL_CATEGORY_MAP`) como el servicio backend `categories.service.ts` (`CATEGORY_ALIAS_MAP`) incorporan normalizadores defensivos con desacentuación (`normalize('NFD')`) y decodificación de URI (`decodeURIComponent`), garantizando que cualquier variación textual o alias resuelva de forma determinista hacia el slug canónico sin respuestas vacías ni títulos con código de escape (`%C3%A1`).
+* **Migas de Pan (*Breadcrumbs*) Homogéneas y Libres de Subrayado:**
+  - Se eliminaron colores de acento y subrayados forzados (`hover:underline`) en `DoiceladevArticleLayout`, `categories/[slug]` y `tags/[slug]`.
+  - La navegación de cabecera mantiene un tono neutral uniforme (`text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] font-medium`).
+* **Bordes Perimetrales Neutros y Supresión de Anillo Nativo:**
+  - Se suprimieron todos los bordes de color en hover (`hover:border-blue-500/30`, `hover:border-cyan-500/30`) en tarjetas, carrusel y directorios en favor de bordes neutros de vidrio esmerilado (`hover:border-slate-300 dark:hover:border-white/15`).
+  - En las pastillas de filtro y navegación se neutralizó el foco con `outline-none focus:outline-none focus-visible:ring-2`, eliminando el destello rectangular negro del navegador al interactuar con el ratón.

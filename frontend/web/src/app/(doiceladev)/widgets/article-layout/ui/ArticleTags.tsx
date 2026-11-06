@@ -39,7 +39,7 @@ export function ArticleTags({ tags, className = '' }: ArticleTagsProps) {
           <Link
             key={tag}
             href={`/tags/${encodeURIComponent(tag)}`}
-            className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/30 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
+            className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
             title={t('searchTagHint', { tag })}
           >
             <span className="text-cyan-600/70 dark:text-cyan-400/70 font-semibold group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">

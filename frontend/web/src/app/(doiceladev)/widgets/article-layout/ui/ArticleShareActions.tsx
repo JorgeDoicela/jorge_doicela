@@ -72,7 +72,7 @@ export function ArticleShareActions({ title, url, className = '' }: ArticleShare
           className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${
             copied
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold'
-              : 'glass-concave-panel border-black/5 dark:border-white/5 text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/30'
+              : 'glass-concave-panel border-black/5 dark:border-white/5 text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-slate-300 dark:hover:border-white/20'
           }`}
           title={copied ? t('linkCopied') : t('copyLink')}
         >
@@ -88,7 +88,7 @@ export function ArticleShareActions({ title, url, className = '' }: ArticleShare
         <button
           type="button"
           onClick={handleShareX}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/30 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
           title={t('shareOnX')}
         >
           {/* Logo oficial minimalista de X */}
@@ -102,7 +102,7 @@ export function ArticleShareActions({ title, url, className = '' }: ArticleShare
         <button
           type="button"
           onClick={handleShareLinkedIn}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/30 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-concave-panel border border-black/5 dark:border-white/5 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 cursor-pointer active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
           title={t('shareOnLinkedIn')}
         >
           {/* Logo de LinkedIn */}

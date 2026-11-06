@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
 import { useTagsHub } from '../../entities/tags';
+import { useFuzzyFilter } from '../../shared';
 
 export default function TagsDirectoryPage() {
   const tNav = useTranslations('Nav');
@@ -12,15 +13,13 @@ export default function TagsDirectoryPage() {
   const [search, setSearch] = useState('');
   const { tags, loading, error } = useTagsHub();
 
-  const filteredTags = useMemo(() => {
-    if (!search.trim()) return tags;
-    const term = search.trim().toLowerCase();
-    return tags.filter(
-      (tag) =>
-        tag.label.toLowerCase().includes(term) ||
-        tag.slug.toLowerCase().includes(term),
-    );
-  }, [tags, search]);
+  const filteredTags = useFuzzyFilter(tags, {
+    search,
+    searchKeys: [
+      { name: 'label', weight: 2.5 },
+      { name: 'slug', weight: 2.0 },
+    ],
+  });
 
   return (
     <DoiceladevPageLayout
@@ -81,7 +80,7 @@ export default function TagsDirectoryPage() {
                 <Link
                   key={tag.slug}
                   href={`/tags/${tag.slug}`}
-                  className="group inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-cyan-500/30 dark:hover:border-white/15 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer active:scale-95 shrink-0"
+                  className="group inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-slate-300 dark:hover:border-white/15 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer active:scale-95 shrink-0"
                 >
                   <span className="text-cyan-600/70 dark:text-cyan-400/70 font-semibold font-mono text-xs">
                     #

@@ -26,6 +26,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
       category="tutorials"
       coverImage={tutorial.coverImage}
       categoryMeta={metaText}
+      topicCategory={tutorial.category}
       excerpt={tutorial.excerpt}
       accentHoverColor="group-hover:text-amber-300"
     />

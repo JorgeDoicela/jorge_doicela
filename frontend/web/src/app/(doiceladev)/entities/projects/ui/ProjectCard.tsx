@@ -27,6 +27,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       category="projects"
       coverImage={project.coverImage}
       categoryMeta={metaText}
+      topicCategory={project.category}
       excerpt={project.description}
       accentHoverColor="group-hover:text-blue-300"
     />

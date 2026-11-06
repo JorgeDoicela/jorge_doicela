@@ -120,7 +120,7 @@ export function CategoryNav({
                                     onSelectCategory(cat.id);
                                 }
                             }}
-                            className={`px-3 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${isSelected
+                            className={`px-3 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 transition-colors duration-150 cursor-pointer select-none ${isSelected
                                     ? 'glass-convex-panel text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
                                     : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
@@ -148,7 +148,7 @@ export function CategoryNav({
                                     onSelectCategory(tax.id);
                                 }
                             }}
-                            className={`px-3 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${isSelected
+                            className={`px-3 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 transition-colors duration-150 cursor-pointer select-none ${isSelected
                                     ? 'glass-convex-panel text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
                                     : 'text-zinc-500 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}

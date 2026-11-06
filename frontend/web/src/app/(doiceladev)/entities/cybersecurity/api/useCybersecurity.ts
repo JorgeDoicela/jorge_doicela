@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { SecurityPost } from '../types';
-import { API_URL } from '../../../shared';
+import { API_URL, useFuzzyFilter } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useCybersecurity(
@@ -11,7 +11,7 @@ export function useCybersecurity(
   search: string = '',
 ) {
   const locale = useLocale();
-  const [posts, setPosts] = useState<SecurityPost[]>([]);
+  const [rawPosts, setRawPosts] = useState<SecurityPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,15 +22,13 @@ export function useCybersecurity(
 
       try {
         const params = new URLSearchParams();
-        if (category && category !== 'all') params.append('category', category);
-        if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/doiceladev/cybersecurity${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<SecurityPost[] | { data: SecurityPost[] }>(url);
 
         const list = Array.isArray(data) ? data : data.data || [];
-        setPosts(list);
+        setRawPosts(list);
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
         console.error('Error al obtener posts de ciberseguridad:', msg);
@@ -41,7 +39,18 @@ export function useCybersecurity(
     };
 
     fetchSecurity();
-  }, [category, search, locale]);
+  }, [locale]);
+
+  const posts = useFuzzyFilter(rawPosts, {
+    category,
+    search,
+    searchKeys: [
+      { name: 'title', weight: 2.5 },
+      { name: 'tags', weight: 1.8 },
+      { name: 'category', weight: 1.2 },
+      { name: 'excerpt', weight: 0.8 },
+    ],
+  });
 
   return { posts, loading, error };
 }

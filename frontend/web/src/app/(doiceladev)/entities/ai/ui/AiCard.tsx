@@ -28,6 +28,7 @@ export function AiCard({ resource }: AiCardProps) {
       category="ai"
       coverImage={resource.coverImage}
       categoryMeta={metaText}
+      topicCategory={resource.category}
       excerpt={resource.description}
       accentHoverColor="group-hover:text-purple-300"
     />

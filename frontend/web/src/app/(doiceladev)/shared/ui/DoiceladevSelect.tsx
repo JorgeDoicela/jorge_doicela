@@ -219,7 +219,7 @@ export function DoiceladevSelect<T extends string | number = string>({
         aria-haspopup="listbox"
         aria-controls={listboxId}
         aria-label={ariaLabel || selectedOption?.label || placeholder}
-        className={`w-full flex items-center justify-between gap-2 text-blue-600 dark:text-blue-400 bg-white/85 dark:bg-black/40 border border-slate-300/80 dark:border-white/10 glass-convex-panel shadow-sm hover:shadow hover:border-blue-500/40 dark:hover:border-blue-400/40 active:scale-[0.98] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${buttonClassName}`}
+        className={`w-full flex items-center justify-between gap-2 text-slate-800 dark:text-zinc-200 bg-white/85 dark:bg-black/40 border border-slate-300/80 dark:border-white/10 glass-convex-panel shadow-sm hover:shadow hover:border-slate-400/60 dark:hover:border-white/25 active:scale-[0.98] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${buttonClassName}`}
       >
         <span className="truncate flex items-center gap-1.5 tracking-tight">
           {selectedOption?.icon && (

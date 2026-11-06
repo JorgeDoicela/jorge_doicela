@@ -26,6 +26,7 @@ export function SecurityCard({ post }: SecurityCardProps) {
       category="cybersecurity"
       coverImage={post.coverImage}
       categoryMeta={metaText}
+      topicCategory={post.category}
       excerpt={post.excerpt}
       accentHoverColor="group-hover:text-rose-300"
     />

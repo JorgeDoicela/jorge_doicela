@@ -35,6 +35,75 @@ export interface DoiceladevCardExcerptProps {
   className?: string;
 }
 
+const CANONICAL_CATEGORY_MAP: Record<string, string> = {
+  // CVE
+  cve_analysis: 'cve_analysis',
+  analisis_de_cve: 'cve_analysis',
+  análisis_de_cve: 'cve_analysis',
+  // Hardening
+  hardening_guide: 'hardening_guide',
+  guias_de_bastionado: 'hardening_guide',
+  guías_de_bastionado: 'hardening_guide',
+  // Advisory
+  advisory: 'advisory',
+  avisos_de_seguridad: 'advisory',
+  // Writeup
+  writeup: 'writeup',
+  writeups_tecnicos: 'writeup',
+  writeups_técnicos: 'writeup',
+  // Pentest
+  pentest: 'pentest',
+  pruebas_de_intrusion: 'pentest',
+  pruebas_de_intrusión: 'pentest',
+  // Infrastructure
+  servers: 'servers',
+  servidores_linux: 'servers',
+  servidores_y_linux: 'servers',
+  'servidores_&_linux': 'servers',
+  ci_cd: 'ci_cd',
+  ci_cd_despliegues: 'ci_cd',
+  'ci_cd_&_despliegues': 'ci_cd',
+  containers: 'containers',
+  contenedores_docker: 'containers',
+  'contenedores_&_docker': 'containers',
+  // Web & Frameworks
+  web: 'web',
+  ecosistema_web: 'web',
+  frameworks: 'frameworks',
+  frameworks_web: 'frameworks',
+  'frameworks_&_web': 'frameworks',
+  // AI
+  mcp_server: 'mcp_server',
+  servidores_mcp: 'mcp_server',
+  llm: 'llm',
+  modelos_llm: 'llm',
+  agent: 'agent',
+  frameworks_agenticos: 'agent',
+  frameworks_agénticos: 'agent',
+  // Development
+  backend: 'backend',
+  backend_apis: 'backend',
+  'backend_&_apis': 'backend',
+  frontend: 'frontend',
+  frontend_ui: 'frontend',
+  'frontend_&_ui': 'frontend',
+  mobile: 'mobile',
+  movil_multiplataforma: 'mobile',
+  móvil_multiplataforma: 'mobile',
+  'móvil_&_multiplataforma': 'mobile',
+  architecture: 'architecture',
+  arquitectura_de_software: 'architecture',
+  clean_code: 'clean_code',
+  codigo_limpio: 'clean_code',
+  código_limpio: 'clean_code',
+  devops: 'devops',
+  cloud_devops: 'devops',
+  'cloud_&_devops': 'devops',
+  hardening: 'hardening',
+  seguridad_bastionado: 'hardening',
+  'seguridad_&_bastionado': 'hardening',
+};
+
 /**
  * DoiceladevCardMeta - Nivel 1 (Módulo) y Nivel 2 (Categoría) desacoplados.
  * Nivel 1 es navegable hacia el módulo correspondiente (/${category}).
@@ -78,12 +147,19 @@ export function DoiceladevCardMeta({
   const categoryHref = React.useMemo(() => {
     const raw = topicCategory || rawCategoryPart;
     if (!raw) return null;
-    const slug = raw
+    const cleaned = raw
       .toLowerCase()
       .trim()
-      .replace(/[\s&]+/g, '_')
+      .replace(/[\s&/]+/g, '_')
       .replace(/_+/g, '_');
-    return `/categories/${encodeURIComponent(slug)}`;
+
+    const unaccented = cleaned.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const canonicalSlug =
+      CANONICAL_CATEGORY_MAP[cleaned] ||
+      CANONICAL_CATEGORY_MAP[unaccented] ||
+      unaccented;
+
+    return `/categories/${encodeURIComponent(canonicalSlug)}`;
   }, [topicCategory, rawCategoryPart]);
 
   if (!categoryMeta) return null;
@@ -177,7 +253,7 @@ export function DoiceladevCard({
   accentHoverColor = 'group-hover:text-cyan-300',
 }: DoiceladevCardProps) {
   return (
-    <div className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-blue-500/30 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none">
+    <div className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 hover:bg-white dark:hover:bg-[#1c2938] border border-slate-200/80 dark:border-white/[0.07] hover:border-slate-300 dark:hover:border-white/15 transition-all duration-200 flex flex-col justify-between h-full group shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] dark:shadow-none">
       <div className="space-y-3.5">
         <Link href={href} className="block overflow-hidden rounded-xl focus:outline-none" tabIndex={-1}>
           <ArticleCover

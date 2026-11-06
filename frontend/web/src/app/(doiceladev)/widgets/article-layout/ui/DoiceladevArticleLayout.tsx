@@ -123,7 +123,7 @@ export function DoiceladevArticleLayout({
 
                     <Link
                       href={categoryHref}
-                      className="text-blue-600 dark:text-blue-400 hover:underline font-semibold transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                      className="text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] font-medium transition-colors py-0.5 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
                     >
                       {categoryLabel}
                     </Link>
@@ -132,11 +132,14 @@ export function DoiceladevArticleLayout({
                       <React.Fragment key={idx}>
                         <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
                         {bc.href ? (
-                          <Link href={bc.href} className="hover:text-[var(--foreground)] transition-colors py-0.5">
+                          <Link
+                            href={bc.href}
+                            className="text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] font-medium transition-colors py-0.5"
+                          >
                             {bc.label}
                           </Link>
                         ) : (
-                          <span className="text-slate-700 dark:text-zinc-300 font-medium">{bc.label}</span>
+                          <span className="text-slate-600 dark:text-zinc-400 font-medium">{bc.label}</span>
                         )}
                       </React.Fragment>
                     ))}

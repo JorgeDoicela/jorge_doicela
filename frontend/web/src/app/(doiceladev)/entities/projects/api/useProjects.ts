@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocale } from 'next-intl';
 import { Project } from '../types';
-import { API_URL } from '../../../shared';
+import { API_URL, useFuzzyFilter } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useProjects(
@@ -12,7 +12,7 @@ export function useProjects(
   status?: string,
 ) {
   const locale = useLocale();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [rawProjects, setRawProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,16 +23,13 @@ export function useProjects(
 
       try {
         const params = new URLSearchParams();
-        if (category && category !== 'all') params.append('category', category);
-        if (status && status !== 'all') params.append('status', status);
-        if (search.trim()) params.append('search', search.trim());
         if (locale) params.append('lang', locale);
 
         const url = `${API_URL}/doiceladev/projects${params.toString() ? `?${params.toString()}` : ''}`;
         const data = await safeFetchJson<Project[] | { data: Project[] }>(url);
 
         const list = Array.isArray(data) ? data : data.data || [];
-        setProjects(list);
+        setRawProjects(list);
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
         console.error('Error al obtener proyectos:', msg);
@@ -43,7 +40,25 @@ export function useProjects(
     };
 
     fetchProjects();
-  }, [category, status, search, locale]);
+  }, [locale]);
+
+  // Pre-filtrado opcional por status si está definido
+  const statusFiltered = useMemo(() => {
+    if (!status || status === 'all') return rawProjects;
+    const sLower = status.trim().toLowerCase();
+    return rawProjects.filter((p) => p.status?.toLowerCase() === sLower);
+  }, [rawProjects, status]);
+
+  const projects = useFuzzyFilter(statusFiltered, {
+    category,
+    search,
+    searchKeys: [
+      { name: 'name', weight: 2.5 },
+      { name: 'techStack', weight: 1.8 },
+      { name: 'category', weight: 1.2 },
+      { name: 'description', weight: 0.8 },
+    ],
+  });
 
   return { projects, loading, error };
 }

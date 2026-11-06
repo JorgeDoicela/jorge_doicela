@@ -12,11 +12,17 @@ type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    // fallback
+  }
   const locale = await getLocale();
   const t = await getTranslations('CategoriesHub');
 
   const res = await serverGet<CategoryArticlesResponse>(
-    `/doiceladev/categories/${encodeURIComponent(slug)}?lang=${locale}`,
+    `/doiceladev/categories/${encodeURIComponent(decodedSlug)}?lang=${locale}`,
   ).catch(() => null);
 
   if (!res || !res.category) {
@@ -34,12 +40,18 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function CategoryHubPage({ params }: Params) {
   const { slug } = await params;
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    // fallback
+  }
   const locale = await getLocale();
   const t = await getTranslations('CategoriesHub');
   const tNav = await getTranslations('Nav');
 
   const res = await serverGet<CategoryArticlesResponse>(
-    `/doiceladev/categories/${encodeURIComponent(slug)}?lang=${locale}&limit=50`,
+    `/doiceladev/categories/${encodeURIComponent(decodedSlug)}?lang=${locale}&limit=50`,
   ).catch(() => null);
 
   if (!res || !res.category) {
@@ -63,7 +75,7 @@ export default async function CategoryHubPage({ params }: Params) {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors py-0.5 rounded focus:outline-none"
+              className="inline-flex items-center gap-1 text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] transition-colors py-0.5 rounded focus:outline-none"
               title={tNav('home')}
             >
               <Home className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
@@ -74,7 +86,7 @@ export default async function CategoryHubPage({ params }: Params) {
 
             <Link
               href="/categories"
-              className="text-blue-600 dark:text-cyan-400 hover:underline font-semibold transition-colors py-0.5"
+              className="text-slate-500 dark:text-zinc-400 hover:text-[var(--foreground)] font-medium transition-colors py-0.5"
             >
               {tNav('categories')}
             </Link>

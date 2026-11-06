@@ -3,12 +3,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { ForumTopic } from '../types';
-import { API_URL } from '../../../shared';
+import { API_URL, useFuzzyFilter } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
 
 export function useForum(category: string = 'all', search: string = '') {
   const locale = useLocale();
-  const [topics, setTopics] = useState<ForumTopic[]>([]);
+  const [rawTopics, setRawTopics] = useState<ForumTopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,15 +18,13 @@ export function useForum(category: string = 'all', search: string = '') {
 
     try {
       const params = new URLSearchParams();
-      if (category !== 'all') params.append('category', category);
-      if (search.trim()) params.append('search', search.trim());
       if (locale) params.append('lang', locale);
 
       const url = `${API_URL}/doiceladev/forum${params.toString() ? `?${params.toString()}` : ''}`;
       const data = await safeFetchJson<ForumTopic[] | { data: ForumTopic[] }>(url);
 
       const list = Array.isArray(data) ? data : data.data || [];
-      setTopics(list);
+      setRawTopics(list);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error('Error al obtener foros:', msg);
@@ -34,11 +32,23 @@ export function useForum(category: string = 'all', search: string = '') {
     } finally {
       setLoading(false);
     }
-  }, [category, search, locale]);
+  }, [locale]);
 
   useEffect(() => {
     fetchTopics();
   }, [fetchTopics]);
+
+  const topics = useFuzzyFilter(rawTopics, {
+    category,
+    search,
+    searchKeys: [
+      { name: 'title', weight: 2.5 },
+      { name: 'tags', weight: 1.8 },
+      { name: 'category', weight: 1.2 },
+      { name: 'author', weight: 1.0 },
+      { name: 'content', weight: 0.8 },
+    ],
+  });
 
   return { topics, loading, error, refetch: fetchTopics };
 }

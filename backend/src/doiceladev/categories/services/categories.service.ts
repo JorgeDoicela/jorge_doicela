@@ -45,6 +45,70 @@ export interface CategoryArticlesResponse {
   totalPages: number;
 }
 
+const CATEGORY_ALIAS_MAP: Record<string, string> = {
+  // CVE
+  analisis_de_cve: 'cve_analysis',
+  análisis_de_cve: 'cve_analysis',
+  cve_analysis: 'cve_analysis',
+  cve: 'cve_analysis',
+  // Hardening
+  guias_de_bastionado: 'hardening_guide',
+  guías_de_bastionado: 'hardening_guide',
+  hardening_guide: 'hardening_guide',
+  // Advisory
+  avisos_de_seguridad: 'advisory',
+  advisory: 'advisory',
+  // Writeup
+  writeups_tecnicos: 'writeup',
+  writeups_técnicos: 'writeup',
+  writeup: 'writeup',
+  // Pentest
+  pruebas_de_intrusion: 'pentest',
+  pruebas_de_intrusión: 'pentest',
+  pentest: 'pentest',
+  // Servers
+  servidores_linux: 'servers',
+  servidores_y_linux: 'servers',
+  servers: 'servers',
+  // CI/CD
+  ci_cd_despliegues: 'ci_cd',
+  ci_cd: 'ci_cd',
+  // Containers
+  contenedores_docker: 'containers',
+  containers: 'containers',
+  // Web
+  ecosistema_web: 'web',
+  web: 'web',
+  // Frameworks
+  frameworks_web: 'frameworks',
+  frameworks: 'frameworks',
+  // AI
+  servidores_mcp: 'mcp_server',
+  mcp_server: 'mcp_server',
+  modelos_llm: 'llm',
+  llm: 'llm',
+  frameworks_agenticos: 'agent',
+  frameworks_agénticos: 'agent',
+  agent: 'agent',
+  // Development
+  backend_apis: 'backend',
+  backend: 'backend',
+  frontend_ui: 'frontend',
+  frontend: 'frontend',
+  movil_multiplataforma: 'mobile',
+  móvil_multiplataforma: 'mobile',
+  mobile: 'mobile',
+  arquitectura_de_software: 'architecture',
+  architecture: 'architecture',
+  codigo_limpio: 'clean_code',
+  código_limpio: 'clean_code',
+  clean_code: 'clean_code',
+  cloud_devops: 'devops',
+  devops: 'devops',
+  seguridad_bastionado: 'hardening',
+  hardening: 'hardening',
+};
+
 @Injectable()
 export class CategoriesService {
   private readonly logger = new Logger(CategoriesService.name);
@@ -199,7 +263,25 @@ export class CategoriesService {
     categorySlug: string,
     query: GetCategoryArticlesQueryDto,
   ): Promise<CategoryArticlesResponse> {
-    const normalizedSlug = categorySlug.trim().toLowerCase();
+    let rawSlug = categorySlug || '';
+    try {
+      rawSlug = decodeURIComponent(categorySlug);
+    } catch {
+      // ignore
+    }
+    const cleanSlug = rawSlug
+      .trim()
+      .toLowerCase()
+      .replace(/[\s-]+/g, '_');
+    const unaccented = cleanSlug
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const normalizedSlug =
+      cleanSlug === 'all'
+        ? 'all'
+        : CATEGORY_ALIAS_MAP[cleanSlug] ||
+          CATEGORY_ALIAS_MAP[unaccented] ||
+          cleanSlug;
     const lang = query.lang || 'es';
     const isEn = lang === 'en';
     const page = Math.max(1, Number(query.page) || 1);

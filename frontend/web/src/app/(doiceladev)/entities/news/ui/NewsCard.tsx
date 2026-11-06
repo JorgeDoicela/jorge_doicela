@@ -37,6 +37,7 @@ export function NewsCard({ article }: NewsCardProps) {
       category="news"
       coverImage={article.coverImage}
       categoryMeta={metaText}
+      topicCategory={article.category}
       excerpt={article.excerpt}
       accentHoverColor="group-hover:text-cyan-300"
     />

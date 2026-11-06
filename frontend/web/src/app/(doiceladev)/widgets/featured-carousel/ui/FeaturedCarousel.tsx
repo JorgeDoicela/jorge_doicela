@@ -169,7 +169,7 @@ export function FeaturedCarousel({
               <button
                 type="button"
                 onClick={handlePrev}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-white hover:border-blue-500/30 dark:hover:border-white/25 active:scale-90 transition-all shadow-sm cursor-pointer select-none"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/25 active:scale-90 transition-all shadow-sm cursor-pointer select-none"
                 title={tHome('prevFeatured')}
                 aria-label={tHome('prevFeatured')}
               >
@@ -180,7 +180,7 @@ export function FeaturedCarousel({
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-white hover:border-blue-500/30 dark:hover:border-white/25 active:scale-90 transition-all shadow-sm cursor-pointer select-none"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl glass-convex-panel border border-slate-200/80 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/25 active:scale-90 transition-all shadow-sm cursor-pointer select-none"
                 title={tHome('nextFeatured')}
                 aria-label={tHome('nextFeatured')}
               >

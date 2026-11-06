@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
 import { useCategoriesHub } from '../../entities/categories';
+import { useFuzzyFilter } from '../../shared';
 
 export default function CategoriesDirectoryPage() {
   const tNav = useTranslations('Nav');
@@ -12,16 +13,14 @@ export default function CategoriesDirectoryPage() {
   const [search, setSearch] = useState('');
   const { categories, loading, error } = useCategoriesHub();
 
-  const filteredCategories = useMemo(() => {
-    if (!search.trim()) return categories;
-    const term = search.trim().toLowerCase();
-    return categories.filter(
-      (cat) =>
-        cat.label.toLowerCase().includes(term) ||
-        cat.slug.toLowerCase().includes(term) ||
-        cat.modules.some((m) => m.toLowerCase().includes(term)),
-    );
-  }, [categories, search]);
+  const filteredCategories = useFuzzyFilter(categories, {
+    search,
+    searchKeys: [
+      { name: 'label', weight: 2.5 },
+      { name: 'slug', weight: 1.5 },
+      { name: 'modules', weight: 1.0 },
+    ],
+  });
 
   return (
     <DoiceladevPageLayout
@@ -85,7 +84,7 @@ export default function CategoriesDirectoryPage() {
                 <Link
                   key={cat.slug}
                   href={`/categories/${cat.slug}`}
-                  className="group p-5 sm:p-6 rounded-2xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-blue-500/30 dark:hover:border-white/15 transition-all duration-300 shadow-md hover:shadow-xl flex items-center cursor-pointer"
+                  className="group p-5 sm:p-6 rounded-2xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-slate-300 dark:hover:border-white/15 transition-all duration-300 shadow-md hover:shadow-xl flex items-center cursor-pointer"
                 >
                   <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
                     {cat.label}

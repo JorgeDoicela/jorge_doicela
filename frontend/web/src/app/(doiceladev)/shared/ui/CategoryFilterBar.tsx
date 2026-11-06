@@ -20,27 +20,27 @@ const ACCENT_STYLES: Record<
   { active: string; badge: string }
 > = {
   cyan: {
-    active: 'glass-btn-neumorphic text-cyan-600 dark:text-cyan-400 font-bold shadow-sm',
+    active: 'glass-convex-panel text-[var(--foreground)] font-semibold shadow-xs',
     badge: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300',
   },
   blue: {
-    active: 'glass-btn-neumorphic text-blue-600 dark:text-blue-400 font-bold shadow-sm',
+    active: 'glass-convex-panel text-[var(--foreground)] font-semibold shadow-xs',
     badge: 'bg-blue-500/15 text-blue-700 dark:text-blue-300',
   },
   purple: {
-    active: 'glass-btn-neumorphic text-purple-600 dark:text-purple-400 font-bold shadow-sm',
+    active: 'glass-convex-panel text-[var(--foreground)] font-semibold shadow-xs',
     badge: 'bg-purple-500/15 text-purple-700 dark:text-purple-300',
   },
   amber: {
-    active: 'glass-btn-neumorphic text-amber-600 dark:text-amber-400 font-bold shadow-sm',
+    active: 'glass-convex-panel text-[var(--foreground)] font-semibold shadow-xs',
     badge: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
   },
   emerald: {
-    active: 'glass-btn-neumorphic text-emerald-600 dark:text-emerald-400 font-bold shadow-sm',
+    active: 'glass-convex-panel text-[var(--foreground)] font-semibold shadow-xs',
     badge: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
   },
   rose: {
-    active: 'glass-btn-neumorphic text-rose-600 dark:text-rose-400 font-bold shadow-sm',
+    active: 'glass-convex-panel text-[var(--foreground)] font-semibold shadow-xs',
     badge: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
   },
 };
@@ -145,10 +145,10 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
                 role="tab"
                 aria-selected={isSelected}
                 onClick={() => onSelect(option.id)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer select-none shrink-0 ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs whitespace-nowrap outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:focus-visible:ring-cyan-400/40 transition-colors duration-150 cursor-pointer select-none shrink-0 border ${
                   isSelected
-                    ? styles.active
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'
+                    ? `${styles.active} border-slate-300/80 dark:border-white/15`
+                    : 'border-transparent text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5 font-medium'
                 }`}
               >
                 <span>{getOptionLabel(option)}</span>

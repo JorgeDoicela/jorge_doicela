@@ -54,10 +54,10 @@ export function RelatedArticlesNav({
                 coverImage={item.coverImage}
               />
 
-              {/* Categoría técnica en tipografía mono */}
+              {/* Categoría técnica en tipografía mono: Nivel 1 • Nivel 2 */}
               <div className="text-[11px] font-mono">
                 <span className="font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
-                  {tNav(item.category as any) || item.categoryMeta}
+                  {item.categoryMeta || tNav(item.category as any)}
                 </span>
               </div>
 

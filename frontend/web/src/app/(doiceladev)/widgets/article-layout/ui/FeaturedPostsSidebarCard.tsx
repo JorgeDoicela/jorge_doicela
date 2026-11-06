@@ -71,11 +71,11 @@ export function FeaturedPostsSidebarCard({
                 href={item.href}
                 className="group flex items-start justify-between gap-3 p-2.5 -mx-2.5 rounded-2xl hover:bg-black/[0.035] dark:hover:bg-white/[0.035] active:scale-[0.99] transition-all duration-200"
               >
-                {/* Título y metadatos */}
+                {/* Título y metadatos: Nivel 1 • Nivel 2 */}
                 <div className="flex-1 min-w-0 space-y-1">
-                  {moduleLabel && (
+                  {(item.categoryMeta || moduleLabel) && (
                     <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate uppercase tracking-wider">
-                      {moduleLabel}
+                      {item.categoryMeta || moduleLabel}
                     </span>
                   )}
                   <h6 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">

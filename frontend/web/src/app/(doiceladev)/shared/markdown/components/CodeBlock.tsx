@@ -392,12 +392,12 @@ export function CodeBlock({ code, language = 'text', meta }: CodeBlockProps) {
 }
 
 /**
- * Componente para código en línea (`inline code`) estilo Apple
+ * Componente para código en línea (`inline code`) con calibración sobria y sin bordes
  */
-export function InlineCode({ children, ...props }: React.HTMLAttributes<HTMLElement>) {
+export function InlineCode({ children, className = '', ...props }: React.HTMLAttributes<HTMLElement>) {
   return (
     <code
-      className="px-1.5 py-0.5 rounded-md bg-slate-200/50 dark:bg-zinc-800/80 text-slate-850 dark:text-zinc-150 font-mono text-[0.875em] font-medium tracking-tight align-baseline select-text border-0"
+      className={`px-1.5 py-0.5 rounded-md bg-slate-200/55 dark:bg-zinc-800/80 text-slate-800 dark:text-zinc-200 font-mono text-[0.875em] font-medium tracking-tight align-baseline select-text border-0 ${className}`.trim()}
       {...props}
     >
       {children}

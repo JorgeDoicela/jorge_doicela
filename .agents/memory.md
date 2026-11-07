@@ -508,3 +508,6 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     3. Cero acoplamientos ni dependencias cruzadas con `KartexNavigationSidebar` o el módulo lector.
   - **Validación de Calidad:** `pnpm --filter web typecheck` ejecutado y aprobado con código 0.
 
+
+* **Calibración Óptima de Código en Línea en DoicelaDev (`InlineCode`):**
+  - **Ajuste:** Fondo neutro suave sin bordes (`bg-slate-200/55 dark:bg-zinc-800/80 border-0`), peso natural `font-medium` (500) y color grafito contrastado `text-slate-800 dark:text-zinc-200`, eliminando clases no estándar (`text-slate-850`) y previniendo el efecto de resaltador invasivo o recargado.

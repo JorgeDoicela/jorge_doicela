@@ -14,3 +14,4 @@ export { ResizeBorderHandle } from './ResizeBorderHandle';
 export { DraggableEdgeTab } from './DraggableEdgeTab';
 export { OngoingExpansionNotice } from './OngoingExpansionNotice';
 export { EdgePeekStrip } from './EdgePeekStrip';
+export { MobileBottomSheet, type MobileBottomSheetProps } from './MobileBottomSheet';

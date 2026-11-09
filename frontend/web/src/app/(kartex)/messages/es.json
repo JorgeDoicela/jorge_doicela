@@ -403,7 +403,7 @@
     "ctaTitle": "Comienza tu Estudio Bíblico Hoy",
     "ctaSubtitle": "Accede de forma inmediata a Kartex sin necesidad de registrarte ni realizar instalaciones complejas.",
     "ctaButton": "Comenzar Lectura y Estudio",
-    "footerCopyright": "© {year} Jorge Doicela. Todos los derechos reservados.",
+    "footerCopyright": "Kartex © {year} • Jorge Doicela. Todos los derechos reservados.",
     "footerHome": "Inicio",
     "footerPortfolio": "Portafolio",
     "footerDoiceladev": "DoicelaDev",
@@ -500,9 +500,7 @@
     "mobilePsalmTitle": "Salmos 23"
   },
   "StudyLayout": {
-    "title": "Jorge Doicela © {year} • Kartex",
-    "presentation": "Presentación",
-    "holyScriptures": "Sagradas Escrituras"
+    "title": "Kartex © {year} • Jorge Doicela"
   },
   "Parallel": {
     "title": "Modo Paralelo Multiversión",
@@ -999,6 +997,10 @@
     "activeItemsSummaryDefault": "Capítulos activos listos para estudiar: Génesis 1, 2 y 3 en 7 traducciones."
   },
   "ReadingView": {
+    "highlights": "Subrayado",
+    "actions": "Acciones",
+    "verseActions": "Acciones de Versículo",
+    "copy": "Copiar",
     "chapter": "Capítulo",
     "versesCountAnalytical": "{count} versículos en vista analítica",
     "copyVerseTooltip": "Copiar cita con referencia",

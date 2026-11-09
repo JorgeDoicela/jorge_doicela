@@ -84,7 +84,7 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
   return (
     <nav
       aria-label={tToolbar('chapterNavigation')}
-      className="w-full flex items-center justify-between gap-4 pt-4 pb-2 print:hidden select-none"
+      className="w-full hidden sm:flex items-center justify-between gap-4 pt-4 pb-2 print:hidden select-none"
     >
       {canGoPrev ? (
         <button

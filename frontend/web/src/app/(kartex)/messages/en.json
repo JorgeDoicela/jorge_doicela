@@ -403,7 +403,7 @@
     "ctaTitle": "Begin Your Scripture Study Today",
     "ctaSubtitle": "Get instant access to Kartex without any mandatory signup or complicated setups.",
     "ctaButton": "Start Reading and Study",
-    "footerCopyright": "© {year} Jorge Doicela. All rights reserved.",
+    "footerCopyright": "Kartex © {year} • Jorge Doicela. All rights reserved.",
     "footerHome": "Home",
     "footerPortfolio": "Portfolio",
     "footerDoiceladev": "DoicelaDev",
@@ -500,9 +500,7 @@
     "mobilePsalmTitle": "Psalm 23"
   },
   "StudyLayout": {
-    "title": "Jorge Doicela © {year} • Kartex",
-    "presentation": "Overview",
-    "holyScriptures": "Holy Scriptures"
+    "title": "Kartex © {year} • Jorge Doicela"
   },
   "Parallel": {
     "title": "Multi-Version Parallel Mode",
@@ -999,6 +997,10 @@
     "activeItemsSummaryDefault": "Active chapters ready for study: Genesis 1, 2, and 3 across 7 translations."
   },
   "ReadingView": {
+    "highlights": "Highlights",
+    "actions": "Actions",
+    "verseActions": "Verse Actions",
+    "copy": "Copy",
     "chapter": "Chapter",
     "versesCountAnalytical": "{count} verses in analytical view",
     "copyVerseTooltip": "Copy quote with reference",

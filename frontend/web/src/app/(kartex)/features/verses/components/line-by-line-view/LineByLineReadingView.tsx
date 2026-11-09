@@ -194,6 +194,8 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
   };
 
   const handleOpenExegesis = (verse: Verse) => {
+    setSelectedVerseNumbers([]);
+    setToolbarPosition(null);
     if (passageContext) {
       const bId =
         typeof verse.book === 'object' && verse.book !== null

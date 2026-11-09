@@ -1,7 +1,6 @@
 'use client';
 
 import React, { Suspense, useEffect } from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
@@ -356,17 +355,8 @@ function KartexStudyWorkspace({ children }: { children: React.ReactNode }) {
 
           {/* Footer Editorial al final del Canvas de Lectura */}
           <footer className="border-t border-border/80 w-full py-6 mt-12 bg-transparent print:hidden max-w-[1780px] mx-auto">
-            <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-accents-5">
+            <div className="w-full flex justify-center items-center text-center text-[11px] font-mono text-accents-5">
               <div>{t('title', { year: new Date().getFullYear().toString() })}</div>
-              <div className="flex gap-4">
-                <Link href="/" className="hover:text-foreground transition-colors duration-150">
-                  {t('presentation')}
-                </Link>
-                <span className="text-accents-3">|</span>
-                <span className="hover:text-foreground transition-colors duration-150 cursor-default">
-                  {t('holyScriptures')}
-                </span>
-              </div>
             </div>
           </footer>
         </main>

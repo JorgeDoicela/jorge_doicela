@@ -175,6 +175,8 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
   };
 
   const handleOpenExegesis = (verse: Verse) => {
+    setSelectedVerseNumbers([]);
+    setToolbarPosition(null);
     if (passageContext) {
       const bId =
         typeof verse.book === 'object' && verse.book !== null
@@ -342,7 +344,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       )}
 
       {/* Nota de Atribución Legal Oficial */}
-      <div className="pt-8 mt-8 border-t border-border/60 text-center">
+      <div className="pt-6 mt-6 text-center">
         <p className="text-[11px] text-zinc-400 dark:text-zinc-500 sepia:text-[#8C765C] font-mono leading-relaxed max-w-xl mx-auto">
           {translationAbbr === 'NBLA' && t('legalNotices.NBLA')}
           {translationAbbr === 'NTV' && t('legalNotices.NTV')}

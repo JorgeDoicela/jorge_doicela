@@ -21,6 +21,7 @@ export interface StudySidePanelProps {
     defaultWidth?: number;
     storageKey?: string;
     collapseTitle?: string;
+    allowBackgroundInteraction?: boolean;
     className?: string;
     children: React.ReactNode;
 }
@@ -94,6 +95,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
     defaultWidth,
     storageKey,
     collapseTitle,
+    allowBackgroundInteraction = true,
     className = '',
     children,
 }) => {
@@ -126,6 +128,12 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
 
     const panelRef = useRef<HTMLElement | null>(null);
 
+    // Soporte táctil y de puntero interactivo en tiempo real para Bottom Sheet en móvil
+    const [sheetDragOffsetY, setSheetDragOffsetY] = useState(0);
+    const [isSheetDragging, setIsSheetDragging] = useState(false);
+    const [isSheetClosing, setIsSheetClosing] = useState(false);
+    const sheetStartYRef = useRef<number | null>(null);
+
     const handleClose = useCallback(() => {
         // Desenfocar elementos activos dentro del panel antes de ocultarlo para cumplir W3C WAI-ARIA
         if (panelRef.current && typeof document !== 'undefined' && panelRef.current.contains(document.activeElement)) {
@@ -134,33 +142,149 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         onClose?.();
     }, [onClose]);
 
-    // Soporte táctil de arrastre hacia abajo para cerrar Bottom Sheet en móvil
-    const touchStartYRef = useRef<number | null>(null);
-
-    const handleSheetTouchStart = useCallback((e: React.TouchEvent) => {
-        touchStartYRef.current = e.touches[0].clientY;
-    }, []);
-
-    const handleSheetTouchEnd = useCallback((e: React.TouchEvent) => {
-        if (touchStartYRef.current === null) return;
-        const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-        if (deltaY > 50) {
+    const triggerAnimatedSheetClose = useCallback(() => {
+        setIsSheetClosing(true);
+        setTimeout(() => {
             handleClose();
-        }
-        touchStartYRef.current = null;
+            setIsSheetClosing(false);
+            setSheetDragOffsetY(0);
+        }, 220);
     }, [handleClose]);
 
-    // Bloqueo de scroll de la página de fondo en móvil mientras el Bottom Sheet está abierto
+    const handleSheetDragStart = useCallback((clientY: number) => {
+        sheetStartYRef.current = clientY;
+        setIsSheetDragging(true);
+    }, []);
+
+    const handleSheetDragMove = useCallback((clientY: number) => {
+        if (sheetStartYRef.current === null) return;
+        const deltaY = clientY - sheetStartYRef.current;
+        if (deltaY > 0) {
+            setSheetDragOffsetY(deltaY);
+        } else {
+            setSheetDragOffsetY(deltaY * 0.2);
+        }
+    }, []);
+
+    const handleSheetDragEnd = useCallback(() => {
+        if (sheetStartYRef.current === null) return;
+        setIsSheetDragging(false);
+        sheetStartYRef.current = null;
+        if (sheetDragOffsetY > 80) {
+            triggerAnimatedSheetClose();
+        } else {
+            setSheetDragOffsetY(0);
+        }
+    }, [sheetDragOffsetY, triggerAnimatedSheetClose]);
+
+    const handleSheetTouchStart = useCallback((e: React.TouchEvent) => {
+        handleSheetDragStart(e.touches[0].clientY);
+    }, [handleSheetDragStart]);
+
+    const handleSheetTouchMove = useCallback((e: React.TouchEvent) => {
+        handleSheetDragMove(e.touches[0].clientY);
+    }, [handleSheetDragMove]);
+
+    const handleSheetTouchEnd = useCallback(() => {
+        handleSheetDragEnd();
+    }, [handleSheetDragEnd]);
+
+    const handleSheetPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        handleSheetDragStart(e.clientY);
+    }, [handleSheetDragStart]);
+
+    const handleSheetPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        if (isSheetDragging) {
+            handleSheetDragMove(e.clientY);
+        }
+    }, [isSheetDragging, handleSheetDragMove]);
+
+    const handleSheetPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+            e.currentTarget.releasePointerCapture(e.pointerId);
+        }
+        handleSheetDragEnd();
+    }, [handleSheetDragEnd]);
+
+    // Restablecer estados de arrastre al abrir
+    useEffect(() => {
+        if (isOpen) {
+            setSheetDragOffsetY(0);
+            setIsSheetDragging(false);
+            setIsSheetClosing(false);
+        }
+    }, [isOpen]);
+
+    // Bloqueo de scroll de la página de fondo en móvil (solo cuando allowBackgroundInteraction es false)
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        if (isOpen && isBottomSheet && window.innerWidth < 1024) {
+        if (isOpen && isBottomSheet && window.innerWidth < 1024 && !allowBackgroundInteraction) {
             const originalOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
                 document.body.style.overflow = originalOverflow;
             };
         }
-    }, [isOpen, isBottomSheet]);
+    }, [isOpen, isBottomSheet, allowBackgroundInteraction]);
+
+    // Interacción Inteligente de Fondo: Permite mover el texto detrás y cierra solo ante tap estático
+    useEffect(() => {
+        if (!isOpen || !isBottomSheet || !allowBackgroundInteraction || typeof window === 'undefined' || window.innerWidth >= 1024) {
+            return;
+        }
+
+        let touchStartPos: { x: number; y: number; time: number } | null = null;
+
+        const handleDocTouchStart = (e: TouchEvent) => {
+            const touch = e.touches[0];
+            touchStartPos = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+        };
+
+        const handleDocTouchEnd = (e: TouchEvent) => {
+            if (!touchStartPos) return;
+            const touch = e.changedTouches[0];
+            const deltaX = Math.abs(touch.clientX - touchStartPos.x);
+            const deltaY = Math.abs(touch.clientY - touchStartPos.y);
+            const elapsed = Date.now() - touchStartPos.time;
+            touchStartPos = null;
+
+            // Si el usuario movió el dedo más de 10px o mantuvo presionado > 450ms,
+            // fue un gesto de desplazamiento de lectura en el texto bíblico, NO un tap de cierre
+            if (deltaX > 10 || deltaY > 10 || elapsed > 450) {
+                return;
+            }
+
+            // Si fue un tap corto y estático fuera del Bottom Sheet
+            const target = e.target as HTMLElement | null;
+            if (panelRef.current && !panelRef.current.contains(target)) {
+                if (target?.closest('[data-mobile-dock]') || target?.closest('[data-verse-item]')) {
+                    return;
+                }
+                triggerAnimatedSheetClose();
+            }
+        };
+
+        const handleDocMouseDown = (e: MouseEvent) => {
+            const target = e.target as HTMLElement | null;
+            if (panelRef.current && !panelRef.current.contains(target)) {
+                if (target?.closest('[data-mobile-dock]') || target?.closest('[data-verse-item]')) {
+                    return;
+                }
+                triggerAnimatedSheetClose();
+            }
+        };
+
+        document.addEventListener('touchstart', handleDocTouchStart, { passive: true });
+        document.addEventListener('touchend', handleDocTouchEnd, { passive: true });
+        document.addEventListener('mousedown', handleDocMouseDown);
+
+        return () => {
+            document.removeEventListener('touchstart', handleDocTouchStart);
+            document.removeEventListener('touchend', handleDocTouchEnd);
+            document.removeEventListener('mousedown', handleDocMouseDown);
+        };
+    }, [isOpen, isBottomSheet, allowBackgroundInteraction, triggerAnimatedSheetClose]);
 
     // Cierre accesible con tecla Escape
     useEffect(() => {
@@ -223,9 +347,9 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         ? Math.max(0.2, Math.min(1, (currentWidth - 100) / 90))
         : undefined;
 
-    // Shell móvil (< lg): Bottom Sheet modal moderno (ancho completo, esquinas superiores redondeadas, sombra profunda)
+    // Shell móvil (< lg): Bottom Sheet modal moderno (ancho completo, esquinas superiores redondeadas, sin sombra invasiva)
     const mobileLayoutClass = isBottomSheet
-        ? 'fixed inset-x-0 bottom-0 top-auto z-50 w-full h-[85vh] max-h-[88vh] rounded-t-3xl sm:rounded-t-[28px] border-t border-border/80 shadow-[0_-12px_48px_rgba(0,0,0,0.35)] dark:shadow-[0_-12px_48px_rgba(0,0,0,0.7)]'
+        ? 'fixed inset-x-0 bottom-0 top-auto z-50 w-full h-[85vh] max-h-[88vh] rounded-t-3xl sm:rounded-t-[28px] border-t border-border/80'
         : `absolute inset-y-0 ${isLeft ? 'border-r left-0' : 'border-l right-0'} z-40 h-full w-[88vw] max-w-[380px] sm:max-w-[420px] border-border`;
 
     const mobileStateClass = isBottomSheet
@@ -247,13 +371,18 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
 
     return (
         <>
-            {/* Cortina oscura backdrop en Móviles (< lg) con transición gradual suave */}
+            {/* Cortina backdrop transparente en Móviles (< lg) sin sombra ni oscurecimiento */}
             <div
                 data-study-panel-backdrop="true"
-                onClick={handleClose}
+                onClick={!allowBackgroundInteraction || !isBottomSheet ? handleClose : undefined}
                 aria-hidden="true"
-                className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-40 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                    }`}
+                className={`fixed inset-0 bg-transparent z-40 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    isOpen
+                        ? isBottomSheet && allowBackgroundInteraction
+                            ? 'opacity-100 pointer-events-none'
+                            : 'opacity-100 pointer-events-auto'
+                        : 'opacity-0 pointer-events-none'
+                }`}
             />
 
             <aside
@@ -268,6 +397,16 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                         [cssVar]: `${currentWidth}px`,
                         '--active-panel-w': isOpen ? `${currentWidth}px` : '0px',
                         opacity: dragOpacity,
+                        transform: isBottomSheet && isSheetClosing
+                            ? 'translateY(100%)'
+                            : isBottomSheet && isSheetDragging
+                                ? `translateY(${Math.max(-20, sheetDragOffsetY)}px)`
+                                : undefined,
+                        transition: isBottomSheet && isSheetDragging
+                            ? 'none'
+                            : isBottomSheet && isSheetClosing
+                                ? 'transform 0.22s cubic-bezier(0.32, 0.72, 0, 1)'
+                                : undefined,
                     } as React.CSSProperties
                 }
                 className={`${mobileLayoutClass} ${mobileStateClass} ${desktopClasses} flex-shrink-0 flex flex-col print:hidden bg-card-bg text-foreground overflow-hidden ${transitionClass} ${className}`}
@@ -288,12 +427,25 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                 {/* Manija táctil de arrastre (Pill) exclusiva para Bottom Sheet en móvil */}
                 {isBottomSheet && (
                     <div
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Arrastrar para cerrar"
+                        onPointerDown={handleSheetPointerDown}
+                        onPointerMove={handleSheetPointerMove}
+                        onPointerUp={handleSheetPointerUp}
                         onTouchStart={handleSheetTouchStart}
+                        onTouchMove={handleSheetTouchMove}
                         onTouchEnd={handleSheetTouchEnd}
-                        className="w-full pt-3 pb-1.5 flex justify-center items-center lg:hidden cursor-grab active:cursor-grabbing select-none shrink-0"
+                        className="w-full pt-3 pb-2 flex justify-center items-center lg:hidden cursor-grab active:cursor-grabbing select-none shrink-0 touch-none group"
                         aria-hidden="true"
                     >
-                        <div className="w-10 h-1.5 rounded-full bg-border/80 dark:bg-zinc-700" />
+                        <div
+                            className={`w-11 h-1.5 rounded-full transition-colors duration-150 ${
+                                isSheetDragging
+                                    ? 'bg-accents-4 scale-105'
+                                    : 'bg-border/90 hover:bg-accents-3 dark:bg-zinc-700'
+                            }`}
+                        />
                     </div>
                 )}
 
@@ -310,9 +462,15 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                     {/* Cabecera Móvil Unificada (si se define title y showMobileHeader está activo) */}
                     {title && showMobileHeader && (
                         <div
+                            onPointerDown={isBottomSheet ? handleSheetPointerDown : undefined}
+                            onPointerMove={isBottomSheet ? handleSheetPointerMove : undefined}
+                            onPointerUp={isBottomSheet ? handleSheetPointerUp : undefined}
                             onTouchStart={isBottomSheet ? handleSheetTouchStart : undefined}
+                            onTouchMove={isBottomSheet ? handleSheetTouchMove : undefined}
                             onTouchEnd={isBottomSheet ? handleSheetTouchEnd : undefined}
-                            className="flex lg:hidden items-center justify-between px-4 py-2.5 border-b border-border/60 shrink-0 select-none"
+                            className={`flex lg:hidden items-center justify-between px-4 py-2.5 border-b border-border/60 shrink-0 select-none ${
+                                isBottomSheet ? 'touch-none cursor-grab active:cursor-grabbing' : ''
+                            }`}
                         >
                             <div className="flex items-center gap-2.5 min-w-0">
                                 {icon && <span className="shrink-0 text-foreground">{icon}</span>}
@@ -321,14 +479,16 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
                                 </span>
                                 {badge}
                             </div>
-                            <button
-                                type="button"
-                                onClick={handleClose}
-                                aria-label={collapseTitle || 'Cerrar panel'}
-                                className="p-1.5 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0 active:scale-95"
-                            >
-                                <X className="w-4 h-4" />
-                            </button>
+                            {!isBottomSheet && (
+                                <button
+                                    type="button"
+                                    onClick={handleClose}
+                                    aria-label={collapseTitle || 'Cerrar panel'}
+                                    className="p-1.5 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-1 transition-colors cursor-pointer shrink-0 active:scale-95"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            )}
                         </div>
                     )}
 

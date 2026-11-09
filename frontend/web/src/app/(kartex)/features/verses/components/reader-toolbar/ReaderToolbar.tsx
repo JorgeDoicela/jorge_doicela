@@ -135,7 +135,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   }));
 
   return (
-    <div className={`relative z-30 border border-border/80 rounded-xl bg-card-bg/95 backdrop-blur-md px-2 sm:px-3 py-1.5 sm:py-2 shadow-xs transition-all print:hidden ${className}`}>
+    <div className={`relative z-30 py-1 transition-all print:hidden ${className}`}>
       <div className="flex items-center justify-between gap-1 sm:gap-2.5 w-full">
         {/* Lado Izquierdo: Pasaje Principal y Versión Bíblica */}
         <div className="flex items-center gap-1 sm:gap-2 min-w-0 shrink">
@@ -212,7 +212,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
 
             {/* Panel Popover Desplegable */}
             {appearanceOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-64 max-w-[calc(100vw-2rem)] p-3.5 rounded-2xl border border-border/80 bg-card-bg/95 backdrop-blur-md shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
+              <div className="absolute right-0 top-full mt-1.5 w-64 max-w-[calc(100vw-2rem)] p-3.5 rounded-2xl border border-border bg-white dark:bg-[#121214] sepia:bg-[#FAF6EE] shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
                 {/* Modo de Lectura (Especialmente accesible en móvil) */}
                 <div>
                   <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-1.5">
@@ -292,22 +292,6 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     size="sm"
                   />
                 </div>
-
-                {/* Guía Rápida de Atajos de Teclado */}
-                <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800/80 text-[10px] text-zinc-400 space-y-1 font-mono">
-                  <div className="flex justify-between">
-                    <span>{t('navigateChapters')}</span>
-                    <span className="text-zinc-600 dark:text-zinc-300 font-bold">{t('shortcutNavKeys')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('focusMode')}</span>
-                    <span className="text-zinc-600 dark:text-zinc-300 font-bold">F</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('fontSizeLabel')}</span>
-                    <span className="text-zinc-600 dark:text-zinc-300 font-bold">+ / -</span>
-                  </div>
-                </div>
               </div>
             )}
           </div>
@@ -330,30 +314,6 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             </button>
           )}
 
-          {/* Desktop-only: Copiar Capítulo */}
-          {verses.length > 0 && (
-            <button
-              type="button"
-              onClick={handleCopyChapter}
-              className="hidden sm:flex p-1.5 rounded-full text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer active:scale-95"
-              title={copied ? t('copied') : t('copyTooltip')}
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
-          )}
-
-          {/* Desktop-only: Imprimir / Exportar Pasaje */}
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof window !== 'undefined') window.print();
-            }}
-            className="hidden sm:flex p-1.5 rounded-full text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer active:scale-95"
-            title={t('printOrPdf')}
-          >
-            <Printer className="w-3.5 h-3.5" />
-          </button>
-
           {/* Mobile-only: Menú Compacto de Acciones Adicionales (...) */}
           <div className={`relative sm:hidden ${moreOptionsOpen ? 'z-50' : ''}`} ref={moreOptionsRef}>
             <button
@@ -371,7 +331,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             </button>
 
             {moreOptionsOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-48 max-w-[calc(100vw-2rem)] p-1.5 rounded-2xl border border-border/80 bg-card-bg/95 backdrop-blur-md shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-1">
+              <div className="absolute right-0 top-full mt-1.5 w-48 max-w-[calc(100vw-2rem)] p-1.5 rounded-2xl border border-border bg-white dark:bg-[#121214] sepia:bg-[#FAF6EE] shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-1">
                 {verses.length > 0 && (
                   <button
                     type="button"

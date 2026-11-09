@@ -74,6 +74,7 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
 
   const handleSelectPassage = (bookId: number, chapter: number, verse: number | null = null) => {
     setSearchQuery('');
+    setSelectedChapterForVerses(null);
     if (propOnSelectPassage) {
       propOnSelectPassage(bookId, chapter, verse);
     } else if (passageContext) {

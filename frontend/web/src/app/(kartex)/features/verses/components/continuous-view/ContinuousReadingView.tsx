@@ -94,12 +94,24 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
           verseEl.classList.add('verse-target-pulse');
           setTimeout(() => {
             verseEl.classList.remove('verse-target-pulse');
+            passageContext?.setSelectedVerse(null);
+            if (typeof window !== 'undefined') {
+              try {
+                const url = new URL(window.location.href);
+                if (url.searchParams.has('verse')) {
+                  url.searchParams.delete('verse');
+                  window.history.replaceState(window.history.state, '', url.pathname + url.search);
+                }
+              } catch {
+                // fallback seguro
+              }
+            }
           }, 2200);
         }
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [passageContext?.selectedVerse, verses, chapter]);
+  }, [passageContext, verses, chapter]);
 
   const localizedBookTitle = useMemo(() => {
     if (rawAbbr && tBooks.has(rawAbbr as any)) {

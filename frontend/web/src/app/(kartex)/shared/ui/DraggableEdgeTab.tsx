@@ -253,10 +253,10 @@ export const DraggableEdgeTab: React.FC<DraggableEdgeTabProps> = ({
           : 'opacity-100 pointer-events-auto'
       } ${
         isDragging
-          ? 'w-10 h-10 rounded-xl border-border shadow-xl cursor-grabbing bg-card-bg text-foreground scale-105'
+          ? 'w-10 h-10 rounded-xl border-zinc-300 dark:border-zinc-700 sepia:border-[#C8B699] shadow-xl cursor-grabbing bg-card-bg text-foreground scale-105'
           : isLeft
-          ? 'w-5 h-24 rounded-r-md border-l-0 border-r border-y pl-0.5 shadow-2xs border-border cursor-grab active:cursor-grabbing bg-card-bg hover:w-5.5 hover:border-accents-4 hover:bg-accents-1 text-accents-4 hover:text-foreground'
-          : 'w-5 h-24 rounded-l-md border-r-0 border-l border-y pr-0.5 shadow-2xs border-border cursor-grab active:cursor-grabbing bg-card-bg hover:w-5.5 hover:border-accents-4 hover:bg-accents-1 text-accents-4 hover:text-foreground'
+          ? 'w-5 h-24 rounded-r-md border-l-0 border-r border-y pl-0.5 shadow-2xs border-zinc-300 dark:border-zinc-700 sepia:border-[#C8B699] cursor-grab active:cursor-grabbing bg-card-bg hover:w-5.5 hover:border-accents-4 hover:bg-accents-1 text-accents-4 hover:text-foreground'
+          : 'w-5 h-24 rounded-l-md border-r-0 border-l border-y pr-0.5 shadow-2xs border-zinc-300 dark:border-zinc-700 sepia:border-[#C8B699] cursor-grab active:cursor-grabbing bg-card-bg hover:w-5.5 hover:border-accents-4 hover:bg-accents-1 text-accents-4 hover:text-foreground'
       }`}
     >
       <DesktopIcon

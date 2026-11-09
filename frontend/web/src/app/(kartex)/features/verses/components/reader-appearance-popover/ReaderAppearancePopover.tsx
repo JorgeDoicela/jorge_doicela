@@ -214,7 +214,7 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
             {/* Renderizado en Escritorio / Tablet (Popover clásico con posicionamiento relativo) */}
             {isOpen && !isMobile && (
                 <div
-                    className={`absolute ${alignClass} ${directionClass} w-64 max-w-[calc(100vw-2rem)] p-3.5 rounded-2xl border border-border/80 bg-card-bg/95 backdrop-blur-md shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3.5`}
+                    className={`absolute ${alignClass} ${directionClass} w-64 max-w-[calc(100vw-2rem)] p-3.5 rounded-2xl border border-border bg-white dark:bg-[#121214] sepia:bg-[#FAF6EE] shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3.5`}
                 >
                     {/* Modo de Lectura */}
                     <div>

@@ -425,6 +425,16 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         verseEl.classList.add('verse-target-pulse');
         setTimeout(() => {
           verseEl.classList.remove('verse-target-pulse');
+          setSelectedVerse(null);
+          try {
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('verse')) {
+              url.searchParams.delete('verse');
+              window.history.replaceState(window.history.state, '', url.pathname + url.search);
+            }
+          } catch {
+            // fallback seguro
+          }
         }, 2200);
       } else if (retries > 0) {
         setTimeout(() => attemptScroll(retries - 1, Math.round(delay * 1.3)), delay);
@@ -949,7 +959,8 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     setSelectedChapter(chapter);
     setSelectedVerse(verse);
     setIsHeaderVisible(true);
-    updateUrlParams(bookId, chapter, selectedTranslationId, verse);
+    // En la URL persistimos libro, capítulo y traducción. El versículo objetivo es un salto transitorio en el lector
+    updateUrlParams(bookId, chapter, selectedTranslationId, null);
     if (verse) {
       scrollToVerse(verse);
     }

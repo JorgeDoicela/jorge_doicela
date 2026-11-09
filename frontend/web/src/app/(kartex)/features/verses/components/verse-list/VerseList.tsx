@@ -159,13 +159,13 @@ export const VerseList: React.FC<VerseListProps> = ({
         className="fixed inset-0 z-50 overflow-y-auto bg-background text-foreground transition-colors duration-200 px-4 sm:px-8 md:px-12 lg:px-24 py-6 flex flex-col items-center animate-fade-in"
       >
         {/* Barra Flotante Superior Minimalista de Modo Enfoque */}
-        <div className="w-full max-w-4xl flex items-center justify-between mb-8 pb-3 border-b border-border/40 text-xs font-mono">
+        <div className="w-full max-w-5xl xl:max-w-6xl flex items-center justify-between mb-8 pb-3 border-b border-border/40 text-xs font-mono">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-sm">
               {selectedBookName} {selectedChapter}
             </span>
             {activeTranslationAbbr && (
-              <span className="px-1.5 py-0.5 rounded bg-accents-2 text-foreground text-[10px]">
+              <span className="text-accents-4 text-xs font-normal">
                 {activeTranslationAbbr}
               </span>
             )}
@@ -186,7 +186,7 @@ export const VerseList: React.FC<VerseListProps> = ({
         </div>
 
         {/* Contenido en ancho óptimo de lectura */}
-        <div className="w-full max-w-4xl space-y-4">
+        <div className="w-full max-w-5xl xl:max-w-6xl space-y-4 relative">
           {loading && verses.length === 0 && (
             <div className="w-full py-8 sm:py-12 space-y-4 animate-pulse">
               <div className="h-6 w-48 bg-accents-2 rounded mx-auto mb-6" />
@@ -203,6 +203,16 @@ export const VerseList: React.FC<VerseListProps> = ({
               {readingContent}
             </div>
           )}
+
+          {/* Flechas laterales flotantes de cambio de capítulo en modo enfoque */}
+          <ChapterNavigator
+            selectedBookName={selectedBookName}
+            selectedBookAbbr={selectedBookAbbr}
+            selectedChapter={selectedChapter}
+            onPrevChapter={onPrevChapter}
+            onNextChapter={onNextChapter}
+            translationAbbr={activeTranslationAbbr}
+          />
         </div>
       </div>
     );
@@ -210,7 +220,7 @@ export const VerseList: React.FC<VerseListProps> = ({
 
   // MODO ESTÁNDAR INTEGRADO EN EL WORKSPACE
   return (
-    <div className="w-full max-w-5xl xl:max-w-6xl mx-auto space-y-4">
+    <div className="w-full max-w-5xl xl:max-w-6xl mx-auto space-y-4 relative">
       {/* Barra de herramientas integrada del lector: en móvil se unifica en la cabecera superior y dock inferior */}
       <ReaderToolbar
         className="hidden lg:block"
@@ -277,8 +287,18 @@ export const VerseList: React.FC<VerseListProps> = ({
 
       {/* Renderizado de Lectura según el modo seleccionado con transición fluida */}
       {!error && verses.length > 0 && (
-        <div className={`transition-opacity duration-150 ${loading ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
+        <div className={`relative w-full transition-opacity duration-150 ${loading ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
           {readingContent}
+
+          {/* Flechas laterales pegadas al borde de las palabras */}
+          <ChapterNavigator
+            selectedBookName={selectedBookName}
+            selectedBookAbbr={selectedBookAbbr}
+            selectedChapter={selectedChapter}
+            onPrevChapter={onPrevChapter}
+            onNextChapter={onNextChapter}
+            translationAbbr={activeTranslationAbbr}
+          />
         </div>
       )}
     </div>

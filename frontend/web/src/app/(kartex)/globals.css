@@ -11,6 +11,9 @@ html.sepia,
 }
 
 @theme {
+  --color-card-bg: var(--card-bg);
+  --color-inner-card: var(--inner-card-bg);
+  --color-border: var(--border);
   --font-serif: var(--font-lora), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-hebrew: var(--font-hebrew), "Frank Ruhl Libre", "SBL Hebrew", "Ezra SIL", serif;
   --font-greek: var(--font-greek), "Cardo", "Gentium Plus", "SBL Greek", serif;

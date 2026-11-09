@@ -1026,8 +1026,8 @@
       "default": "Biblical text for study and exegetical analysis purposes."
     },
     "chapterNavAria": "Chapter navigation",
-    "exitFocusModeTooltip": "Exit Focus Mode (Esc)",
-    "exitEsc": "Exit (Esc)"
+    "exitFocusModeTooltip": "Exit Focus Mode",
+    "exitEsc": "Exit"
   },
   "Studio": {
     "toggleSidebar": "Canonical Navigation",
@@ -1078,6 +1078,7 @@
     "noWordSelected": "Click any word in the text or interlinear to inspect its lexical data.",
     "noVerseSelected": "Select a verse to compare versions in real time.",
     "selectVerseToInspect": "Select a verse",
+    "selectTermPrompt": "Select a term to inspect its lexical analysis.",
     "noVerseSelectedDesc": "Click or tap any verse in the reader to explore its multiverse comparison, original keywords, and cross-references.",
     "strongCode": "Strong Code",
     "originalLemma": "Original Lemma",
@@ -1291,8 +1292,8 @@
     "searchPlaceholder": "Search objection or doubt..."
   },
   "Verses": {
-    "exitFocusEsc": "Exit Focus Mode (Esc)",
-    "exitEsc": "Exit (Esc)",
+    "exitFocusEsc": "Exit Focus Mode",
+    "exitEsc": "Exit",
     "shortcutNavKeys": "← / → or J / K"
   },
   "MobileDock": {

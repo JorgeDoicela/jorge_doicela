@@ -1026,8 +1026,8 @@
       "default": "Texto bíblico para propósitos de estudio y análisis exegético."
     },
     "chapterNavAria": "Navegación de capítulos",
-    "exitFocusModeTooltip": "Salir de Modo Enfoque (Esc)",
-    "exitEsc": "Salir (Esc)"
+    "exitFocusModeTooltip": "Salir de Modo Enfoque",
+    "exitEsc": "Salir"
   },
   "Studio": {
     "toggleSidebar": "Navegación Canónica",
@@ -1078,6 +1078,7 @@
     "noWordSelected": "Toca una palabra en el lector o interlineal para ver su ficha léxica.",
     "noVerseSelected": "Selecciona un versículo para comparar sus versiones en tiempo real.",
     "selectVerseToInspect": "Selecciona un versículo",
+    "selectTermPrompt": "Selecciona un término para consultar su análisis léxico.",
     "noVerseSelectedDesc": "Haz clic sobre cualquier versículo del texto bíblico para ver su cotejo multiversión, términos en lengua original y referencias cruzadas.",
     "strongCode": "Código Strong",
     "originalLemma": "Lema Original",
@@ -1291,8 +1292,8 @@
     "searchPlaceholder": "Buscar objeción o duda..."
   },
   "Verses": {
-    "exitFocusEsc": "Salir de Modo Enfoque (Esc)",
-    "exitEsc": "Salir (Esc)",
+    "exitFocusEsc": "Salir de Modo Enfoque",
+    "exitEsc": "Salir",
     "shortcutNavKeys": "← / → ó J / K"
   },
   "MobileDock": {

@@ -30,8 +30,8 @@ export interface ParallelVerseInspectorProps {
 
 const DEFAULT_TARGET_TRANSLATIONS: TargetTranslationItem[] = [
   { id: 3, name: 'Nueva Biblia de las Américas', abbreviation: 'NBLA', language: 'es' },
-  { id: 5, name: 'New International Version', abbreviation: 'NIV', language: 'en' },
-  { id: 1, name: 'Reina Valera 1909', abbreviation: 'RV1909', language: 'es' },
+  { id: 4, name: 'Nueva Traducción Viviente', abbreviation: 'NTV', language: 'es' },
+  { id: 6, name: 'Reina Valera 1909', abbreviation: 'RV1909', language: 'es' },
 ];
 
 export const ParallelVerseInspector: React.FC<ParallelVerseInspectorProps> = ({

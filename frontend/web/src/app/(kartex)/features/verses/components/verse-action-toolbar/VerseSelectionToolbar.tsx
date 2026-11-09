@@ -112,9 +112,6 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const isInspectorOpen = passageContext?.isRightInspectorOpen ?? false;
-  const isSidebarOpen = passageContext?.isLeftSidebarOpen ?? false;
-
   useEffect(() => {
     setMounted(true);
     const checkMobile = () => {
@@ -124,15 +121,6 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // En pantallas móviles (< 1024px), la exclusión mutua se gobierna de forma unificada
-  // a través de MobileBottomSheet y mobileSheetCoordinator ('kartex-verse-action-sheet').
-  // Si en desktop el usuario abre un panel lateral, cerrar la barra flotante
-  useEffect(() => {
-    if (!isMobile && (isSidebarOpen || isInspectorOpen)) {
-      onClose();
-    }
-  }, [isMobile, isSidebarOpen, isInspectorOpen, onClose]);
 
   // Cierre en escritorio al presionar Escape o clic fuera
   useEffect(() => {
@@ -152,9 +140,7 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
         target?.closest('[data-study-panel-backdrop]') ||
         target?.closest('#kartex-study-right-inspector') ||
         target?.closest('#kartex-study-left-sidebar') ||
-        target?.closest('nav') ||
-        isInspectorOpen ||
-        isSidebarOpen
+        target?.closest('nav')
       ) {
         return;
       }
@@ -170,7 +156,7 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
       document.removeEventListener('mousedown', handlePointerDownOutside);
       document.removeEventListener('touchstart', handlePointerDownOutside);
     };
-  }, [onClose, isInspectorOpen, isSidebarOpen, isMobile]);
+  }, [onClose, isMobile]);
 
   if (!mounted || verses.length === 0) return null;
 
@@ -205,29 +191,121 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
     onClose();
   };
 
+  const headerTitle = (
+    <span className="font-semibold text-xs tracking-wider uppercase text-foreground truncate">
+      {bookName} {verses[0]?.chapter}:{citationNumbers}
+    </span>
+  );
+
+  const headerBadge = (
+    <div className="flex items-center gap-1.5 shrink-0">
+      {translationAbbr && (
+        <span className="text-[10px] font-mono text-accents-4 font-semibold shrink-0">
+          {translationAbbr}
+        </span>
+      )}
+      {verses.length > 1 && (
+        <span className="text-[10px] font-mono text-accents-4 shrink-0">
+          ({verses.length})
+        </span>
+      )}
+    </div>
+  );
+
+  const renderActionsContent = () => (
+    <>
+      {/* Sección 1: Paleta de Subrayado */}
+      <div>
+        <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
+          {t('highlights')}
+        </span>
+        <div className="flex items-center justify-around p-2.5 rounded-2xl border border-border/80 bg-inner-card/60">
+          {HIGHLIGHT_COLORS.map((color) => {
+            const isSelected = currentColor === color;
+            const { swatchClass, label, checkColorClass, activeRingClass } =
+              VERSE_HIGHLIGHT_STYLES[color];
+            return (
+              <button
+                key={color}
+                type="button"
+                onClick={() => {
+                  if (isSelected) {
+                    onRemoveHighlight();
+                  } else {
+                    onSetHighlight(color);
+                  }
+                }}
+                title={isSelected ? `Quitar subrayado (${label})` : `Subrayar ${label}`}
+                aria-label={isSelected ? `Quitar subrayado (${label})` : `Subrayar ${label}`}
+                className={`w-9 h-9 rounded-full border transition-all duration-150 cursor-pointer flex items-center justify-center active:scale-90 ${swatchClass} ${
+                  isSelected
+                    ? `${activeRingClass} scale-110 shadow-xs`
+                    : 'hover:scale-105 opacity-90'
+                }`}
+              >
+                {isSelected && (
+                  <Check className={`w-4 h-4 stroke-[2.75] ${checkColorClass}`} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Sección 2: Acciones Principales */}
+      <div>
+        <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
+          {t('actions')}
+        </span>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            onClick={handlePlayFromVerse}
+            className="py-2.5 px-2 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95"
+            title={t('listenFromHere')}
+            aria-label={t('listenFromHere')}
+          >
+            <Volume2 className="w-4 h-4 stroke-[1.75] shrink-0" />
+            <span className="truncate">{t('listen')}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCopy}
+            className={`py-2.5 px-2 rounded-xl border border-border/80 transition-all duration-150 cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95 ${
+              copied
+                ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30 font-semibold'
+                : 'text-foreground bg-inner-card hover:bg-accents-1'
+            }`}
+          >
+            {copied ? (
+              <>
+                <Check className="w-4 h-4 stroke-[2.25] text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="truncate">{t('copied')}</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4 stroke-[1.75] shrink-0" />
+                <span className="truncate">{t('copy')}</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenExegesis}
+            className="py-2.5 px-2 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95"
+          >
+            <BookOpen className="w-4 h-4 stroke-[1.75] shrink-0" />
+            <span className="truncate">{tDock('exegesis')}</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
   // Versión móvil: Integrada mediante el primitivo MobileBottomSheet
   if (isMobile) {
-    const headerTitle = (
-      <span className="font-semibold text-xs tracking-wider uppercase text-foreground truncate">
-        {bookName} {verses[0]?.chapter}:{citationNumbers}
-      </span>
-    );
-
-    const headerBadge = (
-      <div className="flex items-center gap-1.5 shrink-0">
-        {translationAbbr && (
-          <span className="text-[10px] font-mono text-accents-4 font-semibold shrink-0">
-            {translationAbbr}
-          </span>
-        )}
-        {verses.length > 1 && (
-          <span className="text-[10px] font-mono text-accents-4 shrink-0">
-            ({verses.length})
-          </span>
-        )}
-      </div>
-    );
-
     return (
       <MobileBottomSheet
         id="kartex-verse-action-sheet"
@@ -241,118 +319,42 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
         heightClass="max-h-[60vh]"
         bodyClassName="p-5 space-y-4 select-none"
       >
-        {/* Sección 1: Paleta de Subrayado */}
-        <div>
-          <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
-            {t('highlights')}
-          </span>
-          <div className="flex items-center justify-around p-2.5 rounded-2xl border border-border/80 bg-inner-card/60">
-            {HIGHLIGHT_COLORS.map((color) => {
-              const isSelected = currentColor === color;
-              const { swatchClass, label, checkColorClass, activeRingClass } = VERSE_HIGHLIGHT_STYLES[color];
-              return (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => {
-                    if (isSelected) {
-                      onRemoveHighlight();
-                    } else {
-                      onSetHighlight(color);
-                    }
-                  }}
-                  title={isSelected ? `Quitar subrayado (${label})` : `Subrayar ${label}`}
-                  aria-label={isSelected ? `Quitar subrayado (${label})` : `Subrayar ${label}`}
-                  className={`w-9 h-9 rounded-full border transition-all duration-150 cursor-pointer flex items-center justify-center active:scale-90 ${swatchClass} ${
-                    isSelected
-                      ? `${activeRingClass} scale-110 shadow-xs`
-                      : 'hover:scale-105 opacity-90'
-                  }`}
-                >
-                  {isSelected && (
-                    <Check className={`w-4 h-4 stroke-[2.75] ${checkColorClass}`} />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Sección 2: Acciones Principales */}
-        <div>
-          <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
-            {t('actions')}
-          </span>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={handlePlayFromVerse}
-              className="py-2.5 px-2 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95"
-              title={t('listenFromHere')}
-              aria-label={t('listenFromHere')}
-            >
-              <Volume2 className="w-4 h-4 stroke-[1.75] shrink-0" />
-              <span className="truncate">{t('listen')}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleCopy}
-              className={`py-2.5 px-2 rounded-xl border border-border/80 transition-all duration-150 cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95 ${
-                copied
-                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30 font-semibold'
-                  : 'text-foreground bg-inner-card hover:bg-accents-1'
-              }`}
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4 stroke-[2.25] text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="truncate">{t('copied')}</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 stroke-[1.75] shrink-0" />
-                  <span className="truncate">{t('copy')}</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={onOpenExegesis}
-              className="py-2.5 px-2 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95"
-            >
-              <BookOpen className="w-4 h-4 stroke-[1.75] shrink-0" />
-              <span className="truncate">{tDock('exegesis')}</span>
-            </button>
-          </div>
-        </div>
+        {renderActionsContent()}
       </MobileBottomSheet>
     );
   }
 
-  // Versión de escritorio: Barra flotante relativa al versículo seleccionado
+  // Versión de escritorio (PC): Barra contextual horizontal de alta precisión
+  // Flotando directamente sobre/bajo el versículo seleccionado (estilo Geist / Vercel)
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const halfWidth = 135;
+  const clampedLeft = Math.max(
+    halfWidth + 16,
+    Math.min(screenWidth - halfWidth - 16, position.left),
+  );
+
   const desktopToolbar = (
     <div
       ref={toolbarRef}
       role="toolbar"
-      aria-label="Acciones de versículo"
+      aria-label={`Acciones para ${citation}`}
       style={{
         position: 'fixed',
         top: `${position.top}px`,
-        left: `${position.left}px`,
+        left: `${clampedLeft}px`,
         transform:
           position.placement === 'bottom'
             ? 'translate(-50%, 0)'
             : 'translate(-50%, -100%)',
       }}
-      className="z-50 flex items-center gap-1 px-2 py-1.5 rounded-full border border-border/90 bg-card-bg/95 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-150 select-none"
+      className="z-50 flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-border bg-white dark:bg-[#121214] sepia:bg-[#FAF6EE] shadow-[0_12px_36px_rgba(0,0,0,0.16)] dark:shadow-[0_16px_44px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-150 select-none whitespace-nowrap"
     >
       {/* 1. Paleta de colores para subrayar */}
-      <div className="flex items-center gap-1 pr-1 border-r border-border/60">
+      <div className="flex items-center gap-1 shrink-0">
         {HIGHLIGHT_COLORS.map((color) => {
           const isSelected = currentColor === color;
-          const { swatchClass, label, checkColorClass, activeRingClass } = VERSE_HIGHLIGHT_STYLES[color];
+          const { swatchClass, label, checkColorClass, activeRingClass } =
+            VERSE_HIGHLIGHT_STYLES[color];
           return (
             <button
               key={color}
@@ -368,66 +370,71 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
               aria-label={isSelected ? `Quitar subrayado (${label})` : `Subrayar ${label}`}
               className={`w-5 h-5 rounded-full border transition-all duration-150 cursor-pointer flex items-center justify-center active:scale-90 ${swatchClass} ${
                 isSelected
-                  ? `${activeRingClass} scale-115 shadow-xs`
-                  : 'hover:scale-110 opacity-80 hover:opacity-100'
+                  ? `${activeRingClass} scale-110 shadow-xs`
+                  : 'hover:scale-110 opacity-85 hover:opacity-100'
               }`}
             >
-              {isSelected && <Check className={`w-3 h-3 stroke-[2.5] ${checkColorClass}`} />}
+              {isSelected && (
+                <Check className={`w-3 h-3 stroke-[2.75] ${checkColorClass}`} />
+              )}
             </button>
           );
         })}
       </div>
 
-      {/* 2. Botón Escuchar desde aquí */}
-      <button
-        type="button"
-        onClick={handlePlayFromVerse}
-        title={t('listenFromHere')}
-        aria-label={t('listenFromHere')}
-        className="p-1.5 rounded-full text-zinc-600 dark:text-zinc-300 hover:text-foreground hover:bg-accents-1 transition-all cursor-pointer active:scale-95"
-      >
-        <Volume2 className="w-3.5 h-3.5 stroke-[1.75]" />
-      </button>
+      {/* Separador */}
+      <div className="w-px h-4 bg-border/70 shrink-0" />
 
-      {/* 3. Botón Copiar */}
-      <button
-        type="button"
-        onClick={handleCopy}
-        title={copied ? t('copied') : t('copyVerseTooltip')}
-        aria-label={copied ? t('copied') : t('copyVerseTooltip')}
-        className={`p-1.5 rounded-full transition-all cursor-pointer active:scale-95 ${
-          copied
-            ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10'
-            : 'text-zinc-600 dark:text-zinc-300 hover:text-foreground hover:bg-accents-1'
-        }`}
-      >
-        {copied ? (
-          <Check className="w-3.5 h-3.5 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
-        ) : (
-          <Copy className="w-3.5 h-3.5 stroke-[1.75]" />
-        )}
-      </button>
+      {/* 2. Acciones rápidas (Escuchar y Copiar) */}
+      <div className="flex items-center gap-1 shrink-0">
+        <button
+          type="button"
+          onClick={handlePlayFromVerse}
+          title={t('listenFromHere')}
+          aria-label={t('listenFromHere')}
+          className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium text-accents-5 hover:text-foreground hover:bg-accents-1 transition-all cursor-pointer active:scale-95 shrink-0"
+        >
+          <Volume2 className="w-3.5 h-3.5 stroke-[1.75]" />
+          <span>{t('listen')}</span>
+        </button>
 
-      {/* 4. Botón Exégesis (Icono BookOpen) */}
-      <button
-        type="button"
-        onClick={onOpenExegesis}
-        title={tStudio('verseExegesisTitle')}
-        aria-label={tStudio('verseExegesisTitle')}
-        className="p-1.5 rounded-full text-zinc-600 dark:text-zinc-300 hover:text-foreground hover:bg-accents-1 transition-all cursor-pointer active:scale-95"
-      >
-        <BookOpen className="w-3.5 h-3.5" />
-      </button>
+        <button
+          type="button"
+          onClick={handleCopy}
+          title={copied ? t('copied') : t('copyVerseTooltip')}
+          aria-label={copied ? t('copied') : t('copyVerseTooltip')}
+          className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all cursor-pointer active:scale-95 shrink-0 ${
+            copied
+              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-semibold'
+              : 'text-accents-5 hover:text-foreground hover:bg-accents-1'
+          }`}
+        >
+          {copied ? (
+            <>
+              <Check className="w-3.5 h-3.5 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
+              <span>{t('copied')}</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-3.5 h-3.5 stroke-[1.75]" />
+              <span>{t('copy')}</span>
+            </>
+          )}
+        </button>
+      </div>
 
-      {/* 5. Botón Cerrar selección */}
+      {/* Separador */}
+      <div className="w-px h-4 bg-border/70 shrink-0" />
+
+      {/* 3. Botón Cerrar selección */}
       <button
         type="button"
         onClick={onClose}
         title="Cerrar selección"
         aria-label="Cerrar selección"
-        className="p-1 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-1 transition-all cursor-pointer active:scale-90 ml-0.5"
+        className="p-1 rounded-md text-accents-4 hover:text-foreground hover:bg-accents-1 transition-all cursor-pointer active:scale-90 shrink-0"
       >
-        <X className="w-3 h-3" />
+        <X className="w-3.5 h-3.5" />
       </button>
     </div>
   );

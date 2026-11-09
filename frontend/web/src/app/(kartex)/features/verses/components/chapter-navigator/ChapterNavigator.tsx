@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { getChapterCountForBook } from '../../../../shared/data/canonData';
 import { useKartexPassageSafe } from '../../../../entities/passage';
@@ -67,82 +68,55 @@ export const ChapterNavigator: React.FC<ChapterNavigatorProps> = ({
     return null;
   }
 
-  const prevSubtitle = currentChapter > 1
-    ? tPassage('prevChapterTooltip').replace(' (←)', '')
-    : tToolbar('prevBook');
   const prevLabel = currentChapter > 1
     ? `${selectedBookName} ${currentChapter - 1}`
     : (prevBook?.name || '');
 
-  const nextSubtitle = currentChapter < maxChapters
-    ? tPassage('nextChapterTooltip').replace(' (→)', '')
-    : tToolbar('nextBook');
   const nextLabel = currentChapter < maxChapters
     ? `${selectedBookName} ${currentChapter + 1}`
     : (nextBook?.name || '');
 
   return (
-    <nav
-      aria-label={tToolbar('chapterNavigation')}
-      className="w-full hidden sm:flex items-center justify-between gap-4 pt-4 pb-2 print:hidden select-none"
-    >
-      {canGoPrev ? (
-        <button
-          type="button"
-          onClick={onPrevChapter}
-          title={prevLabel}
+    <>
+      {/* Flecha Lateral Flotante Izquierda - Capítulo Anterior (PC) */}
+      {canGoPrev && (
+        <aside
           aria-label={prevLabel}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xs text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-400 dark:hover:border-zinc-600 shadow-xs hover:shadow-md active:scale-98 transition-all cursor-pointer group"
+          className="hidden lg:block absolute -left-6 sm:-left-7 top-0 bottom-0 pointer-events-none z-30 select-none print:hidden"
         >
-          <svg
-            className="w-4 h-4 transition-transform group-hover:-translate-x-0.5 text-zinc-400 group-hover:text-foreground shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15 19l-7-7 7-7" />
-          </svg>
-          <div className="flex flex-col items-start text-left">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-              {prevSubtitle}
-            </span>
-            <span className="text-xs font-semibold text-foreground">
-              {prevLabel}
-            </span>
+          <div className="sticky top-1/2 -translate-y-1/2 pointer-events-auto">
+            <button
+              type="button"
+              onClick={onPrevChapter}
+              title={`${prevLabel} (←)`}
+              aria-label={prevLabel}
+              className="p-1 text-accents-4 hover:text-foreground hover:scale-115 active:scale-90 transition-all cursor-pointer"
+            >
+              <ChevronLeft className="w-6 h-6 stroke-[2.2]" />
+            </button>
           </div>
-        </button>
-      ) : (
-        <div />
+        </aside>
       )}
 
-      {canGoNext ? (
-        <button
-          type="button"
-          onClick={() => onNextChapter(maxChapters)}
-          title={nextLabel}
+      {/* Flecha Lateral Flotante Derecha - Capítulo Siguiente (PC) */}
+      {canGoNext && (
+        <aside
           aria-label={nextLabel}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xs text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-400 dark:hover:border-zinc-600 shadow-xs hover:shadow-md active:scale-98 transition-all cursor-pointer group ml-auto"
+          className="hidden lg:block absolute -right-6 sm:-right-7 top-0 bottom-0 pointer-events-none z-30 select-none print:hidden"
         >
-          <div className="flex flex-col items-end text-right">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-              {nextSubtitle}
-            </span>
-            <span className="text-xs font-semibold text-foreground">
-              {nextLabel}
-            </span>
+          <div className="sticky top-1/2 -translate-y-1/2 pointer-events-auto">
+            <button
+              type="button"
+              onClick={() => onNextChapter(maxChapters)}
+              title={`${nextLabel} (→)`}
+              aria-label={nextLabel}
+              className="p-1 text-accents-4 hover:text-foreground hover:scale-115 active:scale-90 transition-all cursor-pointer"
+            >
+              <ChevronRight className="w-6 h-6 stroke-[2.2]" />
+            </button>
           </div>
-          <svg
-            className="w-4 h-4 transition-transform group-hover:translate-x-0.5 text-zinc-400 group-hover:text-foreground shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      ) : (
-        <div />
+        </aside>
       )}
-    </nav>
+    </>
   );
 };

@@ -27,7 +27,7 @@ interface ReaderToolbarProps {
   onTogglePericopes?: () => void;
   books?: (BookInfo | Book | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
-  onSelectPassage?: (bookId: number, chapter: number) => void;
+  onSelectPassage?: (bookId: number, chapter: number, verse?: number | null) => void;
   onSelectBook?: (id: number | null) => void;
   selectedBookAbbr?: string;
   selectedBookName?: string;
@@ -123,9 +123,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
     { label: 'A++', value: 'xl' },
   ];
 
-  const handlePassageSelect = (bookId: number, chapter: number) => {
+  const handlePassageSelect = (bookId: number, chapter: number, verse: number | null = null) => {
     if (onSelectPassage) {
-      onSelectPassage(bookId, chapter);
+      onSelectPassage(bookId, chapter, verse);
     } else {
       onSelectBook?.(bookId);
       onSelectChapter(chapter);
@@ -150,6 +150,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
               books={normalizedBooks}
               selectedBookId={selectedBookId || null}
               selectedChapter={selectedChapter}
+              selectedVerse={passageContext?.selectedVerse}
               onSelectPassage={handlePassageSelect}
               onPrevChapter={onPrevChapter}
               onNextChapter={() => onNextChapter?.(totalChapters)}

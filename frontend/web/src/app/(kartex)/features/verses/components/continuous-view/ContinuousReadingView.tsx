@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
 import { getReaderFontClass } from '../../config/readerFonts';
 import { useKartexPassageSafe } from '../../../../entities/passage';
+import { mobileSheetCoordinator } from '../../../../shared/ui';
 import {
   VerseSelectionToolbar,
   VERSE_HIGHLIGHT_STYLES,
@@ -73,11 +74,31 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
       ? verses[0]?.book.abbreviation
       : undefined);
 
-  // Cerrar toolbar y limpiar selección al cambiar de pasaje
+  // Cerrar toolbar y limpiar selección al cambiar de pasaje o abrir paneles laterales en móvil
   useEffect(() => {
     setSelectedVerseNumbers([]);
     setToolbarPosition(null);
-  }, [chapter, rawAbbr]);
+  }, [chapter, rawAbbr, passageContext?.isLeftSidebarOpen, passageContext?.isRightInspectorOpen]);
+
+  // Desplazamiento automático y animación visual al versículo objetivo (seleccionado o vía URL)
+  useEffect(() => {
+    const targetVerseNum = passageContext?.selectedVerse;
+    if (targetVerseNum && verses.length > 0) {
+      const timer = setTimeout(() => {
+        const verseEl = document.querySelector(`[data-verse-number="${targetVerseNum}"]`);
+        if (verseEl) {
+          verseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          verseEl.classList.remove('verse-target-pulse');
+          void (verseEl as HTMLElement).offsetWidth;
+          verseEl.classList.add('verse-target-pulse');
+          setTimeout(() => {
+            verseEl.classList.remove('verse-target-pulse');
+          }, 2200);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [passageContext?.selectedVerse, verses, chapter]);
 
   const localizedBookTitle = useMemo(() => {
     if (rawAbbr && tBooks.has(rawAbbr as any)) {
@@ -127,8 +148,20 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     return colors.every((c) => c === first) ? first : undefined;
   }, [selectedVerses, getHighlight, bookIdFallback]);
 
+  // Reiniciar selección al cambiar de capítulo o libro
+  useEffect(() => {
+    setSelectedVerseNumbers([]);
+    setToolbarPosition(null);
+  }, [chapter, passageContext?.selectedBookId, passageContext?.selectedChapter]);
+
   const handleVerseClick = (verse: Verse, e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
+
+    // En pantallas móviles (< 1024px), cerrar cualquier otra lámina abierta (sidebar, audio, tipografía)
+    // para que la barra de acciones de versículo tenga exclusión mutua limpia
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      mobileSheetCoordinator.dismissAllExcept('kartex-verse-action-sheet');
+    }
     const isAlreadySelected = selectedVerseNumbers.includes(verse.verseNumber);
 
     let nextSelected: number[];
@@ -203,7 +236,6 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             {localizedBookTitle}
           </h2>
-          <div className="w-16 sm:w-24 h-px bg-border/60 mx-auto mt-4" aria-hidden="true" />
         </header>
       )}
 
@@ -231,9 +263,12 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
               passageContext?.currentAudioVerse === verse.verseNumber;
 
             const highlightStyle = highlight ? VERSE_HIGHLIGHT_STYLES[highlight] : null;
+            const verseKey = verse.id
+              ? `crv_verse_${verse.id}`
+              : `crv_verse_${bId}_${verse.chapter || currentChapterNum}_${verse.verseNumber || idx + 1}_${idx}`;
 
             return (
-              <React.Fragment key={verse.id}>
+              <React.Fragment key={verseKey}>
                 {/* Subtítulo Temático (Perícopa) */}
                 {showPericopes && pericopesByStartVerse.has(verse.verseNumber) && (
                   idx === 0 ? (

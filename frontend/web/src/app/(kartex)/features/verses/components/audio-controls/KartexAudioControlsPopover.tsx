@@ -39,7 +39,7 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
 
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
+            setIsMobile(window.innerWidth < 1024);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -309,6 +309,7 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
     if (isMobile || isMobileModal) {
         return (
             <MobileBottomSheet
+                id="kartex-audio-sheet"
                 isOpen={isOpen}
                 onClose={onClose}
                 icon={

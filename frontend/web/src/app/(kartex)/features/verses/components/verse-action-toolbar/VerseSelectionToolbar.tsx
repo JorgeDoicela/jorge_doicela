@@ -9,6 +9,7 @@ import {
   Check,
   X,
   Bookmark,
+  Volume2,
 } from 'lucide-react';
 import { Verse, VerseHighlightColor } from '../../types';
 import { useKartexPassageSafe } from '../../../../entities/passage';
@@ -117,12 +118,21 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
   useEffect(() => {
     setMounted(true);
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // En pantallas móviles (< 1024px), la exclusión mutua se gobierna de forma unificada
+  // a través de MobileBottomSheet y mobileSheetCoordinator ('kartex-verse-action-sheet').
+  // Si en desktop el usuario abre un panel lateral, cerrar la barra flotante
+  useEffect(() => {
+    if (!isMobile && (isSidebarOpen || isInspectorOpen)) {
+      onClose();
+    }
+  }, [isMobile, isSidebarOpen, isInspectorOpen, onClose]);
 
   // Cierre en escritorio al presionar Escape o clic fuera
   useEffect(() => {
@@ -188,6 +198,13 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
     }
   };
 
+  const handlePlayFromVerse = () => {
+    if (sortedVerses.length === 0) return;
+    const firstVerseNumber = sortedVerses[0].verseNumber;
+    passageContext?.playAudioFromVerse(firstVerseNumber);
+    onClose();
+  };
+
   // Versión móvil: Integrada mediante el primitivo MobileBottomSheet
   if (isMobile) {
     const headerTitle = (
@@ -213,8 +230,10 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
 
     return (
       <MobileBottomSheet
+        id="kartex-verse-action-sheet"
         isOpen={true}
         onClose={onClose}
+        dismissMode="interactive"
         icon={<Bookmark className="w-4 h-4 text-foreground shrink-0" />}
         title={headerTitle}
         badge={headerBadge}
@@ -264,11 +283,22 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
           <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
             {t('actions')}
           </span>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={handlePlayFromVerse}
+              className="py-2.5 px-2 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95"
+              title={t('listenFromHere')}
+              aria-label={t('listenFromHere')}
+            >
+              <Volume2 className="w-4 h-4 stroke-[1.75] shrink-0" />
+              <span className="truncate">{t('listen')}</span>
+            </button>
+
             <button
               type="button"
               onClick={handleCopy}
-              className={`py-2.5 px-3 rounded-xl border border-border/80 transition-all duration-150 cursor-pointer flex items-center justify-center gap-2 text-xs font-medium active:scale-95 ${
+              className={`py-2.5 px-2 rounded-xl border border-border/80 transition-all duration-150 cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95 ${
                 copied
                   ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30 font-semibold'
                   : 'text-foreground bg-inner-card hover:bg-accents-1'
@@ -276,13 +306,13 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
-                  <span>{t('copied')}</span>
+                  <Check className="w-4 h-4 stroke-[2.25] text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="truncate">{t('copied')}</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 stroke-[1.75]" />
-                  <span>{t('copy')}</span>
+                  <Copy className="w-4 h-4 stroke-[1.75] shrink-0" />
+                  <span className="truncate">{t('copy')}</span>
                 </>
               )}
             </button>
@@ -290,10 +320,10 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
             <button
               type="button"
               onClick={onOpenExegesis}
-              className="py-2.5 px-3 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-2 text-xs font-medium active:scale-95"
+              className="py-2.5 px-2 rounded-xl border border-border/80 bg-inner-card hover:bg-accents-1 text-foreground transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-medium active:scale-95"
             >
-              <BookOpen className="w-4 h-4 stroke-[1.75]" />
-              <span>{tDock('exegesis')}</span>
+              <BookOpen className="w-4 h-4 stroke-[1.75] shrink-0" />
+              <span className="truncate">{tDock('exegesis')}</span>
             </button>
           </div>
         </div>
@@ -348,7 +378,18 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
         })}
       </div>
 
-      {/* 2. Botón Copiar */}
+      {/* 2. Botón Escuchar desde aquí */}
+      <button
+        type="button"
+        onClick={handlePlayFromVerse}
+        title={t('listenFromHere')}
+        aria-label={t('listenFromHere')}
+        className="p-1.5 rounded-full text-zinc-600 dark:text-zinc-300 hover:text-foreground hover:bg-accents-1 transition-all cursor-pointer active:scale-95"
+      >
+        <Volume2 className="w-3.5 h-3.5 stroke-[1.75]" />
+      </button>
+
+      {/* 3. Botón Copiar */}
       <button
         type="button"
         onClick={handleCopy}
@@ -367,7 +408,7 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
         )}
       </button>
 
-      {/* 3. Botón Exégesis (Icono BookOpen) */}
+      {/* 4. Botón Exégesis (Icono BookOpen) */}
       <button
         type="button"
         onClick={onOpenExegesis}
@@ -378,7 +419,7 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
         <BookOpen className="w-3.5 h-3.5" />
       </button>
 
-      {/* 4. Botón Cerrar selección */}
+      {/* 5. Botón Cerrar selección */}
       <button
         type="button"
         onClick={onClose}

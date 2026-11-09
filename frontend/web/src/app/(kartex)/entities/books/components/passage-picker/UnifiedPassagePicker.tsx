@@ -6,14 +6,17 @@ import { Book } from '../../hooks/useBooks';
 import {
   CANONICAL_CATEGORIES,
   getChaptersForBookId,
+  getVersesCountForChapter,
   isBookInCategory,
 } from '../../data/canonicCategories';
+import { mobileSheetCoordinator } from '../../../../shared/ui';
 
 interface UnifiedPassagePickerProps {
   books: Book[];
   selectedBookId: number | null;
   selectedChapter: number | null;
-  onSelectPassage: (bookId: number, chapter: number) => void;
+  selectedVerse?: number | null;
+  onSelectPassage: (bookId: number, chapter: number, verse?: number | null) => void;
   onPrevChapter?: () => void;
   onNextChapter?: () => void;
   className?: string;
@@ -26,6 +29,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   books,
   selectedBookId,
   selectedChapter,
+  selectedVerse,
   onSelectPassage,
   onPrevChapter,
   onNextChapter,
@@ -39,6 +43,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   const [activeTab, setActiveTab] = useState<TestamentTab>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBookForChapters, setSelectedBookForChapters] = useState<Book | null>(null);
+  const [selectedChapterForVerses, setSelectedChapterForVerses] = useState<number | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -61,11 +66,40 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     [selectedBookForChapters, currentBook],
   );
 
-  // Limpiar búsqueda automáticamente al cerrar el selector
+  const totalVerses = useMemo(() => {
+    const bId = selectedBookForChapters?.id || currentBook?.id;
+    const ch = selectedChapterForVerses || selectedChapter || 1;
+    return getVersesCountForChapter(bId, ch);
+  }, [selectedBookForChapters, currentBook, selectedChapterForVerses, selectedChapter]);
+
+  // Limpiar búsqueda y estados al cerrar el selector
   useEffect(() => {
     if (!isOpen) {
       setSearchQuery('');
+      setSelectedBookForChapters(null);
+      setSelectedChapterForVerses(null);
     }
+  }, [isOpen]);
+
+  // Reiniciar versículos al cambiar libro
+  useEffect(() => {
+    setSelectedChapterForVerses(null);
+  }, [selectedBookForChapters]);
+
+  // Exclusión mutua móvil con el resto de láminas y paneles
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile && isOpen) {
+      mobileSheetCoordinator.registerOpen('passage-picker-popover', () => {
+        setIsOpen(false);
+      });
+    } else {
+      mobileSheetCoordinator.registerClose('passage-picker-popover');
+    }
+    return () => {
+      mobileSheetCoordinator.registerClose('passage-picker-popover');
+    };
   }, [isOpen]);
 
   // Cerrar al hacer clic fuera
@@ -75,6 +109,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
         setIsOpen(false);
         setSearchQuery('');
         setSelectedBookForChapters(null);
+        setSelectedChapterForVerses(null);
       }
     };
     if (isOpen) {
@@ -94,17 +129,18 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     }
   }, [isOpen, selectedBookForChapters]);
 
-  // Filtro de libros y parseo inteligente de pasaje (ej. "Juan 3", "Sal 23", "John 3", "Ps 23")
+  // Filtro de libros y parseo inteligente de pasaje (ej. "Juan 3", "Juan 3:16", "Sal 23", "Sal 23:1")
   const parsedSearch = useMemo(() => {
     const raw = searchQuery.trim().toLowerCase();
-    if (!raw) return { text: '', chapter: null as number | null };
-    const match = raw.match(/^([a-záéíóúñ1-3\s]+?)\s*(\d+)?$/i);
+    if (!raw) return { text: '', chapter: null as number | null, verse: null as number | null };
+    const match = raw.match(/^([a-záéíóúñ1-3\s]+?)\s*(\d+)?(?:[:,\s](\d+))?$/i);
     if (match) {
       const bookPart = match[1].trim();
       const chapterPart = match[2] ? parseInt(match[2], 10) : null;
-      return { text: bookPart, chapter: chapterPart };
+      const versePart = match[3] ? parseInt(match[3], 10) : null;
+      return { text: bookPart, chapter: chapterPart, verse: versePart };
     }
-    return { text: raw, chapter: null };
+    return { text: raw, chapter: null, verse: null };
   }, [searchQuery]);
 
   const filteredBooks = useMemo(() => {
@@ -133,22 +169,48 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     if (parsedSearch.chapter) {
       const maxCh = getChaptersForBookId(book.id);
       const safeCh = Math.min(Math.max(1, parsedSearch.chapter), maxCh);
-      onSelectPassage(book.id, safeCh);
-      setIsOpen(false);
-      setSearchQuery('');
-      setSelectedBookForChapters(null);
+      if (parsedSearch.verse) {
+        const maxV = getVersesCountForChapter(book.id, safeCh);
+        const safeV = Math.min(Math.max(1, parsedSearch.verse), maxV);
+        onSelectPassage(book.id, safeCh, safeV);
+        setIsOpen(false);
+        setSearchQuery('');
+        setSelectedBookForChapters(null);
+        setSelectedChapterForVerses(null);
+      } else {
+        setSelectedBookForChapters(book);
+        setSelectedChapterForVerses(safeCh);
+      }
     } else {
       setSelectedBookForChapters(book);
+      setSelectedChapterForVerses(null);
     }
   };
 
   const handleChapterClick = (ch: number) => {
+    setSelectedChapterForVerses(ch);
+  };
+
+  const handleFullChapterClick = () => {
     if (!selectedBookForChapters && !currentBook) return;
     const targetBookId = selectedBookForChapters?.id || currentBook.id;
-    onSelectPassage(targetBookId, ch);
+    const ch = selectedChapterForVerses || selectedChapter || 1;
+    onSelectPassage(targetBookId, ch, null);
     setIsOpen(false);
     setSearchQuery('');
     setSelectedBookForChapters(null);
+    setSelectedChapterForVerses(null);
+  };
+
+  const handleVerseClick = (verseNum: number) => {
+    if (!selectedBookForChapters && !currentBook) return;
+    const targetBookId = selectedBookForChapters?.id || currentBook.id;
+    const ch = selectedChapterForVerses || selectedChapter || 1;
+    onSelectPassage(targetBookId, ch, verseNum);
+    setIsOpen(false);
+    setSearchQuery('');
+    setSelectedBookForChapters(null);
+    setSelectedChapterForVerses(null);
   };
 
   const handleKeyDownSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -159,6 +221,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
       setIsOpen(false);
       setSearchQuery('');
       setSelectedBookForChapters(null);
+      setSelectedChapterForVerses(null);
     }
   };
 
@@ -170,14 +233,14 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           type="button"
           onClick={onPrevChapter}
           disabled={selectedChapter !== null && selectedChapter <= 1}
-          className={`h-8 w-8 shrink-0 rounded-full border border-border/80 bg-inner-card flex items-center justify-center transition-all cursor-pointer shadow-2xs ${
+          className={`h-8 w-8 shrink-0 rounded-full border border-border/80 bg-inner-card flex items-center justify-center transition-all cursor-pointer shadow-2xs group ${
             selectedChapter !== null && selectedChapter <= 1
               ? 'opacity-30 cursor-not-allowed text-accents-4'
               : 'hover:bg-accents-2 text-foreground active:scale-90'
           }`}
           title={t('prevChapterTooltip')}
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -192,6 +255,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           }
           setIsOpen(!isOpen);
           setSelectedBookForChapters(null);
+          setSelectedChapterForVerses(null);
         }}
         className={`px-3.5 h-8 min-w-0 rounded-full border border-border/80 bg-inner-card/90 transition-all flex items-center gap-2 cursor-pointer shadow-2xs active:scale-95 ${
           isOpen
@@ -199,8 +263,15 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
             : 'hover:bg-accents-1 text-foreground'
         } ${size === 'sm' ? 'text-xs' : 'text-xs sm:text-sm font-semibold'}`}
       >
-        <span className="font-bold tracking-tight truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
-          {currentBook ? `${getBookDisplayName(currentBook)} ${selectedChapter || 1}` : t('selectPassage')}
+        <span
+          key={`${currentBook?.id}_${selectedChapter}_${selectedVerse}`}
+          className="font-bold tracking-tight truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none animate-in fade-in duration-200"
+        >
+          {currentBook
+            ? `${getBookDisplayName(currentBook)} ${selectedChapter || 1}${
+                selectedVerse ? `:${selectedVerse}` : ''
+              }`
+            : t('selectPassage')}
         </span>
 
         <svg
@@ -221,14 +292,14 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
           type="button"
           onClick={onNextChapter}
           disabled={selectedChapter !== null && selectedChapter >= totalChapters}
-          className={`h-8 w-8 shrink-0 rounded-full border border-border/80 bg-inner-card flex items-center justify-center transition-all cursor-pointer shadow-2xs ${
+          className={`h-8 w-8 shrink-0 rounded-full border border-border/80 bg-inner-card flex items-center justify-center transition-all cursor-pointer shadow-2xs group ${
             selectedChapter !== null && selectedChapter >= totalChapters
               ? 'opacity-30 cursor-not-allowed text-accents-4'
               : 'hover:bg-accents-2 text-foreground active:scale-90'
           }`}
           title={t('nextChapterTooltip')}
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -371,7 +442,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                 )}
               </div>
             </>
-          ) : (
+          ) : selectedChapterForVerses === null ? (
             /* Vista 2: Selector de Capítulos */
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b border-accents-2 pb-2">
@@ -412,6 +483,65 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
                       }`}
                     >
                       {ch}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* Vista 3: Selector de Versículos */
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between gap-2 border-b border-accents-2 pb-2">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedChapterForVerses(null)}
+                    className="p-1 -ml-1 rounded-md text-foreground hover:bg-accents-1 active:scale-90 transition-all cursor-pointer shrink-0"
+                    title="Volver a capítulos"
+                    aria-label="Volver a capítulos"
+                  >
+                    <svg className="w-4 h-4 stroke-[2.25] text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.25" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <span className="text-xs font-bold text-foreground shrink-0">
+                    {getBookDisplayName(selectedBookForChapters)} {selectedChapterForVerses}
+                  </span>
+                </div>
+
+                {/* Botón de acceso directo a todo el capítulo */}
+                <button
+                  type="button"
+                  onClick={handleFullChapterClick}
+                  className="h-7.5 px-4 min-w-[150px] rounded-lg text-xs font-medium bg-background text-foreground border border-accents-2 hover:border-foreground flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group shrink-0"
+                  title={`Leer ${getBookDisplayName(selectedBookForChapters)} ${selectedChapterForVerses} completo`}
+                >
+                  <svg className="w-3.5 h-3.5 text-accents-4 group-hover:text-foreground shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  <span>Leer completo</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-72 overflow-y-auto pr-1">
+                {Array.from({ length: totalVerses }).map((_, i) => {
+                  const vNum = i + 1;
+                  const isCurrent =
+                    currentBook?.id === selectedBookForChapters.id &&
+                    selectedChapter === selectedChapterForVerses &&
+                    selectedVerse === vNum;
+                  return (
+                    <button
+                      key={vNum}
+                      type="button"
+                      onClick={() => handleVerseClick(vNum)}
+                      className={`h-8 rounded-lg text-xs font-mono font-medium transition-all flex items-center justify-center cursor-pointer border ${
+                        isCurrent
+                          ? 'bg-foreground text-background font-bold border-foreground shadow-xs'
+                          : 'border-accents-2 bg-background hover:bg-accents-1 hover:border-foreground text-foreground'
+                      }`}
+                    >
+                      {vNum}
                     </button>
                   );
                 })}

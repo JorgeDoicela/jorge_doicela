@@ -167,3 +167,6 @@ export function getChaptersForBookId(bookId?: number | null): number {
   if (!bookId) return 50;
   return CHAPTER_COUNTS_BY_BOOK_ID[bookId] || 50;
 }
+
+export { BIBLE_VERSE_COUNTS, getVersesCountForChapter } from '../../../shared/data/canonVerseCounts';
+

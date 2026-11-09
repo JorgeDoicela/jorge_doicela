@@ -89,7 +89,7 @@ export const KartexExegesisInspector: React.FC<KartexExegesisInspectorProps> = (
           verse={targetVerse}
           translations={translations}
           onSelectPassage={(bookId, chapter, verseNumber) => {
-            passageContext?.setPassage(bookId, chapter);
+            passageContext?.setPassage(bookId, chapter, verseNumber);
             if (verseNumber && passageContext?.openInspectorWithVerse) {
               const bookMeta = passageContext.books?.find((b) => b.id === bookId);
               passageContext.openInspectorWithVerse({

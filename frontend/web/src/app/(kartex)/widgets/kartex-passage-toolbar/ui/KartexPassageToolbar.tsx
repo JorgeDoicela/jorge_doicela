@@ -19,6 +19,7 @@ export const KartexPassageToolbar: React.FC<KartexPassageToolbarProps> = ({
     books,
     selectedBookId,
     selectedChapter,
+    selectedVerse,
     setPassage,
     nextChapter,
     prevChapter,
@@ -38,6 +39,7 @@ export const KartexPassageToolbar: React.FC<KartexPassageToolbarProps> = ({
             books={books}
             selectedBookId={selectedBookId}
             selectedChapter={selectedChapter}
+            selectedVerse={selectedVerse}
             onSelectPassage={setPassage}
             onPrevChapter={prevChapter}
             onNextChapter={nextChapter}

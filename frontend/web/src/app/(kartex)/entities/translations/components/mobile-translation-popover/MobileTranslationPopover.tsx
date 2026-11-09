@@ -35,7 +35,7 @@ export function MobileTranslationPopover({
 
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 640);
+            setIsMobile(window.innerWidth < 1024);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -106,6 +106,7 @@ export function MobileTranslationPopover({
             {/* Bottom Sheet unificado y homogéneo en Móvil */}
             {isMobile && (
                 <MobileBottomSheet
+                    id="kartex-translation-sheet"
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     title={t('selectTranslation')}

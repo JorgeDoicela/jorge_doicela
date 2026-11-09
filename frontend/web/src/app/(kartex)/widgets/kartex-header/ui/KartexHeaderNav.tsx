@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { KartexLogo, BackToKartexButton } from '../../../shared/ui';
+import { KartexLogo, BackToKartexButton, mobileSheetCoordinator } from '../../../shared/ui';
 import { ThemeToggle } from '../../../features/theme-toggle';
 import { LanguageToggle } from '../../../features/language-toggle';
 import { useKartexPassageSafe } from '../../../entities/passage';
@@ -128,7 +128,7 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
           <BackToKartexButton />
           <Link
             href={homeUrl}
-            className="shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity p-0.5 rounded-md hover:bg-accents-1 group"
+            className="hidden sm:flex shrink-0 items-center cursor-pointer hover:opacity-80 transition-opacity p-0.5 rounded-md hover:bg-accents-1 group"
             title={t('landing')}
             aria-label={t('landing')}
           >
@@ -139,7 +139,12 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
         {/* Móvil: Menú Desplegable Flotante Elegante (< md) Centrado Simétricamente */}
         <div className="md:hidden absolute left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-auto" ref={mobileMenuRef}>
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => {
+              if (!mobileMenuOpen) {
+                mobileSheetCoordinator.dismissAll();
+              }
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/80 bg-inner-card/90 text-foreground text-xs font-medium cursor-pointer shadow-2xs active:scale-95 transition-all"
             aria-expanded={mobileMenuOpen}
             aria-label={t('studyMode')}

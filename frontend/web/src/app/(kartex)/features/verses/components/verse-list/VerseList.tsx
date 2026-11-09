@@ -34,7 +34,7 @@ interface VerseListProps {
   onTogglePericopes?: () => void;
   books?: (BookInfo | { id: number; name: string; abbreviation: string; testament: string })[];
   selectedBookId?: number | null;
-  onSelectPassage?: (bookId: number, chapter: number) => void;
+  onSelectPassage?: (bookId: number, chapter: number, verse?: number | null) => void;
   onSelectBook?: (id: number | null) => void;
   selectedBookName?: string;
   selectedBookAbbr?: string;
@@ -100,7 +100,10 @@ export const VerseList: React.FC<VerseListProps> = ({
   const { getHighlight, setHighlight, removeHighlight } = useVerseHighlights();
 
   const readingContent = (
-    <React.Fragment key={`passage_${selectedBookId}_${selectedChapter}_${selectedTranslationId}`}>
+    <div
+      key={`passage_${selectedBookId}_${selectedChapter}_${selectedTranslationId}`}
+      className="animate-passage-change"
+    >
       {readerSettings.layoutMode === 'continuous' ? (
         <ContinuousReadingView
           key={`continuous_${selectedBookId}_${selectedChapter}_${selectedTranslationId}`}
@@ -146,7 +149,7 @@ export const VerseList: React.FC<VerseListProps> = ({
         onNextChapter={onNextChapter}
         translationAbbr={activeTranslationAbbr}
       />
-    </React.Fragment>
+    </div>
   );
 
   // MODO ENFOQUE INMERSIVO A PANTALLA COMPLETA

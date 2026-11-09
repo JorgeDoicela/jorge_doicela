@@ -450,3 +450,60 @@ body {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   Efecto de Enfoque Canónico: Subrayado Punteado Breve al Seleccionar Versículo
+   ========================================================================== */
+@keyframes verseDottedUnderlineFade {
+  0% {
+    text-decoration-color: currentColor;
+  }
+  65% {
+    text-decoration-color: currentColor;
+  }
+  100% {
+    text-decoration-color: transparent;
+  }
+}
+
+.verse-target-pulse {
+  background-color: transparent !important;
+  text-decoration-line: underline !important;
+  text-decoration-style: dotted !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 4px !important;
+  animation: verseDottedUnderlineFade 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.verse-target-pulse p,
+.verse-target-pulse > span:not(sup) {
+  text-decoration-line: underline !important;
+  text-decoration-style: dotted !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 4px !important;
+  animation: verseDottedUnderlineFade 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.verse-target-pulse sup {
+  text-decoration: none !important;
+}
+
+/* ==========================================================================
+   Transición Sutil y Editorial de Pasaje (Búsqueda, Flechas y Navegación)
+   ========================================================================== */
+@keyframes passageEntrance {
+  0% {
+    opacity: 0.15;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-passage-change {
+  animation: passageEntrance 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+

@@ -49,7 +49,10 @@ interface KartexPassageContextValue {
   selectedTranslationId: number | null;
   selectedBook?: Book;
   activeTranslation?: Translation;
-  setPassage: (bookId: number, chapter: number) => void;
+  selectedVerse: number | null;
+  setSelectedVerse: (verse: number | null) => void;
+  setPassage: (bookId: number, chapter: number, verse?: number | null) => void;
+  scrollToVerse: (verseNumber: number) => void;
   setSelectedTranslationId: (id: number | null) => void;
   nextChapter: () => void;
   prevChapter: () => void;
@@ -100,6 +103,7 @@ interface KartexPassageContextValue {
   pauseAudio: () => void;
   resumeAudio: () => void;
   toggleAudio: (verses?: { verseNumber: number; text: string }[]) => void;
+  playAudioFromVerse: (verseNumber: number, explicitVerses?: { verseNumber: number; text: string }[]) => void;
   stopAudio: () => void;
 }
 
@@ -127,6 +131,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   // Obtener estado inicial desde URL query params si existen
   const initialBookParam = searchParams.get('book');
   const initialChapterParam = searchParams.get('chapter');
+  const initialVerseParam = searchParams.get('verse');
   const initialTransParam = searchParams.get('trans');
 
   const [selectedBookId, setSelectedBookId] = useState<number>(() => {
@@ -143,6 +148,14 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
       if (!isNaN(parsed) && parsed > 0) return parsed;
     }
     return 1;
+  });
+
+  const [selectedVerse, setSelectedVerse] = useState<number | null>(() => {
+    if (initialVerseParam) {
+      const parsed = parseInt(initialVerseParam, 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return null;
   });
 
   // Resolución profesional y determinista para SSR:
@@ -400,8 +413,28 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     }
   }, []);
 
+  // Desplazamiento suave y enfoque guiado a versículo específico
+  const scrollToVerse = useCallback((verseNumber: number) => {
+    if (typeof document === 'undefined') return;
+    const attemptScroll = (retries = 8, delay = 80) => {
+      const verseEl = document.querySelector(`[data-verse-number="${verseNumber}"]`);
+      if (verseEl) {
+        verseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        verseEl.classList.remove('verse-target-pulse');
+        void (verseEl as HTMLElement).offsetWidth;
+        verseEl.classList.add('verse-target-pulse');
+        setTimeout(() => {
+          verseEl.classList.remove('verse-target-pulse');
+        }, 2200);
+      } else if (retries > 0) {
+        setTimeout(() => attemptScroll(retries - 1, Math.round(delay * 1.3)), delay);
+      }
+    };
+    requestAnimationFrame(() => attemptScroll());
+  }, []);
+
   // Sincronizar cambios en la barra de URL de forma determinista (0 ms) sin activar el enrutador asíncrono de Next.js ni suspense
-  const updateUrlParams = useCallback((bookId: number, chapter: number, transId: number | null) => {
+  const updateUrlParams = useCallback((bookId: number, chapter: number, transId: number | null, verse: number | null = null) => {
     if (typeof window === 'undefined') return;
     try {
       const url = new URL(window.location.href);
@@ -411,6 +444,11 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         url.searchParams.set('trans', transId.toString());
       } else {
         url.searchParams.delete('trans');
+      }
+      if (verse) {
+        url.searchParams.set('verse', verse.toString());
+      } else {
+        url.searchParams.delete('verse');
       }
       window.history.replaceState(window.history.state, '', url.pathname + url.search);
     } catch {
@@ -441,6 +479,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
       const params = new URLSearchParams(window.location.search);
       const bookParam = params.get('book');
       const chapterParam = params.get('chapter');
+      const verseParam = params.get('verse');
       const transParam = params.get('trans');
 
       if (bookParam) {
@@ -457,6 +496,18 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         }
       }
 
+      if (verseParam) {
+        const parsedVerse = parseInt(verseParam, 10);
+        if (!isNaN(parsedVerse) && parsedVerse > 0) {
+          setSelectedVerse(parsedVerse);
+          scrollToVerse(parsedVerse);
+        } else {
+          setSelectedVerse(null);
+        }
+      } else {
+        setSelectedVerse(null);
+      }
+
       if (transParam) {
         const parsedTrans = parseInt(transParam, 10);
         if (!isNaN(parsedTrans) && parsedTrans > 0) {
@@ -467,7 +518,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [scrollToVerse]);
 
   // Sincronizar cuando se navega externamente a través de un <Link> entre módulos con query params
   const lastSynchronizedSearchRef = useRef<string>(searchParams.toString());
@@ -478,10 +529,12 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
 
     const bookParam = searchParams.get('book');
     const chapterParam = searchParams.get('chapter');
+    const verseParam = searchParams.get('verse');
     if (!bookParam && !chapterParam) return;
 
     const parsedBookId = bookParam ? parseInt(bookParam, 10) : null;
     const parsedChapter = chapterParam ? parseInt(chapterParam, 10) : null;
+    const parsedVerse = verseParam ? parseInt(verseParam, 10) : null;
 
     if (parsedBookId && !isNaN(parsedBookId) && parsedBookId > 0) {
       setSelectedBookId((prev) => (prev !== parsedBookId ? parsedBookId : prev));
@@ -489,7 +542,13 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     if (parsedChapter && !isNaN(parsedChapter) && parsedChapter > 0) {
       setSelectedChapter((prev) => (prev !== parsedChapter ? parsedChapter : prev));
     }
-  }, [searchParams]);
+    if (parsedVerse && !isNaN(parsedVerse) && parsedVerse > 0) {
+      setSelectedVerse((prev) => (prev !== parsedVerse ? parsedVerse : prev));
+      scrollToVerse(parsedVerse);
+    } else if (!verseParam) {
+      setSelectedVerse((prev) => (prev !== null ? null : prev));
+    }
+  }, [searchParams, scrollToVerse]);
 
   // Control de Audio Bíblico Nativo (Web Speech API Accesible y de Alta Fidelidad)
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
@@ -505,6 +564,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   const currentAudioIndexRef = useRef<number>(0);
   const audioSpeedRef = useRef<number>(1.0);
   const selectedVoiceURIRef = useRef<string | null>(null);
+  const activeUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Mantener referencias actualizadas para callbacks asíncronos de SpeechSynthesis
   useEffect(() => {
@@ -615,8 +675,12 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
 
   const stopAudio = useCallback(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
       window.speechSynthesis.cancel();
     }
+    activeUtteranceRef.current = null;
     setIsPlayingAudio(false);
     setIsAudioPaused(false);
     setCurrentAudioVerse(null);
@@ -630,7 +694,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
 
     const queue = audioQueueRef.current;
-    if (index >= queue.length) {
+    if (index < 0 || index >= queue.length) {
       stopAudio();
       return;
     }
@@ -639,6 +703,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     currentAudioIndexRef.current = index;
     setCurrentAudioVerse(item.verseNumber);
     setIsAudioPaused(false);
+    setIsPlayingAudio(true);
 
     // Sincronización visual y scroll suave con el versículo en reproducción
     if (typeof document !== 'undefined') {
@@ -648,9 +713,14 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
       }
     }
 
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(item.text);
+    activeUtteranceRef.current = utterance;
+
     const targetLang = locale && locale.toLowerCase().startsWith('en') ? 'en-US' : 'es-ES';
     utterance.lang = targetLang;
     utterance.rate = audioSpeedRef.current;
@@ -662,10 +732,12 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     }
 
     utterance.onend = () => {
+      activeUtteranceRef.current = null;
       playVerseAtIndex(index + 1);
     };
 
     utterance.onerror = (e) => {
+      activeUtteranceRef.current = null;
       if (e.error !== 'interrupted' && e.error !== 'canceled') {
         stopAudio();
       }
@@ -738,24 +810,53 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     return () => clearInterval(interval);
   }, [isPlayingAudio, isAudioPaused, sleepTimerRemainingSeconds, stopAudio]);
 
+  // Watchdog de 10s para prevenir el bloqueo de 15 segundos nativo de Chromium en SpeechSynthesis
+  useEffect(() => {
+    if (!isPlayingAudio || isAudioPaused || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    const interval = setInterval(() => {
+      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [isPlayingAudio, isAudioPaused]);
+
   const pauseAudio = useCallback(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window && isPlayingAudio && !isAudioPaused) {
-      window.speechSynthesis.pause();
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      window.speechSynthesis.cancel();
+      activeUtteranceRef.current = null;
       setIsAudioPaused(true);
     }
   }, [isAudioPaused, isPlayingAudio]);
 
   const resumeAudio = useCallback(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window && isPlayingAudio && isAudioPaused) {
-      window.speechSynthesis.resume();
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      window.speechSynthesis.cancel();
+      activeUtteranceRef.current = null;
       setIsAudioPaused(false);
+
+      if (audioQueueRef.current.length > 0 && currentAudioIndexRef.current < audioQueueRef.current.length) {
+        playVerseAtIndex(currentAudioIndexRef.current);
+      } else {
+        stopAudio();
+      }
     }
-  }, [isAudioPaused, isPlayingAudio]);
+  }, [isAudioPaused, isPlayingAudio, playVerseAtIndex, stopAudio]);
 
   const playNextVerse = useCallback(() => {
     if (audioQueueRef.current.length > 0) {
       const nextIdx = currentAudioIndexRef.current + 1;
       if (nextIdx < audioQueueRef.current.length) {
+        setIsAudioPaused(false);
         playVerseAtIndex(nextIdx);
       } else {
         stopAudio();
@@ -766,6 +867,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
   const playPrevVerse = useCallback(() => {
     if (audioQueueRef.current.length > 0) {
       const prevIdx = Math.max(0, currentAudioIndexRef.current - 1);
+      setIsAudioPaused(false);
       playVerseAtIndex(prevIdx);
     }
   }, [playVerseAtIndex]);
@@ -778,7 +880,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         resumeAudio();
         return;
       }
-      stopAudio();
+      pauseAudio();
       return;
     }
 
@@ -791,7 +893,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         const vNum = numAttr ? parseInt(numAttr, 10) : idx + 1;
         const clone = el.cloneNode(true) as HTMLElement;
         clone.querySelectorAll('sup').forEach((sup) => sup.remove());
-        const cleanText = clone.textContent?.trim();
+        const cleanText = clone.textContent?.replace(/\s+/g, ' ').trim();
         if (cleanText) {
           extracted.push({ verseNumber: vNum, text: cleanText });
         }
@@ -806,14 +908,51 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
     setIsPlayingAudio(true);
     setIsAudioPaused(false);
     playVerseAtIndex(0);
-  }, [isAudioPaused, isPlayingAudio, playVerseAtIndex, resumeAudio, stopAudio]);
+  }, [isAudioPaused, isPlayingAudio, pauseAudio, playVerseAtIndex, resumeAudio]);
 
-  const setPassage = (bookId: number, chapter: number) => {
+  const playAudioFromVerse = useCallback((startVerseNumber: number, explicitVerses?: { verseNumber: number; text: string }[]) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    let versesToPlay = explicitVerses;
+    if (!versesToPlay || versesToPlay.length === 0) {
+      const elements = document.querySelectorAll<HTMLElement>('[data-verse-item="true"]');
+      const extracted: { verseNumber: number; text: string }[] = [];
+      elements.forEach((el, idx) => {
+        const numAttr = el.getAttribute('data-verse-number');
+        const vNum = numAttr ? parseInt(numAttr, 10) : idx + 1;
+        const clone = el.cloneNode(true) as HTMLElement;
+        clone.querySelectorAll('sup').forEach((sup) => sup.remove());
+        const cleanText = clone.textContent?.replace(/\s+/g, ' ').trim();
+        if (cleanText) {
+          extracted.push({ verseNumber: vNum, text: cleanText });
+        }
+      });
+      versesToPlay = extracted;
+    }
+
+    if (!versesToPlay || versesToPlay.length === 0) return;
+
+    // Localizar el índice del versículo de inicio para reproducir de forma continua hacia abajo
+    const targetIdx = versesToPlay.findIndex((v) => v.verseNumber === startVerseNumber);
+    const startIdx = targetIdx >= 0 ? targetIdx : 0;
+
+    audioQueueRef.current = versesToPlay;
+    currentAudioIndexRef.current = startIdx;
+    setIsPlayingAudio(true);
+    setIsAudioPaused(false);
+    playVerseAtIndex(startIdx);
+  }, [playVerseAtIndex]);
+
+  const setPassage = (bookId: number, chapter: number, verse: number | null = null) => {
     stopAudio();
     setSelectedBookId(bookId);
     setSelectedChapter(chapter);
+    setSelectedVerse(verse);
     setIsHeaderVisible(true);
-    updateUrlParams(bookId, chapter, selectedTranslationId);
+    updateUrlParams(bookId, chapter, selectedTranslationId, verse);
+    if (verse) {
+      scrollToVerse(verse);
+    }
   };
 
   const handleSetTranslation = (id: number | null) => {
@@ -903,10 +1042,13 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         translations,
         selectedBookId,
         selectedChapter,
+        selectedVerse,
         selectedTranslationId,
         selectedBook,
         activeTranslation,
+        setSelectedVerse,
         setPassage,
+        scrollToVerse,
         setSelectedTranslationId: handleSetTranslation,
         nextChapter,
         prevChapter,
@@ -955,6 +1097,7 @@ export const KartexPassageProvider: React.FC<KartexPassageProviderProps> = ({ ch
         pauseAudio,
         resumeAudio,
         toggleAudio,
+        playAudioFromVerse,
         stopAudio,
       }}
     >

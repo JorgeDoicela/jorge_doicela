@@ -1,10 +1,15 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { mobileSheetCoordinator } from './mobileSheetCoordinator';
+
+export type MobileSheetDismissMode = 'modal' | 'dismiss-on-tap' | 'interactive';
 
 export interface MobileBottomSheetProps {
+  dismissMode?: MobileSheetDismissMode;
+  id?: string;
   isOpen: boolean;
   onClose: () => void;
   title?: React.ReactNode;
@@ -38,6 +43,7 @@ export interface MobileBottomSheetProps {
  * - Soporte nativo para áreas seguras (safe-area-inset-bottom).
  */
 export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
+  id,
   isOpen,
   onClose,
   title,
@@ -48,11 +54,17 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   showCloseButton = false,
   closeAriaLabel = 'Cerrar panel',
   heightClass = 'max-h-[85vh]',
+  dismissMode,
   allowBackgroundInteraction = true,
   className = '',
   bodyClassName = '',
   children,
 }) => {
+  const generatedId = useId();
+  const sheetInstanceId = id || generatedId;
+  const effectiveDismissMode: MobileSheetDismissMode =
+    dismissMode ?? (allowBackgroundInteraction === false ? 'modal' : 'dismiss-on-tap');
+
   const [mounted, setMounted] = useState(false);
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -65,6 +77,11 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
     setMounted(true);
   }, []);
 
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
   // Restablecer estados al abrir
   useEffect(() => {
     if (isOpen) {
@@ -74,20 +91,37 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
     }
   }, [isOpen]);
 
-  // Cierre animado ordenado hacia abajo
+  // Cierre animado ordenado hacia abajo (interacción del usuario: arrastre o tap fuera)
   const triggerAnimatedClose = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
-      onClose();
+      onCloseRef.current();
       setIsClosing(false);
       setDragOffsetY(0);
     }, 220);
-  }, [onClose]);
+  }, []);
+
+  // Exclusión mutua estricta en pantallas móviles (< lg / 1024px)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const isMobileScreen = window.innerWidth < 1024;
+    if (isMobileScreen && isOpen) {
+      mobileSheetCoordinator.registerOpen(sheetInstanceId, () => {
+        // Cierre sincrónico e inmediato cuando otra lámina solicita la pantalla
+        onCloseRef.current();
+      });
+    } else {
+      mobileSheetCoordinator.registerClose(sheetInstanceId);
+    }
+    return () => {
+      mobileSheetCoordinator.registerClose(sheetInstanceId);
+    };
+  }, [isOpen, sheetInstanceId]);
 
   // Si allowBackgroundInteraction es false, bloquea el scroll de fondo de forma modal estricta
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (isOpen && !allowBackgroundInteraction) {
+    if (isOpen && effectiveDismissMode === 'modal') {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
@@ -96,9 +130,9 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
     }
   }, [isOpen, allowBackgroundInteraction]);
 
-  // Interacción Inteligente de Fondo: Permite mover el texto detrás y cierra solo ante tap estático
+  // Interacción Desacoplada según dismissMode ('modal' | 'dismiss-on-tap' | 'interactive')
   useEffect(() => {
-    if (!isOpen || !allowBackgroundInteraction) return;
+    if (!isOpen || effectiveDismissMode === 'modal' || typeof window === 'undefined') return;
 
     let touchStartPos: { x: number; y: number; time: number } | null = null;
 
@@ -115,43 +149,47 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       const elapsed = Date.now() - touchStartPos.time;
       touchStartPos = null;
 
-      // Si el usuario movió el dedo más de 10px o mantuvo presionado > 450ms,
-      // fue un gesto de desplazamiento de lectura en el texto bíblico, NO un tap de cierre
+      // Desplazamiento de lectura en el fondo: no cerrar
       if (deltaX > 10 || deltaY > 10 || elapsed > 450) {
         return;
       }
 
-      // Si fue un tap corto y estático fuera del Bottom Sheet
       const target = e.target as HTMLElement | null;
       if (sheetRef.current && !sheetRef.current.contains(target)) {
-        // No cerrar si el tap es sobre elementos de interacción del dock o versículos con lógica propia
-        if (target?.closest('[data-mobile-dock]') || target?.closest('[data-verse-item]')) {
+        // En modo 'interactive' (ej. selección de versículos), toques sobre versículos se respetan para multi-selección
+        if (effectiveDismissMode === 'interactive' && target?.closest('[data-verse-item]')) {
           return;
+        }
+        if (e.cancelable) {
+          e.preventDefault();
         }
         triggerAnimatedClose();
       }
     };
 
-    const handleDocMouseDown = (e: MouseEvent) => {
+    const handleCaptureClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (sheetRef.current && !sheetRef.current.contains(target)) {
-        if (target?.closest('[data-mobile-dock]') || target?.closest('[data-verse-item]')) {
+        // En modo 'interactive', permitir que el evento click llegue al versículo
+        if (effectiveDismissMode === 'interactive' && target?.closest('[data-verse-item]')) {
           return;
         }
+        e.stopPropagation();
+        e.preventDefault();
         triggerAnimatedClose();
       }
     };
 
     document.addEventListener('touchstart', handleDocTouchStart, { passive: true });
-    document.addEventListener('touchend', handleDocTouchEnd, { passive: true });
-    document.addEventListener('mousedown', handleDocMouseDown);
+    document.addEventListener('touchend', handleDocTouchEnd, { passive: false });
+    document.addEventListener('click', handleCaptureClick, true);
 
     return () => {
       document.removeEventListener('touchstart', handleDocTouchStart);
       document.removeEventListener('touchend', handleDocTouchEnd);
-      document.removeEventListener('mousedown', handleDocMouseDown);
+      document.removeEventListener('click', handleCaptureClick, true);
     };
-  }, [isOpen, allowBackgroundInteraction, triggerAnimatedClose]);
+  }, [isOpen, effectiveDismissMode, triggerAnimatedClose]);
 
   // Cierre accesible con tecla Escape
   useEffect(() => {
@@ -261,10 +299,10 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       {/* Backdrop transparente: Si allowBackgroundInteraction está activo, usa pointer-events-none para permitir mover el texto de atrás */}
       <div
         data-bottom-sheet-backdrop="true"
-        onClick={!allowBackgroundInteraction ? triggerAnimatedClose : undefined}
+        onClick={effectiveDismissMode === 'modal' ? triggerAnimatedClose : undefined}
         aria-hidden="true"
-        className={`fixed inset-0 bg-transparent z-50 select-none ${
-          allowBackgroundInteraction ? 'pointer-events-none' : 'pointer-events-auto'
+        className={`fixed inset-0 bg-transparent z-[45] select-none ${
+          effectiveDismissMode === 'modal' ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
       />
 

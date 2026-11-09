@@ -58,8 +58,8 @@ export default function StandardStudyPage() {
         onTogglePericopes={togglePericopes}
         books={books}
         selectedBookId={selectedBookId}
-        onSelectPassage={(bookId, chap) => {
-          setPassage(bookId, chap);
+        onSelectPassage={(bookId, chap, verse) => {
+          setPassage(bookId, chap, verse);
         }}
         onSelectBook={(bookId) => {
           if (bookId !== null) setPassage(bookId, 1);

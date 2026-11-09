@@ -1,11 +1,16 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { ResizeBorderHandle } from './ResizeBorderHandle';
 import { useStudySidePanelState } from './StudySidePanelContext';
+import { mobileSheetCoordinator } from './mobileSheetCoordinator';
+
+export type StudyPanelDismissMode = 'modal' | 'dismiss-on-tap' | 'interactive';
 
 export interface StudySidePanelProps {
+    dismissMode?: StudyPanelDismissMode;
     side: 'left' | 'right';
     mobileVariant?: 'drawer' | 'bottom-sheet';
     ariaLabel?: string;
@@ -96,6 +101,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
     storageKey,
     collapseTitle,
     allowBackgroundInteraction = true,
+    dismissMode,
     className = '',
     children,
 }) => {
@@ -118,6 +124,11 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
     const contextWidth = panelState?.width;
     const isControlledWidth = propWidth !== undefined || contextWidth !== undefined;
     const [independentWidth, setIndependentWidth] = useState<number>(initialWidth);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const currentWidth = propWidth ?? (contextWidth !== undefined ? contextWidth : independentWidth);
 
@@ -126,6 +137,7 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         setIndependentWidth(initialWidth);
     }, [initialWidth]);
 
+    const effectiveDismissMode: StudyPanelDismissMode = dismissMode ?? (allowBackgroundInteraction === false ? 'modal' : 'dismiss-on-tap');
     const panelRef = useRef<HTMLElement | null>(null);
 
     // Soporte táctil y de puntero interactivo en tiempo real para Bottom Sheet en móvil
@@ -142,14 +154,37 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         onClose?.();
     }, [onClose]);
 
+    const handleCloseRef = useRef(handleClose);
+    useEffect(() => {
+        handleCloseRef.current = handleClose;
+    }, [handleClose]);
+
     const triggerAnimatedSheetClose = useCallback(() => {
         setIsSheetClosing(true);
         setTimeout(() => {
-            handleClose();
+            handleCloseRef.current();
             setIsSheetClosing(false);
             setSheetDragOffsetY(0);
         }, 220);
-    }, [handleClose]);
+    }, []);
+
+    // Exclusión mutua estricta en pantallas móviles (< lg / 1024px)
+    const panelSheetId = isLeft ? 'study-panel-left' : 'study-panel-right';
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const isMobileScreen = window.innerWidth < 1024;
+        if (isMobileScreen && isOpen) {
+            mobileSheetCoordinator.registerOpen(panelSheetId, () => {
+                // Cierre sincrónico e inmediato cuando otra lámina solicita la pantalla
+                handleCloseRef.current();
+            });
+        } else {
+            mobileSheetCoordinator.registerClose(panelSheetId);
+        }
+        return () => {
+            mobileSheetCoordinator.registerClose(panelSheetId);
+        };
+    }, [isOpen, panelSheetId]);
 
     const handleSheetDragStart = useCallback((clientY: number) => {
         sheetStartYRef.current = clientY;
@@ -228,9 +263,9 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
         }
     }, [isOpen, isBottomSheet, allowBackgroundInteraction]);
 
-    // Interacción Inteligente de Fondo: Permite mover el texto detrás y cierra solo ante tap estático
+    // Interacción Desacoplada según dismissMode ('modal' | 'dismiss-on-tap' | 'interactive')
     useEffect(() => {
-        if (!isOpen || !isBottomSheet || !allowBackgroundInteraction || typeof window === 'undefined' || window.innerWidth >= 1024) {
+        if (!isOpen || !isBottomSheet || effectiveDismissMode === 'modal' || typeof window === 'undefined' || window.innerWidth >= 1024) {
             return;
         }
 
@@ -249,42 +284,44 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
             const elapsed = Date.now() - touchStartPos.time;
             touchStartPos = null;
 
-            // Si el usuario movió el dedo más de 10px o mantuvo presionado > 450ms,
-            // fue un gesto de desplazamiento de lectura en el texto bíblico, NO un tap de cierre
             if (deltaX > 10 || deltaY > 10 || elapsed > 450) {
                 return;
             }
 
-            // Si fue un tap corto y estático fuera del Bottom Sheet
             const target = e.target as HTMLElement | null;
             if (panelRef.current && !panelRef.current.contains(target)) {
-                if (target?.closest('[data-mobile-dock]') || target?.closest('[data-verse-item]')) {
+                if (effectiveDismissMode === 'interactive' && target?.closest('[data-verse-item]')) {
                     return;
+                }
+                if (e.cancelable) {
+                    e.preventDefault();
                 }
                 triggerAnimatedSheetClose();
             }
         };
 
-        const handleDocMouseDown = (e: MouseEvent) => {
+        const handleCaptureClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement | null;
             if (panelRef.current && !panelRef.current.contains(target)) {
-                if (target?.closest('[data-mobile-dock]') || target?.closest('[data-verse-item]')) {
+                if (effectiveDismissMode === 'interactive' && target?.closest('[data-verse-item]')) {
                     return;
                 }
+                e.stopPropagation();
+                e.preventDefault();
                 triggerAnimatedSheetClose();
             }
         };
 
         document.addEventListener('touchstart', handleDocTouchStart, { passive: true });
-        document.addEventListener('touchend', handleDocTouchEnd, { passive: true });
-        document.addEventListener('mousedown', handleDocMouseDown);
+        document.addEventListener('touchend', handleDocTouchEnd, { passive: false });
+        document.addEventListener('click', handleCaptureClick, true);
 
         return () => {
             document.removeEventListener('touchstart', handleDocTouchStart);
             document.removeEventListener('touchend', handleDocTouchEnd);
-            document.removeEventListener('mousedown', handleDocMouseDown);
+            document.removeEventListener('click', handleCaptureClick, true);
         };
-    }, [isOpen, isBottomSheet, allowBackgroundInteraction, triggerAnimatedSheetClose]);
+    }, [isOpen, isBottomSheet, effectiveDismissMode, triggerAnimatedSheetClose]);
 
     // Cierre accesible con tecla Escape
     useEffect(() => {
@@ -371,19 +408,18 @@ export const StudySidePanelRoot: React.FC<StudySidePanelProps> = ({
 
     return (
         <>
-            {/* Cortina backdrop transparente en Móviles (< lg) sin sombra ni oscurecimiento */}
-            <div
-                data-study-panel-backdrop="true"
-                onClick={!allowBackgroundInteraction || !isBottomSheet ? handleClose : undefined}
-                aria-hidden="true"
-                className={`fixed inset-0 bg-transparent z-40 lg:hidden print:hidden transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                    isOpen
-                        ? isBottomSheet && allowBackgroundInteraction
-                            ? 'opacity-100 pointer-events-none'
-                            : 'opacity-100 pointer-events-auto'
-                        : 'opacity-0 pointer-events-none'
-                }`}
-            />
+            {/* Cortina backdrop portaled a document.body en Móviles (< lg): Al tocar fuera del panel se cierra suavemente sin interactuar con el fondo */}
+            {mounted && isOpen && typeof document !== 'undefined' && createPortal(
+                <div
+                    data-study-panel-backdrop="true"
+                    onClick={effectiveDismissMode === 'modal' ? (isBottomSheet ? triggerAnimatedSheetClose : handleClose) : undefined}
+                    aria-hidden="true"
+                    className={`fixed inset-0 bg-transparent z-[45] lg:hidden print:hidden select-none ${
+                        effectiveDismissMode === 'modal' ? 'pointer-events-auto' : 'pointer-events-none'
+                    }`}
+                />,
+                document.body
+            )}
 
             <aside
                 ref={panelRef}

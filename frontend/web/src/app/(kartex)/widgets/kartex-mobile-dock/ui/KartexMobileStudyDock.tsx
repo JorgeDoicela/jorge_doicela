@@ -7,6 +7,7 @@ import { useKartexPassageSafe } from '../../../entities/passage';
 import { MobileTranslationPopover } from '../../../entities/translations';
 import { ReaderAppearancePopover, KartexAudioControlsPopover } from '../../../features/verses';
 import { getChapterCountForBook } from '../../../shared/data/canonData';
+import { mobileSheetCoordinator } from '../../../shared/ui';
 
 export interface KartexMobileStudyDockProps {
   isVisible?: boolean;
@@ -75,6 +76,9 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
 
 
   const handleToggleLeft = () => {
+    if (!isLeftOpen) {
+      mobileSheetCoordinator.dismissAll();
+    }
     if (onOpenLeft) {
       onOpenLeft();
     } else {
@@ -83,10 +87,22 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
   };
 
   const handleToggleRight = () => {
+    if (!isRightOpen) {
+      mobileSheetCoordinator.dismissAll();
+    }
     if (onOpenRight) {
       onOpenRight();
     } else {
       passageContext?.toggleRightInspector();
+    }
+  };
+
+  const handleToggleAudio = () => {
+    if (!audioPopoverOpen) {
+      mobileSheetCoordinator.dismissAll();
+      setAudioPopoverOpen(true);
+    } else {
+      setAudioPopoverOpen(false);
     }
   };
 
@@ -135,7 +151,10 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
                     : 'text-foreground hover:bg-accents-2/60'
                 }`}
               >
-                <span>{bookDisplayName} {currentChapter}</span>
+                <span>
+                  {bookDisplayName} {currentChapter}
+                  {passageContext?.selectedVerse ? `:${passageContext.selectedVerse}` : ''}
+                </span>
               </button>
 
               {/* Capítulo siguiente */}
@@ -186,7 +205,12 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
             renderTrigger={({ isOpen, toggle, activeAbbreviation }) => (
               <button
                 type="button"
-                onClick={toggle}
+                onClick={() => {
+                  if (!isOpen) {
+                    mobileSheetCoordinator.dismissAll();
+                  }
+                  toggle();
+                }}
                 aria-expanded={isOpen}
                 aria-label={tDock('version')}
                 title={tDock('version')}
@@ -210,7 +234,7 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
           <div className="flex-1 flex justify-center">
             <button
               type="button"
-              onClick={() => setAudioPopoverOpen((prev) => !prev)}
+              onClick={handleToggleAudio}
               aria-expanded={audioPopoverOpen}
               aria-label={tDock('audio')}
               title={tDock('audio')}
@@ -251,7 +275,12 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
             renderTrigger={({ isOpen, toggle }) => (
               <button
                 type="button"
-                onClick={toggle}
+                onClick={() => {
+                  if (!isOpen) {
+                    mobileSheetCoordinator.dismissAll();
+                  }
+                  toggle();
+                }}
                 aria-expanded={isOpen}
                 aria-label={tDock('format')}
                 title={tDock('format')}

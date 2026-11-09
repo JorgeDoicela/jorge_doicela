@@ -56,7 +56,7 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
 
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 640);
+            setIsMobile(window.innerWidth < 1024);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -130,6 +130,7 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
             {/* Bottom Sheet unificado y homogéneo en Móvil */}
             {isMobile && (
                 <MobileBottomSheet
+                    id="kartex-appearance-sheet"
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     title={t('typographySettings')}

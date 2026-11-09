@@ -265,3 +265,6 @@ export function getChapterCountForBook(abbreviation?: string): number {
   const upper = abbreviation.toUpperCase();
   return BOOK_CHAPTERS[upper] || 50;
 }
+
+export { BIBLE_VERSE_COUNTS, getVersesCountForChapter } from './canonVerseCounts';
+

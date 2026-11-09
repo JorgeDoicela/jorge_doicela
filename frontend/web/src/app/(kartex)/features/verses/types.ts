@@ -33,7 +33,7 @@ export interface Pericope {
 }
 
 export type ReaderLayoutMode = 'continuous' | 'verse-by-verse';
-export type ReaderFontSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ReaderFontSize = number | 'sm' | 'md' | 'lg' | 'xl';
 import type { ReaderFontFamily } from './config/readerFonts';
 export type { ReaderFontFamily };
 

@@ -16,6 +16,8 @@ import { Printer, Copy, Check, Type, AlignLeft, ListOrdered, Maximize2, Minimize
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import { KartexAudioControlsPopover } from '../audio-controls';
 import { ReaderFontFamilySelector } from '../font-family-selector/ReaderFontFamilySelector';
+import { ReaderFontSizeControl } from '../reader-font-size-control';
+import { KartexToggleSwitch } from '../../../../shared/ui';
 
 interface ReaderToolbarProps {
   readerSettings: ReaderSettings;
@@ -115,13 +117,6 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  const fontSizes: { label: string; value: ReaderFontSize }[] = [
-    { label: 'A-', value: 'sm' },
-    { label: 'A', value: 'md' },
-    { label: 'A+', value: 'lg' },
-    { label: 'A++', value: 'xl' },
-  ];
 
   const handlePassageSelect = (bookId: number, chapter: number, verse: number | null = null) => {
     if (onSelectPassage) {
@@ -263,28 +258,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   />
                 </div>
 
-                {/* Tamaño de Fuente */}
-                <div>
-                  <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-1.5">
-                    {t('fontSize')}
-                  </span>
-                  <div className="flex p-0.5 rounded-full border border-border/80 bg-inner-card/60 gap-0.5">
-                    {fontSizes.map((f) => (
-                      <button
-                        key={f.value}
-                        type="button"
-                        onClick={() => onFontSizeChange(f.value)}
-                        className={`flex-1 py-1 px-1.5 rounded-full text-xs transition-all cursor-pointer text-center ${
-                          readerSettings.fontSize === f.value
-                            ? 'bg-foreground text-background font-bold shadow-2xs'
-                            : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                        }`}
-                      >
-                        {f.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {/* Tamaño de Fuente (Control Proporcional y Continuo Geist) */}
+                <ReaderFontSizeControl
+                  value={readerSettings.fontSize}
+                  onChange={(size) => onFontSizeChange(size)}
+                  size="sm"
+                />
 
                 {/* Alternar Subtítulos Temáticos */}
                 {onTogglePericopes && (
@@ -292,17 +271,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                     <span className="text-xs text-zinc-500 font-medium">
                       {t('pericopes')}
                     </span>
-                    <button
-                      type="button"
-                      onClick={onTogglePericopes}
-                      className={`px-3 py-0.5 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${
-                        readerSettings.showPericopes
-                          ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
-                          : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
-                      }`}
-                    >
-                      {readerSettings.showPericopes ? 'ON' : 'OFF'}
-                    </button>
+                    <KartexToggleSwitch
+                      checked={readerSettings.showPericopes}
+                      onChange={onTogglePericopes}
+                      label={t('pericopes')}
+                      size="sm"
+                    />
                   </div>
                 )}
 
@@ -311,17 +285,12 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
                   <span className="text-xs text-accents-6 font-medium">
                     {t('verseNumbers')}
                   </span>
-                  <button
-                    type="button"
-                    onClick={onToggleVerseNumbers}
-                    className={`px-3 py-0.5 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${
-                      readerSettings.showVerseNumbers
-                        ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
-                        : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
-                    }`}
-                  >
-                    123
-                  </button>
+                  <KartexToggleSwitch
+                    checked={readerSettings.showVerseNumbers}
+                    onChange={onToggleVerseNumbers}
+                    label={t('verseNumbers')}
+                    size="sm"
+                  />
                 </div>
 
                 {/* Guía Rápida de Atajos de Teclado */}

@@ -2,7 +2,17 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { LucideIcon, BookOpen, Languages, ChevronLeft, ChevronRight, BookOpenCheck, Volume2 } from 'lucide-react';
+import {
+  LucideIcon,
+  BookOpen,
+  Languages,
+  ChevronLeft,
+  ChevronRight,
+  BookOpenCheck,
+  Volume2,
+  Play,
+  Pause,
+} from 'lucide-react';
 import { useKartexPassageSafe } from '../../../entities/passage';
 import { MobileTranslationPopover } from '../../../entities/translations';
 import { ReaderAppearancePopover, KartexAudioControlsPopover } from '../../../features/verses';
@@ -106,6 +116,17 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
     }
   };
 
+  const handleQuickAudioPlayPause = () => {
+    if (!isPlayingAudio) {
+      mobileSheetCoordinator.dismissAll();
+      passageContext?.toggleAudio();
+    } else if (isAudioPaused) {
+      passageContext?.resumeAudio();
+    } else {
+      passageContext?.pauseAudio();
+    }
+  };
+
   const displayLeftLabel =
     leftLabel || (isReaderView ? tDock('books') : tDock('navigation'));
   const displayRightLabel =
@@ -123,18 +144,49 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
     >
       {/* Contenedor Unificado Integrado (Estilo Geist / Vercel Style) */}
       <div className="w-full pointer-events-auto bg-background/95 dark:bg-black/95 sepia:bg-[#FAF6EE]/95 backdrop-blur-xl border-t border-border/80 shadow-[0_-8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.4)] max-w-lg mx-auto sm:rounded-t-2xl sm:border-x">
-        {/* Nivel Superior: Navegación Canónica de Capítulos (Modo Lector) */}
+        {/* Nivel Superior: Navegación Canónica de Capítulos + Reproductor Rápido de Audio (Modo Lector) */}
         {isReaderView && passageContext && (
-          <div className="pt-2 pb-1 px-3 flex items-center justify-center select-none">
+          <div className="pt-2 pb-1 px-3 flex items-center gap-2 select-none">
+            {/* Botón Circular Rápido de Audio Play / Pausa */}
+            <button
+              type="button"
+              onClick={handleQuickAudioPlayPause}
+              aria-label={
+                isPlayingAudio && !isAudioPaused
+                  ? 'Pausar lectura de audio'
+                  : isAudioPaused
+                    ? 'Reanudar lectura de audio'
+                    : 'Iniciar lectura de audio'
+              }
+              title={
+                isPlayingAudio && !isAudioPaused
+                  ? 'Pausar audio'
+                  : isAudioPaused
+                    ? 'Reanudar audio'
+                    : 'Reproducir audio'
+              }
+              className={`h-9 w-9 shrink-0 rounded-full border border-border/80 flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-90 ${
+                isPlayingAudio && !isAudioPaused
+                  ? 'bg-foreground text-background shadow-xs'
+                  : 'bg-accents-1 hover:bg-accents-2 text-foreground'
+              }`}
+            >
+              {isPlayingAudio && !isAudioPaused ? (
+                <Pause className="w-4 h-4 fill-current stroke-none" />
+              ) : (
+                <Play className="w-4 h-4 fill-current stroke-none ml-0.5" />
+              )}
+            </button>
+
             {/* Cápsula de Navegación Canónica para Cambiar el Texto/Capítulo */}
-            <div className="w-full h-9 rounded-full bg-accents-1 border border-border/80 hover:border-accents-3/60 flex items-center justify-between px-2 select-none shadow-2xs transition-colors">
+            <div className="flex-1 h-9 rounded-full bg-accents-1 border border-border/80 hover:border-accents-3/60 flex items-center justify-between px-2 select-none shadow-2xs transition-colors min-w-0">
               {/* Capítulo anterior */}
               <button
                 type="button"
                 onClick={() => passageContext.prevChapter()}
                 disabled={!canGoPrev}
                 aria-label="Capítulo anterior"
-                className="p-1 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-2/80 active:scale-90 transition-all cursor-pointer disabled:opacity-20 disabled:pointer-events-none"
+                className="p-1 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-2/80 active:scale-90 transition-all cursor-pointer disabled:opacity-20 disabled:pointer-events-none shrink-0"
               >
                 <ChevronLeft className="w-4 h-4 stroke-[2.25]" />
               </button>
@@ -145,13 +197,9 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
                 onClick={handleToggleLeft}
                 aria-expanded={isLeftOpen}
                 aria-label={`Selector de libros: pasaje actual ${bookDisplayName} ${currentChapter}`}
-                className={`px-4 py-1 text-xs font-mono font-bold tracking-wider uppercase truncate rounded-full transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 ${
-                  isLeftOpen
-                    ? 'bg-foreground text-background shadow-2xs'
-                    : 'text-foreground hover:bg-accents-2/60'
-                }`}
+                className="px-2 sm:px-4 py-1 text-xs font-mono font-bold tracking-wider uppercase truncate rounded-full transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 min-w-0 text-foreground hover:bg-accents-2/60"
               >
-                <span>
+                <span className="truncate">
                   {bookDisplayName} {currentChapter}
                   {passageContext?.selectedVerse ? `:${passageContext.selectedVerse}` : ''}
                 </span>
@@ -163,7 +211,7 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
                 onClick={() => passageContext.nextChapter()}
                 disabled={!canGoNext}
                 aria-label="Capítulo siguiente"
-                className="p-1 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-2/80 active:scale-90 transition-all cursor-pointer disabled:opacity-20 disabled:pointer-events-none"
+                className="p-1 rounded-full text-accents-4 hover:text-foreground hover:bg-accents-2/80 active:scale-90 transition-all cursor-pointer disabled:opacity-20 disabled:pointer-events-none shrink-0"
               >
                 <ChevronRight className="w-4 h-4 stroke-[2.25]" />
               </button>
@@ -247,11 +295,8 @@ export const KartexMobileStudyDock: React.FC<KartexMobileStudyDockProps> = ({
               <div className="relative">
                 <Volume2
                   className="w-5 h-5 shrink-0"
-                  strokeWidth={audioPopoverOpen || isPlayingAudio ? 2.25 : 1.75}
+                  strokeWidth={audioPopoverOpen || (isPlayingAudio && !isAudioPaused) ? 2.25 : 1.75}
                 />
-                {isPlayingAudio && !isAudioPaused && (
-                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                )}
               </div>
               <span className="text-[10px] tracking-tight font-medium leading-none truncate max-w-full">
                 {tDock('audio')}

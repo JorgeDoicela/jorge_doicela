@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { BookOpen } from 'lucide-react';
 import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
 import { getReaderFontClass } from '../../config/readerFonts';
+import { normalizeFontSizeToPx } from '../../config/readerFontSize';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import { mobileSheetCoordinator } from '../../../../shared/ui';
 import {
@@ -116,20 +117,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
         return bookName || firstVerseBook || '';
     }, [rawAbbr, tBooks, verses, bookName]);
 
-    const getFontSizeClass = (size: ReaderFontSize) => {
-        switch (size) {
-            case 'sm':
-                return 'text-sm leading-relaxed';
-            case 'md':
-                return 'text-base leading-relaxed';
-            case 'lg':
-                return 'text-lg leading-relaxed';
-            case 'xl':
-                return 'text-xl leading-relaxed';
-            default:
-                return 'text-base leading-relaxed';
-        }
-    };
+    const fontSizePx = normalizeFontSizeToPx(fontSize);
 
     const selectedVerses = useMemo(() => {
         return verses.filter((v) => selectedVerseNumbers.includes(v.verseNumber));
@@ -300,7 +288,7 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
                                 data-verse-number={verse.verseNumber}
                                 onClick={(e) => handleVerseClick(verse, e)}
                                 className={`relative py-3 sm:py-4 px-1 sm:px-3 lg:px-4 transition-colors duration-150 flex items-start gap-2.5 sm:gap-4 group cursor-pointer border-l-2 ${isAudioActive
-                                        ? 'bg-foreground/5 dark:bg-white/10 sepia:bg-[#8C765C]/15 border-foreground'
+                                        ? 'border-foreground'
                                         : isSelected
                                             ? 'border-foreground'
                                             : 'border-transparent hover:bg-zinc-500/5 sepia:hover:bg-[#F4ECE0]/60'
@@ -321,13 +309,17 @@ export const LineByLineReadingView: React.FC<LineByLineReadingViewProps> = ({
                                 {/* Contenido textual que aprovecha todo el ancho disponible */}
                                 <div className="flex-1 min-w-0 pr-1 sm:group-hover:pr-14 transition-[padding] duration-150">
                                     <p
-                                        className={`${getFontSizeClass(fontSize)} ${getReaderFontClass(fontFamily)} ${highlightStyle
+                                        style={{
+                                            fontSize: `${fontSizePx}px`,
+                                            lineHeight: 1.7,
+                                        }}
+                                        className={`${getReaderFontClass(fontFamily)} ${highlightStyle
                                                 ? `${highlightStyle.bgClass} px-2 py-0.5 rounded-md sm:rounded-lg`
                                                 : 'text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E]'
                                             } ${isSelected
                                                 ? 'underline decoration-dotted decoration-2 underline-offset-[4px] decoration-zinc-800/80 dark:decoration-zinc-200/80 sepia:decoration-[#6B533E]/90'
                                                 : ''
-                                            } leading-relaxed selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
+                                            } selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
                                     >
                                         {verse.text}
                                     </p>

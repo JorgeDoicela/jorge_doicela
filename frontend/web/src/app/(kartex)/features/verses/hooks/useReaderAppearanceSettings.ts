@@ -8,10 +8,11 @@ import {
   ReaderFontFamily,
 } from '../types';
 import { DEFAULT_READER_FONT_ID, isValidReaderFont } from '../config/readerFonts';
+import { normalizeFontSizeToPx, DEFAULT_READER_FONT_SIZE } from '../config/readerFontSize';
 
 export const DEFAULT_READER_SETTINGS: ReaderSettings = {
   layoutMode: 'continuous',
-  fontSize: 'md',
+  fontSize: DEFAULT_READER_FONT_SIZE,
   fontFamily: DEFAULT_READER_FONT_ID,
   showVerseNumbers: true,
   showPericopes: true,
@@ -27,6 +28,9 @@ export function useReaderAppearanceSettings() {
         const parsed = JSON.parse(saved);
         if (parsed.fontFamily && !isValidReaderFont(parsed.fontFamily)) {
           parsed.fontFamily = DEFAULT_READER_FONT_ID;
+        }
+        if (parsed.fontSize !== undefined) {
+          parsed.fontSize = normalizeFontSizeToPx(parsed.fontSize);
         }
         return { ...DEFAULT_READER_SETTINGS, ...parsed };
       }
@@ -44,6 +48,9 @@ export function useReaderAppearanceSettings() {
           const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
           if (parsed.fontFamily && !isValidReaderFont(parsed.fontFamily)) {
             parsed.fontFamily = DEFAULT_READER_FONT_ID;
+          }
+          if (parsed.fontSize !== undefined) {
+            parsed.fontSize = normalizeFontSizeToPx(parsed.fontSize);
           }
           setSettings((prev) => ({ ...prev, ...parsed }));
         }

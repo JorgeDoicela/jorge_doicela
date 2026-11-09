@@ -128,7 +128,7 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
           <BackToKartexButton />
           <Link
             href={homeUrl}
-            className="hidden sm:flex shrink-0 items-center cursor-pointer hover:opacity-80 transition-opacity p-0.5 rounded-md hover:bg-accents-1 group"
+            className="shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity p-0.5 rounded-md hover:bg-accents-1 group"
             title={t('landing')}
             aria-label={t('landing')}
           >

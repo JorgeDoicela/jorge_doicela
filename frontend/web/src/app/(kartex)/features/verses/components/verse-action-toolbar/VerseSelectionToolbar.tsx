@@ -216,7 +216,7 @@ export const VerseSelectionToolbar: React.FC<VerseSelectionToolbarProps> = ({
     const headerBadge = (
       <div className="flex items-center gap-1.5 shrink-0">
         {translationAbbr && (
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-accents-2/80 text-accents-5 font-semibold shrink-0">
+          <span className="text-[10px] font-mono text-accents-4 font-semibold shrink-0">
             {translationAbbr}
           </span>
         )}

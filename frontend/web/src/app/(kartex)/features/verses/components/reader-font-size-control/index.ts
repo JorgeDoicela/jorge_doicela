@@ -1,0 +1,2 @@
+export { ReaderFontSizeControl } from './ReaderFontSizeControl';
+

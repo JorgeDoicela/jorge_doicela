@@ -2,6 +2,11 @@
 
 import { useEffect } from 'react';
 import { ReaderFontSize } from '../types';
+import {
+  MIN_READER_FONT_SIZE,
+  MAX_READER_FONT_SIZE,
+  normalizeFontSizeToPx,
+} from '../config/readerFontSize';
 
 interface UseReaderKeybindingsOptions {
   onPrevChapter?: () => void;
@@ -13,8 +18,6 @@ interface UseReaderKeybindingsOptions {
   onFontSizeChange?: (size: ReaderFontSize) => void;
   disabled?: boolean;
 }
-
-const fontSizes: ReaderFontSize[] = ['sm', 'md', 'lg', 'xl'];
 
 export function useReaderKeybindings({
   onPrevChapter,
@@ -80,9 +83,9 @@ export function useReaderKeybindings({
         case '=':
           if (onFontSizeChange) {
             e.preventDefault();
-            const currIdx = fontSizes.indexOf(fontSize);
-            if (currIdx < fontSizes.length - 1) {
-              onFontSizeChange(fontSizes[currIdx + 1]);
+            const currPx = normalizeFontSizeToPx(fontSize);
+            if (currPx < MAX_READER_FONT_SIZE) {
+              onFontSizeChange(Math.min(MAX_READER_FONT_SIZE, currPx + 1));
             }
           }
           break;
@@ -91,9 +94,9 @@ export function useReaderKeybindings({
         case '_':
           if (onFontSizeChange) {
             e.preventDefault();
-            const currIdx = fontSizes.indexOf(fontSize);
-            if (currIdx > 0) {
-              onFontSizeChange(fontSizes[currIdx - 1]);
+            const currPx = normalizeFontSizeToPx(fontSize);
+            if (currPx > MIN_READER_FONT_SIZE) {
+              onFontSizeChange(Math.max(MIN_READER_FONT_SIZE, currPx - 1));
             }
           }
           break;

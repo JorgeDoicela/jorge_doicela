@@ -8,6 +8,7 @@ import {
   ReaderSettings,
 } from '../types';
 import { DEFAULT_READER_FONT_ID, isValidReaderFont } from '../config/readerFonts';
+import { normalizeFontSizeToPx, DEFAULT_READER_FONT_SIZE } from '../config/readerFontSize';
 import { API_URL } from '../../../../config';
 import { resolveInitialTranslationId, FALLBACK_DEFAULT_TRANSLATION_ID } from '../../../entities/translations';
 import { fetchPericopes } from '../services/pericopesApiService';
@@ -88,7 +89,7 @@ export function useVerses(
   // Configuraciones de visualización del lector
   const [readerSettings, setReaderSettings] = useState<ReaderSettings>({
     layoutMode: 'continuous',
-    fontSize: 'md',
+    fontSize: DEFAULT_READER_FONT_SIZE,
     fontFamily: DEFAULT_READER_FONT_ID,
     showVerseNumbers: true,
     showPericopes: true,
@@ -104,6 +105,9 @@ export function useVerses(
           const parsed = JSON.parse(saved) as Partial<ReaderSettings>;
           if (parsed.fontFamily && !isValidReaderFont(parsed.fontFamily)) {
             parsed.fontFamily = DEFAULT_READER_FONT_ID;
+          }
+          if (parsed.fontSize !== undefined) {
+            parsed.fontSize = normalizeFontSizeToPx(parsed.fontSize);
           }
           setReaderSettings((prev) => ({
             ...prev,

@@ -11,7 +11,8 @@ import {
 } from '../../types';
 import { useReaderAppearanceSettings } from '../../hooks/useReaderAppearanceSettings';
 import { ReaderFontFamilySelector } from '../font-family-selector/ReaderFontFamilySelector';
-import { MobileBottomSheet } from '../../../../shared/ui';
+import { ReaderFontSizeControl } from '../reader-font-size-control';
+import { MobileBottomSheet, KartexToggleSwitch } from '../../../../shared/ui';
 
 export interface ReaderAppearancePopoverProps {
     readerSettings?: ReaderSettings;
@@ -83,13 +84,6 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [isOpen, isMobile]);
-
-    const fontSizes: { value: ReaderFontSize; label: string }[] = [
-        { value: 'sm', label: 'S' },
-        { value: 'md', label: 'M' },
-        { value: 'lg', label: 'L' },
-        { value: 'xl', label: 'XL' },
-    ];
 
     const alignClass =
         align === 'center'
@@ -182,43 +176,24 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
                         />
                     </div>
 
-                    {/* Tamaño de Fuente */}
-                    <div>
-                        <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-2">
-                            {t('fontSize')}
-                        </span>
-                        <div className="flex p-0.5 rounded-full border border-border/80 bg-inner-card/60 gap-1">
-                            {fontSizes.map((f) => (
-                                <button
-                                    key={f.value}
-                                    type="button"
-                                    onClick={() => onFontSizeChange(f.value)}
-                                    className={`flex-1 py-1.5 px-2 rounded-full text-xs transition-all cursor-pointer text-center ${settings.fontSize === f.value
-                                            ? 'bg-foreground text-background font-bold shadow-2xs'
-                                            : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                                        }`}
-                                >
-                                    {f.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    {/* Tamaño de Fuente (Control Proporcional y Continuo Geist) */}
+                    <ReaderFontSizeControl
+                        value={settings.fontSize}
+                        onChange={(size) => onFontSizeChange(size)}
+                        size="md"
+                    />
 
                     {/* Alternar Subtítulos Temáticos */}
                     <div className="pt-2 border-t border-border flex items-center justify-between">
                         <span className="text-xs text-accents-6 font-medium">
                             {t('pericopes')}
                         </span>
-                        <button
-                            type="button"
-                            onClick={onTogglePericopes}
-                            className={`px-3 py-1 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${settings.showPericopes
-                                    ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
-                                    : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
-                                }`}
-                        >
-                            {settings.showPericopes ? 'ON' : 'OFF'}
-                        </button>
+                        <KartexToggleSwitch
+                            checked={settings.showPericopes}
+                            onChange={onTogglePericopes}
+                            label={t('pericopes')}
+                            size="md"
+                        />
                     </div>
 
                     {/* Alternar Números de Versículo */}
@@ -226,16 +201,12 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
                         <span className="text-xs text-accents-6 font-medium">
                             {t('verseNumbers')}
                         </span>
-                        <button
-                            type="button"
-                            onClick={onToggleVerseNumbers}
-                            className={`px-3 py-1 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${settings.showVerseNumbers
-                                    ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
-                                    : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
-                                }`}
-                        >
-                            {settings.showVerseNumbers ? 'ON' : 'OFF'}
-                        </button>
+                        <KartexToggleSwitch
+                            checked={settings.showVerseNumbers}
+                            onChange={onToggleVerseNumbers}
+                            label={t('verseNumbers')}
+                            size="md"
+                        />
                     </div>
                 </MobileBottomSheet>
             )}
@@ -288,43 +259,24 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
                         />
                     </div>
 
-                    {/* Tamaño de Fuente */}
-                    <div>
-                        <span className="text-[10px] font-semibold text-accents-4 uppercase tracking-wider block mb-1.5">
-                            {t('fontSize')}
-                        </span>
-                        <div className="flex p-0.5 rounded-full border border-border/80 bg-inner-card/60 gap-0.5">
-                            {fontSizes.map((f) => (
-                                <button
-                                    key={f.value}
-                                    type="button"
-                                    onClick={() => onFontSizeChange(f.value)}
-                                    className={`flex-1 py-1 px-1.5 rounded-full text-xs transition-all cursor-pointer text-center ${settings.fontSize === f.value
-                                            ? 'bg-foreground text-background font-bold shadow-2xs'
-                                            : 'bg-transparent text-accents-5 hover:text-foreground hover:bg-accents-1'
-                                        }`}
-                                >
-                                    {f.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    {/* Tamaño de Fuente (Control Proporcional y Continuo Geist) */}
+                    <ReaderFontSizeControl
+                        value={settings.fontSize}
+                        onChange={(size) => onFontSizeChange(size)}
+                        size="sm"
+                    />
 
                     {/* Alternar Subtítulos Temáticos */}
                     <div className="pt-2 border-t border-border flex items-center justify-between">
                         <span className="text-xs text-accents-6 font-medium">
                             {t('pericopes')}
                         </span>
-                        <button
-                            type="button"
-                            onClick={onTogglePericopes}
-                            className={`px-3 py-0.5 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${settings.showPericopes
-                                    ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
-                                    : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
-                                }`}
-                        >
-                            {settings.showPericopes ? 'ON' : 'OFF'}
-                        </button>
+                        <KartexToggleSwitch
+                            checked={settings.showPericopes}
+                            onChange={onTogglePericopes}
+                            label={t('pericopes')}
+                            size="sm"
+                        />
                     </div>
 
                     {/* Alternar Números de Versículo */}
@@ -332,16 +284,12 @@ export const ReaderAppearancePopover: React.FC<ReaderAppearancePopoverProps> = (
                         <span className="text-xs text-accents-6 font-medium">
                             {t('verseNumbers')}
                         </span>
-                        <button
-                            type="button"
-                            onClick={onToggleVerseNumbers}
-                            className={`px-3 py-0.5 text-xs font-mono rounded-full border transition-all cursor-pointer active:scale-95 ${settings.showVerseNumbers
-                                    ? 'bg-foreground text-background border-foreground font-semibold shadow-2xs'
-                                    : 'bg-inner-card text-accents-4 border-border/80 hover:border-accents-4'
-                                }`}
-                        >
-                            {settings.showVerseNumbers ? 'ON' : 'OFF'}
-                        </button>
+                        <KartexToggleSwitch
+                            checked={settings.showVerseNumbers}
+                            onChange={onToggleVerseNumbers}
+                            label={t('verseNumbers')}
+                            size="sm"
+                        />
                     </div>
                 </div>
             )}

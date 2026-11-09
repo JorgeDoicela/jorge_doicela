@@ -201,9 +201,6 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
                         <Gauge className="w-3.5 h-3.5 text-accents-4" />
                         Velocidad
                     </span>
-                    <span className="font-mono text-[11px] font-semibold text-foreground">
-                        {audioSpeed}x
-                    </span>
                 </div>
                 <div className="flex items-center p-0.5 rounded-full border border-border/80 bg-accents-1 gap-0.5">
                     {speedOptions.map((speed) => (
@@ -290,11 +287,11 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
 
     const headerBadge = (
         <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-medium ${isPlayingAudio && !isAudioPaused
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+            className={`text-[11px] font-mono font-medium shrink-0 ${isPlayingAudio && !isAudioPaused
+                    ? 'text-emerald-600 dark:text-emerald-400'
                     : isAudioPaused
-                        ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'
-                        : 'bg-accents-2 text-accents-5'
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-accents-4'
                 }`}
         >
             {isPlayingAudio && !isAudioPaused
@@ -313,12 +310,10 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
                 isOpen={isOpen}
                 onClose={onClose}
                 icon={
-                    <div className="w-6 h-6 rounded-full bg-foreground/5 flex items-center justify-center text-foreground shrink-0">
-                        <Volume2 className="w-3.5 h-3.5" />
-                    </div>
+                    <Volume2 className="w-4 h-4 text-foreground shrink-0" />
                 }
                 title={headerTitle}
-                badge={headerBadge}
+                headerRight={headerBadge}
                 closeAriaLabel="Cerrar panel de audio"
                 heightClass="max-h-[85vh]"
                 bodyClassName="p-5 space-y-4"
@@ -340,9 +335,7 @@ export const KartexAudioControlsPopover: React.FC<KartexAudioControlsPopoverProp
             {/* Cabecera del Panel Desktop */}
             <div className="flex items-center justify-between pb-3 border-b border-border/60">
                 <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-6 h-6 rounded-full bg-foreground/5 flex items-center justify-center text-foreground shrink-0">
-                        <Volume2 className="w-3.5 h-3.5" />
-                    </div>
+                    <Volume2 className="w-4 h-4 text-foreground shrink-0" />
                     <div className="min-w-0">
                         <div className="text-xs font-semibold text-foreground truncate">
                             {currentBookName} {currentChapter}

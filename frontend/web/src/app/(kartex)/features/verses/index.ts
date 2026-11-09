@@ -32,4 +32,13 @@ export {
 } from './config/readerFonts';
 export type { ReaderFontDefinition, ReaderFontId } from './config/readerFonts';
 export { ReaderFontFamilySelector } from './components/font-family-selector/ReaderFontFamilySelector';
+export { ReaderFontSizeControl } from './components/reader-font-size-control';
+export {
+  MIN_READER_FONT_SIZE,
+  MAX_READER_FONT_SIZE,
+  DEFAULT_READER_FONT_SIZE,
+  normalizeFontSizeToPx,
+  FONT_SIZE_PRESETS,
+} from './config/readerFontSize';
+
 

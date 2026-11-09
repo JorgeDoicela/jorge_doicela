@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 
 import { Verse, Pericope, ReaderFontSize, ReaderFontFamily, VerseHighlightColor } from '../../types';
 import { getReaderFontClass } from '../../config/readerFonts';
+import { normalizeFontSizeToPx } from '../../config/readerFontSize';
 import { useKartexPassageSafe } from '../../../../entities/passage';
 import { mobileSheetCoordinator } from '../../../../shared/ui';
 import {
@@ -111,20 +112,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
     return bookName || firstVerseBook || 'Génesis';
   }, [rawAbbr, tBooks, verses, bookName]);
 
-  const getFontSizeClass = (size: ReaderFontSize) => {
-    switch (size) {
-      case 'sm':
-        return 'text-base leading-relaxed';
-      case 'md':
-        return 'text-lg sm:text-xl leading-relaxed sm:leading-loose';
-      case 'lg':
-        return 'text-xl sm:text-2xl leading-loose';
-      case 'xl':
-        return 'text-2xl sm:text-3xl leading-loose';
-      default:
-        return 'text-lg sm:text-xl leading-relaxed sm:leading-loose';
-    }
-  };
+  const fontSizePx = normalizeFontSizeToPx(fontSize);
 
   const selectedVerses = useMemo(() => {
     return verses.filter((v) => selectedVerseNumbers.includes(v.verseNumber));
@@ -241,9 +229,13 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
 
       {/* Prosa Continua en Ancho Completo */}
       <div
-        className={`w-full ${!isFirstChapter ? 'pt-6 sm:pt-10' : ''} ${getFontSizeClass(fontSize)} ${getReaderFontClass(
+        style={{
+          fontSize: `${fontSizePx}px`,
+          lineHeight: 1.75,
+        }}
+        className={`w-full ${!isFirstChapter ? 'pt-6 sm:pt-10' : ''} ${getReaderFontClass(
           fontFamily,
-        )} text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E] select-text leading-relaxed sm:leading-loose selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
+        )} text-zinc-800 dark:text-zinc-200 sepia:text-[#2C221E] select-text selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 sepia:selection:bg-[#EADAB8] sepia:selection:text-[#2C221E]`}
       >
         <p className="space-x-1 text-justify sm:text-left">
           {verses.map((verse, idx) => {
@@ -308,7 +300,7 @@ export const ContinuousReadingView: React.FC<ContinuousReadingViewProps> = ({
                   onClick={(e) => handleVerseClick(verse, e)}
                   className={`inline [box-decoration-break:clone] px-1.5 py-[2px] rounded-md sm:rounded-lg relative group cursor-pointer transition-all duration-150 ${
                   isAudioActive
-                    ? 'bg-foreground/10 dark:bg-white/15 sepia:bg-[#8C765C]/20 ring-1 ring-foreground/30 shadow-2xs'
+                    ? `${highlightStyle ? highlightStyle.bgClass : ''} ring-1 ring-foreground/35`
                     : highlightStyle
                     ? highlightStyle.bgClass
                     : 'hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 sepia:hover:bg-[#F4ECE0]/60'

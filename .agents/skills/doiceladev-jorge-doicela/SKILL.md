@@ -214,22 +214,31 @@ Cada publicación debe estructurarse para que tres niveles de audiencia aprendan
   - Para agregaciones o flujos de publicaciones: **Feed** o **Feed Principal** (ej. `DoiceladevPortalFeed`).
   - Para directorios e índices de enlaces: **Directorio** (ej. *"Directorio de Enlaces"*).
 
-### 4.6 Manual de Estilo Tipográfico y Editorial (Las 4 Categorías Canónicas)
-Toda publicación técnica en los 8 módulos debe estructurarse estrictamente bajo las siguientes 4 categorías sintácticas para erradicar la sobrecarga cognitiva y mantener un estándar de ingeniería de clase mundial:
-1. **Código en Línea (`` `...` ``):** Reservado exclusivamente para elementos literales de ejecución (comandos exactos `sudo ufw enable`, flags `-p 8080:8080`, rutas del sistema `/etc/sysctl.conf`, variables de entorno `IPV6=yes` o métodos/funciones `useSpotlight()`). Prohibido su uso en nombres propios de software (Docker, Linux, Nginx, PostgreSQL), conceptos teóricos o frases en lenguaje natural.
-2. **Negrita Corta (`**...**`):** Empleada exclusivamente como anclaje visual para escaneo rápido (*visual scanning*), con un límite estricto de **1 a 3 palabras clave** por mención (**Default Deny**, **DROP**, **0 ms de CPU**). Queda terminantemente prohibido su uso en oraciones, cláusulas o predicados completos.
-3. **Cursiva Semántica (`*...*`):** Utilizada para énfasis contextual sutil, términos foráneos adoptados (*Stateful Packet Inspection*, *loopback*, *daemon*, *bypassea*) y estados transitorios o persistentes del sistema (*LISTEN*, *ESTABLISHED*).
-4. **Texto Plano:** El 85% del contenido, redactado con fluidez narrativa sin envoltorios decorativos redundantes.
+### 4.6 Manual de Estilo Tipográfico y Editorial Nativo de DoicelaDev
+DoicelaDev cuenta con un motor de interfaz enriquecida propio (`MarkdownRenderer.tsx`, `GlossaryTermPopover.tsx`, `glossary-matcher.tsx` y `TableBlock`) que ya aplica estilos automáticos de alto nivel. Para evitar colisiones visuales entre el formato Markdown manual y los componentes interactivos de la plataforma, toda publicación en los 8 módulos debe seguir de forma estricta estas 4 reglas nativas:
 
-#### Tabla de Referencia Rápida: Patrones de Redacción (Antes vs. Después)
+1. **Términos del Glosario y Nombres Propios de Tecnologías en Texto Plano:**
+   * Los términos registrados en `backend/src/doiceladev/corpus/glossary.json` (`Netfilter`, `UFW`, `DROP`, `REJECT`, `Conntrack`, `Firewall con Estado` / `Stateful Firewall`, `CIDR`, `mTLS`, `eBPF`, `WAL`, `Zero Trust`, `CVE`, `cgroups`, `systemd`, `RAG`, `MCP`, `Idempotencia` / `Idempotence`, `SAPI`, `PHP-FPM`, `Best-Fit Mapping`) y los nombres propios de software en prosa (Linux, Docker, Nginx, PostgreSQL, Debian, Ubuntu) deben escribirse **siempre en texto plano**, sin encerrarlos en backticks ni en negritas.
+   * **Por qué:** Al dejarlos en texto plano, `glossary-matcher.tsx` detecta automáticamente su primera aparición y la transforma en un `GlossaryTermPopover` con **subrayado punteado azul uniforme** (`border-b-2 border-dotted border-blue-500/70`), mientras que las apariciones siguientes fluyen limpiamente sin sobrecargar el párrafo.
+2. **Código en Línea (`` `...` ``) Exclusivo para Sintaxis de Consola, Rutas y Direcciones:**
+   * Reservado estrictamente para comandos ejecutables (`sudo ufw enable`), flags (`-tlnp`), rutas de archivos (`/etc/default/ufw`), variables de configuración (`IPV6=yes`), funciones (`useSpotlight()`) y direcciones IP/puertos (`127.0.0.1:5432`, `0.0.0.0`).
+   * **Por qué:** `glossary-matcher.tsx` ignora los nodos `inlineCode` para que la caja gris (`InlineCode`) represente inequívocamente sintaxis técnica de consola y jamás compita con el Glosario Interactivo.
+3. **Negrita (`**...**`) Solo Estructural y Métricas Cuantitativas:**
+   * Empleada únicamente para el arranque de viñetas (`* **Puertos:** ...`), títulos de Callouts (`**Resumen Ejecutivo:**`) y métricas cuantitativas puntuales (**0 ms de CPU**, **99.9%**, **PHP 8.3.12+**).
+   * **Cero negrita ni backticks en la primera columna de tablas (`TableBlock`):** El componente `td` de `MarkdownRenderer.tsx` ya aplica por diseño `first:font-mono first:font-semibold` con fondo diferenciado a toda la primera columna. Escribir `| **Clave** |` o ``| `Clave` |`` es redundante y está prohibido; debe escribirse limpio: `| Clave |`.
+   * **Cero negritas dentro de párrafos de prosa:** Dentro de los párrafos normales no se aplican negritas a frases ni conceptos porque el Glosario Interactivo y los Callouts ya cumplen la función de anclaje visual.
+4. **Cursiva (`*...*`) Mínima y Puntual:**
+   * Reservada solo para anglicismos crudos puntuales en medio de la prosa (*loopback*, *bypass*, *spoofing*, *handshake*) cuando sea estrictamente necesario.
 
-| Caso de Uso | Patrón Incorrecto (Saturación) | Estándar Correcto (Ingeniería Sobria) | Justificación de Diseño |
+#### Tabla de Referencia Rápida: Patrones de Redacción Nativa
+
+| Caso de Uso | Patrón Incorrecto | Estándar Correcto (Nativo DoicelaDev) | Justificación Arquitectónica |
 |---|---|---|---|
-| **Tuplas y conceptos teóricos** | `` `(IP de Origen, Puerto de Origen...)` `` | `(IP de Origen, Puerto de Origen...)` (texto plano) | Los backticks son exclusivos de sintaxis ejecutable. Las tuplas conceptuales no se ejecutan y rompen la fluidez. |
-| **Políticas y directivas en prosa** | `` `deny incoming` `` o `` `default deny` `` | Política **Default Deny** (negrita corta) o `` `sudo ufw default deny incoming` `` | Frases explicativas no deben encerrarse en código; se usa el concepto formal o el comando terminal exacto. |
-| **Advertencias y oraciones completas** | `` **bypassea por completo las reglas de UFW** `` | `*bypassea* las directivas de UFW` con concepto **Default Deny** | Negritas de más de 3 palabras saturan el campo visual y degradan la elegancia editorial. |
-| **Analogías y listas didácticas** | `* **Los Puertos (Ports):** Son...` | `* **Puertos:** Puertas numeradas...` | Erradica artículos gramaticales ("Los") y redundancias en inglés para maximizar la síntesis técnica. |
-| **Herramientas y tecnologías en prosa** | `` `Docker` ``, `` `Linux` ``, `` `Nginx` `` | Docker, Linux, Nginx (texto plano) | Solo llevan backticks cuando se refieren al comando de consola (`` `docker run` ``, `` `nginx -t` ``). |
+| **Términos del Glosario (`glossary.json`)** | `` `DROP` ``, `` `Netfilter` ``, `**UFW**`, `**PHP-FPM**` | DROP, Netfilter, UFW, PHP-FPM (texto plano) | Permite que `glossary-matcher.tsx` inyecte el subrayado punteado azul uniforme (`GlossaryTermPopover`) sin chocar con cajas `InlineCode`. |
+| **Tecnologías y marcas en prosa** | `` `Docker` ``, `` `Linux` ``, `` `Nginx` `` | Docker, Linux, Nginx (texto plano) | Los nombres propios no son comandos. Solo llevan backticks al invocar el binario (`` `docker run` ``, `` `nginx -t` ``). |
+| **Primera columna de tablas (`TableBlock`)** | `\| **Política** \|` o ``\| `Política` \|`` | `\| Política \|` (texto plano) | `MarkdownRenderer.tsx` ya estiliza automáticamente `td:first-child` con `font-mono font-semibold`. |
+| **Párrafos de prosa técnica** | Párrafos llenos de `**conceptos en negrita**` y `` `cajas` `` | Prosa limpia + Glosario Interactivo + Callouts | Evita que el párrafo compita visualmente con los 6 componentes ricos de la página (Callouts, Glosario, Mermaid, CodeBlock, TableBlock, Checklists). |
+| **Encabezados de listas didácticas** | `* **Los Puertos (Ports):** Son...` | `* **Puertos:** Puertas numeradas...` | Síntesis directa en el arranque de viñeta sin artículos gramaticales innecesarios. |
 
 
 ---
@@ -271,7 +280,7 @@ pnpm run lint
 | Intentar revivir o consultar atributos de "Nivel 4" (dificultad/severidad/entorno) | El Nivel 4 fue completamente erradicado de la base de datos y del código. | La plataforma opera con una taxonomía canónica de 3 niveles: Nivel 1 (Módulo), Nivel 2 (Categoría) y Nivel 3 (Tags). |
 | Cargar fuentes desde Google Fonts o CDNs externos | Genera llamadas de red innecesarias, bloquea la renderización neumórfica y viola la autonomía de caja negra. | Mantener las tipografías variables locales en `(doiceladev)/fonts/` (SIL OFL 1.1) e importar vía `next/font/local`. |
 | Usar la palabra "hub" en interfaces, código o docs | Término impreciso, informal y vetado en los estándares del proyecto. | Emplear términos formales y canónicos: **Portal**, **Plataforma**, **Directorio** o **Feed**. |
-| Saturar párrafos con código en línea o negritas oracionales | Fatiga visual, aspecto amateur y destrucción de la jerarquía tipográfica. | Aplicar el estándar de 4 categorías: código solo para ejecución exacta y negrita para 1 a 3 palabras clave. |
+| Saturar párrafos con código en línea sobre términos del glosario, marcas o negritas en prosa y primera columna de tablas | Choca visualmente con `GlossaryTermPopover` (subrayado punteado azul) y duplica el estilo automático `first:font-mono first:font-semibold` de `TableBlock`. | Dejar términos del glosario, marcas y primera columna de tablas en texto plano; reservar backticks para comandos/rutas/IPs y negritas solo para arranque de listas y métricas. |
 
 ---
 

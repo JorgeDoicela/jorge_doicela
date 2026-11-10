@@ -1,6 +1,6 @@
 > [!IMPORTANT]
-> **Resumen Ejecutivo:**
-> Un firewall en Linux no es un software antivirus tradicional de espacio de usuario, sino un conjunto de directivas inyectadas directamente en el espacio de kernel a través de **Netfilter**. Esta arquitectura permite descartar paquetes maliciosos a una velocidad de **0 ms de CPU**, impidiendo que el tráfico ilegítimo despierte a los procesos de las aplicaciones. La implementación de una política de mínimo privilegio (*Default Deny*), mitigación dinámica con *fail2ban*, aislamiento de contenedores Docker y endurecimiento del kernel con *sysctl* reduce la superficie de ataque perimetral en más de un **99.9%** ante escaneos automatizados en internet.
+> **Resumen Ejecutivo:**  
+> Un firewall en Linux no es un software antivirus tradicional de espacio de usuario, sino un conjunto de directivas inyectadas directamente en el espacio de kernel a través de Netfilter. Esta arquitectura permite descartar paquetes maliciosos a una velocidad de **0 ms de CPU**, impidiendo que el tráfico ilegítimo despierte a los procesos de las aplicaciones. La implementación de una política de mínimo privilegio (Default Deny), mitigación dinámica con fail2ban, aislamiento de contenedores Docker y endurecimiento del kernel con sysctl reduce la superficie de ataque perimetral en más de un **99.9%** ante escaneos automatizados en internet.
 
 ---
 
@@ -33,11 +33,11 @@ flowchart LR
     Guardia -- "Acceso Externo Bloqueado" --x Oficina5432
 ```
 
-* **Los Puertos (Ports):** Son las puertas numeradas del edificio (Puerta 80 para visitantes web, Puerta 22 para el administrador, Puerta 5432 para la base de datos).
-* **Los Sockets:** Son los empleados sentados dentro de cada oficina con el teléfono descolgado, esperando a que alguien toque a la puerta para atenderlo.
-* **Netfilter (Kernel Space):** Es el guardia de seguridad apostado en la reja perimetral exterior. Inspecciona a cada visitante antes de que si quiera ponga un pie en el vestíbulo.
-* **UFW (*Uncomplicated Firewall*):** Es el panel de control táctil y amigable que utiliza el administrador para darle órdenes sencillas al guardia sin tener que escribir instrucciones complejas en lenguaje militar.
-* **DROP vs REJECT:** Si el guardia aplica `DROP`, simplemente ignora al intruso y lo deja esperando en silencio sin confirmar si hay alguien dentro. Si aplica `REJECT`, le dice formalmente "no puedes pasar", revelando que la oficina existe.
+* **Puertos:** Puertas numeradas del edificio (puerto 80 para visitantes web, puerto 22 para administración SSH, puerto 5432 para base de datos).
+* **Sockets:** Canales de comunicación activos dentro de cada oficina esperando solicitudes en la puerta correspondiente.
+* **Netfilter:** Es el guardia de seguridad apostado en la reja perimetral exterior en espacio de kernel. Inspecciona a cada visitante antes de que siquiera ponga un pie en el vestíbulo.
+* **UFW:** Es el panel de control simplificado que utiliza el administrador para darle órdenes directas al guardia sin tener que escribir instrucciones complejas en lenguaje de bajo nivel.
+* **DROP vs REJECT:** Si el guardia aplica DROP, simplemente ignora al intruso y lo deja esperando en silencio sin confirmar si hay alguien dentro. Si aplica REJECT, le responde formalmente "no puedes pasar", revelando que la oficina existe.
 
 ---
 
@@ -45,17 +45,17 @@ flowchart LR
 
 | Término | Definición Técnica Sencilla |
 |---|---|
-| **Socket** | Punto final de comunicación bidireccional entre dos programas en la red, compuesto por una tupla `(IP de Origen, Puerto de Origen, IP de Destino, Puerto de Destino, Protocolo)`. |
-| **Bind Address** | La dirección IP local específica a la que una aplicación se ata para escuchar conexiones (ej. `127.0.0.1` solo escucha al propio servidor, `0.0.0.0` escucha al mundo entero). |
-| **Stateful Packet Inspection (SPI)** | Capacidad del firewall de recordar el estado de las conexiones existentes para permitir automáticamente las respuestas legítimas sin tener que abrir puertos adicionales. |
-| **Conntrack** | Módulo del kernel de Linux (*Connection Tracking*) encargado de registrar la tabla en memoria con todas las conexiones de red activas en el sistema. |
-| **SYN Flood** | Ataque de denegación de servicio (DoS) donde un atacante envía miles de peticiones de conexión incompletas para saturar la memoria del servidor. |
+| Socket | Punto final de comunicación bidireccional entre dos programas en la red, compuesto por una tupla (IP de Origen, Puerto de Origen, IP de Destino, Puerto de Destino, Protocolo). |
+| Bind Address | La dirección IP local específica a la que una aplicación se ata para escuchar conexiones (ej. `127.0.0.1` solo escucha al propio servidor, `0.0.0.0` escucha en todas las interfaces). |
+| Firewall con Estado | Capacidad del firewall (*Stateful Packet Inspection*) de recordar el estado de las conexiones activas para permitir automáticamente las respuestas legítimas sin abrir puertos adicionales. |
+| Conntrack | Módulo del kernel de Linux (*Connection Tracking*) encargado de registrar la tabla en memoria con todas las sesiones de red activas en el sistema. |
+| SYN Flood | Ataque de denegación de servicio (DoS) donde un atacante envía miles de peticiones de conexión incompletas para saturar la memoria del servidor. |
 
 ---
 
 ## 1. Fundamentos: ¿Cómo opera un Firewall en el Kernel de Linux?
 
-El filtrado de tráfico en Linux opera a nivel del kernel mediante **Netfilter**, un framework modular que intercepta paquetes de red en cinco puntos clave de la pila TCP/IP del sistema operativo:
+El filtrado de tráfico en Linux opera a nivel del kernel mediante Netfilter, un framework modular que intercepta paquetes de red en cinco puntos clave de la pila TCP/IP del sistema operativo:
 
 ```mermaid
 flowchart TD
@@ -90,12 +90,18 @@ flowchart TD
 
 ### La Cadena de Abstracciones en Linux
 
-1. **Netfilter (Kernel Space):** Subsistema en tiempo real que ejecuta las decisiones de filtrado (`ACCEPT`, `DROP`, `REJECT`) a nivel de microsegundos.
-2. **iptables / nftables (User Space CLI):** Herramientas de bajo nivel para manipular tablas (`filter`, `nat`, `mangle`) y cadenas del kernel.
-3. **UFW (Uncomplicated Firewall):** Capa de abstracción diseñada por Canonical para simplificar la gestión de iptables/nftables sin requerir sintaxis compleja de tablas de bajo nivel.
+1. **Netfilter (Kernel Space):** Subsistema en tiempo real que ejecuta las decisiones de filtrado (ACCEPT, DROP, REJECT) a nivel de microsegundos.
+2. **nftables / iptables (CLI de Bajo Nivel):** En distribuciones modernas (Debian 12/13, Ubuntu 22.04/24.04), `iptables` opera como un enlace de compatibilidad (`iptables-nft`) que traduce directivas hacia el motor moderno de nftables.
+3. **UFW (Uncomplicated Firewall):** Capa de abstracción declarativa diseñada por Canonical para simplificar la gestión de reglas sin requerir sintaxis compleja de tablas de bajo nivel.
+
+```bash
+# Terminal / Salida
+# Verificar si el sistema opera con el backend moderno nftables
+sudo update-alternatives --display iptables
+```
 
 > [!NOTE]
-> Cuando un paquete no deseado es interceptado y descartado con la directiva `DROP` en la cadena `INPUT`, el kernel lo elimina inmediatamente en memoria. La aplicación en espacio de usuario (Node.js, PostgreSQL, Nginx) nunca llega a recibir la interrupción de hardware, ahorrando ciclos de CPU y memoria RAM.
+> Cuando un paquete no deseado es interceptado y descartado con la directiva DROP en la cadena INPUT, el kernel lo elimina inmediatamente en memoria. La aplicación en espacio de usuario (Node.js, PostgreSQL, Nginx) nunca llega a recibir la interrupción de hardware, ahorrando ciclos de CPU y memoria RAM.
 
 ---
 
@@ -112,7 +118,7 @@ sudo ss -tlnp
 
 La opción `-tlnp` desglosa:
 * `-t`: Protocolo TCP.
-* `-l`: Sockets en estado de escucha (*LISTEN*).
+* `-l`: Sockets en estado de escucha (LISTEN).
 * `-n`: Muestra números de puerto en lugar de nombres de servicio.
 * `-p`: Identificador de proceso (PID) y nombre del programa.
 
@@ -128,9 +134,9 @@ LISTEN   0        128            127.0.0.1:5432           0.0.0.0:*       users:
 
 | Dirección Local | Significado | Riesgo sin Firewall |
 |---|---|---|
-| `0.0.0.0` / `[::]` | El servicio escucha en **todas las interfaces de red** (pública, privada y loopback). | **Crítico:** Cualquier host de internet puede alcanzar el puerto si el firewall del kernel no lo bloquea. |
-| `127.0.0.1` / `[::1]` | El servicio escucha estrictamente en **loopback interno**. | **Bajo:** Solo procesos locales dentro del mismo servidor pueden comunicarse con el socket. |
-| `192.168.1.50` | El servicio escucha exclusivamente en la interfaz de la red de área local (LAN). | **Medio:** Accesible solo por dispositivos conectados al mismo segmento de red local. |
+| 0.0.0.0 / [::] | El servicio escucha en todas las interfaces de red (pública, privada y *loopback*). | **Crítico:** Cualquier host de internet puede alcanzar el puerto si el firewall del kernel no lo bloquea. |
+| 127.0.0.1 / [::1] | El servicio escucha estrictamente en la interfaz *loopback* interna. | **Bajo:** Solo procesos locales dentro del mismo servidor pueden comunicarse con el socket. |
+| 192.168.1.50 | El servicio escucha exclusivamente en la interfaz de la red de área local (LAN). | **Medio:** Accesible solo por dispositivos conectados al mismo segmento de red local via CIDR. |
 
 ---
 
@@ -139,8 +145,8 @@ LISTEN   0        128            127.0.0.1:5432           0.0.0.0:*       users:
 El error más costoso al configurar un firewall en un servidor remoto (VPS en AWS Lightsail, DigitalOcean o servidor dedicado) es activar el servicio antes de haber declarado la regla que autoriza el tráfico SSH.
 
 > [!CAUTION]
-> **Orden de Operaciones Inviolable:**
-> Jamás ejecutes `sudo ufw enable` sin haber ejecutado previamente `sudo ufw allow ssh` (o tu puerto SSH personalizado). Si se activa con la política por defecto `deny incoming`, tu sesión SSH actual se cerrará de inmediato y perderás el acceso administrativo al servidor.
+> **Orden de Operaciones Inviolable:**  
+> Jamás ejecutes `sudo ufw enable` sin haber ejecutado previamente `sudo ufw allow ssh` (o tu puerto SSH específico). Si el cortafuegos se activa bajo la política por defecto Default Deny, la sesión SSH activa terminará de inmediato y perderás el acceso administrativo al servidor.
 
 ### Salvaguarda de Emergencia con Temporizador (Recomendada para Producción)
 
@@ -151,7 +157,7 @@ Si estás configurando un servidor remoto crítico y deseas una red de seguridad
 sudo bash -c "sleep 300 && ufw disable" &
 ```
 
-Si tus pruebas de conexión SSH en una terminal paralela son exitosas, cancelas el temporizador matando el proceso en segundo plano:
+Si tus pruebas de conexión SSH en una terminal paralela son exitosas, cancelas el temporizador deteniendo el proceso en segundo plano:
 
 ```bash
 sudo pkill -f "sleep 300"
@@ -161,7 +167,7 @@ sudo pkill -f "sleep 300"
 
 ## 4. Configuración Base: Mínimo Privilegio y Soporte Dual-Stack IPv6
 
-Un cortafuegos profesional debe operar bajo la filosofía de lista blanca: bloquear todo por defecto y abrir únicamente lo estrictamente necesario.
+Un cortafuegos profesional debe operar bajo la filosofía de lista blanca y arquitectura Zero Trust: bloquear todo por defecto y abrir únicamente lo estrictamente necesario.
 
 ### Paso 1: Garantizar la Protección Dual-Stack IPv6
 
@@ -286,8 +292,8 @@ sudo ufw limit 22/tcp comment 'Rate limit SSH anti-bruteforce'
 ## 7. Resolución Arquitectónica del Conflicto de Reglas: Docker y UFW
 
 > [!WARNING]
-> **El Comportamiento Invasivo de Docker sobre `iptables`:**
-> Por defecto, el daemon de Docker (`dockerd`) manipula directamente las cadenas de `iptables` en la tabla `nat` y en la cadena de reenvío `FORWARD`. Si ejecutas un contenedor con `-p 8080:8080`, Docker inserta una regla en Netfilter que **bypassea por completo las reglas de UFW**, exponiendo el puerto al mundo aunque UFW esté en `default deny incoming`.
+> **Comportamiento de Docker sobre iptables:**  
+> Por defecto, el proceso de Docker (`dockerd`) manipula directamente las cadenas de iptables en la tabla nat y en la cadena de reenvío FORWARD. Si ejecutas un contenedor con `-p 8080:8080`, Docker inserta una regla en Netfilter que realiza un *bypass* sobre las directivas de UFW, exponiendo el puerto al tráfico público incluso con la política Default Deny activa.
 
 ```mermaid
 flowchart TD
@@ -315,18 +321,39 @@ services:
       # - "5432:5432"
 ```
 
-#### Enfoque 2 (Para redes de Contenedores Complejas): Usar la Cadena `DOCKER-USER`
-Netfilter reserva la cadena `DOCKER-USER` específicamente para que las reglas del administrador se ejecuten **antes** de que Docker enrute el paquete. Puedes utilizar la utilidad comunitaria auditada `ufw-docker` para gestionar esta cadena de forma nativa sin romper el NAT saliente de los contenedores.
+#### Enfoque 2 (Control Nativo en Netfilter): Cadena `DOCKER-USER`
+Netfilter reserva la cadena DOCKER-USER específicamente para que las reglas del administrador se ejecuten antes de que Docker enrute el paquete. Puedes inyectar una regla de filtrado perimetral directamente en esta cadena sin requerir paquetes de terceros:
+
+```bash
+# Bloquear acceso externo a un contenedor en eth0, autorizando solo una subred LAN
+sudo iptables -I DOCKER-USER -i eth0 ! -s 192.168.1.0/24 -p tcp --dport 8080 -j DROP
+```
 
 ---
 
-## 8. Hardening Avanzado: fail2ban y Ajustes del Kernel (`sysctl`)
+## 8. Hardening Avanzado: Reglas del Kernel, fail2ban y sysctl
 
-El firewall estático se complementa con herramientas de detección reactiva y optimización de memoria de red a nivel de kernel.
+El firewall estático se complementa con reglas de bajo nivel en `/etc/ufw/before.rules`, herramientas de detección reactiva y optimización de memoria de red a nivel de kernel.
 
-### 8.1 Mitigación Dinámica con fail2ban
+### 8.1 Filtrado de Paquetes Inválidos y Escaneos Stealth en `before.rules`
 
-`fail2ban` audita los logs de autenticación de `sshd` e interactúa automáticamente con Netfilter para expulsar temporalmente a las direcciones IP atacantes:
+UFW evalúa `/etc/ufw/before.rules` antes que cualquier regla de usuario. Puedes descartar paquetes maliciosos o corruptos antes de que consuman estados de conexión en Conntrack:
+
+```text
+# /etc/ufw/before.rules
+# Descartar paquetes con estado INVALID (evita saturación de conntrack)
+-A ufw-before-input -m conntrack --ctstate INVALID -j DROP
+
+# Descartar paquetes TCP sin flags (NULL Scan de Nmap)
+-A ufw-before-input -p tcp --tcp-flags ALL NONE -j DROP
+
+# Descartar paquetes TCP con todas las flags activas (Xmas Scan de Nmap)
+-A ufw-before-input -p tcp --tcp-flags ALL ALL -j DROP
+```
+
+### 8.2 Mitigación Dinámica con fail2ban
+
+La utilidad fail2ban audita los registros de autenticación de `sshd` e interactúa automáticamente con Netfilter para expulsar temporalmente a las direcciones IP atacantes:
 
 ```ini
 # /etc/fail2ban/jail.local
@@ -350,9 +377,9 @@ sudo systemctl enable --now fail2ban
 sudo fail2ban-client status sshd
 ```
 
-### 8.2 Endurecimiento de Parámetros de Red en el Kernel (`sysctl`)
+### 8.3 Endurecimiento de Parámetros de Red en el Kernel (`sysctl`)
 
-Crea un archivo de configuración dedicado para blindar el stack de red contra ataques de inundación, manipulación de enrutamiento y spoofing:
+Crea un archivo de configuración dedicado en `/etc/sysctl.d/99-hardening.conf` para blindar la pila de red contra ataques de inundación, manipulación de enrutamiento y *spoofing*:
 
 ```ini
 # /etc/sysctl.d/99-hardening.conf
@@ -375,7 +402,7 @@ net.ipv4.icmp_echo_ignore_broadcasts = 1
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
 
-# Capacidad de la tabla de seguimiento de conexiones (Conntrack) para alto tráfico
+# Capacidad de la tabla de seguimiento de conexiones (Conntrack) calibrada para 1 GB RAM
 net.netfilter.nf_conntrack_max = 65536
 
 # Espacio de direcciones aleatorio máximo (ASLR contra exploits de memoria)
@@ -386,6 +413,10 @@ kernel.randomize_va_space = 2
 # Aplicar los nuevos parámetros de inmediato sin reiniciar el servidor
 sudo sysctl -p /etc/sysctl.d/99-hardening.conf
 ```
+
+> [!TIP]
+> **Impacto de Memoria en 1 GB de RAM:**  
+> Cada entrada en la tabla Conntrack consume aproximadamente 352 bytes en el slab del kernel. Un límite de 65536 entradas garantiza capacidad para decenas de miles de conexiones simultáneas con un consumo de memoria máximo acotado a **~23 MB de RAM**, protegiendo al VPS frente a interrupciones por falta de memoria.
 
 ---
 
@@ -400,17 +431,17 @@ nmap -sS -Pn -p 22,80,443,3000,5432 <IP_DE_TU_SERVIDOR>
 
 ### Interpretación de Resultados:
 
-| Estado Reportado por Nmap | Significado Técnico | Nivel de Seguridad |
+| Estado en Nmap | Significado Técnico | Nivel de Seguridad |
 |---|---|---|
-| `filtered` | El firewall ejecutó `DROP`. El paquete fue descartado silenciosamente; el atacante no sabe si el servidor existe o está apagado. | **Óptimo (Comportamiento UFW)** |
-| `closed` | El kernel respondió con un flag `TCP RST`. El puerto no tiene aplicación escuchando, pero confirma que el host está activo. | **Aceptable pero revela presencia** |
-| `open` | Un socket en User Space respondió con `SYN-ACK`. El puerto está abierto y expuesto a conexiones. | **Solo para servicios públicos legítimos** |
+| filtered | El firewall ejecutó DROP. El paquete fue descartado silenciosamente; el atacante no sabe si el servidor existe o está apagado. | **Óptimo (Comportamiento UFW)** |
+| closed | El kernel respondió con un paquete TCP RST. El puerto no tiene aplicación escuchando, pero confirma que el host está activo. | **Aceptable pero revela presencia** |
+| open | Un socket en espacio de usuario respondió con SYN-ACK. El puerto está abierto y expuesto a conexiones. | **Solo para servicios públicos legítimos** |
 
 ---
 
 ## 10. Monitoreo y Logging de Paquetes sin Saturar el Disco
 
-UFW registra los eventos de tráfico en `/var/log/ufw.log` o a través de `journalctl`:
+UFW registra los eventos de tráfico en `/var/log/ufw.log` o a través del diario de systemd:
 
 ```bash
 # Configurar el nivel de log en nivel bajo para no saturar servidores con 1 GB de RAM
@@ -424,9 +455,9 @@ sudo journalctl -k -f | grep '[UFW BLOCK]'
 ```text
 [UFW BLOCK] IN=eth0 OUT= MAC=52:54:00:12:34:56 SRC=198.51.100.24 DST=203.0.113.10 LEN=40 TOS=0x00 PREC=0x00 TTL=245 ID=54321 PROTO=TCP SPT=49152 DPT=3306 WINDOW=1024 RES=0x00 SYN URGP=0
 ```
-* `SRC`: Dirección IP del atacante.
-* `DPT=3306`: Puerto objetivo que intentó vulnerar (ej. MySQL).
-* `SYN`: Intento de inicio de conexión TCP que fue descartado en 0 ms.
+* **SRC:** Dirección IP del atacante.
+* **DPT=3306:** Puerto objetivo que intentó vulnerar (ej. MySQL).
+* **SYN:** Intento de inicio de conexión TCP que fue descartado en **0 ms**.
 
 ---
 
@@ -434,24 +465,25 @@ sudo journalctl -k -f | grep '[UFW BLOCK]'
 
 | Comando | Propósito Operativo |
 |---|---|
-| `sudo ufw status verbose` | Despliega el estado general, políticas por defecto e interfaces de red asociadas. |
-| `sudo ufw status numbered` | Despliega las reglas indexadas con número secuencial `[ 1]`, `[ 2]` para operaciones de borrado. |
-| `sudo ufw delete <número>` | Elimina de forma precisa la regla correspondiente al índice sin ambigüedad. |
-| `sudo ufw insert 1 allow ...` | Inserta una regla en la posición superior de prioridad antes que las demás. |
-| `sudo ufw reload` | Recarga las reglas en caliente sin reiniciar el servicio ni desconectar sesiones vivas. |
-| `sudo ufw reset` | Restaura UFW a los valores de fábrica y desactiva el firewall. |
+| sudo ufw status verbose | Despliega el estado general, políticas por defecto e interfaces de red asociadas. |
+| sudo ufw status numbered | Despliega las reglas indexadas con número secuencial [ 1], [ 2] para operaciones de borrado. |
+| sudo ufw delete \<número\> | Elimina de forma precisa la regla correspondiente al índice sin ambigüedad. |
+| sudo ufw insert 1 allow ... | Inserta una regla en la posición superior de prioridad antes que las demás. |
+| sudo ufw reload | Recarga las reglas en caliente sin reiniciar el servicio ni desconectar sesiones vivas. |
+| sudo ufw reset | Restaura UFW a los valores de fábrica y desactiva el firewall. |
 
 ---
 
 ## Conclusión y Checklist de Validación
 
-Un servidor configurado con estándares profesionales de ingeniería aplica el modelo de **Defensa en Profundidad**:
+Un servidor configurado con estándares profesionales de ingeniería aplica el modelo de Defensa en Profundidad:
 
-- [x] **Política de Mínimo Privilegio:** `default deny incoming` activo en UFW.
-- [x] **Protección Dual-Stack:** `IPV6=yes` validado en `/etc/default/ufw`.
-- [x] **Acceso Administrativo Seguro:** SSH permitido en puertos específicos, con rate limiting y temporizador de emergencia previo.
+- [x] **Mínimo Privilegio:** Política Default Deny activa en UFW para tráfico entrante (`sudo ufw default deny incoming`).
+- [x] **Protección Dual-Stack:** Parámetro `IPV6=yes` validado en `/etc/default/ufw`.
+- [x] **Acceso Administrativo Seguro:** SSH permitido en puertos específicos, con limitación de tasa y temporizador de emergencia previo.
 - [x] **Aislamiento de Sockets:** Bases de datos y microservicios internos enlazados estrictamente a `127.0.0.1`.
 - [x] **Docker Controlado:** Ningún contenedor expuesto directamente en `0.0.0.0` saltándose las reglas del firewall.
-- [x] **Defensa Dinámica:** `fail2ban` auditando y expulsando intentos fallidos de autenticación.
-- [x] **Endurecimiento de Kernel:** Parámetros TCP/IP desplegados en `/etc/sysctl.d/99-hardening.conf`.
-- [x] **Auditoría Forense Externa:** Nmap confirmando el estado `filtered` en todos los puertos no públicos.
+- [x] **Filtrado Avanzado en Kernel:** Paquetes inválidos y escaneos sigilosos descartados en `/etc/ufw/before.rules`.
+- [x] **Defensa Dinámica:** Servicio fail2ban auditando y expulsando intentos fallidos de autenticación.
+- [x] **Endurecimiento de Kernel:** Parámetros TCP/IP y Conntrack calibrados en `/etc/sysctl.d/99-hardening.conf`.
+- [x] **Auditoría Forense Externa:** Nmap confirmando el estado filtered en todos los puertos no públicos.

@@ -300,7 +300,7 @@ export function GlossaryTermPopover({
 
   return (
     <>
-      {/* Palabra interactiva con subrayado punteado semántico W3C */}
+      {/* Palabra interactiva con subrayado punteado semántico W3C uniforme */}
       <button
         ref={triggerRef}
         type="button"
@@ -308,11 +308,7 @@ export function GlossaryTermPopover({
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         title={triggerTitle}
-        className={
-          isCode
-            ? "inline-flex items-baseline font-mono text-[0.875em] px-1.5 py-0.5 rounded-md bg-slate-200/55 dark:bg-zinc-800/80 border-b-2 border-b-blue-500/80 hover:border-b-blue-500 hover:text-blue-600 dark:hover:text-blue-400 text-slate-800 dark:text-zinc-200 font-medium cursor-help transition-colors select-text focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
-            : "inline-flex items-baseline font-semibold text-slate-900 dark:text-zinc-100 border-b-2 border-dotted border-blue-500/70 hover:border-solid hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-help px-0.5 rounded-sm focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
-        }
+        className="inline-flex items-baseline font-semibold text-slate-900 dark:text-zinc-100 border-b-2 border-dotted border-blue-500/70 hover:border-solid hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-help px-0.5 rounded-sm focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
       >
         <span>{displayText}</span>
       </button>

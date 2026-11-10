@@ -190,37 +190,14 @@ export function createRemarkGlossary(terms: GlossaryTerm[]) {
       function walk(node: any, parent: any, index: number): number | void {
         if (!node) return;
 
-        // Proteger encabezados, bloques de código cercados, enlaces y HTML crudo
+        // Proteger encabezados, bloques de código cercados, código en línea, enlaces y HTML crudo
         if (
           node.type === 'heading' ||
           node.type === 'code' ||
+          node.type === 'inlineCode' ||
           node.type === 'link' ||
           node.type === 'html'
         ) {
-          return;
-        }
-
-        // Inspeccionar código inline (ej. `ufw`)
-        if (node.type === 'inlineCode') {
-          const trimmed = (node.value || '').trim();
-          for (const { regex, termData } of matchers) {
-            if (seenSlugs.has(termData.slug)) continue;
-            regex.lastIndex = 0;
-            const match = regex.exec(trimmed);
-            if (match && match[0] === trimmed) {
-              seenSlugs.add(termData.slug);
-              node.data = {
-                hName: 'span',
-                hProperties: {
-                  className: 'glossary-term-match',
-                  'data-glossary-slug': termData.slug,
-                  'data-glossary-text': trimmed,
-                  'data-glossary-code': 'true',
-                },
-              };
-              return;
-            }
-          }
           return;
         }
 

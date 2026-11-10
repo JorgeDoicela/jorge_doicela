@@ -10,12 +10,12 @@ En toda la plataforma de DoicelaDev rige un principio fundamental: **Ingeniería
 
 ### 1.1 Prohibición Estricta de Palabras Marketineras y Superlativos Vacíos
 Queda terminantemente prohibido utilizar términos sensacionalistas, publicitarios o de venta vacía, tales como:
-* ❌ *"El mejor"* / *"La mejor"*
-* ❌ *"La solución definitiva"*
-* ❌ *"Increíble"* / *"Asombroso"*
-* ❌ *"Revolucionario"*
-* ❌ *"Mágico"*
-* ❌ *"Perfecto"* / *"Insuperable"*
+* **Prohibido:** *"El mejor"* / *"La mejor"*
+* **Prohibido:** *"La solución definitiva"*
+* **Prohibido:** *"Increíble"* / *"Asombroso"*
+* **Prohibido:** *"Revolucionario"*
+* **Prohibido:** *"Mágico"*
+* **Prohibido:** *"Perfecto"* / *"Insuperable"*
 
 ### 1.2 Enfoque de Reemplazo Profesional
 Toda afirmación debe basarse en arquitectura, pruebas y mediciones empíricas:
@@ -26,9 +26,9 @@ Toda afirmación debe basarse en arquitectura, pruebas y mediciones empíricas:
 ### 1.3 Cero Meta-Etiquetas de Audiencia (No Clasificar Explícitamente al Lector)
 * **Regla de Oro Periodística y de Ingeniería:** Un medio o publicación de alta reputación (como *The New York Times*, *IEEE Software*, *Stripe Engineering* o *Cloudflare Blog*) jamás le dice en la cara a su lector: *"este párrafo es para millonarios"* o *"esta sección es para líderes/reclutadores"*.
 * **Prohibición de Etiquetas:** Queda terminantemente prohibido incluir encabezados o textos que digan:
-  * ❌ *"Para reclutadores"* / *"Para Tech Leads"*
-  * ❌ *"Para principiantes"* / *"Para estudiantes"*
-  * ❌ *"Para expertos"* / *"Para seniors"*
+  * **Prohibido:** *"Para reclutadores"* / *"Para Tech Leads"*
+  * **Prohibido:** *"Para principiantes"* / *"Para estudiantes"*
+  * **Prohibido:** *"Para expertos"* / *"Para seniors"*
 * **Tratamiento Universal y Elegante:** La pedagogía multinivel es un criterio de **diseño interior** del artículo. Los títulos deben ser sobrios y universales:
   * En lugar de *"Resumen Ejecutivo para Reclutadores"*, titular simplemente: `**Resumen Ejecutivo:**`.
   * En lugar de *"Analogía Intuitiva para Principiantes"*, titular: `## Modelo Conceptual: Anatomía del Perímetro de Red`.
@@ -135,3 +135,32 @@ En el área temática de **Infraestructura y Servidores Linux** (`infrastructure
   * El firewall perimetral predeterminado es **UFW** (*Uncomplicated Firewall*) operando sobre Netfilter hooks en espacio de kernel.
   * Mitigación de intrusiones mediante `fail2ban` integrado con el backend `systemd`.
 * **Prohibición de Dispersión:** No se cubren herramientas o familias dispares (como `firewalld`, `dnf`, `rpm` o `SELinux` de RHEL/CentOS/Rocky), salvo mención contextual mínima si un análisis comparativo lo exigiera. Todo el foco técnico práctico y ejecutable permanece 100% en el stack Debian/Ubuntu.
+
+---
+
+## 8. Manual de Estilo Tipográfico y Editorial Nativo de DoicelaDev
+
+DoicelaDev cuenta con un motor de interfaz enriquecida propio (`MarkdownRenderer.tsx`, `GlossaryTermPopover.tsx`, `glossary-matcher.tsx` y `TableBlock`) que ya aplica estilos automáticos de alto nivel. Para evitar colisiones visuales entre el formato Markdown manual y los componentes interactivos de la plataforma, toda publicación en los 8 módulos debe seguir de forma estricta estas 4 reglas nativas:
+
+1. **Términos del Glosario y Nombres Propios de Tecnologías en Texto Plano:**
+   * Los términos registrados en `backend/src/doiceladev/corpus/glossary.json` (`Netfilter`, `UFW`, `DROP`, `REJECT`, `Conntrack`, `Firewall con Estado` / `Stateful Firewall`, `CIDR`, `mTLS`, `eBPF`, `WAL`, `Zero Trust`, `CVE`, `cgroups`, `systemd`, `RAG`, `MCP`, `Idempotencia` / `Idempotence`, `SAPI`, `PHP-FPM`, `Best-Fit Mapping`) y los nombres propios de software en prosa (Linux, Docker, Nginx, PostgreSQL, Debian, Ubuntu) deben escribirse **siempre en texto plano**, sin encerrarlos en backticks ni en negritas.
+   * **Por qué:** Al dejarlos en texto plano, `glossary-matcher.tsx` detecta automáticamente su primera aparición y la transforma en un `GlossaryTermPopover` con **subrayado punteado azul uniforme** (`border-b-2 border-dotted border-blue-500/70`), mientras que las apariciones siguientes fluyen limpiamente sin sobrecargar el párrafo.
+2. **Código en Línea (`` `...` ``) Exclusivo para Sintaxis de Consola, Rutas y Direcciones:**
+   * Reservado estrictamente para comandos ejecutables (`sudo ufw enable`), flags (`-tlnp`), rutas de archivos (`/etc/default/ufw`), variables de configuración (`IPV6=yes`), funciones (`useSpotlight()`) y direcciones IP/puertos (`127.0.0.1:5432`, `0.0.0.0`).
+   * **Por qué:** `glossary-matcher.tsx` ignora los nodos `inlineCode` para que la caja gris (`InlineCode`) represente inequívocamente sintaxis técnica de consola y jamás compita con el Glosario Interactivo.
+3. **Negrita (`**...**`) Solo Estructural y Métricas Cuantitativas:**
+   * Empleada únicamente para el arranque de viñetas (`* **Puertos:** ...`), títulos de Callouts (`**Resumen Ejecutivo:**`) y métricas cuantitativas puntuales (**0 ms de CPU**, **99.9%**, **PHP 8.3.12+**).
+   * **Cero negrita ni backticks en la primera columna de tablas (`TableBlock`):** El componente `td` de `MarkdownRenderer.tsx` ya aplica por diseño `first:font-mono first:font-semibold` con fondo diferenciado a toda la primera columna. Escribir `| **Clave** |` o ``| `Clave` |`` es redundante y está prohibido; debe escribirse limpio: `| Clave |`.
+   * **Cero negritas dentro de párrafos de prosa:** Dentro de los párrafos normales no se aplican negritas a frases ni conceptos porque el Glosario Interactivo y los Callouts ya cumplen la función de anclaje visual.
+4. **Cursiva (`*...*`) Mínima y Puntual:**
+   * Reservada solo para anglicismos crudos puntuales en medio de la prosa (*loopback*, *bypass*, *spoofing*, *handshake*) cuando sea estrictamente necesario.
+
+### Tabla de Referencia Rápida: Patrones de Redacción Nativa
+
+| Caso de Uso | Patrón Incorrecto | Estándar Correcto (Nativo DoicelaDev) | Justificación Arquitectónica |
+|---|---|---|---|
+| **Términos del Glosario (`glossary.json`)** | `` `DROP` ``, `` `Netfilter` ``, `**UFW**`, `**PHP-FPM**` | DROP, Netfilter, UFW, PHP-FPM (texto plano) | Permite que `glossary-matcher.tsx` inyecte el subrayado punteado azul uniforme (`GlossaryTermPopover`) sin chocar con cajas `InlineCode`. |
+| **Tecnologías y marcas en prosa** | `` `Docker` ``, `` `Linux` ``, `` `Nginx` `` | Docker, Linux, Nginx (texto plano) | Los nombres propios no son comandos. Solo llevan backticks al invocar el binario (`` `docker run` ``, `` `nginx -t` ``). |
+| **Primera columna de tablas (`TableBlock`)** | `\| **Política** \|` o ``\| `Política` \|`` | `\| Política \|` (texto plano) | `MarkdownRenderer.tsx` ya estiliza automáticamente `td:first-child` con `font-mono font-semibold`. |
+| **Párrafos de prosa técnica** | Párrafos llenos de `**conceptos en negrita**` y `` `cajas` `` | Prosa limpia + Glosario Interactivo + Callouts | Evita que el párrafo compita visualmente con los 6 componentes ricos de la página (Callouts, Glosario, Mermaid, CodeBlock, TableBlock, Checklists). |
+| **Encabezados de listas didácticas** | `* **Los Puertos (Ports):** Son...` | `* **Puertos:** Puertas numeradas...` | Síntesis directa en el arranque de viñeta sin artículos gramaticales innecesarios. |

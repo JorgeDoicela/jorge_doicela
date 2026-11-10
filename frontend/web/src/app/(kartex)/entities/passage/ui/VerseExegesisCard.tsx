@@ -14,8 +14,6 @@ import {
   Plus,
   ScrollText,
   Volume2,
-  Library,
-  BookMarked,
 } from 'lucide-react';
 import { fetchCommentariesByPassage, CommentaryEntry } from '../../../features/commentaries';
 import { InspectedVerseData } from '../model/KartexPassageContext';
@@ -729,18 +727,16 @@ export const VerseExegesisCard: React.FC<VerseExegesisCardProps> = ({
           <Link
             href={`/study/commentaries?book=${canonicalAbbr}&chapter=${chapter}&verse=${verseNumber}`}
             title={tStudio('openInCommentaries')}
-            className="h-8 px-2.5 rounded-full border border-border/80 bg-inner-card/60 hover:bg-foreground hover:text-background transition-all text-center text-xs font-mono font-medium text-foreground cursor-pointer flex items-center justify-center gap-1.5 truncate"
+            className="h-8 px-2.5 rounded-full border border-border/80 bg-inner-card/60 hover:bg-foreground hover:text-background transition-all text-center text-xs font-mono font-medium text-foreground cursor-pointer flex items-center justify-center truncate"
           >
-            <Library className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{tStudio('openInCommentaries')}</span>
           </Link>
 
           <Link
             href="/study/dictionaries"
             title={tStudio('openInDictionaries')}
-            className="h-8 px-2.5 rounded-full border border-border/80 bg-inner-card/60 hover:bg-foreground hover:text-background transition-all text-center text-xs font-mono font-medium text-foreground cursor-pointer flex items-center justify-center gap-1.5 truncate"
+            className="h-8 px-2.5 rounded-full border border-border/80 bg-inner-card/60 hover:bg-foreground hover:text-background transition-all text-center text-xs font-mono font-medium text-foreground cursor-pointer flex items-center justify-center truncate"
           >
-            <BookMarked className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{tStudio('openInDictionaries')}</span>
           </Link>
         </div>

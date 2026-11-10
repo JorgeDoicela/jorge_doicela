@@ -7,8 +7,7 @@ import { KartexLogo, BackToKartexButton, mobileSheetCoordinator } from '../../..
 import { ThemeToggle } from '../../../features/theme-toggle';
 import { LanguageToggle } from '../../../features/language-toggle';
 import { useKartexPassageSafe } from '../../../entities/passage';
-import { KartexAudioControlsPopover } from '../../../features/verses';
-import { ChevronDown, Check, Volume2 } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface NavTabItem {
@@ -49,8 +48,6 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
-  const [audioSheetOpen, setAudioSheetOpen] = useState(false);
-  const audioNavRef = useRef<HTMLDivElement>(null);
   const [homeUrl, setHomeUrl] = useState('/');
 
   useEffect(() => {
@@ -85,33 +82,25 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
 
   const activeTab = NAV_TABS.find((tab) => isCurrentTab(tab.path)) || NAV_TABS[0];
 
-  // Cerrar menús flotantes al hacer clic fuera
+  // Cerrar menú móvil al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | PointerEvent) => {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setMobileMenuOpen(false);
       }
-      if (audioNavRef.current && !audioNavRef.current.contains(event.target as Node)) {
-        const target = event.target as HTMLElement | null;
-        if (target && target.closest('[data-kartex-audio-modal]')) {
-          return;
-        }
-        setAudioSheetOpen(false);
-      }
     };
-    if (mobileMenuOpen || audioSheetOpen) {
+    if (mobileMenuOpen) {
       document.addEventListener('pointerdown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, [mobileMenuOpen, audioSheetOpen]);
+  }, [mobileMenuOpen]);
 
-  // Si la cabecera se oculta, cerrar menús desplegables
+  // Si la cabecera se oculta, cerrar menú móvil
   useEffect(() => {
     if (!isVisible) {
       setMobileMenuOpen(false);
-      setAudioSheetOpen(false);
     }
   }, [isVisible]);
 
@@ -233,43 +222,8 @@ export const KartexHeaderNav: React.FC<KartexHeaderNavProps> = ({ isVisible = tr
           </nav>
         </div>
 
-        {/* Derecha: Audio Bíblico, Selector de Idioma y Tema */}
+        {/* Derecha: Selector de Idioma y Tema */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-2 pl-1">
-          {passageContext && (
-            <div className={`hidden sm:block relative ${audioSheetOpen ? 'z-50' : ''}`} ref={audioNavRef}>
-              <button
-                type="button"
-                onClick={() => setAudioSheetOpen((prev) => !prev)}
-                className={`flex items-center justify-center w-8 h-8 sm:w-auto sm:px-2.5 sm:py-1 rounded-full transition-colors duration-150 cursor-pointer active:scale-95 gap-1.5 ${
-                  audioSheetOpen || passageContext.isPlayingAudio
-                    ? 'text-foreground bg-transparent hover:bg-accents-1 sm:bg-accents-2 sm:font-medium'
-                    : 'text-accents-5 hover:text-foreground hover:bg-accents-1 bg-transparent'
-                }`}
-                title="Audio Bíblico"
-                aria-label="Controles de audio bíblico"
-              >
-                <Volume2
-                  className={`w-4 h-4 shrink-0 ${
-                    audioSheetOpen || passageContext.isPlayingAudio
-                      ? 'text-foreground'
-                      : 'text-accents-5'
-                  }`}
-                  strokeWidth={1.75}
-                />
-                {passageContext.isPlayingAudio && (
-                  <span className="font-semibold text-[11px] font-mono hidden sm:inline text-foreground">
-                    {passageContext.currentAudioVerse ? `v.${passageContext.currentAudioVerse}` : 'Audio'}
-                  </span>
-                )}
-              </button>
-
-              <KartexAudioControlsPopover
-                isOpen={audioSheetOpen}
-                onClose={() => setAudioSheetOpen(false)}
-                align="right"
-              />
-            </div>
-          )}
           <LanguageToggle />
           <ThemeToggle />
         </div>

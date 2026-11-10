@@ -51,6 +51,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
             alt="Jorge Doicela"
             width={28}
             height={28}
+            priority
             className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
           />
           {/* Logo Negro (Modo Claro) */}
@@ -59,6 +60,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
             alt="Jorge Doicela"
             width={28}
             height={28}
+            priority
             className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
           />
         </Link>

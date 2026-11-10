@@ -18,6 +18,8 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
   - Los archivos `.sqlite` están en `.gitignore`. Al cambiar de máquina o hacer `git pull` con cambios en corpus o entidades, es obligatorio ejecutar `pnpm seed:all`.
 * **Protocolo de Diagnóstico 404:**
   - Ante errores 404 en rutas dinámicas (`/infrastructure/[slug]`, `/tutorials/[slug]`, etc.) en local, verificar primero si el registro existe en la base SQLite o ejecutar `pnpm seed:all` antes de tocar routing o middleware.
+* **Optimización LCP de Logotipo en Landing (`LandingHeader.tsx`):**
+  - Se añadieron las propiedades canónicas `priority` a los componentes `<Image>` del imagotipo (`logo_blanco.png` y `logo_negro.png` con `hidden dark:block` y `block dark:hidden`), respetando los assets de diseño originales y resolviendo el aviso de Largest Contentful Paint (LCP) de Next.js sin alterar el antialiasing ni recurrir a filtros CSS sintéticos (`dark:invert`).
 
 ---
 
@@ -511,3 +513,9 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
 
 * **Calibración Óptima de Código en Línea en DoicelaDev (`InlineCode`):**
   - **Ajuste:** Fondo neutro suave sin bordes (`bg-slate-200/55 dark:bg-zinc-800/80 border-0`), peso natural `font-medium` (500) y color grafito contrastado `text-slate-800 dark:text-zinc-200`, eliminando clases no estándar (`text-slate-850`) y previniendo el efecto de resaltador invasivo o recargado.
+
+* **Depuración de Controles Redundantes en Cabecera de KARTEX (`KartexHeaderNav`):**
+  - **Ajuste:** Eliminación del botón flotante y estado del popover de audio bíblico en la barra de navegación superior. La cabecera preserva un diseño limpio y minimalista con únicamente el selector de idioma y el alternador de tema, ya que los controles de audio residen orgánicamente en la barra de lectura del pasaje (`ReaderToolbar`) y en el dock móvil (`KartexMobileStudyDock`).
+
+* **Unificación Visual Sobria de Botones en `VerseExegesisCard`:**
+  - **Ajuste:** Se eliminaron los iconos decorativos SVG (`Library` y `BookMarked`) de los botones de navegación «Explorar en Comentarios» y «Explorar en Diccionarios», homologando su diseño con los botones hermanos («Explorar en Atlas» y «Explorar en Cronología») para mantener un formato 100% tipográfico y limpio con la estética Geist.

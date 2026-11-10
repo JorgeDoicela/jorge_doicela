@@ -630,6 +630,19 @@ export function seedDoiceladev(
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_glossary_terms_term_lang ON glossary_terms (term, language);
     CREATE INDEX        IF NOT EXISTS IDX_glossary_terms_lang_prio  ON glossary_terms (language, orderPriority DESC);
     CREATE INDEX        IF NOT EXISTS IDX_glossary_terms_cat        ON glossary_terms (language, category, orderPriority DESC);
+
+    -- ── NEWSLETTER SUBSCRIBERS ───────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      email      TEXT    NOT NULL UNIQUE,
+      status     TEXT    NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'unsubscribed')),
+      source     TEXT    NOT NULL DEFAULT 'general',
+      language   TEXT    NOT NULL DEFAULT 'es',
+      createdAt  DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt  DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_newsletter_subscribers_email ON newsletter_subscribers (email);
+    CREATE INDEX        IF NOT EXISTS IDX_newsletter_subscribers_status_created ON newsletter_subscribers (status, createdAt);
   `);
 
   const srcDir = path.resolve(__dirname, '../../../src/doiceladev/corpus');

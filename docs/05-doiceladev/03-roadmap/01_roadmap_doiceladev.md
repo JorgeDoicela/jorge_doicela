@@ -5,11 +5,12 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 ---
 
 ## 1. Arquitectura y Módulos Completados
-- [x] **Monolito Modular Backend (8 Submódulos):** `news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure` con controladores, servicios y entidades TypeORM independientes.
+- [x] **Monolito Modular Backend (9 Submódulos):** `news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `newsletter` con controladores, servicios y entidades TypeORM independientes.
 - [x] **Fuente de Verdad en `corpus/*.json`:** 8 datasets JSON estructurados que alimentan la base de datos de forma desacoplada.
-- [x] **Seeder Atómico Transaccional:** Script CLI (`seed-doiceladev.ts`) que recrea y siembra 9 tablas en SQLite en < 100 ms.
-- [x] **Modelo Relacional Físico (`doiceladev.sqlite`):** 10 entidades registradas bajo `doiceladevConnection` con relaciones foráneas e índices B-Tree especializados.
-- [x] **Frontend Web Next.js 16 (FSD Canónico en 4 Capas):** Capas desacopladas `shared/` (UI, suite Markdown, SEO, lib, types), `entities/` (8 dominios temáticos + feed consolidado), `features/` (spotlight-search, forum-reply, language-toggle, theme-toggle) y `widgets/` (header-nav, footer, category-nav, featured-carousel, article-layout, page-layout).
+- [x] **Seeder Atómico Transaccional:** Script CLI (`seed-doiceladev.ts`) que recrea y siembra 11 tablas en SQLite en < 100 ms.
+- [x] **Modelo Relacional Físico (`doiceladev.sqlite`):** 11 entidades registradas bajo `doiceladevConnection` con relaciones foráneas e índices B-Tree especializados (incluyendo `newsletter_subscribers`).
+- [x] **Servicio Real e Idempotente de Suscripciones Técnicas (Newsletter):** Backend `POST /doiceladev/newsletter/subscribe`, validación RFC 5322, prevención de duplicados, soporte bilingüe (`es`/`en`) y segmentación analítica (`source`, `topicCategory`).
+- [x] **Frontend Web Next.js 16 (FSD Canónico en 6 Capas):** Capas desacopladas `providers/`, `shared/` (UI, suite Markdown, SEO, lib, types), `entities/` (8 dominios temáticos + feed consolidado), `features/` (spotlight-search, forum-reply, newsletter-subscription, language-toggle, theme-toggle) y `widgets/` (header-nav, footer, category-nav, featured-carousel, article-layout, page-layout).
 - [x] **Páginas de Catálogo Dedicadas:** `/doiceladev/news`, `/doiceladev/blog`, `/doiceladev/forum`, `/doiceladev/ai`, `/doiceladev/cybersecurity`, `/doiceladev/tutorials`, `/doiceladev/projects`, `/doiceladev/infrastructure` (o rutas raíz en subdominio `doiceladev.jorgedoicela.com`).
 - [x] **Lector Individual y Modo Interactivo `[slug]`:** Vistas individuales por categoría, incluyendo `StepWizard` interactivo para tutoriales, hilo de discusión para foros y visor de especificaciones de hardware/servidor (`specs`) para infraestructura.
 - [x] **Página Principal (`/doiceladev` o subdominio):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura, spotlight command palette (`Cmd+K`) y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.

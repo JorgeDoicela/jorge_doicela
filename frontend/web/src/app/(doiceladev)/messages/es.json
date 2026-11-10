@@ -88,7 +88,10 @@
     "description": "Recibe notificaciones técnicas sobre nuevos avisos de seguridad, ensayos y lanzamientos de software.",
     "placeholder": "Correo electrónico",
     "subscribe": "SUSCRIBIRME",
-    "success": "✓ Gracias por suscribirte."
+    "subscribing": "ENVIANDO...",
+    "success": "✓ Gracias por suscribirte al boletín técnico.",
+    "errorGeneric": "No pudimos procesar tu suscripción. Intenta nuevamente.",
+    "invalidEmail": "Ingresa una dirección de correo válida."
   },
   "Footer": {
     "platformDesc": "DoicelaDev — Plataforma de ingeniería de software, arquitectura de sistemas y laboratorio de IA por Jorge Doicela.",

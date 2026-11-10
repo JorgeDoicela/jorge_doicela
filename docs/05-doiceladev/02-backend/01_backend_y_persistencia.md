@@ -132,11 +132,19 @@ backend/src/doiceladev/
 │   ├── dto/{get-categories-query.dto.ts, get-category-articles-query.dto.ts}
 │   └── services/categories.service.ts # Agrupación indexada de las 8 tablas de contenido
 │
-└── tags/                             # 13. HUB TRANSVERSAL DE ETIQUETAS (NIVEL 3)
-    ├── tags.module.ts
-    ├── controllers/tags.controller.ts # GET /doiceladev/tags, GET /doiceladev/tags/:slug
-    ├── dto/{get-tags-query.dto.ts, get-tag-articles-query.dto.ts}
-    └── services/tags.service.ts      # Cruce relacional normalizado mediante tags y content_tags
+├── tags/                             # 13. HUB TRANSVERSAL DE ETIQUETAS (NIVEL 3)
+│   ├── tags.module.ts
+│   ├── controllers/tags.controller.ts # GET /doiceladev/tags, GET /doiceladev/tags/:slug
+│   ├── dto/{get-tags-query.dto.ts, get-tag-articles-query.dto.ts}
+│   └── services/tags.service.ts      # Cruce relacional normalizado mediante tags y content_tags
+│
+└── newsletter/                       # 14. SERVICIO DE SUSCRIPCIONES Y AUDIENCIAS TÉCNICAS
+    ├── newsletter.module.ts
+    ├── newsletter.controller.ts      # POST /doiceladev/newsletter/subscribe (idempotente)
+    ├── newsletter.service.ts         # Normalización, reactivación de bajas y métricas
+    ├── entities/newsletter-subscriber.entity.ts # Tabla relacional newsletter_subscribers
+    ├── dto/subscribe-newsletter.dto.ts          # Validación con @IsEmail() y sanitización
+    └── interfaces/newsletter.interface.ts
 ```
 
 ---
@@ -194,6 +202,7 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | **Glosario** | `GET /doiceladev/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
 | | `GET /doiceladev/glossary/:slug` | `lang` | Definición de un término específico por slug |
 | **Feed Global** | `GET /doiceladev/portal` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
+| **Newsletter** | `POST /doiceladev/newsletter/subscribe` | - | Registro o reactivación idempotente de suscriptores técnicos (acepta `email`, `source`, `language`) |
 
 ---
 
@@ -256,6 +265,10 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `glossary_terms`: `id`, `slug`, `term`, `aliases`, `category`, `shortDefinition`, `keyDifference`, `caseSensitive`, `language`, `orderPriority`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram', 'security', 'ai', 'architecture', 'general', 'database', 'linux'))`.  
   * **Índices:** `IDX_glossary_terms_term_lang (term, language) UNIQUE`, `IDX_glossary_terms_lang_prio (language, orderPriority DESC)`.
+* `newsletter_subscribers`: `id`, `email`, `status`, `source`, `language`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (status IN ('active', 'unsubscribed'))`.  
+  * **Índices:** `IDX_newsletter_subscribers_email (email) UNIQUE`, `IDX_newsletter_subscribers_status_created (status, createdAt)`.  
+  * **Propósito:** Registro idempotente y segmentado de audiencias técnicas para alertas de ciberseguridad, tutoriales de arquitectura y boletines temáticos.
 
 ---
 

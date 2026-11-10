@@ -88,7 +88,10 @@
     "description": "Receive technical updates on new security advisories, engineering essays, and software releases.",
     "placeholder": "Email Address",
     "subscribe": "SUBSCRIBE",
-    "success": "✓ Thank you for subscribing."
+    "subscribing": "SENDING...",
+    "success": "✓ Thank you for subscribing to the technical dispatch.",
+    "errorGeneric": "Could not process your subscription. Please try again.",
+    "invalidEmail": "Please enter a valid email address."
   },
   "Footer": {
     "platformDesc": "DoicelaDev — Software engineering platform, system architecture, and AI laboratory by Jorge Doicela.",

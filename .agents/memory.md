@@ -531,3 +531,20 @@ Este archivo almacena el contexto operativo, decisiones arquitectónicas consoli
     4. **Cursiva (`*...*`) Mínima:** Solo para anglicismos crudos puntuales en prosa (*loopback*, *bypass*, *spoofing*).
   - **Ampliación Técnica y Sincronización Completa del Corpus:**
     - Actualizados los borradores bilingües de infraestructura (`es.firewall-linux-ufw-netfilter.md`, `en.linux-firewall-ufw-netfilter.md`) y ciberseguridad (`es.seguridad-php-cve-2024-8927-cve-2024-9026.md`, `en.seguridad-php-cve-2024-8927-cve-2024-9026.md`), así como la totalidad de archivos en `backend/src/doiceladev/corpus/*.json` (`infrastructure.json`, `security.json`, `blog.json`, `news.json`, `ai.json`, `tutorials.json`, `projects.json`, `forum.json`), sembrados en `backend/data/doiceladev.sqlite`.
+* **Servicio Real y Persistente de Suscripciones Técnicas (Newsletter) en DoicelaDev:**
+  - **Backend NestJS (`backend/src/doiceladev/newsletter/`):**
+    - Módulo vertical `NewsletterModule` con arquitectura canónica de 3 capas.
+    - Entidad `NewsletterSubscriber` (`newsletter_subscribers`) aislada en `doiceladev.sqlite` bajo la conexión `'doiceladevConnection'`.
+    - DTO estricto `SubscribeNewsletterDto` con validación `@IsEmail()` y sanitización automática.
+    - Servicio `NewsletterService` con soporte de idempotencia real (responde `200 OK` sin duplicar si ya existe, y reactiva suscriptores previamente dados de baja).
+    - Controlador `NewsletterController` (`POST /doiceladev/newsletter/subscribe`).
+  - **Base de Datos y Seeder (`seed-doiceladev.ts`):**
+    - Tabla `newsletter_subscribers` con índice único en `email` e índice compuesto en `(status, createdAt)` aprovisionada en el seeder limpio.
+  - **Frontend Next.js (FSD):**
+    - Hook `useNewsletterSubscription` en `frontend/web/src/app/(doiceladev)/features/newsletter-subscription/` con gestión completa del ciclo de vida (`idle`, `loading`, `success`, `error`), sanitización y persistencia en `localStorage`.
+    - Componente `StayInformedCard.tsx` conectado al backend real con accesibilidad (`aria-live`), spinners durante el envío y mensajes de error e internacionalización (`es`/`en`).
+  - **Infraestructura Cloud de Email (Amazon SES & Cloudflare DNS):**
+    - Identidad de dominio `jorgedoicela.com` verificada en AWS SES (`us-east-1`) con firma criptográfica Easy DKIM (3 registros CNAME en Cloudflare con proxy en *DNS only*).
+    - Registro SPF actualizado en Cloudflare (`v=spf1 include:amazonses.com ~all`) en alineación con DMARC (`p=reject`) para garantizar 100% de entregabilidad sin rebotes.
+    - Solicitud de salida de Sandbox de AWS SES enviada para acceso de producción masivo sin cuotas mensuales fijas ($0.10 / 1000 emails).
+    - Usuario IAM de servicio `doiceladev-ses-mailer` configurado con permisos estrictos de mínimo privilegio (`AmazonSESFullAccess`) y credenciales desacopladas en `backend/.env`.

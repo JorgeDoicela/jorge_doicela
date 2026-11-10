@@ -373,3 +373,39 @@ Para erradicar soluciones provisionales y proveer recomendaciones contextuales p
   4. Pondera afinidad de categoría (bono de $+0.30$ si comparte subcategoría técnica y bono por dominio afín) junto con desempate por calidad editorial (`smartScore` normalizado).
   5. Aplica filtro antifatiga excluyendo publicaciones presentes en `exclude`. Si no hay suficientes publicaciones no leídas para cubrir el cupo, incorpora publicaciones de mayor afinidad como respaldo.
   6. Retorna un payload ultraligero (< 1 KB) conformado por `RecommendationCardDto[]`.
+
+---
+
+## 9. Infraestructura de Boletines y Notificaciones Técnicas (Amazon SES & Seguridad de Correo)
+
+Para el despacho de notificaciones técnicas, avisos de seguridad y boletines educativos a la audiencia registrada en `newsletter_subscribers`:
+
+### 9.1 Arquitectura Serverless y Protección del VPS (1 GB de RAM)
+* **Desacoplamiento Serverless:** El servidor VPS en AWS Lightsail no ejecuta ningún servicio SMTP local (Postfix, Exim o Sendmail), ahorrando entre 40 MB y 60 MB de memoria RAM permanentes y blindando la IP del servidor contra listas negras.
+* **Consumo Liviano vía HTTPS:** El backend interactúa directamente con el servicio administrado **Amazon SES** en la región `us-east-1` utilizando `@aws-sdk/client-ses`. Las conexiones son efímeras y no mantienen sockets persistentes en memoria.
+* **Variables de Entorno Estandarizadas:**
+  * `AWS_REGION`: Región del servicio (`us-east-1`).
+  * `AWS_ACCESS_KEY_ID`: Identificador de clave de acceso del usuario IAM de servicio.
+  * `AWS_SECRET_ACCESS_KEY`: Clave de acceso secreta privada (nunca versionada en Git).
+  * `AWS_SES_FROM_EMAIL`: Dirección remitente oficial verificada (`newsletter@doiceladev.jorgedoicela.com`).
+
+### 9.2 Autenticación Criptográfica y Entregabilidad (Cloudflare DNS)
+* **Easy DKIM (2048-bit RSA):** 3 registros CNAME dedicados en Cloudflare configurados con proxy en **DNS only (gris)** para resolución directa por parte de servidores de correo receptores (Gmail, Outlook, ProtonMail).
+* **SPF (Sender Policy Framework):** Registro TXT en el dominio raíz `jorgedoicela.com`:
+  ```text
+  v=spf1 include:amazonses.com ~all
+  ```
+* **DMARC (Domain-based Message Authentication):** Registro TXT en `_dmarc.jorgedoicela.com`:
+  ```text
+  v=DMARC1; p=reject; sp=reject;
+  ```
+  La combinación de DKIM firmado + SPF autorizado + DMARC estricto garantiza que los correos legítimos no caigan en la carpeta de Spam y previene cualquier intento de suplantación (*spoofing*).
+
+### 9.3 Gestión de Identidad y Mínimo Privilegio (IAM)
+* **Usuario de Servicio Aislado:** `doiceladev-ses-mailer` configurado sin credenciales de acceso a la consola web de AWS.
+* **Política de Permisos:** Restringido a `AmazonSESFullAccess` exclusivamente para la API de correo, sin permisos sobre Lightsail, bases de datos o facturación.
+
+### 9.4 Supresión, Idempotencia y Políticas Antispam
+* **Opt-in Explícito:** Los lectores se registran voluntariamente mediante el componente `StayInformedCard` en los artículos de DoicelaDev.
+* **Manejo de Bajas en SQLite:** Los suscriptores que solicitan desuscripción se marcan con `status = 'unsubscribed'`, impidiendo cualquier envío futuro.
+* **Monitoreo de Reputación:** Supervisión continua a través del panel de SES para mantener tasas de rebote (*Bounce Rate*) inferiores al 5% y quejas por spam (*Complaint Rate*) por debajo del 0.1%.

@@ -61,6 +61,16 @@ El proyecto está diseñado como un ecosistema modular compuesto por **cuatro ap
    * **Zona API (`limit_req_zone $real_client_ip zone=api_limit_zone rate=15r/s burst=25 nodelay`):** Protege las bases de datos SQLite (`kartex.sqlite`, `doiceladev.sqlite`) y el backend NestJS contra scraping agresivo devolviendo `HTTP 429 Too Many Requests` en microsegundos.
    * **Zona Web (`limit_req_zone $real_client_ip zone=web_limit_zone rate=35r/s burst=50 nodelay`):** Protege el SSR de Next.js de ataques de denegación de servicio sin penalizar a usuarios humanos navegando rápido.
 
+### 2.2 Servicios Cloud Complementarios y Entrega de Correo (Amazon SES)
+Para despachos de boletines técnicos y notificaciones transaccionales sin sobrecargar la memoria RAM del servidor VPS de 1 GB:
+* **Amazon SES (Simple Email Service en `us-east-1`):** Servicio administrado serverless en la misma nube de AWS. Elimina la necesidad de ejecutar servidores de correo locales (Postfix/Exim) en el VPS, ahorrando ~40-60 MB de RAM permanentes y evitando problemas de bloqueo de IP por spam.
+* **Consumo Liviano vía HTTPS:** El backend NestJS interactúa con SES mediante llamadas HTTP de API con `@aws-sdk/client-ses` de ciclo de vida efímero (conexión se abre, despacha y libera memoria inmediatamente).
+* **Autenticación Criptográfica en Cloudflare DNS:**
+  * **Easy DKIM (2048-bit RSA):** 3 registros CNAME dedicados en Cloudflare configurados con proxy en **DNS only (gris)** para resolución directa de firmas criptográficas.
+  * **SPF (Sender Policy Framework):** Registro TXT en el dominio raíz (`v=spf1 include:amazonses.com ~all`) que autoriza exclusivamente a los servidores de AWS SES.
+  * **DMARC:** Registro TXT (`_dmarc.jorgedoicela.com`) con política de rechazo estricta (`p=reject; sp=reject;`) que protege el dominio contra suplantación de identidad (*spoofing*).
+* **Mínimo Privilegio en IAM:** Operación bajo el usuario de servicio dedicado `doiceladev-ses-mailer`, restringido exclusivamente a la política `AmazonSESFullAccess` sin acceso a Lightsail ni otros recursos de AWS.
+
 
 ---
 

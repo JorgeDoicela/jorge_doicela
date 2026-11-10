@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t("title"),
     description: t("description"),
     icons: {
-      icon: "/kartex/logo/logo_fondo_circular_color_.png",
+      icon: "/kartex/logo/logo_fondo_circular_color_.webp",
     },
     openGraph: {
       title: t("title"),
@@ -71,7 +71,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: "/kartex/logo/logo_fondo_circular_color_.png",
+          url: "/kartex/logo/logo_fondo_circular_color_.webp",
           width: 512,
           height: 512,
           alt: "Kartex - Jorge Doicela",
@@ -82,7 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary",
       title: t("title"),
       description: t("description"),
-      images: ["/kartex/logo/logo_fondo_circular_color_.png"],
+      images: ["/kartex/logo/logo_fondo_circular_color_.webp"],
     },
     alternates: {
       canonical: "https://kartex.jorgedoicela.com",

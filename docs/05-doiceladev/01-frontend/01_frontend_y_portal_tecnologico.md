@@ -128,7 +128,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 
 * **Fusión Neumórfica y Vítrea Calibrada:** Contenedores y tarjetas construidos sobre `.glass-convex-panel` y `.glass-concave-panel` que combinan sombras cóncavas (efecto hendido) y convexas (relieve extruido) con fondos de cristal esmerilado translúcido (`backdrop-filter: blur(16px)`), gradientes lumínicos diagonales y bordes perimetrales vítreos.
 * **Cabecera Editorial de Marca Centralizada:**
-  * Imagotipo compuesto de alta nitidez y escala calibrada: icono [`logo_blanco.png`](/doiceladev/logo/logo_blanco.png) a la izquierda y bloque tipográfico [`doiceladev.png`](/doiceladev/logo/doiceladev.png) a la derecha, asegurando una proporción armónica y legibilidad impecable.
+  * Imagotipo compuesto de alta nitidez y escala calibrada: icono [`logo_blanco.webp`](/doiceladev/logo/logo_blanco.webp) a la izquierda y bloque tipográfico [`doiceladev.webp`](/doiceladev/logo/doiceladev.webp) a la derecha, asegurando una proporción armónica y legibilidad impecable.
   * **Enrutamiento Determinístico del Logotipo:** El logotipo completo está enlazado a la raíz del subdominio de DoicelaDev (`/` o `http://doiceladev.localhost:3001/` en desarrollo local y `https://doiceladev.jorgedoicela.com` en producción). Además, al hacer clic sobre el imagotipo mientras se está en la página principal, reinicia automáticamente la categoría a `'all'` (*Todo el Contenido*), restaurando la vista principal de destacados y últimas publicaciones.
   * Titular semántico accesible para SEO (`h1.sr-only`), eliminando el texto visual redundante para dar protagonismo absoluto al diseño del imagotipo.
   * Fila limpia de iconos de redes sociales libres sin contenedores invasivos (`w-6 h-6`, 24px) en color blanco nítido: LinkedIn, GitHub, YouTube, TikTok y Email de contacto, situados a proximidad inmediata bajo el logotipo (`text-white hover:text-zinc-300`).
@@ -248,7 +248,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 * **Autor 100% Dinámico desde Base de Datos y Micro-Avatar Editorial:**
   * Los 8 módulos temáticos (`infrastructure`, `tutorials`, `projects`, `cybersecurity`, `ai`, `blog`, `news`, `forum`) leen el autor estrictamente de la entidad devuelta por la base de datos (`author` en `doiceladev.sqlite`).
   * Erradicación total de fallbacks o valores por defecto hardcodeados tanto en las páginas `[slug]/page.tsx` como en el layout maestro ([`DoiceladevArticleLayout.tsx`](/doiceladev/widgets/article-layout/ui/DoiceladevArticleLayout.tsx)).
-  * La cabecera editorial integra un micro-avatar circular de perfil ($20\times 20\text{px}$, `/doiceladev/logo/perfil.jpg`) a la izquierda del nombre del autor con borde suave y sombra neumórfica.
+  * La cabecera editorial integra un micro-avatar circular de perfil ($20\times 20\text{px}$, `/doiceladev/logo/perfil.webp`) a la izquierda del nombre del autor con borde suave y sombra neumórfica.
   * En el módulo de IA (`/ai`), el proveedor tecnológico (`provider`, ej. *Anthropic*) se aísla en una insignia técnica (`badge`) independiente, distinguiéndolo claramente del autor del artículo.
 
 ---
@@ -336,8 +336,8 @@ Para garantizar escalabilidad, trazabilidad y cero colisión de archivos a medid
 ```text
 public/doiceladev/images/
 ├── covers/                      # Portadas 16:9 oficiales (1 por publicación, nombrada con el slug)
-│   ├── news/                    # ej: /doiceladev/images/covers/news/nextjs-16.jpg
-│   ├── tutorials/               # ej: /doiceladev/images/covers/tutorials/terminal-ssh-websockets.jpg
+│   ├── news/                    # ej: /doiceladev/images/covers/news/nextjs-16.webp
+│   ├── tutorials/               # ej: /doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp
 │   ├── blog/                    # Portadas de ensayos de arquitectura
 │   ├── cybersecurity/           # Portadas de avisos de seguridad
 │   ├── ai/                      # Portadas de modelos y herramientas IA

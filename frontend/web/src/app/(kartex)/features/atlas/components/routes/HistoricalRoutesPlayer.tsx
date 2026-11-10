@@ -88,7 +88,7 @@ export const HistoricalRoutesPlayer: React.FC = () => {
 
             {/* Imagen Cartográfica Histórica / Satelital de Fondo */}
             <image
-              href={isDark ? '/kartex/images/atlas/map_satellite.jpg' : '/kartex/images/atlas/map_parchment.jpg'}
+              href={isDark ? '/kartex/images/atlas/map_satellite.webp' : '/kartex/images/atlas/map_parchment.webp'}
               x="0"
               y="0"
               width="1000"

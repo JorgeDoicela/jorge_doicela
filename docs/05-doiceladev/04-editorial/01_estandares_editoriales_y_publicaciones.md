@@ -108,7 +108,7 @@ Toda publicación en cualquiera de las 8 categorías (`infrastructure`, `tutoria
 
 Las imágenes de portada de cada publicación (`coverImage` en `frontend/web/public/doiceladev/images/covers/`) deben respetar la misma sobriedad que el texto escrito:
 
-* **Directriz Maestra (Modelo Infraestructura):** La portada de la guía de firewall Linux (`guia-firewall-linux-ufw.jpg`) define el estándar de sobriedad, realismo tangible y ausencia de hype publicitario.
+* **Directriz Maestra (Modelo Infraestructura):** La portada de la guía de firewall Linux (`guia-firewall-linux-ufw.webp`) define el estándar de sobriedad, realismo tangible y ausencia de hype publicitario.
 * **Prohibición de Tipografía Publicitaria en la Imagen:** Queda terminantemente prohibido incluir títulos flotantes gigantes en 3D ("MODEL CONTEXT PROTOCOL", "MONOLITO MODULAR", etc.) dentro del arte gráfico. Los títulos, etiquetas y autores son gestionados semánticamente por los componentes web de Next.js en HTML/CSS.
 * **Diferenciación Temática con Sujetos Tangibles Únicos:** Cada publicación debe tener su propio encuadre, entorno y sujeto físico representativo de su tema, evitando repetir la misma composición:
   * *IA / Model Context Protocol:* Macrofotografía de procesador neural de silicio sobre placa de circuito con osciloscopio de laboratorio.

@@ -25,7 +25,7 @@ export function AuthorSidebarCard() {
             <div className="w-24 h-24 mx-auto rounded-full p-1 glass-concave-panel border border-white/10 shadow-inner flex items-center justify-center relative">
                 <div className="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center bg-black/40">
                     <Image
-                        src="/doiceladev/logo/perfil.jpg"
+                        src="/doiceladev/logo/perfil.webp"
                         alt="Jorge Doicela"
                         fill
                         sizes="96px"

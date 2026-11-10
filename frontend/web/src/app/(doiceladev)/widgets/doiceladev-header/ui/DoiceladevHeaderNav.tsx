@@ -67,7 +67,7 @@ export function DoiceladevHeaderNav({
                 <div className={`${compact ? 'h-15 sm:h-16' : 'h-23 sm:h-22 md:h-25 lg:h-28'} w-auto flex items-center justify-center shrink-0`}>
                     {/* Logo Blanco (Modo Oscuro) */}
                     <Image
-                        src="/doiceladev/logo/logo_blanco.png"
+                        src="/doiceladev/logo/logo_blanco.webp"
                         alt={tNav('headerLogoAlt')}
                         width={128}
                         height={128}
@@ -76,7 +76,7 @@ export function DoiceladevHeaderNav({
                     />
                     {/* Logo Negro (Modo Claro) */}
                     <Image
-                        src="/doiceladev/logo/logo_negro.png"
+                        src="/doiceladev/logo/logo_negro.webp"
                         alt={tNav('headerLogoAlt')}
                         width={128}
                         height={128}
@@ -86,7 +86,7 @@ export function DoiceladevHeaderNav({
                 </div>
                 <div className={`${compact ? 'h-10 sm:h-10.5' : 'h-14 sm:h-[54px] md:h-16 lg:h-[74px]'} w-auto flex items-center justify-center translate-y-[2px] sm:translate-y-[3px]`}>
                     <Image
-                        src="/doiceladev/logo/doiceladev.png"
+                        src="/doiceladev/logo/doiceladev.webp"
                         alt={tNav('headerLogoAlt')}
                         width={380}
                         height={105}

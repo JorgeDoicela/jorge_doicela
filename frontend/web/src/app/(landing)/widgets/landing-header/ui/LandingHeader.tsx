@@ -47,7 +47,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
         >
           {/* Logo Blanco (Modo Oscuro) */}
           <Image
-            src="/landing/logo/logo_blanco.png"
+            src="/landing/logo/logo_blanco.webp"
             alt="Jorge Doicela"
             width={28}
             height={28}
@@ -56,7 +56,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
           />
           {/* Logo Negro (Modo Claro) */}
           <Image
-            src="/landing/logo/logo_negro.png"
+            src="/landing/logo/logo_negro.webp"
             alt="Jorge Doicela"
             width={28}
             height={28}

@@ -64,7 +64,7 @@ export function KartexManuscriptsSection() {
 
                 <div className="w-full max-w-md lg:max-w-xl xl:max-w-2xl shrink-0 rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl relative aspect-[4/3]">
                     <Image
-                        src="/kartex/images/manuscripts_heritage.jpg"
+                        src="/kartex/images/manuscripts_heritage.webp"
                         alt={tLanding('manuscriptImageAlt')}
                         fill
                         className="object-cover"

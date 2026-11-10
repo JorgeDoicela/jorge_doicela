@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'profile',
       images: [
         {
-          url: 'https://jorgedoicela.com/landing/logo/logo_fondo_color.png',
+          url: 'https://jorgedoicela.com/landing/logo/logo_fondo_color.webp',
           width: 1200,
           height: 630,
           alt: 'Jorge Doicela — Software Developer & AI Engineer',
@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: t('metaTitle'),
       description: t('metaDescription'),
-      images: ['https://jorgedoicela.com/landing/logo/logo_fondo_color.png'],
+      images: ['https://jorgedoicela.com/landing/logo/logo_fondo_color.webp'],
     },
   };
 }

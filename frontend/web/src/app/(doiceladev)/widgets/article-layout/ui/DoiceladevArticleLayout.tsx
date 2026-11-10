@@ -52,7 +52,7 @@ export function DoiceladevArticleLayout({
   subtitle,
   date,
   author,
-  authorImage = '/doiceladev/logo/perfil.jpg',
+  authorImage = '/doiceladev/logo/perfil.webp',
   badge,
   callout,
   breadcrumbs,

@@ -38,10 +38,11 @@ export function KartexHeroSection({ studyUrl = '/study' }: KartexHeroSectionProp
                 <div className="w-full max-w-[1380px] mx-auto rounded-[28px] sm:rounded-[40px] overflow-hidden relative bg-zinc-950">
                     <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full max-h-[460px] sm:max-h-[480px]">
                         <Image
-                            src="/kartex/images/hero_editorial_dark.jpg"
+                            src="/kartex/images/hero_editorial_dark.webp"
                             alt={tLanding('heroImageAlt')}
                             fill
                             priority
+                            loading="eager"
                             className="object-cover filter brightness-[0.92] contrast-[1.05] dark:brightness-[0.80] transition-all duration-700"
                         />
                         {/* Degradado inferior sutil para fundir armónicamente con el fondo y la tarjeta flotante */}

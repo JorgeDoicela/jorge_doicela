@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: t("title"),
         description: t("description"),
         icons: {
-            icon: "/portfolio/logo/logo_fondo_circular_color_.png",
+            icon: "/portfolio/logo/logo_fondo_circular_color_.webp",
         },
         openGraph: {
             title: t("title"),
@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
             type: "profile",
             images: [
                 {
-                    url: "/portfolio/logo/logo_fondo_circular_color_.png",
+                    url: "/portfolio/logo/logo_fondo_circular_color_.webp",
                     width: 512,
                     height: 512,
                     alt: "Jorge Doicela - Portafolio",
@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
             card: "summary",
             title: t("title"),
             description: t("description"),
-            images: ["/portfolio/logo/logo_fondo_circular_color_.png"],
+            images: ["/portfolio/logo/logo_fondo_circular_color_.webp"],
         },
         alternates: {
             canonical: "https://portfolio.jorgedoicela.com",

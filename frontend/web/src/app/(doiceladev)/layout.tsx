@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t("title"),
     description: t("description"),
     icons: {
-      icon: "/doiceladev/logo/logo_fondo_circular_color_.png",
+      icon: "/doiceladev/logo/logo_fondo_circular_color_.webp",
     },
     openGraph: {
       title: t("title"),
@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: "/doiceladev/logo/logo_fondo_circular_color_.png",
+          url: "/doiceladev/logo/logo_fondo_circular_color_.webp",
           width: 512,
           height: 512,
           alt: "DoicelaDev - Jorge Doicela",
@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary",
       title: t("title"),
       description: t("description"),
-      images: ["/doiceladev/logo/logo_fondo_circular_color_.png"],
+      images: ["/doiceladev/logo/logo_fondo_circular_color_.webp"],
     },
     alternates: {
       canonical: "https://doiceladev.jorgedoicela.com",
@@ -92,7 +92,7 @@ export default async function RootLayout({
     >
       <head>
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
-        <link rel="icon" href="/doiceladev/logo/logo_fondo_circular_color_.png" />
+        <link rel="icon" href="/doiceladev/logo/logo_fondo_circular_color_.webp" />
         <DoiceladevJsonLd locale={locale} />
       </head>
       <body className="font-sans min-h-full theme-doiceladev bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative" suppressHydrationWarning>

@@ -295,14 +295,14 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 
 | Sección | Archivo JSON | Slug Canónico | Portada Editorial (16:9) |
 |---|---|---|---|
-| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | `/doiceladev/images/covers/news/nextjs-16.jpg` |
-| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.jpg` |
-| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.jpg` |
-| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.jpg` |
-| **Ciberseguridad** | `security.json` | `seguridad-php-cve-2024-8927-cve-2024-9026` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.jpg` |
-| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.jpg` |
-| **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.jpg` |
-| **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.jpg` |
+| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | `/doiceladev/images/covers/news/nextjs-16.webp` |
+| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.webp` |
+| **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.webp` |
+| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.webp` |
+| **Ciberseguridad** | `security.json` | `seguridad-php-cve-2024-8927-cve-2024-9026` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp` |
+| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp` |
+| **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.webp` |
+| **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.webp` |
 
 ### 6.1 Modo de Operación del Seeder (`seed-doiceladev.ts`)
 El script `seed-doiceladev.ts` está diseñado para reconstruir y reiniciar la base de datos limpia desde cero de forma instantánea:

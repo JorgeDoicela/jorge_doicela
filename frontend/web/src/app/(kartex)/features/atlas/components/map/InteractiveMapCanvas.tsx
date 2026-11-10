@@ -114,12 +114,12 @@ export const InteractiveMapCanvas: React.FC<InteractiveMapCanvasProps> = ({
         <image
           href={
             activeLayer === 'satellite'
-              ? '/kartex/images/atlas/map_satellite.jpg'
+              ? '/kartex/images/atlas/map_satellite.webp'
               : activeLayer === 'historical'
-              ? '/kartex/images/atlas/map_parchment.jpg'
+              ? '/kartex/images/atlas/map_parchment.webp'
               : isDark
-              ? '/kartex/images/atlas/map_satellite.jpg'
-              : '/kartex/images/atlas/map_parchment.jpg'
+              ? '/kartex/images/atlas/map_satellite.webp'
+              : '/kartex/images/atlas/map_parchment.webp'
           }
           x="0"
           y="0"

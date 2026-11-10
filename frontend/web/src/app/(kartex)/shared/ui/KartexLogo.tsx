@@ -14,18 +14,18 @@ export const KartexLogo: React.FC<KartexLogoProps> = ({ size = 20, className = '
       className={`relative shrink-0 flex items-center justify-center ${className}`}
       style={{ width: size, height: size }}
     >
-      {/* Modo Claro: logo_negro.png */}
+      {/* Modo Claro: logo_negro.webp */}
       <Image
-        src="/kartex/logo/logo_negro.png"
+        src="/kartex/logo/logo_negro.webp"
         alt="Logo Kartex"
         width={size}
         height={size}
         className="w-full h-full object-contain block dark:hidden"
         unoptimized
       />
-      {/* Modo Oscuro: logo_blanco.png */}
+      {/* Modo Oscuro: logo_blanco.webp */}
       <Image
-        src="/kartex/logo/logo_blanco.png"
+        src="/kartex/logo/logo_blanco.webp"
         alt="Logo Kartex"
         width={size}
         height={size}

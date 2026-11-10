@@ -8,7 +8,7 @@ export default function PersonJsonLd() {
         'name': 'Jorge Ismael Doicela Molina',
         'alternateName': ['Jorge Doicela', 'Jorge Doicela M.', 'Jorge Ismael Doicela'],
         'url': 'https://jorgedoicela.com',
-        'image': 'https://jorgedoicela.com/landing/logo/logo_color.png',
+        'image': 'https://jorgedoicela.com/landing/logo/logo_color.webp',
         'jobTitle': 'Software Developer & DevOps Specialist',
         'description': 'Desarrollador de software, administrador de sistemas Linux y especialista en DevOps, Inteligencia Artificial y Ciberseguridad en Quito, Ecuador.',
         'address': {

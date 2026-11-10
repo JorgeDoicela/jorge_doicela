@@ -132,14 +132,14 @@ export function KartexEnginesCarousel() {
 
     const getEngineTheme = (idx: number) => {
         const engineImages = [
-            '/kartex/images/hero_editorial_dark.jpg',
-            '/kartex/images/parallel_versions_study.jpg',
-            '/kartex/images/codex_interlinear_scroll.jpg',
-            '/kartex/images/strong_lexicon_study.jpg',
-            '/kartex/images/kartex_atlas_topography.jpg',
-            '/kartex/images/historical_timeline_chronology.jpg',
-            '/kartex/images/manuscripts_heritage.jpg',
-            '/kartex/images/evangelism_proclamation.jpg',
+            '/kartex/images/hero_editorial_dark.webp',
+            '/kartex/images/parallel_versions_study.webp',
+            '/kartex/images/codex_interlinear_scroll.webp',
+            '/kartex/images/strong_lexicon_study.webp',
+            '/kartex/images/kartex_atlas_topography.webp',
+            '/kartex/images/historical_timeline_chronology.webp',
+            '/kartex/images/manuscripts_heritage.webp',
+            '/kartex/images/evangelism_proclamation.webp',
         ];
 
         return {

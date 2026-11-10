@@ -496,7 +496,7 @@ export function AiAssistantChatModal({ isOpen, onClose }: AiAssistantChatModalPr
       <header className="px-4.5 py-3.5 ai-modal-header flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Image
-            src="/landing/logo/logo_fondo_circular_color_.png"
+            src="/landing/logo/logo_fondo_circular_color_.webp"
             alt="Jorge Doicela"
             width={32}
             height={32}

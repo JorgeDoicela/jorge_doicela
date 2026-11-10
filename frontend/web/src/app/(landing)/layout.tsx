@@ -76,7 +76,7 @@ export async function generateMetadata(): Promise<Metadata> {
             siteName: "Jorge Doicela",
             images: [
                 {
-                    url: "/landing/logo/logo_color.png",
+                    url: "/landing/logo/logo_color.webp",
                     width: 1200,
                     height: 630,
                     alt: "Jorge Doicela — Logo Oficial",
@@ -87,7 +87,7 @@ export async function generateMetadata(): Promise<Metadata> {
             card: "summary_large_image",
             title: t("title"),
             description: t("description"),
-            images: ["/landing/logo/logo_color.png"],
+            images: ["/landing/logo/logo_color.webp"],
         },
         appleWebApp: {
             capable: true,
@@ -95,8 +95,8 @@ export async function generateMetadata(): Promise<Metadata> {
             title: "Jorge Doicela",
         },
         icons: {
-            icon: "/landing/logo/logo_fondo_circular_color_.png",
-            apple: "/landing/logo/logo_fondo_circular_color_.png",
+            icon: "/landing/logo/logo_fondo_circular_color_.webp",
+            apple: "/landing/logo/logo_fondo_circular_color_.webp",
         },
         alternates: {
             canonical: "https://jorgedoicela.com",

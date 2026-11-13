@@ -94,3 +94,76 @@ export function useNewsletterSubscription(options: UseNewsletterOptions = {}): U
   };
 }
 
+export interface UnsubscribePayload {
+  token?: string;
+  email?: string;
+}
+
+export interface UseNewsletterUnsubscribeReturn {
+  status: NewsletterStatus;
+  errorMessage: string | null;
+  unsubscribe: (payload: UnsubscribePayload) => Promise<boolean>;
+  reset: () => void;
+}
+
+export function useNewsletterUnsubscribe(): UseNewsletterUnsubscribeReturn {
+  const [status, setStatus] = useState<NewsletterStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const reset = useCallback(() => {
+    setStatus('idle');
+    setErrorMessage(null);
+  }, []);
+
+  const unsubscribe = useCallback(async (payload: UnsubscribePayload): Promise<boolean> => {
+    const cleanToken = payload.token?.trim();
+    const cleanEmail = payload.email?.trim();
+    if (!cleanToken && !cleanEmail) return false;
+
+    setStatus('loading');
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch(`${API_URL}/doiceladev/newsletter/unsubscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+          cleanToken ? { token: cleanToken } : { email: cleanEmail }
+        ),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        const message =
+          errorData && typeof errorData.message === 'string'
+            ? errorData.message
+            : Array.isArray(errorData?.message)
+            ? errorData.message.join(', ')
+            : 'Error al procesar la baja';
+        throw new Error(message);
+      }
+
+      setStatus('success');
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // Fallback silencioso si localStorage está bloqueado
+      }
+      return true;
+    } catch (err) {
+      setStatus('error');
+      setErrorMessage(err instanceof Error ? err.message : 'Error inesperado');
+      return false;
+    }
+  }, []);
+
+  return {
+    status,
+    errorMessage,
+    unsubscribe,
+    reset,
+  };
+}
+

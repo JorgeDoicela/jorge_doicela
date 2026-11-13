@@ -140,10 +140,13 @@ backend/src/doiceladev/
 │
 └── newsletter/                       # 14. SERVICIO DE SUSCRIPCIONES Y AUDIENCIAS TÉCNICAS
     ├── newsletter.module.ts
-    ├── newsletter.controller.ts      # POST /doiceladev/newsletter/subscribe (idempotente)
-    ├── newsletter.service.ts         # Normalización, reactivación de bajas y métricas
+    ├── newsletter.controller.ts      # POST /doiceladev/newsletter/subscribe y /unsubscribe
+    ├── newsletter.service.ts         # Normalización, token de baja, reactivación y métricas
+    ├── newsletter-mailer.service.ts  # Cliente SMTP Amazon SES (nodemailer sin pool)
+    ├── guards/newsletter-throttle.guard.ts # Rate limiting en memoria por IP (5 req/min)
     ├── entities/newsletter-subscriber.entity.ts # Tabla relacional newsletter_subscribers
-    ├── dto/subscribe-newsletter.dto.ts          # Validación con @IsEmail() y sanitización
+    ├── dto/subscribe-newsletter.dto.ts          # Validación estricta de email, source, language
+    ├── dto/unsubscribe-newsletter.dto.ts        # Validación de token o email para baja
     └── interfaces/newsletter.interface.ts
 ```
 
@@ -202,7 +205,8 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | **Glosario** | `GET /doiceladev/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
 | | `GET /doiceladev/glossary/:slug` | `lang` | Definición de un término específico por slug |
 | **Feed Global** | `GET /doiceladev/portal` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
-| **Newsletter** | `POST /doiceladev/newsletter/subscribe` | - | Registro o reactivación idempotente de suscriptores técnicos (acepta `email`, `source`, `language`) |
+| **Newsletter** | `POST /doiceladev/newsletter/subscribe` | - | Registro o reactivación idempotente de suscriptores técnicos (acepta `email`, `source`, `language`) con rate limiting por IP |
+| | `POST /doiceladev/newsletter/unsubscribe` | - | Baja segura de suscriptores mediante `token` único o `email` |
 
 ---
 
@@ -265,9 +269,9 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `glossary_terms`: `id`, `slug`, `term`, `aliases`, `category`, `shortDefinition`, `keyDifference`, `caseSensitive`, `language`, `orderPriority`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram', 'security', 'ai', 'architecture', 'general', 'database', 'linux'))`.  
   * **Índices:** `IDX_glossary_terms_term_lang (term, language) UNIQUE`, `IDX_glossary_terms_lang_prio (language, orderPriority DESC)`.
-* `newsletter_subscribers`: `id`, `email`, `status`, `source`, `language`, `createdAt`, `updatedAt`.  
+* `newsletter_subscribers`: `id`, `email`, `status`, `unsubscribeToken`, `source`, `language`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (status IN ('active', 'unsubscribed'))`.  
-  * **Índices:** `IDX_newsletter_subscribers_email (email) UNIQUE`, `IDX_newsletter_subscribers_status_created (status, createdAt)`.  
+  * **Índices:** `IDX_newsletter_subscribers_email (email) UNIQUE`, `IDX_newsletter_subscribers_status_created (status, createdAt)`, `IDX_newsletter_subscribers_unsubscribe_token (unsubscribeToken)`.  
   * **Propósito:** Registro idempotente y segmentado de audiencias técnicas para alertas de ciberseguridad, tutoriales de arquitectura y boletines temáticos.
 
 ---
@@ -382,12 +386,14 @@ Para el despacho de notificaciones técnicas, avisos de seguridad y boletines ed
 
 ### 9.1 Arquitectura Serverless y Protección del VPS (1 GB de RAM)
 * **Desacoplamiento Serverless:** El servidor VPS en AWS Lightsail no ejecuta ningún servicio SMTP local (Postfix, Exim o Sendmail), ahorrando entre 40 MB y 60 MB de memoria RAM permanentes y blindando la IP del servidor contra listas negras.
-* **Consumo Liviano vía HTTPS:** El backend interactúa directamente con el servicio administrado **Amazon SES** en la región `us-east-1` utilizando `@aws-sdk/client-ses`. Las conexiones son efímeras y no mantienen sockets persistentes en memoria.
+* **Consumo Liviano vía SMTP:** El backend se conecta al servidor SMTP oficial de **Amazon SES** en la región `us-east-1` (`email-smtp.us-east-1.amazonaws.com`, puerto `587`) utilizando `nodemailer` sin pool persistente (`pool: false`) para minimizar el consumo de RAM, incluyendo cabeceras `List-Unsubscribe` (RFC 8058).
 * **Variables de Entorno Estandarizadas:**
   * `AWS_REGION`: Región del servicio (`us-east-1`).
-  * `AWS_ACCESS_KEY_ID`: Identificador de clave de acceso del usuario IAM de servicio.
-  * `AWS_SECRET_ACCESS_KEY`: Clave de acceso secreta privada (nunca versionada en Git).
+  * `SES_SMTP_HOST`: Endpoint SMTP de Amazon SES (`email-smtp.us-east-1.amazonaws.com`).
+  * `SES_SMTP_PORT`: Puerto SMTP TLS (`587` o `465`).
+  * `SES_SMTP_USER` / `SES_SMTP_PASS`: Credenciales SMTP generadas en Amazon SES (nunca versionadas en Git).
   * `AWS_SES_FROM_EMAIL`: Dirección remitente oficial verificada (`newsletter@doiceladev.jorgedoicela.com`).
+  * `DOICELADEV_PUBLIC_URL`: URL pública del portal para construir los enlaces de baja (`https://doiceladev.jorgedoicela.com`).
 
 ### 9.2 Autenticación Criptográfica y Entregabilidad (Cloudflare DNS)
 * **Easy DKIM (2048-bit RSA):** 3 registros CNAME dedicados en Cloudflare configurados con proxy en **DNS only (gris)** para resolución directa por parte de servidores de correo receptores (Gmail, Outlook, ProtonMail).

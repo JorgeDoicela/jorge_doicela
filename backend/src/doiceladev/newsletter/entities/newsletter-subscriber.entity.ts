@@ -12,6 +12,7 @@ export type NewsletterSubscriberStatus = 'active' | 'unsubscribed';
 @Entity('newsletter_subscribers')
 @Index('IDX_newsletter_subscribers_email', ['email'], { unique: true })
 @Index('IDX_newsletter_subscribers_status_created', ['status', 'createdAt'])
+@Index('IDX_newsletter_subscribers_unsubscribe_token', ['unsubscribeToken'])
 export class NewsletterSubscriber {
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,6 +26,9 @@ export class NewsletterSubscriber {
     default: 'active',
   })
   status: NewsletterSubscriberStatus;
+
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  unsubscribeToken: string | null;
 
   @Column({ type: 'varchar', length: 64, default: 'general' })
   source: string;

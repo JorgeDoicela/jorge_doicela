@@ -91,7 +91,15 @@
     "subscribing": "SENDING...",
     "success": "✓ Thank you for subscribing to the technical dispatch.",
     "errorGeneric": "Could not process your subscription. Please try again.",
-    "invalidEmail": "Please enter a valid email address."
+    "invalidEmail": "Please enter a valid email address.",
+    "unsubscribeTitle": "Manage newsletter unsubscribe",
+    "unsubscribeDescription": "Confirm below to stop receiving technical updates and advisories from DoicelaDev.",
+    "unsubscribeTokenDetected": "Verified unsubscribe link. Click confirm to complete your request.",
+    "unsubscribeButton": "Confirm unsubscribe",
+    "unsubscribing": "Processing...",
+    "unsubscribeSuccess": "Your subscription has been cancelled.",
+    "unsubscribeError": "Could not process your unsubscribe request. Please verify your details and try again.",
+    "backToPortal": "Back to portal"
   },
   "Footer": {
     "platformDesc": "DoicelaDev — Software engineering platform, system architecture, and AI laboratory by Jorge Doicela.",

@@ -223,8 +223,16 @@ body {
 }
 
 .glass-input-neumorphic:focus {
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: var(--glass-shadow-concave);
+  outline: none;
+}
+
+html.dark .glass-input-neumorphic:focus,
+.dark .glass-input-neumorphic:focus {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: var(--glass-shadow-concave);
+  outline: none;
 }
 
 /* Utilidad para ocultar barras de scroll preservando la funcionalidad */

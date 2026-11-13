@@ -91,7 +91,15 @@
     "subscribing": "ENVIANDO...",
     "success": "✓ Gracias por suscribirte al boletín técnico.",
     "errorGeneric": "No pudimos procesar tu suscripción. Intenta nuevamente.",
-    "invalidEmail": "Ingresa una dirección de correo válida."
+    "invalidEmail": "Ingresa una dirección de correo válida.",
+    "unsubscribeTitle": "Gestionar baja del boletín",
+    "unsubscribeDescription": "Confirma para dejar de recibir notificaciones técnicas y avisos de DoicelaDev.",
+    "unsubscribeTokenDetected": "Enlace de baja verificado. Haz clic en confirmar para completar el proceso.",
+    "unsubscribeButton": "Confirmar baja",
+    "unsubscribing": "Procesando...",
+    "unsubscribeSuccess": "Tu suscripción ha sido cancelada correctamente.",
+    "unsubscribeError": "No pudimos procesar tu solicitud de baja. Verifica los datos e intenta nuevamente.",
+    "backToPortal": "Volver al portal"
   },
   "Footer": {
     "platformDesc": "DoicelaDev — Plataforma de ingeniería de software, arquitectura de sistemas y laboratorio de IA por Jorge Doicela.",

@@ -325,16 +325,15 @@ export function SpotlightModal({
 
   const fuse = useMemo(() => new Fuse(allSearchableItems, fuseOptions), [allSearchableItems, fuseOptions]);
 
+  const cleanQuery = useMemo(() => {
+    const raw = query.trim();
+    return raw.startsWith('#') ? raw.slice(1).trim() : raw;
+  }, [query]);
+
   // Resultados calculados con ranking de relevancia y extracción de rangos de coincidencia
   const filteredResults: SearchResultEntry[] = useMemo(() => {
-    const raw = query.trim();
-    if (!raw) {
-      return allSearchableItems.slice(0, 8).map((item) => ({ item }));
-    }
-
-    const cleanQuery = raw.startsWith('#') ? raw.slice(1).trim() : raw;
     if (!cleanQuery) {
-      return allSearchableItems.slice(0, 8).map((item) => ({ item }));
+      return [];
     }
 
     const searchResults = fuse.search(cleanQuery);
@@ -389,19 +388,19 @@ export function SpotlightModal({
       role="dialog"
       aria-modal="true"
       aria-label={t('commandPalette')}
-      className="fixed inset-0 z-50 flex items-start justify-center pt-14 sm:pt-20 px-4 bg-slate-900/40 dark:bg-black/75 backdrop-blur-md overscroll-contain transition-all duration-200"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-14 sm:pt-20 px-4 bg-slate-900/25 dark:bg-black/65 backdrop-blur-md overscroll-contain transition-all duration-200"
       onClick={onClose}
     >
-      {/* Contenedor Modal OPACO (Sin transparencias invasivas, acabado sólido idéntico a las tarjetas del sidebar) */}
+      {/* Contenedor Modal con estética Soft Neumorphism + Glassmorphism de alta legibilidad */}
       <div
-        className="w-full max-w-2xl rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/10 shadow-2xl shadow-slate-900/15 dark:shadow-black/80 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150 select-none"
+        className="w-full max-w-2xl rounded-3xl bg-gradient-to-br from-white/95 via-white/92 to-slate-100/90 dark:from-[#101726]/95 dark:via-[#0d1320]/92 dark:to-[#080c14]/90 backdrop-blur-xl border border-[var(--glass-border-convex)] shadow-[var(--glass-shadow-convex)] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150 select-none"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera del Buscador con Superficie Sólida */}
-        <div className="p-4 sm:p-5 bg-white dark:bg-[#0c121e] border-b border-slate-200/70 dark:border-white/5">
-          {/* Input en Cápsula Sólida Cóncava */}
-          <div className="w-full py-2.5 px-3.5 rounded-2xl bg-slate-100/90 dark:bg-[#121824] border border-slate-200/80 dark:border-white/10 flex items-center gap-3">
-            <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 shrink-0" aria-hidden="true" />
+        {/* Cabecera del Buscador sobre superficie de cristal */}
+        <div className="p-4 sm:p-5 border-b border-black/[0.06] dark:border-white/[0.06]">
+          {/* Input en Cápsula Cóncava Neumórfica */}
+          <div className="w-full py-2.5 px-3.5 rounded-2xl glass-concave-panel focus-within:border-blue-500/40 dark:focus-within:border-blue-400/40 flex items-center gap-3">
+            <Search className="w-4 h-4 text-slate-500 dark:text-zinc-400 shrink-0" aria-hidden="true" />
             <input
               ref={inputRef}
               type="text"
@@ -412,7 +411,7 @@ export function SpotlightModal({
               }}
               onKeyDown={handleInputKeyDown}
               placeholder={tSearch('placeholder')}
-              className="w-full bg-transparent text-sm text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 outline-none font-mono"
+              className="w-full bg-transparent text-sm text-[var(--foreground)] placeholder-slate-400 dark:placeholder-zinc-500 outline-none font-mono"
             />
             {query && (
               <button
@@ -430,91 +429,100 @@ export function SpotlightModal({
           </div>
         </div>
 
-        {/* Lista de Resultados 100% Opaca */}
-        <div ref={listRef} className="max-h-[62vh] overflow-y-auto p-3 sm:p-4 pb-4 sm:pb-5 space-y-1 bg-white dark:bg-[#0c121e] no-scrollbar overscroll-contain">
-          {filteredResults.length === 0 ? (
-            <div className="py-14 text-center space-y-2">
-              <Search className="w-8 h-8 mx-auto text-slate-300 dark:text-zinc-600 stroke-[1.5]" />
-              <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
-                {t('noResults', { query })}
-              </p>
-            </div>
-          ) : (
-            filteredResults.map((entry, idx) => {
-              const { item, titleMatches, snippetMatches, matchedTag } = entry;
-              const isSelected = idx === selectedIndex;
-              const moduleLabel = item.categoryLabel.toUpperCase();
+        {/* Lista de Resultados o Estado Inicial sobre el panel convexo */}
+        {!cleanQuery ? (
+          <div className="pt-12 pb-14 px-6 text-center space-y-3">
+            <Search className="w-7 h-7 mx-auto text-slate-300 dark:text-zinc-600 stroke-[1.5]" aria-hidden="true" />
+            <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono max-w-md mx-auto leading-relaxed">
+              {t('emptyPrompt')}
+            </p>
+          </div>
+        ) : (
+          <div ref={listRef} className="max-h-[62vh] overflow-y-auto p-3 sm:p-4 pb-4 sm:pb-5 space-y-1 no-scrollbar overscroll-contain">
+            {filteredResults.length === 0 ? (
+              <div className="py-14 text-center space-y-2">
+                <Search className="w-8 h-8 mx-auto text-slate-300 dark:text-zinc-600 stroke-[1.5]" />
+                <p className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                  {t('noResults', { query })}
+                </p>
+              </div>
+            ) : (
+              filteredResults.map((entry, idx) => {
+                const { item, titleMatches, snippetMatches, matchedTag } = entry;
+                const isSelected = idx === selectedIndex;
+                const moduleLabel = item.categoryLabel.toUpperCase();
 
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  onClick={onClose}
-                  onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`group flex items-start justify-between gap-3 p-3 rounded-2xl transition-all duration-150 cursor-pointer border ${
-                    isSelected
-                      ? 'bg-slate-100/90 dark:bg-white/[0.08] border-slate-200/90 dark:border-white/10 shadow-xs'
-                      : 'border-transparent hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-                  }`}
-                >
-                  {/* Título y metadatos */}
-                  <div className="flex-1 min-w-0 space-y-1">
-                    {/* Metadatos en tipografía mono sobria */}
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
-                        {moduleLabel}
-                      </span>
-                      {matchedTag && (
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 font-semibold">
-                          #{matchedTag}
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={onClose}
+                    onMouseEnter={() => setSelectedIndex(idx)}
+                    className={`group flex items-start justify-between gap-3 p-3 rounded-2xl transition-none cursor-pointer border ${
+                      isSelected
+                        ? 'bg-white/95 dark:bg-white/[0.08] border-white dark:border-white/15 shadow-[var(--btn-shadow)]'
+                        : 'border-transparent hover:bg-black/[0.03] dark:hover:bg-white/[0.035]'
+                    }`}
+                  >
+                    {/* Título y metadatos */}
+                    <div className="flex-1 min-w-0 space-y-1">
+                      {/* Metadatos en tipografía mono sobria */}
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                          {moduleLabel}
                         </span>
+                        {matchedTag && (
+                          <span className="text-[11px] font-mono font-semibold text-cyan-600 dark:text-cyan-400">
+                            #{matchedTag}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Título con resaltado seguro de términos coincidentes */}
+                      <h6
+                        className={`text-xs sm:text-[13px] font-bold transition-colors line-clamp-2 leading-snug ${
+                          isSelected
+                            ? 'text-blue-600 dark:text-cyan-400'
+                            : 'text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-cyan-400'
+                        }`}
+                      >
+                        <HighlightedText
+                          text={item.title}
+                          indices={titleMatches}
+                          highlightClassName={
+                            isSelected
+                              ? 'text-blue-700 dark:text-cyan-300 font-black'
+                              : 'text-blue-600 dark:text-cyan-400 font-black'
+                          }
+                        />
+                      </h6>
+
+                      {/* Snippet descriptivo con resaltado sutil */}
+                      {item.snippet && (
+                        <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1 font-light leading-relaxed">
+                          <HighlightedText
+                            text={item.snippet}
+                            indices={snippetMatches}
+                            highlightClassName="text-slate-900 dark:text-zinc-200 font-medium"
+                          />
+                        </p>
                       )}
                     </div>
 
-                    {/* Título con resaltado seguro de términos coincidentes */}
-                    <h6
-                      className={`text-xs sm:text-[13px] font-bold transition-colors line-clamp-2 leading-snug ${
+                    {/* Flecha terminal */}
+                    <ArrowRight
+                      className={`w-3.5 h-3.5 mt-1 transition-transform duration-75 shrink-0 ${
                         isSelected
-                          ? 'text-blue-600 dark:text-cyan-400'
-                          : 'text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-cyan-400'
+                          ? 'text-blue-600 dark:text-cyan-400 translate-x-1'
+                          : 'text-slate-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-cyan-400 group-hover:translate-x-1'
                       }`}
-                    >
-                      <HighlightedText
-                        text={item.title}
-                        indices={titleMatches}
-                        highlightClassName={
-                          isSelected
-                            ? 'text-blue-700 dark:text-cyan-300 font-black'
-                            : 'text-blue-600 dark:text-cyan-400 font-black'
-                        }
-                      />
-                    </h6>
-
-                    {/* Snippet descriptivo con resaltado sutil */}
-                    {item.snippet && (
-                      <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1 font-light leading-relaxed">
-                        <HighlightedText
-                          text={item.snippet}
-                          indices={snippetMatches}
-                          highlightClassName="text-slate-900 dark:text-zinc-200 font-medium"
-                        />
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Flecha terminal */}
-                  <ArrowRight
-                    className={`w-3.5 h-3.5 mt-1 transition-all duration-150 shrink-0 ${
-                      isSelected
-                        ? 'text-blue-600 dark:text-cyan-400 translate-x-1'
-                        : 'text-slate-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-cyan-400 group-hover:translate-x-1'
-                    }`}
-                  />
-                </Link>
-              );
-            })
-          )}
-        </div>
+                    />
+                  </Link>
+                );
+              })
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

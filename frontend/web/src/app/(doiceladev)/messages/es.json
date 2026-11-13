@@ -114,6 +114,7 @@
     "commandPalette": "Paleta de comandos Spotlight",
     "clear": "Limpiar",
     "noResults": "No se encontraron resultados para “{query}”",
+    "emptyPrompt": "Escribe para buscar artículos, guías o proyectos, o usa # para filtrar por etiqueta",
     "searchTitle": "Buscar (Ctrl + K)",
     "searchAria": "Buscar"
   },

@@ -114,6 +114,7 @@
     "commandPalette": "Spotlight Command Palette",
     "clear": "Clear",
     "noResults": "No results found for “{query}”",
+    "emptyPrompt": "Type to search articles, guides or projects, or use # to filter by tag",
     "searchTitle": "Search (Ctrl + K)",
     "searchAria": "Search"
   },

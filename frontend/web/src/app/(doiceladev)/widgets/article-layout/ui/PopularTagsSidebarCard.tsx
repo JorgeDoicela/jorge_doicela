@@ -85,13 +85,13 @@ export function PopularTagsSidebarCard({
       ) : popularTags.length === 0 ? null : (
         /* Lista vertical limpia de etiquetas sin marco invasivo de píldora */
         <div className="space-y-1" role="list" aria-label={t('popularTags')}>
-          {popularTags.map(({ name, count }) => (
+          {popularTags.map(({ name }) => (
             <Link
               key={name}
               href={`/tags/${encodeURIComponent(name)}`}
               role="listitem"
-              className="group flex items-center justify-between w-full py-2 px-3 rounded-xl hover:bg-black/[0.035] dark:hover:bg-white/[0.035] transition-all duration-200 text-left cursor-pointer active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
-              title={`#${name} (${count})`}
+              className="group flex items-center w-full py-2 px-3 rounded-xl hover:bg-black/[0.035] dark:hover:bg-white/[0.035] transition-all duration-200 text-left cursor-pointer active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
+              title={`#${name}`}
             >
               {/* Lado izquierdo: # distintivo del tag + nombre en tipografía mono */}
               <div className="flex items-center gap-1.5 min-w-0">
@@ -102,11 +102,6 @@ export function PopularTagsSidebarCard({
                   {name}
                 </span>
               </div>
-
-              {/* Lado derecho: pastilla cóncava neumórfica sutil con contador */}
-              <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono glass-concave-panel text-slate-500 dark:text-zinc-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 shrink-0 transition-colors">
-                {count}
-              </span>
             </Link>
           ))}
         </div>

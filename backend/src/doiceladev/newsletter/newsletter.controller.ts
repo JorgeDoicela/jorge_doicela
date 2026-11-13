@@ -6,10 +6,12 @@ import {
   HttpStatus,
   ValidationPipe,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { NewsletterService } from './newsletter.service';
 import { SubscribeNewsletterDto } from './dto/subscribe-newsletter.dto';
 import { NewsletterSubscriptionResult } from './interfaces/newsletter.interface';
+import { NewsletterThrottleGuard } from './guards/newsletter-throttle.guard';
 
 @Controller('doiceladev/newsletter')
 export class NewsletterController {
@@ -17,7 +19,14 @@ export class NewsletterController {
 
   @Post('subscribe')
   @HttpCode(HttpStatus.OK)
-  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  @UseGuards(NewsletterThrottleGuard)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
   async subscribe(
     @Body() dto: SubscribeNewsletterDto,
   ): Promise<NewsletterSubscriptionResult> {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ChevronRight, ArrowUpRight } from 'lucide-react';
 import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
-import { PortalFeedItem, PortalSpotlightData } from '../../../entities/portal/types';
+import { PortalFeedItem } from '../../../entities/portal/types';
 
 interface ExploreTopicsSidebarCardProps {
   className?: string;
@@ -15,12 +15,11 @@ interface TopicCategory {
   id: string;
   label: string;
   href: string;
-  spotlightKey: keyof PortalSpotlightData;
 }
 
 export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSidebarCardProps) {
   const tNav = useTranslations('Nav');
-  const { featured, feed, spotlightData, loading } = useDoiceladevPortal();
+  const { featured, feed, loading } = useDoiceladevPortal();
 
   // Estado para las categorías abiertas en el árbol (múltiple concurrente, no cierre automático)
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
@@ -62,49 +61,41 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
       id: 'cybersecurity',
       label: tNav('cybersecurity'),
       href: '/cybersecurity',
-      spotlightKey: 'secPosts',
     },
     {
       id: 'infrastructure',
       label: tNav('infrastructure'),
       href: '/infrastructure',
-      spotlightKey: 'infraPosts',
     },
     {
       id: 'ai',
       label: tNav('ai'),
       href: '/ai',
-      spotlightKey: 'aiResources',
     },
     {
       id: 'tutorials',
       label: tNav('tutorials'),
       href: '/tutorials',
-      spotlightKey: 'tutorials',
     },
     {
       id: 'projects',
       label: tNav('projects'),
       href: '/projects',
-      spotlightKey: 'projects',
     },
     {
       id: 'blog',
       label: tNav('blog'),
       href: '/blog',
-      spotlightKey: 'posts',
     },
     {
       id: 'news',
       label: tNav('news'),
       href: '/news',
-      spotlightKey: 'news',
     },
     {
       id: 'forum',
       label: tNav('forum'),
       href: '/forum',
-      spotlightKey: 'topics',
     },
   ];
 
@@ -124,10 +115,6 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
         {categories.map((cat) => {
           const isOpen = openCategoryIds.includes(cat.id);
           const categoryPosts = postsByCategory[cat.id] || [];
-          const count =
-            categoryPosts.length ||
-            (spotlightData ? spotlightData[cat.spotlightKey]?.length : 0) ||
-            0;
 
           const displayedPosts = categoryPosts.slice(0, 5);
 
@@ -163,17 +150,6 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                     {cat.label}
                   </span>
                 </div>
-
-                {/* Lado derecho: Pastilla Cóncava Neumórfica con Contador */}
-                <span
-                  className={`px-2.5 py-0.5 rounded-md text-[11px] font-mono transition-colors duration-150 shrink-0 ${
-                    isOpen
-                      ? 'glass-concave-panel text-blue-600 dark:text-blue-400 font-bold'
-                      : 'glass-concave-panel text-slate-500 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                  }`}
-                >
-                  {loading ? '—' : count}
-                </span>
               </button>
 
               {/* CONTENIDO DESPLEGABLE CON ANIMACIÓN FLUIDA DE ALTURA (ZERO JANK / ZERO HOVER FANTASMA) */}

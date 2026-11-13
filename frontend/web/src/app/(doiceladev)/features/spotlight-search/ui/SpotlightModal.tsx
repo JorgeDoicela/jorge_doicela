@@ -472,28 +472,18 @@ export function SpotlightModal({
                           {moduleLabel}
                         </span>
                         {matchedTag && (
-                          <span className="text-[11px] font-mono font-semibold text-cyan-600 dark:text-cyan-400">
+                          <span className="text-[11px] font-mono font-semibold text-blue-600 dark:text-cyan-400">
                             #{matchedTag}
                           </span>
                         )}
                       </div>
 
                       {/* Título con resaltado seguro de términos coincidentes */}
-                      <h6
-                        className={`text-xs sm:text-[13px] font-bold transition-colors line-clamp-2 leading-snug ${
-                          isSelected
-                            ? 'text-blue-600 dark:text-cyan-400'
-                            : 'text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-cyan-400'
-                        }`}
-                      >
+                      <h6 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-zinc-100 line-clamp-2 leading-snug">
                         <HighlightedText
                           text={item.title}
                           indices={titleMatches}
-                          highlightClassName={
-                            isSelected
-                              ? 'text-blue-700 dark:text-cyan-300 font-black'
-                              : 'text-blue-600 dark:text-cyan-400 font-black'
-                          }
+                          highlightClassName="text-blue-600 dark:text-cyan-400 font-black"
                         />
                       </h6>
 
@@ -511,7 +501,7 @@ export function SpotlightModal({
 
                     {/* Flecha terminal */}
                     <ArrowRight
-                      className={`w-3.5 h-3.5 mt-1 transition-transform duration-75 shrink-0 ${
+                      className={`w-3.5 h-3.5 self-center transition-transform duration-75 shrink-0 ${
                         isSelected
                           ? 'text-blue-600 dark:text-cyan-400 translate-x-1'
                           : 'text-slate-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-cyan-400 group-hover:translate-x-1'

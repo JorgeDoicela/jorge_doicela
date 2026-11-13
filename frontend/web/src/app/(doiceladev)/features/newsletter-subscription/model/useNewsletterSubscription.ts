@@ -3,7 +3,12 @@
 import { useState, useCallback } from 'react';
 import { API_URL } from '../../../shared';
 
-export type NewsletterStatus = 'idle' | 'loading' | 'success' | 'error';
+export type NewsletterStatus =
+  | 'idle'
+  | 'loading'
+  | 'success'
+  | 'already_subscribed'
+  | 'error';
 
 export interface UseNewsletterOptions {
   source?: string;
@@ -23,9 +28,9 @@ export function useNewsletterSubscription(options: UseNewsletterOptions = {}): U
   const [status, setStatus] = useState<NewsletterStatus>(() => {
     if (typeof window !== 'undefined') {
       try {
-        return localStorage.getItem(STORAGE_KEY) === 'true' ? 'success' : 'idle';
+        localStorage.removeItem(STORAGE_KEY);
       } catch {
-        return 'idle';
+        // Ignorar si localStorage está bloqueado
       }
     }
     return 'idle';
@@ -59,23 +64,25 @@ export function useNewsletterSubscription(options: UseNewsletterOptions = {}): U
           }),
         });
 
+        const payload = await response.json().catch(() => null);
+
         if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
           const message =
-            errorData && typeof errorData.message === 'string'
-              ? errorData.message
-              : Array.isArray(errorData?.message)
-              ? errorData.message.join(', ')
+            payload && typeof payload.message === 'string'
+              ? payload.message
+              : Array.isArray(payload?.message)
+              ? payload.message.join(', ')
               : 'Error al procesar la suscripción';
           throw new Error(message);
         }
 
-        setStatus('success');
-        try {
-          localStorage.setItem(STORAGE_KEY, 'true');
-        } catch {
-          // Fallback silencioso si localStorage está bloqueado
+        const resultStatus = payload?.data?.status ?? payload?.status;
+        if (resultStatus === 'already_active') {
+          setStatus('already_subscribed');
+          return false;
         }
+
+        setStatus('success');
         return true;
       } catch (err) {
         setStatus('error');

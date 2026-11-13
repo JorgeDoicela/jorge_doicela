@@ -4,7 +4,7 @@ import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { CheckCircle2, AlertCircle, Loader2, ArrowLeft, MailX } from 'lucide-react';
+import { AlertCircle, Loader2, ArrowLeft, MailX } from 'lucide-react';
 import { DoiceladevPageLayout } from '../../widgets/page-layout/ui/DoiceladevPageLayout';
 import { useNewsletterUnsubscribe } from '../../features/newsletter-subscription';
 
@@ -45,8 +45,7 @@ function UnsubscribeContent() {
 
         {isSuccess ? (
           <div className="space-y-6">
-            <div className="flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl glass-concave-panel text-sm text-emerald-600 dark:text-emerald-400 font-mono text-center border border-emerald-500/20">
-              <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
+            <div className="flex items-center justify-center p-4 sm:p-5 rounded-2xl glass-concave-panel text-sm text-emerald-600 dark:text-emerald-400 font-mono text-center border border-emerald-500/20">
               <span>{t('unsubscribeSuccess')}</span>
             </div>
             <div className="text-center">
@@ -74,7 +73,7 @@ function UnsubscribeContent() {
                   required
                   disabled={isLoading}
                   aria-label={t('placeholder')}
-                  className="w-full px-5 py-3.5 rounded-2xl glass-input-neumorphic text-base sm:text-[15px] font-mono placeholder:text-slate-400 dark:placeholder:text-zinc-500 disabled:opacity-60 focus:outline-none"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 text-sm sm:text-[15px] font-sans outline-none focus:ring-2 focus:ring-blue-500 shadow-inner transition-colors disabled:opacity-60"
                 />
               </div>
             )}

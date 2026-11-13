@@ -190,7 +190,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                         <div className="h-3 w-3/5 bg-black/5 dark:bg-white/5 rounded" />
                       </div>
                     ) : displayedPosts.length > 0 ? (
-                      <div className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-3 py-1">
+                      <div className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-2 py-0.5">
                         {displayedPosts.map((post) => (
                           <Link
                             key={post.id || post.href}
@@ -204,7 +204,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
                         ))}
 
                         {/* Enlace final de la rama */}
-                        <div className="pt-1">
+                        <div>
                           <Link
                             href={cat.href}
                             className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"

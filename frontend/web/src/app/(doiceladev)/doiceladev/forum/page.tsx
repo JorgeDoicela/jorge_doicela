@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
-import { useForum, useForumCategories, TopicCard } from '../../entities/forum';
+import { useForum, useForumCategories, TopicCard, TopicCardSkeleton } from '../../entities/forum';
 import { ModuleFilterToolbar } from '../../shared/ui';
 
 export default function ForumCategoryPage() {
@@ -46,9 +46,9 @@ export default function ForumCategoryPage() {
 
         <main>
           {loading ? (
-            <div className="space-y-4 animate-pulse">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="h-28 rounded-3xl glass-convex-panel bg-zinc-900/30" />
+            <div className="space-y-4">
+              {[1, 2, 3, 4].map((n) => (
+                <TopicCardSkeleton key={n} />
               ))}
             </div>
           ) : error ? (

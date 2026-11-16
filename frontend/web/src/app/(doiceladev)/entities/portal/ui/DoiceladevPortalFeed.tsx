@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
+import { DoiceladevCard, DoiceladevCardSkeleton } from '../../../shared/ui/DoiceladevCard';
 import { PortalFeedItem } from '../types';
 
 interface DoiceladevPortalFeedProps {
@@ -33,12 +33,9 @@ export function DoiceladevPortalFeed({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading && feed.length === 0 && (
-            <div className="col-span-full py-16 flex flex-col items-center justify-center text-center text-zinc-400">
-              <div className="w-7 h-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
-              <p className="text-xs font-mono tracking-wider uppercase text-zinc-500">
-                {tCommon('loading')}
-              </p>
-            </div>
+            Array.from({ length: 6 }).map((_, idx) => (
+              <DoiceladevCardSkeleton key={idx} />
+            ))
           )}
 
           {error && !isLoading && (

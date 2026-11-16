@@ -116,7 +116,7 @@ Las imágenes de portada de cada publicación (`coverImage` en `frontend/web/pub
   * *Tutoriales / Consola Interactiva:* Monitor sin marcos en escritorio de desarrollo nocturno con consola interactiva y teclado mecánico.
   * *Blog / Monolitos Modulares:* Escultura geométrica de cajas negras modulares en aluminio y cristal ahumado sobre concreto pulido.
   * *Foro / Optimización de RAM VPS:* Módulo de memoria RAM física y disco SSD NVMe sobre grafito cepillado.
-  * *Noticias / Next.js 16 & RSC:* Laptop de ingeniería abierta en ángulo con código y diagrama de flujo de datos en pantalla.
+  * *Noticias / Ransomware y Respaldos Inmutables:* Cartucho magnético de respaldo LTO y módulo SSD empresarial NVMe desconectado dentro de un maletín de bóveda de titanio sobre pizarra oscura de centro de datos.
   * *Ciberseguridad / Acceso SSH:* Llave física de seguridad criptográfica de titanio y candado industrial de acero endurecido.
   * *Infraestructura / Perímetro Linux:* Servidor rack 1U con escudo perimetral translúcido Netfilter.
 

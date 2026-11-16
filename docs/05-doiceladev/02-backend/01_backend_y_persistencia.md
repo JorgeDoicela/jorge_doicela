@@ -299,7 +299,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 
 | Sección | Archivo JSON | Slug Canónico | Portada Editorial (16:9) |
 |---|---|---|---|
-| **Noticias** | `news.json` | `novedades-nextjs-16-react-server-components` | `/doiceladev/images/covers/news/nextjs-16.webp` |
+| **Noticias** | `news.json` | `ransomware-ia-cifrado-hibrido-respaldos-inmutables` | `/doiceladev/images/covers/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables.webp` |
 | **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.webp` |
 | **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.webp` |
 | **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.webp` |

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForum } from '../../../entities/forum/api/useForum';
 import { TopicCard } from '../../../entities/forum/ui/TopicCard';
+import { TopicCardSkeleton } from '../../../entities/forum/ui/TopicCardSkeleton';
 
 export function ForumSection() {
   const tForum = useTranslations('Forum');
@@ -45,9 +46,9 @@ export function ForumSection() {
       </div>
 
       {loading ? (
-        <div className="space-y-4 animate-pulse">
-          {[1, 2, 3].map((n) => (
-            <div key={n} className="h-28 rounded-3xl glass-convex-panel bg-zinc-900/30" />
+        <div className="space-y-4">
+          {[1, 2, 3, 4].map((n) => (
+            <TopicCardSkeleton key={n} />
           ))}
         </div>
       ) : error ? (

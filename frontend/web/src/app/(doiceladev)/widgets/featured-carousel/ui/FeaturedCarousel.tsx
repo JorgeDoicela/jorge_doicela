@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
+import { DoiceladevCard, DoiceladevCardSkeleton } from '../../../shared/ui/DoiceladevCard';
 import { PortalFeedItem } from '../../../entities/portal/types';
 
 export interface FeaturedCarouselProps {
@@ -127,12 +127,7 @@ export function FeaturedCarousel({
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={`feat-pulse-${i}`}
-                className="p-6 rounded-2xl animate-pulse text-xs font-mono text-zinc-500 min-h-[260px] flex items-center justify-center glass-concave-panel"
-              >
-                {tCommon('loading')}
-              </div>
+              <DoiceladevCardSkeleton key={`feat-pulse-${i}`} />
             ))}
           </div>
         </div>

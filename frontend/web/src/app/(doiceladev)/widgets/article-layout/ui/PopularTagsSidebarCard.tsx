@@ -74,12 +74,17 @@ export function PopularTagsSidebarCard({
       </div>
 
       {loading && popularTags.length === 0 ? (
-        <div className="space-y-1.5 pt-1">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="space-y-1 pt-1" aria-hidden="true">
+          {['w-20', 'w-28', 'w-24', 'w-32', 'w-16', 'w-24'].map((wClass, i) => (
             <div
               key={i}
-              className="h-8 rounded-xl bg-slate-200/50 dark:bg-white/5 animate-pulse"
-            />
+              className="flex items-center w-full py-2 px-3 rounded-xl gap-1.5"
+            >
+              <span className="text-cyan-600/40 dark:text-cyan-400/40 font-semibold font-mono text-xs select-none">
+                #
+              </span>
+              <div className={`h-3 ${wClass} rounded bg-slate-200/60 dark:bg-white/10 animate-pulse`} />
+            </div>
           ))}
         </div>
       ) : popularTags.length === 0 ? null : (

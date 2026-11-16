@@ -570,5 +570,71 @@
     "caseSensitive": true,
     "language": "en",
     "orderPriority": 74
+  },
+  {
+    "slug": "ransomware",
+    "term": "Ransomware",
+    "aliases": "ransomware, secuestro de datos",
+    "category": "security",
+    "shortDefinition": "Software malicioso de extorsión que cifra sistemas de archivos o bases de datos mediante esquemas criptográficos híbridos y exige un rescate económico a cambio de la clave privada de descifrado.",
+    "keyDifference": "A diferencia del malware de espionaje tradicional (que busca operar en secreto), el ransomware anuncia su presencia tras completar el cifrado e inutilizar las copias de recuperación locales.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 82
+  },
+  {
+    "slug": "ransomware",
+    "term": "Ransomware",
+    "aliases": "ransomware, crypto-extortion",
+    "category": "security",
+    "shortDefinition": "Extortion malware that encrypts filesystems or databases using hybrid cryptographic schemes and demands financial payment in exchange for the private decryption key.",
+    "keyDifference": "Unlike stealth espionage malware (which aims to remain undetected), ransomware announces its presence immediately after encrypting production data and sabotaging local recovery points.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 82
+  },
+  {
+    "slug": "worm",
+    "term": "WORM",
+    "aliases": "worm, write once read many, almacenamiento inmutable",
+    "category": "security",
+    "shortDefinition": "Write Once, Read Many: arquitectura de almacenamiento donde los datos escritos no pueden ser modificados, sobrescritos ni eliminados por ningún usuario durante un periodo de retención fijado.",
+    "keyDifference": "A diferencia de los permisos de solo lectura convencionales del sistema operativo (que un administrador o usuario root comprometido puede revertir), WORM bloquea el borrado a nivel físico o de motor de almacenamiento.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 79
+  },
+  {
+    "slug": "worm",
+    "term": "WORM",
+    "aliases": "worm, write once read many, immutable storage",
+    "category": "security",
+    "shortDefinition": "Write Once, Read Many: storage architecture where written data cannot be modified, overwritten, or deleted by any user during a configured retention period.",
+    "keyDifference": "Unlike standard OS read-only file permissions (which a compromised administrator or root user can revert), WORM enforces deletion locks at the physical media or object-storage engine layer.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 79
+  },
+  {
+    "slug": "air-gap",
+    "term": "Air Gap",
+    "aliases": "air gap, air-gap, aislamiento físico",
+    "category": "security",
+    "shortDefinition": "Medida de aislamiento donde un servidor o unidad de respaldo permanece física o lógicamente desconectado de cualquier red de producción o de internet, impidiendo el acceso remoto.",
+    "keyDifference": "A diferencia de una VLAN o un firewall por software (que pueden ser puenteados si un atacante compromete las credenciales del administrador de red), un Air Gap carece de enlace de red activo durante el reposo.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 77
+  },
+  {
+    "slug": "air-gap",
+    "term": "Air Gap",
+    "aliases": "air gap, air-gap, air-gapped",
+    "category": "security",
+    "shortDefinition": "Isolation measure where a backup server or storage medium remains physically or logically disconnected from production networks and the internet, blocking remote access.",
+    "keyDifference": "Unlike a VLAN or software firewall (which can be bypassed if an attacker compromises network administrator credentials), an Air Gap has no active network link while at rest.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 77
   }
 ]

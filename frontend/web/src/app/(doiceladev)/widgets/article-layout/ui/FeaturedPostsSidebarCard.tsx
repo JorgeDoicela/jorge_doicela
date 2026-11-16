@@ -54,11 +54,14 @@ export function FeaturedPostsSidebarCard({
       {/* Lista de Publicaciones */}
       <div className="space-y-2.5">
         {loading && displayPosts.length === 0 ? (
-          // Skeletons de carga fluida
+          // Skeletons de carga fluida con paridad estructural
           Array.from({ length: maxPosts }).map((_, idx) => (
-            <div key={idx} className="p-2.5 -mx-2.5 space-y-1.5 animate-pulse">
-              <div className="h-2.5 w-20 bg-black/5 dark:bg-white/5 rounded" />
-              <div className="h-3.5 w-full bg-black/5 dark:bg-white/5 rounded" />
+            <div key={idx} aria-hidden="true" className="p-2.5 -mx-2.5 space-y-1.5">
+              <div className="h-2.5 w-24 bg-slate-200/70 dark:bg-white/10 rounded animate-pulse" />
+              <div className="space-y-1">
+                <div className="h-3.5 w-full bg-slate-200/80 dark:bg-white/10 rounded animate-pulse" />
+                <div className="h-3.5 w-3/4 bg-slate-200/80 dark:bg-white/10 rounded animate-pulse" />
+              </div>
             </div>
           ))
         ) : displayPosts.length > 0 ? (

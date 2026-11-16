@@ -54,13 +54,13 @@ export default function CategoriesDirectoryPage() {
         <main>
           {loading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {Array.from({ length: 6 }).map((_, idx) => (
+              {Array.from({ length: 9 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className="h-36 rounded-2xl glass-convex-panel animate-pulse p-6 space-y-3"
+                  aria-hidden="true"
+                  className="p-5 sm:p-6 rounded-2xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] flex items-center min-h-[68px] sm:min-h-[76px]"
                 >
-                  <div className="h-5 w-3/4 bg-slate-300 dark:bg-zinc-800 rounded-lg" />
-                  <div className="h-4 w-1/3 bg-slate-200 dark:bg-zinc-800/60 rounded-md" />
+                  <div className="h-5 w-3/5 bg-slate-200/70 dark:bg-white/10 rounded-lg animate-pulse" />
                 </div>
               ))}
             </div>

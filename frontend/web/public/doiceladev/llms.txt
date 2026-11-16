@@ -16,6 +16,8 @@
 ### 1. Noticias de Tecnología (`/news`)
 - **Descripción:** Actualidad y tendencias sobre desarrollo de software, Inteligencia Artificial, lenguajes de programación y herramientas DevOps.
 - **Capacidades:** Alertas *Breaking News*, buscador en tiempo real, etiquetas semánticas y enlaces a fuentes oficiales verificadas.
+- **Publicaciones Destacadas:**
+  - *Escalada de Ransomware Impulsado por IA: Del Récord de Octubre al Cifrado Híbrido y Respaldos Inmutables* (`/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables`): Análisis del récord de 1,063 ataques de ransomware en octubre de 2026 reportado por Check Point Research (+35% interanual), agentes de IA como operadores de intrusión en vivo, anatomía del cifrado híbrido (`ChaCha20-Poly1305` + `Curve25519`) e intermitente, arquitectura 3-2-1-1-0 de respaldos por extracción (*Pull*), atributos `chattr +i`/`+a`, bloqueo de `CAP_LINUX_IMMUTABLE` en systemd, repositorios Borg `--append-only` y almacenamiento WORM con S3 Object Lock en modo `COMPLIANCE`.
 
 ### 2. Blog de Arquitectura de Sistemas (`/blog`)
 - **Descripción:** Ensayos técnicos de nivel senior sobre diseño de software, patrones de arquitectura limpia, microservicios, optimización de APIs y gestión de memoria en hardware restringido.

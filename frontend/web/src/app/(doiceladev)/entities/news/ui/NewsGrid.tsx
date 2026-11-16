@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { NewsArticle } from '../types';
 import { NewsCard } from './NewsCard';
+import { DoiceladevCardSkeleton } from '../../../shared/ui/DoiceladevCardSkeleton';
 
 interface NewsGridProps {
   news: NewsArticle[];
@@ -16,9 +17,9 @@ export function NewsGrid({ news, loading, error }: NewsGridProps) {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-pulse">
-        {[1, 2, 3, 4].map((n) => (
-          <div key={n} className="h-48 rounded-3xl glass-convex-panel bg-zinc-900/30" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {Array.from({ length: 6 }).map((_, idx) => (
+          <DoiceladevCardSkeleton key={idx} />
         ))}
       </div>
     );

@@ -4,6 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArticleCover, DoiceladevArticleCategory } from './ArticleCover';
+import { DoiceladevCardSkeleton } from './DoiceladevCardSkeleton';
+
+export { DoiceladevCardSkeleton };
 
 export interface DoiceladevCardProps {
   href: string;
@@ -285,3 +288,4 @@ export function DoiceladevCard({
 DoiceladevCard.Meta = DoiceladevCardMeta;
 DoiceladevCard.Title = DoiceladevCardTitle;
 DoiceladevCard.Excerpt = DoiceladevCardExcerpt;
+DoiceladevCard.Skeleton = DoiceladevCardSkeleton;

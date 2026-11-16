@@ -17,6 +17,7 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 - [x] **Sistema de Borradores Markdown (`drafts/` en FSD):** Carpetas `drafts/` co-localizadas en las 8 entidades de frontend para redacción y edición nativa en Markdown puro antes de la ingesta en el corpus JSON.
 - [x] **Publicación Inaugural de Infraestructura:** Publicación bilingüe de ingeniería sobre *Firewall en Linux: De Netfilter y UFW a la Seguridad Perimetral de Servidores* (`firewall-linux-ufw-netfilter-seguridad-servidores`).
 - [x] **Publicación Inaugural de Tutoriales:** Guía práctica bilingüe sobre *Autenticación SSH en Linux y Git: De Claves Ed25519 a la Gestión de Identidades y Bastionado* (`configuracion-ssh-claves-ed25519-alias-tuneles`).
+- [x] **Publicación Inaugural de Noticias:** Análisis técnico bilingüe sobre *Escalada de Ransomware Impulsado por IA: Del Récord de Octubre al Cifrado Híbrido y Respaldos Inmutables* (`ransomware-ia-cifrado-hibrido-respaldos-inmutables`).
 
 ---
 

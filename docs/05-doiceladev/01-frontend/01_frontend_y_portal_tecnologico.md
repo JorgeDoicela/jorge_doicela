@@ -45,7 +45,7 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts
 │
 ├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
-│   ├── ui/                           # DoiceladevCard, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, BackToPortalButton, ScrollToTopButton, ArticleCover
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # DoiceladevJsonLd (Schema JSON-LD)
 │   ├── lib/                          # api, serverFetch, fetchJson
@@ -54,7 +54,7 @@ frontend/web/src/app/(doiceladev)/
 ├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown
 │   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
 │   ├── blog/                         # BlogCard, BlogGrid, useBlog, drafts/, types.ts, index.ts
-│   ├── forum/                        # TopicCard, useForum, drafts/, types.ts, index.ts
+│   ├── forum/                        # TopicCard, TopicCardSkeleton, useForum, drafts/, types.ts, index.ts
 │   ├── ai/                           # AiCard, AiGrid, useAi, drafts/, types.ts, index.ts
 │   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, drafts/, types.ts, index.ts
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
@@ -160,6 +160,15 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
     * **2. Titular Principal:** Campo `title` o `name` puro de la base de datos en `text-base` (16px, `leading-snug`, `font-bold`), manteniendo altura uniforme sin saltos ni inflación visual.
     * **3. Extracto Descriptivo:** Campo `excerpt`, `subtitle` o `description` puro de la base de datos en `text-xs` (12px, `text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5`).
   * **Cero Ruido Visual (Prohibición de Footers, Tiempos de Lectura y Datos Quemados):** Se eliminaron los pies de tarjeta con líneas divisorias (`border-t`), listas secundarias de tecnologías apiladas, estimaciones de tiempo de lectura y textos estáticos artificiales, garantizando que el 100% de la información provenga directamente de la base de datos SQLite y los corpus JSON bilingües.
+  * **Estandarización de Skeletons con Paridad Estructural 1:1 (`DoiceladevCardSkeleton.tsx` y `DoiceladevCard.Skeleton`):**
+    * Para erradicar el cambio acumulativo de diseño (Cumulative Layout Shift - CLS) y eliminar placeholders planos vacíos (`h-48` / `h-64` / spinners aislados), se creó el componente atómico [`DoiceladevCardSkeleton`](/doiceladev/shared/ui/DoiceladevCardSkeleton.tsx) exportado también como propiedad estática de [`DoiceladevCard`](/doiceladev/shared/ui/DoiceladevCard.tsx).
+    * **Geometría Fidedigna:** Replica de forma exacta la envolvente exterior (`p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 border border-slate-200/80 dark:border-white/[0.07]`), el contenedor de portada 16:9 (`aspect-video rounded-xl bg-slate-200/70 dark:bg-white/5 animate-pulse`), la barra de metadatos mono (`h-3 w-28`), las 2 líneas de titular (`h-4 w-11/12` y `h-4 w-3/5`) y las 2 líneas de extracto (`h-3 w-full` y `h-3 w-4/5`).
+    * **Integración Universal en Grillas:** Adoptado de forma homogénea en los 7 catálogos de módulo (`NewsGrid`, `BlogGrid`, `AiGrid`, `SecurityGrid`, `InfrastructureGrid`, `ProjectGrid`, `TutorialGrid`), en el carrusel de destacados (`FeaturedCarousel`) y en el feed principal del portal (`DoiceladevPortalFeed`), todos bajo la cuadrícula canónica `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full`.
+    * **Skeletons Especializados Adicionales:**
+      * [`TopicCardSkeleton`](/doiceladev/entities/forum/ui/TopicCardSkeleton.tsx) para discusiones de foro (`/forum` y `ForumSection`), emulando el panel horizontal con metadatos, titular, snippet y contadores de respuestas.
+      * Skeleton de categorías (`/categories`) calibrado con la altura real del botón neumórfico compacto (`min-h-[68px] sm:min-h-[76px]`).
+      * Skeleton de etiquetas (`/tags`) con contenedor flexible centrado (`flex flex-wrap gap-2.5 sm:gap-3 justify-center`) y píldoras `# tag` con anchos aleatorizados controlados, eliminando cuadrículas artificiales.
+      * Sidebars editoriales (`FeaturedPostsSidebarCard`, `ExploreTopicsSidebarCard`, `PopularTagsSidebarCard`) sincronizados con la tipografía y guías de árbol del diseño activo.
 * **Coherencia Editorial Total en las 8 Páginas de Categoría (`/[category]`):**
   * Las 8 páginas de listado (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `forum`) incorporan la misma estructura arquitectónica que el home `/`: cabecera editorial de marca [`DoiceladevHeaderNav`](/doiceladev/widgets/doiceladev-header/ui/DoiceladevHeaderNav.tsx) con la categoría activa resaltada en la cápsula, botón de retorno a la raíz (`/`) con la etiqueta localizada `Inicio` (ES) / `Home` (EN), barra de búsqueda integrada, contenedor unificado `glass-convex-panel` con sombra 2xl y el pie de página completo [`DoiceladevFooter`](/doiceladev/widgets/doiceladev-footer/ui/DoiceladevFooter.tsx).
   * **Sistema Universal de Filtros Polimórficos (`CategoryFilterBar.tsx` en `shared/ui`):**
@@ -337,7 +346,7 @@ Para garantizar escalabilidad, trazabilidad y cero colisión de archivos a medid
 ```text
 public/doiceladev/images/
 ├── covers/                      # Portadas 16:9 oficiales (1 por publicación, nombrada con el slug)
-│   ├── news/                    # ej: /doiceladev/images/covers/news/nextjs-16.webp
+│   ├── news/                    # ej: /doiceladev/images/covers/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables.webp
 │   ├── tutorials/               # ej: /doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp
 │   ├── blog/                    # Portadas de ensayos de arquitectura
 │   ├── cybersecurity/           # Portadas de avisos de seguridad

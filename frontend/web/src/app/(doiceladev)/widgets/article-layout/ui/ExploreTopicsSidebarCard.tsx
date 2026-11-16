@@ -8,207 +8,208 @@ import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevP
 import { PortalFeedItem } from '../../../entities/portal/types';
 
 interface ExploreTopicsSidebarCardProps {
-  className?: string;
+    className?: string;
 }
 
 interface TopicCategory {
-  id: string;
-  label: string;
-  href: string;
+    id: string;
+    label: string;
+    href: string;
 }
 
 export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSidebarCardProps) {
-  const tNav = useTranslations('Nav');
-  const { featured, feed, loading } = useDoiceladevPortal();
+    const tNav = useTranslations('Nav');
+    const { featured, feed, loading } = useDoiceladevPortal();
 
-  // Estado para las categorías abiertas en el árbol (múltiple concurrente, no cierre automático)
-  const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
+    // Estado para las categorías abiertas en el árbol (múltiple concurrente, no cierre automático)
+    const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
 
-  const toggleCategory = (catId: string) => {
-    setOpenCategoryIds((prev) =>
-      prev.includes(catId) ? prev.filter((id) => id !== catId) : [...prev, catId]
-    );
-  };
-
-  // Mapeo ordenado de todas las publicaciones por categoría
-  const postsByCategory = useMemo(() => {
-    const map: Record<string, PortalFeedItem[]> = {
-      cybersecurity: [],
-      infrastructure: [],
-      ai: [],
-      tutorials: [],
-      projects: [],
-      blog: [],
-      news: [],
-      forum: [],
+    const toggleCategory = (catId: string) => {
+        setOpenCategoryIds((prev) =>
+            prev.includes(catId) ? prev.filter((id) => id !== catId) : [...prev, catId]
+        );
     };
 
-    const seenIds = new Set<string>();
-    const combined = [...featured, ...feed];
+    // Mapeo ordenado de todas las publicaciones por categoría
+    const postsByCategory = useMemo(() => {
+        const map: Record<string, PortalFeedItem[]> = {
+            cybersecurity: [],
+            infrastructure: [],
+            ai: [],
+            tutorials: [],
+            projects: [],
+            blog: [],
+            news: [],
+            forum: [],
+        };
 
-    for (const item of combined) {
-      if (item?.category && map[item.category] && !seenIds.has(item.id)) {
-        seenIds.add(item.id);
-        map[item.category].push(item);
-      }
-    }
+        const seenIds = new Set<string>();
+        const combined = [...featured, ...feed];
 
-    return map;
-  }, [featured, feed]);
+        for (const item of combined) {
+            if (item?.category && map[item.category] && !seenIds.has(item.id)) {
+                seenIds.add(item.id);
+                map[item.category].push(item);
+            }
+        }
 
-  const categories: TopicCategory[] = [
-    {
-      id: 'cybersecurity',
-      label: tNav('cybersecurity'),
-      href: '/cybersecurity',
-    },
-    {
-      id: 'infrastructure',
-      label: tNav('infrastructure'),
-      href: '/infrastructure',
-    },
-    {
-      id: 'ai',
-      label: tNav('ai'),
-      href: '/ai',
-    },
-    {
-      id: 'tutorials',
-      label: tNav('tutorials'),
-      href: '/tutorials',
-    },
-    {
-      id: 'projects',
-      label: tNav('projects'),
-      href: '/projects',
-    },
-    {
-      id: 'blog',
-      label: tNav('blog'),
-      href: '/blog',
-    },
-    {
-      id: 'news',
-      label: tNav('news'),
-      href: '/news',
-    },
-    {
-      id: 'forum',
-      label: tNav('forum'),
-      href: '/forum',
-    },
-  ];
+        return map;
+    }, [featured, feed]);
 
-  return (
-    <div
-      className={`p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-3.5 shadow-xl select-none ${className}`}
-    >
-      {/* Cabecera de la tarjeta */}
-      <div className="flex items-center justify-between">
-        <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
-          {tNav('exploreTopics')}
-        </h5>
-      </div>
+    const categories: TopicCategory[] = [
+        {
+            id: 'cybersecurity',
+            label: tNav('cybersecurity'),
+            href: '/cybersecurity',
+        },
+        {
+            id: 'infrastructure',
+            label: tNav('infrastructure'),
+            href: '/infrastructure',
+        },
+        {
+            id: 'ai',
+            label: tNav('ai'),
+            href: '/ai',
+        },
+        {
+            id: 'tutorials',
+            label: tNav('tutorials'),
+            href: '/tutorials',
+        },
+        {
+            id: 'projects',
+            label: tNav('projects'),
+            href: '/projects',
+        },
+        {
+            id: 'blog',
+            label: tNav('blog'),
+            href: '/blog',
+        },
+        {
+            id: 'news',
+            label: tNav('news'),
+            href: '/news',
+        },
+        {
+            id: 'forum',
+            label: tNav('forum'),
+            href: '/forum',
+        },
+    ];
 
-      {/* Lista de Secciones Colapsables (Tree / Branch View) */}
-      <div className="space-y-1">
-        {categories.map((cat) => {
-          const isOpen = openCategoryIds.includes(cat.id);
-          const categoryPosts = postsByCategory[cat.id] || [];
-
-          const displayedPosts = categoryPosts.slice(0, 5);
-
-          return (
-            <div key={cat.id} className="rounded-2xl transition-colors">
-              {/* Botón de la Especialidad (Toggle del Acordeón) */}
-              <button
-                type="button"
-                onClick={() => toggleCategory(cat.id)}
-                className={`group flex items-center justify-between w-full py-2.5 px-3 rounded-xl transition-colors duration-150 text-left cursor-pointer active:scale-[0.99] select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500/40 ${
-                  isOpen
-                    ? 'bg-black/[0.045] dark:bg-white/[0.045]'
-                    : 'hover:bg-black/[0.035] dark:hover:bg-white/[0.035]'
-                }`}
-                aria-expanded={isOpen}
-              >
-                {/* Lado izquierdo: Chevron + Nombre */}
-                <div className="flex items-center gap-2 min-w-0">
-                  <ChevronRight
-                    className={`w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 transition-transform duration-200 shrink-0 ${
-                      isOpen
-                        ? 'rotate-90 text-blue-600 dark:text-blue-400'
-                        : 'group-hover:text-slate-700 dark:group-hover:text-zinc-300'
-                    }`}
-                  />
-                  <span
-                    className={`text-xs sm:text-[13px] font-sans font-medium transition-colors duration-150 truncate ${
-                      isOpen
-                        ? 'text-blue-600 dark:text-blue-400 font-semibold'
-                        : 'text-slate-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                    }`}
-                  >
-                    {cat.label}
-                  </span>
-                </div>
-              </button>
-
-              {/* CONTENIDO DESPLEGABLE CON ANIMACIÓN FLUIDA DE ALTURA (ZERO JANK / ZERO HOVER FANTASMA) */}
-              <div
-                className={`grid transition-[grid-template-rows,opacity] duration-200 ease-out ${
-                  isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <div className="pt-2 pb-2 px-2">
-                    {loading && categoryPosts.length === 0 ? (
-                      <div className="space-y-1.5 py-2 pl-4 animate-pulse">
-                        <div className="h-3 w-4/5 bg-black/5 dark:bg-white/5 rounded" />
-                        <div className="h-3 w-3/5 bg-black/5 dark:bg-white/5 rounded" />
-                      </div>
-                    ) : displayedPosts.length > 0 ? (
-                      <div className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-2 py-0.5">
-                        {displayedPosts.map((post) => (
-                          <Link
-                            key={post.id || post.href}
-                            href={post.href}
-                            className="group/tree block transition-all"
-                          >
-                            <h6 className="text-xs font-sans font-medium text-slate-800 dark:text-zinc-200 group-hover/tree:text-blue-600 dark:group-hover/tree:text-blue-400 line-clamp-2 leading-snug transition-colors">
-                              {post.title}
-                            </h6>
-                          </Link>
-                        ))}
-
-                        {/* Enlace final de la rama */}
-                        <div>
-                          <Link
-                            href={cat.href}
-                            className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
-                          >
-                            <span>{tNav('all')}</span>
-                            <ArrowUpRight className="w-3 h-3" />
-                          </Link>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="py-2 pl-3 text-xs font-mono text-slate-400 dark:text-zinc-500 space-y-1">
-                        <p>{tNav('noPostsInCategory')}</p>
-                        <Link
-                          href={cat.href}
-                          className="text-blue-600 dark:text-blue-400 hover:underline inline-block font-semibold"
-                        >
-                          {cat.label} →
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+    return (
+        <div
+            className={`p-6 rounded-3xl glass-convex-panel border border-black/5 dark:border-white/5 space-y-3.5 shadow-xl select-none ${className}`}
+        >
+            {/* Cabecera de la tarjeta */}
+            <div className="flex items-center justify-between">
+                <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                    {tNav('exploreTopics')}
+                </h5>
             </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+
+            {/* Lista de Secciones Colapsables (Tree / Branch View) */}
+            <div className="space-y-1">
+                {categories.map((cat) => {
+                    const isOpen = openCategoryIds.includes(cat.id);
+                    const categoryPosts = postsByCategory[cat.id] || [];
+
+                    const displayedPosts = categoryPosts.slice(0, 5);
+
+                    return (
+                        <div key={cat.id} className="rounded-2xl transition-colors">
+                            {/* Botón de la Especialidad (Toggle del Acordeón) */}
+                            <button
+                                type="button"
+                                onClick={() => toggleCategory(cat.id)}
+                                className={`group flex items-center justify-between w-full py-2.5 px-3 rounded-xl transition-colors duration-150 text-left cursor-pointer active:scale-[0.99] select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-500/40 ${isOpen
+                                        ? 'bg-black/[0.045] dark:bg-white/[0.045]'
+                                        : 'hover:bg-black/[0.035] dark:hover:bg-white/[0.035]'
+                                    }`}
+                                aria-expanded={isOpen}
+                            >
+                                {/* Lado izquierdo: Chevron + Nombre */}
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <ChevronRight
+                                        className={`w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 transition-transform duration-200 shrink-0 ${isOpen
+                                                ? 'rotate-90 text-blue-600 dark:text-blue-400'
+                                                : 'group-hover:text-slate-700 dark:group-hover:text-zinc-300'
+                                            }`}
+                                    />
+                                    <span
+                                        className={`text-xs sm:text-[13px] font-sans font-medium transition-colors duration-150 truncate ${isOpen
+                                                ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                                                : 'text-slate-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                                            }`}
+                                    >
+                                        {cat.label}
+                                    </span>
+                                </div>
+                            </button>
+
+                            {/* CONTENIDO DESPLEGABLE CON ANIMACIÓN FLUIDA DE ALTURA (ZERO JANK / ZERO HOVER FANTASMA) */}
+                            <div
+                                className={`grid transition-[grid-template-rows,opacity] duration-200 ease-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                                    }`}
+                            >
+                                <div className="overflow-hidden">
+                                    <div className="pt-2 pb-2 px-2">
+                                        {loading && categoryPosts.length === 0 ? (
+                                            <div aria-hidden="true" className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-2.5 py-1">
+                                                <div className="space-y-1">
+                                                    <div className="h-3 w-4/5 bg-slate-200/70 dark:bg-white/10 rounded animate-pulse" />
+                                                    <div className="h-3 w-3/5 bg-slate-200/50 dark:bg-white/5 rounded animate-pulse" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <div className="h-3 w-5/6 bg-slate-200/70 dark:bg-white/10 rounded animate-pulse" />
+                                                </div>
+                                            </div>
+                                        ) : displayedPosts.length > 0 ? (
+                                            <div className="relative pl-3.5 ml-3 border-l-2 border-blue-500/25 dark:border-blue-400/25 space-y-2 py-0.5">
+                                                {displayedPosts.map((post) => (
+                                                    <Link
+                                                        key={post.id || post.href}
+                                                        href={post.href}
+                                                        className="group/tree block transition-all"
+                                                    >
+                                                        <h6 className="text-xs font-sans font-medium text-slate-800 dark:text-zinc-200 group-hover/tree:text-blue-600 dark:group-hover/tree:text-blue-400 line-clamp-2 leading-snug transition-colors">
+                                                            {post.title}
+                                                        </h6>
+                                                    </Link>
+                                                ))}
+
+                                                {/* Enlace final de la rama */}
+                                                <div>
+                                                    <Link
+                                                        href={cat.href}
+                                                        className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+                                                    >
+                                                        <span>{tNav('all')}</span>
+                                                        <ArrowUpRight className="w-3 h-3" />
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="py-2 pl-3 text-xs font-mono text-slate-400 dark:text-zinc-500 space-y-1">
+                                                <p>{tNav('noPostsInCategory')}</p>
+                                                <Link
+                                                    href={cat.href}
+                                                    className="text-blue-600 dark:text-blue-400 hover:underline inline-block font-semibold"
+                                                >
+                                                    {cat.label} →
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
 }
 

@@ -430,14 +430,16 @@ graph TD
     D --> E[pnpm run build: NestJS dist + Next.js Standalone]
     E --> F[Preparar bundle estático: copiar public y static a standalone]
     F --> G[rsync bundle completo vía SSH a Lightsail]
-    G --> H[SSH Script en Servidor]
-    H --> I[pnpm install --prod en backend]
-    H --> I2[Limpieza de SQLite legadas en raíz y backend/]
-    I2 --> I3[mkdir -p backend/data]
-    I3 --> J[seed-corpus.js + seed-doiceladev.js + seed-portfolio.js en backend/data/]
+    G --> H[SSH Script con set -e en Servidor]
+    H --> I[CI=true pnpm install --prod --force en backend]
+    H --> I3[mkdir -p backend/data]
+    I3 --> J[Siembra atómica en backend/data/*.sqlite.tmp]
+    J --> J2[mv -f *.tmp *.sqlite: Reemplazo atómico instantáneo]
     H --> K[Garantizar estructura de recursos estáticos en standalone]
     H --> L[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
-    H --> M[pm2 reload con zero-downtime o start de resguardo]
+    H --> M[pm2 restart pm2.config.js con zero-downtime]
+    M --> N[Healthcheck activo con curl en :3000 y :3001]
+    N --> O[Purga automática de caché en Cloudflare API]
 ```
 
 ### 5.1 Fases del Pipeline:
@@ -461,3 +463,12 @@ graph TD
 * `REMOTE_HOST`: IP estática del VPS.
 * `REMOTE_USER`: Usuario del sistema operativo (ej. `admin` o `debian`).
 * `TARGET_DIR`: Ruta absoluta en el servidor (ej. `/var/www/jorgedoicela`).
+
+---
+
+## 6. Documentación de Incidentes y Post-Mortems
+
+* **Auditoría de Hardening Perimetral (Sep 2026):** [`02_auditoria_seguridad_sep2026.md`](./02_auditoria_seguridad_sep2026.md)
+* **Incidente de Subdominios y Proxies Loopback en Next.js:** [`03_resolucion_incidente_subdominios_nextjs_loopback.md`](./03_resolucion_incidente_subdominios_nextjs_loopback.md)
+* **Incidente de Dependencias en Producción (nodemailer) y Hardening del Pipeline CI/CD (Nov 2026):** [`04_resolucion_incidente_dependencias_produccion_y_hardening_cicd.md`](./04_resolucion_incidente_dependencias_produccion_y_hardening_cicd.md)
+

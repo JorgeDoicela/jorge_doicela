@@ -53,18 +53,21 @@ flowchart TD
     SQLiteStale --> SeedLocal --> LiveLocal
 ```
 
-### 2.1 En Producción (Automático e Idempotente)
-El pipeline de CI/CD ([deploy.yml](file:///c:/Users/jorge/Desktop/Proyectos/jorge_doicela/.github/workflows/deploy.yml)) ejecuta de forma no negociable por SSH:
+### 2.1 En Producción (Automático, Idempotente y Atómico)
+El pipeline de CI/CD (`.github/workflows/deploy.yml`) ejecuta de forma atómica y no destructiva por SSH:
 ```bash
-# 1. Limpieza física previa
-rm -f backend/data/*.sqlite* 2>/dev/null || true
+# 1. Sembrado atómico en archivos temporales aislados
+DATABASE_KARTEX_PATH=./data/kartex.sqlite.tmp node backend/dist/kartex/cli/seed-corpus.js
+DATABASE_DOICELADEV_PATH=./data/doiceladev.sqlite.tmp node backend/dist/doiceladev/cli/seed-doiceladev.js
+DATABASE_PORTFOLIO_PATH=./data/portfolio.sqlite.tmp node backend/dist/portfolio/cli/seed-portfolio.js
 
-# 2. Reconstrucción atómica y seeding desde los corpus JSON compilados
-node backend/dist/kartex/cli/seed-corpus.js
-node backend/dist/doiceladev/cli/seed-doiceladev.js
-node backend/dist/portfolio/cli/seed-portfolio.js
+# 2. Reemplazo atómico instantáneo solo tras el éxito confirmado de los 3 seeders
+mv -f backend/data/kartex.sqlite.tmp backend/data/kartex.sqlite
+mv -f backend/data/doiceladev.sqlite.tmp backend/data/doiceladev.sqlite
+mv -f backend/data/portfolio.sqlite.tmp backend/data/portfolio.sqlite
+rm -f backend/data/*.sqlite-shm backend/data/*.sqlite-wal 2>/dev/null || true
 ```
-Por este motivo físico, el servidor de producción **siempre cuenta con todas las tablas, columnas, artículos y términos de glosario actualizados**.
+Por este mecanismo atómico, si algún dataset JSON tuviera una anomalía, el script aborta inmediatamente con `set -e` y las bases de datos originales en producción **nunca se destruyen ni quedan en blanco**. Solo tras completar los 3 seeders al 100%, el comando `mv` intercambia los binarios en menos de 1 milisegundo.
 
 ### 2.2 En Desarrollo Local (Manual e Imperativo)
 Al clonar el repositorio, cambiar de máquina o realizar un `git pull` de commits que introducen nuevas publicaciones, términos o entidades:

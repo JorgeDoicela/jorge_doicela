@@ -5,13 +5,12 @@ import { useTranslations } from 'next-intl';
 import { Copy, Check, Terminal, Code2, FileCode } from 'lucide-react';
 import { MermaidBlock } from './MermaidBlock';
 import Prism from 'prismjs';
-
-// Gramáticas comunes de Prism
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-tsx';
 import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-powershell';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-yaml';
 import 'prismjs/components/prism-sql';
@@ -31,6 +30,9 @@ import 'prismjs/components/prism-graphql';
 import 'prismjs/components/prism-protobuf';
 import 'prismjs/components/prism-hcl';
 
+// Deshabilitar el resaltado imperativo automático en el DOM; React controla el renderizado de forma declarativa
+Prism.manual = true;
+
 export interface CodeBlockProps {
   code: string;
   language?: string;
@@ -49,6 +51,8 @@ const LANGUAGE_LABELS: Record<string, string> = {
   sh: 'Bash',
   zsh: 'Shell',
   shell: 'Shell',
+  powershell: 'PowerShell',
+  ps1: 'PowerShell',
   json: 'JSON',
   yaml: 'YAML',
   yml: 'YAML',
@@ -272,7 +276,9 @@ export function CodeBlock({ code, language = 'text', meta }: CodeBlockProps) {
     normalizedLang === 'bash' ||
     normalizedLang === 'sh' ||
     normalizedLang === 'zsh' ||
-    normalizedLang === 'shell';
+    normalizedLang === 'shell' ||
+    normalizedLang === 'powershell' ||
+    normalizedLang === 'ps1';
   const displayLabel = LANGUAGE_LABELS[normalizedLang] || normalizedLang;
   const detectedFilename = extractFilename(cleanCode);
 
@@ -287,10 +293,10 @@ export function CodeBlock({ code, language = 'text', meta }: CodeBlockProps) {
     [cleanCode, normalizedLang, meta, detectedFilename]
   );
 
-  // Resaltado de sintaxis con Prism
+  // Resaltado de sintaxis determinista con Prism (100% simétrico entre SSR y Cliente)
   const highlightedHtml = useMemo(() => {
     try {
-      const grammar = Prism.languages[normalizedLang] || Prism.languages.javascript || Prism.languages.plain;
+      const grammar = Prism.languages[normalizedLang];
       if (grammar) {
         return Prism.highlight(cleanCode, grammar, normalizedLang);
       }
@@ -375,7 +381,6 @@ export function CodeBlock({ code, language = 'text', meta }: CodeBlockProps) {
       {/* Cuerpo del código */}
       <pre
         tabIndex={0}
-        suppressHydrationWarning
         className="p-4 sm:p-5 overflow-x-auto text-[#1d1d1f] dark:text-[#f0f6fc] leading-relaxed font-mono text-[13px] scrollbar-thin selection:bg-blue-500/20 dark:selection:bg-blue-500/30"
       >
         {highlightedHtml ? (

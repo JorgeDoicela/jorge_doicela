@@ -304,7 +304,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 | **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.webp` |
 | **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.webp` |
 | **Ciberseguridad** | `security.json` | `seguridad-php-cve-2024-8927-cve-2024-9026` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp` |
-| **Tutoriales** | `tutorials.json` | `tutorial-terminal-ssh-virtual-websockets-react` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp` |
+| **Tutoriales** | `tutorials.json` | `configuracion-ssh-claves-ed25519-alias-tuneles` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp` |
 | **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.webp` |
 | **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.webp` |
 

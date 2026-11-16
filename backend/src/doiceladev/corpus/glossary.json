@@ -438,5 +438,71 @@
     "caseSensitive": false,
     "language": "en",
     "orderPriority": 75
+  },
+  {
+    "slug": "ed25519",
+    "term": "Ed25519",
+    "aliases": "ed25519, curve25519, ssh-ed25519",
+    "category": "security",
+    "shortDefinition": "Algoritmo moderno de firma digital de clave pública basado en criptografía de curva elíptica (Curve25519) con claves compactas de 256 bits.",
+    "keyDifference": "A diferencia de RSA de 2048 o 4096 bits, genera claves mucho más cortas (68 caracteres), firma y verifica en microsegundos y es inmune a ataques de tiempo y canal lateral.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 88
+  },
+  {
+    "slug": "ed25519",
+    "term": "Ed25519",
+    "aliases": "ed25519, curve25519, ssh-ed25519",
+    "category": "security",
+    "shortDefinition": "Modern public-key digital signature algorithm built on twisted Edwards curve cryptography (Curve25519) providing compact 256-bit keys.",
+    "keyDifference": "Unlike 2048-bit or 4096-bit RSA, it produces compact 68-character public keys, verifies signatures in microseconds, and is immune to timing side-channel attacks.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 88
+  },
+  {
+    "slug": "port-forwarding",
+    "term": "Port Forwarding",
+    "aliases": "port forwarding, reenvío de puertos, túnel ssh, ssh tunneling",
+    "category": "networking",
+    "shortDefinition": "Técnica de red que encapsula y redirige conexiones TCP desde un puerto local hacia un destino remoto a través de una sesión SSH cifrada.",
+    "keyDifference": "A diferencia de abrir un puerto en el firewall público (0.0.0.0), permite acceder a bases de datos o paneles internos en 127.0.0.1 sin exponerlos a internet.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 84
+  },
+  {
+    "slug": "port-forwarding",
+    "term": "Port Forwarding",
+    "aliases": "port forwarding, local port forwarding, ssh tunneling, ssh tunnel",
+    "category": "networking",
+    "shortDefinition": "Networking technique that encapsulates and routes TCP traffic from a local socket to a remote host through an encrypted SSH connection.",
+    "keyDifference": "Unlike opening a port on a public firewall (0.0.0.0), it grants local access to remote services bound to 127.0.0.1 without exposing them to the internet.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 84
+  },
+  {
+    "slug": "known-hosts",
+    "term": "Known Hosts",
+    "aliases": "known hosts, known_hosts",
+    "category": "security",
+    "shortDefinition": "Archivo de registro local donde el cliente SSH almacena las huellas criptográficas verificadas de los servidores a los que se ha conectado previamente.",
+    "keyDifference": "A diferencia de authorized_keys (que vive en el servidor para autorizar usuarios), Known Hosts vive en tu equipo cliente para evitar ataques Man-in-the-Middle.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 80
+  },
+  {
+    "slug": "known-hosts",
+    "term": "Known Hosts",
+    "aliases": "known hosts, known_hosts",
+    "category": "security",
+    "shortDefinition": "Local registry file where the SSH client stores verified cryptographic host key fingerprints of previously visited remote servers.",
+    "keyDifference": "Unlike authorized_keys (which resides on the server to authenticate users), Known Hosts resides on the client machine to prevent Man-in-the-Middle impersonation.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 80
   }
 ]

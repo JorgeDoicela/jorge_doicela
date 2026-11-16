@@ -76,14 +76,18 @@ export default async function TutorialDetailPage({ params }: Params) {
       tags={tutorial.tags}
       recommendations={recommendations || []}
     >
-      <div className="space-y-8">
-        {tutorial.description && (
-          <div className="pb-4 border-b border-black/5 dark:border-white/5">
-            <MarkdownRenderer content={tutorial.description} glossaryTerms={glossary || []} />
-          </div>
-        )}
-        <TutorialStepWizard steps={tutorial.steps || []} />
-      </div>
+      {tutorial.steps && tutorial.steps.length > 0 ? (
+        <div className="space-y-8">
+          {tutorial.description && (
+            <div className="pb-4 border-b border-black/5 dark:border-white/5">
+              <MarkdownRenderer content={tutorial.description} glossaryTerms={glossary || []} />
+            </div>
+          )}
+          <TutorialStepWizard steps={tutorial.steps} />
+        </div>
+      ) : (
+        <MarkdownRenderer content={tutorial.description} glossaryTerms={glossary || []} />
+      )}
     </DoiceladevArticleLayout>
   );
 }

@@ -67,6 +67,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
             cd ${{ secrets.TARGET_DIR }}
             
             # 1. Limpieza de rutas y artefactos legados en el VPS

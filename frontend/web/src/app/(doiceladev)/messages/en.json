@@ -106,17 +106,14 @@
         "platformDesc": "DoicelaDev — Software engineering platform, system architecture, and AI laboratory by Jorge Doicela.",
         "contents": "Contents",
         "specialties": "Specialties",
-        "platforms": "Platforms",
         "techNews": "Technology News",
         "archEssays": "Architecture Essays",
         "handsOnTutorials": "Practical Tutorials",
+        "cloudInfra": "Cloud Infrastructure",
         "aiDirectory": "AI Directory",
         "secAdvisories": "Cybersecurity Advisories",
         "communityForums": "Community Forums",
         "projectsShowcase": "Projects Showcase",
-        "mainPortal": "Main Portal",
-        "portfolioSSH": "Portfolio",
-        "exegesisKartex": "Kartex",
         "copyright": "DoicelaDev © {year} — Jorge Doicela."
     },
     "Spotlight": {

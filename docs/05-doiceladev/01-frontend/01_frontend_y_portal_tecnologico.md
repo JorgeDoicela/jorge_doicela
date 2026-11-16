@@ -73,7 +73,7 @@ frontend/web/src/app/(doiceladev)/
 │
 ├── widgets/                          # CAPA 3: Bloques Visuales Autónomos Complejos y Shells
 │   ├── doiceladev-header/            # DoiceladevHeaderNav (Lupa conectada a useSpotlight)
-│   ├── doiceladev-footer/            # DoiceladevFooter (Enlaces a /categories y /tags)
+│   ├── doiceladev-footer/            # DoiceladevFooter (3 bloques modulares: Marca DoicelaDev, Contenidos y Especialidades con las 8 áreas temáticas y copyright)
 │   ├── category-nav/                 # CategoryNav (Selector unificado de 8 categorías)
 │   ├── featured-carousel/            # FeaturedCarousel (Autoplay + Neumorphic Controls)
 │   ├── article-layout/               # DoiceladevArticleLayout + Sidebars (Author, ExploreTopics, PopularTags, FeaturedPosts, StayInformed)

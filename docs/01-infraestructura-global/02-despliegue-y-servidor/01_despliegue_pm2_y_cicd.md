@@ -446,15 +446,15 @@ graph TD
 3. **Empaquetado de Assets Standalone:** Copia `public/` y `.next/static/` directamente a `.next/standalone/frontend/web/` en el runner de GitHub Actions para que el bundle viaje completo y listo para producción sin sobrecargar la CPU del servidor.
 4. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sincroniza los archivos vía rsync excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
 5. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
-   * Instala dependencias de producción en `backend/` (`--prod --ignore-scripts`).
-   * **Reinicio y reconstrucción limpia de SQLite:** Elimina `backend/data/*.sqlite*` y cualquier archivo legado en la raíz para garantizar un reinicio limpio y determinista en cada despliegue.
-   * **Asegura el directorio canónico:** `mkdir -p backend/data` garantiza que el directorio exista incluso en clones limpios del servidor.
-   * **Siembra limpia de los 3 módulos:** Ejecuta `seed-corpus.js`, `seed-doiceladev.js` y `seed-portfolio.js`, recreando esquemas y poblando desde cero los datos limpios de los corpus JSON hacia `backend/data/` (`kartex.sqlite`, `doiceladev.sqlite`, `portfolio.sqlite`).
+   * **Instalación no interactiva sin caída:** Ejecuta `CI=true pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts --force` con los procesos vivos de PM2 para evitar downtime durante la descarga.
+   * **Siembra Atómica en `.tmp`:** Ejecuta `seed-corpus.js`, `seed-doiceladev.js` y `seed-portfolio.js` apuntando a archivos temporales (`*.sqlite.tmp`). Si alguno de los seeders falla (por ejemplo por sintaxis en JSON o error en TypeORM), la base de datos anterior no es tocada y el despliegue aborta con `set -e`.
+   * **Reemplazo Instantáneo con `mv`:** Únicamente tras confirmar éxito en los 3 seeders, los archivos `.sqlite.tmp` reemplazan atómicamente a los definitivos en disco.
    * Verifica la integridad de los recursos estáticos en `standalone/`.
-   * **Construcción del Docker Sandbox:** Construye `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` si existen cambios, aprovechando el caché de capas de Docker en el VPS (< 1s).
-   * **Permisos del Docker Socket:** Asegura que el usuario `admin` pertenezca al grupo `docker` y ajusta permisos a `0660 /var/run/docker.sock` para que el proceso NestJS en PM2 opere contenedores sin `sudo`.
+   * **Construcción del Docker Sandbox:** Construye `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` si existen cambios.
+   * **Permisos del Docker Socket:** Asegura que el usuario `admin` pertenezca al grupo `docker` y ajusta permisos a `0660 /var/run/docker.sock`.
    * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída (`sudo nginx -t && sudo systemctl reload nginx`).
-   * Recarga los procesos sin caída del servicio usando `pm2 reload pm2.config.js --update-env || pm2 start pm2.config.js`.
+   * Reinicia los procesos con `pm2 restart pm2.config.js --update-env`.
+   * **Healthcheck Activo Automatizado:** Verifica activamente que `http://127.0.0.1:3000/api/doiceladev/portal?lang=es` y `http://[::1]:3001` respondan con código `200 OK` en menos de 15 segundos. Si algún servicio no responde o entra en crash loop, el pipeline de GitHub Actions se detiene y marca fallo en rojo.
 
 ### 5.2 Secretos de GitHub Requeridos:
 * `SSH_PRIVATE_KEY`: Llave privada SSH para autenticarse en AWS Lightsail.

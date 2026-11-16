@@ -1284,6 +1284,7 @@ export function seedCorpus(
   console.log(
     `\n[CorpusSeeder] Completado con éxito: ${totalVersesInserted} versículos indexados en ${elapsed} ms. Consumo de RAM: ${memoryUsageMB} MB.`,
   );
+  db.close();
 }
 
 // Ejecución directa si se invoca por CLI

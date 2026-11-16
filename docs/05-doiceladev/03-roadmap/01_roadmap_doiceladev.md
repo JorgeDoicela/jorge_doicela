@@ -16,7 +16,7 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 - [x] **Página Principal (`/doiceladev` o subdominio):** Bento Grid interactivo, ticker de tecnologías, métricas de arquitectura, spotlight command palette (`Cmd+K`) y buscador en tiempo real con estética Neumorphism UI + Glassmorphism.
 - [x] **Sistema de Borradores Markdown (`drafts/` en FSD):** Carpetas `drafts/` co-localizadas en las 8 entidades de frontend para redacción y edición nativa en Markdown puro antes de la ingesta en el corpus JSON.
 - [x] **Publicación Inaugural de Infraestructura:** Publicación bilingüe de ingeniería sobre *Firewall en Linux: De Netfilter y UFW a la Seguridad Perimetral de Servidores* (`firewall-linux-ufw-netfilter-seguridad-servidores`).
-- [x] **Publicación Inaugural de Tutoriales:** Guía práctica bilingüe sobre *Configuración Profesional de SSH: Claves Ed25519, Alias de Servidores y Túneles Seguros* (`configuracion-ssh-claves-ed25519-alias-tuneles`).
+- [x] **Publicación Inaugural de Tutoriales:** Guía práctica bilingüe sobre *Autenticación SSH en Linux y Git: De Claves Ed25519 a la Gestión de Identidades y Bastionado* (`configuracion-ssh-claves-ed25519-alias-tuneles`).
 
 ---
 

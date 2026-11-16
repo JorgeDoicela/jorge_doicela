@@ -39,7 +39,7 @@
 - **Descripción:** Manuales reproducibles de ingeniería de software y DevOps con código listo para producción.
 - **Capacidades:** Lectura técnica continua con diagramas vectoriales Mermaid, snippets con resaltado de sintaxis, glosario interactivo y listas de verificación.
 - **Publicaciones Destacadas:**
-  - *Configuración Profesional de SSH: Claves Ed25519, Alias de Servidores y Túneles Seguros* (`/tutorials/configuracion-ssh-claves-ed25519-alias-tuneles`): Generación de pares de claves Ed25519 con rondas KDF, despliegue sin contraseñas en GitHub y servidores Debian/Ubuntu, automatización en `~/.ssh/config`, redirección de puertos locales (Port Forwarding) y endurecimiento de `sshd_config`.
+  - *Autenticación SSH en Linux y Git: De Claves Ed25519 a la Gestión de Identidades y Bastionado* (`/tutorials/configuracion-ssh-claves-ed25519-alias-tuneles`): Anatomía del protocolo y handshake SSH (TOFU), generación de claves Ed25519 con rondas KDF, automatización con `ssh-agent` en Linux/macOS/Windows, arquitectura multi-cuenta y multiplexación TCP en `~/.ssh/config`, firma criptográfica de commits en Git, llaves FIDO2 y endurecimiento de `sshd_config`.
 
 ### 7. Catálogo de Proyectos Showcase (`/projects`)
 - **Descripción:** Muestra de sistemas, librerías y aplicaciones desarrolladas por Jorge Doicela.

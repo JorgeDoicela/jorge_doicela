@@ -180,9 +180,9 @@ Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaD
 
 Toda publicación elaborada para cualquiera de los 8 módulos de DoicelaDev (`infrastructure`, `tutorials`, `blog`, `news`, `security`, `ai`, `projects`, `forum`) debe cumplir de forma estricta los siguientes principios editoriales:
 
-### 4.1 Prohibición Absoluta de Lenguaje Publicitario ("Hype" o Marketing)
-* **Prohibido:** Usar expresiones sensacionalistas, publicitarias o superlativos vacíos como *"el mejor"*, *"la solución definitiva"*, *"increíble"*, *"revolucionario"*, *"mágico"* o cualquier tono comercial.
-* **Obligatorio:** Emplear tono de **ingeniería rigurosa y sobria**. Describir soluciones por su nombre arquitectónico, fundamentos de diseño, métricas empíricas, ventajas y desventajas objetivas (trade-offs).
+### 4.1 Prohibición Absoluta de Lenguaje Publicitario ("Hype", Marketing o Adjetivos Auto-Calificativos)
+* **Prohibido:** Usar expresiones sensacionalistas, publicitarias, adjetivos auto-calificativos en títulos o superlativos vacíos como *"el mejor"*, *"la solución definitiva"*, *"guía definitiva"*, *"guía maestra"*, *"configuración profesional de..."*, *"guía profesional"*, *"avanzado"* (en títulos), *"increíble"*, *"revolucionario"*, *"mágico"* o cualquier tono comercial.
+* **Obligatorio:** Emplear tono de **ingeniería rigurosa y sobria**. Los títulos y subtítulos deben ser estrictamente descriptivos y técnicos (ej. *"De X a Y"*, *"Arquitectura de..."*), describiendo soluciones por su nombre arquitectónico, fundamentos de diseño, métricas empíricas, ventajas y desventajas objetivas (trade-offs).
 
 ### 4.2 Arquitectura Pedagógica Multinivel
 Cada publicación debe estructurarse para que tres niveles de audiencia aprendan y obtengan valor inmediato:
@@ -266,7 +266,7 @@ pnpm run lint
 
 | Anti-Patrón | Por qué está prohibido | Solución Correcta |
 |---|---|---|
-| Usar lenguaje publicitario (*"el mejor"*, *"la definitiva"*) | Resta seriedad, rigor técnico y credibilidad profesional. | Describir los fundamentos técnicos, trade-offs y métricas objetivas. |
+| Usar lenguaje publicitario o auto-calificativos en títulos (*"el mejor"*, *"la definitiva"*, *"profesional"*, *"guía maestra"*) | Resta seriedad, rigor técnico y credibilidad editorial. | Usar títulos puramente técnicos (*"De X a Y"*, *"Arquitectura de..."*) y demostrar el nivel en el contenido, trade-offs y métricas objetivas. |
 | Incluir meta-etiquetas de audiencia (*"para reclutadores"*, *"para principiantes"*) | Se percibe artificial, amateur y rompe la elegancia editorial. | Usar encabezados universales (*"Resumen Ejecutivo"*, *"Modelo Conceptual"*). |
 | Redactar exclusivamente para expertos o solo para novatos | Aleja a estudiantes o aburre a ingenieros experimentados. | Aplicar el enfoque multinivel: analogía didáctica + resumen ejecutivo + bajo nivel. |
 | Crear una tabla genérica con discriminador de categoría | Crea columnas vacías y rompe el modelo relacional a medida que el dominio crece. | Mantener entidades especializadas por submódulo. |

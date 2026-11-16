@@ -8,10 +8,11 @@ Este documento define las directrices editoriales mandatorias para la creación,
 
 En toda la plataforma de DoicelaDev rige un principio fundamental: **Ingeniería Sobria y Objetiva**.
 
-### 1.1 Prohibición Estricta de Palabras Marketineras y Superlativos Vacíos
-Queda terminantemente prohibido utilizar términos sensacionalistas, publicitarios o de venta vacía, tales como:
+### 1.1 Prohibición Estricta de Palabras Marketineras, Adjetivos Auto-Calificativos y Superlativos Vacíos
+Queda terminantemente prohibido utilizar términos sensacionalistas, publicitarios, adjetivos de auto-elogio en títulos o superlativos vacíos, tales como:
 * **Prohibido:** *"El mejor"* / *"La mejor"*
-* **Prohibido:** *"La solución definitiva"*
+* **Prohibido:** *"La solución definitiva"* / *"Guía definitiva"* / *"Guía maestra"*
+* **Prohibido:** *"Configuración Profesional de..."* / *"Guía Profesional de..."* / *"Avanzado"* en títulos (el rigor se demuestra en el contenido técnico, no adjetivando el título)
 * **Prohibido:** *"Increíble"* / *"Asombroso"*
 * **Prohibido:** *"Revolucionario"*
 * **Prohibido:** *"Mágico"*

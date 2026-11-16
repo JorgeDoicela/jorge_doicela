@@ -504,5 +504,71 @@
     "caseSensitive": false,
     "language": "en",
     "orderPriority": 80
+  },
+  {
+    "slug": "tofu",
+    "term": "TOFU",
+    "aliases": "tofu, trust on first use",
+    "category": "security",
+    "shortDefinition": "Trust On First Use: modelo de seguridad criptográfica donde el cliente verifica y almacena la huella pública de un servidor en la primera conexión y alerta si cambia posteriormente.",
+    "keyDifference": "A diferencia de TLS tradicional que depende de una Autoridad de Certificación (CA) centralizada previa, TOFU establece una relación de confianza directa punto a punto desde el primer contacto.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 78
+  },
+  {
+    "slug": "tofu",
+    "term": "TOFU",
+    "aliases": "tofu, trust on first use",
+    "category": "security",
+    "shortDefinition": "Trust On First Use: cryptographic security model where a client records a server's public key fingerprint on initial connection and alerts if it changes on subsequent sessions.",
+    "keyDifference": "Unlike traditional TLS which relies on a pre-established central Certificate Authority (CA), TOFU establishes direct peer-to-peer trust starting from the initial connection.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 78
+  },
+  {
+    "slug": "kdf",
+    "term": "KDF",
+    "aliases": "kdf, key derivation function, función de derivación de clave",
+    "category": "security",
+    "shortDefinition": "Key Derivation Function: algoritmo criptográfico que transforma una frase de paso en una clave de cifrado simétrico resistente a fuerza bruta mediante múltiples rondas de cómputo.",
+    "keyDifference": "A diferencia de un hash rápido como SHA-256 (diseñado para ejecutarse en nanosegundos), una KDF como bcrypt-pbkdf introduce costo computacional deliberado para frenar el descifrado offline.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 76
+  },
+  {
+    "slug": "kdf",
+    "term": "KDF",
+    "aliases": "kdf, key derivation function",
+    "category": "security",
+    "shortDefinition": "Key Derivation Function: cryptographic algorithm that stretches a passphrase into a brute-force-resistant symmetric encryption key through multiple computational rounds.",
+    "keyDifference": "Unlike fast hash functions like SHA-256 (designed to execute in nanoseconds), a KDF such as bcrypt-pbkdf introduces deliberate computational work to slow down offline cracking.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 76
+  },
+  {
+    "slug": "fido2",
+    "term": "FIDO2",
+    "aliases": "fido2, u2f, webauthn, yubikey",
+    "category": "security",
+    "shortDefinition": "Estándar abierto de autenticación criptográfica respaldado por hardware que vincula las claves privadas a un chip físico de seguridad requiriendo presencia humana.",
+    "keyDifference": "A diferencia de una clave privada almacenada como archivo en el disco duro, el material criptográfico en un token FIDO2 reside en un elemento seguro aislado y no puede ser extraído por software.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 74
+  },
+  {
+    "slug": "fido2",
+    "term": "FIDO2",
+    "aliases": "fido2, u2f, webauthn, yubikey",
+    "category": "security",
+    "shortDefinition": "Open hardware-backed cryptographic authentication standard that binds private keys to a physical security chip requiring human touch verification.",
+    "keyDifference": "Unlike a private key stored as a file on a disk drive, cryptographic material inside a FIDO2 token resides in an isolated secure element and cannot be extracted by software.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 74
   }
 ]

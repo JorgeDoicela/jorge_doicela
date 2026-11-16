@@ -76,8 +76,8 @@ jobs:
             # 2. Detener procesos en PM2 para liberar los file descriptors de SQLite en memoria
             pm2 stop pm2.config.js 2>/dev/null || true
             
-            # 3. Instalar dependencias del backend en producción con filtro monorepo
-            pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts
+            # 3. Instalar dependencias del backend en producción con filtro monorepo de forma no interactiva
+            CI=true pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts --force
             
             # 3. Limpieza física y reinicio total de las bases de datos en producción
             rm -f backend/data/*.sqlite* 2>/dev/null || true

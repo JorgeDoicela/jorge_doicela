@@ -75,7 +75,8 @@ jobs:
             rm -rf frontend/web/src/app/\(bible\) backend/src/bible backend/dist/bible frontend/web/public/bible docs/04-bible .agents/skills/bible-* 2>/dev/null || true
 
             # 2. Instalar dependencias de produccion sin detener procesos activos (Zero-Downtime)
-            CI=true pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts --force
+            CI=true pnpm --filter backend install --prod --frozen-lockfile --config.confirmModulesPurge=false
+            pnpm --filter backend rebuild better-sqlite3
             
             # 3. Sembrado atomico en archivos temporales .sqlite.tmp (protege la BD previa ante fallos de corpus)
             mkdir -p backend/data

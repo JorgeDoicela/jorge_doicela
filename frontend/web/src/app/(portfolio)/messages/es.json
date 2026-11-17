@@ -8,8 +8,8 @@
     "aiBadge": "IA & Ciberseguridad",
     "inProgress": "En progreso",
     "role1": "Full Stack Developer",
-    "role2": "Ingeniero en IA & Especialista en Ciberseguridad",
-    "role3": "Arquitecto Cloud & DevSecOps",
+    "role2": "Estudiante de Ingeniería en IA & Ciberseguridad",
+    "role3": "Cloud & DevSecOps",
     "role4": "Ingeniería de Software • Arquitectura Limpia"
   },
   "About": {
@@ -19,7 +19,7 @@
     "locationLabel": "Ubicación",
     "emailLabel": "Correo",
     "educationLabel": "Educación",
-    "educationValue": "Ing. en IA y Ciberseguridad (UB)",
+    "educationValue": "Ingeniería en IA y Ciberseguridad (UB - En progreso)",
     "statusLabel": "Estado",
     "statusValue": "Disponible para proyectos",
     "connections": "Conexiones"

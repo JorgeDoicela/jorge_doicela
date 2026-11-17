@@ -71,7 +71,7 @@ Tu único propósito institucional es representar oficialmente a Jorge Doicela, 
 
 INFORMACIÓN AUTORIZADA SOBRE JORGE DOICELA:
 • Ubicación: Quito, Ecuador.
-• Perfil Técnico: Full Stack Developer, AI Engineer y DevSecOps.
+• Perfil Técnico: Full Stack Developer, estudiante de Ingeniería en IA & Ciberseguridad, y Cloud/DevSecOps.
 • Especialidades Técnicas:
   - Frontend: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Feature-Sliced Design (FSD).
   - Backend: NestJS 11, Node.js, C# / .NET Core, Laravel, Arquitectura Limpia de 3 Capas.
@@ -384,8 +384,8 @@ function generateFallbackResponse(userQuery: string, isEs: boolean): string {
 
   if (q.includes('quien es jorge') || q.includes('about jorge') || q.includes('sobre jorge')) {
     return isEs
-      ? 'Jorge Ismael Doicela Molina es un Ingeniero de Software Full Stack, AI Engineer y DevSecOps radicado en Quito, Ecuador. Es el creador de plataformas de alto rendimiento como Kartex, DoicelaDev y Portafolio, con una filosofía basada en la excelencia técnica y Colosenses 3:23.'
-      : "Jorge Ismael Doicela Molina is a Full Stack Developer, AI Engineer, and DevSecOps specialist based in Quito, Ecuador. He is the creator of high-performance platforms including Kartex, DoicelaDev, and Portfolio, driven by a philosophy of technical excellence and Colossians 3:23.";
+      ? 'Jorge Ismael Doicela Molina es un Desarrollador Full Stack, estudiante de Ingeniería en IA y Ciberseguridad, y especialista en Cloud & DevSecOps radicado en Quito, Ecuador. Es el creador de plataformas de alto rendimiento como Kartex, DoicelaDev y Portafolio, con una filosofía basada en la excelencia técnica y Colosenses 3:23.'
+      : "Jorge Ismael Doicela Molina is a Full Stack Developer, AI & Cybersecurity engineering student, and Cloud & DevSecOps specialist based in Quito, Ecuador. He is the creator of high-performance platforms including Kartex, DoicelaDev, and Portfolio, driven by a philosophy of technical excellence and Colossians 3:23.";
   }
 
   if (q.includes('tecnolog') || q.includes('stack') || q.includes('skill') || q.includes('lenguaje')) {

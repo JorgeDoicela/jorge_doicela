@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
         keywords: [
             "Jorge Doicela",
             "Full Stack Developer",
-            "AI Engineer",
+            "AI & Cybersecurity",
             "Ciberseguridad",
             "DevSecOps",
             "Ecuador",

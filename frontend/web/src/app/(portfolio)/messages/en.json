@@ -8,8 +8,8 @@
     "aiBadge": "AI & Cybersecurity",
     "inProgress": "In progress",
     "role1": "Full Stack Developer",
-    "role2": "AI Engineer & Cybersecurity Specialist",
-    "role3": "Cloud Architect & DevSecOps",
+    "role2": "AI & Cybersecurity Engineering Student",
+    "role3": "Cloud & DevSecOps",
     "role4": "Software Engineering • Clean Architecture"
   },
   "About": {
@@ -19,7 +19,7 @@
     "locationLabel": "Location",
     "emailLabel": "Email",
     "educationLabel": "Education",
-    "educationValue": "B.S. in AI & Cybersecurity (UB)",
+    "educationValue": "B.S. in AI & Cybersecurity (UB - In progress)",
     "statusLabel": "Status",
     "statusValue": "Available for projects",
     "connections": "Connections"

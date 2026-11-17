@@ -3,7 +3,7 @@
 > Desarrollador de Software, Administrador de Sistemas Linux (SysAdmin) y Especialista en DevOps e Ingeniería de Inteligencia Artificial en Quito, Ecuador.
 
 ## Biografía y Perfil Técnico
-Jorge Ismael Doicela Molina es un desarrollador e ingeniero enfocado en la arquitectura de software de alto rendimiento, optimización de sistemas en entornos de recursos restringidos, desarrollo backend con NestJS/C#, aplicaciones web avanzadas con Next.js y React, y administración de servidores Linux (Debian 13 y Arch Linux).
+Jorge Ismael Doicela Molina es un desarrollador de software enfocado en la arquitectura de alto rendimiento, optimización de sistemas en entornos de recursos restringidos, desarrollo backend con NestJS/C#, aplicaciones web avanzadas con Next.js y React, y administración de servidores Linux (Debian 13 y Arch Linux).
 
 - **Ubicación:** Quito, Pichincha, Ecuador.
 - **Educación:** Egresado de la carrera de **Desarrollo de Software** en el **Instituto Tecnológico Superior Traversari (ISTPET)**, Quito, Ecuador.

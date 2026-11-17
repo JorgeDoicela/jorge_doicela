@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: 'https://jorgedoicela.com/landing/logo/logo_fondo_color.webp',
           width: 1200,
           height: 630,
-          alt: 'Jorge Doicela — Software Developer & AI Engineer',
+          alt: 'Jorge Doicela — Software Developer, AI & Cybersecurity',
         },
       ],
     },

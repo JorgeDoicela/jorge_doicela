@@ -63,7 +63,7 @@ export class PortfolioGateway
     const welcomeBanner = [
       '\x1b[90m┌────────────────────────────────────────────────────────────┐\x1b[0m',
       '\x1b[90m│\x1b[0m  \x1b[1;33mJorge Ismael Doicela Molina • Portfolio Shell\x1b[0m             \x1b[90m│\x1b[0m',
-      '\x1b[90m│\x1b[0m  \x1b[36mFull-Stack & DevSecOps Engineer • Debian GNU/Linux 13\x1b[0m     \x1b[90m│\x1b[0m',
+      '\x1b[90m│\x1b[0m  \x1b[36mFull-Stack & DevSecOps Developer • Debian GNU/Linux 13\x1b[0m    \x1b[90m│\x1b[0m',
       '\x1b[90m└────────────────────────────────────────────────────────────┘\x1b[0m',
       '',
       '¡Bienvenido/a! Esta consola interactiva te permite explorar mi',

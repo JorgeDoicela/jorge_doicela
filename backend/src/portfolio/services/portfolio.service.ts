@@ -43,7 +43,7 @@ export class PortfolioService {
               updatedAt: 'Aug 14 12:05',
               content: [
                 '\x1b[1;33m# Jorge Ismael Doicela Molina\x1b[0m',
-                'Full-Stack & DevSecOps Engineer | Debian GNU/Linux 13',
+                'Full-Stack & DevSecOps Developer | Debian GNU/Linux 13',
                 '',
                 'Bienvenido/a a mi entorno de desarrollo interactivo. Esta terminal te permite',
                 'explorar mis proyectos, habilidades técnicas y arquitectura de sistemas.',
@@ -321,17 +321,17 @@ export class PortfolioService {
             '     \x1b[90m• Resumen:\x1b[0m Plataforma de investigación bíblica con 9 módulos y morfología Strong.',
             '',
             '  \x1b[1;33m2. DoicelaDev Platform\x1b[0m      \x1b[90m[doiceladev.jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m Full Stack & DevSecOps Engineer',
+            '     \x1b[33m• Rol:\x1b[0m Full Stack & DevSecOps Developer',
             '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite, Neumorphism UI, Glassmorphism',
             '     \x1b[90m• Resumen:\x1b[0m Monolito modular con 7 áreas temáticas y 9 entidades TypeORM.',
             '',
             '  \x1b[1;33m3. Arquitectura Cloud VPS\x1b[0m   \x1b[90m[jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m DevSecOps & Cloud Architect',
+            '     \x1b[33m• Rol:\x1b[0m Cloud & DevSecOps',
             '     \x1b[33m• Stack:\x1b[0m AWS Lightsail, Debian 13, Nginx mTLS, PM2, GitHub Actions CI/CD',
             '     \x1b[90m• Resumen:\x1b[0m Despliegue de alta disponibilidad y cero downtime en 1 GB RAM.',
             '',
             '  \x1b[1;33m4. Consola Web Interactiva\x1b[0m  \x1b[90m[portfolio.jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m Backend & Frontend Engineer',
+            '     \x1b[33m• Rol:\x1b[0m Backend & Frontend Developer',
             '     \x1b[33m• Stack:\x1b[0m NestJS WebSockets, Socket.io, TypeScript, ANSI Parser',
             '     \x1b[90m• Resumen:\x1b[0m Emulador UNIX interactivo sobre WebSockets.',
             '',
@@ -412,7 +412,7 @@ export class PortfolioService {
       case 'whoami':
         return {
           output:
-            '\x1b[1;32mjorge\x1b[0m (Jorge Ismael Doicela Molina - Full Stack & DevSecOps Engineer) [uid=1000, gid=1000]',
+            '\x1b[1;32mjorge\x1b[0m (Jorge Ismael Doicela Molina - Full Stack & DevSecOps Developer) [uid=1000, gid=1000]',
         };
 
       case 'date': {

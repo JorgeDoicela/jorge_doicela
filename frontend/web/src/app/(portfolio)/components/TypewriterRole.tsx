@@ -12,9 +12,9 @@ interface TypewriterRoleProps {
 
 const DEFAULT_ROLES = [
   'Full Stack Developer',
-  'AI Engineer & Cybersecurity Specialist',
-  'DevSecOps & Cloud Architect',
-  'Software Engineer • Clean Architecture',
+  'AI & Cybersecurity Engineering Student',
+  'Cloud & DevSecOps',
+  'Software Engineering • Clean Architecture',
 ];
 
 export const TypewriterRole: React.FC<TypewriterRoleProps> = ({

@@ -302,7 +302,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 | **Noticias** | `news.json` | `ransomware-ia-cifrado-hibrido-respaldos-inmutables` | `/doiceladev/images/covers/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables.webp` |
 | **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.webp` |
 | **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.webp` |
-| **IA & MCP** | `ai.json` | `mcp-model-context-protocol-anthropic` | `/doiceladev/images/covers/ai/model-context-protocol.webp` |
+| **IA & Agentes** | `ai.json` | `inyeccion-prompts-owasp-llm01-seguridad-agentes` | `/doiceladev/images/covers/ai/inyeccion-prompts-owasp-llm01-seguridad-agentes.webp` |
 | **Ciberseguridad** | `security.json` | `seguridad-php-cve-2024-8927-cve-2024-9026` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp` |
 | **Tutoriales** | `tutorials.json` | `configuracion-ssh-claves-ed25519-alias-tuneles` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp` |
 | **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.webp` |

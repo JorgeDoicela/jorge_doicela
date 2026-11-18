@@ -43,8 +43,8 @@ export function AiGrid({ resources, loading, error }: AiGridProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {resources.map((res) => (
-        <AiCard key={res.id} resource={res} />
+      {resources.map((res, idx) => (
+        <AiCard key={res.id} resource={res} priority={idx < 3} />
       ))}
     </div>
   );

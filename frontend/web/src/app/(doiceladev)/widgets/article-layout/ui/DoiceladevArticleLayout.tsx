@@ -235,16 +235,18 @@ export function DoiceladevArticleLayout({
             </article>
           </div>
 
-          {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo */}
-          {!isSidebarCollapsed && (
-            <SmartSidebar className="w-full lg:sticky lg:bottom-8 lg:self-end">
-              <AuthorSidebarCard />
-              <FeaturedPostsSidebarCard />
-              <ExploreTopicsSidebarCard />
-              <PopularTagsSidebarCard />
-              <StayInformedCard />
-            </SmartSidebar>
-          )}
+          {/* Columna Derecha: Barra Lateral Completa con Anclaje al Fondo (En móvil siempre visible aunque se colapse en escritorio) */}
+          <SmartSidebar
+            className={`w-full lg:sticky lg:bottom-8 lg:self-end ${
+              isSidebarCollapsed ? 'lg:hidden' : ''
+            }`}
+          >
+            <AuthorSidebarCard />
+            <FeaturedPostsSidebarCard />
+            <ExploreTopicsSidebarCard />
+            <PopularTagsSidebarCard />
+            <StayInformedCard />
+          </SmartSidebar>
         </div>
 
         {/* Bloque de Lecturas Recomendadas (100% Ancho Completo, Fuera de la Cuadrícula del Artículo) */}

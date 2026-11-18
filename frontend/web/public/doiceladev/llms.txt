@@ -30,6 +30,8 @@
 ### 4. Directorio de Inteligencia Artificial y Agentes (`/ai`)
 - **Descripción:** Catálogo curado de modelos de lenguaje (LLMs), agentes autónomos, frameworks de desarrollo y servidores Model Context Protocol (MCP Servers).
 - **Capacidades:** Fichas técnicas detalladas con proveedor, licencia, enlaces a papers académicos y repositorios de código.
+- **Publicaciones Destacadas:**
+  - *Inyección de Prompts en Sistemas de IA (OWASP LLM01): De los Engaños a Chatbots a la Inyección Indirecta y el Aislamiento en Backend* (`/ai/inyeccion-prompts-owasp-llm01-seguridad-agentes`): Arquitectura de defensa en profundidad frente a OWASP LLM01, causa raíz de canal único en modelos Transformer, casos reales de manipulación de chatbots e inyección indirecta, inyección determinista de `session.userId` en NestJS/SQLite (`PRAGMA query_only = ON`), bloqueo de exfiltración por imágenes Markdown mediante sanitización en React y cabeceras `Content-Security-Policy` en Nginx, delimitación criptográfica por petición (*Spotlighting*) y compuertas de confirmación humana (*Human-in-the-Loop*).
 
 ### 5. Ciberseguridad y Bastionado (`/cybersecurity`)
 - **Descripción:** Matriz de avisos de seguridad, análisis de vulnerabilidades (CVEs) y guías prácticas de remediación y endurecimiento de servidores.

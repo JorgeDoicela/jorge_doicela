@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface TutorialCardProps {
   tutorial: Tutorial;
+  priority?: boolean;
 }
 
-export function TutorialCard({ tutorial }: TutorialCardProps) {
+export function TutorialCard({ tutorial, priority = false }: TutorialCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
   const moduleLabel = tNav('tutorials').toUpperCase();
@@ -28,6 +29,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
       categoryMeta={metaText}
       topicCategory={tutorial.category}
       excerpt={tutorial.excerpt}
+      priority={priority}
       accentHoverColor="group-hover:text-amber-300"
     />
   );

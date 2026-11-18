@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface InfrastructureCardProps {
   post: InfrastructurePost;
+  priority?: boolean;
 }
 
-export function InfrastructureCard({ post }: InfrastructureCardProps) {
+export function InfrastructureCard({ post, priority = false }: InfrastructureCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
   const moduleLabel = tNav('infrastructure').toUpperCase();
@@ -28,6 +29,7 @@ export function InfrastructureCard({ post }: InfrastructureCardProps) {
       topicCategory={post.category}
       categoryMeta={metaText}
       excerpt={post.subtitle || post.architectureOverview}
+      priority={priority}
       accentHoverColor="group-hover:text-cyan-300"
     />
   );

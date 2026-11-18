@@ -112,7 +112,7 @@ Las imágenes de portada de cada publicación (`coverImage` en `frontend/web/pub
 * **Directriz Maestra (Modelo Infraestructura):** La portada de la guía de firewall Linux (`guia-firewall-linux-ufw.webp`) define el estándar de sobriedad, realismo tangible y ausencia de hype publicitario.
 * **Prohibición de Tipografía Publicitaria en la Imagen:** Queda terminantemente prohibido incluir títulos flotantes gigantes en 3D ("MODEL CONTEXT PROTOCOL", "MONOLITO MODULAR", etc.) dentro del arte gráfico. Los títulos, etiquetas y autores son gestionados semánticamente por los componentes web de Next.js en HTML/CSS.
 * **Diferenciación Temática con Sujetos Tangibles Únicos:** Cada publicación debe tener su propio encuadre, entorno y sujeto físico representativo de su tema, evitando repetir la misma composición:
-  * *IA / Model Context Protocol:* Macrofotografía de procesador neural de silicio sobre placa de circuito con osciloscopio de laboratorio.
+  * *IA / Inyección de Prompts y Aislamiento (OWASP LLM01):* Procesador tensorial de silicio desnudo con disipador de microcanales de cobre encapsulado en cámara de aislamiento de cristal templado junto a un acoplador prismático de fibra óptica sin texto impreso.
   * *Tutoriales / Consola Interactiva:* Monitor sin marcos en escritorio de desarrollo nocturno con consola interactiva y teclado mecánico.
   * *Blog / Monolitos Modulares:* Escultura geométrica de cajas negras modulares en aluminio y cristal ahumado sobre concreto pulido.
   * *Foro / Optimización de RAM VPS:* Módulo de memoria RAM física y disco SSD NVMe sobre grafito cepillado.

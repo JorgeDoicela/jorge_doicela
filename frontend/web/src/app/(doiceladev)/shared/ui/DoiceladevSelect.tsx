@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useId, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Check } from 'lucide-react';
+import { ChevronDown, ChevronUp, Check } from 'lucide-react';
 
 export interface SelectOption<T extends string | number = string> {
   value: T;
@@ -41,10 +41,19 @@ export function DoiceladevSelect<T extends string | number = string>({
 }: DoiceladevSelectProps<T>) {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [coords, setCoords] = useState<{ top: number; left: number; width: number } | null>(null);
+  const [coords, setCoords] = useState<{
+    top?: number;
+    bottom?: number;
+    left: number;
+    width: number;
+    maxHeight: number;
+  } | null>(null);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
 
   useEffect(() => {
@@ -53,32 +62,64 @@ export function DoiceladevSelect<T extends string | number = string>({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  // Medir posición exacta en el viewport para rendering inmutable vía Portal
+  // Evaluar si existen opciones ocultas arriba o abajo del área visible
+  const updateScrollIndicators = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollUp(el.scrollTop > 4);
+    setCanScrollDown(el.scrollHeight - el.scrollTop - el.clientHeight > 4);
+  }, []);
+
+  // Medir posición exacta y espacio disponible en el viewport para rendering vía Portal
   const updateCoords = useCallback(() => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    setCoords({
-      top: rect.bottom + 6,
-      left: rect.left,
-      width: rect.width,
-    });
+    const margin = 16;
+    const offset = 6;
+    const spaceBelow = window.innerHeight - rect.bottom - margin;
+    const spaceAbove = rect.top - margin;
+    const openUpward = spaceBelow < 180 && spaceAbove > spaceBelow;
+
+    if (openUpward) {
+      setCoords({
+        bottom: window.innerHeight - rect.top + offset,
+        left: rect.left,
+        width: rect.width,
+        maxHeight: Math.max(160, Math.min(420, spaceAbove)),
+      });
+    } else {
+      setCoords({
+        top: rect.bottom + offset,
+        left: rect.left,
+        width: rect.width,
+        maxHeight: Math.max(160, Math.min(420, spaceBelow)),
+      });
+    }
   }, []);
 
-  // Seguimiento activo de posición al abrir, scrollear o redimensionar
+  // Posicionar al abrir, recalcular en resize y cerrar ante scroll externo (preservando scroll interno)
   useEffect(() => {
     if (!isOpen) return;
     updateCoords();
 
-    const handleScrollOrResize = () => {
+    const handleResize = () => {
       updateCoords();
     };
 
-    window.addEventListener('resize', handleScrollOrResize);
-    window.addEventListener('scroll', handleScrollOrResize, true);
+    const handleScroll = (event: Event) => {
+      const target = event.target;
+      if (target instanceof Node && menuRef.current?.contains(target)) {
+        return;
+      }
+      setIsOpen(false);
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('resize', handleScrollOrResize);
-      window.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll, { capture: true });
     };
   }, [isOpen, updateCoords]);
 
@@ -102,13 +143,34 @@ export function DoiceladevSelect<T extends string | number = string>({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  // Sincronizar índice resaltado al abrir
+  // Sincronizar índice resaltado, centrar ítem activo y medir indicadores de scroll al abrir
   useEffect(() => {
-    if (isOpen) {
-      const idx = options.findIndex((opt) => opt.value === value);
-      setHighlightedIndex(idx >= 0 ? idx : 0);
+    if (!isOpen) {
+      setCanScrollUp(false);
+      setCanScrollDown(false);
+      return;
     }
-  }, [isOpen, options, value]);
+
+    const idx = options.findIndex((opt) => opt.value === value);
+    setHighlightedIndex(idx >= 0 ? idx : 0);
+
+    const frame = requestAnimationFrame(() => {
+      if (idx >= 0 && scrollRef.current) {
+        const activeBtn = scrollRef.current.children[idx] as HTMLElement | undefined;
+        activeBtn?.scrollIntoView({ block: 'nearest' });
+      }
+      updateScrollIndicators();
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [isOpen, options, value, coords, updateScrollIndicators]);
+
+  // Mantener visible la opción resaltada al navegar con teclado
+  useEffect(() => {
+    if (!isOpen || highlightedIndex < 0 || !scrollRef.current) return;
+    const highlightedBtn = scrollRef.current.children[highlightedIndex] as HTMLElement | undefined;
+    highlightedBtn?.scrollIntoView({ block: 'nearest' });
+  }, [isOpen, highlightedIndex]);
 
   const handleSelect = useCallback(
     (optionValue: T) => {
@@ -243,13 +305,10 @@ export function DoiceladevSelect<T extends string | number = string>({
         createPortal(
           <div
             ref={menuRef}
-            id={listboxId}
-            role="listbox"
-            tabIndex={-1}
-            aria-label={ariaLabel}
             style={{
               position: 'fixed',
-              top: `${coords.top}px`,
+              top: coords.top !== undefined ? `${coords.top}px` : undefined,
+              bottom: coords.bottom !== undefined ? `${coords.bottom}px` : undefined,
               left:
                 align === 'center'
                   ? `${coords.left + coords.width / 2}px`
@@ -264,49 +323,78 @@ export function DoiceladevSelect<T extends string | number = string>({
                   : undefined,
               minWidth: `${Math.max(coords.width, 185)}px`,
             }}
-            className={`z-[999999] max-h-72 overflow-y-auto scrollbar-none p-1.5 rounded-2xl bg-white/95 dark:bg-[#12161f]/95 backdrop-blur-2xl border border-black/10 dark:border-white/10 shadow-2xl shadow-black/30 dark:shadow-black/70 animate-in fade-in zoom-in-95 duration-150 select-none ${menuClassName}`}
+            className={`z-[999999] rounded-2xl bg-white/95 dark:bg-[#12161f]/95 backdrop-blur-2xl border border-black/10 dark:border-white/10 shadow-2xl shadow-black/30 dark:shadow-black/70 overflow-hidden animate-in fade-in zoom-in-95 duration-150 select-none ${menuClassName}`}
           >
-            {options.map((option, idx) => {
-              const isSelected = option.value === value;
-              const isHighlighted = idx === highlightedIndex;
+            {canScrollUp && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute top-0 inset-x-0 h-7 bg-gradient-to-b from-white/95 dark:from-[#12161f]/95 via-white/75 dark:via-[#12161f]/75 to-transparent flex items-start justify-center pt-1 z-10"
+              >
+                <ChevronUp className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-400" />
+              </div>
+            )}
 
-              return (
-                <button
-                  key={String(option.value)}
-                  type="button"
-                  role="option"
-                  aria-selected={isSelected}
-                  disabled={option.disabled}
-                  onClick={() => !option.disabled && handleSelect(option.value)}
-                  onMouseEnter={() => setHighlightedIndex(idx)}
-                  className={`w-full flex items-center justify-between gap-2.5 px-3 py-2 my-0.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer focus:outline-none ${
-                    isSelected
-                      ? 'text-blue-600 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-400/15 font-bold shadow-xs'
-                      : isHighlighted
-                      ? 'text-slate-900 dark:text-white bg-black/5 dark:bg-white/10'
-                      : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
-                  } ${option.disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    {option.icon && (
-                      <span className="shrink-0 text-current">{option.icon}</span>
-                    )}
-                    <span className="truncate">{option.label}</span>
-                  </div>
+            <div
+              ref={scrollRef}
+              id={listboxId}
+              role="listbox"
+              tabIndex={-1}
+              aria-label={ariaLabel}
+              onScroll={updateScrollIndicators}
+              style={{ maxHeight: `${coords.maxHeight}px` }}
+              className="overflow-y-auto p-1.5 focus:outline-none"
+            >
+              {options.map((option, idx) => {
+                const isSelected = option.value === value;
+                const isHighlighted = idx === highlightedIndex;
 
-                  <div className="flex items-center gap-1.5 shrink-0 ml-auto">
-                    {option.badge !== undefined && (
-                      <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-black/5 dark:bg-white/10 text-slate-500 dark:text-zinc-400">
-                        {option.badge}
-                      </span>
-                    )}
-                    {isSelected && (
-                      <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={String(option.value)}
+                    type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    disabled={option.disabled}
+                    onClick={() => !option.disabled && handleSelect(option.value)}
+                    onMouseEnter={() => setHighlightedIndex(idx)}
+                    className={`w-full flex items-center justify-between gap-2.5 px-3 py-2 my-0.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer focus:outline-none ${
+                      isSelected
+                        ? 'text-blue-600 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-400/15 font-bold shadow-xs'
+                        : isHighlighted
+                        ? 'text-slate-900 dark:text-white bg-black/5 dark:bg-white/10'
+                        : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
+                    } ${option.disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      {option.icon && (
+                        <span className="shrink-0 text-current">{option.icon}</span>
+                      )}
+                      <span className="truncate">{option.label}</span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+                      {option.badge !== undefined && (
+                        <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-black/5 dark:bg-white/10 text-slate-500 dark:text-zinc-400">
+                          {option.badge}
+                        </span>
+                      )}
+                      {isSelected && (
+                        <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {canScrollDown && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-0 inset-x-0 h-7 bg-gradient-to-t from-white/95 dark:from-[#12161f]/95 via-white/75 dark:via-[#12161f]/75 to-transparent flex items-end justify-center pb-1 z-10"
+              >
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-400" />
+              </div>
+            )}
           </div>,
           document.body
         )}

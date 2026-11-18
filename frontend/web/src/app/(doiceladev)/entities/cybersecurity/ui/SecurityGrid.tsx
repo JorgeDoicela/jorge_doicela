@@ -43,8 +43,8 @@ export function SecurityGrid({ posts, loading, error }: SecurityGridProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {posts.map((post) => (
-        <SecurityCard key={post.id} post={post} />
+      {posts.map((post, idx) => (
+        <SecurityCard key={post.id} post={post} priority={idx < 3} />
       ))}
     </div>
   );

@@ -43,8 +43,8 @@ export function TutorialGrid({ tutorials, loading, error }: TutorialGridProps) {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-            {tutorials.map((tut) => (
-                <TutorialCard key={tut.id} tutorial={tut} />
+            {tutorials.map((tut, idx) => (
+                <TutorialCard key={tut.id} tutorial={tut} priority={idx < 3} />
             ))}
         </div>
     );

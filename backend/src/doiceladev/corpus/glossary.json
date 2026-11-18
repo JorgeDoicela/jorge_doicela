@@ -636,5 +636,71 @@
     "caseSensitive": false,
     "language": "en",
     "orderPriority": 77
+  },
+  {
+    "slug": "prompt-injection",
+    "term": "Inyección de Prompts",
+    "aliases": "inyección de prompts, prompt injection, indirect prompt injection, inyección indirecta",
+    "category": "ai",
+    "shortDefinition": "Vulnerabilidad crítica (OWASP LLM01) donde entradas de texto maliciosas manipulan a un modelo de lenguaje para ignorar sus reglas originales o ejecutar acciones no autorizadas.",
+    "keyDifference": "Ocurre porque los LLMs procesan las instrucciones del sistema y los datos externos no confiables dentro de una misma secuencia continua de tokens sin separación nativa de canales.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 89
+  },
+  {
+    "slug": "prompt-injection",
+    "term": "Prompt Injection",
+    "aliases": "prompt injection, indirect prompt injection, llm01",
+    "category": "ai",
+    "shortDefinition": "Critical vulnerability (OWASP LLM01) where crafted input text manipulates a language model into overriding its original instructions or executing unauthorized tool actions.",
+    "keyDifference": "Stems from the architectural fact that LLMs process system instructions and untrusted external data within a single unified token stream without hardware-level channel separation.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 89
+  },
+  {
+    "slug": "system-prompt",
+    "term": "System Prompt",
+    "aliases": "system prompt, prompt del sistema, instrucciones del sistema",
+    "category": "ai",
+    "shortDefinition": "Bloque inicial de instrucciones definido por el desarrollador que establece el rol, el tono, el contexto operativo y las restricciones de comportamiento de un modelo de lenguaje.",
+    "keyDifference": "No es una barrera de seguridad determinista; al residir en la misma ventana de contexto que los mensajes del usuario, puede ser revelado o puenteado si no se acompaña de controles en backend.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 83
+  },
+  {
+    "slug": "system-prompt",
+    "term": "System Prompt",
+    "aliases": "system prompt, system instructions",
+    "category": "ai",
+    "shortDefinition": "Developer-defined initial instruction block that establishes the role, operational context, formatting rules, and behavioral constraints of a language model.",
+    "keyDifference": "It is not a deterministic security boundary; because it shares the same context window as user input, it can be leaked or overridden unless enforced by backend controls.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 83
+  },
+  {
+    "slug": "csp",
+    "term": "CSP",
+    "aliases": "csp, content security policy, content-security-policy",
+    "category": "security",
+    "shortDefinition": "Content Security Policy: cabecera HTTP de seguridad que restringe desde qué dominios el navegador web tiene permitido cargar imágenes, scripts, estilos o conexiones de red.",
+    "keyDifference": "En aplicaciones de IA, una directiva img-src restrictiva bloquea en el navegador la exfiltración silenciosa de datos mediante imágenes Markdown inyectadas por un atacante.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 73
+  },
+  {
+    "slug": "csp",
+    "term": "CSP",
+    "aliases": "csp, content security policy, content-security-policy",
+    "category": "security",
+    "shortDefinition": "Content Security Policy: HTTP security response header that restricts which external domains a browser is permitted to load images, scripts, stylesheets, or network requests from.",
+    "keyDifference": "In AI web applications, a strict img-src directive prevents the browser from executing silent data exfiltration via attacker-injected Markdown image tags.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 73
   }
 ]

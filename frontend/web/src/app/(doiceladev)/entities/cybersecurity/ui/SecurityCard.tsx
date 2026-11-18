@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface SecurityCardProps {
   post: SecurityPost;
+  priority?: boolean;
 }
 
-export function SecurityCard({ post }: SecurityCardProps) {
+export function SecurityCard({ post, priority = false }: SecurityCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
   const moduleLabel = tNav('cybersecurity').toUpperCase();
@@ -28,6 +29,7 @@ export function SecurityCard({ post }: SecurityCardProps) {
       categoryMeta={metaText}
       topicCategory={post.category}
       excerpt={post.excerpt}
+      priority={priority}
       accentHoverColor="group-hover:text-rose-300"
     />
   );

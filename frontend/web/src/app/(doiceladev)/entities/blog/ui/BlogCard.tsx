@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface BlogCardProps {
   post: BlogPost;
+  priority?: boolean;
 }
 
-export function BlogCard({ post }: BlogCardProps) {
+export function BlogCard({ post, priority = false }: BlogCardProps) {
   const locale = useLocale();
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
@@ -39,6 +40,7 @@ export function BlogCard({ post }: BlogCardProps) {
       categoryMeta={metaText}
       topicCategory={post.category}
       excerpt={post.subtitle ? `${post.subtitle} — ${post.excerpt}` : post.excerpt}
+      priority={priority}
       accentHoverColor="group-hover:text-blue-300"
     />
   );

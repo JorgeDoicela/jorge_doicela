@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface ProjectCardProps {
   project: Project;
+  priority?: boolean;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, priority = false }: ProjectCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
 
@@ -29,6 +30,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       categoryMeta={metaText}
       topicCategory={project.category}
       excerpt={project.description}
+      priority={priority}
       accentHoverColor="group-hover:text-blue-300"
     />
   );

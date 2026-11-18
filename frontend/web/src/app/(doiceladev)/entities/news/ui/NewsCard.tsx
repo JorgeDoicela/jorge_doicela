@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface NewsCardProps {
   article: NewsArticle;
+  priority?: boolean;
 }
 
-export function NewsCard({ article }: NewsCardProps) {
+export function NewsCard({ article, priority = false }: NewsCardProps) {
   const locale = useLocale();
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
@@ -39,6 +40,7 @@ export function NewsCard({ article }: NewsCardProps) {
       categoryMeta={metaText}
       topicCategory={article.category}
       excerpt={article.excerpt}
+      priority={priority}
       accentHoverColor="group-hover:text-cyan-300"
     />
   );

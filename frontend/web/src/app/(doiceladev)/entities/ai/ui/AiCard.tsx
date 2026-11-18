@@ -7,9 +7,10 @@ import { DoiceladevCard } from '../../../shared/ui/DoiceladevCard';
 
 interface AiCardProps {
   resource: AiResource;
+  priority?: boolean;
 }
 
-export function AiCard({ resource }: AiCardProps) {
+export function AiCard({ resource, priority = false }: AiCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
 
@@ -30,6 +31,7 @@ export function AiCard({ resource }: AiCardProps) {
       categoryMeta={metaText}
       topicCategory={resource.category}
       excerpt={resource.description}
+      priority={priority}
       accentHoverColor="group-hover:text-purple-300"
     />
   );

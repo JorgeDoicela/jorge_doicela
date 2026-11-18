@@ -254,15 +254,15 @@ export function DoiceladevSelect<T extends string | number = string>({
     }
   };
 
-  const alignClasses = {
-    left: 'left-0 origin-top-left',
-    center: 'left-1/2 -translate-x-1/2 origin-top',
-    right: 'right-0 origin-top-right',
-  }[align];
+  const isCentered = align === 'center';
 
   const sizeClasses = {
-    sm: 'text-xs py-1.5 px-3 rounded-lg',
-    md: 'text-xs font-semibold py-2 pl-3 pr-2.5 rounded-xl',
+    sm: isCentered
+      ? 'text-xs py-1.5 px-7 rounded-lg'
+      : 'text-xs py-1.5 px-3 rounded-lg',
+    md: isCentered
+      ? 'text-xs font-semibold py-2 px-7 rounded-xl'
+      : 'text-xs font-semibold py-2 pl-3 pr-2.5 rounded-xl',
   }[size];
 
   return (
@@ -281,19 +281,27 @@ export function DoiceladevSelect<T extends string | number = string>({
         aria-haspopup="listbox"
         aria-controls={listboxId}
         aria-label={ariaLabel || selectedOption?.label || placeholder}
-        className={`w-full flex items-center justify-between gap-2 text-slate-800 dark:text-zinc-200 bg-white/85 dark:bg-black/40 border border-slate-300/80 dark:border-white/10 glass-convex-panel shadow-sm hover:shadow hover:border-slate-400/60 dark:hover:border-white/25 active:scale-[0.98] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${buttonClassName}`}
+        className={`relative w-full flex items-center ${
+          isCentered ? 'justify-center' : 'justify-between gap-2'
+        } text-slate-800 dark:text-zinc-200 bg-white/85 dark:bg-black/40 border border-slate-300/80 dark:border-white/10 glass-convex-panel shadow-sm hover:shadow hover:border-slate-400/60 dark:hover:border-white/25 active:scale-[0.98] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${buttonClassName}`}
       >
-        <span className="truncate flex items-center gap-1.5 tracking-tight">
+        <span
+          className={`truncate flex items-center gap-1.5 tracking-tight ${
+            isCentered ? 'justify-center text-center' : ''
+          }`}
+        >
           {selectedOption?.icon && (
             <span className="shrink-0">{selectedOption.icon}</span>
           )}
-          <span>{selectedOption ? selectedOption.label : placeholder || '...'}</span>
+          <span className="truncate">
+            {selectedOption ? selectedOption.label : placeholder || '...'}
+          </span>
         </span>
 
         <ChevronDown
           className={`w-3.5 h-3.5 text-blue-500/80 shrink-0 transition-transform duration-200 ease-out ${
-            isOpen ? 'rotate-180 text-blue-600 dark:text-blue-400' : ''
-          }`}
+            isCentered ? 'absolute right-2.5' : ''
+          } ${isOpen ? 'rotate-180 text-blue-600 dark:text-blue-400' : ''}`}
           aria-hidden="true"
         />
       </button>
@@ -321,7 +329,7 @@ export function DoiceladevSelect<T extends string | number = string>({
                   : align === 'right'
                   ? 'translateX(-100%)'
                   : undefined,
-              minWidth: `${Math.max(coords.width, 185)}px`,
+              width: `${Math.max(coords.width, 185)}px`,
             }}
             className={`z-[999999] rounded-2xl bg-white/95 dark:bg-[#12161f]/95 backdrop-blur-2xl border border-black/10 dark:border-white/10 shadow-2xl shadow-black/30 dark:shadow-black/70 overflow-hidden animate-in fade-in zoom-in-95 duration-150 select-none ${menuClassName}`}
           >
@@ -357,7 +365,11 @@ export function DoiceladevSelect<T extends string | number = string>({
                     disabled={option.disabled}
                     onClick={() => !option.disabled && handleSelect(option.value)}
                     onMouseEnter={() => setHighlightedIndex(idx)}
-                    className={`w-full flex items-center justify-between gap-2.5 px-3 py-2 my-0.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer focus:outline-none ${
+                    className={`relative w-full flex items-center ${
+                      isCentered
+                        ? 'justify-center px-7 py-2 text-center'
+                        : 'justify-between gap-2.5 px-3 py-2'
+                    } my-0.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer focus:outline-none ${
                       isSelected
                         ? 'text-blue-600 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-400/15 font-bold shadow-xs'
                         : isHighlighted
@@ -365,14 +377,22 @@ export function DoiceladevSelect<T extends string | number = string>({
                         : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
                     } ${option.disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
                   >
-                    <div className="flex items-center gap-2 truncate">
+                    <div
+                      className={`flex items-center gap-2 truncate ${
+                        isCentered ? 'justify-center' : ''
+                      }`}
+                    >
                       {option.icon && (
                         <span className="shrink-0 text-current">{option.icon}</span>
                       )}
                       <span className="truncate">{option.label}</span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+                    <div
+                      className={`flex items-center gap-1.5 shrink-0 ${
+                        isCentered ? 'absolute right-3' : 'ml-auto'
+                      }`}
+                    >
                       {option.badge !== undefined && (
                         <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-black/5 dark:bg-white/10 text-slate-500 dark:text-zinc-400">
                           {option.badge}

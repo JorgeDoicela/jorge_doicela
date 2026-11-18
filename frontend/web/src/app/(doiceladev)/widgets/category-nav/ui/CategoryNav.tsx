@@ -87,7 +87,7 @@ export function CategoryNav({
     return (
         <nav aria-label={t('all')} className={bare ? 'w-full' : 'w-fit max-w-full'}>
             {/* 1. Selector Dropdown Táctil Reutilizable (Exclusivo para Móvil: visible en < sm, oculto en sm y superior) */}
-            <div className="sm:hidden w-full max-w-[185px] mx-auto flex justify-center">
+            <div className="sm:hidden w-full mx-auto flex justify-center">
                 <DoiceladevSelect<DoiceladevSection>
                     options={categoryOptions}
                     value={selectedCategory}

@@ -173,10 +173,10 @@ export function DoiceladevArticleLayout({
 
                 {/* Byline Editorial Centrado: Autor, Avatar, Fecha de Publicación y Actualización */}
                 {(author || date || updatedDate) && (
-                  <div className="flex items-center justify-center gap-3 pt-1 text-xs select-none">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 pt-2 text-xs select-none">
                     {author && (
-                      <div className="inline-flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
+                      <div className="inline-flex items-center gap-2 shrink-0">
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden relative shrink-0 ring-1 ring-black/10 dark:ring-white/10 shadow-sm bg-black/5 dark:bg-white/10">
                           <Image
                             src={authorImage}
                             alt={author}
@@ -185,28 +185,37 @@ export function DoiceladevArticleLayout({
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <span className="font-mono text-xs font-semibold text-slate-900 dark:text-zinc-200">
+                        <span className="font-mono text-xs font-semibold text-slate-900 dark:text-zinc-200 whitespace-nowrap">
                           {author}
                         </span>
                       </div>
                     )}
 
                     {author && (date || updatedDate) && (
-                      <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
+                      <span className="hidden sm:inline text-slate-300 dark:text-zinc-700 shrink-0" aria-hidden="true">•</span>
                     )}
 
                     {updatedDate && updatedDate !== date ? (
-                      <time
-                        dateTime={updatedAtIso || updatedDate}
-                        title={date ? tArticle('originallyPublished', { date }) : undefined}
-                        className="font-mono text-slate-500 dark:text-zinc-400 cursor-help"
-                      >
-                        {tArticle('updatedOn')} {updatedDate}
-                      </time>
+                      <span className="group relative inline-flex items-center shrink-0">
+                        <time
+                          dateTime={updatedAtIso || updatedDate}
+                          className="font-mono text-slate-500 dark:text-zinc-400 cursor-default whitespace-nowrap"
+                        >
+                          {tArticle('updatedOn')} {updatedDate}
+                        </time>
+                        {date && (
+                          <span
+                            role="tooltip"
+                            className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 rounded-xl bg-white/95 dark:bg-[#12161f]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-lg font-mono text-[11px] text-slate-700 dark:text-zinc-300 whitespace-nowrap opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 z-30"
+                          >
+                            {tArticle('originallyPublished', { date })}
+                          </span>
+                        )}
+                      </span>
                     ) : date ? (
                       <time
                         dateTime={publishedAtIso || date}
-                        className="font-mono text-slate-500 dark:text-zinc-400"
+                        className="font-mono text-slate-500 dark:text-zinc-400 whitespace-nowrap shrink-0"
                       >
                         {date}
                       </time>

@@ -107,6 +107,10 @@ const CATEGORY_ALIAS_MAP: Record<string, string> = {
   devops: 'devops',
   seguridad_bastionado: 'hardening',
   hardening: 'hardening',
+  ciberseguridad: 'security',
+  seguridad: 'security',
+  security: 'security',
+  cybersecurity: 'security',
 };
 
 @Injectable()
@@ -440,8 +444,13 @@ export class CategoriesService {
       frontend: { es: 'Frontend & UI', en: 'Frontend & UI' },
       mobile: { es: 'Móvil & Multiplataforma', en: 'Mobile & Cross-Platform' },
       frameworks: { es: 'Frameworks & Web', en: 'Frameworks & Web' },
+      framework: { es: 'Frameworks', en: 'Frameworks' },
       general: { es: 'Comunidad General', en: 'General Community' },
       tool: { es: 'Herramientas', en: 'Tools' },
+      security: { es: 'Ciberseguridad', en: 'Cybersecurity' },
+      cybersecurity: { es: 'Ciberseguridad', en: 'Cybersecurity' },
+      dataset: { es: 'Datasets', en: 'Datasets' },
+      platform: { es: 'Plataformas', en: 'Platforms' },
     };
     const found = map[cat.toLowerCase()];
     if (found) return isEn ? found.en : found.es;

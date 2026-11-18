@@ -300,7 +300,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 | Sección | Archivo JSON | Slug Canónico | Portada Editorial (16:9) |
 |---|---|---|---|
 | **Noticias** | `news.json` | `ransomware-ia-cifrado-hibrido-respaldos-inmutables` | `/doiceladev/images/covers/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables.webp` |
-| **Blog** | `blog.json` | `arquitectura-limpia-monolitos-modulares-nestjs` | `/doiceladev/images/covers/blog/arquitectura-limpia-monolitos.webp` |
+| **Blog** | `blog.json` | `fundamentos-linux-redes-sql-sobre-frameworks` | `/doiceladev/images/covers/blog/fundamentos-linux-redes-sql-sobre-frameworks.webp` |
 | **Foro** | `forum.json` | `optimizacion-ram-vps-1gb-nodejs` | `/doiceladev/images/covers/forum/optimizacion-ram-vps.webp` |
 | **IA & Agentes** | `ai.json` | `inyeccion-prompts-owasp-llm01-seguridad-agentes` | `/doiceladev/images/covers/ai/inyeccion-prompts-owasp-llm01-seguridad-agentes.webp` |
 | **Ciberseguridad** | `security.json` | `seguridad-php-cve-2024-8927-cve-2024-9026` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp` |

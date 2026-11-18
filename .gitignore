@@ -12,6 +12,8 @@ out/
 bin/
 obj/
 *.tsbuildinfo
+*.tar
+*.tar.gz
 
 # Debug and Logs
 logs/

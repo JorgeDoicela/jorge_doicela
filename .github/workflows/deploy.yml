@@ -49,6 +49,11 @@ jobs:
           cp -r frontend/web/public frontend/web/.next/standalone/frontend/web/public
           cp -r frontend/web/.next/static frontend/web/.next/standalone/frontend/web/.next/static
 
+      - name: Compilar y empaquetar imagen Docker del Sandbox en el Runner
+        run: |
+          docker build --platform linux/amd64 -t portfolio-sandbox:latest backend/src/portfolio/docker
+          docker save portfolio-sandbox:latest | gzip > portfolio-sandbox.tar.gz
+
       - name: Desplegar archivos compilados a AWS Lightsail
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
@@ -112,9 +117,12 @@ jobs:
               sudo nginx -t && sudo systemctl reload nginx
             fi
 
-            # 8. Construir/actualizar imagen del sandbox efímero si existen cambios
-            if [ -d "backend/src/portfolio/docker" ]; then
-              docker build -t portfolio-sandbox:latest backend/src/portfolio/docker/ 2>/dev/null || true
+            # 8. Cargar imagen del sandbox efímero empaquetada en GitHub Actions
+            if [ -f "portfolio-sandbox.tar.gz" ]; then
+              echo "==> [CI/CD] Cargando imagen optimizada portfolio-sandbox en Docker..."
+              docker load -i portfolio-sandbox.tar.gz
+              rm -f portfolio-sandbox.tar.gz
+              docker image prune -f >/dev/null 2>&1 || true
             fi
 
             # 9. Garantizar acceso al socket de Docker para el proceso backend en PM2

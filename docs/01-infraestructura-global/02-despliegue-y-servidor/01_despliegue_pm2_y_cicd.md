@@ -429,7 +429,9 @@ graph TD
     B --> D[pnpm run typecheck]
     D --> E[pnpm run build: NestJS dist + Next.js Standalone]
     E --> F[Preparar bundle estático: copiar public y static a standalone]
-    F --> G[rsync bundle completo vía SSH a Lightsail]
+    E --> F2[Compilar y empaquetar portfolio-sandbox.tar.gz en el runner]
+    F --> G[rsync bundle completo y sandbox comprimido vía SSH a Lightsail]
+    F2 --> G
     G --> H[SSH Script con set -e en Servidor]
     H --> I[CI=true pnpm install --prod --force en backend]
     H --> I3[mkdir -p backend/data]
@@ -437,7 +439,9 @@ graph TD
     J --> J2[mv -f *.tmp *.sqlite: Reemplazo atómico instantáneo]
     H --> K[Garantizar estructura de recursos estáticos en standalone]
     H --> L[Actualizar Nginx desde nginx/jorgedoicela.com.conf]
-    H --> M[pm2 restart pm2.config.js con zero-downtime]
+    H --> L2[docker load portfolio-sandbox.tar.gz y purga de capas viejas]
+    L2 --> M[pm2 restart pm2.config.js con zero-downtime]
+    L --> M
     M --> N[Healthcheck activo con curl en :3000 y :3001]
     N --> O[Purga automática de caché en Cloudflare API]
 ```
@@ -445,14 +449,14 @@ graph TD
 ### 5.1 Fases del Pipeline:
 1. **Instalación y Caché:** Instala con pnpm utilizando la caché de la tienda local (`~/.local/share/pnpm/store`).
 2. **Validación y Compilación:** Ejecuta `pnpm run typecheck` y `pnpm run build` en el runner de GitHub.
-3. **Empaquetado de Assets Standalone:** Copia `public/` y `.next/static/` directamente a `.next/standalone/frontend/web/` en el runner de GitHub Actions para que el bundle viaje completo y listo para producción sin sobrecargar la CPU del servidor.
-4. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sincroniza los archivos vía rsync excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
+3. **Empaquetado de Assets Standalone y Sandbox Docker:** Copia `public/` y `.next/static/` a `standalone/`, compila la imagen `portfolio-sandbox:latest` directamente en el runner de GitHub Actions (aprovechando sus 7 GB de RAM) y la exporta comprimida como `portfolio-sandbox.tar.gz` (~15 MB).
+4. **Transferencia Segura (`easingthemes/ssh-deploy`):** Sincroniza los archivos compilados y el contenedor empaquetado vía rsync excluyendo `.git`, `node_modules` y bases de datos `*.sqlite`.
 5. **Post-Despliegue en el Servidor (`appleboy/ssh-action`):**
    * **Instalación no interactiva sin caída:** Ejecuta `CI=true pnpm --filter backend install --prod --frozen-lockfile --ignore-scripts --force` con los procesos vivos de PM2 para evitar downtime durante la descarga.
    * **Siembra Atómica en `.tmp`:** Ejecuta `seed-corpus.js`, `seed-doiceladev.js` y `seed-portfolio.js` apuntando a archivos temporales (`*.sqlite.tmp`). Si alguno de los seeders falla (por ejemplo por sintaxis en JSON o error en TypeORM), la base de datos anterior no es tocada y el despliegue aborta con `set -e`.
    * **Reemplazo Instantáneo con `mv`:** Únicamente tras confirmar éxito en los 3 seeders, los archivos `.sqlite.tmp` reemplazan atómicamente a los definitivos en disco.
    * Verifica la integridad de los recursos estáticos en `standalone/`.
-   * **Construcción del Docker Sandbox:** Construye `portfolio-sandbox:latest` desde `backend/src/portfolio/docker/` si existen cambios.
+   * **Carga Instantánea del Sandbox:** Si existe `portfolio-sandbox.tar.gz`, lo importa mediante `docker load`, elimina el archivo `.tar.gz` y purga imágenes huérfanas con `docker image prune -f` de forma desatendida. Zero consumo de compilación en el VPS.
    * **Permisos del Docker Socket:** Asegura que el usuario `admin` pertenezca al grupo `docker` y ajusta permisos a `0660 /var/run/docker.sock`.
    * Si existe `nginx/jorgedoicela.com.conf`, lo copia a `/etc/nginx/sites-available/` y recarga Nginx sin caída (`sudo nginx -t && sudo systemctl reload nginx`).
    * Reinicia los procesos con `pm2 restart pm2.config.js --update-env`.

@@ -146,7 +146,7 @@ A partir de la finalización de este aprovisionamiento, no se requiere acceso ma
 3. Despliegue de artefactos compilados mediante `rsync`.
 4. Instalación de dependencias de producción (`pnpm --filter backend install --prod --ignore-scripts`).
 5. Sincronización automática de bases de datos SQLite.
-6. Reconstrucción automatizada de la imagen `portfolio-sandbox:latest` si se modifican archivos en `backend/src/portfolio/docker/`.
+6. Compilación y empaquetado de `portfolio-sandbox:latest` directamente en GitHub Actions (`portfolio-sandbox.tar.gz`), con importación atómica (`docker load`) y purga de imágenes desvinculadas (`docker image prune -f`) en el VPS sin consumir CPU/RAM de compilación.
 7. Aplicación de permisos de socket Docker (`chmod 660 /var/run/docker.sock`).
 8. Actualización y recarga de Nginx.
 9. Recarga en caliente de procesos en PM2 (`pm2 reload pm2.config.js --update-env`).

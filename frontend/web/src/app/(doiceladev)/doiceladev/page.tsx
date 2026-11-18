@@ -23,7 +23,7 @@ export default function DoiceladevPage() {
     <>
       {/* 1. CONTENIDO PRINCIPAL ESTILO EDITORIAL TECH */}
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
-        <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-6 sm:px-6 lg:px-8 space-y-10 sm:space-y-12 flex-1 pb-16 md:pb-24">
+        <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-2.5 sm:px-6 lg:px-8 space-y-10 sm:space-y-12 flex-1 pb-16 md:pb-24">
           
           {/* CABECERA EDITORIAL DE MARCA REUTILIZABLE (ESTILO MALWARETECH) */}
           <DoiceladevHeaderNav activeCategory="all" />

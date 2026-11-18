@@ -43,7 +43,7 @@ export function DoiceladevPageLayout({
   if (minimal) {
     return (
       <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-colors duration-400">
-        <header className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5 sm:pt-7 flex items-center justify-between gap-4">
+        <header className="w-full max-w-6xl mx-auto px-2.5 sm:px-6 pt-5 sm:pt-7 flex items-center justify-between gap-4">
           <Link
             href="/"
             className="flex items-center gap-3 sm:gap-3.5 select-none hover:opacity-90 transition-opacity"
@@ -87,7 +87,7 @@ export function DoiceladevPageLayout({
           </div>
         </header>
 
-        <main className={`flex-1 w-full flex items-center justify-center px-4 sm:px-6 py-10 ${className}`}>
+        <main className={`flex-1 w-full flex items-center justify-center px-2.5 sm:px-6 py-10 ${className}`}>
           {children}
         </main>
       </div>
@@ -96,7 +96,7 @@ export function DoiceladevPageLayout({
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center transition-colors duration-400 pt-6 md:pt-10 pb-0">
-      <div className={`w-full max-w-[1490px] 2xl:max-w-[1620px] px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10 flex-1 pb-16 md:pb-24 ${className}`}>
+      <div className={`w-full max-w-[1490px] 2xl:max-w-[1620px] px-2.5 sm:px-6 lg:px-8 space-y-8 md:space-y-10 flex-1 pb-16 md:pb-24 ${className}`}>
         {/* Cabecera Editorial Reutilizable */}
         <DoiceladevHeaderNav
           activeCategory={activeCategory}

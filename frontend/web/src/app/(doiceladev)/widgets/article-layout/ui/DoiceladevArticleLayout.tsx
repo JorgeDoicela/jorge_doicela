@@ -75,7 +75,7 @@ export function DoiceladevArticleLayout({
       {/* Telemetría anónima de historial de lectura en cookie HTTP (0 overhead de servidor) */}
       {slug && <ReaderHistoryTracker slug={slug} />}
 
-      <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-6 sm:px-6 lg:px-8 flex-1 pb-16 md:pb-24 space-y-6 sm:space-y-8">
+      <div className="w-full max-w-[1490px] 2xl:max-w-[1620px] px-2.5 sm:px-6 lg:px-8 flex-1 pb-16 md:pb-24 space-y-6 sm:space-y-8">
         
         {/* Cabecera Editorial Reutilizable */}
         <DoiceladevHeaderNav

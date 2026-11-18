@@ -181,9 +181,19 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
           blockquote: ({ node: _node, children }) => (
             <CalloutBlock>{children}</CalloutBlock>
           ),
-          ul: ({ node: _node, ...props }) => (
-            <ul className="my-3 space-y-2 pl-5 list-disc text-blue-600 dark:text-blue-400" {...props} />
-          ),
+          ul: ({ node: _node, className, ...props }) => {
+            const isTaskList = className?.includes('contains-task-list');
+            return (
+              <ul
+                className={`my-3 space-y-2 ${
+                  isTaskList
+                    ? 'pl-0 list-none'
+                    : 'pl-5 list-disc text-blue-600 dark:text-blue-400'
+                }`}
+                {...props}
+              />
+            );
+          },
           ol: ({ node: _node, ...props }) => (
             <ol className="my-3 space-y-2 pl-5 list-decimal text-blue-600 dark:text-blue-400 font-mono font-medium" {...props} />
           ),
@@ -192,7 +202,7 @@ export function MarkdownRenderer({ content, glossaryTerms = [] }: MarkdownRender
             return (
               <li
                 className={`text-slate-700 dark:text-zinc-300 font-sans font-normal leading-relaxed ${
-                  isTaskList ? 'list-none -ml-5 my-1.5' : ''
+                  isTaskList ? 'list-none my-1.5' : ''
                 }`}
                 {...props}
               >

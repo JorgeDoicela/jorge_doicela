@@ -76,6 +76,8 @@ export default async function TagHubPage({ params }: Params) {
             >
               {tNav('tags')}
             </Link>
+
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
           </nav>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--header-title)]">

@@ -134,9 +134,10 @@ export function DoiceladevArticleLayout({
                       {categoryLabel}
                     </Link>
 
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
+
                     {breadcrumbs?.map((bc, idx) => (
                       <React.Fragment key={idx}>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
                         {bc.href ? (
                           <Link
                             href={bc.href}
@@ -146,6 +147,9 @@ export function DoiceladevArticleLayout({
                           </Link>
                         ) : (
                           <span className="text-slate-600 dark:text-zinc-400 font-medium">{bc.label}</span>
+                        )}
+                        {idx < breadcrumbs.length - 1 && (
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 shrink-0" aria-hidden="true" />
                         )}
                       </React.Fragment>
                     ))}

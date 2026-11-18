@@ -29,6 +29,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: article.title,
       description: article.excerpt,
       type: 'article',
+      publishedTime: article.publishedAt || article.createdAt,
+      ...(article.updatedAt ? { modifiedTime: article.updatedAt } : {}),
       authors: [article.author],
       ...(article.coverImage ? { images: [{ url: article.coverImage }] } : {}),
     },
@@ -58,10 +60,30 @@ export default async function NewsDetailPage({ params }: Params) {
 
   if (!article) notFound();
 
-  const formattedDate = new Date(article.publishedAt || article.createdAt).toLocaleDateString(
-    locale === 'es' ? 'es-ES' : 'en-US',
-    { day: '2-digit', month: 'long', year: 'numeric' },
+  const pubRaw = article.publishedAt || article.createdAt;
+  const updRaw = article.updatedAt;
+
+  const formattedPublishedDate = pubRaw
+    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
+
+  const isMeaningfullyUpdated = Boolean(
+    pubRaw &&
+      updRaw &&
+      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
   );
+
+  const formattedUpdatedDate = isMeaningfullyUpdated
+    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -71,7 +93,10 @@ export default async function NewsDetailPage({ params }: Params) {
       categoryHref="/news"
       title={article.title}
       subtitle={article.excerpt}
-      date={formattedDate}
+      date={formattedPublishedDate}
+      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
+      updatedDate={formattedUpdatedDate}
+      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
       author={article.author}
       tags={article.tags}
       recommendations={recommendations || []}

@@ -113,6 +113,7 @@ interface NewsSeedItem {
   featured?: boolean;
   orderPriority?: number;
   publishedAt?: string;
+  updatedAt?: string;
 }
 
 interface BlogSeedItem {
@@ -133,6 +134,7 @@ interface BlogSeedItem {
   featured?: boolean;
   orderPriority?: number;
   publishedAt?: string;
+  updatedAt?: string;
 }
 
 interface ForumSeedData {
@@ -150,6 +152,8 @@ interface ForumSeedData {
     orderPriority?: number;
     repliesCount: number;
     views: number;
+    createdAt?: string;
+    updatedAt?: string;
   }[];
   replies: {
     id: number;
@@ -159,6 +163,8 @@ interface ForumSeedData {
     content: string;
     isAcceptedAnswer: boolean;
     likes: number;
+    createdAt?: string;
+    updatedAt?: string;
   }[];
 }
 
@@ -182,6 +188,7 @@ interface AiSeedItem {
   featured?: boolean;
   orderPriority?: number;
   publishedAt?: string;
+  updatedAt?: string;
 }
 
 interface SecuritySeedItem {
@@ -202,6 +209,7 @@ interface SecuritySeedItem {
   featured?: boolean;
   orderPriority?: number;
   publishedAt?: string;
+  updatedAt?: string;
 }
 
 interface TutorialsSeedData {
@@ -223,6 +231,7 @@ interface TutorialsSeedData {
     featured?: boolean;
     orderPriority?: number;
     publishedAt?: string;
+    updatedAt?: string;
   }[];
   steps: {
     id: number;
@@ -253,6 +262,9 @@ interface ProjectSeedItem {
   stars: number;
   views: number;
   architectureDiagramUrl?: string;
+  publishedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface InfrastructureSeedItem {
@@ -273,6 +285,7 @@ interface InfrastructureSeedItem {
   featured?: boolean;
   orderPriority?: number;
   publishedAt?: string;
+  updatedAt?: string;
 }
 
 interface GlossarySeedItem {
@@ -695,10 +708,10 @@ export function seedDoiceladev(
     const insertNews = db.prepare(`
       INSERT INTO news_articles
         (slug, title, excerpt, contentMarkdown, sourceUrl, isBreaking, featured, orderPriority,
-         author, category, tags, language, coverImage, views, likes, publishedAt)
+         author, category, tags, language, coverImage, views, likes, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @excerpt, @contentMarkdown, @sourceUrl, @isBreaking, @featured,
-         @orderPriority, @author, @category, @tags, @language, @coverImage, @views, @likes, @publishedAt)
+         @orderPriority, @author, @category, @tags, @language, @coverImage, @views, @likes, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title         = excluded.title,
         excerpt       = excluded.excerpt,
@@ -711,10 +724,13 @@ export function seedDoiceladev(
         category      = excluded.category,
         tags          = excluded.tags,
         coverImage    = excluded.coverImage,
-        updatedAt     = CURRENT_TIMESTAMP
+        publishedAt   = excluded.publishedAt,
+        updatedAt     = excluded.updatedAt
     `);
     const newsData = readJson<NewsSeedItem[]>('news.json');
     for (const item of newsData) {
+      const pubDate = item.publishedAt || '2026-09-01T00:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       const result = insertNews.run({
         ...item,
         category: item.category || 'frameworks',
@@ -724,7 +740,8 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
-        publishedAt: item.publishedAt || new Date().toISOString(),
+        publishedAt: pubDate,
+        updatedAt: updDate,
       });
       const rowId =
         result.lastInsertRowid ||
@@ -744,10 +761,10 @@ export function seedDoiceladev(
     const insertBlog = db.prepare(`
       INSERT INTO blog_posts
         (slug, title, subtitle, excerpt, contentMarkdown, author, category, tags, language,
-         series, tableOfContents, coverImage, views, likes, featured, orderPriority, publishedAt)
+         series, tableOfContents, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @category, @tags, @language,
-         @series, @tableOfContents, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
+         @series, @tableOfContents, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         subtitle        = excluded.subtitle,
@@ -761,10 +778,13 @@ export function seedDoiceladev(
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
-        updatedAt       = CURRENT_TIMESTAMP
+        publishedAt     = excluded.publishedAt,
+        updatedAt       = excluded.updatedAt
     `);
     const blogData = readJson<BlogSeedItem[]>('blog.json');
     for (const item of blogData) {
+      const pubDate = item.publishedAt || '2026-09-01T00:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       const result = insertBlog.run({
         ...item,
         category: item.category || 'architecture',
@@ -772,7 +792,8 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
-        publishedAt: item.publishedAt || new Date().toISOString(),
+        publishedAt: pubDate,
+        updatedAt: updDate,
         subtitle: item.subtitle ?? null,
         series: item.series ?? null,
         tableOfContents: item.tableOfContents ?? null,
@@ -794,21 +815,45 @@ export function seedDoiceladev(
 
     // ── 3. Foros ────────────────────────────────────────────────────────────
     const insertTopic = db.prepare(`
-      INSERT OR IGNORE INTO forum_topics
+      INSERT INTO forum_topics
         (id, slug, title, content, author, category, language, coverImage,
-         isSolved, isPinned, orderPriority, repliesCount, views)
+         isSolved, isPinned, orderPriority, repliesCount, views, createdAt, updatedAt)
       VALUES
         (@id, @slug, @title, @content, @author, @category, @language, @coverImage,
-         @isSolved, @isPinned, @orderPriority, @repliesCount, @views)
+         @isSolved, @isPinned, @orderPriority, @repliesCount, @views, @createdAt, @updatedAt)
+      ON CONFLICT(id) DO UPDATE SET
+        slug         = excluded.slug,
+        title        = excluded.title,
+        content      = excluded.content,
+        author       = excluded.author,
+        category     = excluded.category,
+        language     = excluded.language,
+        coverImage   = excluded.coverImage,
+        isSolved     = excluded.isSolved,
+        isPinned     = excluded.isPinned,
+        orderPriority = excluded.orderPriority,
+        createdAt    = excluded.createdAt,
+        updatedAt    = excluded.updatedAt
     `);
     const insertReply = db.prepare(`
-      INSERT OR IGNORE INTO forum_replies
-        (id, topicId, parentId, author, content, isAcceptedAnswer, likes)
+      INSERT INTO forum_replies
+        (id, topicId, parentId, author, content, isAcceptedAnswer, likes, createdAt, updatedAt)
       VALUES
-        (@id, @topicId, @parentId, @author, @content, @isAcceptedAnswer, @likes)
+        (@id, @topicId, @parentId, @author, @content, @isAcceptedAnswer, @likes, @createdAt, @updatedAt)
+      ON CONFLICT(id) DO UPDATE SET
+        topicId          = excluded.topicId,
+        parentId         = excluded.parentId,
+        author           = excluded.author,
+        content          = excluded.content,
+        isAcceptedAnswer = excluded.isAcceptedAnswer,
+        likes            = excluded.likes,
+        createdAt        = excluded.createdAt,
+        updatedAt        = excluded.updatedAt
     `);
     const forumData = readJson<ForumSeedData>('forum.json');
     for (const topic of forumData.topics) {
+      const crDate = topic.createdAt || '2026-09-01T00:00:00.000Z';
+      const upDate = topic.updatedAt || crDate;
       insertTopic.run({
         ...topic,
         category: topic.category || 'general',
@@ -817,13 +862,19 @@ export function seedDoiceladev(
         isPinned: topic.isPinned ? 1 : 0,
         orderPriority: topic.orderPriority || 0,
         language: topic.language || 'es',
+        createdAt: crDate,
+        updatedAt: upDate,
       });
     }
     for (const reply of forumData.replies) {
+      const crDate = reply.createdAt || '2026-09-01T00:00:00.000Z';
+      const upDate = reply.updatedAt || crDate;
       insertReply.run({
         ...reply,
         parentId: reply.parentId ?? null,
         isAcceptedAnswer: reply.isAcceptedAnswer ? 1 : 0,
+        createdAt: crDate,
+        updatedAt: upDate,
       });
     }
 
@@ -832,11 +883,11 @@ export function seedDoiceladev(
       INSERT INTO ai_resources
         (slug, name, category, provider, author, description, contentMarkdown, license,
          documentationUrl, paperUrl, githubUrl, tags, language, coverImage,
-         views, likes, featured, orderPriority, publishedAt)
+         views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @name, @category, @provider, @author, @description, @contentMarkdown, @license,
          @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @coverImage,
-         @views, @likes, @featured, @orderPriority, @publishedAt)
+         @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         name            = excluded.name,
         category        = excluded.category,
@@ -852,10 +903,13 @@ export function seedDoiceladev(
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
-        updatedAt       = CURRENT_TIMESTAMP
+        publishedAt     = excluded.publishedAt,
+        updatedAt       = excluded.updatedAt
     `);
     const aiData = readJson<AiSeedItem[]>('ai.json');
     for (const item of aiData) {
+      const pubDate = item.publishedAt || '2026-09-01T00:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       const result = insertAi.run({
         ...item,
         category: item.category || 'tool',
@@ -863,7 +917,8 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
-        publishedAt: item.publishedAt || new Date().toISOString(),
+        publishedAt: pubDate,
+        updatedAt: updDate,
         documentationUrl: item.documentationUrl ?? null,
         paperUrl: item.paperUrl ?? null,
         githubUrl: item.githubUrl ?? null,
@@ -888,11 +943,11 @@ export function seedDoiceladev(
       INSERT INTO security_posts
         (slug, title, category, cveId, affectedSystems, remediation,
          excerpt, contentMarkdown, author, tags, language, coverImage,
-         views, likes, featured, orderPriority, publishedAt)
+         views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @category, @cveId, @affectedSystems, @remediation,
          @excerpt, @contentMarkdown, @author, @tags, @language, @coverImage,
-         @views, @likes, @featured, @orderPriority, @publishedAt)
+         @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         category        = excluded.category,
@@ -906,10 +961,13 @@ export function seedDoiceladev(
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
-        updatedAt       = CURRENT_TIMESTAMP
+        publishedAt     = excluded.publishedAt,
+        updatedAt       = excluded.updatedAt
     `);
     const secData = readJson<SecuritySeedItem[]>('security.json');
     for (const item of secData) {
+      const pubDate = item.publishedAt || '2026-09-01T00:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       const result = insertSec.run({
         ...item,
         category: item.category || 'advisory',
@@ -917,7 +975,8 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
-        publishedAt: item.publishedAt || new Date().toISOString(),
+        publishedAt: pubDate,
+        updatedAt: updDate,
         cveId: item.cveId ?? null,
         affectedSystems: item.affectedSystems ?? null,
         remediation: item.remediation ?? null,
@@ -941,10 +1000,10 @@ export function seedDoiceladev(
     const insertTutorial = db.prepare(`
       INSERT INTO tutorials
         (id, slug, title, excerpt, description, category, prerequisites,
-         techStack, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
+         techStack, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@id, @slug, @title, @excerpt, @description, @category, @prerequisites,
-         @techStack, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
+         @techStack, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         excerpt         = excluded.excerpt,
@@ -957,7 +1016,8 @@ export function seedDoiceladev(
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
-        updatedAt       = CURRENT_TIMESTAMP
+        publishedAt     = excluded.publishedAt,
+        updatedAt       = excluded.updatedAt
     `);
     const insertStep = db.prepare(`
       INSERT INTO tutorial_steps
@@ -976,6 +1036,8 @@ export function seedDoiceladev(
     `);
     const tutorialsData = readJson<TutorialsSeedData>('tutorials.json');
     for (const item of tutorialsData.tutorials) {
+      const pubDate = item.publishedAt || '2026-09-01T00:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       insertTutorial.run({
         ...item,
         category: item.category || 'backend',
@@ -983,7 +1045,8 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
-        publishedAt: item.publishedAt || new Date().toISOString(),
+        publishedAt: pubDate,
+        updatedAt: updDate,
         prerequisites: item.prerequisites ?? null,
       });
       seedTags('tutorial', item.id, item.tags);
@@ -1000,10 +1063,10 @@ export function seedDoiceladev(
     const insertProj = db.prepare(`
       INSERT INTO projects
         (slug, name, category, description, techStack, author, language, coverImage,
-         repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl)
+         repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl, createdAt, updatedAt)
       VALUES
         (@slug, @name, @category, @description, @techStack, @author, @language, @coverImage,
-         @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl)
+         @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl, @createdAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         name                 = excluded.name,
         category             = excluded.category,
@@ -1017,10 +1080,14 @@ export function seedDoiceladev(
         featured             = excluded.featured,
         orderPriority        = excluded.orderPriority,
         architectureDiagramUrl = excluded.architectureDiagramUrl,
-        updatedAt            = CURRENT_TIMESTAMP
+        createdAt            = excluded.createdAt,
+        updatedAt            = excluded.updatedAt
     `);
     const projectsData = readJson<ProjectSeedItem[]>('projects.json');
     for (const item of projectsData) {
+      const crDate =
+        item.createdAt || item.publishedAt || '2026-09-01T00:00:00.000Z';
+      const upDate = item.updatedAt || crDate;
       const result = insertProj.run({
         ...item,
         category: item.category || 'web',
@@ -1031,6 +1098,8 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        createdAt: crDate,
+        updatedAt: upDate,
       });
       const rowId =
         result.lastInsertRowid !== 0n && result.lastInsertRowid !== BigInt(0)
@@ -1051,10 +1120,10 @@ export function seedDoiceladev(
     const insertInfra = db.prepare(`
       INSERT INTO infrastructure_posts
         (slug, title, subtitle, category, techStack, architectureOverview,
-         specs, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt)
+         specs, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @subtitle, @category, @techStack, @architectureOverview,
-         @specs, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt)
+         @specs, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title                = excluded.title,
         subtitle             = excluded.subtitle,
@@ -1068,10 +1137,13 @@ export function seedDoiceladev(
         coverImage           = excluded.coverImage,
         featured             = excluded.featured,
         orderPriority        = excluded.orderPriority,
-        updatedAt            = CURRENT_TIMESTAMP
+        publishedAt          = excluded.publishedAt,
+        updatedAt            = excluded.updatedAt
     `);
     const infraData = readJson<InfrastructureSeedItem[]>('infrastructure.json');
     for (const item of infraData) {
+      const pubDate = item.publishedAt || '2026-09-17T10:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       const result = insertInfra.run({
         ...item,
         coverImage: item.coverImage ?? null,
@@ -1085,7 +1157,8 @@ export function seedDoiceladev(
         likes: item.likes || 0,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
-        publishedAt: item.publishedAt ?? null,
+        publishedAt: pubDate,
+        updatedAt: updDate,
       });
       const rawTags = item.tags || item.techStack || 'infrastructure';
       const rowId =

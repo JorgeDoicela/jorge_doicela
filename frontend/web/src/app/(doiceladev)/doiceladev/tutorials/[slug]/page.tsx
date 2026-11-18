@@ -29,6 +29,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: tutorial.title,
       description: tutorial.excerpt,
       type: 'article',
+      publishedTime: tutorial.publishedAt || tutorial.createdAt,
+      ...(tutorial.updatedAt ? { modifiedTime: tutorial.updatedAt } : {}),
       authors: [tutorial.author],
       ...(tutorial.coverImage ? { images: [{ url: tutorial.coverImage }] } : {}),
     },
@@ -58,10 +60,30 @@ export default async function TutorialDetailPage({ params }: Params) {
 
   if (!tutorial) notFound();
 
-  const formattedDate = new Date(tutorial.publishedAt || tutorial.createdAt).toLocaleDateString(
-    locale === 'es' ? 'es-ES' : 'en-US',
-    { day: '2-digit', month: 'long', year: 'numeric' },
+  const pubRaw = tutorial.publishedAt || tutorial.createdAt;
+  const updRaw = tutorial.updatedAt;
+
+  const formattedPublishedDate = pubRaw
+    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
+
+  const isMeaningfullyUpdated = Boolean(
+    pubRaw &&
+      updRaw &&
+      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
   );
+
+  const formattedUpdatedDate = isMeaningfullyUpdated
+    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -71,7 +93,10 @@ export default async function TutorialDetailPage({ params }: Params) {
       categoryHref="/tutorials"
       title={tutorial.title}
       subtitle={tutorial.excerpt}
-      date={formattedDate}
+      date={formattedPublishedDate}
+      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
+      updatedDate={formattedUpdatedDate}
+      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
       author={tutorial.author}
       tags={tutorial.tags}
       recommendations={recommendations || []}

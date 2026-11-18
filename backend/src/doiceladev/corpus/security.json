@@ -15,7 +15,9 @@
     "featured": true,
     "orderPriority": 95,
     "views": 180,
-    "likes": 42
+    "likes": 42,
+    "publishedAt": "2024-10-24T14:30:00.000Z",
+    "updatedAt": "2026-11-09T22:30:00.000Z"
   },
   {
     "slug": "seguridad-php-cve-2024-8927-cve-2024-9026",
@@ -33,6 +35,8 @@
     "featured": true,
     "orderPriority": 95,
     "views": 180,
-    "likes": 42
+    "likes": 42,
+    "publishedAt": "2024-10-24T14:30:00.000Z",
+    "updatedAt": "2026-11-09T22:30:00.000Z"
   }
 ]

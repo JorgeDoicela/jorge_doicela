@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: topic.title,
       description: topic.content.slice(0, 160),
       type: 'article',
+      publishedTime: topic.createdAt,
+      ...(topic.updatedAt ? { modifiedTime: topic.updatedAt } : {}),
       authors: [topic.author],
     },
     alternates: {
@@ -59,10 +61,30 @@ export default async function ForumTopicDetailPage({ params }: Params) {
 
   if (!topic) notFound();
 
-  const formattedDate = new Date(topic.createdAt).toLocaleDateString(
-    locale === 'es' ? 'es-ES' : 'en-US',
-    { day: '2-digit', month: 'long', year: 'numeric' },
+  const pubRaw = topic.createdAt;
+  const updRaw = topic.updatedAt;
+
+  const formattedPublishedDate = pubRaw
+    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
+
+  const isMeaningfullyUpdated = Boolean(
+    pubRaw &&
+      updRaw &&
+      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
   );
+
+  const formattedUpdatedDate = isMeaningfullyUpdated
+    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -71,7 +93,10 @@ export default async function ForumTopicDetailPage({ params }: Params) {
       categoryLabel={tNav('forum')}
       categoryHref="/forum"
       title={topic.title}
-      date={formattedDate}
+      date={formattedPublishedDate}
+      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
+      updatedDate={formattedUpdatedDate}
+      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
       author={topic.author}
       tags={topic.category}
       recommendations={recommendations || []}

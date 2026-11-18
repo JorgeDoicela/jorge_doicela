@@ -39,6 +39,7 @@
         "statusActive": "Active",
         "statusWip": "In Progress",
         "published": "Published:",
+        "updated": "Updated:",
         "tags": "Tags:",
         "articleMetadata": "Article Metadata",
         "officialSource": "Official News Source ↗",
@@ -432,7 +433,12 @@
         "shareOnX": "Share on X",
         "shareOnLinkedIn": "Share on LinkedIn",
         "relatedArticlesTitle": "Recommended Reading",
-        "readArticle": "Read publication"
+        "readArticle": "Read publication",
+        "publishedOn": "Published:",
+        "updatedOn": "Updated:",
+        "publishedDate": "Published on {date}",
+        "updatedDate": "Updated on {date}",
+        "originallyPublished": "Originally published: {date}"
     },
     "CategoriesHub": {
         "title": "Categories",

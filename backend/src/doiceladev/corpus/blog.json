@@ -15,7 +15,9 @@
     "series": "Arquitectura y Monolitos",
     "tableOfContents": "1. Principio de Cajas Negras, 2. Persistencia Aislada Físicamente, 3. Matriz Comparativa de Arquitecturas, 4. Arquitectura en 3 Capas, 5. Conclusión",
     "views": 540,
-    "likes": 128
+    "likes": 128,
+    "publishedAt": "2026-09-28T16:00:00.000Z",
+    "updatedAt": "2026-10-30T18:00:00.000Z"
   },
   {
     "slug": "arquitectura-limpia-monolitos-modulares-nestjs",
@@ -33,6 +35,8 @@
     "series": "Architecture & Monoliths",
     "tableOfContents": "1. Black Box Principle, 2. Physically Isolated Persistence, 3. Architecture Comparison Matrix, 4. Three-Tier Architecture, 5. Conclusion",
     "views": 540,
-    "likes": 128
+    "likes": 128,
+    "publishedAt": "2026-09-28T16:00:00.000Z",
+    "updatedAt": "2026-10-30T18:00:00.000Z"
   }
 ]

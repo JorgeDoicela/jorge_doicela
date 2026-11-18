@@ -14,7 +14,9 @@
     "language": "es",
     "coverImage": "/doiceladev/images/covers/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables.webp",
     "views": 540,
-    "likes": 118
+    "likes": 118,
+    "publishedAt": "2026-11-16T16:50:00.000Z",
+    "updatedAt": "2026-11-16T16:50:00.000Z"
   },
   {
     "slug": "ransomware-ia-cifrado-hibrido-respaldos-inmutables",
@@ -31,6 +33,8 @@
     "language": "en",
     "coverImage": "/doiceladev/images/covers/news/ransomware-ia-cifrado-hibrido-respaldos-inmutables.webp",
     "views": 540,
-    "likes": 118
+    "likes": 118,
+    "publishedAt": "2026-11-16T16:50:00.000Z",
+    "updatedAt": "2026-11-16T16:50:00.000Z"
   }
 ]

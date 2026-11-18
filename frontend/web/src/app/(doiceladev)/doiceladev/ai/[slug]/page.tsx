@@ -29,6 +29,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: resource.name,
       description: resource.description,
       type: 'article',
+      publishedTime: resource.publishedAt || resource.createdAt,
+      ...(resource.updatedAt ? { modifiedTime: resource.updatedAt } : {}),
       authors: [resource.author],
       ...(resource.coverImage ? { images: [{ url: resource.coverImage }] } : {}),
     },
@@ -58,10 +60,30 @@ export default async function AiDetailPage({ params }: Params) {
 
   if (!resource) notFound();
 
-  const formattedDate = new Date(resource.publishedAt || resource.createdAt).toLocaleDateString(
-    locale === 'es' ? 'es-ES' : 'en-US',
-    { day: '2-digit', month: 'long', year: 'numeric' },
+  const pubRaw = resource.publishedAt || resource.createdAt;
+  const updRaw = resource.updatedAt;
+
+  const formattedPublishedDate = pubRaw
+    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
+
+  const isMeaningfullyUpdated = Boolean(
+    pubRaw &&
+      updRaw &&
+      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
   );
+
+  const formattedUpdatedDate = isMeaningfullyUpdated
+    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -71,7 +93,10 @@ export default async function AiDetailPage({ params }: Params) {
       categoryHref="/ai"
       title={resource.name}
       subtitle={resource.description}
-      date={formattedDate}
+      date={formattedPublishedDate}
+      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
+      updatedDate={formattedUpdatedDate}
+      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
       author={resource.author}
       tags={resource.tags}
       recommendations={recommendations || []}

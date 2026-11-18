@@ -16,7 +16,8 @@
     "likes": 28,
     "featured": true,
     "orderPriority": 100,
-    "publishedAt": "2026-09-17T10:00:00.000Z"
+    "publishedAt": "2026-09-17T10:00:00.000Z",
+    "updatedAt": "2026-10-25T11:00:00.000Z"
   },
   {
     "slug": "firewall-linux-ufw-netfilter-seguridad-servidores",
@@ -35,6 +36,7 @@
     "likes": 28,
     "featured": true,
     "orderPriority": 100,
-    "publishedAt": "2026-09-17T10:00:00.000Z"
+    "publishedAt": "2026-09-17T10:00:00.000Z",
+    "updatedAt": "2026-10-25T11:00:00.000Z"
   }
 ]

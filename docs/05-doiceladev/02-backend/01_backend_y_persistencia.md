@@ -415,3 +415,29 @@ Para el despacho de notificaciones técnicas, avisos de seguridad y boletines ed
 * **Opt-in Explícito:** Los lectores se registran voluntariamente mediante el componente `StayInformedCard` en los artículos de DoicelaDev.
 * **Manejo de Bajas en SQLite:** Los suscriptores que solicitan desuscripción se marcan con `status = 'unsubscribed'`, impidiendo cualquier envío futuro.
 * **Monitoreo de Reputación:** Supervisión continua a través del panel de SES para mantener tasas de rebote (*Bounce Rate*) inferiores al 5% y quejas por spam (*Complaint Rate*) por debajo del 0.1%.
+
+---
+
+## 10. Gestión Cronológica y Modelo de Fechas en SQLite (`publishedAt`, `createdAt`, `updatedAt`)
+
+Para garantizar la fidelidad histórica y evitar discrepancias cronológicas en la presentación técnica de publicaciones:
+
+### 10.1 Definición Estática en el Corpus JSON
+* Los archivos de datos en `backend/src/doiceladev/corpus/*.json` son la única fuente de verdad cronológica.
+* Cada registro editorial declara explícitamente en formato ISO 8601:
+  * `publishedAt`: Fecha y hora de lanzamiento original del contenido.
+  * `updatedAt`: Fecha y hora de la última revisión, enriquecimiento técnico o bastionado.
+* **Prohibición de Fechas Huérfanas:** Queda estrictamente prohibido omitir las fechas en el corpus para forzar fallbacks a `new Date()`.
+
+### 10.2 Idempotencia y Sincronización en el Seeder (`seed-doiceladev.ts`)
+* Las sentencias `INSERT INTO ... ON CONFLICT(slug, language) DO UPDATE SET` actualizan de forma idempotente tanto `publishedAt` como `updatedAt`:
+  ```sql
+  ON CONFLICT(slug, language) DO UPDATE SET
+    publishedAt = excluded.publishedAt,
+    updatedAt   = excluded.updatedAt
+  ```
+* Al ejecutar `pnpm seed:all` o `pnpm --filter backend seed:doiceladev`, la base de datos `doiceladev.sqlite` adopta de inmediato las fechas exactas del corpus sin generar fechas espurias de ejecución local.
+
+### 10.3 Impulso de Frescura Editorial (`SmartScore` en `portal.service.ts`)
+* El algoritmo de ponderación temporal (`calculateRecencyBoost`) computa el decaimiento de novedad editorial restando `Date.now() - pubTime` sobre la fecha real `publishedAt`.
+* Al fijar fechas históricas reales, las publicaciones más recientes reciben la bonificación legítima de novedad mientras que el contenido histórico mantiene su posicionamiento orgánico calibrado por interacciones (`views`, `likes`, `orderPriority`).

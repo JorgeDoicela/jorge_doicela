@@ -33,6 +33,9 @@ export interface DoiceladevArticleLayoutProps {
   title: string;
   subtitle?: string;
   date?: string;
+  publishedAtIso?: string;
+  updatedDate?: string;
+  updatedAtIso?: string;
   author?: string;
   authorImage?: string;
   badge?: React.ReactNode;
@@ -51,6 +54,9 @@ export function DoiceladevArticleLayout({
   title,
   subtitle,
   date,
+  publishedAtIso,
+  updatedDate,
+  updatedAtIso,
   author,
   authorImage = '/doiceladev/logo/perfil.webp',
   badge,
@@ -165,8 +171,8 @@ export function DoiceladevArticleLayout({
                   </p>
                 )}
 
-                {/* Byline Editorial Centrado: Autor, Avatar y Fecha */}
-                {(author || date) && (
+                {/* Byline Editorial Centrado: Autor, Avatar, Fecha de Publicación y Actualización */}
+                {(author || date || updatedDate) && (
                   <div className="flex items-center justify-center gap-3 pt-1 text-xs select-none">
                     {author && (
                       <div className="inline-flex items-center gap-2">
@@ -185,15 +191,26 @@ export function DoiceladevArticleLayout({
                       </div>
                     )}
 
-                    {author && date && (
+                    {author && (date || updatedDate) && (
                       <span className="text-slate-300 dark:text-zinc-700" aria-hidden="true">•</span>
                     )}
 
-                    {date && (
-                      <time dateTime={date} className="font-mono text-slate-500 dark:text-zinc-400">
+                    {updatedDate && updatedDate !== date ? (
+                      <time
+                        dateTime={updatedAtIso || updatedDate}
+                        title={date ? tArticle('originallyPublished', { date }) : undefined}
+                        className="font-mono text-slate-500 dark:text-zinc-400 cursor-help"
+                      >
+                        {tArticle('updatedOn')} {updatedDate}
+                      </time>
+                    ) : date ? (
+                      <time
+                        dateTime={publishedAtIso || date}
+                        className="font-mono text-slate-500 dark:text-zinc-400"
+                      >
                         {date}
                       </time>
-                    )}
+                    ) : null}
                   </div>
                 )}
 

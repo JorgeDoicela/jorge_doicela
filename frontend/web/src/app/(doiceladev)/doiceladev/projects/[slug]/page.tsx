@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: project.name,
       description: project.description,
       type: 'article',
+      publishedTime: project.publishedAt || project.createdAt,
+      ...(project.updatedAt ? { modifiedTime: project.updatedAt } : {}),
       authors: [project.author],
       ...(project.coverImage ? { images: [{ url: project.coverImage }] } : {}),
     },
@@ -57,10 +59,30 @@ export default async function ProjectDetailPage({ params }: Params) {
 
   if (!project) notFound();
 
-  const formattedDate = new Date(project.publishedAt || project.createdAt).toLocaleDateString(
-    locale === 'es' ? 'es-ES' : 'en-US',
-    { day: '2-digit', month: 'long', year: 'numeric' },
+  const pubRaw = project.publishedAt || project.createdAt;
+  const updRaw = project.updatedAt;
+
+  const formattedPublishedDate = pubRaw
+    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
+
+  const isMeaningfullyUpdated = Boolean(
+    pubRaw &&
+      updRaw &&
+      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
   );
+
+  const formattedUpdatedDate = isMeaningfullyUpdated
+    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
 
   const techList = project.techStack
     ? project.techStack.split(',').map((t) => t.trim()).filter(Boolean)
@@ -74,7 +96,10 @@ export default async function ProjectDetailPage({ params }: Params) {
       categoryHref="/projects"
       title={project.name}
       subtitle={project.description}
-      date={formattedDate}
+      date={formattedPublishedDate}
+      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
+      updatedDate={formattedUpdatedDate}
+      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
       author={project.author}
       tags={project.techStack}
       recommendations={recommendations || []}

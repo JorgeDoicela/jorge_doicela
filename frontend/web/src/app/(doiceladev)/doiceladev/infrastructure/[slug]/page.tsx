@@ -29,6 +29,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: post.title,
       description: post.subtitle || post.title,
       type: 'article',
+      publishedTime: post.publishedAt || post.createdAt,
+      ...(post.updatedAt ? { modifiedTime: post.updatedAt } : {}),
       authors: [post.author],
       ...(post.coverImage ? { images: [{ url: post.coverImage }] } : {}),
     },
@@ -58,10 +60,30 @@ export default async function InfrastructureDetailPage({ params }: Params) {
 
   if (!post) notFound();
 
-  const formattedDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString(
-    locale === 'es' ? 'es-ES' : 'en-US',
-    { day: '2-digit', month: 'long', year: 'numeric' },
+  const pubRaw = post.publishedAt || post.createdAt;
+  const updRaw = post.updatedAt;
+
+  const formattedPublishedDate = pubRaw
+    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
+
+  const isMeaningfullyUpdated = Boolean(
+    pubRaw &&
+      updRaw &&
+      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
   );
+
+  const formattedUpdatedDate = isMeaningfullyUpdated
+    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -71,7 +93,10 @@ export default async function InfrastructureDetailPage({ params }: Params) {
       categoryHref="/infrastructure"
       title={post.title}
       subtitle={post.subtitle}
-      date={formattedDate}
+      date={formattedPublishedDate}
+      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
+      updatedDate={formattedUpdatedDate}
+      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
       author={post.author}
       tags={post.tags}
       recommendations={recommendations || []}

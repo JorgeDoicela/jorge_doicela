@@ -165,3 +165,26 @@ DoicelaDev cuenta con un motor de interfaz enriquecida propio (`MarkdownRenderer
 | **Primera columna de tablas (`TableBlock`)** | `\| **Política** \|` o ``\| `Política` \|`` | `\| Política \|` (texto plano) | `MarkdownRenderer.tsx` ya estiliza automáticamente `td:first-child` con `font-mono font-semibold`. |
 | **Párrafos de prosa técnica** | Párrafos llenos de `**conceptos en negrita**` y `` `cajas` `` | Prosa limpia + Glosario Interactivo + Callouts | Evita que el párrafo compita visualmente con los 6 componentes ricos de la página (Callouts, Glosario, Mermaid, CodeBlock, TableBlock, Checklists). |
 | **Encabezados de listas didácticas** | `* **Los Puertos (Ports):** Son...` | `* **Puertos:** Puertas numeradas...` | Síntesis directa en el arranque de viñeta sin artículos gramaticales innecesarios. |
+
+---
+
+## 9. Estándares Cronológicos Editoriales: Fecha de Publicación y Fecha de Revisión Técnica
+
+Para asegurar la transparencia técnica ante auditores, reclutadores e ingenieros DevSecOps, el portal diferencia con precisión entre la fecha de publicación original y las revisiones técnicas posteriores:
+
+### 9.1 Reglas de Inmutabilidad y Actualización
+* **Fecha de Publicación (`publishedAt`):** Representa el momento exacto en que la investigación, tutorial o aviso fue liberado públicamente. Es inmutable.
+* **Fecha de Actualización (`updatedAt`):** Representa la última fecha en que el artículo fue modificado con nuevo código, diagramas de arquitectura, comandos actualizados o análisis forenses.
+* **Condición de Visualización:** El badge de actualización técnica solo se muestra si `updatedAt` es posterior al día de publicación por más de 24 horas (`updatedAt - publishedAt > 86400000 ms`), evitando ruido visual redundante en artículos recién creados.
+
+### 9.2 Presentación Visual en `DoiceladevArticleLayout`
+1. **Artículo sin actualizaciones significativas:**
+   * Muestra la fecha de publicación limpia en tipografía mono:
+     `Jorge Doicela • 24 de octubre de 2024`
+2. **Artículo con revisiones técnicas posteriores (Vigencia Directa + Tooltip Nativo):**
+   * Despliega una única fecha en pantalla (la de actualización técnica) para garantizar máxima legibilidad en móvil y evitar saltos de línea redundantes:
+     `Jorge Doicela • Actualizado: 09 de noviembre de 2026`
+   * Al pasar el cursor sobre la fecha, el atributo HTML nativo `title` revela la fecha original: `Publicado originalmente: 24 de octubre de 2024`.
+3. **Semántica HTML y SEO:**
+   * La fecha visible se encapsula en `<time dateTime="[ISO 8601]">`.
+   * En `generateMetadata`, se exportan tanto `publishedTime` como `modifiedTime` en las etiquetas OpenGraph, garantizando trazabilidad completa para motores de búsqueda sin sobrecargar la interfaz de usuario.

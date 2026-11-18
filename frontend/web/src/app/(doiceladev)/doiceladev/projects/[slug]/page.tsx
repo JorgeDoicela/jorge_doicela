@@ -3,10 +3,11 @@ import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Project, ProjectActions } from '../../../entities/projects';
+import type { GlossaryTerm } from '../../../entities/glossary/types';
 import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
-import { MermaidBlock, CalloutBlock } from '../../../shared/markdown';
+import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -48,8 +49,9 @@ export default async function ProjectDetailPage({ params }: Params) {
   const cookieStore = await cookies();
   const readHistory = cookieStore.get('doicela_read_history')?.value || '';
 
-  const [project, recommendations] = await Promise.all([
+  const [project, glossary, recommendations] = await Promise.all([
     serverGet<Project>(`/doiceladev/projects/${slug}?lang=${locale}`),
+    serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
     serverGet<RecommendationCard[]>(
       `/doiceladev/recommendations?module=projects&slug=${slug}&lang=${locale}${
         readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
@@ -123,76 +125,14 @@ export default async function ProjectDetailPage({ params }: Params) {
         </div>
       )}
 
-      {/* Caso de Estudio y Arquitectura */}
-      <div className="space-y-6 pt-4">
-        <div className="space-y-2">
-          <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight font-mono">
-            {tDetail('architecturePrinciples')}
-          </h3>
-          <p className="text-sm sm:text-base text-slate-700 dark:text-zinc-300 font-light leading-relaxed">
-            {tDetail('architecturePrinciplesDesc')}
-          </p>
-        </div>
+      {/* Contenido Editorial en Markdown (Mismo estándar universal) */}
+      <MarkdownRenderer
+        content={project.contentMarkdown || project.description}
+        glossaryTerms={glossary || []}
+      />
 
-        <MermaidBlock
-          chart={
-            locale === 'es'
-              ? `graph TD
-    subgraph Edge ["Perímetro Seguro (AWS Lightsail)"]
-        CF["Cloudflare Edge (SSL / DNS)"]
-        Nginx["Nginx Reverse Proxy (:80 / :443)"]
-    end
-
-    subgraph Runtimes ["Runtimes Consolidados (1 GB RAM)"]
-        Next["Next.js 16 (App Router + FSD)<br/>Puerto 3001"]
-        Nest["NestJS 11 (Modular Monolith)<br/>Puerto 3000"]
-    end
-
-    subgraph Storage ["Persistencia Aislada (Cajas Negras)"]
-        DBSw[("doiceladev.sqlite (WAL)")]
-        DBKartex[("kartex.sqlite (WAL)")]
-        DBPort[("portfolio.sqlite (WAL)")]
-    end
-
-    CF --> Nginx
-    Nginx -->|Web Traffic| Next
-    Nginx -->|API Traffic| Nest
-    Nest --> DBSw
-    Nest --> DBKartex
-    Nest --> DBPort`
-              : `graph TD
-    subgraph Edge ["Secure Perimeter (AWS Lightsail)"]
-        CF["Cloudflare Edge (SSL / DNS)"]
-        Nginx["Nginx Reverse Proxy (:80 / :443)"]
-    end
-
-    subgraph Runtimes ["Consolidated Runtimes (1 GB RAM)"]
-        Next["Next.js 16 (App Router + FSD)<br/>Port 3001"]
-        Nest["NestJS 11 (Modular Monolith)<br/>Port 3000"]
-    end
-
-    subgraph Storage ["Isolated Persistence (Black-Box)"]
-        DBSw[("doiceladev.sqlite (WAL)")]
-        DBKartex[("kartex.sqlite (WAL)")]
-        DBPort[("portfolio.sqlite (WAL)")]
-    end
-
-    CF --> Nginx
-    Nginx -->|Web Traffic| Next
-    Nginx -->|API Traffic| Nest
-    Nest --> DBSw
-    Nest --> DBKartex
-    Nest --> DBPort`
-          }
-        />
-
-        <CalloutBlock type="note">
-          {locale === 'es'
-            ? 'Las 4 aplicaciones (landing, portfolio, kartex, doiceladev) conviven en un único monorepo pnpm pero mantienen aislamiento absoluto de dependencias locales y bases de datos físicas independientes en backend/data/.'
-            : 'All 4 sub-applications (landing, portfolio, kartex, doiceladev) reside within a unified pnpm monorepo while enforcing strict zero-cross-import isolation and discrete physical SQLite files in backend/data/.'}
-        </CalloutBlock>
-
-        {/* Botones de Acción de Enlaces Externos al final del artículo (CTA) */}
+      {/* Botones de Acción de Enlaces Externos al final del artículo (CTA) */}
+      <div className="pt-4">
         <ProjectActions liveUrl={project.liveUrl} repoUrl={project.repoUrl} />
       </div>
     </DoiceladevArticleLayout>

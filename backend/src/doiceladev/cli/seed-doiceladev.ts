@@ -250,6 +250,7 @@ interface ProjectSeedItem {
   name: string;
   category: ProjectCategory;
   description: string;
+  contentMarkdown?: string;
   techStack: string;
   author: string;
   language?: string;
@@ -573,6 +574,7 @@ export function seedDoiceladev(
       category             TEXT    NOT NULL DEFAULT 'web'
                            CHECK (category IN ('web','backend','mobile','devops','ai','open_source','tool')),
       description          TEXT    NOT NULL,
+      contentMarkdown      TEXT,
       techStack            TEXT    NOT NULL,
       author               TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       language             TEXT    NOT NULL DEFAULT 'es',
@@ -1062,15 +1064,16 @@ export function seedDoiceladev(
     // ── 7. Proyectos ────────────────────────────────────────────────────────
     const insertProj = db.prepare(`
       INSERT INTO projects
-        (slug, name, category, description, techStack, author, language, coverImage,
+        (slug, name, category, description, contentMarkdown, techStack, author, language, coverImage,
          repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl, createdAt, updatedAt)
       VALUES
-        (@slug, @name, @category, @description, @techStack, @author, @language, @coverImage,
+        (@slug, @name, @category, @description, @contentMarkdown, @techStack, @author, @language, @coverImage,
          @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl, @createdAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         name                 = excluded.name,
         category             = excluded.category,
         description          = excluded.description,
+        contentMarkdown      = excluded.contentMarkdown,
         techStack            = excluded.techStack,
         author               = excluded.author,
         coverImage           = excluded.coverImage,
@@ -1091,6 +1094,7 @@ export function seedDoiceladev(
       const result = insertProj.run({
         ...item,
         category: item.category || 'web',
+        contentMarkdown: item.contentMarkdown ?? null,
         coverImage: item.coverImage ?? null,
         architectureDiagramUrl: item.architectureDiagramUrl ?? null,
         repoUrl: item.repoUrl ?? null,

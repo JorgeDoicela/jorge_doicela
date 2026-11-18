@@ -265,8 +265,6 @@
         "loadingProject": "Cargando caso de estudio de arquitectura...",
         "projectNotFound": "Proyecto no encontrado",
         "techStackUsed": "Stack Tecnológico Utilizado",
-        "architecturePrinciples": "Arquitectura y Principios de Diseño",
-        "architecturePrinciplesDesc": "Este sistema está construido bajo el principio de cajas negras independientes (desacoplamiento total de dependencias y tipos locales), optimizado para ejecutarse en entornos de memoria controlada (1 GB de RAM) con persistencia física SQLite y arquitectura basada en Feature-Sliced Design (FSD) en Next.js.",
         "loadingInfrastructure": "Cargando guía de infraestructura...",
         "allInfrastructure": "← Todas las guías",
         "serverSpecs": "Telemetría & Especificaciones del Nodo",

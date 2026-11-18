@@ -260,7 +260,7 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (tutorialId) REFERENCES tutorials(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_tutorial_steps_tut (tutorialId)`, `IDX_tutorial_steps_tut_order (tutorialId, stepOrder ASC)`.
-* `projects`: `id`, `slug`, `name`, `description`, `category`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
+* `projects`: `id`, `slug`, `name`, `description`, `contentMarkdown`, `category`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
   * **Restricciones:** `CHECK (status IN ('active', 'archived', 'wip'))`, `CHECK (category IN ('web', 'backend', 'mobile', 'devops', 'tools', 'ai', 'security', 'open_source'))`.  
   * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, stars DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, stars DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, stars DESC)`.
 * `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
@@ -305,7 +305,7 @@ Todos los datasets fuente en `backend/src/doiceladev/corpus/*.json` contienen re
 | **IA & Agentes** | `ai.json` | `inyeccion-prompts-owasp-llm01-seguridad-agentes` | `/doiceladev/images/covers/ai/inyeccion-prompts-owasp-llm01-seguridad-agentes.webp` |
 | **Ciberseguridad** | `security.json` | `seguridad-php-cve-2024-8927-cve-2024-9026` | `/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp` |
 | **Tutoriales** | `tutorials.json` | `configuracion-ssh-claves-ed25519-alias-tuneles` | `/doiceladev/images/covers/tutorials/terminal-ssh-websockets.webp` |
-| **Proyectos** | `projects.json` | `doiceladev-plataforma-tecnologica` | `/doiceladev/images/covers/projects/doiceladev-plataforma-tecnologica.webp` |
+| **Proyectos** | `projects.json` | `vpn-privada-wireguard-linux` | `/doiceladev/images/covers/projects/vpn-privada-wireguard-linux.webp` |
 | **Infraestructura** | `infrastructure.json` | `firewall-linux-ufw-netfilter-seguridad-servidores` | `/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.webp` |
 
 ### 6.1 Modo de Operación del Seeder (`seed-doiceladev.ts`)

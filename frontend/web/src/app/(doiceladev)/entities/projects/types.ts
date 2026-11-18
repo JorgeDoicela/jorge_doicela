@@ -14,6 +14,7 @@ export interface Project {
   name: string;
   category: ProjectCategory;
   description: string;
+  contentMarkdown?: string;
   techStack: string;
   author: string;
   repoUrl?: string;

@@ -22,6 +22,10 @@ export class CreateProjectDto {
 
   @IsString()
   @IsOptional()
+  contentMarkdown?: string;
+
+  @IsString()
+  @IsOptional()
   author?: string;
 
   @IsString()

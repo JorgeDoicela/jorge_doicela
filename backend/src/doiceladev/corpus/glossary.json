@@ -702,5 +702,71 @@
     "caseSensitive": true,
     "language": "en",
     "orderPriority": 73
+  },
+  {
+    "slug": "wireguard",
+    "term": "WireGuard",
+    "aliases": "wireguard, wg",
+    "category": "networking",
+    "shortDefinition": "Protocolo VPN moderno de código abierto integrado nativamente en el kernel de Linux que encapsula tráfico IP sobre UDP usando criptografía fija de alto rendimiento.",
+    "keyDifference": "A diferencia de OpenVPN (~100,000 líneas en espacio de usuario), WireGuard opera en ~4,000 líneas dentro del kernel sin negociación de cifrados heredados.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 92
+  },
+  {
+    "slug": "wireguard",
+    "term": "WireGuard",
+    "aliases": "wireguard, wg",
+    "category": "networking",
+    "shortDefinition": "Modern open-source VPN protocol integrated natively into the Linux kernel that encapsulates IP traffic over UDP using fixed, high-speed cryptography.",
+    "keyDifference": "Unlike OpenVPN (~100,000 user-space lines), WireGuard executes in ~4,000 kernel-space lines without legacy cipher suite negotiation.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 92
+  },
+  {
+    "slug": "nat-masquerade",
+    "term": "NAT Masquerade",
+    "aliases": "nat masquerade, masquerade, nat",
+    "category": "networking",
+    "shortDefinition": "Mecanismo de traducción dinámica de direcciones (SNAT) que reemplaza la IP privada de origen de los paquetes salientes por la IP pública actual de la interfaz de salida.",
+    "keyDifference": "A diferencia del SNAT estático, Masquerade consulta automáticamente la IP de la interfaz de salida en tiempo real, evitando fallos si la IP pública cambia.",
+    "caseSensitive": false,
+    "language": "es",
+    "orderPriority": 88
+  },
+  {
+    "slug": "nat-masquerade",
+    "term": "NAT Masquerade",
+    "aliases": "nat masquerade, masquerade, nat",
+    "category": "networking",
+    "shortDefinition": "Dynamic source network address translation (SNAT) mechanism that rewrites private source IP addresses on outbound packets to match the egress interface public IP.",
+    "keyDifference": "Unlike static SNAT, Masquerade dynamically resolves the egress interface IP on the fly, preventing routing breakage when public IPs change.",
+    "caseSensitive": false,
+    "language": "en",
+    "orderPriority": 88
+  },
+  {
+    "slug": "mtu",
+    "term": "MTU",
+    "aliases": "mtu, maximum transmission unit",
+    "category": "networking",
+    "shortDefinition": "Maximum Transmission Unit: tamaño máximo en bytes que puede transportar un paquete IP sin requerir fragmentación al atravesar un enlace o túnel de red.",
+    "keyDifference": "En túneles VPN (como WireGuard sobre Ethernet de 1500 bytes), las cabeceras adicionales obligan a reducir la MTU (ej. 1420 bytes) para evitar paquetes descartados.",
+    "caseSensitive": true,
+    "language": "es",
+    "orderPriority": 86
+  },
+  {
+    "slug": "mtu",
+    "term": "MTU",
+    "aliases": "mtu, maximum transmission unit",
+    "category": "networking",
+    "shortDefinition": "Maximum Transmission Unit: maximum payload size in bytes that an IP packet can carry across a network link or VPN tunnel without fragmentation.",
+    "keyDifference": "Inside VPN tunnels (such as WireGuard over 1500-byte Ethernet), encapsulation headers require lowering MTU (e.g., 1420 bytes) to prevent silent packet drops.",
+    "caseSensitive": true,
+    "language": "en",
+    "orderPriority": 86
   }
 ]

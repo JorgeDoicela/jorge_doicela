@@ -35,6 +35,9 @@ export class Project {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ type: 'text', nullable: true })
+  contentMarkdown?: string;
+
   @Column({ default: 'Jorge Doicela' })
   author: string;
 

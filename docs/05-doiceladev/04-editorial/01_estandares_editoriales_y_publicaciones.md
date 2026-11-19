@@ -117,8 +117,8 @@ Las imágenes de portada de cada publicación (`coverImage` en `frontend/web/pub
 * **Diferenciación Temática con Sujetos Tangibles Únicos:** Cada publicación debe tener su propio encuadre, entorno y sujeto físico representativo de su tema, evitando repetir la misma composición:
   * *IA / Inyección de Prompts y Aislamiento (OWASP LLM01):* Procesador tensorial de silicio desnudo con disipador de microcanales de cobre encapsulado en cámara de aislamiento de cristal templado junto a un acoplador prismático de fibra óptica sin texto impreso.
   * *Tutoriales / Consola Interactiva:* Monitor sin marcos en escritorio de desarrollo nocturno con consola interactiva y teclado mecánico.
-  * *Blog / Monolitos Modulares:* Escultura geométrica de cajas negras modulares en aluminio y cristal ahumado sobre concreto pulido.
-  * *Foro / Optimización de RAM VPS:* Módulo de memoria RAM física y disco SSD NVMe sobre grafito cepillado.
+  * *Blog / Fundamentos Linux, Redes y SQL:* Escultura geométrica minimalista y cuaderno técnico sobre escritorio oscuro de ingeniería sin texto publicitario.
+  * *Foro / Ingeniería de Software en la Era de la IA:* Cuaderno de cuadrícula abierto con diagramas de bloques minimalistas sin texto junto a teclado mecánico oscuro mate y reflejo sutil en aluminio anodizado.
   * *Noticias / Ransomware y Respaldos Inmutables:* Cartucho magnético de respaldo LTO y módulo SSD empresarial NVMe desconectado dentro de un maletín de bóveda de titanio sobre pizarra oscura de centro de datos.
   * *Ciberseguridad / Acceso SSH:* Llave física de seguridad criptográfica de titanio y candado industrial de acero endurecido.
   * *Infraestructura / Perímetro Linux:* Servidor rack 1U con escudo perimetral translúcido Netfilter.

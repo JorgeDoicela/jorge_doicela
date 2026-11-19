@@ -16,7 +16,7 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 > * **Arquitectura en 3 Capas por Submódulo:**
 >   1. *Presentación:* Controladores REST de solo lectura para los 7 módulos editoriales (`NewsController`, `BlogController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`, `InfrastructureController`), además de `ForumController`, `GlossaryController`, `PortalController`, `RecommendationsController`, `CategoriesController`, `TagsController` y `NewsletterController`.
 >   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas, soporte uniforme de `sortBy` (`smart | recent | popular`) y agregación SQL `GROUP BY` compartida (`category-aggregation.util.ts`).
->   3. *Acceso a Datos:* 14 tablas relacionales en `better-sqlite3` (`news_articles`, `blog_posts`, `forum_topics`, `forum_replies`, `ai_resources`, `security_posts`, `tutorials`, `tutorial_steps`, `projects`, `infrastructure_posts`, `glossary_terms`, `tags`, `content_tags`, `newsletter_subscribers`).
+>   3. *Acceso a Datos:* 15 tablas relacionales en `better-sqlite3` (`news_articles`, `blog_posts`, `forum_topics`, `forum_replies`, `forum_poll_options`, `ai_resources`, `security_posts`, `tutorials`, `tutorial_steps`, `projects`, `infrastructure_posts`, `glossary_terms`, `tags`, `content_tags`, `newsletter_subscribers`).
 > * **Sistema Universal de Filtros Polimórficos:**
 >   - Todos los submódulos exponen el endpoint `GET /doiceladev/[modulo]/categories?lang=es|en` devolviendo el contrato universal `{ id: string, label: string, count: number }`.
 >   - Las agregaciones se ejecutan dinámicamente en `doiceladev.sqlite` sin sobrecarga de memoria, erradicando datos quemados y alimentando de forma homogénea a `CategoryFilterBar` en el frontend.
@@ -28,7 +28,7 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 
 ```text
 backend/src/doiceladev/
-├── doiceladev.module.ts               # Orquestador puro de los 14 submódulos (14 tablas relacionales)
+├── doiceladev.module.ts               # Orquestador puro de los 14 submódulos (15 tablas relacionales)
 ├── cli/
 │   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI desde corpus/*.json
 │

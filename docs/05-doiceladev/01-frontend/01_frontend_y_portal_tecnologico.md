@@ -41,7 +41,7 @@ frontend/web/src/app/(doiceladev)/
 │   └── en.json
 │
 ├── providers/                        # CAPA 1 (APP): Proveedores de Tema y Contexto Global
-│   ├── theme-provider.tsx            # Wrapper local de next-themes
+│   ├── theme-provider.tsx            # Re-export de ThemeProvider nativo React 19 (shared/lib/theme-context.tsx + script anti-FOUC en <head>)
 │   └── index.ts
 │
 ├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
@@ -66,7 +66,7 @@ frontend/web/src/app/(doiceladev)/
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
-│   ├── forum-reply/                  # ForumDiscussionSection, ForumPollCard, ForumReplyForm, ForumSection
+│   ├── forum-reply/                  # ForumDiscussionSection, ForumPollCard, ForumReplyForm
 │   ├── newsletter-subscription/      # useNewsletterSubscription y useNewsletterUnsubscribe (suscripción y baja idempotente)
 │   ├── language-toggle/              # LanguageToggle (ES / EN)
 │   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)

@@ -1,6 +1,6 @@
 ---
 name: doiceladev-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de DoicelaDev (doiceladev.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 áreas temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (14 submódulos, 7 módulos editoriales homologados de solo lectura GET, corpus/*.json, seeder atómico) y la base de datos doiceladev.sqlite (14 tablas relacionales).
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de DoicelaDev (doiceladev.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 áreas temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (14 submódulos, 7 módulos editoriales homologados de solo lectura GET, foro con encuestas y respuestas anidadas, corpus/*.json, seeder atómico) y la base de datos doiceladev.sqlite (15 tablas relacionales).
 ---
 # Directrices de Desarrollo: DoicelaDev (doiceladev.jorgedoicela.com)
 
@@ -38,14 +38,14 @@ frontend/web/src/app/(doiceladev)/
 ├── layout.tsx                        # Layout raíz del subdominio (localFont + ThemeProvider + NextIntlClientProvider + generateMetadata)
 │
 ├── providers/                        # CAPA 1 (App): Proveedores globales aislados
-│   ├── theme-provider.tsx            # Proveedor de tema local aislado (next-themes)
+│   ├── theme-provider.tsx            # Re-export de ThemeProvider nativo React 19 (shared/lib/theme-context.tsx + script anti-FOUC en <head>)
 │   └── index.ts                      # Barrel export de providers
 │
 ├── shared/                           # CAPA 6: UI Kit agnóstico, suite Markdown, SEO, Lib y Tipos
 │   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, DoiceladevSelect, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel, ModuleFilterToolbar, CategoryFilterBar
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # DoiceladevJsonLd (Schema.org JSON-LD bilingüe)
-│   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson, articlePage.ts (metadata, fechas y carga paralela unificada)
+│   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson, articlePage.ts, theme-context.tsx, useFuzzyFilter.ts
 │   └── types/                        # filter.ts, glossary.ts, recommendation.ts, spotlight.ts
 │
 ├── entities/                         # CAPA 5: Modelos de dominio, Hooks API, Tarjetas de Entidad y Borradores Markdown (drafts/)
@@ -61,7 +61,7 @@ frontend/web/src/app/(doiceladev)/
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightModal (Cmd + K) y búsqueda interactiva
-│   ├── forum-reply/                  # ForumReplyForm, ForumSection
+│   ├── forum-reply/                  # ForumDiscussionSection, ForumPollCard, ForumReplyForm
 │   ├── language-toggle/              # LanguageToggle (ES / EN)
 │   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
 │
@@ -118,9 +118,9 @@ frontend/web/src/app/(doiceladev)/
 ### 3.1 Estructura de Directorios Backend
 ```text
 backend/src/doiceladev/
-├── doiceladev.module.ts               # Orquestador puro (importa 14 submódulos, registra 14 tablas)
+├── doiceladev.module.ts               # Orquestador puro (importa 14 submódulos, registra 15 tablas)
 ├── cli/
-│   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI (14 tablas desde corpus/*.json)
+│   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI (15 tablas desde corpus/*.json)
 │
 ├── common/                            # Contratos y utilidades compartidas de DoicelaDev
 │   ├── dto/doiceladev-query.dto.ts    # Query base: search, lang, tag, sortBy (smart|recent|popular), limit, page
@@ -140,7 +140,7 @@ backend/src/doiceladev/
 │
 ├── news/                              # NewsArticle (GET /doiceladev/news)
 ├── blog/                              # BlogPost (GET /doiceladev/blog)
-├── forum/                             # ForumTopic + ForumReply (GET|POST /doiceladev/forum)
+├── forum/                             # ForumTopic + ForumReply + ForumPollOption + ForumThrottleGuard (GET|POST replies/votes)
 ├── ai/                                # AiResource (GET /doiceladev/ai)
 ├── cybersecurity/                     # SecurityPost (GET /doiceladev/cybersecurity)
 ├── tutorials/                         # Tutorial + TutorialStep (GET /doiceladev/tutorials)
@@ -154,7 +154,7 @@ backend/src/doiceladev/
 └── newsletter/                        # Suscripciones idempotentes + Amazon SES (POST /doiceladev/newsletter/*)
 ```
 
-### 3.2 14 Tablas Relacionales en `doiceladev.sqlite`
+### 3.2 15 Tablas Relacionales en `doiceladev.sqlite`
 
 Los 7 módulos editoriales (`news_articles`, `blog_posts`, `ai_resources`, `security_posts`, `tutorials`, `projects`, `infrastructure_posts`) comparten un núcleo común idéntico (`id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `category`, `tags`, `author`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt NOT NULL`, `createdAt`, `updatedAt`) e índices B-Tree alineados a `publishedAt`:
 
@@ -162,8 +162,9 @@ Los 7 módulos editoriales (`news_articles`, `blog_posts`, `ai_resources`, `secu
 |---|---|
 | `news_articles` | `isBreaking`, `sourceUrl` (fuente primaria verificable) |
 | `blog_posts` | `subtitle`, `series`; categorías personales (`lessons`, `postmortems`, `opinion`, `career`, `journal`) |
-| `forum_topics` | Hilos comunitarios con `isSolved`, `isPinned`, `repliesCount`, `views` |
+| `forum_topics` | Hilos comunitarios con `tags`, `pollQuestion`, `isSolved`, `isPinned`, `repliesCount`, `views` |
 | `forum_replies` | Respuestas con FK `topicId`, `parentId` (anidado), `isAcceptedAnswer`, `likes` |
+| `forum_poll_options` | Opciones votables de encuesta por debate con FK `topicId`, `label`, `votes`, `displayOrder` |
 | `ai_resources` | `provider`, `license`, `documentationUrl`, `paperUrl`, `githubUrl` |
 | `security_posts` | `cveId`, `affectedSystems`, `remediation` |
 | `tutorials` | `prerequisites`, `techStack` (+ relación `1:N` con `tutorial_steps`) |

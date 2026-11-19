@@ -34,7 +34,7 @@ export function ArticleTags({ tags, className = '' }: ArticleTagsProps) {
         <span>{t('topicsTitle')}</span>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2.5">
         {parsedTags.map((tag) => (
           <Link
             key={tag}

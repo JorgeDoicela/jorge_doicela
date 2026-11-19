@@ -177,7 +177,60 @@ export class ForumService {
     return reply;
   }
 
+  async unvoteReply(replyId: number): Promise<ForumReply> {
+    const reply = await this.replyRepository.findOne({
+      where: { id: replyId },
+    });
+    if (!reply) {
+      throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+    }
+
+    await this.replyRepository
+      .createQueryBuilder()
+      .update(ForumReply)
+      .set({ likes: () => 'MAX(0, likes - 1)' })
+      .where('id = :replyId', { replyId })
+      .execute();
+
+    reply.likes = Math.max(0, (reply.likes || 0) - 1);
+    return reply;
+  }
+
   async votePollOption(
+    topicId: number,
+    optionId: number,
+    previousOptionId?: number,
+  ): Promise<ForumPollOption[]> {
+    const option = await this.pollOptionRepository.findOne({
+      where: { id: optionId, topicId },
+    });
+    if (!option) {
+      throw new NotFoundException(
+        `Opción de encuesta #${optionId} no encontrada en el debate #${topicId}`,
+      );
+    }
+
+    if (previousOptionId && previousOptionId !== optionId) {
+      await this.pollOptionRepository
+        .createQueryBuilder()
+        .update(ForumPollOption)
+        .set({ votes: () => 'MAX(0, votes - 1)' })
+        .where('id = :prevId AND topicId = :topicId', {
+          prevId: previousOptionId,
+          topicId,
+        })
+        .execute();
+    }
+
+    await this.pollOptionRepository.increment({ id: optionId }, 'votes', 1);
+
+    return this.pollOptionRepository.find({
+      where: { topicId },
+      order: { displayOrder: 'ASC' },
+    });
+  }
+
+  async unvotePollOption(
     topicId: number,
     optionId: number,
   ): Promise<ForumPollOption[]> {
@@ -190,7 +243,12 @@ export class ForumService {
       );
     }
 
-    await this.pollOptionRepository.increment({ id: optionId }, 'votes', 1);
+    await this.pollOptionRepository
+      .createQueryBuilder()
+      .update(ForumPollOption)
+      .set({ votes: () => 'MAX(0, votes - 1)' })
+      .where('id = :optionId AND topicId = :topicId', { optionId, topicId })
+      .execute();
 
     return this.pollOptionRepository.find({
       where: { topicId },

@@ -66,33 +66,69 @@ export function ForumDiscussionSection({
   }, [replies]);
 
   const handleVoteReply = async (replyId: number) => {
-    if (votedIds.has(replyId) || votingId !== null) return;
+    if (votingId !== null) return;
     setVotingId(replyId);
 
+    const isUnvoting = votedIds.has(replyId);
+    const previousReplies = replies;
+    const previousVotedIds = new Set(votedIds);
+
+    // Actualización optimista inmediata (0 ms)
+    setReplies((prev) =>
+      prev.map((r) => {
+        if (r.id !== replyId) return r;
+        return {
+          ...r,
+          likes: isUnvoting ? Math.max(0, r.likes - 1) : r.likes + 1,
+        };
+      }),
+    );
+
+    const nextVotedIds = new Set(votedIds);
+    if (isUnvoting) {
+      nextVotedIds.delete(replyId);
+    } else {
+      nextVotedIds.add(replyId);
+    }
+    setVotedIds(nextVotedIds);
+
     try {
-      const res = await fetch(
-        `${API_URL}/doiceladev/forum/replies/${replyId}/vote`,
-        { method: 'POST' },
+      window.localStorage.setItem(
+        VOTED_REPLIES_KEY,
+        JSON.stringify(Array.from(nextVotedIds)),
       );
-      if (!res.ok) return;
+    } catch {
+      // Silencioso
+    }
 
-      setReplies((prev) =>
-        prev.map((r) => (r.id === replyId ? { ...r, likes: r.likes + 1 } : r)),
-      );
+    try {
+      const endpoint = isUnvoting
+        ? `${API_URL}/doiceladev/forum/replies/${replyId}/unvote`
+        : `${API_URL}/doiceladev/forum/replies/${replyId}/vote`;
 
-      setVotedIds((prev) => {
-        const next = new Set(prev);
-        next.add(replyId);
-        try {
-          window.localStorage.setItem(
-            VOTED_REPLIES_KEY,
-            JSON.stringify(Array.from(next)),
-          );
-        } catch {
-          // Silencioso
-        }
-        return next;
-      });
+      const res = await fetch(endpoint, { method: 'POST' });
+      if (!res.ok) {
+        throw new Error('Vote request failed');
+      }
+
+      const data = (await res.json()) as { data?: ForumReply } | ForumReply;
+      const updated = (data as { data?: ForumReply }).data ?? (data as ForumReply);
+      if (updated && typeof updated.likes === 'number') {
+        setReplies((prev) =>
+          prev.map((r) => (r.id === replyId ? { ...r, likes: updated.likes } : r)),
+        );
+      }
+    } catch {
+      setReplies(previousReplies);
+      setVotedIds(previousVotedIds);
+      try {
+        window.localStorage.setItem(
+          VOTED_REPLIES_KEY,
+          JSON.stringify(Array.from(previousVotedIds)),
+        );
+      } catch {
+        // Silencioso
+      }
     } finally {
       setVotingId(null);
     }
@@ -116,47 +152,56 @@ export function ForumDiscussionSection({
         key={reply.id}
         className={
           depth > 0
-            ? 'ml-4 sm:ml-8 pl-4 border-l-2 border-blue-500/20 space-y-3'
+            ? 'ml-4 sm:ml-8 pl-4 border-l border-slate-200 dark:border-white/10 space-y-3'
             : 'space-y-3'
         }
       >
-        <article className="p-5 rounded-2xl bg-white/70 dark:bg-black/20 border border-slate-200/80 dark:border-white/5 space-y-3 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400">
+        <article className="px-5 py-4 sm:px-6 sm:py-5 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-bold text-cyan-600 dark:text-cyan-400">
+              <span className="text-xs sm:text-[13px] font-semibold text-slate-800 dark:text-zinc-100">
                 {reply.author}
               </span>
               {reply.isAcceptedAnswer && (
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-wider text-emerald-600 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-emerald-600 dark:text-emerald-400">
                   <span>•</span>
                   <span>{tDetail('acceptedAnswer')}</span>
                 </span>
               )}
             </div>
-            <span className="text-[11px] text-slate-500 dark:text-zinc-500">
+            <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">
               {new Date(reply.createdAt).toLocaleDateString(
                 locale === 'es' ? 'es-ES' : 'en-US',
+                {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                },
               )}
             </span>
           </div>
 
-          <div className="pt-1 text-xs sm:text-sm leading-relaxed">
-            <MarkdownRenderer content={reply.content} />
+          <div>
+            <MarkdownRenderer content={reply.content} variant="compact" />
           </div>
 
-          <div className="flex items-center gap-3 pt-2 border-t border-black/5 dark:border-white/5">
+          <div className="flex items-center gap-2.5 pt-1">
             <button
               type="button"
               onClick={() => handleVoteReply(reply.id)}
-              disabled={hasVoted || votingId === reply.id}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-colors ${
+              disabled={votingId === reply.id}
+              aria-pressed={hasVoted}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-mono transition-all cursor-pointer glass-btn-neumorphic ${
                 hasVoted
-                  ? 'bg-blue-500/15 text-blue-600 dark:text-cyan-400 border border-blue-500/30 cursor-default'
-                  : 'glass-concave-panel text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 cursor-pointer'
+                  ? 'font-bold text-slate-900 dark:text-white shadow-[var(--btn-shadow-hover)]'
+                  : 'font-medium text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white'
               }`}
               aria-label={tDetail('upvoteReply')}
             >
-              <ArrowUp className="w-3.5 h-3.5" aria-hidden="true" />
+              <ArrowUp
+                className={`w-3.5 h-3.5 ${hasVoted ? 'stroke-[2.5]' : ''}`}
+                aria-hidden="true"
+              />
               <span>{reply.likes}</span>
             </button>
 
@@ -164,7 +209,7 @@ export function ForumDiscussionSection({
               <button
                 type="button"
                 onClick={() => handleSelectReplyTarget(reply)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-btn-neumorphic text-[11px] font-mono font-medium text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
               >
                 <CornerDownRight className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{tDetail('replyAction')}</span>
@@ -192,8 +237,8 @@ export function ForumDiscussionSection({
         />
       )}
 
-      <div className="mt-10 pt-8 border-t border-black/5 dark:border-white/5 space-y-6">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight font-mono">
+      <div className="mt-8 pt-6 border-t border-black/5 dark:border-white/5 space-y-5">
+        <h3 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
           {tDetail('communityReplies', { count: replies.length })}
         </h3>
 

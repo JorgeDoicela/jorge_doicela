@@ -181,28 +181,24 @@ body {
   box-shadow: var(--btn-shadow);
   color: var(--foreground);
   outline: none;
-  
-  /* OPTIMIZACIÓN RENDIMIENTO: GPU Acceleration */
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
-  
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 
 .glass-btn-neumorphic:hover {
-  transform: translateY(-1.5px) translateZ(0);
   box-shadow: var(--btn-shadow-hover);
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .theme-doiceladev.dark .glass-btn-neumorphic:hover {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Presión táctil: se hunde físicamente volviéndose cóncavo */
 .glass-btn-neumorphic:active {
-  transform: translateY(1px) translateZ(0);
   background-color: var(--glass-bg-concave);
   border-color: var(--glass-border-concave);
   

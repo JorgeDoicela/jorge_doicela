@@ -90,12 +90,9 @@ export function ForumReplyForm({
   };
 
   return (
-    <form
-      onSubmit={handlePostReply}
-      className="mt-8 p-6 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-4"
-    >
-      <div className="flex flex-wrap items-center justify-between gap-2 min-h-6">
-        <h4 className="text-xs font-mono font-bold tracking-wider text-slate-900 dark:text-white">
+    <form onSubmit={handlePostReply} className="mt-6 space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h4 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
           {tDetail('joinDiscussion')}
         </h4>
 
@@ -116,44 +113,48 @@ export function ForumReplyForm({
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="space-y-1.5">
+        {/* Campo 1 separado: Nombre o Alias en su propio panel cóncavo */}
         <input
           type="text"
           value={authorName}
           onChange={(e) => setAuthorName(e.target.value)}
           placeholder={tDetail('namePlaceholder')}
           maxLength={60}
-          className="px-3.5 py-2.5 rounded-xl bg-white/80 dark:bg-black/40 border border-slate-300 dark:border-white/10 text-xs font-mono text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-sm transition-colors"
+          className="w-full px-4 py-3 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] outline-none text-xs sm:text-[13px] font-medium text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 transition-colors focus:border-blue-500/40 dark:focus:border-cyan-400/40 block"
+        />
+
+        {/* Campo 2 separado: Área de escritura en su propio panel cóncavo */}
+        <textarea
+          value={replyContent}
+          onChange={(e) => setReplyContent(e.target.value)}
+          placeholder={tDetail('replyPlaceholder')}
+          rows={4}
+          required
+          minLength={3}
+          maxLength={4000}
+          className="w-full px-4 py-3 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] outline-none text-xs sm:text-[13px] font-sans text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 resize-none leading-relaxed transition-colors focus:border-blue-500/40 dark:focus:border-cyan-400/40 block"
         />
       </div>
 
-      <textarea
-        value={replyContent}
-        onChange={(e) => setReplyContent(e.target.value)}
-        placeholder={tDetail('replyPlaceholder')}
-        rows={4}
-        required
-        minLength={3}
-        maxLength={4000}
-        className="w-full p-3.5 rounded-xl bg-white/80 dark:bg-black/40 border border-slate-300 dark:border-white/10 text-xs font-sans text-slate-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 resize-none leading-relaxed shadow-sm transition-colors"
-      />
+      {/* Barra inferior con estado y botón neumórfico */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <div className="min-h-4 flex items-center">
+          {errorMsg ? (
+            <p className="text-xs font-mono text-rose-500 dark:text-rose-400">
+              {errorMsg}
+            </p>
+          ) : successMsg ? (
+            <p className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
+              {successMsg}
+            </p>
+          ) : null}
+        </div>
 
-      {errorMsg && (
-        <p className="text-xs font-mono text-rose-500 dark:text-rose-400">
-          {errorMsg}
-        </p>
-      )}
-      {successMsg && (
-        <p className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
-          {successMsg}
-        </p>
-      )}
-
-      <div className="flex justify-end">
         <button
           type="submit"
           disabled={submitting}
-          className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs font-mono disabled:opacity-40 transition-all cursor-pointer shadow-md hover:shadow-blue-500/25"
+          className="inline-flex items-center justify-center px-4 py-2 rounded-xl glass-btn-neumorphic text-xs font-mono font-medium text-slate-700 dark:text-zinc-200 hover:text-blue-600 dark:hover:text-cyan-400 disabled:opacity-40 transition-colors cursor-pointer"
         >
           {submitting ? tDetail('publishing') : tDetail('postReplyBtn')}
         </button>

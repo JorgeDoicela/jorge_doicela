@@ -52,12 +52,32 @@ export class ForumController {
     return this.forumService.voteReply(id);
   }
 
+  @Post('replies/:id/unvote')
+  @UseGuards(ForumThrottleGuard)
+  async unvoteReply(@Param('id', ParseIntPipe) id: number) {
+    return this.forumService.unvoteReply(id);
+  }
+
   @Post(':id/poll/:optionId/vote')
   @UseGuards(ForumThrottleGuard)
   async votePollOption(
     @Param('id', ParseIntPipe) id: number,
     @Param('optionId', ParseIntPipe) optionId: number,
+    @Body('previousOptionId') previousOptionId?: number,
   ) {
-    return this.forumService.votePollOption(id, optionId);
+    const prevId =
+      typeof previousOptionId === 'number' && !Number.isNaN(previousOptionId)
+        ? previousOptionId
+        : undefined;
+    return this.forumService.votePollOption(id, optionId, prevId);
+  }
+
+  @Post(':id/poll/:optionId/unvote')
+  @UseGuards(ForumThrottleGuard)
+  async unvotePollOption(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
+  ) {
+    return this.forumService.unvotePollOption(id, optionId);
   }
 }

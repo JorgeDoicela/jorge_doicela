@@ -173,7 +173,9 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `GET /doiceladev/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
 | | `POST /doiceladev/forum/replies` | - | Publicar respuesta (raíz o anidada con `parentId`) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/replies/:id/vote` | - | Votar respuesta útil (`likes + 1`) protegida con `ForumThrottleGuard` |
-| | `POST /doiceladev/forum/:id/poll/:optionId/vote` | - | Registrar voto en opción de encuesta del debate protegida con `ForumThrottleGuard` |
+| | `POST /doiceladev/forum/replies/:id/unvote` | - | Retirar voto de respuesta (`MAX(0, likes - 1)`) protegida con `ForumThrottleGuard` |
+| | `POST /doiceladev/forum/:id/poll/:optionId/vote` | - | Registrar o cambiar voto en encuesta (`previousOptionId` opcional) protegida con `ForumThrottleGuard` |
+| | `POST /doiceladev/forum/:id/poll/:optionId/unvote` | - | Retirar voto de opción de encuesta (`MAX(0, votes - 1)`) protegida con `ForumThrottleGuard` |
 | **IA** | `GET /doiceladev/ai` | `category`, `tag`, `search`, `sortBy`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, etiqueta, búsqueda, ordenamiento e idioma |
 | | `GET /doiceladev/ai/categories` | `lang` | Categorías y artefactos de IA activos con conteo real |
 | | `GET /doiceladev/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |

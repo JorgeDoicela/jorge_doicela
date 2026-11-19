@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ForumPollOption } from '../../../entities/forum/types';
 import { API_URL } from '../../../shared/lib/api';
@@ -44,15 +43,57 @@ export function ForumPollCard({
   const totalVotes = options.reduce((acc, opt) => acc + (opt.votes || 0), 0);
 
   const handleVote = async (optionId: number) => {
-    if (votedOptionId !== null || submittingId !== null) return;
+    if (submittingId !== null) return;
     setSubmittingId(optionId);
     setError(null);
 
+    const isUnvoting = votedOptionId === optionId;
+    const previousOptionId = votedOptionId;
+    const previousOptions = options;
+
+    // Actualización optimista inmediata para respuesta visual instantánea
+    const optimisticOptions = options.map((opt) => {
+      if (isUnvoting && opt.id === optionId) {
+        return { ...opt, votes: Math.max(0, opt.votes - 1) };
+      }
+      if (!isUnvoting && opt.id === optionId) {
+        return { ...opt, votes: opt.votes + 1 };
+      }
+      if (!isUnvoting && previousOptionId && opt.id === previousOptionId) {
+        return { ...opt, votes: Math.max(0, opt.votes - 1) };
+      }
+      return opt;
+    });
+
+    setOptions(optimisticOptions);
+    if (isUnvoting) {
+      setVotedOptionId(null);
+      try {
+        window.localStorage.removeItem(storageKey);
+      } catch {
+        // Silencioso
+      }
+    } else {
+      setVotedOptionId(optionId);
+      try {
+        window.localStorage.setItem(storageKey, String(optionId));
+      } catch {
+        // Silencioso
+      }
+    }
+
     try {
-      const res = await fetch(
-        `${API_URL}/doiceladev/forum/${topicId}/poll/${optionId}/vote`,
-        { method: 'POST' },
-      );
+      const endpoint = isUnvoting
+        ? `${API_URL}/doiceladev/forum/${topicId}/poll/${optionId}/unvote`
+        : `${API_URL}/doiceladev/forum/${topicId}/poll/${optionId}/vote`;
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: isUnvoting
+          ? undefined
+          : JSON.stringify({ previousOptionId: previousOptionId ?? undefined }),
+      });
 
       if (!res.ok) {
         throw new Error(tDetail('pollVoteError'));
@@ -64,21 +105,19 @@ export function ForumPollCard({
       const updated = Array.isArray(data) ? data : data.data;
       if (Array.isArray(updated) && updated.length > 0) {
         setOptions(updated);
-      } else {
-        setOptions((prev) =>
-          prev.map((opt) =>
-            opt.id === optionId ? { ...opt, votes: opt.votes + 1 } : opt,
-          ),
-        );
       }
-
-      setVotedOptionId(optionId);
+    } catch (err: unknown) {
+      setOptions(previousOptions);
+      setVotedOptionId(previousOptionId);
       try {
-        window.localStorage.setItem(storageKey, String(optionId));
+        if (previousOptionId) {
+          window.localStorage.setItem(storageKey, String(previousOptionId));
+        } else {
+          window.localStorage.removeItem(storageKey);
+        }
       } catch {
         // Silencioso
       }
-    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : tDetail('pollVoteError'),
       );
@@ -88,23 +127,23 @@ export function ForumPollCard({
   };
 
   return (
-    <section className="my-8 p-5 sm:p-6 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] space-y-4">
+    <section className="my-8 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[11px] font-mono font-bold tracking-wider text-slate-500 dark:text-zinc-400">
+        <h2 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
           {tDetail('pollTitle')}
-        </span>
-        <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-500">
+        </h2>
+        <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">
           {tDetail('pollTotalVotes', { count: totalVotes })}
         </span>
       </div>
 
       {question && (
-        <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+        <p className="text-xs sm:text-[13px] font-semibold text-slate-700 dark:text-zinc-200 leading-relaxed">
           {question}
-        </h3>
+        </p>
       )}
 
-      <div className="space-y-2.5">
+      <div className="space-y-2.5 pt-0.5">
         {options.map((opt) => {
           const pct =
             totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
@@ -116,38 +155,39 @@ export function ForumPollCard({
               key={opt.id}
               type="button"
               onClick={() => handleVote(opt.id)}
-              disabled={showResults || submittingId !== null}
-              className={`relative w-full text-left overflow-hidden rounded-xl border px-4 py-3 transition-all ${
-                isSelected
-                  ? 'border-blue-500/60 bg-blue-500/10 dark:bg-blue-500/15'
-                  : 'border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-black/25 hover:border-blue-500/40'
-              } ${showResults ? 'cursor-default' : 'cursor-pointer'}`}
+              disabled={submittingId !== null}
+              aria-pressed={isSelected}
+              className={`group relative w-full text-left overflow-hidden rounded-xl px-4 py-2.5 transition-all cursor-pointer glass-btn-neumorphic ${
+                isSelected ? 'shadow-[var(--btn-shadow-hover)]' : ''
+              }`}
             >
-              {showResults && (
-                <div
-                  className={`absolute inset-y-0 left-0 transition-all duration-500 ${
+              <div className="relative w-full flex items-center justify-between gap-3 text-xs sm:text-[13px]">
+                <span
+                  className={`flex items-center gap-3 transition-colors ${
                     isSelected
-                      ? 'bg-blue-500/20 dark:bg-blue-500/25'
-                      : 'bg-slate-200/60 dark:bg-white/[0.06]'
+                      ? 'font-bold text-slate-900 dark:text-white'
+                      : 'font-normal dark:font-light text-slate-600 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-white'
                   }`}
-                  style={{ width: `${pct}%` }}
-                  aria-hidden="true"
-                />
-              )}
-
-              <div className="relative flex items-center justify-between gap-3 text-xs sm:text-sm">
-                <span className="flex items-center gap-2 font-medium text-slate-800 dark:text-zinc-100">
-                  {isSelected && (
-                    <Check
-                      className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0"
-                      aria-hidden="true"
-                    />
-                  )}
+                >
+                  <span
+                    className={`w-3.5 h-3.5 rounded-full shrink-0 transition-colors ${
+                      isSelected
+                        ? 'bg-slate-800 dark:bg-zinc-100'
+                        : 'border border-slate-300 dark:border-zinc-600 bg-transparent group-hover:border-0 group-hover:bg-slate-400 dark:group-hover:bg-zinc-500'
+                    }`}
+                    aria-hidden="true"
+                  />
                   <span>{opt.label}</span>
                 </span>
 
                 {showResults && (
-                  <span className="font-mono text-xs font-semibold text-slate-600 dark:text-zinc-300 shrink-0">
+                  <span
+                    className={`font-mono text-[11px] shrink-0 ${
+                      isSelected
+                        ? 'font-bold text-slate-900 dark:text-white'
+                        : 'font-normal text-slate-500 dark:text-zinc-400'
+                    }`}
+                  >
                     {pct}% ({opt.votes})
                   </span>
                 )}

@@ -62,6 +62,9 @@ export default async function ProjectDetailPage({ params }: Params) {
         ? tFilters('wip')
         : tFilters('archived');
 
+  const hasTech = techList.length > 0;
+  const rows = hasTech ? [{ label: tMeta('status'), value: statusLabel }] : [];
+
   return (
     <DoiceladevArticleLayout
       slug={slug}
@@ -80,12 +83,8 @@ export default async function ProjectDetailPage({ params }: Params) {
     >
       <ArticleMetaPanel
         title={tMeta('projectBrief')}
-        rows={[{ label: tMeta('status'), value: statusLabel }]}
-        badges={
-          techList.length > 0
-            ? { label: tMeta('techStack'), items: techList }
-            : undefined
-        }
+        rows={rows}
+        badges={hasTech ? { label: tMeta('techStack'), items: techList } : undefined}
       />
 
       <MarkdownRenderer

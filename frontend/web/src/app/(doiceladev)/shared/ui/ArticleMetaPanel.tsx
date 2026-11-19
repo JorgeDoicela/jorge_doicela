@@ -77,7 +77,7 @@ export function ArticleMetaPanel({
       }`}
     >
       {title && (
-        <h2 className="text-center text-[11px] font-mono font-bold uppercase tracking-[0.14em] text-slate-700 dark:text-zinc-200">
+        <h2 className="text-center text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
           {title}
         </h2>
       )}
@@ -85,11 +85,11 @@ export function ArticleMetaPanel({
       {hasRows && (
         <dl className={rowsLayoutClass}>
           {validRows.map((row, index) => (
-            <div key={`${row.label}-${index}`} className={`space-y-1 min-w-0 ${isCentered ? 'text-center' : 'text-left'}`}>
-              <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-400">
+            <div key={`${row.label}-${index}`} className={`space-y-1.5 min-w-0 ${isCentered ? 'text-center' : 'text-left'}`}>
+              <dt className="text-xs font-semibold text-slate-700 dark:text-zinc-200">
                 {row.label}
               </dt>
-              <dd className="text-[13px] sm:text-sm font-medium text-slate-900 dark:text-zinc-100 leading-relaxed break-words">
+              <dd className="text-xs sm:text-[13px] text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed break-words">
                 {row.value}
               </dd>
             </div>
@@ -99,10 +99,10 @@ export function ArticleMetaPanel({
 
       {hasBadges && badges && (
         <div className={`space-y-2 ${isCentered ? 'text-center' : 'text-left'} ${hasRows ? 'pt-1' : ''}`}>
-          <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-400">
+          <div className="text-xs font-semibold text-slate-700 dark:text-zinc-200">
             {badges.label}
           </div>
-          <ul className={`flex flex-wrap items-center ${isCentered ? 'justify-center' : ''} gap-y-1.5 list-none p-0 m-0 text-xs sm:text-[13px] font-mono font-medium text-slate-800 dark:text-zinc-200`}>
+          <ul className={`flex flex-wrap items-center ${isCentered ? 'justify-center' : ''} gap-y-1.5 list-none p-0 m-0 text-xs sm:text-[13px] font-mono font-normal dark:font-light text-slate-600 dark:text-zinc-400`}>
             {validBadges.map((item, index) => (
               <li key={item} className="inline-flex items-center">
                 <span>{item}</span>

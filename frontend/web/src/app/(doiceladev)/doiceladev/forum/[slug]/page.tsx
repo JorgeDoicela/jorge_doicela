@@ -64,6 +64,14 @@ export default async function ForumTopicDetailPage({ params }: Params) {
     locale,
   );
 
+  // Control gobernado por el corpus: solo se muestra el panel si el debate está resuelto
+  const forumRows = topic.isSolved
+    ? [
+        { label: tMeta('status'), value: tCard('solved') },
+        { label: tMeta('replies'), value: String(topic.replies?.length ?? topic.repliesCount ?? 0) },
+      ]
+    : [];
+
   return (
     <DoiceladevArticleLayout
       slug={slug}
@@ -81,16 +89,7 @@ export default async function ForumTopicDetailPage({ params }: Params) {
     >
       <ArticleMetaPanel
         title={tMeta('forumBrief')}
-        rows={[
-          {
-            label: tMeta('status'),
-            value: topic.isSolved ? tCard('solved') : tCard('open'),
-          },
-          {
-            label: tMeta('replies'),
-            value: String(topic.replies?.length ?? topic.repliesCount ?? 0),
-          },
-        ]}
+        rows={forumRows}
       />
 
       <MarkdownRenderer content={topic.content} glossaryTerms={glossary} />

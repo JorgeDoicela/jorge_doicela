@@ -94,11 +94,11 @@ export function FeaturedPostsSidebarCard({
                                 {/* Título y metadatos: Nivel 1 • Nivel 2 */}
                                 <div className="flex-1 min-w-0 space-y-1">
                                     {(item.categoryMeta || moduleLabel) && (
-                                        <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate uppercase tracking-wider">
+                                        <span className="block text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate uppercase tracking-wider">
                                             {formatCategoryMeta(item.categoryMeta, moduleLabel)}
                                         </span>
                                     )}
-                                    <h6 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                    <h6 className="text-xs sm:text-[13px] font-normal text-slate-800 dark:text-zinc-200 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                         {item.title}
                                     </h6>
                                 </div>

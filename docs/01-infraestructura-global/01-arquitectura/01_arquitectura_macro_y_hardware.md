@@ -148,5 +148,29 @@ Adicionalmente, implementa una **resolución multi-tenant unificada de rutas y a
 
 Al migrar un subproyecto a su propio servidor físico independiente, simplemente se **remueve su clave del diccionario** `SUBDOMAIN_TARGET_MAP`. La landing no requiere entrada porque opera como ruta raíz por defecto.
 
+### 5.4 `next.config.ts` — Prevención de Desbordamiento de Memoria en Turbopack (Desarrollo Local)
+
+Next.js 16 incorpora Turbopack como motor de empaquetado predeterminado. En monorepos consolidados de alta densidad (550+ componentes TSX y 4 dominios aislados), la opción por defecto `experimental.turbopackFileSystemCacheForDev: true` acumula bases de datos `.sst` en `.next/dev/cache` que pueden alcanzar gigabytes en disco y provocar picos críticos de memoria virtual comprometida (Commit Charge) por mapeo `mmap`.
+
+Para prevenir este fenómeno y asegurar un desarrollo ágil y libre de cuellos de botella de paginación (thrashing) en máquinas locales:
+
+```ts
+// frontend/web/next.config.ts
+const nextConfig: NextConfig = {
+  output: 'standalone',
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+  images: {
+    unoptimized: true,
+  },
+  experimental: {
+    turbopackFileSystemCacheForDev: false,
+  },
+};
+```
+
+Esta directiva erradica la persistencia acumulativa en disco durante `next dev`, procesando los bundles en memoria volátil de forma limpia sin afectar las compilaciones de producción (`next build`), las cuales por estándar industrial no utilizan caché dev `.sst`.
+
 > [!TIP]
 > La estructura de **assets públicos** (`public/landing/`, `public/portfolio/`, etc.) y las **bases de datos SQLite** (`portfolio.sqlite`, `kartex.sqlite`, `doiceladev.sqlite`) ya son 100% portables sin modificación alguna.

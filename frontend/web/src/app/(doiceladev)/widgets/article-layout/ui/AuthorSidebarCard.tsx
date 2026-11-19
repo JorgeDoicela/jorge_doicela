@@ -50,7 +50,7 @@ export function AuthorSidebarCard() {
             </p>
 
             {/* Enlaces y Redes Sociales */}
-            <div className="pt-3 border-t border-black/5 dark:border-white/5">
+            <div className="pt-1">
                 <div className="flex items-center justify-center gap-2.5 text-zinc-500 dark:text-zinc-400">
                     {/* GitHub */}
                     <a

@@ -109,8 +109,8 @@ export function DoiceladevArticleLayout({
                 aria-label={isSidebarCollapsed ? tArticle('restoreSidebar') : tArticle('expandReading')}
               />
               
-              {/* Cabecera Editorial del Artículo (Hero Centrado con Divisor) */}
-              <header className="space-y-6 text-center border-b border-black/5 dark:border-white/5 pb-8">
+              {/* Cabecera Editorial del Artículo (Hero Centrado) */}
+              <header className="space-y-6 text-center pb-2">
                 
                 {/* Barra Jerárquica de Navegación Centrada */}
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-xs select-none">

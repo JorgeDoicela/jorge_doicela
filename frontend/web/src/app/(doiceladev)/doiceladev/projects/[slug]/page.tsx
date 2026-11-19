@@ -7,6 +7,7 @@ import {
   buildArticleMetadata,
   fetchArticlePageContext,
   formatArticleDates,
+  parseTechStack,
 } from '../../../shared/lib/articlePage';
 import { ArticleMetaPanel } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
@@ -52,12 +53,7 @@ export default async function ProjectDetailPage({ params }: Params) {
     locale,
   );
 
-  const techList = project.techStack
-    ? project.techStack
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean)
-    : [];
+  const techList = parseTechStack(project.techStack);
 
   const statusLabel =
     project.status === 'active'

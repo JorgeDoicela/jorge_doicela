@@ -7,6 +7,7 @@ import {
   buildArticleMetadata,
   fetchArticlePageContext,
   formatArticleDates,
+  parseTechStack,
 } from '../../../shared/lib/articlePage';
 import { ArticleMetaPanel } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
@@ -51,12 +52,7 @@ export default async function TutorialDetailPage({ params }: Params) {
     locale,
   );
 
-  const techList = tutorial.techStack
-    ? tutorial.techStack
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean)
-    : [];
+  const techList = parseTechStack(tutorial.techStack);
 
   return (
     <DoiceladevArticleLayout

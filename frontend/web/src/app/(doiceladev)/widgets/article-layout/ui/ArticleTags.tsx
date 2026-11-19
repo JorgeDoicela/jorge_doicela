@@ -28,7 +28,7 @@ export function ArticleTags({ tags, className = '' }: ArticleTagsProps) {
   return (
     <section
       aria-label={t('topicsTitle')}
-      className={`pt-8 mt-12 border-t border-black/5 dark:border-white/5 space-y-3.5 select-none ${className}`}
+      className={`pt-6 mt-8 space-y-3.5 select-none ${className}`}
     >
       <div className="text-xs font-mono font-bold tracking-wider uppercase text-slate-500 dark:text-zinc-400">
         <span>{t('topicsTitle')}</span>

@@ -125,3 +125,15 @@ export async function fetchArticlePageContext<T>(
     recommendations: recommendations || [],
   };
 }
+
+/**
+ * Normaliza y deduplica una cadena de tecnologías separadas por coma.
+ */
+export function parseTechStack(techStack?: string): string[] {
+  if (!techStack) return [];
+  const items = techStack
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return Array.from(new Set(items));
+}

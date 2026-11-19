@@ -7,6 +7,7 @@ import {
   buildArticleMetadata,
   fetchArticlePageContext,
   formatArticleDates,
+  parseTechStack,
 } from '../../../shared/lib/articlePage';
 import { ArticleMetaPanel, type ArticleMetaRow } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
@@ -75,12 +76,7 @@ export default async function InfrastructureDetailPage({ params }: Params) {
     locale,
   );
 
-  const techList = post.techStack
-    ? post.techStack
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean)
-    : [];
+  const techList = parseTechStack(post.techStack);
 
   const specRows = parseSpecsRows(post.specs, (key) =>
     tSpecs.has(key as never)

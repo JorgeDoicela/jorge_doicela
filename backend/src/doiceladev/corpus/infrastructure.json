@@ -9,6 +9,13 @@
     "author": "Jorge Doicela",
     "tags": "firewall,linux,ufw,netfilter,security,hardening,sysadmin,debian,ubuntu,docker,fail2ban,nmap,ipv6",
     "language": "es",
+    "metaAlign": {
+      "title": "center",
+      "labels": "left",
+      "values": "left",
+      "badges": "left",
+      "links": "left"
+    },
     "coverImage": "/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.webp",
     "views": 142,
     "likes": 28,
@@ -28,6 +35,13 @@
     "author": "Jorge Doicela",
     "tags": "firewall,linux,ufw,netfilter,security,hardening,sysadmin,debian,ubuntu,docker,fail2ban,nmap,ipv6",
     "language": "en",
+    "metaAlign": {
+      "title": "center",
+      "labels": "left",
+      "values": "left",
+      "badges": "left",
+      "links": "left"
+    },
     "coverImage": "/doiceladev/images/covers/infrastructure/guia-firewall-linux-ufw.webp",
     "views": 142,
     "likes": 28,

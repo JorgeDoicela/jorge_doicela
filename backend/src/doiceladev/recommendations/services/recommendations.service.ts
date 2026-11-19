@@ -111,7 +111,7 @@ export class RecommendationsService {
       categoryDomain: 'forum',
       routePrefix: '/forum',
       titleCol: 'title',
-      descCol: 'content',
+      descCol: 'COALESCE(excerpt, content)',
       featCol: 'isPinned',
     },
   ];

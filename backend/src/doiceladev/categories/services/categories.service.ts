@@ -205,7 +205,7 @@ export class CategoriesService {
       categoryDomain: 'forum',
       routePrefix: '/forum',
       titleCol: 'title',
-      descCol: 'content',
+      descCol: 'COALESCE(excerpt, content)',
       dateCol: 'createdAt',
       featCol: 'isPinned',
     },

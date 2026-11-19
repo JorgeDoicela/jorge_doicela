@@ -35,6 +35,9 @@ export class ForumTopic {
   @Column({ type: 'text' })
   content: string;
 
+  @Column({ type: 'text', nullable: true })
+  excerpt?: string;
+
   @Column({ default: 'Jorge Doicela' })
   author: string;
 

@@ -15,6 +15,7 @@ import { SecurityPost } from '../../../entities/cybersecurity';
 import { Tutorial } from '../../../entities/tutorials';
 import { Project } from '../../../entities/projects';
 import { InfrastructurePost } from '../../../entities/infrastructure';
+import { stripMarkdown } from '../../../shared/lib';
 
 interface SpotlightModalProps {
   isOpen: boolean;
@@ -264,12 +265,16 @@ export function SpotlightModal({
     });
 
     topics.forEach((top) => {
+      const cleanSnippet = top.excerpt || stripMarkdown(top.content);
       items.push({
         id: `forum-${top.id}`,
         title: top.title,
         category: 'forum',
         categoryLabel: tNav('forum'),
-        snippet: top.content.slice(0, 100) + '...',
+        snippet:
+          cleanSnippet.length > 100
+            ? cleanSnippet.slice(0, 100) + '...'
+            : cleanSnippet,
         href: `/forum/${top.slug}`,
         tags: parseTags(top.tags || top.category),
         extraSearchTerms: [top.author, top.category].filter(Boolean).join(' '),

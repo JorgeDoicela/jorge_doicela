@@ -11,6 +11,13 @@
     "author": "Jorge Doicela",
     "tags": "php,cybersecurity,cve,cve-2024-8927,cve-2024-9026,php-fpm,nginx,hardening,sysadmin,linux,security",
     "language": "es",
+    "metaAlign": {
+      "title": "center",
+      "labels": "left",
+      "values": "left",
+      "badges": "left",
+      "links": "left"
+    },
     "coverImage": "/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp",
     "featured": true,
     "orderPriority": 95,
@@ -31,6 +38,13 @@
     "author": "Jorge Doicela",
     "tags": "php,cybersecurity,cve,cve-2024-8927,cve-2024-9026,php-fpm,nginx,hardening,sysadmin,linux,security",
     "language": "en",
+    "metaAlign": {
+      "title": "center",
+      "labels": "left",
+      "values": "left",
+      "badges": "left",
+      "links": "left"
+    },
     "coverImage": "/doiceladev/images/covers/cybersecurity/vulnerabilidades-php-seguridad.webp",
     "featured": true,
     "orderPriority": 95,

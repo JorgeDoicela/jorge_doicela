@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { serverGet } from './serverFetch';
+import { stripMarkdown } from './stripMarkdown';
 import type { GlossaryTerm } from '../types/glossary';
 import type { RecommendationCard } from '../types/recommendation';
 
@@ -77,12 +78,14 @@ export function buildArticleMetadata(params: {
     return { title: `${notFoundLabel} | DoicelaDev — Jorge Doicela` };
   }
 
+  const cleanDescription = stripMarkdown(record.excerpt);
+
   return {
     title: `${record.title} | ${moduleLabel} — Jorge Doicela`,
-    description: record.excerpt,
+    description: cleanDescription,
     openGraph: {
       title: record.title,
-      description: record.excerpt,
+      description: cleanDescription,
       type: 'article',
       publishedTime: record.publishedAt || record.createdAt,
       ...(record.updatedAt ? { modifiedTime: record.updatedAt } : {}),

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArticleCover, DoiceladevArticleCategory } from './ArticleCover';
 import { DoiceladevCardSkeleton } from './DoiceladevCardSkeleton';
+import { stripMarkdown } from '../lib/stripMarkdown';
 
 export { DoiceladevCardSkeleton };
 
@@ -263,12 +264,15 @@ export function DoiceladevCardExcerpt({
 }: DoiceladevCardExcerptProps) {
   if (!excerpt) return null;
 
+  const clean = stripMarkdown(excerpt);
+  if (!clean) return null;
+
   return (
     <p
-      title={excerpt}
+      title={clean}
       className={`text-xs text-slate-600 dark:text-zinc-400 font-normal dark:font-light line-clamp-2 leading-relaxed mt-1.5 ${className}`}
     >
-      {excerpt}
+      {clean}
     </p>
   );
 }

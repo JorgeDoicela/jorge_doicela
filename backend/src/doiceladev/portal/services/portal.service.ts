@@ -15,6 +15,30 @@ import {
 
 export type { PortalFeedItem, PortalSpotlightData, PortalResponseDto };
 
+function stripMarkdownToPlainText(
+  text?: string | null,
+  maxLength = 220,
+): string {
+  if (!text) return '';
+  const clean = text
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+    .replace(/>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/gi, '')
+    .replace(/^>\s*/gm, '')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/(\*\*|__)(.*?)\1/g, '$2')
+    .replace(/(\*|_)(.*?)\1/g, '$2')
+    .replace(/~~(.*?)~~/g, '$1')
+    .replace(/`{1,3}[\s\S]*?`{1,3}/g, '')
+    .replace(/---+/g, ' ')
+    .replace(/\r?\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (clean.length <= maxLength) return clean;
+  return clean.slice(0, maxLength).trimEnd() + '...';
+}
+
 @Injectable()
 export class PortalService {
   private readonly logger = new Logger(PortalService.name);
@@ -278,7 +302,7 @@ export class PortalService {
         category: 'forum',
         coverImage: top.coverImage,
         categoryMeta: sub ? `forum • ${sub}` : 'forum',
-        excerpt: top.content,
+        excerpt: top.excerpt || stripMarkdownToPlainText(top.content, 220),
         accentHoverColor: 'group-hover:text-sky-300',
         date: dateStr,
         smartScore:

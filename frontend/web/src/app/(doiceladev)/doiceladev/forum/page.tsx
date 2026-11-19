@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
-import { useForum, useForumCategories, TopicCard, TopicCardSkeleton } from '../../entities/forum';
+import { useForum, useForumCategories, ForumGrid } from '../../entities/forum';
 import { ModuleFilterToolbar } from '../../shared/ui';
 
 export default function ForumCategoryPage() {
@@ -45,27 +45,7 @@ export default function ForumCategoryPage() {
         </header>
 
         <main>
-          {loading ? (
-            <div className="space-y-4">
-              {[1, 2, 3, 4].map((n) => (
-                <TopicCardSkeleton key={n} />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="p-8 rounded-3xl glass-concave-panel text-center text-rose-400 text-sm">
-              {error}
-            </div>
-          ) : topics.length === 0 ? (
-            <div className="p-12 rounded-3xl glass-concave-panel text-center text-zinc-500 text-sm">
-              {tForum('noTopics')}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {topics.map((t) => (
-                <TopicCard key={t.id} topic={t} />
-              ))}
-            </div>
-          )}
+          <ForumGrid topics={topics} loading={loading} error={error} />
         </main>
       </div>
     </DoiceladevPageLayout>

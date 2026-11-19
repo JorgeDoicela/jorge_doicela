@@ -9,6 +9,7 @@ import {
   fetchArticlePageContext,
   formatArticleDates,
 } from '../../../shared/lib/articlePage';
+import { stripMarkdown } from '../../../shared/lib/stripMarkdown';
 import { ArticleMetaPanel } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       ? {
           slug: topic.slug,
           title: topic.title,
-          excerpt: topic.content.slice(0, 160),
+          excerpt: topic.excerpt || stripMarkdown(topic.content).slice(0, 160),
           author: topic.author,
           coverImage: topic.coverImage,
           publishedAt: topic.createdAt,

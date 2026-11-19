@@ -19,6 +19,7 @@ import { RelatedArticlesNav } from './RelatedArticlesNav';
 import { DoiceladevSection } from '../../category-nav/ui/CategoryNav';
 import { ReaderHistoryTracker } from '../../../features/reader-history';
 import { RecommendationCard } from '../../../entities/portal/types';
+import { stripMarkdown } from '../../../shared/lib';
 
 export interface BreadcrumbItem {
   label: string;
@@ -171,7 +172,7 @@ export function DoiceladevArticleLayout({
                 {/* Subtítulo / Extracto Destacado Centrado */}
                 {subtitle && (
                   <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 font-normal dark:font-light leading-relaxed max-w-2xl mx-auto">
-                    {subtitle}
+                    {stripMarkdown(subtitle)}
                   </p>
                 )}
 

@@ -153,6 +153,7 @@ interface ForumSeedData {
     slug: string;
     title: string;
     content: string;
+    excerpt?: string;
     author: string;
     category: ForumCategory;
     tags?: string;
@@ -455,6 +456,7 @@ export function seedDoiceladev(
       slug          TEXT    NOT NULL,
       title         TEXT    NOT NULL,
       content       TEXT    NOT NULL,
+      excerpt       TEXT,
       author        TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       category      TEXT    NOT NULL DEFAULT 'general'
                     CHECK (category IN ('architecture','devops','ai','frontend','backend','help','general')),
@@ -874,15 +876,16 @@ export function seedDoiceladev(
     // ── 3. Foros ────────────────────────────────────────────────────────────
     const insertTopic = db.prepare(`
       INSERT INTO forum_topics
-        (id, slug, title, content, author, category, tags, language, metaAlign, coverImage, pollQuestion,
+        (id, slug, title, content, excerpt, author, category, tags, language, metaAlign, coverImage, pollQuestion,
          isSolved, isPinned, orderPriority, repliesCount, views, createdAt, updatedAt)
       VALUES
-        (@id, @slug, @title, @content, @author, @category, @tags, @language, @metaAlign, @coverImage, @pollQuestion,
+        (@id, @slug, @title, @content, @excerpt, @author, @category, @tags, @language, @metaAlign, @coverImage, @pollQuestion,
          @isSolved, @isPinned, @orderPriority, @repliesCount, @views, @createdAt, @updatedAt)
       ON CONFLICT(id) DO UPDATE SET
         slug          = excluded.slug,
         title         = excluded.title,
         content       = excluded.content,
+        excerpt       = excluded.excerpt,
         author        = excluded.author,
         category      = excluded.category,
         tags          = excluded.tags,
@@ -929,6 +932,7 @@ export function seedDoiceladev(
       const rawTags = topic.tags || `${topic.category || 'general'},forum`;
       insertTopic.run({
         ...topic,
+        excerpt: topic.excerpt ?? null,
         category: topic.category || 'general',
         tags: rawTags,
         coverImage: topic.coverImage ?? null,

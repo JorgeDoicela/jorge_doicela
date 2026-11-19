@@ -332,6 +332,8 @@
         "discussionsAndCommunity": "Discussions & Community",
         "discussionsDesc": "Questions, architecture, and engineering discussions",
         "noTopics": "No topics recorded in this category yet.",
+        "empty": "No topics found in the forum.",
+        "loadError": "Error loading forum topics: {error}",
         "catAll": "All",
         "catFrontend": "Frontend",
         "catDevops": "DevOps & VPS",

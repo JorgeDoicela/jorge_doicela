@@ -332,6 +332,8 @@
         "discussionsAndCommunity": "Debates y Comunidad",
         "discussionsDesc": "Preguntas, arquitectura y discusiones de ingeniería",
         "noTopics": "No hay temas registrados en esta categoría aún.",
+        "empty": "No hay debates registrados en el foro.",
+        "loadError": "Error al cargar debates del foro: {error}",
         "catAll": "Todos",
         "catFrontend": "Frontend",
         "catDevops": "DevOps & VPS",

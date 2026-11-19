@@ -22,6 +22,7 @@ export interface ForumTopic {
   id: number;
   slug: string;
   title: string;
+  excerpt?: string;
   content: string;
   author: string;
   category: string;

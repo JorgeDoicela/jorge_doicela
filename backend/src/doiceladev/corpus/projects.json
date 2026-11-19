@@ -19,6 +19,7 @@
     "title": "VPN Privada Autoalojada con WireGuard: Arquitectura en Kernel Linux, Criptografía Noise y Enrutamiento Seguro",
     "excerpt": "Diseño e implementación paso a paso de un servidor VPN privado con WireGuard en espacio de kernel Linux, detallando el protocolo criptográfico Noise_IKpsk2, reenvío IPv4/IPv6, aislamiento NAT, prevención de fugas DNS y provisión de clientes móviles.",
     "tags": "wireguard,vpn,linux,networking,security,devops,dns,ufw",
+    "metaAlign": "center",
     "likes": 95
   },
   {
@@ -41,6 +42,7 @@
     "title": "Self-Hosted Private VPN with WireGuard: Linux Kernel Architecture, Noise Cryptography, and Secure Routing",
     "excerpt": "Step-by-step design and deployment of a private WireGuard VPN server in Linux kernel space, covering the Noise_IKpsk2 cryptographic handshake, IPv4/IPv6 forwarding, NAT isolation, DNS leak prevention, and mobile client provisioning.",
     "tags": "wireguard,vpn,linux,networking,security,devops,dns,ufw",
+    "metaAlign": "center",
     "likes": 95
   }
 ]

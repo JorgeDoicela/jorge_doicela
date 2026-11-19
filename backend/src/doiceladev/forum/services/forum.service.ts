@@ -51,7 +51,7 @@ export class ForumService {
 
     if (search) {
       qb.andWhere(
-        '(topic.title LIKE :search OR topic.content LIKE :search OR topic.tags LIKE :search)',
+        '(topic.title LIKE :search OR topic.excerpt LIKE :search OR topic.content LIKE :search OR topic.tags LIKE :search)',
         { search: `%${search}%` },
       );
     }

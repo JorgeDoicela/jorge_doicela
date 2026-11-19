@@ -230,7 +230,7 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `category`, `tags`, `language`, `series`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('lessons', 'postmortems', 'opinion', 'career', 'journal'))`.
   * **Índices:** `IDX_blog_posts_slug_lang (slug, language) UNIQUE`, `IDX_blog_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_series_feed (language, series, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
-* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `tags`, `language`, `coverImage`, `pollQuestion`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
+* `forum_topics`: `id`, `slug`, `title`, `excerpt`, `content`, `author`, `category`, `tags`, `language`, `coverImage`, `pollQuestion`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
   * **Índices:** `IDX_forum_topics_slug_lang (slug, language) UNIQUE`, `IDX_forum_topics_feed (language, isPinned DESC, orderPriority DESC, createdAt DESC)`, `IDX_forum_topics_cat_feed (language, category, isPinned DESC, orderPriority DESC, createdAt DESC)`.
 * `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`, `FOREIGN KEY (parentId) REFERENCES forum_replies(id) ON DELETE CASCADE`.  

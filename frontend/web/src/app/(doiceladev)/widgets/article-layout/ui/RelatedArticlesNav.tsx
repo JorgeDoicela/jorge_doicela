@@ -32,7 +32,7 @@ export function RelatedArticlesNav({
       className={`space-y-4 select-none ${className}`}
     >
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-mono font-bold tracking-wider uppercase text-slate-500 dark:text-zinc-400">
+        <h4 className="text-xs font-mono font-bold tracking-wider text-slate-500 dark:text-zinc-400">
           {t('relatedArticlesTitle')}
         </h4>
       </div>

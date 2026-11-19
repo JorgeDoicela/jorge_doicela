@@ -14,10 +14,10 @@ export function ProjectCard({ project, priority = false }: ProjectCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
 
-  const moduleLabel = tNav('projects').toUpperCase();
+  const moduleLabel = tNav('projects');
   const catKey = project.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

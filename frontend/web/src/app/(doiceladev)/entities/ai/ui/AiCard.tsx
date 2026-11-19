@@ -16,10 +16,10 @@ export function AiCard({ resource, priority = false }: AiCardProps) {
 
   const catKey = resource.category?.toLowerCase() || '';
   const categoryLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
     : '';
 
-  const moduleLabel = tNav('ai').toUpperCase();
+  const moduleLabel = tNav('ai');
   const metaText = categoryLabel ? `${moduleLabel} • ${categoryLabel}` : moduleLabel;
 
   return (

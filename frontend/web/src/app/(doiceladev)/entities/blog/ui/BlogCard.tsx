@@ -14,10 +14,10 @@ export function BlogCard({ post, priority = false }: BlogCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
 
-  const moduleLabel = tNav('blog').toUpperCase();
+  const moduleLabel = tNav('blog');
   const catKey = post.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as never) ? tFilters(catKey as never) : catKey.replace(/_/g, ' ')).toUpperCase()
+    ? (tFilters.has(catKey as never) ? tFilters(catKey as never) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

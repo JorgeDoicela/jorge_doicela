@@ -13,10 +13,10 @@ interface InfrastructureCardProps {
 export function InfrastructureCard({ post, priority = false }: InfrastructureCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
-  const moduleLabel = tNav('infrastructure').toUpperCase();
+  const moduleLabel = tNav('infrastructure');
   const catKey = post.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

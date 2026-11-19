@@ -60,7 +60,7 @@ export function ArticleShareActions({ title, url, className = '' }: ArticleShare
       className={`pt-6 mt-6 flex flex-wrap items-center justify-between gap-4 select-none ${className}`}
       aria-label={t('shareTitle')}
     >
-      <div className="text-xs font-mono font-bold tracking-wider uppercase text-slate-500 dark:text-zinc-400">
+      <div className="text-xs font-mono font-bold tracking-wider text-slate-500 dark:text-zinc-400">
         <span>{t('shareTitle')}</span>
       </div>
 

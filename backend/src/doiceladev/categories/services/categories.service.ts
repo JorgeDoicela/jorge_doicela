@@ -341,13 +341,10 @@ export class CategoriesService {
           params,
         );
 
-        const moduleLabel = this.formatModuleLabel(config.categoryDomain, isEn);
-
         for (const row of rows) {
-          const categoryLabel = this.formatCategoryLabel(
-            row.category || normalizedSlug,
-            isEn,
-          );
+          const sub = (row.category || normalizedSlug || '')
+            .trim()
+            .toLowerCase();
           const dateStr = new Date(
             row.publishedAt || row.createdAt || Date.now(),
           ).toISOString();
@@ -356,7 +353,9 @@ export class CategoriesService {
             href: `${config.routePrefix}/${row.slug}`,
             title: row.title,
             category: config.categoryDomain,
-            categoryMeta: `${moduleLabel} • ${categoryLabel}`,
+            categoryMeta: sub
+              ? `${config.categoryDomain} • ${sub}`
+              : config.categoryDomain,
             coverImage: row.coverImage,
             excerpt: row.excerpt || null,
             date: dateStr,
@@ -414,20 +413,6 @@ export class CategoriesService {
         totalPages: 0,
       };
     }
-  }
-
-  private formatModuleLabel(domain: string, isEn: boolean): string {
-    const map: Record<string, { es: string; en: string }> = {
-      infrastructure: { es: 'INFRAESTRUCTURA', en: 'INFRASTRUCTURE' },
-      cybersecurity: { es: 'CIBERSEGURIDAD', en: 'CYBERSECURITY' },
-      tutorials: { es: 'TUTORIALES', en: 'TUTORIALS' },
-      blog: { es: 'BLOG', en: 'BLOG' },
-      news: { es: 'NOTICIAS', en: 'NEWS' },
-      ai: { es: 'IA', en: 'AI' },
-      projects: { es: 'PROYECTOS', en: 'PROJECTS' },
-      forum: { es: 'FORO', en: 'FORUM' },
-    };
-    return (isEn ? map[domain]?.en : map[domain]?.es) || domain.toUpperCase();
   }
 
   private formatCategoryLabel(cat: string, isEn: boolean): string {

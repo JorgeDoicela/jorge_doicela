@@ -20,7 +20,7 @@ export function TopicCard({ topic }: TopicCardProps) {
     ? (tFilters.has(catKey as never)
         ? tFilters(catKey as never)
         : catKey.replace(/_/g, ' ')
-      ).toUpperCase()
+      )
     : '';
 
   const formattedDate = new Date(topic.createdAt).toLocaleDateString(
@@ -40,16 +40,16 @@ export function TopicCard({ topic }: TopicCardProps) {
       <div className="flex-1">
         <div className="flex items-center gap-3 mb-2 flex-wrap">
           {topic.isPinned && (
-            <span className="text-[11px] font-mono font-bold uppercase text-amber-500 dark:text-amber-400">
+            <span className="text-[11px] font-mono font-bold text-amber-500 dark:text-amber-400">
               {tCard('pinned')}
             </span>
           )}
           {topic.isSolved && (
-            <span className="text-[11px] font-mono font-bold uppercase text-emerald-500 dark:text-emerald-400">
+            <span className="text-[11px] font-mono font-bold text-emerald-500 dark:text-emerald-400">
               {tCard('solved')}
             </span>
           )}
-          <span className="text-[11px] font-mono font-bold uppercase text-blue-500 dark:text-blue-400">
+          <span className="text-[11px] font-mono font-bold text-blue-500 dark:text-blue-400">
             {categoryLabel || topic.category}
           </span>
           <span className="text-xs text-zinc-500 font-mono">• {tCommon('author', { name: topic.author })}</span>

@@ -95,7 +95,7 @@ export function ForumReplyForm({
       className="mt-8 p-6 rounded-2xl glass-concave-panel border border-black/5 dark:border-white/5 space-y-4"
     >
       <div className="flex flex-wrap items-center justify-between gap-2 min-h-6">
-        <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+        <h4 className="text-xs font-mono font-bold tracking-wider text-slate-900 dark:text-white">
           {tDetail('joinDiscussion')}
         </h4>
 

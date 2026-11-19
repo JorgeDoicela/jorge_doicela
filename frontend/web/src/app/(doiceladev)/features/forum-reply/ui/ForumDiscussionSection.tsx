@@ -127,7 +127,7 @@ export function ForumDiscussionSection({
                 {reply.author}
               </span>
               {reply.isAcceptedAnswer && (
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-wider text-emerald-600 dark:text-emerald-400">
                   <span>•</span>
                   <span>{tDetail('acceptedAnswer')}</span>
                 </span>

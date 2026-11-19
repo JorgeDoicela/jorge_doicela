@@ -201,13 +201,8 @@ export class TagsService {
             params,
           );
 
-          const moduleLabel = this.formatModuleLabel(
-            config.categoryDomain,
-            isEn,
-          );
-
           for (const row of rows) {
-            const categoryLabel = this.formatCategoryLabel(row.category, isEn);
+            const sub = (row.category || '').trim().toLowerCase();
             const dateStr = new Date(
               row.publishedAt || row.createdAt || Date.now(),
             ).toISOString();
@@ -217,9 +212,9 @@ export class TagsService {
               href: `${config.routePrefix}/${row.slug}`,
               title: row.title,
               category: config.categoryDomain,
-              categoryMeta: categoryLabel
-                ? `${moduleLabel} • ${categoryLabel}`
-                : moduleLabel,
+              categoryMeta: sub
+                ? `${config.categoryDomain} • ${sub}`
+                : config.categoryDomain,
               coverImage: row.coverImage,
               excerpt: row.excerpt || null,
               date: dateStr,
@@ -313,13 +308,8 @@ export class TagsService {
             params,
           );
 
-          const moduleLabel = this.formatModuleLabel(
-            config.categoryDomain,
-            isEn,
-          );
-
           for (const row of rows) {
-            const categoryLabel = this.formatCategoryLabel(row.category, isEn);
+            const sub = (row.category || '').trim().toLowerCase();
             const dateStr = new Date(
               row.publishedAt || row.createdAt || Date.now(),
             ).toISOString();
@@ -329,9 +319,9 @@ export class TagsService {
               href: `${config.routePrefix}/${row.slug}`,
               title: row.title,
               category: config.categoryDomain,
-              categoryMeta: categoryLabel
-                ? `${moduleLabel} • ${categoryLabel}`
-                : moduleLabel,
+              categoryMeta: sub
+                ? `${config.categoryDomain} • ${sub}`
+                : config.categoryDomain,
               coverImage: row.coverImage,
               excerpt: row.excerpt || null,
               date: dateStr,
@@ -390,78 +380,5 @@ export class TagsService {
         totalPages: 0,
       };
     }
-  }
-
-  private formatModuleLabel(domain: string, isEn: boolean): string {
-    const map: Record<string, { es: string; en: string }> = {
-      infrastructure: { es: 'INFRAESTRUCTURA', en: 'INFRASTRUCTURE' },
-      cybersecurity: { es: 'CIBERSEGURIDAD', en: 'CYBERSECURITY' },
-      tutorials: { es: 'TUTORIALES', en: 'TUTORIALS' },
-      blog: { es: 'BLOG', en: 'BLOG' },
-      news: { es: 'NOTICIAS', en: 'NEWS' },
-      ai: { es: 'IA', en: 'AI' },
-      projects: { es: 'PROYECTOS', en: 'PROJECTS' },
-      forum: { es: 'FORO', en: 'FORUM' },
-    };
-    return (isEn ? map[domain]?.en : map[domain]?.es) || domain.toUpperCase();
-  }
-
-  private formatCategoryLabel(cat: string, isEn: boolean): string {
-    if (!cat) return '';
-    const map: Record<string, { es: string; en: string }> = {
-      hardening_guide: { es: 'Guías de Bastionado', en: 'Hardening Guides' },
-      advisory: { es: 'Avisos de Seguridad', en: 'Security Advisories' },
-      cve_analysis: { es: 'Análisis de CVE', en: 'CVE Analysis' },
-      writeup: { es: 'Writeups Técnicos', en: 'Technical Writeups' },
-      pentest: { es: 'Pruebas de Intrusión', en: 'Penetration Testing' },
-      mcp_server: { es: 'Servidores MCP', en: 'MCP Servers' },
-      llm: { es: 'Modelos LLM', en: 'LLM Models' },
-      agent: { es: 'Frameworks Agénticos', en: 'Agentic Frameworks' },
-      ci_cd: { es: 'CI/CD & Despliegues', en: 'CI/CD & Deployments' },
-      servers: { es: 'Servidores & Linux', en: 'Servers & Linux' },
-      containers: { es: 'Contenedores & Docker', en: 'Containers & Docker' },
-      clean_code: { es: 'Código Limpio', en: 'Clean Code' },
-      hardening: { es: 'Seguridad & Bastionado', en: 'Security & Hardening' },
-      architecture: {
-        es: 'Arquitectura de Software',
-        en: 'Software Architecture',
-      },
-      devops: { es: 'Cloud & DevOps', en: 'Cloud & DevOps' },
-      web: { es: 'Ecosistema Web', en: 'Web Ecosystem' },
-      backend: { es: 'Backend & APIs', en: 'Backend & APIs' },
-      frontend: { es: 'Frontend & UI', en: 'Frontend & UI' },
-      mobile: { es: 'Móvil & Multiplataforma', en: 'Mobile & Cross-Platform' },
-      frameworks: { es: 'Frameworks & Web', en: 'Frameworks & Web' },
-      general: { es: 'Comunidad General', en: 'General Community' },
-      tool: { es: 'Herramientas', en: 'Tools' },
-      tools: { es: 'Herramientas', en: 'Tools' },
-      security: { es: 'Ciberseguridad', en: 'Cybersecurity' },
-      cybersecurity: { es: 'Ciberseguridad', en: 'Cybersecurity' },
-      framework: { es: 'Frameworks', en: 'Frameworks' },
-      dataset: { es: 'Datasets', en: 'Datasets' },
-      platform: { es: 'Plataformas', en: 'Platforms' },
-      lessons: { es: 'Lecciones Aprendidas', en: 'Lessons Learned' },
-      postmortems: {
-        es: 'Errores & Post-Mortems',
-        en: 'Failures & Post-Mortems',
-      },
-      opinion: { es: 'Ensayos & Opinión', en: 'Essays & Opinion' },
-      career: { es: 'Carrera Técnica', en: 'Engineering Career' },
-      journal: { es: 'Bitácora de Ingeniería', en: 'Engineering Log' },
-      networking: { es: 'Redes & mTLS', en: 'Networking & mTLS' },
-      cloud: { es: 'Cloud & VPS', en: 'Cloud & VPS' },
-      databases: { es: 'Bases de Datos', en: 'Databases' },
-      open_source: { es: 'Open Source', en: 'Open Source' },
-      ai: { es: 'Inteligencia Artificial', en: 'Artificial Intelligence' },
-      help: { es: 'Soporte & Dudas', en: 'Help & Q&A' },
-      monitoring: {
-        es: 'Monitoreo & Telemetría',
-        en: 'Monitoring & Telemetry',
-      },
-      zero_ram: { es: 'Optimización de Recursos', en: 'Resource Optimization' },
-    };
-    const found = map[cat.toLowerCase()];
-    if (found) return isEn ? found.en : found.es;
-    return cat.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   }
 }

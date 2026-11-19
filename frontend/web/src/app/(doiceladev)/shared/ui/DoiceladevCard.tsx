@@ -38,7 +38,7 @@ export interface DoiceladevCardExcerptProps {
   className?: string;
 }
 
-const CANONICAL_CATEGORY_MAP: Record<string, string> = {
+export const CANONICAL_CATEGORY_MAP: Record<string, string> = {
   // CVE
   cve_analysis: 'cve_analysis',
   analisis_de_cve: 'cve_analysis',
@@ -142,21 +142,32 @@ export function DoiceladevCardMeta({
   className = '',
 }: DoiceladevCardMetaProps) {
   const tFilters = useTranslations('Filters');
+  const tNav = useTranslations('Nav');
 
   const formatSegment = React.useCallback(
     (segment: string): string => {
       const trimmed = segment.trim();
       if (!trimmed) return '';
       const lower = trimmed.toLowerCase();
+      const canonical = CANONICAL_CATEGORY_MAP[lower] || lower;
+      if (tNav.has(canonical as any)) {
+        return tNav(canonical as any);
+      }
+      if (tFilters.has(canonical as any)) {
+        return tFilters(canonical as any);
+      }
+      if (tNav.has(lower as any)) {
+        return tNav(lower as any);
+      }
       if (tFilters.has(lower as any)) {
-        return tFilters(lower as any).toUpperCase();
+        return tFilters(lower as any);
       }
       if (tFilters.has(trimmed as any)) {
-        return tFilters(trimmed as any).toUpperCase();
+        return tFilters(trimmed as any);
       }
       return trimmed.replace(/_/g, ' ');
     },
-    [tFilters]
+    [tFilters, tNav]
   );
 
   const { moduleSegment, categorySegment, rawCategoryPart } = React.useMemo(() => {
@@ -192,7 +203,7 @@ export function DoiceladevCardMeta({
 
   if (typeof categoryMeta !== 'string') {
     return (
-      <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium ${className}`}>
+      <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 tracking-wider truncate font-medium ${className}`}>
         {categoryMeta}
       </p>
     );
@@ -201,7 +212,7 @@ export function DoiceladevCardMeta({
   const moduleHref = category ? `/${category}` : null;
 
   return (
-    <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 uppercase tracking-wider truncate font-medium ${className}`}>
+    <p className={`text-[11px] font-mono text-slate-500 dark:text-zinc-400 tracking-wider truncate font-medium ${className}`}>
       {moduleHref ? (
         <Link href={moduleHref} className="hover:no-underline">
           {moduleSegment}

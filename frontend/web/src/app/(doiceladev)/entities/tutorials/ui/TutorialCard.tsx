@@ -13,10 +13,10 @@ interface TutorialCardProps {
 export function TutorialCard({ tutorial, priority = false }: TutorialCardProps) {
   const tNav = useTranslations('Nav');
   const tFilters = useTranslations('Filters');
-  const moduleLabel = tNav('tutorials').toUpperCase();
+  const moduleLabel = tNav('tutorials');
   const catKey = tutorial.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' ')).toUpperCase()
+    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

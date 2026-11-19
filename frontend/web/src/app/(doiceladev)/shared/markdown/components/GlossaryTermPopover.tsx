@@ -51,7 +51,7 @@ export function GlossaryTermPopover({
 
   const categoryLabel =
     categoryMap[termData.category.toLowerCase()] ||
-    termData.category.toUpperCase();
+    termData.category.replace(/_/g, ' ');
   const triggerTitle = t('definition', { term: termData.term });
   const dialogAriaLabel = t('definitionOf', { term: termData.term });
   const closeAriaLabel = t('close');
@@ -248,7 +248,7 @@ export function GlossaryTermPopover({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[10px] font-mono uppercase text-blue-600 dark:text-blue-400 font-semibold tracking-wider">
+            <span className="text-[10px] font-mono text-blue-600 dark:text-blue-400 font-semibold tracking-wider">
               {categoryLabel}
             </span>
 
@@ -271,7 +271,7 @@ export function GlossaryTermPopover({
         {/* Criterio Técnico con Acento Lateral Elegante */}
         {termData.keyDifference && (
           <div className="border-l-2 border-blue-500 dark:border-blue-400 pl-2.5 py-0.5 space-y-0.5">
-            <span className="block text-[9.5px] font-mono uppercase tracking-wider font-bold text-blue-600 dark:text-blue-400">
+            <span className="block text-[9.5px] font-mono tracking-wider font-bold text-blue-600 dark:text-blue-400">
               {technicalInsightLabel}
             </span>
             <div className="text-[11.5px] text-slate-600 dark:text-zinc-300 leading-relaxed font-sans">

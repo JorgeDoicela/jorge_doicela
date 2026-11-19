@@ -138,7 +138,7 @@ export function CalloutBlock({ type: explicitType, title: explicitTitle, childre
     return (
       <div className="relative my-6 p-5 sm:p-6 rounded-2xl overflow-hidden glass-convex-panel border border-blue-500/20 bg-gradient-to-br from-blue-950/15 via-black/[0.02] to-slate-900/20 dark:from-blue-950/30 dark:via-zinc-900/40 dark:to-slate-950/30 space-y-2.5 shadow-md">
         {explicitTitle && (
-          <h4 className="text-[11px] font-mono font-bold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+          <h4 className="text-[11px] font-mono font-bold tracking-wider text-blue-600 dark:text-blue-400">
             {explicitTitle}
           </h4>
         )}
@@ -158,7 +158,7 @@ export function CalloutBlock({ type: explicitType, title: explicitTitle, childre
       role="note"
       aria-label={displayTitle}
     >
-      <h4 className={`text-[11px] font-mono font-bold tracking-wider uppercase ${config.titleColor}`}>
+      <h4 className={`text-[11px] font-mono font-bold tracking-wider ${config.titleColor}`}>
         {displayTitle}
       </h4>
       <div className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 font-normal dark:font-light leading-relaxed [&>p]:my-1.5 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">

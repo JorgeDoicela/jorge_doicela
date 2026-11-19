@@ -125,7 +125,6 @@ export class RecommendationsService {
     query: GetRecommendationsQueryDto,
   ): Promise<RecommendationCardDto[]> {
     const { slug, lang = 'es', limit = 3, exclude } = query;
-    const isEn = lang === 'en';
 
     // Lista normalizada de slugs a excluir (artículo actual + historial de lectura del usuario)
     const excludedSlugs = new Set<string>();
@@ -271,21 +270,17 @@ export class RecommendationsService {
 
           const isExcluded = excludedSlugs.has(rowSlug);
 
-          // Formateo de etiquetas y metadatos
-          const moduleLabel = this.formatModuleLabel(
-            config.categoryDomain,
-            isEn,
-          );
-          const subLabel = this.formatSubcategory(row.category, isEn);
+          // Formateo de etiquetas y metadatos canónicos
+          const sub = (row.category || '').trim().toLowerCase();
           candidates.push({
             card: {
               id: `${config.type}-${row.id}`,
               href: `${config.routePrefix}/${row.slug}`,
               title: row.title,
               category: config.categoryDomain,
-              categoryMeta: subLabel
-                ? `${moduleLabel} • ${subLabel}`
-                : moduleLabel,
+              categoryMeta: sub
+                ? `${config.categoryDomain} • ${sub}`
+                : config.categoryDomain,
               excerpt: row.excerpt || null,
               coverImage: row.coverImage,
               score: Math.round(totalScore * 100) / 100,
@@ -347,41 +342,5 @@ export class RecommendationsService {
       }
     }
     return null;
-  }
-
-  private formatModuleLabel(domain: string, isEn: boolean): string {
-    const map: Record<string, { es: string; en: string }> = {
-      infrastructure: { es: 'INFRAESTRUCTURA', en: 'INFRASTRUCTURE' },
-      cybersecurity: { es: 'CIBERSEGURIDAD', en: 'CYBERSECURITY' },
-      tutorials: { es: 'TUTORIALES', en: 'TUTORIALS' },
-      blog: { es: 'BLOG', en: 'BLOG' },
-      news: { es: 'NOTICIAS', en: 'NEWS' },
-      ai: { es: 'IA', en: 'AI' },
-      projects: { es: 'PROYECTOS', en: 'PROJECTS' },
-      forum: { es: 'FORO', en: 'FORUM' },
-    };
-    return (isEn ? map[domain]?.en : map[domain]?.es) || domain.toUpperCase();
-  }
-
-  private formatSubcategory(cat?: string, isEn?: boolean): string {
-    if (!cat) return '';
-    const map: Record<string, { es: string; en: string }> = {
-      hardening_guide: { es: 'GUÍAS DE BASTIONADO', en: 'HARDENING GUIDES' },
-      advisory: { es: 'AVISOS DE SEGURIDAD', en: 'SECURITY ADVISORIES' },
-      cve_analysis: { es: 'ANÁLISIS CVE', en: 'CVE ANALYSIS' },
-      writeup: { es: 'WRITEUPS TÉCNICOS', en: 'TECHNICAL WRITEUPS' },
-      pentest: { es: 'PENTESTING', en: 'PENTESTING' },
-      mcp_server: { es: 'SERVIDORES MCP', en: 'MCP SERVERS' },
-      llm: { es: 'MODELOS LLM', en: 'LLM MODELS' },
-      agent: { es: 'FRAMEWORKS AGÉNTICOS', en: 'AGENTIC FRAMEWORKS' },
-      ci_cd: { es: 'CI/CD & DESPLIEGUES', en: 'CI/CD & DEPLOYMENTS' },
-      servers: { es: 'SERVIDORES & LINUX', en: 'SERVERS & LINUX' },
-      containers: { es: 'CONTENEDORES', en: 'CONTAINERS' },
-      clean_code: { es: 'CÓDIGO LIMPIO', en: 'CLEAN CODE' },
-      hardening: { es: 'BASTIONADO', en: 'HARDENING' },
-    };
-    const found = map[cat.toLowerCase()];
-    if (found) return isEn ? found.en : found.es;
-    return cat.replace(/_/g, ' ').toUpperCase();
   }
 }

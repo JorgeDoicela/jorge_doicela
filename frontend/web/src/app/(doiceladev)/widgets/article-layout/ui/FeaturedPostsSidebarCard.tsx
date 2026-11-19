@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
 import { PortalFeedItem } from '../../../entities/portal/types';
 import { useDoiceladevPortal } from '../../../entities/portal/api/useDoiceladevPortal';
+import { CANONICAL_CATEGORY_MAP } from '../../../shared/ui/DoiceladevCard';
 
 interface FeaturedPostsSidebarCardProps {
     maxPosts?: number;
@@ -30,10 +31,23 @@ export function FeaturedPostsSidebarCard({
             .map((segment) => {
                 const trimmed = segment.trim();
                 const lower = trimmed.toLowerCase();
-                if (tFilters.has(lower as never)) {
-                    return tFilters(lower as never).toUpperCase();
+                const canonical = CANONICAL_CATEGORY_MAP[lower] || lower;
+                if (tNav.has(canonical as never)) {
+                    return tNav(canonical as never);
                 }
-                return trimmed.replace(/_/g, ' ').toUpperCase();
+                if (tFilters.has(canonical as never)) {
+                    return tFilters(canonical as never);
+                }
+                if (tNav.has(lower as never)) {
+                    return tNav(lower as never);
+                }
+                if (tFilters.has(lower as never)) {
+                    return tFilters(lower as never);
+                }
+                if (tFilters.has(trimmed as never)) {
+                    return tFilters(trimmed as never);
+                }
+                return trimmed.replace(/_/g, ' ');
             })
             .filter(Boolean)
             .join(' • ');
@@ -55,7 +69,7 @@ export function FeaturedPostsSidebarCard({
         >
             {/* Cabecera de la tarjeta */}
             <div className="flex items-center justify-between">
-                <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                <h5 className="text-xs font-mono font-bold tracking-wider text-slate-800 dark:text-zinc-200">
                     {tHome('featuredPosts')}
                 </h5>
                 <Link
@@ -83,7 +97,7 @@ export function FeaturedPostsSidebarCard({
                     ))
                 ) : displayPosts.length > 0 ? (
                     displayPosts.map((item: PortalFeedItem) => {
-                        const moduleLabel = item.category ? tNav(item.category).toUpperCase() : '';
+                        const moduleLabel = item.category ? (tNav.has(item.category as never) ? tNav(item.category as never) : item.category) : '';
 
                         return (
                             <Link
@@ -94,7 +108,7 @@ export function FeaturedPostsSidebarCard({
                                 {/* Título y metadatos: Nivel 1 • Nivel 2 */}
                                 <div className="flex-1 min-w-0 space-y-1">
                                     {(item.categoryMeta || moduleLabel) && (
-                                        <span className="block text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate uppercase tracking-wider">
+                                        <span className="block text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate tracking-wider">
                                             {formatCategoryMeta(item.categoryMeta, moduleLabel)}
                                         </span>
                                     )}

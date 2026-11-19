@@ -68,7 +68,7 @@ export function PopularTagsSidebarCard({
         >
             {/* Cabecera limpia sin el símbolo # en el título */}
             <div className="flex items-center justify-between">
-                <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                <h5 className="text-xs font-mono font-bold tracking-wider text-slate-800 dark:text-zinc-200">
                     {t('popularTags')}
                 </h5>
             </div>

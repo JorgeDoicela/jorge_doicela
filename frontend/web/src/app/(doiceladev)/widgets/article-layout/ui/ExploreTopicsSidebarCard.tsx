@@ -105,7 +105,7 @@ export function ExploreTopicsSidebarCard({ className = '' }: ExploreTopicsSideba
         >
             {/* Cabecera de la tarjeta */}
             <div className="flex items-center justify-between">
-                <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                <h5 className="text-xs font-mono font-bold tracking-wider text-slate-800 dark:text-zinc-200">
                     {tNav('exploreTopics')}
                 </h5>
             </div>

@@ -90,7 +90,7 @@ export function ForumPollCard({
   return (
     <section className="my-8 p-5 sm:p-6 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400">
+        <span className="text-[11px] font-mono font-bold tracking-wider text-slate-500 dark:text-zinc-400">
           {tDetail('pollTitle')}
         </span>
         <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-500">

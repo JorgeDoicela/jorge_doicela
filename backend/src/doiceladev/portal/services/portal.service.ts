@@ -72,8 +72,6 @@ export class PortalService {
     const projects = extract(results[6], 'projects');
     const topics = extract(results[7], 'forum');
 
-    const isEn = lang === 'en';
-
     // Devuelve el slug canónico de Nivel 2; la traducción reactiva reside en el frontend (next-intl)
     const formatSub = (cat?: string): string => {
       if (!cat) return '';
@@ -96,7 +94,6 @@ export class PortalService {
       const dateStr = new Date(
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'NEWS' : 'NOTICIAS';
       const sub = formatSub(item.category);
 
       return {
@@ -105,7 +102,7 @@ export class PortalService {
         title: item.title,
         category: 'news',
         coverImage: item.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `news • ${sub}` : 'news',
         excerpt: item.excerpt,
         accentHoverColor: 'group-hover:text-cyan-300',
         date: dateStr,
@@ -123,7 +120,6 @@ export class PortalService {
       const dateStr = new Date(
         item.publishedAt || item.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'BLOG' : 'BLOG';
       const sub = formatSub(item.category);
 
       return {
@@ -132,7 +128,7 @@ export class PortalService {
         title: item.title,
         category: 'blog',
         coverImage: item.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `blog • ${sub}` : 'blog',
         excerpt: item.excerpt,
         accentHoverColor: 'group-hover:text-blue-300',
         date: dateStr,
@@ -149,7 +145,6 @@ export class PortalService {
       const dateStr = new Date(
         sec.publishedAt || sec.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'SECURITY' : 'SEGURIDAD';
       const sub = formatSub(sec.category);
 
       return {
@@ -158,7 +153,7 @@ export class PortalService {
         title: sec.title,
         category: 'cybersecurity',
         coverImage: sec.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `cybersecurity • ${sub}` : 'cybersecurity',
         excerpt: sec.excerpt,
         accentHoverColor: 'group-hover:text-rose-300',
         date: dateStr,
@@ -175,7 +170,6 @@ export class PortalService {
       const dateStr = new Date(
         tut.publishedAt || tut.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'TUTORIALS' : 'TUTORIALES';
       const sub = formatSub(tut.category);
 
       return {
@@ -184,7 +178,7 @@ export class PortalService {
         title: tut.title,
         category: 'tutorials',
         coverImage: tut.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `tutorials • ${sub}` : 'tutorials',
         excerpt: tut.excerpt,
         accentHoverColor: 'group-hover:text-amber-300',
         date: dateStr,
@@ -201,7 +195,6 @@ export class PortalService {
       const dateStr = new Date(
         inf.publishedAt || inf.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'INFRASTRUCTURE' : 'INFRAESTRUCTURA';
       const sub = formatSub(inf.category);
 
       return {
@@ -210,7 +203,7 @@ export class PortalService {
         title: inf.title,
         category: 'infrastructure',
         coverImage: inf.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `infrastructure • ${sub}` : 'infrastructure',
         excerpt: inf.excerpt,
         accentHoverColor: 'group-hover:text-emerald-300',
         date: dateStr,
@@ -227,7 +220,6 @@ export class PortalService {
       const dateStr = new Date(
         res.publishedAt || res.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'AI' : 'IA';
       const sub = formatSub(res.category);
 
       return {
@@ -236,7 +228,7 @@ export class PortalService {
         title: res.title,
         category: 'ai',
         coverImage: res.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `ai • ${sub}` : 'ai',
         excerpt: res.excerpt,
         accentHoverColor: 'group-hover:text-indigo-300',
         date: dateStr,
@@ -253,7 +245,6 @@ export class PortalService {
       const dateStr = new Date(
         proj.publishedAt || proj.createdAt || Date.now(),
       ).toISOString();
-      const module = isEn ? 'PROJECTS' : 'PROYECTOS';
       const sub = formatSub(proj.category);
 
       return {
@@ -262,7 +253,7 @@ export class PortalService {
         title: proj.title,
         category: 'projects',
         coverImage: proj.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `projects • ${sub}` : 'projects',
         excerpt: proj.excerpt,
         accentHoverColor: 'group-hover:text-blue-300',
         date: dateStr,
@@ -278,7 +269,6 @@ export class PortalService {
 
     const forumItems: PortalFeedItem[] = topics.map((top) => {
       const dateStr = new Date(top.createdAt || Date.now()).toISOString();
-      const module = isEn ? 'FORUM' : 'FORO';
       const sub = formatSub(top.category);
 
       return {
@@ -287,7 +277,7 @@ export class PortalService {
         title: top.title,
         category: 'forum',
         coverImage: top.coverImage,
-        categoryMeta: sub ? `${module} • ${sub}` : module,
+        categoryMeta: sub ? `forum • ${sub}` : 'forum',
         excerpt: top.content,
         accentHoverColor: 'group-hover:text-sky-300',
         date: dateStr,

@@ -450,7 +450,7 @@ export function SpotlightModal({
               filteredResults.map((entry, idx) => {
                 const { item, titleMatches, snippetMatches, matchedTag } = entry;
                 const isSelected = idx === selectedIndex;
-                const moduleLabel = item.categoryLabel.toUpperCase();
+                const moduleLabel = item.categoryLabel;
 
                 return (
                   <Link
@@ -468,7 +468,7 @@ export function SpotlightModal({
                     <div className="flex-1 min-w-0 space-y-1">
                       {/* Metadatos en tipografía mono sobria */}
                       <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                        <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 tracking-wider">
                           {moduleLabel}
                         </span>
                         {matchedTag && (

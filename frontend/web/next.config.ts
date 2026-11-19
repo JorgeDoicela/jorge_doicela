@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Evita que Turbopack acumule gigabytes de caché .sst mapeada en memoria en desarrollo
+  experimental: {
+    turbopackFileSystemCacheForDev: false,
+  },
   async headers() {
     return [
       {

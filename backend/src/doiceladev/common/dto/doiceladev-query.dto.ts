@@ -1,5 +1,7 @@
-import { IsOptional, IsString, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min, Max, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+
+export type DoiceladevSortBy = 'smart' | 'recent' | 'popular';
 
 export class DoiceladevQueryDto {
   @IsOptional()
@@ -9,6 +11,16 @@ export class DoiceladevQueryDto {
   @IsOptional()
   @IsString({ message: 'El parámetro lang debe ser una cadena de texto.' })
   lang?: string = 'es';
+
+  @IsOptional()
+  @IsString({ message: 'El parámetro tag debe ser una cadena de texto.' })
+  tag?: string;
+
+  @IsOptional()
+  @IsIn(['smart', 'recent', 'popular'], {
+    message: 'El parámetro sortBy debe ser smart, recent o popular.',
+  })
+  sortBy?: DoiceladevSortBy = 'smart';
 
   @IsOptional()
   @Type(() => Number)

@@ -2,19 +2,18 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { useProjects } from '../api/useProjects';
+import { Project } from '../types';
 import { ProjectCard } from './ProjectCard';
 import { DoiceladevCardSkeleton } from '../../../shared/ui/DoiceladevCardSkeleton';
 
 interface ProjectGridProps {
-  category?: string;
-  status?: string;
-  search?: string;
+  projects: Project[];
+  loading: boolean;
+  error: string | null;
 }
 
-export function ProjectGrid({ category, status, search }: ProjectGridProps) {
+export function ProjectGrid({ projects, loading, error }: ProjectGridProps) {
   const t = useTranslations('Projects');
-  const { projects, loading, error } = useProjects(category, search, status);
 
   if (loading) {
     return (

@@ -111,6 +111,17 @@ const CATEGORY_ALIAS_MAP: Record<string, string> = {
   seguridad: 'security',
   security: 'security',
   cybersecurity: 'security',
+  // Blog Personal
+  lecciones_aprendidas: 'lessons',
+  lessons: 'lessons',
+  errores_postmortems: 'postmortems',
+  postmortems: 'postmortems',
+  ensayos_opinion: 'opinion',
+  opinion: 'opinion',
+  carrera_tecnica: 'career',
+  career: 'career',
+  bitacora_de_ingenieria: 'journal',
+  journal: 'journal',
 };
 
 @Injectable()
@@ -124,7 +135,7 @@ export class CategoriesService {
       categoryDomain: 'infrastructure',
       routePrefix: '/infrastructure',
       titleCol: 'title',
-      descCol: "COALESCE(subtitle, architectureOverview, '')",
+      descCol: 'excerpt',
       dateCol: 'publishedAt',
       featCol: 'featured',
     },
@@ -173,8 +184,8 @@ export class CategoriesService {
       type: 'ai',
       categoryDomain: 'ai',
       routePrefix: '/ai',
-      titleCol: 'name',
-      descCol: 'description',
+      titleCol: 'title',
+      descCol: 'excerpt',
       dateCol: 'publishedAt',
       featCol: 'featured',
     },
@@ -183,9 +194,9 @@ export class CategoriesService {
       type: 'project',
       categoryDomain: 'projects',
       routePrefix: '/projects',
-      titleCol: 'name',
-      descCol: 'description',
-      dateCol: 'createdAt',
+      titleCol: 'title',
+      descCol: 'excerpt',
+      dateCol: 'publishedAt',
       featCol: 'featured',
     },
     {
@@ -451,6 +462,26 @@ export class CategoriesService {
       cybersecurity: { es: 'Ciberseguridad', en: 'Cybersecurity' },
       dataset: { es: 'Datasets', en: 'Datasets' },
       platform: { es: 'Plataformas', en: 'Platforms' },
+      lessons: { es: 'Lecciones Aprendidas', en: 'Lessons Learned' },
+      postmortems: {
+        es: 'Errores & Post-Mortems',
+        en: 'Failures & Post-Mortems',
+      },
+      opinion: { es: 'Ensayos & Opinión', en: 'Essays & Opinion' },
+      career: { es: 'Carrera Técnica', en: 'Engineering Career' },
+      journal: { es: 'Bitácora de Ingeniería', en: 'Engineering Log' },
+      networking: { es: 'Redes & mTLS', en: 'Networking & mTLS' },
+      cloud: { es: 'Cloud & VPS', en: 'Cloud & VPS' },
+      databases: { es: 'Bases de Datos', en: 'Databases' },
+      open_source: { es: 'Open Source', en: 'Open Source' },
+      tools: { es: 'Herramientas', en: 'Tools' },
+      ai: { es: 'Inteligencia Artificial', en: 'Artificial Intelligence' },
+      help: { es: 'Soporte & Dudas', en: 'Help & Q&A' },
+      monitoring: {
+        es: 'Monitoreo & Telemetría',
+        en: 'Monitoring & Telemetry',
+      },
+      zero_ram: { es: 'Optimización de Recursos', en: 'Resource Optimization' },
     };
     const found = map[cat.toLowerCase()];
     if (found) return isEn ? found.en : found.es;

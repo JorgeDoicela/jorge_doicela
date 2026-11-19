@@ -6,11 +6,12 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ForumService } from '../services/forum.service';
-import { CreateForumTopicDto } from '../dto/create-forum-topic.dto';
 import { CreateForumReplyDto } from '../dto/create-forum-reply.dto';
 import { GetForumTopicsQueryDto } from '../dto/get-forum-topics-query.dto';
+import { ForumThrottleGuard } from '../guards/forum-throttle.guard';
 
 @Controller('doiceladev/forum')
 export class ForumController {
@@ -34,18 +35,29 @@ export class ForumController {
     return this.forumService.findTopic(idOrSlug, lang);
   }
 
-  @Post()
-  async createTopic(@Body() createTopicDto: CreateForumTopicDto) {
-    return this.forumService.createTopic(createTopicDto);
+  @Get(':id/replies')
+  async getReplies(@Param('id', ParseIntPipe) id: number) {
+    return this.forumService.findRepliesByTopic(id);
   }
 
   @Post('replies')
+  @UseGuards(ForumThrottleGuard)
   async createReply(@Body() createReplyDto: CreateForumReplyDto) {
     return this.forumService.createReply(createReplyDto);
   }
 
-  @Get(':id/replies')
-  async getReplies(@Param('id', ParseIntPipe) id: number) {
-    return this.forumService.findRepliesByTopic(id);
+  @Post('replies/:id/vote')
+  @UseGuards(ForumThrottleGuard)
+  async voteReply(@Param('id', ParseIntPipe) id: number) {
+    return this.forumService.voteReply(id);
+  }
+
+  @Post(':id/poll/:optionId/vote')
+  @UseGuards(ForumThrottleGuard)
+  async votePollOption(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
+  ) {
+    return this.forumService.votePollOption(id, optionId);
   }
 }

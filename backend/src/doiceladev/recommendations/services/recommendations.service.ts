@@ -48,7 +48,7 @@ export class RecommendationsService {
       categoryDomain: 'infrastructure',
       routePrefix: '/infrastructure',
       titleCol: 'title',
-      descCol: "COALESCE(subtitle, architectureOverview, '')",
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {
@@ -92,8 +92,8 @@ export class RecommendationsService {
       type: 'ai',
       categoryDomain: 'ai',
       routePrefix: '/ai',
-      titleCol: 'name',
-      descCol: 'description',
+      titleCol: 'title',
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {
@@ -101,8 +101,8 @@ export class RecommendationsService {
       type: 'project',
       categoryDomain: 'projects',
       routePrefix: '/projects',
-      titleCol: 'name',
-      descCol: 'description',
+      titleCol: 'title',
+      descCol: 'excerpt',
       featCol: 'featured',
     },
     {

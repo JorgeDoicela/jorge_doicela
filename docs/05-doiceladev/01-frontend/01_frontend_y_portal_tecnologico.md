@@ -45,11 +45,11 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts
 │
 ├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
-│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # DoiceladevJsonLd (Schema JSON-LD)
-│   ├── lib/                          # api, serverFetch, fetchJson
-│   └── types/                        # spotlight.ts
+│   ├── lib/                          # api, serverFetch, fetchJson, articlePage (metadata, fechas y carga paralela unificada)
+│   └── types/                        # filter.ts, glossary.ts, recommendation.ts, spotlight.ts
 │
 ├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown
 │   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
@@ -61,12 +61,12 @@ frontend/web/src/app/(doiceladev)/
 │   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
 │   ├── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
-│   ├── categories/                   # Hub de Categorías (Nivel 2): useCategoriesHub, useCategoryArticles, types.ts, index.ts
-│   └── tags/                         # Hub de Etiquetas (Nivel 3): useTagsHub, useTagArticles, types.ts, index.ts
+│   ├── categories/                   # Directorio de Categorías (Nivel 2): useCategoriesHub, useCategoryArticles, types.ts, index.ts
+│   └── tags/                         # Directorio de Etiquetas (Nivel 3): useTagsHub, useTagArticles, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
-│   ├── forum-reply/                  # ForumReplyForm, ForumSection
+│   ├── forum-reply/                  # ForumDiscussionSection, ForumPollCard, ForumReplyForm, ForumSection
 │   ├── newsletter-subscription/      # useNewsletterSubscription y useNewsletterUnsubscribe (suscripción y baja idempotente)
 │   ├── language-toggle/              # LanguageToggle (ES / EN)
 │   └── theme-toggle/                 # ThemeToggle (Titanio / Obsidiana)
@@ -89,8 +89,8 @@ frontend/web/src/app/(doiceladev)/
     ├── tutorials/                    # Malla de tutoriales y asistente interactivo (/tutorials, /tutorials/[slug])
     ├── projects/                     # Showcase de proyectos (/projects, /projects/[slug])
     ├── infrastructure/               # Guías y especificaciones de servidores (/infrastructure, /infrastructure/[slug])
-    ├── categories/                   # Directorio (/categories) y Hub de Categoría (/categories/[slug])
-    └── tags/                         # Directorio (/tags) y Hub de Etiqueta (/tags/[slug])
+    ├── categories/                   # Directorio (/categories) y vista de categoría (/categories/[slug])
+    └── tags/                         # Directorio (/tags) y vista de etiqueta (/tags/[slug])
 ```
 
 ---
@@ -105,7 +105,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 4. **Ciberseguridad (`cybersecurity`):** Avisos con matriz de severidad (LOW a CRITICAL), guías de bastionado y remediación.
 5. **Infraestructura (`infrastructure`):** Servidores Linux, topologías cloud (AWS Lightsail), arquitectura en 1 GB de RAM, seguridad perimetral mTLS, rate limiting en Nginx, sandboxing en Docker y CI/CD.
 6. **Proyectos (`projects`):** Catálogo de sistemas, librerías y herramientas desarrolladas por Jorge con enlaces demo/repo.
-7. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software, patrones de diseño y buenas prácticas.
+7. **Blog (`blog`):** Blog personal en primera persona con lecciones aprendidas, errores/post-mortems, criterio de ingeniería, carrera y bitácora técnica (`lessons`, `postmortems`, `opinion`, `career`, `journal`).
 8. **Foros (`forum`):** Espacio comunitario para debates técnicos, preguntas y respuestas anidadas.
 
 > **Regla Universal de Metadatos (`categoryMeta`):** Todas las tarjetas muestran exclusivamente `[MÓDULO] • [CATEGORÍA]` (ej. `TUTORIALES • WEB`, `PROYECTOS • WEB`, `INFRAESTRUCTURA • CONTAINERS`). La plataforma opera bajo una taxonomía canónica universal de 3 niveles (Nivel 1: Módulo, Nivel 2: Categoría, Nivel 3: Tags), habiendo erradicado por completo el concepto de Nivel 4 y atributos aislados de la jerarquía visual de tarjetas.

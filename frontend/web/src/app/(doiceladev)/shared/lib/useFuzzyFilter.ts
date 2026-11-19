@@ -60,8 +60,6 @@ export function useFuzzyFilter<T>(
         { name: 'category', weight: 1.2 },
         { name: 'subtitle', weight: 1.0 },
         { name: 'excerpt', weight: 0.8 },
-        { name: 'description', weight: 0.8 },
-        { name: 'architectureOverview', weight: 0.8 },
         { name: 'content', weight: 0.6 },
       ],
       threshold: 0.35,

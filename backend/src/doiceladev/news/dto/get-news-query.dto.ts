@@ -1,12 +1,19 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsIn } from 'class-validator';
 import { DoiceladevQueryDto } from '../../common/dto/doiceladev-query.dto';
+import { NewsCategory } from '../entities/news-article.entity';
 
 export class GetNewsQueryDto extends DoiceladevQueryDto {
   @IsOptional()
-  @IsString({ message: 'El parámetro tag debe ser una cadena de texto.' })
-  tag?: string;
-
-  @IsOptional()
-  @IsString({ message: 'El parámetro category debe ser una cadena de texto.' })
-  category?: string;
+  @IsIn([
+    'all',
+    'frameworks',
+    'cloud',
+    'ai',
+    'devops',
+    'security',
+    'web',
+    'tools',
+    'databases',
+  ])
+  category?: NewsCategory | 'all';
 }

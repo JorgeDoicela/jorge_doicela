@@ -84,6 +84,9 @@ Toda publicación en cualquiera de las 8 categorías (`infrastructure`, `tutoria
 6. **Auditoría y Comandos Operativos:** Tablas de referencia rápida de comandos y monitoreo.
 7. **Conclusión y Checklist de Validación:** Lista de verificación interactiva (`[x]`).
 
+> [!NOTE]
+> **Excepción Editorial para el Módulo `blog` (Blog Personal):** A diferencia de las guías técnicas (`infrastructure`, `tutorials`, `cybersecurity`, `ai`, `projects`, `news`), el módulo `blog` es un espacio de escritura personal y humana en primera persona (lecciones aprendidas, errores/post-mortems, criterio de ingeniería, carrera y bitácora). Mantiene el mismo rigor técnico y la prohibición de lenguaje publicitario, pero goza de libertad narrativa sin obligar a incluir checklists de comandos ni resúmenes ejecutivos rígidos cuando el ensayo fluya mejor como prosa reflexiva.
+
 ---
 
 ## 4. Bilingüismo Simétrico Obligatorio

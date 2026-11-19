@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
-import { ProjectGrid, useProjectsCategories } from '../../entities/projects';
+import { ProjectGrid, useProjects, useProjectsCategories } from '../../entities/projects';
 import { ModuleFilterToolbar } from '../../shared/ui';
 
 export default function ProjectsCategoryPage() {
@@ -12,6 +12,7 @@ export default function ProjectsCategoryPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const { categories, loading: categoriesLoading } = useProjectsCategories();
+  const { projects, loading, error } = useProjects(category, search);
 
   return (
     <DoiceladevPageLayout
@@ -44,7 +45,7 @@ export default function ProjectsCategoryPage() {
         </header>
 
         <main>
-          <ProjectGrid category={category} search={search} />
+          <ProjectGrid projects={projects} loading={loading} error={error} />
         </main>
       </div>
     </DoiceladevPageLayout>

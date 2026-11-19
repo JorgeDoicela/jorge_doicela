@@ -5,10 +5,11 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 ---
 
 ## 1. Arquitectura y Módulos Completados
-- [x] **Monolito Modular Backend (9 Submódulos):** `news`, `blog`, `forum`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`, `newsletter` con controladores, servicios y entidades TypeORM independientes.
-- [x] **Fuente de Verdad en `corpus/*.json`:** 8 datasets JSON estructurados que alimentan la base de datos de forma desacoplada.
-- [x] **Seeder Atómico Transaccional:** Script CLI (`seed-doiceladev.ts`) que recrea y siembra 11 tablas en SQLite en < 100 ms.
-- [x] **Modelo Relacional Físico (`doiceladev.sqlite`):** 11 entidades registradas bajo `doiceladevConnection` con relaciones foráneas e índices B-Tree especializados (incluyendo `newsletter_subscribers`).
+- [x] **Monolito Modular Backend (14 Submódulos):** 7 módulos editoriales homologados de solo lectura (`news`, `blog`, `ai`, `cybersecurity`, `tutorials`, `projects`, `infrastructure`), `forum`, `glossary` y 5 submódulos transversales (`portal`, `recommendations`, `categories`, `tags`, `newsletter`).
+- [x] **Fuente de Verdad en `corpus/*.json`:** 9 datasets JSON estructurados y bilingües que alimentan la base de datos de forma desacoplada.
+- [x] **Seeder Atómico Transaccional:** Script CLI (`seed-doiceladev.ts`) que recrea y siembra las 14 tablas en SQLite en < 100 ms.
+- [x] **Modelo Relacional Físico (`doiceladev.sqlite`):** 14 tablas registradas bajo `doiceladevConnection` con núcleo común unificado (`title`, `excerpt`, `contentMarkdown`, `tags`, `likes`, `views`, `publishedAt`), relaciones foráneas e índices B-Tree alineados a `publishedAt`.
+- [x] **Homologación Editorial y FSD:** Utilidades compartidas (`articlePage.ts`, `ArticleMetaPanel.tsx`, `category-aggregation.util.ts`) y especialización sobria por dominio en los 7 módulos editoriales (incluyendo Blog Personal en primera persona).
 - [x] **Servicio Real e Idempotente de Suscripciones Técnicas (Newsletter):** Backend `POST /doiceladev/newsletter/subscribe`, validación RFC 5322, prevención de duplicados, soporte bilingüe (`es`/`en`) y segmentación analítica (`source`, `topicCategory`).
 - [x] **Frontend Web Next.js 16 (FSD Canónico en 6 Capas):** Capas desacopladas `providers/`, `shared/` (UI, suite Markdown, SEO, lib, types), `entities/` (8 dominios temáticos + feed consolidado), `features/` (spotlight-search, forum-reply, newsletter-subscription, language-toggle, theme-toggle) y `widgets/` (header-nav, footer, category-nav, featured-carousel, article-layout, page-layout).
 - [x] **Páginas de Catálogo Dedicadas:** `/doiceladev/news`, `/doiceladev/blog`, `/doiceladev/forum`, `/doiceladev/ai`, `/doiceladev/cybersecurity`, `/doiceladev/tutorials`, `/doiceladev/projects`, `/doiceladev/infrastructure` (o rutas raíz en subdominio `doiceladev.jorgedoicela.com`).

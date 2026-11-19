@@ -74,26 +74,10 @@ export class PortalService {
 
     const isEn = lang === 'en';
 
-    // Función pura para normalizar subcategorías sin dejar slugs técnicos con guiones bajos
+    // Devuelve el slug canónico de Nivel 2; la traducción reactiva reside en el frontend (next-intl)
     const formatSub = (cat?: string): string => {
       if (!cat) return '';
-      const map: Record<string, { es: string; en: string }> = {
-        hardening_guide: { es: 'GUÍAS DE BASTIONADO', en: 'HARDENING GUIDES' },
-        advisory: { es: 'AVISOS DE SEGURIDAD', en: 'SECURITY ADVISORIES' },
-        cve_analysis: { es: 'ANÁLISIS CVE', en: 'CVE ANALYSIS' },
-        writeup: { es: 'WRITEUPS TÉCNICOS', en: 'TECHNICAL WRITEUPS' },
-        pentest: { es: 'PENTESTING', en: 'PENTESTING' },
-        mcp_server: { es: 'SERVIDORES MCP', en: 'MCP SERVERS' },
-        llm: { es: 'MODELOS LLM', en: 'LLM MODELS' },
-        agent: { es: 'FRAMEWORKS AGÉNTICOS', en: 'AGENTIC FRAMEWORKS' },
-        ci_cd: { es: 'CI/CD & DESPLIEGUES', en: 'CI/CD & DEPLOYMENTS' },
-        servers: { es: 'SERVIDORES & LINUX', en: 'SERVERS & LINUX' },
-        containers: { es: 'CONTENEDORES', en: 'CONTAINERS' },
-        clean_code: { es: 'CÓDIGO LIMPIO', en: 'CLEAN CODE' },
-      };
-      const found = map[cat.toLowerCase()];
-      if (found) return isEn ? found.en : found.es;
-      return cat.replace(/_/g, ' ').toUpperCase();
+      return cat.trim().toLowerCase();
     };
 
     // Función pura para calcular el impulso de frescura / recency decay
@@ -227,7 +211,7 @@ export class PortalService {
         category: 'infrastructure',
         coverImage: inf.coverImage,
         categoryMeta: sub ? `${module} • ${sub}` : module,
-        excerpt: inf.subtitle || inf.architectureOverview,
+        excerpt: inf.excerpt,
         accentHoverColor: 'group-hover:text-emerald-300',
         date: dateStr,
         smartScore:
@@ -249,11 +233,11 @@ export class PortalService {
       return {
         id: `ai-${res.id}`,
         href: `/ai/${res.slug}`,
-        title: res.name,
+        title: res.title,
         category: 'ai',
         coverImage: res.coverImage,
         categoryMeta: sub ? `${module} • ${sub}` : module,
-        excerpt: res.description,
+        excerpt: res.excerpt,
         accentHoverColor: 'group-hover:text-indigo-300',
         date: dateStr,
         smartScore:
@@ -266,24 +250,27 @@ export class PortalService {
     });
 
     const projItems: PortalFeedItem[] = projects.map((proj) => {
-      const dateStr = new Date(proj.createdAt || Date.now()).toISOString();
+      const dateStr = new Date(
+        proj.publishedAt || proj.createdAt || Date.now(),
+      ).toISOString();
       const module = isEn ? 'PROJECTS' : 'PROYECTOS';
       const sub = formatSub(proj.category);
 
       return {
         id: `proj-${proj.id}`,
         href: `/projects/${proj.slug}`,
-        title: proj.name,
+        title: proj.title,
         category: 'projects',
         coverImage: proj.coverImage,
         categoryMeta: sub ? `${module} • ${sub}` : module,
-        excerpt: proj.description,
+        excerpt: proj.excerpt,
         accentHoverColor: 'group-hover:text-blue-300',
         date: dateStr,
         smartScore:
           (proj.featured ? 600 : 0) +
           (proj.orderPriority || 0) * 20 +
           (proj.stars || 0) * 5 +
+          (proj.likes || 0) * 4 +
           (proj.views || 0) * 1.5 +
           calculateRecencyBoost(dateStr),
       };

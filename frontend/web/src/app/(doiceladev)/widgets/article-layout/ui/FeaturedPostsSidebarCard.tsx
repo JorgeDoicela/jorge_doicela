@@ -19,8 +19,25 @@ export function FeaturedPostsSidebarCard({
 }: FeaturedPostsSidebarCardProps) {
     const tHome = useTranslations('Home');
     const tNav = useTranslations('Nav');
+    const tFilters = useTranslations('Filters');
     const pathname = usePathname();
     const { featured, feed, loading } = useDoiceladevPortal();
+
+    const formatCategoryMeta = (rawMeta?: string, fallback?: string): string => {
+        if (!rawMeta) return fallback || '';
+        return rawMeta
+            .split('•')
+            .map((segment) => {
+                const trimmed = segment.trim();
+                const lower = trimmed.toLowerCase();
+                if (tFilters.has(lower as never)) {
+                    return tFilters(lower as never).toUpperCase();
+                }
+                return trimmed.replace(/_/g, ' ').toUpperCase();
+            })
+            .filter(Boolean)
+            .join(' • ');
+    };
 
     // Filtrar el post actual para que no aparezca el artículo que ya se está leyendo
     const availablePosts = (featured.length > 0 ? featured : feed).filter((item: PortalFeedItem) => {
@@ -78,7 +95,7 @@ export function FeaturedPostsSidebarCard({
                                 <div className="flex-1 min-w-0 space-y-1">
                                     {(item.categoryMeta || moduleLabel) && (
                                         <span className="block text-[11px] font-mono font-medium text-slate-500 dark:text-zinc-400 truncate uppercase tracking-wider">
-                                            {item.categoryMeta || moduleLabel}
+                                            {formatCategoryMeta(item.categoryMeta, moduleLabel)}
                                         </span>
                                     )}
                                     <h6 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">

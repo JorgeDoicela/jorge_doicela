@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Delete,
-  Body,
-  Param,
-  Query,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { AiService } from '../services/ai.service';
-import { CreateAiResourceDto } from '../dto/create-ai-resource.dto';
 import { GetAiResourcesQueryDto } from '../dto/get-ai-resources-query.dto';
 
 @Controller('doiceladev/ai')
@@ -32,16 +22,5 @@ export class AiController {
     @Query('lang') lang?: string,
   ) {
     return this.aiService.findOne(idOrSlug, lang);
-  }
-
-  @Post()
-  async create(@Body() createAiResourceDto: CreateAiResourceDto) {
-    return this.aiService.create(createAiResourceDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    await this.aiService.remove(id);
-    return { success: true };
   }
 }

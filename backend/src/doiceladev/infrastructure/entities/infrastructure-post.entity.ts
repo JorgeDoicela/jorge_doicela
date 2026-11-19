@@ -13,7 +13,9 @@ export type InfrastructureCategory =
   | 'networking'
   | 'ci_cd'
   | 'hardening'
-  | 'zero_ram';
+  | 'zero_ram'
+  | 'monitoring'
+  | 'security';
 
 @Entity('infrastructure_posts')
 @Index(['slug', 'language'], { unique: true })
@@ -30,17 +32,14 @@ export class InfrastructurePost {
   @Column()
   title: string;
 
-  @Column({ nullable: true })
-  subtitle?: string;
+  @Column({ type: 'text' })
+  excerpt: string;
 
   @Column({ default: 'servers' })
   category: InfrastructureCategory;
 
   @Column({ default: 'Debian, Linux, Nginx' })
   techStack: string;
-
-  @Column({ type: 'text', nullable: true })
-  architectureOverview?: string;
 
   @Column({ type: 'text', nullable: true })
   specs?: string;
@@ -72,8 +71,8 @@ export class InfrastructurePost {
   @Column({ default: 0 })
   orderPriority: number;
 
-  @Column({ type: 'datetime', nullable: true })
-  publishedAt?: Date;
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  publishedAt: Date;
 
   @CreateDateColumn()
   createdAt: Date;

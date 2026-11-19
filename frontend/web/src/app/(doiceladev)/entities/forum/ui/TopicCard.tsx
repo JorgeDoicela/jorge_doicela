@@ -13,6 +13,15 @@ export function TopicCard({ topic }: TopicCardProps) {
   const locale = useLocale();
   const tCard = useTranslations('CardActions');
   const tCommon = useTranslations('Common');
+  const tFilters = useTranslations('Filters');
+
+  const catKey = topic.category?.toLowerCase() || '';
+  const categoryLabel = catKey
+    ? (tFilters.has(catKey as never)
+        ? tFilters(catKey as never)
+        : catKey.replace(/_/g, ' ')
+      ).toUpperCase()
+    : '';
 
   const formattedDate = new Date(topic.createdAt).toLocaleDateString(
     locale === 'es' ? 'es-ES' : 'en-US',
@@ -41,7 +50,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             </span>
           )}
           <span className="text-[11px] font-mono font-bold uppercase text-blue-500 dark:text-blue-400">
-            {topic.category}
+            {categoryLabel || topic.category}
           </span>
           <span className="text-xs text-zinc-500 font-mono">• {tCommon('author', { name: topic.author })}</span>
           <span className="text-xs text-zinc-500 font-mono">• {formattedDate}</span>

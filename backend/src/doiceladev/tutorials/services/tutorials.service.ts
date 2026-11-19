@@ -1,23 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tutorial } from '../entities/tutorial.entity';
-import { TutorialStep } from '../entities/tutorial-step.entity';
-import { CreateTutorialDto } from '../dto/create-tutorial.dto';
-import { CreateTutorialStepDto } from '../dto/create-tutorial-step.dto';
+import { Tutorial, TutorialCategory } from '../entities/tutorial.entity';
 import { GetTutorialsQueryDto } from '../dto/get-tutorials-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class TutorialsService {
   constructor(
     @InjectRepository(Tutorial, 'doiceladevConnection')
     private readonly tutorialRepository: Repository<Tutorial>,
-    @InjectRepository(TutorialStep, 'doiceladevConnection')
-    private readonly stepRepository: Repository<TutorialStep>,
   ) {}
 
   async findAll(query: GetTutorialsQueryDto = {}): Promise<Tutorial[]> {
-    const { category, search, lang } = query;
+    const { category, tag, search, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -31,24 +30,34 @@ export class TutorialsService {
       qb.andWhere('tut.category = :category', { category });
     }
 
+    if (tag && tag !== 'all') {
+      qb.andWhere('tut.tags LIKE :tag', { tag: `%${tag}%` });
+    }
+
     if (search) {
       qb.andWhere(
         '(tut.title LIKE :search OR tut.excerpt LIKE :search OR tut.tags LIKE :search OR tut.techStack LIKE :search)',
-
         { search: `%${search}%` },
       );
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore)
-    qb.addSelect(
-      '((tut.featured * 1000) + (tut.orderPriority * 20) + (tut.likes * 4) + (tut.views * 1.5))',
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('COALESCE(tut.publishedAt, tut.createdAt)', 'DESC');
-    qb.addOrderBy('tut.id', 'DESC');
+    if (sortBy === 'recent') {
+      qb.orderBy('tut.publishedAt', 'DESC');
+      qb.addOrderBy('tut.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('tut.views', 'DESC');
+      qb.addOrderBy('tut.likes', 'DESC');
+      qb.addOrderBy('tut.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((tut.featured * 1000) + (tut.orderPriority * 20) + (tut.likes * 4) + (tut.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('tut.publishedAt', 'DESC');
+      qb.addOrderBy('tut.id', 'DESC');
+    }
 
-    // Techo de seguridad de memoria para VPS 1 GB RAM
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -88,7 +97,6 @@ export class TutorialsService {
       throw new NotFoundException(`Tutorial "${idOrSlug}" no encontrado`);
     }
 
-    // Ordenar pasos
     if (tutorial.steps) {
       tutorial.steps.sort((a, b) => a.stepOrder - b.stepOrder);
     }
@@ -98,57 +106,8 @@ export class TutorialsService {
     return tutorial;
   }
 
-  async create(createTutorialDto: CreateTutorialDto): Promise<Tutorial> {
-    const tutorial = this.tutorialRepository.create(createTutorialDto);
-    return this.tutorialRepository.save(tutorial);
-  }
-
-  async addStep(dto: CreateTutorialStepDto): Promise<TutorialStep> {
-    const tutorial = await this.tutorialRepository.findOne({
-      where: { id: dto.tutorialId },
-    });
-    if (!tutorial) {
-      throw new NotFoundException(`Tutorial #${dto.tutorialId} no encontrado`);
-    }
-
-    const step = this.stepRepository.create(dto);
-    return this.stepRepository.save(step);
-  }
-
-  async remove(id: number): Promise<void> {
-    const result = await this.tutorialRepository.delete(id);
-    if (!result.affected) {
-      throw new NotFoundException(`Tutorial #${id} no encontrado`);
-    }
-  }
-
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    const qb = this.tutorialRepository.createQueryBuilder('tut');
-    if (lang) {
-      qb.andWhere('tut.language = :lang', { lang });
-    }
-
-    const allTutorials = await qb.select(['tut.category']).getMany();
-    const countMap = new Map<string, number>();
-
-    for (const tut of allTutorials) {
-      if (tut.category) {
-        const cat = tut.category.toLowerCase();
-        countMap.set(cat, (countMap.get(cat) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allTutorials.length,
-      },
-    ];
-
-    const categoryOrder = [
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
+    const categoryOrder: TutorialCategory[] = [
       'web',
       'backend',
       'devops',
@@ -158,27 +117,11 @@ export class TutorialsService {
       'ai',
       'mobile',
     ];
-    for (const cat of categoryOrder) {
-      const count = countMap.get(cat) || 0;
-      if (count > 0) {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    for (const [cat, count] of countMap.entries()) {
-      if (!result.some((r) => r.id === cat)) {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    return result;
+    return aggregateModuleCategories(
+      this.tutorialRepository.createQueryBuilder('tut'),
+      'tut',
+      lang,
+      categoryOrder,
+    );
   }
 }

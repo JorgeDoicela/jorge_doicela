@@ -1,8 +1,19 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsIn } from 'class-validator';
 import { DoiceladevQueryDto } from '../../common/dto/doiceladev-query.dto';
+import { TutorialCategory } from '../entities/tutorial.entity';
 
 export class GetTutorialsQueryDto extends DoiceladevQueryDto {
   @IsOptional()
-  @IsString({ message: 'El parámetro category debe ser una cadena de texto.' })
-  category?: string;
+  @IsIn([
+    'all',
+    'web',
+    'backend',
+    'devops',
+    'mobile',
+    'ai',
+    'databases',
+    'security',
+    'architecture',
+  ])
+  category?: TutorialCategory | 'all';
 }

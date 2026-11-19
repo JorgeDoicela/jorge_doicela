@@ -28,7 +28,7 @@ export function InfrastructureCard({ post, priority = false }: InfrastructureCar
       coverImage={post.coverImage}
       topicCategory={post.category}
       categoryMeta={metaText}
-      excerpt={post.subtitle || post.architectureOverview}
+      excerpt={post.excerpt}
       priority={priority}
       accentHoverColor="group-hover:text-cyan-300"
     />

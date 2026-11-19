@@ -1,9 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SecurityPost } from '../entities/security-post.entity';
-import { CreateSecurityPostDto } from '../dto/create-security-post.dto';
+import {
+  SecurityPost,
+  SecurityCategory,
+} from '../entities/security-post.entity';
 import { GetSecurityPostsQueryDto } from '../dto/get-security-posts-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class CybersecurityService {
@@ -13,7 +19,7 @@ export class CybersecurityService {
   ) {}
 
   async findAll(query: GetSecurityPostsQueryDto = {}): Promise<SecurityPost[]> {
-    const { category, search, lang } = query;
+    const { category, tag, search, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -27,6 +33,10 @@ export class CybersecurityService {
       qb.andWhere('sec.category = :category', { category });
     }
 
+    if (tag && tag !== 'all') {
+      qb.andWhere('sec.tags LIKE :tag', { tag: `%${tag}%` });
+    }
+
     if (search) {
       qb.andWhere(
         '(sec.title LIKE :search OR sec.excerpt LIKE :search OR sec.cveId LIKE :search OR sec.tags LIKE :search)',
@@ -34,16 +44,23 @@ export class CybersecurityService {
       );
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore)
-    qb.addSelect(
-      `((sec.featured * 1000) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5))`,
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('COALESCE(sec.publishedAt, sec.createdAt)', 'DESC');
-    qb.addOrderBy('sec.id', 'DESC');
+    if (sortBy === 'recent') {
+      qb.orderBy('sec.publishedAt', 'DESC');
+      qb.addOrderBy('sec.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('sec.views', 'DESC');
+      qb.addOrderBy('sec.likes', 'DESC');
+      qb.addOrderBy('sec.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((sec.featured * 1000) + (sec.orderPriority * 20) + (sec.likes * 4) + (sec.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('sec.publishedAt', 'DESC');
+      qb.addOrderBy('sec.id', 'DESC');
+    }
 
-    // Techo de seguridad de memoria para VPS 1 GB RAM
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -87,79 +104,19 @@ export class CybersecurityService {
     return post;
   }
 
-  async create(
-    createSecurityPostDto: CreateSecurityPostDto,
-  ): Promise<SecurityPost> {
-    const post = this.securityRepository.create({
-      ...createSecurityPostDto,
-      category: createSecurityPostDto.category || 'advisory',
-    });
-    return this.securityRepository.save(post);
-  }
-
-  async remove(id: number): Promise<void> {
-    const result = await this.securityRepository.delete(id);
-    if (!result.affected) {
-      throw new NotFoundException(
-        `Publicación de ciberseguridad #${id} no encontrada`,
-      );
-    }
-  }
-
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    const qb = this.securityRepository.createQueryBuilder('sec');
-    if (lang) {
-      qb.andWhere('sec.language = :lang', { lang });
-    }
-
-    const allPosts = await qb.select(['sec.category']).getMany();
-    const countMap = new Map<string, number>();
-
-    for (const post of allPosts) {
-      if (post.category) {
-        const cat = post.category.toLowerCase();
-        countMap.set(cat, (countMap.get(cat) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allPosts.length,
-      },
-    ];
-
-    const categoryOrder = [
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
+    const categoryOrder: SecurityCategory[] = [
       'advisory',
       'hardening_guide',
       'cve_analysis',
       'writeup',
       'pentest',
     ];
-    for (const cat of categoryOrder) {
-      const count = countMap.get(cat) || 0;
-      if (count > 0) {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    for (const [cat, count] of countMap.entries()) {
-      if (!result.some((r) => r.id === cat)) {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    return result;
+    return aggregateModuleCategories(
+      this.securityRepository.createQueryBuilder('sec'),
+      'sec',
+      lang,
+      categoryOrder,
+    );
   }
 }

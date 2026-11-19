@@ -6,6 +6,7 @@ import { NewsArticle } from './news/entities/news-article.entity';
 import { BlogPost } from './blog/entities/blog-post.entity';
 import { ForumTopic } from './forum/entities/forum-topic.entity';
 import { ForumReply } from './forum/entities/forum-reply.entity';
+import { ForumPollOption } from './forum/entities/forum-poll-option.entity';
 import { AiResource } from './ai/entities/ai-resource.entity';
 import { SecurityPost } from './cybersecurity/entities/security-post.entity';
 import { Tutorial } from './tutorials/entities/tutorial.entity';
@@ -58,6 +59,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         BlogPost,
         ForumTopic,
         ForumReply,
+        ForumPollOption,
         AiResource,
         SecurityPost,
         Tutorial,

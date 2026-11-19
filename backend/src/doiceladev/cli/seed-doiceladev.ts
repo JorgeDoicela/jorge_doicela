@@ -18,14 +18,11 @@ export type NewsCategory =
   | 'databases';
 
 export type BlogCategory =
-  | 'architecture'
-  | 'devops'
-  | 'ai'
-  | 'frontend'
-  | 'backend'
-  | 'career'
+  | 'lessons'
+  | 'postmortems'
   | 'opinion'
-  | 'databases';
+  | 'career'
+  | 'journal';
 
 export type AiCategory =
   | 'llm'
@@ -127,7 +124,6 @@ interface BlogSeedItem {
   tags: string;
   language?: string;
   series?: string;
-  tableOfContents?: string;
   coverImage?: string;
   views: number;
   likes: number;
@@ -145,8 +141,10 @@ interface ForumSeedData {
     content: string;
     author: string;
     category: ForumCategory;
+    tags?: string;
     language?: string;
     coverImage?: string;
+    pollQuestion?: string;
     isSolved: boolean;
     isPinned: boolean;
     orderPriority?: number;
@@ -166,15 +164,22 @@ interface ForumSeedData {
     createdAt?: string;
     updatedAt?: string;
   }[];
+  pollOptions?: {
+    id: number;
+    topicId: number;
+    label: string;
+    votes: number;
+    displayOrder: number;
+  }[];
 }
 
 interface AiSeedItem {
   slug: string;
-  name: string;
+  title: string;
   category: AiCategory;
   provider: string;
   author: string;
-  description: string;
+  excerpt: string;
   contentMarkdown: string;
   license: string;
   documentationUrl?: string;
@@ -218,7 +223,7 @@ interface TutorialsSeedData {
     slug: string;
     title: string;
     excerpt: string;
-    description: string;
+    contentMarkdown: string;
     category: TutorialCategory;
     prerequisites?: string;
     techStack: string;
@@ -247,11 +252,12 @@ interface TutorialsSeedData {
 
 interface ProjectSeedItem {
   slug: string;
-  name: string;
+  title: string;
   category: ProjectCategory;
-  description: string;
-  contentMarkdown?: string;
+  excerpt: string;
+  contentMarkdown: string;
   techStack: string;
+  tags: string;
   author: string;
   language?: string;
   coverImage?: string;
@@ -262,7 +268,7 @@ interface ProjectSeedItem {
   orderPriority?: number;
   stars: number;
   views: number;
-  architectureDiagramUrl?: string;
+  likes?: number;
   publishedAt?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -271,10 +277,9 @@ interface ProjectSeedItem {
 interface InfrastructureSeedItem {
   slug: string;
   title: string;
-  subtitle?: string;
+  excerpt: string;
   category: InfrastructureCategory;
   techStack: string;
-  architectureOverview?: string;
   specs?: string;
   contentMarkdown: string;
   author?: string;
@@ -313,7 +318,7 @@ export function seedDoiceladev(
 ) {
   const startTime = Date.now();
   console.log(
-    `[DoiceladevSeeder] 🚀 Recreando base de datos limpia desde cero: ${dbPath}...`,
+    `[DoiceladevSeeder] Recreando base de datos limpia desde cero: ${dbPath}...`,
   );
 
   const db = new Database(dbPath);
@@ -335,6 +340,7 @@ export function seedDoiceladev(
     DROP TABLE IF EXISTS tutorials;
     DROP TABLE IF EXISTS security_posts;
     DROP TABLE IF EXISTS ai_resources;
+    DROP TABLE IF EXISTS forum_poll_options;
     DROP TABLE IF EXISTS forum_replies;
     DROP TABLE IF EXISTS forum_topics;
     DROP TABLE IF EXISTS blog_posts;
@@ -401,12 +407,11 @@ export function seedDoiceladev(
       excerpt       TEXT    NOT NULL,
       contentMarkdown TEXT  NOT NULL,
       author        TEXT    NOT NULL DEFAULT 'Jorge Doicela',
-      category      TEXT    NOT NULL DEFAULT 'architecture'
-                    CHECK (category IN ('architecture','devops','ai','frontend','backend','career','opinion','databases')),
+      category      TEXT    NOT NULL DEFAULT 'opinion'
+                    CHECK (category IN ('lessons','postmortems','opinion','career','journal')),
       tags          TEXT    NOT NULL DEFAULT 'architecture,clean-code',
       language      TEXT    NOT NULL DEFAULT 'es',
       series        TEXT,
-      tableOfContents TEXT,
       coverImage    TEXT,
       views         INTEGER NOT NULL DEFAULT 0,
       likes         INTEGER NOT NULL DEFAULT 0,
@@ -428,11 +433,13 @@ export function seedDoiceladev(
       slug          TEXT    NOT NULL,
       title         TEXT    NOT NULL,
       content       TEXT    NOT NULL,
-      author        TEXT    NOT NULL DEFAULT 'Comunidad Tech',
+      author        TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       category      TEXT    NOT NULL DEFAULT 'general'
                     CHECK (category IN ('architecture','devops','ai','frontend','backend','help','general')),
+      tags          TEXT    NOT NULL DEFAULT 'forum,debate',
       language      TEXT    NOT NULL DEFAULT 'es',
       coverImage    TEXT,
+      pollQuestion  TEXT,
       isSolved      INTEGER NOT NULL DEFAULT 0,
       isPinned      INTEGER NOT NULL DEFAULT 0,
       orderPriority INTEGER NOT NULL DEFAULT 0,
@@ -462,16 +469,28 @@ export function seedDoiceladev(
     CREATE INDEX IF NOT EXISTS IDX_forum_replies_parent        ON forum_replies (parentId);
     CREATE INDEX IF NOT EXISTS IDX_forum_replies_topic_created ON forum_replies (topicId, createdAt ASC);
 
+    CREATE TABLE IF NOT EXISTS forum_poll_options (
+      id           INTEGER PRIMARY KEY AUTOINCREMENT,
+      topicId      INTEGER NOT NULL,
+      label        TEXT    NOT NULL,
+      votes        INTEGER NOT NULL DEFAULT 0,
+      displayOrder INTEGER NOT NULL DEFAULT 1,
+      createdAt    DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE
+    );
+    CREATE INDEX IF NOT EXISTS IDX_forum_poll_options_topic       ON forum_poll_options (topicId);
+    CREATE INDEX IF NOT EXISTS IDX_forum_poll_options_topic_order ON forum_poll_options (topicId, displayOrder ASC);
+
     -- ── IA & AGENTES ────────────────────────────────────────────────────────
     CREATE TABLE IF NOT EXISTS ai_resources (
       id               INTEGER PRIMARY KEY AUTOINCREMENT,
       slug             TEXT    NOT NULL,
-      name             TEXT    NOT NULL,
+      title            TEXT    NOT NULL,
       category         TEXT    NOT NULL DEFAULT 'tool'
                        CHECK (category IN ('llm','agent','framework','mcp_server','tool','dataset','platform')),
       provider         TEXT    NOT NULL DEFAULT 'Open Source',
       author           TEXT    NOT NULL DEFAULT 'Jorge Doicela',
-      description      TEXT    NOT NULL,
+      excerpt          TEXT    NOT NULL,
       contentMarkdown  TEXT    NOT NULL,
       license          TEXT    NOT NULL DEFAULT 'MIT',
       documentationUrl TEXT,
@@ -484,14 +503,14 @@ export function seedDoiceladev(
       likes            INTEGER NOT NULL DEFAULT 0,
       featured         INTEGER NOT NULL DEFAULT 0,
       orderPriority    INTEGER NOT NULL DEFAULT 0,
-      publishedAt      DATETIME DEFAULT CURRENT_TIMESTAMP,
+      publishedAt      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       createdAt        DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt        DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_ai_resources_slug_lang  ON ai_resources (slug, language);
-    CREATE INDEX        IF NOT EXISTS IDX_ai_resources_feed        ON ai_resources (language, orderPriority DESC, createdAt DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_ai_resources_cat_feed    ON ai_resources (language, category, orderPriority DESC, createdAt DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_ai_resources_feat_feed   ON ai_resources (language, featured, orderPriority DESC, createdAt DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_ai_resources_feed        ON ai_resources (language, orderPriority DESC, publishedAt DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_ai_resources_cat_feed    ON ai_resources (language, category, orderPriority DESC, publishedAt DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_ai_resources_feat_feed   ON ai_resources (language, featured, orderPriority DESC, publishedAt DESC);
 
     -- ── CIBERSEGURIDAD ──────────────────────────────────────────────────────
     CREATE TABLE IF NOT EXISTS security_posts (
@@ -524,26 +543,26 @@ export function seedDoiceladev(
 
     -- ── TUTORIALES ──────────────────────────────────────────────────────────
     CREATE TABLE IF NOT EXISTS tutorials (
-      id            INTEGER PRIMARY KEY AUTOINCREMENT,
-      slug          TEXT    NOT NULL,
-      title         TEXT    NOT NULL,
-      excerpt       TEXT    NOT NULL,
-      description   TEXT    NOT NULL,
-      category      TEXT    NOT NULL DEFAULT 'backend'
-                    CHECK (category IN ('web','backend','devops','mobile','ai','databases','security','architecture')),
-      prerequisites TEXT,
-      techStack     TEXT    NOT NULL DEFAULT 'TypeScript,Node.js',
-      author        TEXT    NOT NULL DEFAULT 'Jorge Doicela',
-      tags          TEXT    NOT NULL DEFAULT 'tutorial,guide',
-      language      TEXT    NOT NULL DEFAULT 'es',
-      coverImage    TEXT,
-      views         INTEGER NOT NULL DEFAULT 0,
-      likes         INTEGER NOT NULL DEFAULT 0,
-      featured      INTEGER NOT NULL DEFAULT 0,
-      orderPriority INTEGER NOT NULL DEFAULT 0,
-      publishedAt   DATETIME DEFAULT CURRENT_TIMESTAMP,
-      createdAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug            TEXT    NOT NULL,
+      title           TEXT    NOT NULL,
+      excerpt         TEXT    NOT NULL,
+      contentMarkdown TEXT    NOT NULL,
+      category        TEXT    NOT NULL DEFAULT 'backend'
+                      CHECK (category IN ('web','backend','devops','mobile','ai','databases','security','architecture')),
+      prerequisites   TEXT,
+      techStack       TEXT    NOT NULL DEFAULT 'TypeScript,Node.js',
+      author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
+      tags            TEXT    NOT NULL DEFAULT 'tutorial,guide',
+      language        TEXT    NOT NULL DEFAULT 'es',
+      coverImage      TEXT,
+      views           INTEGER NOT NULL DEFAULT 0,
+      likes           INTEGER NOT NULL DEFAULT 0,
+      featured        INTEGER NOT NULL DEFAULT 0,
+      orderPriority   INTEGER NOT NULL DEFAULT 0,
+      publishedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      createdAt       DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt       DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_tutorials_slug_lang   ON tutorials (slug, language);
     CREATE INDEX        IF NOT EXISTS IDX_tutorials_feed         ON tutorials (language, orderPriority DESC, publishedAt DESC);
@@ -568,58 +587,59 @@ export function seedDoiceladev(
 
     -- ── PROYECTOS ───────────────────────────────────────────────────────────
     CREATE TABLE IF NOT EXISTS projects (
-      id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-      slug                 TEXT    NOT NULL,
-      name                 TEXT    NOT NULL,
-      category             TEXT    NOT NULL DEFAULT 'web'
-                           CHECK (category IN ('web','backend','mobile','devops','ai','open_source','tool')),
-      description          TEXT    NOT NULL,
-      contentMarkdown      TEXT,
-      techStack            TEXT    NOT NULL,
-      author               TEXT    NOT NULL DEFAULT 'Jorge Doicela',
-      language             TEXT    NOT NULL DEFAULT 'es',
-      coverImage           TEXT,
-      repoUrl              TEXT,
-      liveUrl              TEXT,
-      status               TEXT    NOT NULL DEFAULT 'active'
-                           CHECK (status IN ('active','archived','wip')),
-      featured             INTEGER NOT NULL DEFAULT 0,
-      orderPriority        INTEGER NOT NULL DEFAULT 0,
-      stars                INTEGER NOT NULL DEFAULT 0,
-      views                INTEGER NOT NULL DEFAULT 0,
-      architectureDiagramUrl TEXT,
-      createdAt            DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updatedAt            DATETIME DEFAULT CURRENT_TIMESTAMP
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug            TEXT    NOT NULL,
+      title           TEXT    NOT NULL,
+      category        TEXT    NOT NULL DEFAULT 'web'
+                      CHECK (category IN ('web','backend','mobile','devops','ai','open_source','tool')),
+      excerpt         TEXT    NOT NULL,
+      contentMarkdown TEXT    NOT NULL,
+      techStack       TEXT    NOT NULL,
+      tags            TEXT    NOT NULL DEFAULT 'project,open-source',
+      author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
+      language        TEXT    NOT NULL DEFAULT 'es',
+      coverImage      TEXT,
+      repoUrl         TEXT,
+      liveUrl         TEXT,
+      status          TEXT    NOT NULL DEFAULT 'active'
+                      CHECK (status IN ('active','archived','wip')),
+      featured        INTEGER NOT NULL DEFAULT 0,
+      orderPriority   INTEGER NOT NULL DEFAULT 0,
+      stars           INTEGER NOT NULL DEFAULT 0,
+      views           INTEGER NOT NULL DEFAULT 0,
+      likes           INTEGER NOT NULL DEFAULT 0,
+      publishedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      createdAt       DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt       DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_projects_slug_lang    ON projects (slug, language);
-    CREATE INDEX        IF NOT EXISTS IDX_projects_feed          ON projects (language, orderPriority DESC, stars DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_projects_cat_feed      ON projects (language, category, orderPriority DESC, stars DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_projects_status_feed   ON projects (language, status, orderPriority DESC, stars DESC);
-    CREATE INDEX        IF NOT EXISTS IDX_projects_feat_feed     ON projects (language, featured, orderPriority DESC, stars DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_projects_feed          ON projects (language, orderPriority DESC, publishedAt DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_projects_cat_feed      ON projects (language, category, orderPriority DESC, publishedAt DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_projects_status_feed   ON projects (language, status, orderPriority DESC, publishedAt DESC);
+    CREATE INDEX        IF NOT EXISTS IDX_projects_feat_feed     ON projects (language, featured, orderPriority DESC, publishedAt DESC);
 
     -- ── INFRAESTRUCTURA ─────────────────────────────────────────────────────
     CREATE TABLE IF NOT EXISTS infrastructure_posts (
-      id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-      slug                 TEXT    NOT NULL,
-      title                TEXT    NOT NULL,
-      subtitle             TEXT,
-      category             TEXT    NOT NULL DEFAULT 'servers'
-                           CHECK (category IN ('cloud','servers','containers','networking','ci_cd','hardening','zero_ram','monitoring','security')),
-      techStack            TEXT    NOT NULL DEFAULT 'Debian, Linux, Nginx',
-      architectureOverview TEXT,
-      specs                TEXT,
-      contentMarkdown      TEXT    NOT NULL,
-      author               TEXT    NOT NULL DEFAULT 'Jorge Doicela',
-      tags                 TEXT    NOT NULL DEFAULT 'infrastructure,cloud,sysadmin',
-      language             TEXT    NOT NULL DEFAULT 'es',
-      coverImage           TEXT,
-      views                INTEGER NOT NULL DEFAULT 0,
-      likes                INTEGER NOT NULL DEFAULT 0,
-      featured             INTEGER NOT NULL DEFAULT 0,
-      orderPriority        INTEGER NOT NULL DEFAULT 0,
-      publishedAt          DATETIME,
-      createdAt            DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updatedAt            DATETIME DEFAULT CURRENT_TIMESTAMP
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug            TEXT    NOT NULL,
+      title           TEXT    NOT NULL,
+      excerpt         TEXT    NOT NULL,
+      category        TEXT    NOT NULL DEFAULT 'servers'
+                      CHECK (category IN ('cloud','servers','containers','networking','ci_cd','hardening','zero_ram','monitoring','security')),
+      techStack       TEXT    NOT NULL DEFAULT 'Debian, Linux, Nginx',
+      specs           TEXT,
+      contentMarkdown TEXT    NOT NULL,
+      author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
+      tags            TEXT    NOT NULL DEFAULT 'infrastructure,cloud,sysadmin',
+      language        TEXT    NOT NULL DEFAULT 'es',
+      coverImage      TEXT,
+      views           INTEGER NOT NULL DEFAULT 0,
+      likes           INTEGER NOT NULL DEFAULT 0,
+      featured        INTEGER NOT NULL DEFAULT 0,
+      orderPriority   INTEGER NOT NULL DEFAULT 0,
+      publishedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      createdAt       DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt       DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_infrastructure_posts_slug_lang ON infrastructure_posts (slug, language);
     CREATE INDEX        IF NOT EXISTS IDX_infrastructure_posts_feed       ON infrastructure_posts (language, orderPriority DESC, publishedAt DESC);
@@ -763,10 +783,10 @@ export function seedDoiceladev(
     const insertBlog = db.prepare(`
       INSERT INTO blog_posts
         (slug, title, subtitle, excerpt, contentMarkdown, author, category, tags, language,
-         series, tableOfContents, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
+         series, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @category, @tags, @language,
-         @series, @tableOfContents, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
+         @series, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         subtitle        = excluded.subtitle,
@@ -776,7 +796,6 @@ export function seedDoiceladev(
         category        = excluded.category,
         tags            = excluded.tags,
         series          = excluded.series,
-        tableOfContents = excluded.tableOfContents,
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
@@ -798,7 +817,6 @@ export function seedDoiceladev(
         updatedAt: updDate,
         subtitle: item.subtitle ?? null,
         series: item.series ?? null,
-        tableOfContents: item.tableOfContents ?? null,
       });
       const rowId =
         result.lastInsertRowid !== 0n && result.lastInsertRowid !== BigInt(0)
@@ -818,24 +836,26 @@ export function seedDoiceladev(
     // ── 3. Foros ────────────────────────────────────────────────────────────
     const insertTopic = db.prepare(`
       INSERT INTO forum_topics
-        (id, slug, title, content, author, category, language, coverImage,
+        (id, slug, title, content, author, category, tags, language, coverImage, pollQuestion,
          isSolved, isPinned, orderPriority, repliesCount, views, createdAt, updatedAt)
       VALUES
-        (@id, @slug, @title, @content, @author, @category, @language, @coverImage,
+        (@id, @slug, @title, @content, @author, @category, @tags, @language, @coverImage, @pollQuestion,
          @isSolved, @isPinned, @orderPriority, @repliesCount, @views, @createdAt, @updatedAt)
       ON CONFLICT(id) DO UPDATE SET
-        slug         = excluded.slug,
-        title        = excluded.title,
-        content      = excluded.content,
-        author       = excluded.author,
-        category     = excluded.category,
-        language     = excluded.language,
-        coverImage   = excluded.coverImage,
-        isSolved     = excluded.isSolved,
-        isPinned     = excluded.isPinned,
+        slug          = excluded.slug,
+        title         = excluded.title,
+        content       = excluded.content,
+        author        = excluded.author,
+        category      = excluded.category,
+        tags          = excluded.tags,
+        language      = excluded.language,
+        coverImage    = excluded.coverImage,
+        pollQuestion  = excluded.pollQuestion,
+        isSolved      = excluded.isSolved,
+        isPinned      = excluded.isPinned,
         orderPriority = excluded.orderPriority,
-        createdAt    = excluded.createdAt,
-        updatedAt    = excluded.updatedAt
+        createdAt     = excluded.createdAt,
+        updatedAt     = excluded.updatedAt
     `);
     const insertReply = db.prepare(`
       INSERT INTO forum_replies
@@ -852,14 +872,28 @@ export function seedDoiceladev(
         createdAt        = excluded.createdAt,
         updatedAt        = excluded.updatedAt
     `);
+    const insertPollOption = db.prepare(`
+      INSERT INTO forum_poll_options
+        (id, topicId, label, votes, displayOrder)
+      VALUES
+        (@id, @topicId, @label, @votes, @displayOrder)
+      ON CONFLICT(id) DO UPDATE SET
+        topicId      = excluded.topicId,
+        label        = excluded.label,
+        votes        = excluded.votes,
+        displayOrder = excluded.displayOrder
+    `);
     const forumData = readJson<ForumSeedData>('forum.json');
     for (const topic of forumData.topics) {
       const crDate = topic.createdAt || '2026-09-01T00:00:00.000Z';
       const upDate = topic.updatedAt || crDate;
+      const rawTags = topic.tags || `${topic.category || 'general'},forum`;
       insertTopic.run({
         ...topic,
         category: topic.category || 'general',
+        tags: rawTags,
         coverImage: topic.coverImage ?? null,
+        pollQuestion: topic.pollQuestion ?? null,
         isSolved: topic.isSolved ? 1 : 0,
         isPinned: topic.isPinned ? 1 : 0,
         orderPriority: topic.orderPriority || 0,
@@ -867,6 +901,7 @@ export function seedDoiceladev(
         createdAt: crDate,
         updatedAt: upDate,
       });
+      seedTags('forum', topic.id, rawTags);
     }
     for (const reply of forumData.replies) {
       const crDate = reply.createdAt || '2026-09-01T00:00:00.000Z';
@@ -879,23 +914,30 @@ export function seedDoiceladev(
         updatedAt: upDate,
       });
     }
+    for (const opt of forumData.pollOptions || []) {
+      insertPollOption.run({
+        ...opt,
+        votes: opt.votes || 0,
+        displayOrder: opt.displayOrder || 1,
+      });
+    }
 
     // ── 4. IA ───────────────────────────────────────────────────────────────
     const insertAi = db.prepare(`
       INSERT INTO ai_resources
-        (slug, name, category, provider, author, description, contentMarkdown, license,
+        (slug, title, category, provider, author, excerpt, contentMarkdown, license,
          documentationUrl, paperUrl, githubUrl, tags, language, coverImage,
          views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
-        (@slug, @name, @category, @provider, @author, @description, @contentMarkdown, @license,
+        (@slug, @title, @category, @provider, @author, @excerpt, @contentMarkdown, @license,
          @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @coverImage,
          @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
-        name            = excluded.name,
+        title           = excluded.title,
         category        = excluded.category,
         provider        = excluded.provider,
         author          = excluded.author,
-        description     = excluded.description,
+        excerpt         = excluded.excerpt,
         contentMarkdown = excluded.contentMarkdown,
         license         = excluded.license,
         documentationUrl = excluded.documentationUrl,
@@ -1001,15 +1043,15 @@ export function seedDoiceladev(
     // ── 6. Tutoriales ───────────────────────────────────────────────────────
     const insertTutorial = db.prepare(`
       INSERT INTO tutorials
-        (id, slug, title, excerpt, description, category, prerequisites,
+        (id, slug, title, excerpt, contentMarkdown, category, prerequisites,
          techStack, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
-        (@id, @slug, @title, @excerpt, @description, @category, @prerequisites,
+        (@id, @slug, @title, @excerpt, @contentMarkdown, @category, @prerequisites,
          @techStack, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         excerpt         = excluded.excerpt,
-        description     = excluded.description,
+        contentMarkdown = excluded.contentMarkdown,
         category        = excluded.category,
         prerequisites   = excluded.prerequisites,
         techStack       = excluded.techStack,
@@ -1064,46 +1106,48 @@ export function seedDoiceladev(
     // ── 7. Proyectos ────────────────────────────────────────────────────────
     const insertProj = db.prepare(`
       INSERT INTO projects
-        (slug, name, category, description, contentMarkdown, techStack, author, language, coverImage,
-         repoUrl, liveUrl, status, featured, orderPriority, stars, views, architectureDiagramUrl, createdAt, updatedAt)
+        (slug, title, category, excerpt, contentMarkdown, techStack, tags, author, language, coverImage,
+         repoUrl, liveUrl, status, featured, orderPriority, stars, views, likes, publishedAt, updatedAt)
       VALUES
-        (@slug, @name, @category, @description, @contentMarkdown, @techStack, @author, @language, @coverImage,
-         @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @architectureDiagramUrl, @createdAt, @updatedAt)
+        (@slug, @title, @category, @excerpt, @contentMarkdown, @techStack, @tags, @author, @language, @coverImage,
+         @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @likes, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
-        name                 = excluded.name,
-        category             = excluded.category,
-        description          = excluded.description,
-        contentMarkdown      = excluded.contentMarkdown,
-        techStack            = excluded.techStack,
-        author               = excluded.author,
-        coverImage           = excluded.coverImage,
-        repoUrl              = excluded.repoUrl,
-        liveUrl              = excluded.liveUrl,
-        status               = excluded.status,
-        featured             = excluded.featured,
-        orderPriority        = excluded.orderPriority,
-        architectureDiagramUrl = excluded.architectureDiagramUrl,
-        createdAt            = excluded.createdAt,
-        updatedAt            = excluded.updatedAt
+        title           = excluded.title,
+        category        = excluded.category,
+        excerpt         = excluded.excerpt,
+        contentMarkdown = excluded.contentMarkdown,
+        techStack       = excluded.techStack,
+        tags            = excluded.tags,
+        author          = excluded.author,
+        coverImage      = excluded.coverImage,
+        repoUrl         = excluded.repoUrl,
+        liveUrl         = excluded.liveUrl,
+        status          = excluded.status,
+        featured        = excluded.featured,
+        orderPriority   = excluded.orderPriority,
+        stars           = excluded.stars,
+        likes           = excluded.likes,
+        publishedAt     = excluded.publishedAt,
+        updatedAt       = excluded.updatedAt
     `);
     const projectsData = readJson<ProjectSeedItem[]>('projects.json');
     for (const item of projectsData) {
-      const crDate =
-        item.createdAt || item.publishedAt || '2026-09-01T00:00:00.000Z';
-      const upDate = item.updatedAt || crDate;
+      const pubDate =
+        item.publishedAt || item.createdAt || '2026-09-01T00:00:00.000Z';
+      const updDate = item.updatedAt || pubDate;
       const result = insertProj.run({
         ...item,
         category: item.category || 'web',
-        contentMarkdown: item.contentMarkdown ?? null,
+        tags: item.tags || item.techStack || 'project,open-source',
         coverImage: item.coverImage ?? null,
-        architectureDiagramUrl: item.architectureDiagramUrl ?? null,
         repoUrl: item.repoUrl ?? null,
         liveUrl: item.liveUrl ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
+        likes: item.likes || 0,
         language: item.language || 'es',
-        createdAt: crDate,
-        updatedAt: upDate,
+        publishedAt: pubDate,
+        updatedAt: updDate,
       });
       const rowId =
         result.lastInsertRowid !== 0n && result.lastInsertRowid !== BigInt(0)
@@ -1117,32 +1161,31 @@ export function seedDoiceladev(
                 | { id: number }
                 | undefined
             )?.id;
-      if (rowId) seedTags('project', rowId, item.techStack);
+      if (rowId) seedTags('project', rowId, item.tags || item.techStack);
     }
 
     // ── 8. Infraestructura ──────────────────────────────────────────────────
     const insertInfra = db.prepare(`
       INSERT INTO infrastructure_posts
-        (slug, title, subtitle, category, techStack, architectureOverview,
+        (slug, title, excerpt, category, techStack,
          specs, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
-        (@slug, @title, @subtitle, @category, @techStack, @architectureOverview,
+        (@slug, @title, @excerpt, @category, @techStack,
          @specs, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
-        title                = excluded.title,
-        subtitle             = excluded.subtitle,
-        category             = excluded.category,
-        techStack            = excluded.techStack,
-        architectureOverview = excluded.architectureOverview,
-        specs                = excluded.specs,
-        contentMarkdown      = excluded.contentMarkdown,
-        author               = excluded.author,
-        tags                 = excluded.tags,
-        coverImage           = excluded.coverImage,
-        featured             = excluded.featured,
-        orderPriority        = excluded.orderPriority,
-        publishedAt          = excluded.publishedAt,
-        updatedAt            = excluded.updatedAt
+        title           = excluded.title,
+        excerpt         = excluded.excerpt,
+        category        = excluded.category,
+        techStack       = excluded.techStack,
+        specs           = excluded.specs,
+        contentMarkdown = excluded.contentMarkdown,
+        author          = excluded.author,
+        tags            = excluded.tags,
+        coverImage      = excluded.coverImage,
+        featured        = excluded.featured,
+        orderPriority   = excluded.orderPriority,
+        publishedAt     = excluded.publishedAt,
+        updatedAt       = excluded.updatedAt
     `);
     const infraData = readJson<InfrastructureSeedItem[]>('infrastructure.json');
     for (const item of infraData) {
@@ -1151,8 +1194,6 @@ export function seedDoiceladev(
       const result = insertInfra.run({
         ...item,
         coverImage: item.coverImage ?? null,
-        subtitle: item.subtitle ?? null,
-        architectureOverview: item.architectureOverview ?? null,
         specs: item.specs ?? null,
         author: item.author || 'Jorge Doicela',
         tags: item.tags || 'infrastructure,cloud,sysadmin',
@@ -1216,7 +1257,7 @@ export function seedDoiceladev(
   db.close();
 
   console.log(
-    `[DoiceladevSeeder] ✅ Reinicio y sembrado completado en ${Date.now() - startTime}ms.`,
+    `[DoiceladevSeeder] Reinicio y sembrado completado en ${Date.now() - startTime}ms.`,
   );
 }
 

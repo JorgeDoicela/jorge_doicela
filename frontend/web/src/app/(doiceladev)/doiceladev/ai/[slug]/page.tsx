@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { AiResource } from '../../../entities/ai';
-import type { GlossaryTerm } from '../../../entities/glossary/types';
-import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
+import {
+  buildArticleMetadata,
+  fetchArticlePageContext,
+  formatArticleDates,
+} from '../../../shared/lib/articlePage';
+import { ArticleMetaPanel, type ArticleMetaLink } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
 
@@ -14,76 +17,50 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
-  const tNav = await getTranslations('Nav');
-  const tCommon = await getTranslations('Common');
-  const resource = await serverGet<AiResource>(`/doiceladev/ai/${slug}?lang=${locale}`);
+  const [tNav, tCommon, resource] = await Promise.all([
+    getTranslations('Nav'),
+    getTranslations('Common'),
+    serverGet<AiResource>(`/doiceladev/ai/${slug}?lang=${locale}`),
+  ]);
 
-  if (!resource) {
-    return { title: `${tCommon('notFound')} | DoicelaDev — Jorge Doicela` };
-  }
-
-  return {
-    title: `${resource.name} | ${tNav('ai')} — Jorge Doicela`,
-    description: resource.description,
-    openGraph: {
-      title: resource.name,
-      description: resource.description,
-      type: 'article',
-      publishedTime: resource.publishedAt || resource.createdAt,
-      ...(resource.updatedAt ? { modifiedTime: resource.updatedAt } : {}),
-      authors: [resource.author],
-      ...(resource.coverImage ? { images: [{ url: resource.coverImage }] } : {}),
-    },
-    alternates: {
-      canonical: `https://doiceladev.jorgedoicela.com/ai/${slug}`,
-    },
-  };
+  return buildArticleMetadata({
+    record: resource,
+    modulePath: 'ai',
+    moduleLabel: tNav('ai'),
+    notFoundLabel: tCommon('notFound'),
+    slug,
+  });
 }
 
 export default async function AiDetailPage({ params }: Params) {
   const { slug } = await params;
   const locale = await getLocale();
-  const tNav = await getTranslations('Nav');
-
-  const cookieStore = await cookies();
-  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
-
-  const [resource, glossary, recommendations] = await Promise.all([
-    serverGet<AiResource>(`/doiceladev/ai/${slug}?lang=${locale}`),
-    serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
-    serverGet<RecommendationCard[]>(
-      `/doiceladev/recommendations?module=ai&slug=${slug}&lang=${locale}${
-        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
-      }`,
-    ).catch(() => [] as RecommendationCard[]),
-  ]);
+  const [tNav, tMeta, { item: resource, glossary, recommendations }] =
+    await Promise.all([
+      getTranslations('Nav'),
+      getTranslations('ArticleMeta'),
+      fetchArticlePageContext<AiResource>('ai', slug, locale),
+    ]);
 
   if (!resource) notFound();
 
-  const pubRaw = resource.publishedAt || resource.createdAt;
-  const updRaw = resource.updatedAt;
-
-  const formattedPublishedDate = pubRaw
-    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-    : undefined;
-
-  const isMeaningfullyUpdated = Boolean(
-    pubRaw &&
-      updRaw &&
-      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
+  const dates = formatArticleDates(
+    resource.publishedAt,
+    resource.createdAt,
+    resource.updatedAt,
+    locale,
   );
 
-  const formattedUpdatedDate = isMeaningfullyUpdated
-    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-    : undefined;
+  const links: ArticleMetaLink[] = [];
+  if (resource.documentationUrl) {
+    links.push({ label: tMeta('documentation'), href: resource.documentationUrl });
+  }
+  if (resource.paperUrl) {
+    links.push({ label: tMeta('paper'), href: resource.paperUrl });
+  }
+  if (resource.githubUrl) {
+    links.push({ label: tMeta('repository'), href: resource.githubUrl });
+  }
 
   return (
     <DoiceladevArticleLayout
@@ -91,17 +68,33 @@ export default async function AiDetailPage({ params }: Params) {
       category="ai"
       categoryLabel={tNav('ai')}
       categoryHref="/ai"
-      title={resource.name}
-      subtitle={resource.description}
-      date={formattedPublishedDate}
-      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
-      updatedDate={formattedUpdatedDate}
-      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
+      title={resource.title}
+      subtitle={resource.excerpt}
+      date={dates.formattedPublishedDate}
+      publishedAtIso={dates.publishedAtIso}
+      updatedDate={dates.formattedUpdatedDate}
+      updatedAtIso={dates.updatedAtIso}
       author={resource.author}
       tags={resource.tags}
-      recommendations={recommendations || []}
+      recommendations={recommendations}
     >
-      <MarkdownRenderer content={resource.contentMarkdown} glossaryTerms={glossary || []} />
+      <ArticleMetaPanel
+        title={tMeta('aiBrief')}
+        rows={[
+          ...(resource.provider
+            ? [{ label: tMeta('provider'), value: resource.provider }]
+            : []),
+          ...(resource.license
+            ? [{ label: tMeta('license'), value: resource.license }]
+            : []),
+        ]}
+        links={links}
+      />
+
+      <MarkdownRenderer
+        content={resource.contentMarkdown}
+        glossaryTerms={glossary}
+      />
     </DoiceladevArticleLayout>
   );
 }

@@ -18,10 +18,10 @@ export type ProjectCategory =
 
 @Entity('projects')
 @Index(['slug', 'language'], { unique: true })
-@Index(['language', 'orderPriority', 'stars'])
-@Index(['language', 'category', 'orderPriority', 'stars'])
-@Index(['language', 'status', 'orderPriority', 'stars'])
-@Index(['language', 'featured', 'orderPriority', 'stars'])
+@Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
+@Index(['language', 'status', 'orderPriority', 'publishedAt'])
+@Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class Project {
   @PrimaryGeneratedColumn()
   id: number;
@@ -30,13 +30,13 @@ export class Project {
   slug: string;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column({ type: 'text' })
-  description: string;
+  excerpt: string;
 
-  @Column({ type: 'text', nullable: true })
-  contentMarkdown?: string;
+  @Column({ type: 'text' })
+  contentMarkdown: string;
 
   @Column({ default: 'Jorge Doicela' })
   author: string;
@@ -46,6 +46,9 @@ export class Project {
 
   @Column()
   techStack: string;
+
+  @Column({ default: 'project,open-source' })
+  tags: string;
 
   @Column({ default: 'es' })
   language: string;
@@ -74,8 +77,11 @@ export class Project {
   @Column({ default: 0 })
   views: number;
 
-  @Column({ nullable: true })
-  architectureDiagramUrl?: string;
+  @Column({ default: 0 })
+  likes: number;
+
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  publishedAt: Date;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,5 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsIn } from 'class-validator';
 import { DoiceladevQueryDto } from '../../common/dto/doiceladev-query.dto';
+import { BlogCategory } from '../entities/blog-post.entity';
 
 export class GetBlogQueryDto extends DoiceladevQueryDto {
   @IsOptional()
@@ -7,10 +8,6 @@ export class GetBlogQueryDto extends DoiceladevQueryDto {
   series?: string;
 
   @IsOptional()
-  @IsString({ message: 'El parámetro tag debe ser una cadena de texto.' })
-  tag?: string;
-
-  @IsOptional()
-  @IsString({ message: 'El parámetro category debe ser una cadena de texto.' })
-  category?: string;
+  @IsIn(['all', 'lessons', 'postmortems', 'opinion', 'career', 'journal'])
+  category?: BlogCategory | 'all';
 }

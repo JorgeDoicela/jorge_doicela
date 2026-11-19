@@ -15,7 +15,9 @@
       "repliesCount": 1,
       "views": 590,
       "createdAt": "2026-10-02T11:00:00.000Z",
-      "updatedAt": "2026-11-12T15:30:00.000Z"
+      "updatedAt": "2026-11-12T15:30:00.000Z",
+      "tags": "nodejs,vps,linux,sqlite,pm2,devops,memoria",
+      "pollQuestion": "¿Qué estrategia priorizas primero en un VPS de 1 GB RAM con Node.js?"
     },
     {
       "id": 2,
@@ -32,7 +34,9 @@
       "repliesCount": 1,
       "views": 590,
       "createdAt": "2026-10-02T11:00:00.000Z",
-      "updatedAt": "2026-11-12T15:30:00.000Z"
+      "updatedAt": "2026-11-12T15:30:00.000Z",
+      "tags": "nodejs,vps,linux,sqlite,pm2,devops,memory",
+      "pollQuestion": "Which strategy do you prioritize first on a 1 GB RAM Node.js VPS?"
     }
   ],
   "replies": [
@@ -57,6 +61,64 @@
       "likes": 42,
       "createdAt": "2026-10-02T14:20:00.000Z",
       "updatedAt": "2026-10-02T14:20:00.000Z"
+    }
+  ],
+  "pollOptions": [
+    {
+      "id": 1,
+      "topicId": 1,
+      "label": "Limitar heap de V8 (--max-old-space-size) + PM2",
+      "votes": 18,
+      "displayOrder": 1
+    },
+    {
+      "id": 2,
+      "topicId": 1,
+      "label": "Cambiar PostgreSQL/MySQL por SQLite en modo WAL",
+      "votes": 14,
+      "displayOrder": 2
+    },
+    {
+      "id": 3,
+      "topicId": 1,
+      "label": "Aprovisionar swapfile NVMe con swappiness=10",
+      "votes": 9,
+      "displayOrder": 3
+    },
+    {
+      "id": 4,
+      "topicId": 1,
+      "label": "Escalar verticalmente a 2 GB RAM directamente",
+      "votes": 6,
+      "displayOrder": 4
+    },
+    {
+      "id": 5,
+      "topicId": 2,
+      "label": "Cap V8 heap (--max-old-space-size) + PM2 watchdog",
+      "votes": 18,
+      "displayOrder": 1
+    },
+    {
+      "id": 6,
+      "topicId": 2,
+      "label": "Replace PostgreSQL/MySQL with SQLite WAL mode",
+      "votes": 14,
+      "displayOrder": 2
+    },
+    {
+      "id": 7,
+      "topicId": 2,
+      "label": "Provision NVMe swapfile with vm.swappiness=10",
+      "votes": 9,
+      "displayOrder": 3
+    },
+    {
+      "id": 8,
+      "topicId": 2,
+      "label": "Scale vertically to a 2 GB RAM instance directly",
+      "votes": 6,
+      "displayOrder": 4
     }
   ]
 }

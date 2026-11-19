@@ -6,6 +6,16 @@ import {
   Index,
 } from 'typeorm';
 
+export type NewsCategory =
+  | 'frameworks'
+  | 'cloud'
+  | 'ai'
+  | 'devops'
+  | 'security'
+  | 'web'
+  | 'tools'
+  | 'databases';
+
 @Entity('news_articles')
 @Index(['slug', 'language'], { unique: true })
 @Index(['language', 'category', 'orderPriority', 'publishedAt'])
@@ -44,7 +54,7 @@ export class NewsArticle {
   author: string;
 
   @Column({ default: 'frameworks' })
-  category: string;
+  category: NewsCategory;
 
   @Column({ default: 'news,tech' })
   tags: string;

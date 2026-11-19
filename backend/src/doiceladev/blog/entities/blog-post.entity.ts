@@ -7,14 +7,11 @@ import {
 } from 'typeorm';
 
 export type BlogCategory =
-  | 'architecture'
-  | 'devops'
-  | 'ai'
-  | 'frontend'
-  | 'backend'
-  | 'career'
+  | 'lessons'
+  | 'postmortems'
   | 'opinion'
-  | 'databases';
+  | 'career'
+  | 'journal';
 
 @Entity('blog_posts')
 @Index(['slug', 'language'], { unique: true })
@@ -44,7 +41,7 @@ export class BlogPost {
   @Column({ default: 'Jorge Doicela' })
   author: string;
 
-  @Column({ default: 'architecture' })
+  @Column({ default: 'opinion' })
   category: BlogCategory;
 
   @Column({ default: 'architecture,clean-code' })
@@ -55,9 +52,6 @@ export class BlogPost {
 
   @Column({ nullable: true })
   series?: string;
-
-  @Column({ nullable: true })
-  tableOfContents?: string;
 
   @Column({ nullable: true })
   coverImage?: string;

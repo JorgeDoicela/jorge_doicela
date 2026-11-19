@@ -1,9 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BlogPost } from '../entities/blog-post.entity';
-import { CreateBlogPostDto } from '../dto/create-blog-post.dto';
+import { BlogPost, BlogCategory } from '../entities/blog-post.entity';
 import { GetBlogQueryDto } from '../dto/get-blog-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class BlogService {
@@ -13,7 +16,7 @@ export class BlogService {
   ) {}
 
   async findAll(query: GetBlogQueryDto = {}): Promise<BlogPost[]> {
-    const { search, series, tag, category, lang } = query;
+    const { search, series, tag, category, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -23,6 +26,18 @@ export class BlogService {
       qb.andWhere('blog.language = :lang', { lang });
     }
 
+    if (category && category !== 'all') {
+      qb.andWhere('blog.category = :category', { category });
+    }
+
+    if (series) {
+      qb.andWhere('blog.series = :series', { series });
+    }
+
+    if (tag && tag !== 'all') {
+      qb.andWhere('blog.tags LIKE :tag', { tag: `%${tag}%` });
+    }
+
     if (search) {
       qb.andWhere(
         '(blog.title LIKE :search OR blog.excerpt LIKE :search OR blog.tags LIKE :search)',
@@ -30,34 +45,23 @@ export class BlogService {
       );
     }
 
-    if (series) {
-      qb.andWhere('blog.series = :series', { series });
-    }
-
-    if (tag) {
-      qb.andWhere('blog.tags LIKE :tag', { tag: `%${tag}%` });
-    }
-
-    if (category && category !== 'all') {
-      qb.andWhere(
-        '(blog.category = :category OR blog.tags LIKE :catPattern OR blog.series LIKE :catPattern)',
-        {
-          category,
-          catPattern: `%${category}%`,
-        },
+    if (sortBy === 'recent') {
+      qb.orderBy('blog.publishedAt', 'DESC');
+      qb.addOrderBy('blog.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('blog.views', 'DESC');
+      qb.addOrderBy('blog.likes', 'DESC');
+      qb.addOrderBy('blog.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((blog.featured * 1000) + (blog.orderPriority * 20) + (blog.likes * 4) + (blog.views * 1.5))',
+        'smart_score',
       );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('blog.publishedAt', 'DESC');
+      qb.addOrderBy('blog.id', 'DESC');
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore)
-    qb.addSelect(
-      '((blog.featured * 1000) + (blog.orderPriority * 20) + (blog.likes * 4) + (blog.views * 1.5))',
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('COALESCE(blog.publishedAt, blog.createdAt)', 'DESC');
-    qb.addOrderBy('blog.id', 'DESC');
-
-    // Techo de seguridad de memoria para VPS 1 GB RAM
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -99,58 +103,19 @@ export class BlogService {
     return post;
   }
 
-  async create(createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
-    const post = this.blogRepository.create(
-      createBlogPostDto as Partial<BlogPost>,
-    );
-    return this.blogRepository.save(post);
-  }
-
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    const qb = this.blogRepository.createQueryBuilder('blog');
-    if (lang) {
-      qb.andWhere('blog.language = :lang', { lang });
-    }
-
-    const allPosts = await qb.select(['blog.category']).getMany();
-
-    const categoryCountMap = new Map<string, number>();
-
-    for (const post of allPosts) {
-      if (post.category) {
-        const cat = post.category.trim().toLowerCase();
-        categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allPosts.length,
-      },
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
+    const categoryOrder: BlogCategory[] = [
+      'opinion',
+      'lessons',
+      'postmortems',
+      'career',
+      'journal',
     ];
-
-    // Categorías primarias registradas
-    for (const [cat, count] of categoryCountMap.entries()) {
-      if (cat !== 'all') {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    return result;
-  }
-
-  async remove(id: number): Promise<void> {
-    const result = await this.blogRepository.delete(id);
-    if (!result.affected) {
-      throw new NotFoundException(`Artículo #${id} no encontrado`);
-    }
+    return aggregateModuleCategories(
+      this.blogRepository.createQueryBuilder('blog'),
+      'blog',
+      lang,
+      categoryOrder,
+    );
   }
 }

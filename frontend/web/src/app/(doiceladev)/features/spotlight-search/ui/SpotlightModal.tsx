@@ -227,10 +227,10 @@ export function SpotlightModal({
     aiResources.forEach((a) => {
       items.push({
         id: `ai-${a.id}`,
-        title: a.name,
+        title: a.title,
         category: 'ai',
         categoryLabel: tNav('ai'),
-        snippet: a.description,
+        snippet: a.excerpt,
         href: `/ai/${a.slug}`,
         tags: parseTags(a.tags),
         extraSearchTerms: [a.provider, a.category, a.license].filter(Boolean).join(' '),
@@ -256,7 +256,7 @@ export function SpotlightModal({
         title: t.title,
         category: 'tutorials',
         categoryLabel: tNav('tutorials'),
-        snippet: t.description || t.excerpt,
+        snippet: t.excerpt,
         href: `/tutorials/${t.slug}`,
         tags: parseTags(t.tags),
         extraSearchTerms: [t.category, t.techStack, t.prerequisites].filter(Boolean).join(' '),
@@ -271,7 +271,7 @@ export function SpotlightModal({
         categoryLabel: tNav('forum'),
         snippet: top.content.slice(0, 100) + '...',
         href: `/forum/${top.slug}`,
-        tags: parseTags(top.category),
+        tags: parseTags(top.tags || top.category),
         extraSearchTerms: [top.author, top.category].filter(Boolean).join(' '),
       });
     });
@@ -279,12 +279,12 @@ export function SpotlightModal({
     projects.forEach((prj) => {
       items.push({
         id: `prj-${prj.id}`,
-        title: prj.name,
+        title: prj.title,
         category: 'projects',
         categoryLabel: tNav('projects'),
-        snippet: prj.description,
+        snippet: prj.excerpt,
         href: `/projects/${prj.slug}`,
-        tags: parseTags(prj.techStack),
+        tags: parseTags(prj.tags || prj.techStack),
         extraSearchTerms: [prj.category, prj.techStack, prj.status].filter(Boolean).join(' '),
       });
     });
@@ -295,10 +295,10 @@ export function SpotlightModal({
         title: inf.title,
         category: 'infrastructure',
         categoryLabel: tNav('infrastructure'),
-        snippet: inf.subtitle || inf.architectureOverview || inf.contentMarkdown.slice(0, 100),
+        snippet: inf.excerpt,
         href: `/infrastructure/${inf.slug}`,
         tags: parseTags(inf.tags),
-        extraSearchTerms: [inf.category, inf.architectureOverview].filter(Boolean).join(' '),
+        extraSearchTerms: [inf.category, inf.techStack].filter(Boolean).join(' '),
       });
     });
 

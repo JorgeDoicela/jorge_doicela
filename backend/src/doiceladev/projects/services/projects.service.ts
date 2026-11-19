@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Project } from '../entities/project.entity';
-import { CreateProjectDto } from '../dto/create-project.dto';
-import { UpdateProjectDto } from '../dto/update-project.dto';
+import { Project, ProjectCategory } from '../entities/project.entity';
 import { GetProjectsQueryDto } from '../dto/get-projects-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class ProjectsService {
@@ -14,7 +16,7 @@ export class ProjectsService {
   ) {}
 
   async findAll(query: GetProjectsQueryDto = {}): Promise<Project[]> {
-    const { status, category, search, lang } = query;
+    const { status, category, tag, search, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -32,23 +34,34 @@ export class ProjectsService {
       qb.andWhere('proj.category = :category', { category });
     }
 
+    if (tag && tag !== 'all') {
+      qb.andWhere('proj.tags LIKE :tag', { tag: `%${tag}%` });
+    }
+
     if (search) {
       qb.andWhere(
-        '(proj.name LIKE :search OR proj.description LIKE :search OR proj.techStack LIKE :search)',
+        '(proj.title LIKE :search OR proj.excerpt LIKE :search OR proj.techStack LIKE :search OR proj.tags LIKE :search)',
         { search: `%${search}%` },
       );
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore con ponderación Stars)
-    qb.addSelect(
-      '((proj.featured * 1000) + (proj.orderPriority * 20) + (proj.stars * 10) + (proj.views * 1.5))',
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('proj.createdAt', 'DESC');
-    qb.addOrderBy('proj.id', 'DESC');
+    if (sortBy === 'recent') {
+      qb.orderBy('proj.publishedAt', 'DESC');
+      qb.addOrderBy('proj.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('proj.views', 'DESC');
+      qb.addOrderBy('proj.stars', 'DESC');
+      qb.addOrderBy('proj.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((proj.featured * 1000) + (proj.orderPriority * 20) + (proj.stars * 10) + (proj.likes * 4) + (proj.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('proj.publishedAt', 'DESC');
+      qb.addOrderBy('proj.id', 'DESC');
+    }
 
-    // Techo de seguridad de memoria para VPS 1 GB RAM
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -90,87 +103,21 @@ export class ProjectsService {
     return project;
   }
 
-  async create(createProjectDto: CreateProjectDto): Promise<Project> {
-    const project = this.projectRepository.create({
-      ...createProjectDto,
-      status: createProjectDto.status || 'active',
-    });
-    return this.projectRepository.save(project);
-  }
-
-  async update(
-    id: number,
-    updateProjectDto: UpdateProjectDto,
-  ): Promise<Project> {
-    const project = await this.findOne(String(id));
-    Object.assign(project, updateProjectDto);
-    return this.projectRepository.save(project);
-  }
-
-  async remove(id: number): Promise<void> {
-    const result = await this.projectRepository.delete(id);
-    if (!result.affected) {
-      throw new NotFoundException(`Proyecto #${id} no encontrado`);
-    }
-  }
-
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    const qb = this.projectRepository.createQueryBuilder('proj');
-    if (lang) {
-      qb.andWhere('proj.language = :lang', { lang });
-    }
-
-    const allProjects = await qb.select(['proj.category']).getMany();
-    const countMap = new Map<string, number>();
-
-    for (const proj of allProjects) {
-      if (proj.category) {
-        const c = proj.category.toLowerCase();
-        countMap.set(c, (countMap.get(c) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allProjects.length,
-      },
-    ];
-
-    const categoryOrder = [
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
+    const categoryOrder: ProjectCategory[] = [
       'web',
       'backend',
       'devops',
-      'tools',
       'tool',
       'open_source',
       'ai',
       'mobile',
     ];
-    for (const c of categoryOrder) {
-      const count = countMap.get(c) || 0;
-      if (count > 0) {
-        result.push({
-          id: c,
-          label: c,
-          count,
-        });
-      }
-    }
-
-    for (const [c, count] of countMap.entries()) {
-      if (!result.some((r) => r.id === c)) {
-        result.push({
-          id: c,
-          label: c,
-          count,
-        });
-      }
-    }
-
-    return result;
+    return aggregateModuleCategories(
+      this.projectRepository.createQueryBuilder('proj'),
+      'proj',
+      lang,
+      categoryOrder,
+    );
   }
 }

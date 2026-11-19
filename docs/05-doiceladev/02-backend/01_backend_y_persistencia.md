@@ -10,13 +10,13 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 > **Arquitectura Macro:**
 > * **Monolito Modular Orquestado:** Módulo orquestador en `backend/src/doiceladev/doiceladev.module.ts` dentro del proceso único NestJS (puerto `3000`, VPS 1 GB RAM).
 > * **Aislamiento de Persistencia:** Base de datos física independiente `backend/data/doiceladev.sqlite` registrada con la conexión TypeORM `'doiceladevConnection'`.
-> * **Aislamiento de Dominio:** 8 submódulos verticales con sus propios módulos, controladores, servicios y entidades.
+> * **Aislamiento de Dominio:** 14 submódulos verticales y transversales con sus propios módulos, controladores, servicios y entidades.
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en 3 Capas por Submódulo:**
->   1. *Presentación:* Controladores REST (`NewsController`, `BlogController`, `ForumController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`, `InfrastructureController`).
->   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas (`NewsService`, `BlogService`, `InfrastructureService`, etc.).
->   3. *Acceso a Datos:* 10 entidades TypeORM en `better-sqlite3` (`NewsArticle`, `BlogPost`, `ForumTopic`, `ForumReply`, `AiResource`, `SecurityPost`, `Tutorial`, `TutorialStep`, `Project`, `InfrastructurePost`).
+>   1. *Presentación:* Controladores REST de solo lectura para los 7 módulos editoriales (`NewsController`, `BlogController`, `AiController`, `CybersecurityController`, `TutorialsController`, `ProjectsController`, `InfrastructureController`), además de `ForumController`, `GlossaryController`, `PortalController`, `RecommendationsController`, `CategoriesController`, `TagsController` y `NewsletterController`.
+>   2. *Lógica de Negocio:* Servicios especializados con consultas indexadas, soporte uniforme de `sortBy` (`smart | recent | popular`) y agregación SQL `GROUP BY` compartida (`category-aggregation.util.ts`).
+>   3. *Acceso a Datos:* 14 tablas relacionales en `better-sqlite3` (`news_articles`, `blog_posts`, `forum_topics`, `forum_replies`, `ai_resources`, `security_posts`, `tutorials`, `tutorial_steps`, `projects`, `infrastructure_posts`, `glossary_terms`, `tags`, `content_tags`, `newsletter_subscribers`).
 > * **Sistema Universal de Filtros Polimórficos:**
 >   - Todos los submódulos exponen el endpoint `GET /doiceladev/[modulo]/categories?lang=es|en` devolviendo el contrato universal `{ id: string, label: string, count: number }`.
 >   - Las agregaciones se ejecutan dinámicamente en `doiceladev.sqlite` sin sobrecarga de memoria, erradicando datos quemados y alimentando de forma homogénea a `CategoryFilterBar` en el frontend.
@@ -28,80 +28,83 @@ Este documento detalla la arquitectura macro y micro, submódulos verticales, co
 
 ```text
 backend/src/doiceladev/
-├── doiceladev.module.ts               # Orquestador puro de los 8 submódulos (registra 10 entidades)
+├── doiceladev.module.ts               # Orquestador puro de los 14 submódulos (14 tablas relacionales)
 ├── cli/
-│   └── seed-doiceladev.ts               # Sembrado transaccional atómico CLI (9 tablas desde corpus/*.json)
+│   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI desde corpus/*.json
 │
 ├── corpus/                            # DATASETS JSON ESTRUCTURADOS (FUENTE DE VERDAD)
 │   ├── news.json                      # Noticias iniciales de tecnología
-│   ├── blog.json                      # Artículos de arquitectura y buenas prácticas
+│   ├── blog.json                      # Artículos del blog personal (lecciones, opinión, post-mortems)
 │   ├── forum.json                     # Temas y respuestas iniciales del foro
 │   ├── ai.json                        # Modelos LLM, agentes y servidores MCP
 │   ├── security.json                  # Avisos de ciberseguridad y guías de bastionado
 │   ├── tutorials.json                 # Tutoriales con pasos y snippets de código
 │   ├── projects.json                  # Proyectos showcase de Jorge Doicela
-│   └── infrastructure.json            # Guías de infraestructura, servidores y cloud
+│   ├── infrastructure.json            # Guías de infraestructura, servidores y cloud
+│   └── glossary.json                  # Términos técnicos bilingües interactivos
 │
-├── common/                            # DTOs Y UTILIDADES COMPARTIDAS DEL MÓDULO DOICELADEV
-│   └── dto/doiceladev-query.dto.ts      # Clase base con paginación (limit/page), search y lang
+├── common/                            # DTOs, ENTIDADES Y UTILIDADES COMPARTIDAS DEL MÓDULO DOICELADEV
+│   ├── dto/doiceladev-query.dto.ts    # Clase base con search, lang, tag, sortBy, limit y page
+│   ├── entities/{tag.entity.ts, content-tag.entity.ts}
+│   └── utils/category-aggregation.util.ts # Agregación SQL GROUP BY reutilizable O(1) RAM
 │
-├── news/                              # 1. NOTICIAS Y TENDENCIAS
+├── news/                              # 1. NOTICIAS Y TENDENCIAS (Solo lectura GET)
 │   ├── news.module.ts
-│   ├── controllers/news.controller.ts # /doiceladev/news (ParseIntPipe en :id)
+│   ├── controllers/news.controller.ts # GET /doiceladev/news, /categories, /:idOrSlug
 │   ├── services/news.service.ts
 │   ├── entities/news-article.entity.ts
-│   └── dto/{create-news.dto.ts, get-news-query.dto.ts}
+│   └── dto/get-news-query.dto.ts
 │
-├── blog/                              # 2. BLOG DE ARQUITECTURA
+├── blog/                              # 2. BLOG PERSONAL (Solo lectura GET)
 │   ├── blog.module.ts
-│   ├── controllers/blog.controller.ts # /doiceladev/blog (ParseIntPipe en :id)
+│   ├── controllers/blog.controller.ts # GET /doiceladev/blog, /categories, /:idOrSlug
 │   ├── services/blog.service.ts
 │   ├── entities/blog-post.entity.ts
-│   └── dto/{create-blog-post.dto.ts, get-blog-query.dto.ts}
+│   └── dto/get-blog-query.dto.ts
 │
-├── forum/                             # 3. FOROS Y DEBATES COMUNITARIOS
+├── forum/                             # 3. FOROS Y DEBATES COMUNITARIOS (Respuestas anidadas + Votos + Encuestas)
 │   ├── forum.module.ts
-│   ├── controllers/forum.controller.ts # /doiceladev/forum (ParseIntPipe en :id/replies)
+│   ├── controllers/forum.controller.ts # GET /doiceladev/forum, POST /replies, POST /replies/:id/vote, POST /:id/poll/:optionId/vote
+│   ├── guards/forum-throttle.guard.ts  # Rate limiting en memoria por IP (15 req/min)
 │   ├── services/forum.service.ts
-│   ├── entities/forum-topic.entity.ts
-│   ├── entities/forum-reply.entity.ts
-│   └── dto/{create-forum-topic.dto.ts, create-forum-reply.dto.ts, get-forum-topics-query.dto.ts}
+│   ├── entities/{forum-topic.entity.ts, forum-reply.entity.ts, forum-poll-option.entity.ts}
+│   └── dto/{create-forum-reply.dto.ts, get-forum-topics-query.dto.ts}
 │
-├── ai/                                # 4. INTELIGENCIA ARTIFICIAL Y AGENTES
+├── ai/                                # 4. INTELIGENCIA ARTIFICIAL Y AGENTES (Solo lectura GET)
 │   ├── ai.module.ts
-│   ├── controllers/ai.controller.ts   # /doiceladev/ai (ParseIntPipe en :id)
+│   ├── controllers/ai.controller.ts   # GET /doiceladev/ai, /categories, /:idOrSlug
 │   ├── services/ai.service.ts
 │   ├── entities/ai-resource.entity.ts
-│   └── dto/{create-ai-resource.dto.ts, get-ai-resources-query.dto.ts}
+│   └── dto/get-ai-resources-query.dto.ts
 │
-├── cybersecurity/                     # 5. CIBERSEGURIDAD Y BASTIONADO
+├── cybersecurity/                     # 5. CIBERSEGURIDAD Y BASTIONADO (Solo lectura GET)
 │   ├── cybersecurity.module.ts
-│   ├── controllers/cybersecurity.controller.ts # /doiceladev/cybersecurity (ParseIntPipe en :id)
+│   ├── controllers/cybersecurity.controller.ts # GET /doiceladev/cybersecurity, /categories, /:idOrSlug
 │   ├── services/cybersecurity.service.ts
 │   ├── entities/security-post.entity.ts
-│   └── dto/{create-security-post.dto.ts, get-security-posts-query.dto.ts}
+│   └── dto/get-security-posts-query.dto.ts
 │
-├── tutorials/                         # 6. TUTORIALES PRÁCTICOS
+├── tutorials/                         # 6. TUTORIALES PRÁCTICOS (Solo lectura GET)
 │   ├── tutorials.module.ts
-│   ├── controllers/tutorials.controller.ts # /doiceladev/tutorials (ParseIntPipe en :id)
+│   ├── controllers/tutorials.controller.ts # GET /doiceladev/tutorials, /categories, /:idOrSlug
 │   ├── services/tutorials.service.ts
 │   ├── entities/tutorial.entity.ts
 │   ├── entities/tutorial-step.entity.ts
-│   └── dto/{create-tutorial.dto.ts, create-tutorial-step.dto.ts, get-tutorials-query.dto.ts}
+│   └── dto/get-tutorials-query.dto.ts
 │
-├── projects/                          # 7. PROYECTOS SHOWCASE
+├── projects/                          # 7. PROYECTOS SHOWCASE (Solo lectura GET)
 │   ├── projects.module.ts
-│   ├── controllers/projects.controller.ts # /doiceladev/projects (ParseIntPipe en :id)
+│   ├── controllers/projects.controller.ts # GET /doiceladev/projects, /categories, /:idOrSlug
 │   ├── services/projects.service.ts
 │   ├── entities/project.entity.ts
-│   └── dto/{create-project.dto.ts, update-project.dto.ts, get-projects-query.dto.ts}
+│   └── dto/get-projects-query.dto.ts
 │
-├── infrastructure/                   # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD
+├── infrastructure/                    # 8. INFRAESTRUCTURA, SERVIDORES Y CLOUD (Solo lectura GET)
 │   ├── infrastructure.module.ts
-│   ├── controllers/infrastructure.controller.ts # /doiceladev/infrastructure (ParseIntPipe en :id y like)
+│   ├── controllers/infrastructure.controller.ts # GET /doiceladev/infrastructure, /categories, /:idOrSlug
 │   ├── services/infrastructure.service.ts
 │   ├── entities/infrastructure-post.entity.ts
-│   └── dto/{create-infrastructure-post.dto.ts, get-infrastructure-query.dto.ts}
+│   └── dto/get-infrastructure-query.dto.ts
 │
 ├── glossary/                         # 9. GLOSARIO TERMINOLÓGICO Y PEDAGÓGICO
 │   ├── glossary.module.ts
@@ -158,50 +161,34 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 
 | Dominio | Método y Ruta | Parámetros Query | Descripción |
 |---|---|---|---|
-| **Noticias** | `GET /doiceladev/news` | `search`, `category`, `tag`, `lang` | Listado filtrable por búsqueda, categoría, etiqueta e idioma |
+| **Noticias** | `GET /doiceladev/news` | `search`, `category`, `tag`, `sortBy`, `lang` | Listado filtrable por búsqueda, categoría, etiqueta, ordenamiento e idioma |
 | | `GET /doiceladev/news/categories` | `lang` | Taxonomías y categorías dinámicas con conteo de artículos activos |
 | | `GET /doiceladev/news/:idOrSlug` | `lang` | Detalle de la noticia por ID o slug con fallback de idioma |
-| | `POST /doiceladev/news` | - | Crear nuevo artículo de noticias |
-| | `DELETE /doiceladev/news/:id` | - | Eliminar artículo de noticias por ID |
-| **Blog** | `GET /doiceladev/blog` | `search`, `category`, `tag`, `series`, `lang` | Ensayos de arquitectura filtrables por categoría, búsqueda, serie, etiqueta e idioma |
-| | `GET /doiceladev/blog/categories` | `lang` | Series y categorías dinámicas del blog con conteo de artículos activos |
-| | `GET /doiceladev/blog/:idOrSlug` | `lang` | Detalle del post con tabla de contenidos e idioma |
-| | `POST /doiceladev/blog` | - | Publicar nuevo post editorial de blog |
-| | `DELETE /doiceladev/blog/:id` | - | Eliminar post de blog por ID |
-| **Foros** | `GET /doiceladev/forum` | `category`, `search`, `lang` | Hilos de debate filtrables por categoría, búsqueda e idioma |
-| | `GET /doiceladev/forum/categories` | `lang` | Categorías y salas de debate activas con conteo de hilos |
-| | `GET /doiceladev/forum/:idOrSlug` | `lang` | Hilo principal con respuestas anidadas |
-| | `POST /doiceladev/forum` | - | Crear nuevo hilo de debate (`ForumTopic`) |
-| | `POST /doiceladev/forum/replies` | - | Publicar nueva respuesta a un tema (`ForumReply`) |
+| **Blog** | `GET /doiceladev/blog` | `search`, `category`, `tag`, `series`, `sortBy`, `lang` | Ensayos de arquitectura filtrables por categoría, búsqueda, serie, etiqueta, ordenamiento e idioma |
+| | `GET /doiceladev/blog/categories` | `lang` | Categorías dinámicas del blog con conteo de artículos activos |
+| | `GET /doiceladev/blog/:idOrSlug` | `lang` | Detalle del ensayo localizado por ID o slug |
+| **Foros** | `GET /doiceladev/forum` | `category`, `tag`, `search`, `sortBy`, `lang` | Hilos de debate filtrables por categoría, etiqueta, búsqueda, ordenamiento e idioma |
+| | `GET /doiceladev/forum/categories` | `lang` | Categorías y salas de debate activas con conteo de hilos (`GROUP BY` SQL) |
+| | `GET /doiceladev/forum/:idOrSlug` | `lang` | Hilo principal con respuestas ordenadas y opciones de encuesta |
 | | `GET /doiceladev/forum/:id/replies` | - | Obtener todas las respuestas de un hilo por ID |
-| **IA** | `GET /doiceladev/ai` | `category`, `search`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, búsqueda e idioma |
+| | `POST /doiceladev/forum/replies` | - | Publicar respuesta (raíz o anidada con `parentId`) protegida con `ForumThrottleGuard` |
+| | `POST /doiceladev/forum/replies/:id/vote` | - | Votar respuesta útil (`likes + 1`) protegida con `ForumThrottleGuard` |
+| | `POST /doiceladev/forum/:id/poll/:optionId/vote` | - | Registrar voto en opción de encuesta del debate protegida con `ForumThrottleGuard` |
+| **IA** | `GET /doiceladev/ai` | `category`, `tag`, `search`, `sortBy`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, etiqueta, búsqueda, ordenamiento e idioma |
 | | `GET /doiceladev/ai/categories` | `lang` | Categorías y artefactos de IA activos con conteo real |
 | | `GET /doiceladev/ai/:idOrSlug` | `lang` | Ficha técnica del recurso de IA localizado |
-| | `POST /doiceladev/ai` | - | Registrar nuevo recurso de IA / agente / servidor MCP |
-| | `DELETE /doiceladev/ai/:id` | - | Eliminar recurso de IA por ID |
-| **Ciberseguridad** | `GET /doiceladev/cybersecurity` | `category`, `search`, `lang` | Avisos técnicos y guías de bastionado por categoría, búsqueda e idioma |
+| **Ciberseguridad** | `GET /doiceladev/cybersecurity` | `category`, `tag`, `search`, `sortBy`, `lang` | Avisos técnicos y guías de bastionado por categoría, etiqueta, búsqueda, ordenamiento e idioma |
 | | `GET /doiceladev/cybersecurity/categories` | `lang` | Categorías temáticas de seguridad activas con conteo |
 | | `GET /doiceladev/cybersecurity/:idOrSlug` | `lang` | Detalle del aviso y guía de remediación localizada |
-| | `POST /doiceladev/cybersecurity` | - | Registrar nuevo aviso o guía de seguridad |
-| | `DELETE /doiceladev/cybersecurity/:id` | - | Eliminar aviso de seguridad por ID |
-| **Tutoriales** | `GET /doiceladev/tutorials` | `category`, `search`, `lang` | Guías paso a paso filtrables por categoría temática, búsqueda e idioma |
+| **Tutoriales** | `GET /doiceladev/tutorials` | `category`, `tag`, `search`, `sortBy`, `lang` | Guías paso a paso filtrables por categoría temática, etiqueta, búsqueda, ordenamiento e idioma |
 | | `GET /doiceladev/tutorials/categories` | `lang` | Categorías temáticas pedagógicas activas con conteo |
 | | `GET /doiceladev/tutorials/:idOrSlug` | `lang` | Tutorial interactivo con pasos ordenados (`steps`) e idioma |
-| | `POST /doiceladev/tutorials` | - | Crear nuevo tutorial maestro |
-| | `POST /doiceladev/tutorials/steps` | - | Agregar paso con snippet de código a un tutorial |
-| | `DELETE /doiceladev/tutorials/:id` | - | Eliminar tutorial por ID |
-| **Proyectos** | `GET /doiceladev/projects` | `category`, `status`, `search`, `lang` | Showcase filtrable por categoría temática, estado, búsqueda e idioma |
+| **Proyectos** | `GET /doiceladev/projects` | `category`, `status`, `tag`, `search`, `sortBy`, `lang` | Showcase filtrable por categoría temática, estado, etiqueta, búsqueda, ordenamiento e idioma |
 | | `GET /doiceladev/projects/categories` | `lang` | Categorías temáticas de proyectos activas con conteo |
 | | `GET /doiceladev/projects/:idOrSlug` | `lang` | Ficha, demo, repo y arquitectura del proyecto localizada |
-| | `POST /doiceladev/projects` | - | Registrar nuevo proyecto showcase |
-| | `PATCH /doiceladev/projects/:id` | - | Actualizar campos o estado de un proyecto |
-| | `DELETE /doiceladev/projects/:id` | - | Eliminar proyecto por ID |
-| **Infraestructura** | `GET /doiceladev/infrastructure` | `category`, `search`, `sortBy`, `lang` | Guías de servidores y cloud filtrables por categoría, búsqueda y ordenamiento |
+| **Infraestructura** | `GET /doiceladev/infrastructure` | `category`, `tag`, `search`, `sortBy`, `lang` | Guías de servidores y cloud filtrables por categoría, etiqueta, búsqueda, ordenamiento e idioma |
 | | `GET /doiceladev/infrastructure/categories` | `lang` | Categorías disponibles con conteo de guías |
 | | `GET /doiceladev/infrastructure/:idOrSlug` | `lang` | Detalle de guía técnica con specs e incremento de vistas |
-| | `GET /doiceladev/infrastructure/:idOrSlug` | `lang` | Guía técnica interactiva con lector de código |
-| | `POST /doiceladev/infrastructure` | - | Crear nueva publicación de infraestructura |
-| | `DELETE /doiceladev/infrastructure/:id` | - | Eliminar publicación de infraestructura por ID |
 | **Glosario** | `GET /doiceladev/glossary` | `category`, `lang` | Catálogo bilingüe de conceptos técnicos para popovers editoriales |
 | | `GET /doiceladev/glossary/:slug` | `lang` | Definición de un término específico por slug |
 | **Feed Global** | `GET /doiceladev/portal` | `search`, `lang` | Consulta consolidada única: Top destacados por SmartScore (para carrusel dinámico), feed cronológico deduplicado (excluye destacados para cero redundancia visual) y datos para Spotlight |
@@ -216,7 +203,7 @@ La persistencia implementa soporte multiidioma nativo mediante la columna `langu
 
 * `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `publishedAt`.  
   * **Índice Único:** `IDX_news_articles_slug_lang (slug, language)`.
-* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `category`, `tags`, `language`, `series`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`.  
   * **Índice Único:** `IDX_blog_posts_slug_lang (slug, language)`.
 ### 4.1 Pragmas de Conexión SQLite (`better-sqlite3`)
 En `backend/src/doiceladev/doiceladev.module.ts` y en `seed-doiceladev.ts`, la base de datos `doiceladev.sqlite` está configurada con los siguientes pragmas de alto rendimiento y blindaje de memoria:
@@ -238,33 +225,36 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
   * **Integridad:** `FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE`.
   * **Índices:** `IDX_content_tags_tag (tag_id)`, `IDX_content_tags_content (content_type, content_id)`.
 * `news_articles`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `sourceUrl`, `isBreaking`, `featured`, `orderPriority`, `author`, `category`, `tags`, `language`, `coverImage`, `views`, `likes`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricción:** `CHECK (category IN ('frameworks', 'security', 'ai', 'cloud', 'architecture', 'devops', 'standards', 'general'))`.
-  * **Índices:** `IDX_news_articles_slug_lang (slug, language) UNIQUE`, `IDX_news_articles_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_break_feed (language, isBreaking, orderPriority DESC, publishedAt DESC)`.
-* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `category`, `tags`, `language`, `series`, `tableOfContents`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricción:** `CHECK (category IN ('architecture', 'devops', 'ai', 'frontend', 'backend', 'career', 'opinion', 'databases'))`.
+  * **Restricción:** `CHECK (category IN ('frameworks', 'cloud', 'ai', 'devops', 'security', 'web', 'tools', 'databases'))`.
+  * **Índices:** `IDX_news_articles_slug_lang (slug, language) UNIQUE`, `IDX_news_articles_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`, `IDX_news_articles_break_feed (language, isBreaking, orderPriority DESC, publishedAt DESC)`.
+* `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `category`, `tags`, `language`, `series`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricción:** `CHECK (category IN ('lessons', 'postmortems', 'opinion', 'career', 'journal'))`.
   * **Índices:** `IDX_blog_posts_slug_lang (slug, language) UNIQUE`, `IDX_blog_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_series_feed (language, series, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
-* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `language`, `coverImage`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
+* `forum_topics`: `id`, `slug`, `title`, `content`, `author`, `category`, `tags`, `language`, `coverImage`, `pollQuestion`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
   * **Índices:** `IDX_forum_topics_slug_lang (slug, language) UNIQUE`, `IDX_forum_topics_feed (language, isPinned DESC, orderPriority DESC, createdAt DESC)`, `IDX_forum_topics_cat_feed (language, category, isPinned DESC, orderPriority DESC, createdAt DESC)`.
 * `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`, `FOREIGN KEY (parentId) REFERENCES forum_replies(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_forum_replies_topic (topicId)`, `IDX_forum_replies_parent (parentId)`, `IDX_forum_replies_topic_created (topicId, createdAt ASC)`.
-* `ai_resources`: `id`, `slug`, `name`, `category`, `provider`, `author`, `description`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+* `forum_poll_options`: `id`, `topicId` (FK), `label`, `votes`, `displayOrder`, `createdAt`.  
+  * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`.  
+  * **Índices:** `IDX_forum_poll_options_topic (topicId)`, `IDX_forum_poll_options_topic_order (topicId, displayOrder ASC)`.
+* `ai_resources`: `id`, `slug`, `title`, `category`, `provider`, `author`, `excerpt`, `contentMarkdown`, `license`, `documentationUrl`, `paperUrl`, `githubUrl`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('llm', 'agent', 'framework', 'mcp_server', 'tool', 'dataset', 'platform'))`.  
-  * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_cat_feed (language, category, orderPriority DESC, createdAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, createdAt DESC)`.
+  * **Índices:** `IDX_ai_resources_slug_lang (slug, language) UNIQUE`, `IDX_ai_resources_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_ai_resources_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_ai_resources_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `security_posts`: `id`, `slug`, `title`, `category`, `cveId`, `affectedSystems`, `remediation`, `excerpt`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricciones:** `CHECK (category IN ('advisory', 'hardening_guide', 'writeup', 'cve_analysis', 'pentest'))`.  
   * **Índices:** `IDX_security_posts_slug_lang (slug, language) UNIQUE`, `IDX_security_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_security_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
-* `tutorials`: `id`, `slug`, `title`, `excerpt`, `description`, `category`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+* `tutorials`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `category`, `prerequisites`, `techStack`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricciones:** `CHECK (category IN ('web', 'backend', 'devops', 'mobile', 'ai', 'databases', 'security', 'architecture'))`.  
-  * **Índices:** `IDX_tutorials_slug_lang (slug, language) UNIQUE`, `IDX_tutorials_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+  * **Índices:** `IDX_tutorials_slug_lang (slug, language) UNIQUE`, `IDX_tutorials_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_tutorials_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `tutorial_steps`: `id`, `tutorialId` (FK), `stepOrder`, `title`, `contentMarkdown`, `codeSnippet`, `codeLanguage`, `imageUrl`, `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (tutorialId) REFERENCES tutorials(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_tutorial_steps_tut (tutorialId)`, `IDX_tutorial_steps_tut_order (tutorialId, stepOrder ASC)`.
-* `projects`: `id`, `slug`, `name`, `description`, `contentMarkdown`, `category`, `techStack`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `architectureDiagramUrl`, `createdAt`, `updatedAt`.  
-  * **Restricciones:** `CHECK (status IN ('active', 'archived', 'wip'))`, `CHECK (category IN ('web', 'backend', 'mobile', 'devops', 'tools', 'ai', 'security', 'open_source'))`.  
-  * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, stars DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, stars DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, stars DESC)`.
-* `infrastructure_posts`: `id`, `slug`, `title`, `subtitle`, `category`, `techStack`, `architectureOverview`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
-  * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram'))`.  
+* `projects`: `id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `category`, `techStack`, `tags`, `author`, `language`, `coverImage`, `repoUrl`, `liveUrl`, `status`, `featured`, `orderPriority`, `stars`, `views`, `likes`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (status IN ('active', 'archived', 'wip'))`, `CHECK (category IN ('web', 'backend', 'mobile', 'devops', 'ai', 'open_source', 'tool'))`.  
+  * **Índices:** `IDX_projects_slug_lang (slug, language) UNIQUE`, `IDX_projects_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_projects_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_projects_status_feed (language, status, orderPriority DESC, publishedAt DESC)`, `IDX_projects_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
+* `infrastructure_posts`: `id`, `slug`, `title`, `excerpt`, `category`, `techStack`, `specs`, `contentMarkdown`, `author`, `tags`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
+  * **Restricciones:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram', 'monitoring', 'security'))`.  
   * **Índices:** `IDX_infrastructure_posts_slug_lang (slug, language) UNIQUE`, `IDX_infrastructure_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_cat_feed (language, category, orderPriority DESC, publishedAt DESC)`, `IDX_infrastructure_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
 * `glossary_terms`: `id`, `slug`, `term`, `aliases`, `category`, `shortDefinition`, `keyDifference`, `caseSensitive`, `language`, `orderPriority`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('cloud', 'servers', 'containers', 'networking', 'ci_cd', 'hardening', 'zero_ram', 'security', 'ai', 'architecture', 'general', 'database', 'linux'))`.  

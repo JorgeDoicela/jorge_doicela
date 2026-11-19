@@ -1,32 +1,20 @@
 import { IsOptional, IsIn } from 'class-validator';
 import { DoiceladevQueryDto } from '../../common/dto/doiceladev-query.dto';
-import type { InfrastructureCategory } from '../entities/infrastructure-post.entity';
-
-const CATEGORIES: Array<InfrastructureCategory | 'all'> = [
-  'all',
-  'cloud',
-  'servers',
-  'containers',
-  'networking',
-  'ci_cd',
-  'hardening',
-  'zero_ram',
-];
-
-const SORT_BY_OPTIONS = ['smart', 'recent', 'views', 'likes'] as const;
-export type InfraSortBy = (typeof SORT_BY_OPTIONS)[number];
+import { InfrastructureCategory } from '../entities/infrastructure-post.entity';
 
 export class GetInfrastructureQueryDto extends DoiceladevQueryDto {
   @IsOptional()
-  @IsIn(CATEGORIES, {
-    message:
-      'La categoría debe ser: cloud, servers, containers, networking, ci_cd, hardening o zero_ram',
-  })
+  @IsIn([
+    'all',
+    'cloud',
+    'servers',
+    'containers',
+    'networking',
+    'ci_cd',
+    'hardening',
+    'zero_ram',
+    'monitoring',
+    'security',
+  ])
   category?: InfrastructureCategory | 'all';
-
-  @IsOptional()
-  @IsIn(SORT_BY_OPTIONS, {
-    message: 'El ordenamiento debe ser: smart, recent, views o likes',
-  })
-  sortBy?: InfraSortBy = 'smart';
 }

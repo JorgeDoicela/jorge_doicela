@@ -17,9 +17,9 @@ export type AiCategory =
 
 @Entity('ai_resources')
 @Index(['slug', 'language'], { unique: true })
-@Index(['language', 'orderPriority', 'createdAt'])
-@Index(['language', 'category', 'orderPriority', 'createdAt'])
-@Index(['language', 'featured', 'orderPriority', 'createdAt'])
+@Index(['language', 'orderPriority', 'publishedAt'])
+@Index(['language', 'category', 'orderPriority', 'publishedAt'])
+@Index(['language', 'featured', 'orderPriority', 'publishedAt'])
 export class AiResource {
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,7 +28,7 @@ export class AiResource {
   slug: string;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column({ default: 'tool' })
   category: AiCategory;
@@ -40,7 +40,7 @@ export class AiResource {
   author: string;
 
   @Column({ type: 'text' })
-  description: string;
+  excerpt: string;
 
   @Column({ type: 'text' })
   contentMarkdown: string;

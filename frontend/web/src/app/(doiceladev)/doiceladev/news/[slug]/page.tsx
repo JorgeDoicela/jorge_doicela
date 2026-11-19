@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { NewsArticle } from '../../../entities/news';
-import type { GlossaryTerm } from '../../../entities/glossary/types';
-import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
+import {
+  buildArticleMetadata,
+  fetchArticlePageContext,
+  formatArticleDates,
+} from '../../../shared/lib/articlePage';
+import { ArticleMetaPanel } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
 
@@ -14,76 +17,39 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
-  const tNav = await getTranslations('Nav');
-  const tCommon = await getTranslations('Common');
-  const article = await serverGet<NewsArticle>(`/doiceladev/news/${slug}?lang=${locale}`);
+  const [tNav, tCommon, article] = await Promise.all([
+    getTranslations('Nav'),
+    getTranslations('Common'),
+    serverGet<NewsArticle>(`/doiceladev/news/${slug}?lang=${locale}`),
+  ]);
 
-  if (!article) {
-    return { title: `${tCommon('notFound')} | DoicelaDev — Jorge Doicela` };
-  }
-
-  return {
-    title: `${article.title} | ${tNav('news')} — Jorge Doicela`,
-    description: article.excerpt,
-    openGraph: {
-      title: article.title,
-      description: article.excerpt,
-      type: 'article',
-      publishedTime: article.publishedAt || article.createdAt,
-      ...(article.updatedAt ? { modifiedTime: article.updatedAt } : {}),
-      authors: [article.author],
-      ...(article.coverImage ? { images: [{ url: article.coverImage }] } : {}),
-    },
-    alternates: {
-      canonical: `https://doiceladev.jorgedoicela.com/news/${slug}`,
-    },
-  };
+  return buildArticleMetadata({
+    record: article,
+    modulePath: 'news',
+    moduleLabel: tNav('news'),
+    notFoundLabel: tCommon('notFound'),
+    slug,
+  });
 }
 
 export default async function NewsDetailPage({ params }: Params) {
   const { slug } = await params;
   const locale = await getLocale();
-  const tNav = await getTranslations('Nav');
-
-  const cookieStore = await cookies();
-  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
-
-  const [article, glossary, recommendations] = await Promise.all([
-    serverGet<NewsArticle>(`/doiceladev/news/${slug}?lang=${locale}`),
-    serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
-    serverGet<RecommendationCard[]>(
-      `/doiceladev/recommendations?module=news&slug=${slug}&lang=${locale}${
-        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
-      }`,
-    ).catch(() => [] as RecommendationCard[]),
-  ]);
+  const [tNav, tMeta, { item: article, glossary, recommendations }] =
+    await Promise.all([
+      getTranslations('Nav'),
+      getTranslations('ArticleMeta'),
+      fetchArticlePageContext<NewsArticle>('news', slug, locale),
+    ]);
 
   if (!article) notFound();
 
-  const pubRaw = article.publishedAt || article.createdAt;
-  const updRaw = article.updatedAt;
-
-  const formattedPublishedDate = pubRaw
-    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-    : undefined;
-
-  const isMeaningfullyUpdated = Boolean(
-    pubRaw &&
-      updRaw &&
-      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
+  const dates = formatArticleDates(
+    article.publishedAt,
+    article.createdAt,
+    article.updatedAt,
+    locale,
   );
-
-  const formattedUpdatedDate = isMeaningfullyUpdated
-    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -93,15 +59,28 @@ export default async function NewsDetailPage({ params }: Params) {
       categoryHref="/news"
       title={article.title}
       subtitle={article.excerpt}
-      date={formattedPublishedDate}
-      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
-      updatedDate={formattedUpdatedDate}
-      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
+      date={dates.formattedPublishedDate}
+      publishedAtIso={dates.publishedAtIso}
+      updatedDate={dates.formattedUpdatedDate}
+      updatedAtIso={dates.updatedAtIso}
       author={article.author}
       tags={article.tags}
-      recommendations={recommendations || []}
+      recommendations={recommendations}
     >
-      <MarkdownRenderer content={article.contentMarkdown} glossaryTerms={glossary || []} />
+      <MarkdownRenderer
+        content={article.contentMarkdown}
+        glossaryTerms={glossary}
+      />
+
+      <ArticleMetaPanel
+        title={tMeta('newsBrief')}
+        placement="footer"
+        links={
+          article.sourceUrl
+            ? [{ label: tMeta('primarySource'), href: article.sourceUrl }]
+            : []
+        }
+      />
     </DoiceladevArticleLayout>
   );
 }

@@ -5,12 +5,16 @@ export type InfrastructureCategory =
   | 'networking'
   | 'ci_cd'
   | 'hardening'
-  | 'zero_ram';
+  | 'zero_ram'
+  | 'monitoring'
+  | 'security';
 
 export interface InfrastructureSpecs {
   ram?: string;
   cpu?: string;
   os?: string;
+  kernel?: string;
+  engine?: string;
   storage?: string;
   ports?: string;
   networkPolicy?: string;
@@ -35,10 +39,9 @@ export interface InfrastructurePost {
   id: number;
   slug: string;
   title: string;
-  subtitle?: string;
+  excerpt: string;
   category: InfrastructureCategory;
   techStack: string;
-  architectureOverview?: string;
   specs?: string;
   contentMarkdown: string;
   author: string;
@@ -49,12 +52,12 @@ export interface InfrastructurePost {
   likes: number;
   featured?: boolean;
   orderPriority?: number;
-  publishedAt?: string;
+  publishedAt: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export type InfrastructureSortBy = 'smart' | 'recent' | 'views' | 'likes';
+export type InfrastructureSortBy = 'smart' | 'recent' | 'popular';
 
 export interface InfrastructureFilter {
   category?: InfrastructureCategory | 'all';

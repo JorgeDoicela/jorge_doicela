@@ -2,8 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AiResource, AiCategory } from '../entities/ai-resource.entity';
-import { CreateAiResourceDto } from '../dto/create-ai-resource.dto';
 import { GetAiResourcesQueryDto } from '../dto/get-ai-resources-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class AiService {
@@ -13,7 +16,7 @@ export class AiService {
   ) {}
 
   async findAll(query: GetAiResourcesQueryDto = {}): Promise<AiResource[]> {
-    const { category, search, lang } = query;
+    const { category, tag, search, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -27,23 +30,34 @@ export class AiService {
       qb.andWhere('ai.category = :category', { category });
     }
 
+    if (tag && tag !== 'all') {
+      qb.andWhere('ai.tags LIKE :tag', { tag: `%${tag}%` });
+    }
+
     if (search) {
       qb.andWhere(
-        '(ai.name LIKE :search OR ai.description LIKE :search OR ai.tags LIKE :search)',
+        '(ai.title LIKE :search OR ai.excerpt LIKE :search OR ai.tags LIKE :search OR ai.provider LIKE :search)',
         { search: `%${search}%` },
       );
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore)
-    qb.addSelect(
-      '((ai.featured * 1000) + (ai.orderPriority * 20) + (ai.likes * 4) + (ai.views * 1.5))',
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('COALESCE(ai.publishedAt, ai.createdAt)', 'DESC');
-    qb.addOrderBy('ai.id', 'DESC');
+    if (sortBy === 'recent') {
+      qb.orderBy('ai.publishedAt', 'DESC');
+      qb.addOrderBy('ai.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('ai.views', 'DESC');
+      qb.addOrderBy('ai.likes', 'DESC');
+      qb.addOrderBy('ai.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((ai.featured * 1000) + (ai.orderPriority * 20) + (ai.likes * 4) + (ai.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('ai.publishedAt', 'DESC');
+      qb.addOrderBy('ai.id', 'DESC');
+    }
 
-    // Techo de seguridad de memoria para VPS 1 GB RAM
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -85,47 +99,7 @@ export class AiService {
     return resource;
   }
 
-  async create(createAiResourceDto: CreateAiResourceDto): Promise<AiResource> {
-    const resource = this.aiRepository.create({
-      ...createAiResourceDto,
-      category: (createAiResourceDto.category || 'tool') as AiCategory,
-    });
-    return this.aiRepository.save(resource);
-  }
-
-  async remove(id: number): Promise<void> {
-    const result = await this.aiRepository.delete(id);
-    if (!result.affected) {
-      throw new NotFoundException(`Recurso de IA #${id} no encontrado`);
-    }
-  }
-
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    const qb = this.aiRepository.createQueryBuilder('ai');
-    if (lang) {
-      qb.andWhere('ai.language = :lang', { lang });
-    }
-
-    const allResources = await qb.select(['ai.category']).getMany();
-    const countMap = new Map<string, number>();
-
-    for (const r of allResources) {
-      if (r.category) {
-        const c = r.category.toLowerCase();
-        countMap.set(c, (countMap.get(c) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allResources.length,
-      },
-    ];
-
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
     const categoryOrder: AiCategory[] = [
       'llm',
       'agent',
@@ -135,27 +109,11 @@ export class AiService {
       'dataset',
       'platform',
     ];
-    for (const c of categoryOrder) {
-      const count = countMap.get(c) || 0;
-      if (count > 0) {
-        result.push({
-          id: c,
-          label: c,
-          count,
-        });
-      }
-    }
-
-    for (const [c, count] of countMap.entries()) {
-      if (!result.some((r) => r.id === c)) {
-        result.push({
-          id: c,
-          label: c,
-          count,
-        });
-      }
-    }
-
-    return result;
+    return aggregateModuleCategories(
+      this.aiRepository.createQueryBuilder('ai'),
+      'ai',
+      lang,
+      categoryOrder,
+    );
   }
 }

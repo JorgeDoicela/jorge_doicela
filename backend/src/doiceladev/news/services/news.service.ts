@@ -1,9 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NewsArticle } from '../entities/news-article.entity';
-import { CreateNewsDto } from '../dto/create-news.dto';
+import { NewsArticle, NewsCategory } from '../entities/news-article.entity';
 import { GetNewsQueryDto } from '../dto/get-news-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class NewsService {
@@ -13,7 +16,7 @@ export class NewsService {
   ) {}
 
   async findAll(query: GetNewsQueryDto = {}): Promise<NewsArticle[]> {
-    const { search, tag, category, lang } = query;
+    const { category, tag, search, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -23,6 +26,14 @@ export class NewsService {
       qb.andWhere('news.language = :lang', { lang });
     }
 
+    if (category && category !== 'all') {
+      qb.andWhere('news.category = :category', { category });
+    }
+
+    if (tag && tag !== 'all') {
+      qb.andWhere('news.tags LIKE :tag', { tag: `%${tag}%` });
+    }
+
     if (search) {
       qb.andWhere(
         '(news.title LIKE :search OR news.excerpt LIKE :search OR news.tags LIKE :search)',
@@ -30,27 +41,23 @@ export class NewsService {
       );
     }
 
-    if (category && category !== 'all') {
-      qb.andWhere('(news.category = :category OR news.tags LIKE :catPattern)', {
-        category,
-        catPattern: `%${category}%`,
-      });
+    if (sortBy === 'recent') {
+      qb.orderBy('news.publishedAt', 'DESC');
+      qb.addOrderBy('news.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('news.views', 'DESC');
+      qb.addOrderBy('news.likes', 'DESC');
+      qb.addOrderBy('news.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((news.featured * 1000) + (news.isBreaking * 500) + (news.orderPriority * 20) + (news.likes * 4) + (news.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('news.publishedAt', 'DESC');
+      qb.addOrderBy('news.id', 'DESC');
     }
 
-    if (tag && tag !== 'all') {
-      qb.andWhere('news.tags LIKE :tag', { tag: `%${tag}%` });
-    }
-
-    // Algoritmo de Inteligencia Editorial (SmartScore)
-    qb.addSelect(
-      '((news.featured * 1000) + (news.isBreaking * 500) + (news.orderPriority * 20) + (news.likes * 4) + (news.views * 1.5))',
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('COALESCE(news.publishedAt, news.createdAt)', 'DESC');
-    qb.addOrderBy('news.id', 'DESC');
-
-    // Techo de seguridad de memoria para VPS 1 GB RAM
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -92,55 +99,22 @@ export class NewsService {
     return article;
   }
 
-  async create(createNewsDto: CreateNewsDto): Promise<NewsArticle> {
-    const article = this.newsRepository.create(createNewsDto);
-    return this.newsRepository.save(article);
-  }
-
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    // 1. Obtener todas las noticias del idioma correspondiente
-    const allArticles = await this.newsRepository.find({
-      where: { language: lang },
-      select: { id: true, category: true },
-    });
-
-    const categoryCountMap = new Map<string, number>();
-
-    for (const art of allArticles) {
-      if (art.category) {
-        const cat = art.category.trim().toLowerCase();
-        categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allArticles.length,
-      },
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
+    const categoryOrder: NewsCategory[] = [
+      'security',
+      'ai',
+      'frameworks',
+      'cloud',
+      'devops',
+      'web',
+      'databases',
+      'tools',
     ];
-
-    // Categorías primarias registradas
-    for (const [cat, count] of categoryCountMap.entries()) {
-      if (cat !== 'all') {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    return result;
-  }
-
-  async remove(id: number): Promise<void> {
-    const result = await this.newsRepository.delete(id);
-    if (!result.affected) {
-      throw new NotFoundException(`Noticia #${id} no encontrada`);
-    }
+    return aggregateModuleCategories(
+      this.newsRepository.createQueryBuilder('news'),
+      'news',
+      lang,
+      categoryOrder,
+    );
   }
 }

@@ -1,11 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { ForumTopic } from '../entities/forum-topic.entity';
+import { ForumTopic, ForumCategory } from '../entities/forum-topic.entity';
 import { ForumReply } from '../entities/forum-reply.entity';
-import { CreateForumTopicDto } from '../dto/create-forum-topic.dto';
+import { ForumPollOption } from '../entities/forum-poll-option.entity';
 import { CreateForumReplyDto } from '../dto/create-forum-reply.dto';
 import { GetForumTopicsQueryDto } from '../dto/get-forum-topics-query.dto';
+import {
+  aggregateModuleCategories,
+  CategoryCountOption,
+} from '../../common/utils/category-aggregation.util';
 
 @Injectable()
 export class ForumService {
@@ -16,12 +24,14 @@ export class ForumService {
     private readonly topicRepository: Repository<ForumTopic>,
     @InjectRepository(ForumReply, 'doiceladevConnection')
     private readonly replyRepository: Repository<ForumReply>,
+    @InjectRepository(ForumPollOption, 'doiceladevConnection')
+    private readonly pollOptionRepository: Repository<ForumPollOption>,
   ) {}
 
   async findAllTopics(
     query: GetForumTopicsQueryDto = {},
   ): Promise<ForumTopic[]> {
-    const { category, search, lang } = query;
+    const { category, tag, search, lang, sortBy = 'smart' } = query;
     const page = Math.max(1, query.page ? Number(query.page) : 1);
     const limit = Math.min(query.limit ? Number(query.limit) : 50, 100);
 
@@ -35,22 +45,34 @@ export class ForumService {
       qb.andWhere('topic.category = :category', { category });
     }
 
-    if (search) {
-      qb.andWhere('(topic.title LIKE :search OR topic.content LIKE :search)', {
-        search: `%${search}%`,
-      });
+    if (tag && tag !== 'all') {
+      qb.andWhere('topic.tags LIKE :tag', { tag: `%${tag}%` });
     }
 
-    // Algoritmo de Inteligencia Editorial (SmartScore con ponderación Comunitaria)
-    qb.addSelect(
-      '((topic.isPinned * 1000) + (topic.orderPriority * 20) + (topic.repliesCount * 15) + (topic.views * 1.5))',
-      'smart_score',
-    );
-    qb.orderBy('smart_score', 'DESC');
-    qb.addOrderBy('topic.createdAt', 'DESC');
-    qb.addOrderBy('topic.id', 'DESC');
+    if (search) {
+      qb.andWhere(
+        '(topic.title LIKE :search OR topic.content LIKE :search OR topic.tags LIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
 
-    // Techo de seguridad de memoria para VPS 1 GB RAM
+    if (sortBy === 'recent') {
+      qb.orderBy('topic.createdAt', 'DESC');
+      qb.addOrderBy('topic.id', 'DESC');
+    } else if (sortBy === 'popular') {
+      qb.orderBy('topic.repliesCount', 'DESC');
+      qb.addOrderBy('topic.views', 'DESC');
+      qb.addOrderBy('topic.id', 'DESC');
+    } else {
+      qb.addSelect(
+        '((topic.isPinned * 1000) + (topic.orderPriority * 20) + (topic.repliesCount * 15) + (topic.views * 1.5))',
+        'smart_score',
+      );
+      qb.orderBy('smart_score', 'DESC');
+      qb.addOrderBy('topic.createdAt', 'DESC');
+      qb.addOrderBy('topic.id', 'DESC');
+    }
+
     qb.skip((page - 1) * limit).take(limit);
 
     const results = await qb.getMany();
@@ -69,19 +91,19 @@ export class ForumService {
     if (isId) {
       topic = await this.topicRepository.findOne({
         where: { id: Number(idOrSlug) },
-        relations: { replies: true },
+        relations: { replies: true, pollOptions: true },
       });
     } else {
       if (lang) {
         topic = await this.topicRepository.findOne({
           where: { slug: idOrSlug, language: lang },
-          relations: { replies: true },
+          relations: { replies: true, pollOptions: true },
         });
       }
       if (!topic) {
         topic = await this.topicRepository.findOne({
           where: { slug: idOrSlug },
-          relations: { replies: true },
+          relations: { replies: true, pollOptions: true },
         });
       }
     }
@@ -90,14 +112,22 @@ export class ForumService {
       throw new NotFoundException(`Tema del foro "${idOrSlug}" no encontrado`);
     }
 
+    if (topic.replies) {
+      topic.replies.sort(
+        (a, b) =>
+          Number(b.isAcceptedAnswer) - Number(a.isAcceptedAnswer) ||
+          b.likes - a.likes ||
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      );
+    }
+
+    if (topic.pollOptions) {
+      topic.pollOptions.sort((a, b) => a.displayOrder - b.displayOrder);
+    }
+
     void this.topicRepository.increment({ id: topic.id }, 'views', 1);
     topic.views += 1;
     return topic;
-  }
-
-  async createTopic(dto: CreateForumTopicDto): Promise<ForumTopic> {
-    const topic = this.topicRepository.create(dto);
-    return this.topicRepository.save(topic);
   }
 
   async createReply(dto: CreateForumReplyDto): Promise<ForumReply> {
@@ -109,60 +139,87 @@ export class ForumService {
         throw new NotFoundException(`Tema #${dto.topicId} no encontrado`);
       }
 
-      const reply = manager.create(ForumReply, dto);
+      if (dto.parentId) {
+        const parentReply = await manager.findOne(ForumReply, {
+          where: { id: dto.parentId, topicId: dto.topicId },
+        });
+        if (!parentReply) {
+          throw new BadRequestException(
+            'La respuesta padre indicada no pertenece a este debate.',
+          );
+        }
+      }
+
+      const reply = manager.create(ForumReply, {
+        topicId: dto.topicId,
+        parentId: dto.parentId,
+        content: dto.content.trim(),
+        author: dto.author?.trim() || 'Comunidad Tech',
+      });
       const savedReply = await manager.save(reply);
 
-      topic.repliesCount += 1;
-      await manager.save(topic);
+      await manager.increment(ForumTopic, { id: topic.id }, 'repliesCount', 1);
 
       return savedReply;
+    });
+  }
+
+  async voteReply(replyId: number): Promise<ForumReply> {
+    const reply = await this.replyRepository.findOne({
+      where: { id: replyId },
+    });
+    if (!reply) {
+      throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+    }
+
+    await this.replyRepository.increment({ id: replyId }, 'likes', 1);
+    reply.likes += 1;
+    return reply;
+  }
+
+  async votePollOption(
+    topicId: number,
+    optionId: number,
+  ): Promise<ForumPollOption[]> {
+    const option = await this.pollOptionRepository.findOne({
+      where: { id: optionId, topicId },
+    });
+    if (!option) {
+      throw new NotFoundException(
+        `Opción de encuesta #${optionId} no encontrada en el debate #${topicId}`,
+      );
+    }
+
+    await this.pollOptionRepository.increment({ id: optionId }, 'votes', 1);
+
+    return this.pollOptionRepository.find({
+      where: { topicId },
+      order: { displayOrder: 'ASC' },
     });
   }
 
   async findRepliesByTopic(topicId: number): Promise<ForumReply[]> {
     return this.replyRepository.find({
       where: { topicId },
-      order: { createdAt: 'ASC' },
+      order: { isAcceptedAnswer: 'DESC', likes: 'DESC', createdAt: 'ASC' },
     });
   }
 
-  async getCategories(
-    lang: string = 'es',
-  ): Promise<Array<{ id: string; label: string; count: number }>> {
-    const qb = this.topicRepository.createQueryBuilder('topic');
-    if (lang) {
-      qb.andWhere('topic.language = :lang', { lang });
-    }
-
-    const allTopics = await qb.select(['topic.category']).getMany();
-
-    const categoryCountMap = new Map<string, number>();
-
-    for (const topic of allTopics) {
-      if (topic.category) {
-        const cat = topic.category.trim().toLowerCase();
-        categoryCountMap.set(cat, (categoryCountMap.get(cat) || 0) + 1);
-      }
-    }
-
-    const result: Array<{ id: string; label: string; count: number }> = [
-      {
-        id: 'all',
-        label: 'all',
-        count: allTopics.length,
-      },
+  async getCategories(lang: string = 'es'): Promise<CategoryCountOption[]> {
+    const categoryOrder: ForumCategory[] = [
+      'architecture',
+      'devops',
+      'ai',
+      'backend',
+      'frontend',
+      'help',
+      'general',
     ];
-
-    for (const [cat, count] of categoryCountMap.entries()) {
-      if (cat !== 'all') {
-        result.push({
-          id: cat,
-          label: cat,
-          count,
-        });
-      }
-    }
-
-    return result;
+    return aggregateModuleCategories(
+      this.topicRepository.createQueryBuilder('topic'),
+      'topic',
+      lang,
+      categoryOrder,
+    );
   }
 }

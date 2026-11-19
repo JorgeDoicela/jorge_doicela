@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { SecurityPost } from '../../../entities/cybersecurity';
-import type { GlossaryTerm } from '../../../entities/glossary/types';
-import type { RecommendationCard } from '../../../entities/portal/types';
 import { serverGet } from '../../../shared/lib/serverFetch';
+import {
+  buildArticleMetadata,
+  fetchArticlePageContext,
+  formatArticleDates,
+} from '../../../shared/lib/articlePage';
+import { ArticleMetaPanel } from '../../../shared/ui';
 import { DoiceladevArticleLayout } from '../../../widgets/article-layout';
 import { MarkdownRenderer } from '../../../shared/markdown/MarkdownRenderer';
 
@@ -14,76 +17,39 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
-  const tNav = await getTranslations('Nav');
-  const tCommon = await getTranslations('Common');
-  const post = await serverGet<SecurityPost>(`/doiceladev/cybersecurity/${slug}?lang=${locale}`);
+  const [tNav, tCommon, post] = await Promise.all([
+    getTranslations('Nav'),
+    getTranslations('Common'),
+    serverGet<SecurityPost>(`/doiceladev/cybersecurity/${slug}?lang=${locale}`),
+  ]);
 
-  if (!post) {
-    return { title: `${tCommon('notFound')} | DoicelaDev — Jorge Doicela` };
-  }
-
-  return {
-    title: `${post.title} | ${tNav('cybersecurity')} — Jorge Doicela`,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: 'article',
-      publishedTime: post.publishedAt || post.createdAt,
-      ...(post.updatedAt ? { modifiedTime: post.updatedAt } : {}),
-      authors: [post.author],
-      ...(post.coverImage ? { images: [{ url: post.coverImage }] } : {}),
-    },
-    alternates: {
-      canonical: `https://doiceladev.jorgedoicela.com/cybersecurity/${slug}`,
-    },
-  };
+  return buildArticleMetadata({
+    record: post,
+    modulePath: 'cybersecurity',
+    moduleLabel: tNav('cybersecurity'),
+    notFoundLabel: tCommon('notFound'),
+    slug,
+  });
 }
 
 export default async function CybersecurityDetailPage({ params }: Params) {
   const { slug } = await params;
   const locale = await getLocale();
-  const tNav = await getTranslations('Nav');
-
-  const cookieStore = await cookies();
-  const readHistory = cookieStore.get('doicela_read_history')?.value || '';
-
-  const [post, glossary, recommendations] = await Promise.all([
-    serverGet<SecurityPost>(`/doiceladev/cybersecurity/${slug}?lang=${locale}`),
-    serverGet<GlossaryTerm[]>(`/doiceladev/glossary?lang=${locale}`).catch(() => [] as GlossaryTerm[]),
-    serverGet<RecommendationCard[]>(
-      `/doiceladev/recommendations?module=cybersecurity&slug=${slug}&lang=${locale}${
-        readHistory ? `&exclude=${encodeURIComponent(readHistory)}` : ''
-      }`,
-    ).catch(() => [] as RecommendationCard[]),
-  ]);
+  const [tNav, tMeta, { item: post, glossary, recommendations }] =
+    await Promise.all([
+      getTranslations('Nav'),
+      getTranslations('ArticleMeta'),
+      fetchArticlePageContext<SecurityPost>('cybersecurity', slug, locale),
+    ]);
 
   if (!post) notFound();
 
-  const pubRaw = post.publishedAt || post.createdAt;
-  const updRaw = post.updatedAt;
-
-  const formattedPublishedDate = pubRaw
-    ? new Date(pubRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-    : undefined;
-
-  const isMeaningfullyUpdated = Boolean(
-    pubRaw &&
-      updRaw &&
-      new Date(updRaw).getTime() - new Date(pubRaw).getTime() > 24 * 60 * 60 * 1000,
+  const dates = formatArticleDates(
+    post.publishedAt,
+    post.createdAt,
+    post.updatedAt,
+    locale,
   );
-
-  const formattedUpdatedDate = isMeaningfullyUpdated
-    ? new Date(updRaw).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-    : undefined;
 
   return (
     <DoiceladevArticleLayout
@@ -93,15 +59,31 @@ export default async function CybersecurityDetailPage({ params }: Params) {
       categoryHref="/cybersecurity"
       title={post.title}
       subtitle={post.excerpt}
-      date={formattedPublishedDate}
-      publishedAtIso={pubRaw ? new Date(pubRaw).toISOString() : undefined}
-      updatedDate={formattedUpdatedDate}
-      updatedAtIso={isMeaningfullyUpdated ? new Date(updRaw).toISOString() : undefined}
+      date={dates.formattedPublishedDate}
+      publishedAtIso={dates.publishedAtIso}
+      updatedDate={dates.formattedUpdatedDate}
+      updatedAtIso={dates.updatedAtIso}
       author={post.author}
       tags={post.tags}
-      recommendations={recommendations || []}
+      recommendations={recommendations}
     >
-      <MarkdownRenderer content={post.contentMarkdown} glossaryTerms={glossary || []} />
+      <ArticleMetaPanel
+        title={tMeta('securityBrief')}
+        rows={[
+          ...(post.cveId ? [{ label: tMeta('cveId'), value: post.cveId }] : []),
+          ...(post.affectedSystems
+            ? [{ label: tMeta('affectedSystems'), value: post.affectedSystems }]
+            : []),
+          ...(post.remediation
+            ? [{ label: tMeta('remediation'), value: post.remediation }]
+            : []),
+        ]}
+      />
+
+      <MarkdownRenderer
+        content={post.contentMarkdown}
+        glossaryTerms={glossary}
+      />
     </DoiceladevArticleLayout>
   );
 }

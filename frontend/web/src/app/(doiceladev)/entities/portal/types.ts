@@ -1,4 +1,6 @@
 import type { DoiceladevArticleCategory } from '../../shared/ui/ArticleCover';
+import type { RecommendationCard } from '../../shared/types/recommendation';
+export type { RecommendationCard };
 import type { NewsArticle } from '../news';
 import type { BlogPost } from '../blog';
 import type { ForumTopic } from '../forum';
@@ -19,17 +21,6 @@ export interface PortalFeedItem {
   accentHoverColor?: string;
   date: string;
   smartScore: number;
-}
-
-export interface RecommendationCard {
-  id: string;
-  href: string;
-  title: string;
-  category: DoiceladevArticleCategory;
-  categoryMeta: string;
-  coverImage?: string;
-  excerpt?: string | null;
-  score: number;
 }
 
 export interface PortalSpotlightData {

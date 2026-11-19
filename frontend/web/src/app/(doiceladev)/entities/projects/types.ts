@@ -11,11 +11,12 @@ export type ProjectCategory =
 export interface Project {
   id: number;
   slug: string;
-  name: string;
+  title: string;
   category: ProjectCategory;
-  description: string;
-  contentMarkdown?: string;
+  excerpt: string;
+  contentMarkdown: string;
   techStack: string;
+  tags: string;
   author: string;
   repoUrl?: string;
   liveUrl?: string;
@@ -23,10 +24,10 @@ export interface Project {
   featured: boolean;
   stars: number;
   views: number;
+  likes: number;
   orderPriority?: number;
-  publishedAt?: string;
+  publishedAt: string;
   coverImage?: string;
-  architectureDiagramUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

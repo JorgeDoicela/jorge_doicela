@@ -1,17 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  Query,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProjectsService } from '../services/projects.service';
-import { CreateProjectDto } from '../dto/create-project.dto';
-import { UpdateProjectDto } from '../dto/update-project.dto';
 import { GetProjectsQueryDto } from '../dto/get-projects-query.dto';
 
 @Controller('doiceladev/projects')
@@ -34,24 +22,5 @@ export class ProjectsController {
     @Query('lang') lang?: string,
   ) {
     return this.projectsService.findOne(idOrSlug, lang);
-  }
-
-  @Post()
-  async create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectsService.create(createProjectDto);
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateProjectDto: UpdateProjectDto,
-  ) {
-    return this.projectsService.update(id, updateProjectDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    await this.projectsService.remove(id);
-    return { success: true };
   }
 }

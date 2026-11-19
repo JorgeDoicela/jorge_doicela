@@ -37,7 +37,7 @@ export class Tutorial {
   excerpt: string;
 
   @Column({ type: 'text' })
-  description: string;
+  contentMarkdown: string;
 
   @Column({ default: 'backend' })
   category: TutorialCategory;

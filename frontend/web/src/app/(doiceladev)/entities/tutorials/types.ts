@@ -24,7 +24,7 @@ export interface Tutorial {
   slug: string;
   title: string;
   excerpt: string;
-  description: string;
+  contentMarkdown: string;
   category: TutorialCategory;
   prerequisites?: string;
   techStack: string;
@@ -35,7 +35,7 @@ export interface Tutorial {
   likes: number;
   featured?: boolean;
   orderPriority?: number;
-  publishedAt?: string;
+  publishedAt: string;
   steps?: TutorialStep[];
   createdAt: string;
   updatedAt: string;

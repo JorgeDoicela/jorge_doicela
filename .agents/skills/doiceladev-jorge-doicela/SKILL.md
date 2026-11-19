@@ -1,6 +1,6 @@
 ---
 name: doiceladev-jorge-doicela
-description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de DoicelaDev (doiceladev.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 categorías temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (9 submódulos verticales, corpus/*.json, seeder atómico) y la base de datos doiceladev.sqlite (11 tablas relacionales).
+description: Activa esta skill para tareas de desarrollo, diseño o mantenimiento de DoicelaDev (doiceladev.jorgedoicela.com), incluyendo el frontend en Next.js 16 (estética Neumorphism UI + Glassmorphism, 8 áreas temáticas, páginas de listado y subrutas [slug] con FSD), backend en NestJS 11 (14 submódulos, 7 módulos editoriales homologados de solo lectura GET, corpus/*.json, seeder atómico) y la base de datos doiceladev.sqlite (14 tablas relacionales).
 ---
 # Directrices de Desarrollo: DoicelaDev (doiceladev.jorgedoicela.com)
 
@@ -20,7 +20,7 @@ Esta habilidad define los estándares técnicos, estructura, modelo de datos y b
 
 * **Subdominio:** `doiceladev.jorgedoicela.com` (en desarrollo: `doiceladev.localhost:3001` o subruta `/doiceladev`).
 * **Frontend:** Grupo de rutas `frontend/web/src/app/(doiceladev)/`.
-* **Backend:** Módulo orquestador `backend/src/doiceladev/doiceladev.module.ts` compuesto por 9 submódulos verticales.
+* **Backend:** Módulo orquestador `backend/src/doiceladev/doiceladev.module.ts` compuesto por 14 submódulos (7 módulos editoriales homologados de solo lectura `GET`, `forum`, `glossary` y 5 transversales: `portal`, `recommendations`, `categories`, `tags`, `newsletter`).
 * **Persistencia:** Base de datos SQLite física independiente `doiceladev.sqlite` conectada mediante `'doiceladevConnection'` en TypeORM.
 * **Aislamiento de Estilos y Tipografías Locales:** Utiliza exclusivamente su propio archivo `(doiceladev)/globals.css` (estética **Neumorphism UI + Glassmorphism**, combinando paneles táctiles cóncavos/convexos con desenfoques vítreos, reflejos esmerilados y sombras suaves superpuestas) y sus tipografías locales en `(doiceladev)/fonts/` (`PlusJakartaSans-Variable.woff2`, `PlusJakartaSans-Italic-Variable.woff2`, `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1**. Prohibido cualquier enlace a Google Fonts o CDNs externos.
 * **Aislamiento de Assets:** Recursos estáticos ubicados en `frontend/web/public/doiceladev/`.
@@ -42,11 +42,11 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts                      # Barrel export de providers
 │
 ├── shared/                           # CAPA 6: UI Kit agnóstico, suite Markdown, SEO, Lib y Tipos
-│   ├── ui/                           # DoiceladevCard, DoiceladevSelect, BackToPortalButton, ScrollToTopButton, ArticleCover
+│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, DoiceladevSelect, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel, ModuleFilterToolbar, CategoryFilterBar
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # DoiceladevJsonLd (Schema.org JSON-LD bilingüe)
-│   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson
-│   └── types/                        # spotlight.ts
+│   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson, articlePage.ts (metadata, fechas y carga paralela unificada)
+│   └── types/                        # filter.ts, glossary.ts, recommendation.ts, spotlight.ts
 │
 ├── entities/                         # CAPA 5: Modelos de dominio, Hooks API, Tarjetas de Entidad y Borradores Markdown (drafts/)
 │   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
@@ -87,7 +87,7 @@ frontend/web/src/app/(doiceladev)/
 
 ### 2.2 Las 8 Áreas Temáticas de DoicelaDev
 1. **Noticias (`news`):** Novedades y tendencias del sector tecnológico con alertas breaking.
-2. **Blog (`blog`):** Ensayos profundos sobre arquitectura de software y buenas prácticas.
+2. **Blog (`blog`):** Blog personal en primera persona sobre aprendizajes reales, errores/post-mortems, criterio de ingeniería, carrera y bitácora técnica (`lessons`, `postmortems`, `opinion`, `career`, `journal`).
 3. **Foros (`forum`):** Espacio de discusión y debates técnicos comunitarios con respuestas anidadas.
 4. **Inteligencia Artificial (`ai`):** Modelos de razonamiento, agentes, servidores MCP y herramientas.
 5. **Ciberseguridad (`cybersecurity`):** Avisos de vulnerabilidades (LOW a CRITICAL), guías de bastionado y remediación.
@@ -118,9 +118,14 @@ frontend/web/src/app/(doiceladev)/
 ### 3.1 Estructura de Directorios Backend
 ```text
 backend/src/doiceladev/
-├── doiceladev.module.ts               # Orquestador puro (importa 9 submódulos, registra 11 entidades)
+├── doiceladev.module.ts               # Orquestador puro (importa 14 submódulos, registra 14 tablas)
 ├── cli/
-│   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI (11 tablas desde corpus/*.json)
+│   └── seed-doiceladev.ts             # Sembrado transaccional atómico CLI (14 tablas desde corpus/*.json)
+│
+├── common/                            # Contratos y utilidades compartidas de DoicelaDev
+│   ├── dto/doiceladev-query.dto.ts    # Query base: search, lang, tag, sortBy (smart|recent|popular), limit, page
+│   ├── entities/{tag.entity.ts, content-tag.entity.ts}
+│   └── utils/category-aggregation.util.ts # Agregación SQL GROUP BY reutilizable O(1) RAM
 │
 ├── corpus/                            # DATASETS JSON ESTRUCTURADOS (FUENTE DE VERDAD)
 │   ├── news.json
@@ -133,32 +138,41 @@ backend/src/doiceladev/
 │   ├── infrastructure.json
 │   └── glossary.json
 │
-├── news/                              # NewsArticle (GET|POST /doiceladev/news)
-├── blog/                              # BlogPost (GET|POST /doiceladev/blog)
+├── news/                              # NewsArticle (GET /doiceladev/news)
+├── blog/                              # BlogPost (GET /doiceladev/blog)
 ├── forum/                             # ForumTopic + ForumReply (GET|POST /doiceladev/forum)
-├── ai/                                # AiResource (GET|POST /doiceladev/ai)
-├── cybersecurity/                     # SecurityPost (GET|POST /doiceladev/cybersecurity)
-├── tutorials/                         # Tutorial + TutorialStep (GET|POST /doiceladev/tutorials)
-├── projects/                          # Project (GET|POST|PATCH|DELETE /doiceladev/projects)
-├── infrastructure/                    # InfrastructurePost (GET|POST /doiceladev/infrastructure)
-└── glossary/                          # GlossaryTerm (GET /doiceladev/glossary)
+├── ai/                                # AiResource (GET /doiceladev/ai)
+├── cybersecurity/                     # SecurityPost (GET /doiceladev/cybersecurity)
+├── tutorials/                         # Tutorial + TutorialStep (GET /doiceladev/tutorials)
+├── projects/                          # Project (GET /doiceladev/projects)
+├── infrastructure/                    # InfrastructurePost (GET /doiceladev/infrastructure)
+├── glossary/                          # GlossaryTerm (GET /doiceladev/glossary)
+├── portal/                            # Agregador consolidado (GET /doiceladev/portal)
+├── recommendations/                   # Motor de recomendaciones Jaccard + antifatiga (GET /doiceladev/recommendations)
+├── categories/                        # Directorio transversal Nivel 2 (GET /doiceladev/categories)
+├── tags/                              # Directorio transversal Nivel 3 (GET /doiceladev/tags)
+└── newsletter/                        # Suscripciones idempotentes + Amazon SES (POST /doiceladev/newsletter/*)
 ```
 
-### 3.2 11 Entidades TypeORM en `doiceladev.sqlite`
+### 3.2 14 Tablas Relacionales en `doiceladev.sqlite`
 
-| Tabla | Propósito |
+Los 7 módulos editoriales (`news_articles`, `blog_posts`, `ai_resources`, `security_posts`, `tutorials`, `projects`, `infrastructure_posts`) comparten un núcleo común idéntico (`id`, `slug`, `title`, `excerpt`, `contentMarkdown`, `category`, `tags`, `author`, `language`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt NOT NULL`, `createdAt`, `updatedAt`) e índices B-Tree alineados a `publishedAt`:
+
+| Tabla | Especialización de Dominio |
 |---|---|
-| `news_articles` | Noticias con `isBreaking`, `sourceUrl`, `readTimeMinutes`, `views`, `likes` |
-| `blog_posts` | Ensayos con `series`, `tableOfContents`, `readTimeMinutes`, `views`, `likes` |
-| `forum_topics` | Hilos con `isSolved`, `isPinned`, `repliesCount`, `views` |
+| `news_articles` | `isBreaking`, `sourceUrl` (fuente primaria verificable) |
+| `blog_posts` | `subtitle`, `series`; categorías personales (`lessons`, `postmortems`, `opinion`, `career`, `journal`) |
+| `forum_topics` | Hilos comunitarios con `isSolved`, `isPinned`, `repliesCount`, `views` |
 | `forum_replies` | Respuestas con FK `topicId`, `parentId` (anidado), `isAcceptedAnswer`, `likes` |
-| `ai_resources` | Catálogo con `type` (`llm`, `agent`, `framework`, `mcp_server`, `tool`), `provider`, `author`, `license` |
-| `security_posts` | Avisos técnicos y guías de bastionado con `category`, `cveId`, `remediation`, `author` |
-| `tutorials` | Guías paso a paso con `category`, `prerequisites`, `author`, `techStack` |
+| `ai_resources` | `provider`, `license`, `documentationUrl`, `paperUrl`, `githubUrl` |
+| `security_posts` | `cveId`, `affectedSystems`, `remediation` |
+| `tutorials` | `prerequisites`, `techStack` (+ relación `1:N` con `tutorial_steps`) |
 | `tutorial_steps` | Pasos con FK `tutorialId`, `stepOrder`, `codeSnippet`, `codeLanguage` |
-| `projects` | Showcase con `status`, `featured`, `stars`, `author`, `repoUrl`, `liveUrl` |
-| `infrastructure_posts` | Guías de infraestructura con `category`, `specs`, `techStack`, `author`, `views`, `likes` |
-| `glossary_terms` | Catálogo bilingüe de conceptos técnicos interactivos con `aliases`, `shortDefinition`, `keyDifference` |
+| `projects` | `techStack`, `repoUrl`, `liveUrl`, `status`, `stars` |
+| `infrastructure_posts` | `techStack`, `specs` (JSON de entorno/hardware) |
+| `glossary_terms` | Catálogo bilingüe interactivo con `aliases`, `shortDefinition`, `keyDifference` |
+| `tags` / `content_tags` | Vocabulario técnico controlado y tabla puente polimórfica para Nivel 3 y recomendaciones |
+| `newsletter_subscribers` | Registro idempotente de suscriptores con `status`, `unsubscribeToken`, `source`, `language` |
 
 ### 3.3 Arquitectura Taxonómica Oficial y Regla de Presentación de Metadatos
 Toda publicación, recurso o registro técnico dentro del ecosistema de DoicelaDev opera estrictamente bajo las siguientes fuentes de datos físicas en `doiceladev.sqlite`:

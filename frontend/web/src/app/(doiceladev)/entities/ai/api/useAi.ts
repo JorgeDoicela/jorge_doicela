@@ -42,11 +42,11 @@ export function useAi(category?: string, search: string = '') {
     category,
     search,
     searchKeys: [
-      { name: 'name', weight: 2.5 },
       { name: 'title', weight: 2.5 },
       { name: 'tags', weight: 1.8 },
       { name: 'category', weight: 1.2 },
-      { name: 'description', weight: 0.8 },
+      { name: 'provider', weight: 1.0 },
+      { name: 'excerpt', weight: 0.8 },
     ],
   });
 

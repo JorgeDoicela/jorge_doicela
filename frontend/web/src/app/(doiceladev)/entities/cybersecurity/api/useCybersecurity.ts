@@ -46,6 +46,7 @@ export function useCybersecurity(
     search,
     searchKeys: [
       { name: 'title', weight: 2.5 },
+      { name: 'cveId', weight: 2.0 },
       { name: 'tags', weight: 1.8 },
       { name: 'category', weight: 1.2 },
       { name: 'excerpt', weight: 0.8 },

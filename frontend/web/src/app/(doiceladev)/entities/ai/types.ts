@@ -10,10 +10,10 @@ export type AiCategory =
 export interface AiResource {
   id: number;
   slug: string;
-  name: string;
+  title: string;
   category: AiCategory;
   provider: string;
-  description: string;
+  excerpt: string;
   contentMarkdown: string;
   license: string;
   documentationUrl?: string;
@@ -26,7 +26,7 @@ export interface AiResource {
   likes: number;
   featured?: boolean;
   orderPriority?: number;
-  publishedAt?: string;
+  publishedAt: string;
   createdAt: string;
   updatedAt: string;
 }

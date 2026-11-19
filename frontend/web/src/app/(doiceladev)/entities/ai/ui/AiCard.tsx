@@ -25,12 +25,12 @@ export function AiCard({ resource, priority = false }: AiCardProps) {
   return (
     <DoiceladevCard
       href={`/ai/${resource.slug}`}
-      title={resource.name}
+      title={resource.title}
       category="ai"
       coverImage={resource.coverImage}
       categoryMeta={metaText}
       topicCategory={resource.category}
-      excerpt={resource.description}
+      excerpt={resource.excerpt}
       priority={priority}
       accentHoverColor="group-hover:text-purple-300"
     />

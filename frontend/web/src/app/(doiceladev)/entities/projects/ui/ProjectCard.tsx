@@ -24,12 +24,12 @@ export function ProjectCard({ project, priority = false }: ProjectCardProps) {
   return (
     <DoiceladevCard
       href={`/projects/${project.slug}`}
-      title={project.name}
+      title={project.title}
       category="projects"
       coverImage={project.coverImage}
       categoryMeta={metaText}
       topicCategory={project.category}
-      excerpt={project.description}
+      excerpt={project.excerpt}
       priority={priority}
       accentHoverColor="group-hover:text-blue-300"
     />

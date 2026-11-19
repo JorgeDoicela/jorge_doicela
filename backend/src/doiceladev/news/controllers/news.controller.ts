@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Delete,
-  Body,
-  Param,
-  Query,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { NewsService } from '../services/news.service';
-import { CreateNewsDto } from '../dto/create-news.dto';
 import { GetNewsQueryDto } from '../dto/get-news-query.dto';
 
 @Controller('doiceladev/news')
@@ -32,16 +22,5 @@ export class NewsController {
     @Query('lang') lang?: string,
   ) {
     return this.newsService.findOne(idOrSlug, lang);
-  }
-
-  @Post()
-  async create(@Body() createNewsDto: CreateNewsDto) {
-    return this.newsService.create(createNewsDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    await this.newsService.remove(id);
-    return { success: true };
   }
 }

@@ -108,6 +108,7 @@ export default async function InfrastructureDetailPage({ params }: Params) {
             ? { label: tMeta('techStack'), items: techList }
             : undefined
         }
+        align={post.metaAlign}
       />
 
       <MarkdownRenderer

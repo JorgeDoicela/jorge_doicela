@@ -93,6 +93,18 @@ export type GlossaryCategory =
 // Interfaces de los corpus JSON
 // ─────────────────────────────────────────────────────────────────────────────
 
+export type MetaAlignSeed =
+  | 'left'
+  | 'center'
+  | 'right'
+  | {
+      title?: 'left' | 'center' | 'right';
+      labels?: 'left' | 'center' | 'right';
+      values?: 'left' | 'center' | 'right';
+      badges?: 'left' | 'center' | 'right';
+      links?: 'left' | 'center' | 'right';
+    };
+
 interface NewsSeedItem {
   slug: string;
   title: string;
@@ -104,6 +116,7 @@ interface NewsSeedItem {
   category: NewsCategory;
   tags: string; // CSV usado para sembrar content_tags
   language?: string;
+  metaAlign?: MetaAlignSeed;
   coverImage?: string;
   views: number;
   likes: number;
@@ -123,6 +136,7 @@ interface BlogSeedItem {
   category: BlogCategory;
   tags: string;
   language?: string;
+  metaAlign?: MetaAlignSeed;
   series?: string;
   coverImage?: string;
   views: number;
@@ -143,6 +157,7 @@ interface ForumSeedData {
     category: ForumCategory;
     tags?: string;
     language?: string;
+    metaAlign?: MetaAlignSeed;
     coverImage?: string;
     pollQuestion?: string;
     isSolved: boolean;
@@ -187,6 +202,7 @@ interface AiSeedItem {
   githubUrl?: string;
   tags: string;
   language?: string;
+  metaAlign?: MetaAlignSeed;
   coverImage?: string;
   views: number;
   likes: number;
@@ -208,6 +224,7 @@ interface SecuritySeedItem {
   author: string;
   tags: string;
   language?: string;
+  metaAlign?: MetaAlignSeed;
   coverImage?: string;
   views: number;
   likes: number;
@@ -230,6 +247,7 @@ interface TutorialsSeedData {
     author: string;
     tags: string;
     language?: string;
+    metaAlign?: MetaAlignSeed;
     coverImage?: string;
     views: number;
     likes: number;
@@ -260,6 +278,7 @@ interface ProjectSeedItem {
   tags: string;
   author: string;
   language?: string;
+  metaAlign?: MetaAlignSeed;
   coverImage?: string;
   repoUrl?: string;
   liveUrl?: string;
@@ -285,6 +304,7 @@ interface InfrastructureSeedItem {
   author?: string;
   tags?: string;
   language?: string;
+  metaAlign?: MetaAlignSeed;
   coverImage?: string;
   views?: number;
   likes?: number;
@@ -385,6 +405,7 @@ export function seedDoiceladev(
                     CHECK (category IN ('frameworks','cloud','ai','devops','security','web','tools','databases')),
       tags          TEXT    NOT NULL DEFAULT 'news,tech',
       language      TEXT    NOT NULL DEFAULT 'es',
+      metaAlign     TEXT    NOT NULL DEFAULT 'left',
       coverImage    TEXT,
       views         INTEGER NOT NULL DEFAULT 0,
       likes         INTEGER NOT NULL DEFAULT 0,
@@ -411,6 +432,7 @@ export function seedDoiceladev(
                     CHECK (category IN ('lessons','postmortems','opinion','career','journal')),
       tags          TEXT    NOT NULL DEFAULT 'architecture,clean-code',
       language      TEXT    NOT NULL DEFAULT 'es',
+      metaAlign     TEXT    NOT NULL DEFAULT 'left' CHECK (metaAlign IN ('left','center')),
       series        TEXT,
       coverImage    TEXT,
       views         INTEGER NOT NULL DEFAULT 0,
@@ -438,6 +460,7 @@ export function seedDoiceladev(
                     CHECK (category IN ('architecture','devops','ai','frontend','backend','help','general')),
       tags          TEXT    NOT NULL DEFAULT 'forum,debate',
       language      TEXT    NOT NULL DEFAULT 'es',
+      metaAlign     TEXT    NOT NULL DEFAULT 'left',
       coverImage    TEXT,
       pollQuestion  TEXT,
       isSolved      INTEGER NOT NULL DEFAULT 0,
@@ -498,6 +521,7 @@ export function seedDoiceladev(
       githubUrl        TEXT,
       tags             TEXT    NOT NULL DEFAULT 'ai,llm',
       language         TEXT    NOT NULL DEFAULT 'es',
+      metaAlign        TEXT    NOT NULL DEFAULT 'left',
       coverImage       TEXT,
       views            INTEGER NOT NULL DEFAULT 0,
       likes            INTEGER NOT NULL DEFAULT 0,
@@ -527,6 +551,7 @@ export function seedDoiceladev(
       author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       tags            TEXT    NOT NULL DEFAULT 'cybersecurity,devsecops',
       language        TEXT    NOT NULL DEFAULT 'es',
+      metaAlign       TEXT    NOT NULL DEFAULT 'left',
       coverImage      TEXT,
       views           INTEGER NOT NULL DEFAULT 0,
       likes           INTEGER NOT NULL DEFAULT 0,
@@ -555,6 +580,7 @@ export function seedDoiceladev(
       author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       tags            TEXT    NOT NULL DEFAULT 'tutorial,guide',
       language        TEXT    NOT NULL DEFAULT 'es',
+      metaAlign       TEXT    NOT NULL DEFAULT 'left',
       coverImage      TEXT,
       views           INTEGER NOT NULL DEFAULT 0,
       likes           INTEGER NOT NULL DEFAULT 0,
@@ -598,6 +624,7 @@ export function seedDoiceladev(
       tags            TEXT    NOT NULL DEFAULT 'project,open-source',
       author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       language        TEXT    NOT NULL DEFAULT 'es',
+      metaAlign       TEXT    NOT NULL DEFAULT 'left',
       coverImage      TEXT,
       repoUrl         TEXT,
       liveUrl         TEXT,
@@ -632,6 +659,7 @@ export function seedDoiceladev(
       author          TEXT    NOT NULL DEFAULT 'Jorge Doicela',
       tags            TEXT    NOT NULL DEFAULT 'infrastructure,cloud,sysadmin',
       language        TEXT    NOT NULL DEFAULT 'es',
+      metaAlign       TEXT    NOT NULL DEFAULT 'left',
       coverImage      TEXT,
       views           INTEGER NOT NULL DEFAULT 0,
       likes           INTEGER NOT NULL DEFAULT 0,
@@ -725,15 +753,21 @@ export function seedDoiceladev(
     }
   };
 
+  const serializeMetaAlign = (val: unknown): string => {
+    if (!val) return 'left';
+    if (typeof val === 'string') return val;
+    return JSON.stringify(val);
+  };
+
   const seedTransaction = db.transaction(() => {
     // ── 1. Noticias ─────────────────────────────────────────────────────────
     const insertNews = db.prepare(`
       INSERT INTO news_articles
         (slug, title, excerpt, contentMarkdown, sourceUrl, isBreaking, featured, orderPriority,
-         author, category, tags, language, coverImage, views, likes, publishedAt, updatedAt)
+         author, category, tags, language, metaAlign, coverImage, views, likes, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @excerpt, @contentMarkdown, @sourceUrl, @isBreaking, @featured,
-         @orderPriority, @author, @category, @tags, @language, @coverImage, @views, @likes, @publishedAt, @updatedAt)
+         @orderPriority, @author, @category, @tags, @language, @metaAlign, @coverImage, @views, @likes, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title         = excluded.title,
         excerpt       = excluded.excerpt,
@@ -745,6 +779,7 @@ export function seedDoiceladev(
         author        = excluded.author,
         category      = excluded.category,
         tags          = excluded.tags,
+        metaAlign     = excluded.metaAlign,
         coverImage    = excluded.coverImage,
         publishedAt   = excluded.publishedAt,
         updatedAt     = excluded.updatedAt
@@ -762,6 +797,7 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         publishedAt: pubDate,
         updatedAt: updDate,
       });
@@ -783,10 +819,10 @@ export function seedDoiceladev(
     const insertBlog = db.prepare(`
       INSERT INTO blog_posts
         (slug, title, subtitle, excerpt, contentMarkdown, author, category, tags, language,
-         series, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
+         series, metaAlign, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @subtitle, @excerpt, @contentMarkdown, @author, @category, @tags, @language,
-         @series, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
+         @series, @metaAlign, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         subtitle        = excluded.subtitle,
@@ -796,6 +832,7 @@ export function seedDoiceladev(
         category        = excluded.category,
         tags            = excluded.tags,
         series          = excluded.series,
+        metaAlign       = excluded.metaAlign,
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
@@ -813,6 +850,7 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         publishedAt: pubDate,
         updatedAt: updDate,
         subtitle: item.subtitle ?? null,
@@ -836,10 +874,10 @@ export function seedDoiceladev(
     // ── 3. Foros ────────────────────────────────────────────────────────────
     const insertTopic = db.prepare(`
       INSERT INTO forum_topics
-        (id, slug, title, content, author, category, tags, language, coverImage, pollQuestion,
+        (id, slug, title, content, author, category, tags, language, metaAlign, coverImage, pollQuestion,
          isSolved, isPinned, orderPriority, repliesCount, views, createdAt, updatedAt)
       VALUES
-        (@id, @slug, @title, @content, @author, @category, @tags, @language, @coverImage, @pollQuestion,
+        (@id, @slug, @title, @content, @author, @category, @tags, @language, @metaAlign, @coverImage, @pollQuestion,
          @isSolved, @isPinned, @orderPriority, @repliesCount, @views, @createdAt, @updatedAt)
       ON CONFLICT(id) DO UPDATE SET
         slug          = excluded.slug,
@@ -849,6 +887,7 @@ export function seedDoiceladev(
         category      = excluded.category,
         tags          = excluded.tags,
         language      = excluded.language,
+        metaAlign     = excluded.metaAlign,
         coverImage    = excluded.coverImage,
         pollQuestion  = excluded.pollQuestion,
         isSolved      = excluded.isSolved,
@@ -898,6 +937,7 @@ export function seedDoiceladev(
         isPinned: topic.isPinned ? 1 : 0,
         orderPriority: topic.orderPriority || 0,
         language: topic.language || 'es',
+        metaAlign: serializeMetaAlign(topic.metaAlign),
         createdAt: crDate,
         updatedAt: upDate,
       });
@@ -926,11 +966,11 @@ export function seedDoiceladev(
     const insertAi = db.prepare(`
       INSERT INTO ai_resources
         (slug, title, category, provider, author, excerpt, contentMarkdown, license,
-         documentationUrl, paperUrl, githubUrl, tags, language, coverImage,
+         documentationUrl, paperUrl, githubUrl, tags, language, metaAlign, coverImage,
          views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @category, @provider, @author, @excerpt, @contentMarkdown, @license,
-         @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @coverImage,
+         @documentationUrl, @paperUrl, @githubUrl, @tags, @language, @metaAlign, @coverImage,
          @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
@@ -944,6 +984,7 @@ export function seedDoiceladev(
         paperUrl        = excluded.paperUrl,
         githubUrl       = excluded.githubUrl,
         tags            = excluded.tags,
+        metaAlign       = excluded.metaAlign,
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
@@ -961,6 +1002,7 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         publishedAt: pubDate,
         updatedAt: updDate,
         documentationUrl: item.documentationUrl ?? null,
@@ -986,11 +1028,11 @@ export function seedDoiceladev(
     const insertSec = db.prepare(`
       INSERT INTO security_posts
         (slug, title, category, cveId, affectedSystems, remediation,
-         excerpt, contentMarkdown, author, tags, language, coverImage,
+         excerpt, contentMarkdown, author, tags, language, metaAlign, coverImage,
          views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @category, @cveId, @affectedSystems, @remediation,
-         @excerpt, @contentMarkdown, @author, @tags, @language, @coverImage,
+         @excerpt, @contentMarkdown, @author, @tags, @language, @metaAlign, @coverImage,
          @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
@@ -1002,6 +1044,7 @@ export function seedDoiceladev(
         contentMarkdown = excluded.contentMarkdown,
         author          = excluded.author,
         tags            = excluded.tags,
+        metaAlign       = excluded.metaAlign,
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
@@ -1019,6 +1062,7 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         publishedAt: pubDate,
         updatedAt: updDate,
         cveId: item.cveId ?? null,
@@ -1044,10 +1088,10 @@ export function seedDoiceladev(
     const insertTutorial = db.prepare(`
       INSERT INTO tutorials
         (id, slug, title, excerpt, contentMarkdown, category, prerequisites,
-         techStack, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
+         techStack, author, tags, language, metaAlign, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@id, @slug, @title, @excerpt, @contentMarkdown, @category, @prerequisites,
-         @techStack, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
+         @techStack, @author, @tags, @language, @metaAlign, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         excerpt         = excluded.excerpt,
@@ -1057,6 +1101,7 @@ export function seedDoiceladev(
         techStack       = excluded.techStack,
         author          = excluded.author,
         tags            = excluded.tags,
+        metaAlign       = excluded.metaAlign,
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
@@ -1089,6 +1134,7 @@ export function seedDoiceladev(
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         publishedAt: pubDate,
         updatedAt: updDate,
         prerequisites: item.prerequisites ?? null,
@@ -1106,10 +1152,10 @@ export function seedDoiceladev(
     // ── 7. Proyectos ────────────────────────────────────────────────────────
     const insertProj = db.prepare(`
       INSERT INTO projects
-        (slug, title, category, excerpt, contentMarkdown, techStack, tags, author, language, coverImage,
+        (slug, title, category, excerpt, contentMarkdown, techStack, tags, author, language, metaAlign, coverImage,
          repoUrl, liveUrl, status, featured, orderPriority, stars, views, likes, publishedAt, updatedAt)
       VALUES
-        (@slug, @title, @category, @excerpt, @contentMarkdown, @techStack, @tags, @author, @language, @coverImage,
+        (@slug, @title, @category, @excerpt, @contentMarkdown, @techStack, @tags, @author, @language, @metaAlign, @coverImage,
          @repoUrl, @liveUrl, @status, @featured, @orderPriority, @stars, @views, @likes, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
@@ -1119,6 +1165,7 @@ export function seedDoiceladev(
         techStack       = excluded.techStack,
         tags            = excluded.tags,
         author          = excluded.author,
+        metaAlign       = excluded.metaAlign,
         coverImage      = excluded.coverImage,
         repoUrl         = excluded.repoUrl,
         liveUrl         = excluded.liveUrl,
@@ -1146,6 +1193,7 @@ export function seedDoiceladev(
         orderPriority: item.orderPriority || 0,
         likes: item.likes || 0,
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         publishedAt: pubDate,
         updatedAt: updDate,
       });
@@ -1168,10 +1216,10 @@ export function seedDoiceladev(
     const insertInfra = db.prepare(`
       INSERT INTO infrastructure_posts
         (slug, title, excerpt, category, techStack,
-         specs, contentMarkdown, author, tags, language, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
+         specs, contentMarkdown, author, tags, language, metaAlign, coverImage, views, likes, featured, orderPriority, publishedAt, updatedAt)
       VALUES
         (@slug, @title, @excerpt, @category, @techStack,
-         @specs, @contentMarkdown, @author, @tags, @language, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
+         @specs, @contentMarkdown, @author, @tags, @language, @metaAlign, @coverImage, @views, @likes, @featured, @orderPriority, @publishedAt, @updatedAt)
       ON CONFLICT(slug, language) DO UPDATE SET
         title           = excluded.title,
         excerpt         = excluded.excerpt,
@@ -1181,6 +1229,7 @@ export function seedDoiceladev(
         contentMarkdown = excluded.contentMarkdown,
         author          = excluded.author,
         tags            = excluded.tags,
+        metaAlign       = excluded.metaAlign,
         coverImage      = excluded.coverImage,
         featured        = excluded.featured,
         orderPriority   = excluded.orderPriority,
@@ -1198,6 +1247,7 @@ export function seedDoiceladev(
         author: item.author || 'Jorge Doicela',
         tags: item.tags || 'infrastructure,cloud,sysadmin',
         language: item.language || 'es',
+        metaAlign: serializeMetaAlign(item.metaAlign),
         views: item.views || 0,
         likes: item.likes || 0,
         featured: item.featured ? 1 : 0,

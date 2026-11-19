@@ -11,6 +11,7 @@ export interface NewsArticle {
   author: string;
   category: string;
   tags: string;
+  metaAlign?: string;
   coverImage?: string;
   views: number;
   likes: number;

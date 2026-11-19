@@ -28,6 +28,7 @@ export interface ForumTopic {
   tags?: string;
   coverImage?: string;
   pollQuestion?: string;
+  metaAlign?: string;
   isSolved: boolean;
   isPinned: boolean;
   repliesCount: number;

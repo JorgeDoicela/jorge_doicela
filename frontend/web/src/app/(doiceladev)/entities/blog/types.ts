@@ -15,6 +15,7 @@ export interface BlogPost {
   author: string;
   category: BlogCategory;
   tags: string;
+  metaAlign?: string;
   series?: string;
   coverImage?: string;
   views: number;

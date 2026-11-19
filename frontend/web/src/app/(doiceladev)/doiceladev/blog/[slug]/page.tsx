@@ -72,6 +72,7 @@ export default async function BlogDetailPage({ params }: Params) {
         rows={
           post.series ? [{ label: tMeta('series'), value: post.series }] : []
         }
+        align={post.metaAlign}
       />
 
       <MarkdownRenderer

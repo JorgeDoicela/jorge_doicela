@@ -82,6 +82,7 @@ export default async function TutorialDetailPage({ params }: Params) {
             ? { label: tMeta('techStack'), items: techList }
             : undefined
         }
+        align={tutorial.metaAlign}
       />
 
       {tutorial.steps && tutorial.steps.length > 0 ? (

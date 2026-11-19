@@ -65,6 +65,9 @@ export class Project {
   @Column({ default: 'active' })
   status: ProjectStatus;
 
+  @Column({ default: 'left' })
+  metaAlign: string;
+
   @Column({ default: false })
   featured: boolean;
 

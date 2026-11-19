@@ -21,6 +21,7 @@ export interface AiResource {
   githubUrl?: string;
   tags: string;
   author: string;
+  metaAlign?: string;
   coverImage?: string;
   views: number;
   likes: number;

@@ -30,6 +30,7 @@ export interface Tutorial {
   techStack: string;
   author: string;
   tags: string;
+  metaAlign?: string;
   coverImage?: string;
   views: number;
   likes: number;

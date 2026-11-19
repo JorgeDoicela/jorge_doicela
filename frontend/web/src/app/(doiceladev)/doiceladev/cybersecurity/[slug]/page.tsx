@@ -78,6 +78,7 @@ export default async function CybersecurityDetailPage({ params }: Params) {
             ? [{ label: tMeta('remediation'), value: post.remediation }]
             : []),
         ]}
+        align={post.metaAlign}
       />
 
       <MarkdownRenderer

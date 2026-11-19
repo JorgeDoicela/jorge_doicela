@@ -56,6 +56,9 @@ export class InfrastructurePost {
   @Column({ default: 'es' })
   language: string;
 
+  @Column({ default: 'left' })
+  metaAlign: string;
+
   @Column({ nullable: true })
   coverImage?: string;
 

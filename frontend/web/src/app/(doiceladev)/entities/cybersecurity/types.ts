@@ -17,6 +17,7 @@ export interface SecurityPost {
   contentMarkdown: string;
   author: string;
   tags: string;
+  metaAlign?: string;
   coverImage?: string;
   views: number;
   likes: number;

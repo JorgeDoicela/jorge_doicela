@@ -22,6 +22,7 @@ export interface Project {
   liveUrl?: string;
   status: ProjectStatus;
   featured: boolean;
+  metaAlign?: string;
   stars: number;
   views: number;
   likes: number;

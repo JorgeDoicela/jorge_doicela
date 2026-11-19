@@ -89,6 +89,7 @@ export default async function AiDetailPage({ params }: Params) {
             : []),
         ]}
         links={links}
+        align={resource.metaAlign}
       />
 
       <MarkdownRenderer

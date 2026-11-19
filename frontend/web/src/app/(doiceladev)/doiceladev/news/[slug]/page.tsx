@@ -80,6 +80,7 @@ export default async function NewsDetailPage({ params }: Params) {
             ? [{ label: tMeta('primarySource'), href: article.sourceUrl }]
             : []
         }
+        align={article.metaAlign}
       />
     </DoiceladevArticleLayout>
   );

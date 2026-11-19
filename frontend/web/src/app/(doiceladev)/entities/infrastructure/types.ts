@@ -47,6 +47,7 @@ export interface InfrastructurePost {
   author: string;
   tags: string;
   language: string;
+  metaAlign?: string;
   coverImage?: string;
   views: number;
   likes: number;

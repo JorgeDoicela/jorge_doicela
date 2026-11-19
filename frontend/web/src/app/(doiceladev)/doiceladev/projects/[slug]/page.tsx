@@ -85,6 +85,7 @@ export default async function ProjectDetailPage({ params }: Params) {
         title={tMeta('projectBrief')}
         rows={rows}
         badges={hasTech ? { label: tMeta('techStack'), items: techList } : undefined}
+        align={project.metaAlign}
       />
 
       <MarkdownRenderer

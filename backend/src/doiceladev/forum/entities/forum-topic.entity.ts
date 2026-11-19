@@ -47,6 +47,9 @@ export class ForumTopic {
   @Column({ default: 'es' })
   language: string;
 
+  @Column({ default: 'left' })
+  metaAlign: string;
+
   @Column({ nullable: true })
   coverImage?: string;
 

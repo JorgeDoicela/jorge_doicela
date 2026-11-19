@@ -90,6 +90,7 @@ export default async function ForumTopicDetailPage({ params }: Params) {
       <ArticleMetaPanel
         title={tMeta('forumBrief')}
         rows={forumRows}
+        align={topic.metaAlign}
       />
 
       <MarkdownRenderer content={topic.content} glossaryTerms={glossary} />

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useId, useMemo, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
-import { useTheme } from 'next-themes';
+import { useTheme } from '../../lib/theme-context';
 import {
   AlertCircle,
   Loader2,

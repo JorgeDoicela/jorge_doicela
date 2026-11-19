@@ -1,333 +1,372 @@
 > [!IMPORTANT]
 > **Resumen Ejecutivo:**  
-> Contratar una VPN comercial no elimina el riesgo de interceptación ni el registro de metadatos; únicamente traslada la confianza desde tu proveedor de internet hacia un tercero opaco que observa todo tu tráfico saliente. Desplegar un nodo propio con WireGuard sobre Debian o Ubuntu resuelve este problema ejecutando el cifrado directamente en el espacio de kernel de Linux en menos de **4,000 líneas de código**, logrando una huella operativa inferior a **10 MB de RAM**, latencia mínima sobre UDP y seguridad criptográfica moderna mediante el protocolo Noise_IKpsk2 (Curve25519, ChaCha20-Poly1305 y BLAKE2s). Este caso de ingeniería detalla la arquitectura completa del túnel, el enrutamiento por clave criptográfica, la integración limpia con UFW y Netfilter, la prevención de fugas DNS con un resolver privado Unbound y la provisión sin rastros de clientes de escritorio y móviles.
+> Contratar una VPN comercial no elimina la exposición de tu tráfico: simplemente traslada el punto de observación desde tu proveedor de Internet hacia un tercero cuya infraestructura no puedes auditar. Este proyecto documenta la arquitectura, el despliegue reproducible y la operación en producción de un servidor VPN privado autoalojado con WireGuard sobre Debian 13 y Ubuntu 24.04 LTS, operando íntegramente en espacio de kernel Linux con criptografía Noise (`IKpsk2`), resolución DNS recursiva local con Unbound para erradicar fugas, enrutamiento Dual-Stack IPv4/IPv6 y endurecimiento perimetral con UFW y Netfilter. El resultado es un túnel silencioso ante escaneos externos con consumo residente inferior a **15 MB de RAM**, latencia agregada menor a **2 ms** y capacidad de saturar enlaces Gigabit sin cambios de contexto entre espacio de usuario y kernel.
 
 ---
 
 ## Modelo Conceptual: Qué Ocurre Realmente en una Red Pública y Cómo Opera un Túnel Propio
 
-Cuando un dispositivo se conecta a una red Wi-Fi abierta en un aeropuerto, cafetería o hotel, el router local y el proveedor de red controlan el primer salto de cada paquete. Incluso si visitas sitios web con HTTPS, el contenido del cuerpo viaja cifrado, pero la red local sigue observando qué dominios consultas mediante tráfico DNS en texto claro, el nombre del servidor destino en el saludo TLS (campo SNI), el volumen de datos intercambiado y la hora exacta de cada conexión.
+Cuando te conectas a una red Wi-Fi pública (un aeropuerto, una cafetería o un hotel) o navegas desde un operador local, cada paquete que abandona tu dispositivo viaja con metadatos visibles antes de llegar a destino. Incluso cuando el sitio web usa HTTPS, el punto de acceso y el operador pueden observar:
 
-Una red privada virtual propia funciona como un sobre blindado dentro de una caja opaca desde tu computadora o teléfono hasta un servidor bajo tu control exclusivo (por ejemplo, un servidor privado virtual en la nube o una placa Linux en tu red doméstica):
+* **Consultas DNS en texto claro:** Cada dominio que visitas queda registrado si el equipo resuelve nombres mediante el servidor DNS asignado por DHCP.
+* **SNI (Server Name Indication):** El nombre de dominio al que te conectas durante la negociación TLS tradicional.
+* **Patrones de volumen, destino y horarios:** Direcciones IP de destino, duración de las sesiones y puertos utilizados.
 
-* **Encapsulación en el dispositivo origen:** Antes de que un paquete IP salga por la tarjeta Wi-Fi o celular, la interfaz virtual `wg0` cifra por completo tanto la carga útil como las cabeceras internas y envuelve el resultado dentro de un datagrama UDP estándar.
-* **Tránsito opaco por redes no confiables:** Los routers intermedios de la cafetería y los operadores locales solo observan datagramas UDP cifrados viajando hacia una única dirección IP y puerto (`51820`). No pueden inspeccionar los dominios consultados, inyectar anuncios HTTP ni alterar un solo bit sin invalidar la etiqueta de autenticación criptográfica.
-* **Desencapsulación y salida en kernel:** Tu servidor recibe el datagrama UDP, valida su firma criptográfica directamente dentro del kernel de Linux, extrae el paquete IP original y lo reenvía hacia Internet sustituyendo la IP privada del túnel por su propia IP pública mediante NAT Masquerade.
+Una analogía cotidiana ayuda a visualizar la diferencia. Navegar sin túnel es como enviar cartas en sobres cerrados a través de una oficina postal local: nadie lee el texto interior (HTTPS), pero cualquier empleado ve el remitente, el destinatario, el grosor del sobre y a qué hora lo envías. Un túnel WireGuard autoalojado equivale a colocar todos tus sobres dentro de una valija blindada e indescifrable que sale desde tu dispositivo directo hasta tu propio servidor Linux; la red intermedia solo ve paquetes UDP cifrados entre tu equipo y un único destino, mientras tu servidor abre la valija, resuelve los nombres internamente y entrega cada petición a Internet desde su propia interfaz.
 
-### Por qué WireGuard Frente a OpenVPN o IPsec
+### Por Qué WireGuard Frente a OpenVPN o IPsec
 
-Durante más de veinte años, los despliegues VPN dependieron de demonios en espacio de usuario como OpenVPN o pilas complejas de negociación como IPsec. WireGuard replanteó el plano de datos bajo el principio de minimalismo auditable y primitivas criptográficas fijas:
+A diferencia de soluciones históricas basadas en demonios pesados en espacio de usuario y negociación compleja de cifrados, WireGuard fue diseñado e integrado directamente en el kernel oficial de Linux (desde la versión **5.6**) con una superficie de ataque mínima: alrededor de **4.000 líneas de código** auditables frente a cientos de miles en OpenVPN o strongSwan.
 
-| Parámetro Técnico | WireGuard | OpenVPN | IPsec (strongSwan / IKEv2) |
+| Criterio Técnico | OpenVPN (TLS/UDP) | IPsec / IKEv2 (strongSwan) | WireGuard (Kernel Linux) |
 |---|---|---|---|
-| Base de código fuente | ~4,000 líneas (auditable por una persona) | > 100,000 líneas + OpenSSL | > 400,000 líneas |
-| Plano de ejecución | Espacio de kernel Linux nativo | Espacio de usuario (`tun` + cambios de contexto) | Mixto (Kernel XFRM + demonio IKE) |
-| Primitivas criptográficas | Fijas y modernas (Curve25519, ChaCha20-Poly1305, BLAKE2s) | Negociables (riesgo de *downgrade* por mala configuración) | Negociables (múltiples suites heredadas) |
-| Consumo en reposo | < 10 MB de RAM, 0% CPU sin tráfico | ~30 - 80 MB por proceso | ~25 - 50 MB |
-| Cambio de red (Wi-Fi a 4G) | Transparente e instantáneo sin reconexión | Requiere renegociación TLS (3 a 10 s) | Requiere MOBIKE y reconexión frecuente |
-| Visibilidad ante escáneres | Silencioso: descarta paquetes sin firma sin responder | Responde al saludo TLS en el puerto abierto | Responde paquetes IKE visibles al escaneo |
+| Espacio de ejecución | Espacio de usuario (`tun` + copias de memoria) | Kernel + demonio IKE en espacio de usuario | 100% en espacio de kernel Linux |
+| Tamaño de base de código | ~100.000+ líneas (+ OpenSSL) | ~400.000+ líneas | ~4.000 líneas auditables |
+| Agilidad criptográfica | Negociable (vulnerable a degradación si se configura mal) | Múltiples suites y perfiles complejos | Primitivas fijas y versionadas (Noise `IKpsk2`) |
+| Visibilidad ante escaneos | Responde al puerto abierto en escaneos TCP/UDP | Responde a paquetes IKE en puerto `500`/`4500` | Silencio total (DROP ante cualquier paquete sin firma válida) |
+| Tiempo de reconexión móvil | 2 a 8 segundos al cambiar de Wi-Fi a 4G/5G | 1 a 4 segundos | Instantáneo (*roaming* transparente por clave pública) |
+| Consumo base de memoria | 35 a 80 MB por instancia | 40 a 90 MB | < 15 MB incluyendo resolver DNS Unbound |
 
 ---
 
 ## Glosario Técnico de Arquitectura VPN
 
-| Término | Definición Operativa |
-|---|---|
-| Interfaz virtual wg0 | Dispositivo de red lógico en el kernel de Linux encargado de cifrar el tráfico saliente y descifrar los datagramas UDP válidos provenientes de los pares autorizados. |
-| Cryptokey Routing (AllowedIPs) | Tabla bidireccional propia de WireGuard que asocia una clave pública con subredes CIDR específicas: define qué tráfico se envía a un par y qué IP de origen se acepta de él. |
-| Protocolo Noise_IKpsk2 | Esquema de intercambio autenticado de llaves en un único viaje de ida y vuelta (*1-RTT*) con secreto perfecto hacia adelante y mezcla opcional de clave precompartida. |
-| NAT Masquerade | Traducción dinámica de direcciones en Netfilter que reescribe la IP privada del cliente (`10.8.0.2`) por la IP pública del servidor en la interfaz de salida. |
-| Full Tunnel vs. Split Tunnel | En modo completo (`0.0.0.0/0, ::/0`), todo el tráfico de Internet pasa por el túnel; en modo dividido (`10.8.0.0/24`), solo viaja por el túnel el acceso a recursos privados. |
-| MTU | Tamaño máximo en bytes de un paquete sin fragmentación; al descontar las cabeceras de encapsulación UDP y WireGuard, fijar `1420` bytes evita cortes silenciosos en redes móviles. |
+Para seguir cada directiva de configuración y diagnóstico de red sin lagunas previas, estos son los conceptos clave que intervienen en el despliegue:
+
+| Término | Definición Técnica | Papel en Este Proyecto |
+|---|---|---|
+| Interfaz virtual (`wg0`) | Adaptador de red creado por el kernel Linux que cifra y descifra paquetes al vuelo. | Recibe tráfico IP de los clientes y lo encapsula en datagramas UDP cifrados. |
+| Peer | Nodo autorizado en la malla VPN identificado unívocamente por su clave pública Curve25519. | Reemplaza contraseñas y certificados complejos por pares de claves criptográficas. |
+| Cryptokey Routing | Tabla interna que asocia cada clave pública con los prefijos CIDR que tiene permitido enviar y recibir. | Unifica autenticación y enrutamiento: si un paquete viene de una IP no asociada a esa clave, el kernel lo descarta. |
+| Handshake Noise (`IKpsk2`) | Intercambio autenticado de un solo viaje (1-RTT) con secreto precompartido opcional resistente a ataques post-cuánticos. | Establece claves efímeras de sesión cada **120 segundos** para garantizar secreto hacia adelante (*Perfect Forward Secrecy*). |
+| IP Forwarding | Capacidad del kernel Linux para reenviar paquetes recibidos en una interfaz (`wg0`) hacia otra (`eth0`). | Sin habilitar `net.ipv4.ip_forward=1`, los paquetes llegan al servidor pero nunca salen a Internet. |
+| NAT Masquerade | Reescritura de la dirección IP privada de origen del túnel (`10.8.0.x`) por la IP pública del servidor al salir a Internet. | Permite que servidores remotos devuelvan la respuesta al VPS, que luego la traduce de vuelta hacia el cliente correcto vía Conntrack. |
+| MTU (Maximum Transmission Unit) | Tamaño máximo en bytes de un paquete IP que puede atravesar un enlace sin fragmentarse. | Al sumar encabezados UDP + WireGuard (**60 bytes** en IPv4, **80 bytes** en IPv6), un MTU mal ajustado rompe conexiones HTTPS largas. |
+| Split Tunnel vs Full Tunnel | Enrutamiento selectivo de solo ciertas subredes (`10.8.0.0/24`) frente a todo el tráfico (`0.0.0.0/0`). | Permite elegir entre máxima privacidad en Wi-Fi pública (Full) o acceso rápido solo a servidores privados (Split). |
+| Resolver recursivo (Unbound) | Servidor DNS local que consulta directamente a los servidores raíz con validación DNSSEC sin intermediarios comerciales. | Elimina fugas DNS hacia el ISP y bloquea la exposición de dominios consultados. |
 
 ---
 
 ## Arquitectura del Túnel, Enrutamiento y Handshake Silencioso
 
-El siguiente diagrama detalla la trayectoria exacta de un paquete IP desde el navegador del cliente hasta Internet atravesando el espacio de kernel del servidor Linux y las reglas de UFW:
+Todo el tráfico del proyecto fluye por un recorrido determinista desde el dispositivo cliente hasta Internet, sin demonios intermedios en espacio de usuario que dupliquen memoria ni abran puertos innecesarios.
 
 ```mermaid
 flowchart LR
     subgraph Cliente ["Dispositivo Cliente (Laptop / Móvil)"]
-        App["Navegador / Terminal\n(IP origen: 10.8.0.2)"]
-        WGClient["Interfaz wg0\nChaCha20-Poly1305\nMTU: 1420"]
+        App["Navegador / Terminal"] --> WGClient["Interfaz wg0\n10.8.0.2/32\nMTU 1420"]
     end
 
-    subgraph RedPublica ["Red Pública No Confiable (Wi-Fi / 4G)"]
-        UDP["Datagrama UDP :51820\nCarga Cifrada Opaca"]
+    subgraph RedPublica ["Red Pública No Confiable (Wi-Fi / ISP)"]
+        UDP["Datagramas UDP :51820\nChaCha20-Poly1305\n(Tráfico opaco)"]
     end
 
-    subgraph Servidor ["Servidor Linux Debian / Ubuntu (Espacio de Kernel)"]
-        UFW["Perímetro UFW / Netfilter\nPermite únicamente UDP 51820"]
-        WGServer["Módulo Kernel wireguard\nValida Clave Pública + AllowedIPs"]
-        Unbound["Unbound DNS (:53)\nEscucha solo en 10.8.0.1"]
-        Routing["net.ipv4.ip_forward = 1\nCadena FORWARD"]
-        NAT["Regla *nat POSTROUTING\nMASQUERADE en eth0"]
+    subgraph VPS ["Servidor Debian 13 / Ubuntu 24.04"]
+        UFWNode["Netfilter / UFW\nSolo permite UDP :51820"] --> WGServer["Interfaz wg0\n10.8.0.1/24"]
+        WGServer -->|"Consultas :53"| Unbound["Unbound DNS\n10.8.0.1:53\n(Recursivo + DNSSEC)"]
+        WGServer -->|"Tráfico externo"| NAT["NAT Masquerade\n(POSTROUTING -> eth0)"]
     end
 
-    App -->|"Paquete IP plano"| WGClient
-    WGClient -->|"Encapsula en UDP"| UDP
-    UDP --> UFW
-    UFW --> WGServer
-    WGServer -->|"Consultas DNS"| Unbound
-    WGServer -->|"Tráfico web descifrado"| Routing
-    Routing --> NAT
-    NAT -->|"Salida a Internet"| Internet(("Internet / Red Privada"))
+    WGClient --> UDP
+    UDP --> UFWNode
+    NAT --> Internet["Internet Público"]
 ```
 
-### Anatomía de la Autenticación Silenciosa (Stealth)
+### Anatomía Criptográfica y Autenticación Silenciosa (Stealth)
 
-Un puerto TCP abierto con OpenVPN o SSH responde siempre a cualquier escáner de Internet que envíe un paquete `SYN`. WireGuard invierte este comportamiento mediante autenticación silenciosa antes de responder un solo byte:
+WireGuard utiliza una suite criptográfica fija y moderna:
+
+* **Intercambio de claves:** Curve25519 (ECDH) combinado opcionalmente con una clave simétrica precompartida (`PresharedKey` de 256 bits) para resistencia adicional frente a futuras amenazas cuánticas de tipo *harvest now, decrypt later*.
+* **Cifrado autenticado (AEAD):** ChaCha20 para confidencialidad y Poly1305 para integridad de cada paquete, con excelente rendimiento por software incluso en procesadores ARM sin aceleración AES-NI.
+* **Hashing y derivación:** BLAKE2s y HKDF para derivar claves de sesión efímeras rotadas automáticamente cada pocos minutos.
+
+Una propiedad crítica en producción es su comportamiento silencioso ante atacantes externos. Si un escáner masivo como Nmap o Masscan envía sondas al puerto UDP `51820`, el kernel verifica la firma criptográfica del primer paquete contra la lista de claves públicas registradas. Si el paquete no está autenticado por un peer conocido, el kernel aplica DROP silencioso sin responder absolutamente nada: el puerto aparece como `open|filtered` o indistinguible de un puerto cerrado.
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    participant E as Escáner / Atacante
-    participant C as Cliente Autorizado (Clave Privada C)
-    participant S as Servidor WireGuard (UDP 51820)
+    participant Attacker as Escáner Externo (No Autorizado)
+    participant Client as Peer Autorizado (Laptop)
+    participant Kernel as Kernel Linux (WireGuard :51820)
 
-    E->>S: Paquete UDP aleatorio o sondeo de puerto
-    S--xS: Firma MAC ausente o inválida -> DROP silencioso (0 bytes de respuesta)
-    Note over E,S: Para escáneres externos (Nmap), el puerto UDP 51820 figura como open|filtered
+    Attacker->>Kernel: Sonda UDP aleatoria al puerto 51820
+    Note over Kernel: Firma inválida o clave desconocida -> DROP silencioso (0 bytes de respuesta)
 
-    C->>S: Handshake Initiation (Clave Efímera C + Sello temporal + MAC con Clave Pública S)
-    S->>C: Handshake Response (Clave Efímera S + Llaves Simétricas de Sesión)
-    Note over C,S: Túnel activo en 1-RTT (< 5 ms). Rotación automática de llaves cada 120 segundos.
+    Client->>Kernel: Handshake Initiation (Curve25519 + TAI64N timestamp + MAC)
+    Note over Kernel: Verifica clave pública y marca temporal anti-replay
+    Kernel-->>Client: Handshake Response (Claves efímeras de sesión)
+    Client->>Kernel: Paquetes IP encapsulados en ChaCha20-Poly1305
+    Kernel-->>Client: Respuestas cifradas (Rotación automática cada 120 s)
 ```
 
 ---
 
-## Despliegue Paso a Paso en Debian y Ubuntu
+## Diseño de Direccionamiento y Subredes (Dual-Stack IPv4/IPv6)
 
-Todo el procedimiento está verificado para Debian GNU/Linux (12 / 13) y Ubuntu Server LTS (22.04 / 24.04) utilizando exclusivamente el stack estándar `apt`, systemd y UFW.
+Antes de escribir un solo archivo de configuración, planificar el esquema CIDR evita colisiones futuras con redes domésticas (`192.168.1.0/24`), redes corporativas (`10.0.0.0/24`) o puentes de Docker (`172.17.0.0/16`).
+
+| Elemento | Subred IPv4 (RFC 1918) | Subred IPv6 ULA (RFC 4193) | Propósito |
+|---|---|---|---|
+| Red completa del túnel | `10.8.0.0/24` | `fd42:42:42::/64` | Espacio privado aislado para hasta **253 peers** simultáneos. |
+| Interfaz servidor (`wg0`) | `10.8.0.1/24` | `fd42:42:42::1/64` | Gateway del túnel y dirección de escucha exclusiva de Unbound DNS. |
+| Peer 1 (Laptop principal) | `10.8.0.2/32` | `fd42:42:42::2/128` | Estación de trabajo de administración y desarrollo. |
+| Peer 2 (Teléfono móvil) | `10.8.0.3/32` | `fd42:42:42::3/128` | Navegación cifrada en redes Wi-Fi y datos móviles con *roaming* transparente. |
+| Peer 3 (Respaldo / Tablet) | `10.8.0.4/32` | `fd42:42:42::4/128` | Acceso secundario revocable de forma independiente. |
+
+> [!NOTE]
+> **Por qué usar IPv6 ULA (`fd42:...`) o deshabilitar fugas IPv6 en clientes:** Si un cliente navega en una red Wi-Fi con soporte IPv6 nativo pero tu túnel solo enruta `0.0.0.0/0` (IPv4), el sistema operativo enviará el tráfico IPv6 fuera de la VPN directamente por la red local. Incluir `::/0` en el túnel Dual-Stack (o enrutarlo correctamente hacia el VPS) cierra por completo esa fuga silenciosa.
+
+---
+
+## Despliegue Paso a Paso en Debian 13 y Ubuntu 24.04 LTS
+
+Todos los comandos están validados para servidores basados en la familia Debian/Ubuntu con systemd y UFW.
 
 ### Paso 1: Instalación y Generación de Llaves con Aislamiento de Permisos
 
-Nunca generes claves privadas con permisos de lectura global (`0644`). Al fijar `umask 077` dentro de una subshell antes de ejecutar `wg genkey`, cada archivo nace con permisos exclusivos para `root` (`0600`):
+Nunca generes llaves privadas con permisos por defecto (`0644`), ya que cualquier usuario local podría leerlas. Fijamos `umask 077` en una subshell aislada para que cada archivo nazca con permisos estrictos `0600` (solo `root`).
 
 ```bash
-# 1. Instalar módulo/herramientas de WireGuard y generador QR para clientes móviles
+# Actualizar repositorios e instalar utilidades de WireGuard y generador QR
 sudo apt update && sudo apt install -y wireguard wireguard-tools qrencode
 
-# 2. Preparar directorio de configuración con permisos estrictos
-sudo mkdir -p /etc/wireguard/clients
-sudo chmod 700 /etc/wireguard
+# Verificar el nombre exacto de la interfaz de salida hacia Internet (ej. eth0, ens5, enp1s0)
+ip -br route show default
 
-# 3. Generar llaves asimétricas Curve25519 y clave precompartida (PSK) de 256 bits
-sudo bash -c '
-  umask 077
-  wg genkey | tee /etc/wireguard/server_private.key | wg pubkey > /etc/wireguard/server_public.key
-  wg genkey | tee /etc/wireguard/clients/laptop_private.key | wg pubkey > /etc/wireguard/clients/laptop_public.key
-  wg genpsk > /etc/wireguard/clients/laptop.psk
+# Generar par de claves del servidor y clave precompartida (PSK) para el primer cliente
+sudo install -d -m 700 /etc/wireguard/keys
+sudo bash -c 'umask 077
+  wg genkey | tee /etc/wireguard/keys/server.key | wg pubkey > /etc/wireguard/keys/server.pub
+  wg genkey | tee /etc/wireguard/keys/laptop.key | wg pubkey > /etc/wireguard/keys/laptop.pub
+  wg genpsk > /etc/wireguard/keys/laptop.psk
 '
-```
 
-> [!TIP]
-> El archivo `laptop.psk` introduce una clave simétrica precompartida de 256 bits dentro del intercambio `Noise_IKpsk2`. Incluso si un adversario captura hoy el tráfico cifrado y décadas después logra romper Curve25519 con computación cuántica, seguirá sin poder descifrar las sesiones pasadas (*Harvest Now, Decrypt Later*).
+# Verificar permisos estrictos (deben mostrar -rw------- root root)
+sudo ls -la /etc/wireguard/keys
+```
 
 ### Paso 2: Habilitar IP Forwarding y Ajustar Buffers UDP del Kernel
 
-Por defecto, Linux bloquea el tránsito de paquetes entre distintas interfaces (`wg0` hacia `eth0`). Crea un archivo persistente en `/etc/sysctl.d/99-wireguard.conf` habilitando el reenvío y ajustando los buffers de recepción UDP junto con sondeo automático de MTU:
+El kernel Linux bloquea el reenvío de paquetes entre interfaces por defecto. Además, ajustar las colas de recepción/envío UDP y activar control de congestión BBR mejora drásticamente el rendimiento en enlaces móviles con pérdida intermitente de paquetes.
 
 ```bash
-sudo tee /etc/sysctl.d/99-wireguard.conf > /dev/null << 'EOF'
-# Reenvío de paquetes entre túnel VPN e interfaz pública
+# /etc/sysctl.d/99-wireguard.conf — Enrutamiento y optimización de red en kernel
+sudo tee /etc/sysctl.d/99-wireguard.conf > /dev/null <<'EOF'
+# Habilitar reenvío de paquetes IPv4 e IPv6 entre wg0 y la interfaz externa
 net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding = 1
 
-# Sondeo automático de MTU para evitar agujeros negros en enlaces PPPoE/LTE
-net.ipv4.tcp_mtu_probing = 1
+# Control de congestión BBR para túneles sobre enlaces de alta latencia o móviles
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
 
-# Incremento moderado de buffers UDP en memoria para ráfagas de tráfico
-net.core.rmem_max = 26214400
-net.core.wmem_max = 26214400
+# Ampliar buffers UDP para evitar descartes en ráfagas de tráfico cifrado
+net.core.rmem_max = 4194304
+net.core.wmem_max = 4194304
 EOF
 
-# Aplicar parámetros en caliente sin reiniciar
+# Aplicar parámetros inmediatamente y verificar
 sudo sysctl --system
+sysctl net.ipv4.ip_forward net.ipv6.conf.all.forwarding net.ipv4.tcp_congestion_control
 ```
 
 ### Paso 3: Configurar la Interfaz del Servidor (`/etc/wireguard/wg0.conf`)
 
-Primero, identifica el nombre exacto de la interfaz conectada a Internet en tu servidor (habitualmente `eth0`, `ens3` o `enp1s0`):
-
-```bash
-ip -o -4 route show to default | awk '{print $5}'
-```
-
-Crea el archivo `/etc/wireguard/wg0.conf` utilizando una subred privada `10.8.0.0/24` (evita `192.168.1.0/24` para no colisionar con routers domésticos o de hoteles cuando te conectes remotamente). Incluye explícitamente `SaveConfig = false` para evitar que systemd sobrescriba tus comentarios o reglas al detener el servicio:
+Reemplaza `eth0` por el nombre de tu interfaz de red pública detectada en el Paso 1, e inserta las claves generadas en `/etc/wireguard/keys/`. Observa el uso de `SaveConfig = false` para evitar que ediciones manuales se sobreescriban al reiniciar el servicio.
 
 ```ini
-# /etc/wireguard/wg0.conf
+# /etc/wireguard/wg0.conf — Permisos obligatorios: chmod 600
 [Interface]
-Address = 10.8.0.1/24
+Address = 10.8.0.1/24, fd42:42:42::1/64
 ListenPort = 51820
+PrivateKey = <CONTENIDO_DE_server.key>
 MTU = 1420
 SaveConfig = false
-PrivateKey = <CONTENIDO_DE_/etc/wireguard/server_private.key>
 
-# Cliente 1: Estación de trabajo / Laptop
+# Reglas de NAT Masquerade y TCP MSS Clamping al levantar la interfaz
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE; iptables -t mangle -A FORWARD -i %i -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE; iptables -t mangle -D FORWARD -i %i -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+
+# Peer 1: Laptop principal
 [Peer]
-PublicKey = <CONTENIDO_DE_/etc/wireguard/clients/laptop_public.key>
-PresharedKey = <CONTENIDO_DE_/etc/wireguard/clients/laptop.psk>
-AllowedIPs = 10.8.0.2/32
+PublicKey = <CONTENIDO_DE_laptop.pub>
+PresharedKey = <CONTENIDO_DE_laptop.psk>
+AllowedIPs = 10.8.0.2/32, fd42:42:42::2/128
 ```
 
-Protege el archivo con permisos `600`:
+Asegura los permisos del archivo y habilita la unidad systemd persistente:
 
 ```bash
 sudo chmod 600 /etc/wireguard/wg0.conf
-```
-
-### Paso 4: Integración Limpia con UFW y NAT Masquerade
-
-En lugar de mezclar reglas manuales dispersas en `PostUp` que compiten con UFW, integra la traducción de direcciones directamente en la tabla `*nat` de `/etc/ufw/before.rules` y habilita la política de reenvío de UFW. Sustituye `eth0` por el nombre de tu interfaz detectado en el Paso 3:
-
-```bash
-# 1. Permitir reenvío de paquetes en UFW
-sudo sed -i 's/^DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw
-
-# 2. Verificar que /etc/ufw/before.rules no tenga ya la sección *nat y añadirla al inicio
-sudo tee /etc/ufw/before.rules.tmp > /dev/null << 'EOF'
-# Reglas NAT Masquerade para subred VPN WireGuard
-*nat
-:POSTROUTING ACCEPT [0:0]
--A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
-COMMIT
-
-EOF
-sudo cat /etc/ufw/before.rules | sudo tee -a /etc/ufw/before.rules.tmp > /dev/null
-sudo mv /etc/ufw/before.rules.tmp /etc/ufw/before.rules
-sudo chmod 640 /etc/ufw/before.rules
-```
-
-Abre el puerto UDP `51820`, habilita el enrutamiento explícito entre `wg0` y `eth0`, recarga UFW y levanta el servicio `wg-quick@wg0`:
-
-```bash
-sudo ufw allow 51820/udp comment 'WireGuard VPN'
-sudo ufw route allow in on wg0 out on eth0
-sudo ufw reload
-
 sudo systemctl enable --now wg-quick@wg0
+sudo systemctl status wg-quick@wg0 --no-pager
+```
+
+### Paso 4: Integración Limpia con UFW y Política de Enrutamiento
+
+Si el servidor utiliza UFW como fachada de Netfilter, su política predeterminada de reenvío (`DEFAULT_FORWARD_POLICY`) es DROP. Debes abrir exclusivamente el puerto UDP `51820` hacia el exterior y permitir explícitamente el reenvío únicamente desde la interfaz `wg0`, evitando abrir `DEFAULT_FORWARD_POLICY="ACCEPT"` globalmente.
+
+```bash
+# 1. Permitir exclusivamente el puerto UDP del túnel en la interfaz pública
+sudo ufw allow 51820/udp comment 'WireGuard VPN'
+
+# 2. Permitir el reenvío solo para tráfico originado en el túnel hacia eth0
+sudo ufw route allow in on wg0 out on eth0 from 10.8.0.0/24 to any comment 'WireGuard NAT forward'
+
+# 3. Permitir consultas DNS locales exclusivamente desde clientes conectados al túnel
+sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto udp comment 'Unbound DNS para peers VPN'
+sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto tcp comment 'Unbound DNS TCP para peers VPN'
+
+# 4. Recargar y auditar reglas activas
+sudo ufw reload
+sudo ufw status verbose
 ```
 
 ---
 
 ## Prevención de Fugas DNS con Resolver Privado Local (Unbound)
 
-Cifrar el tráfico IP mientras el sistema operativo sigue consultando el servidor DNS del router local (`192.168.1.1`) expone cada dominio visitado al dueño de la red Wi-Fi (**DNS Leak**). Enviar las consultas a proveedores públicos dentro del túnel resuelve la fuga local, pero permite que ese proveedor observe tus dominios.
-
-La arquitectura más limpia consiste en desplegar un resolver DNS recursivo propio con Unbound escuchando exclusivamente en la IP interna del túnel (`10.8.0.1`), sin abrir el puerto `53` hacia Internet:
+De nada sirve cifrar el tráfico HTTP si el cliente envía sus consultas DNS al router del café o a un tercero que perfila tu historial de navegación. Instalar **Unbound** directamente en el VPS y enlazarlo exclusivamente a `10.8.0.1` garantiza que ninguna consulta DNS abandone tu infraestructura hacia terceros comerciales y que el puerto `53` jamás quede expuesto a Internet (previniendo ataques de amplificación DNS).
 
 ```bash
-# 1. Instalar Unbound en el servidor VPN
-sudo apt install -y unbound
+# Instalar Unbound y descargar los root hints oficiales de IANA
+sudo apt install -y unbound dns-root-data
+```
 
-# 2. Configurar escucha exclusiva en la interfaz del túnel 10.8.0.1
-sudo tee /etc/unbound/unbound.conf.d/wireguard-dns.conf > /dev/null << 'EOF'
+Crea una configuración dedicada en `/etc/unbound/unbound.conf.d/wireguard.conf`:
+
+```ini
+# /etc/unbound/unbound.conf.d/wireguard.conf
 server:
+    # Escuchar únicamente en loopback y en la interfaz interna del túnel VPN
+    interface: 127.0.0.1
     interface: 10.8.0.1
     port: 53
     do-ip4: yes
-    do-ip6: no
+    do-ip6: yes
     do-udp: yes
     do-tcp: yes
 
-    # Permitir consultas únicamente desde la subred privada del túnel VPN
-    access-control: 127.0.0.1/32 allow
+    # Control de acceso estricto: rechazar cualquier IP fuera del host y del túnel
+    access-control: 127.0.0.0/8 allow
     access-control: 10.8.0.0/24 allow
     access-control: 0.0.0.0/0 refuse
 
-    # Privacidad y endurecimiento
+    # Privacidad, minimización de consultas y endurecimiento
+    qname-minimisation: yes
     hide-identity: yes
     hide-version: yes
-    qname-minimisation: yes
     harden-glue: yes
     harden-dnssec-stripped: yes
     prefetch: yes
-EOF
 
-# 3. Permitir consultas DNS únicamente desde la interfaz wg0 en UFW
-sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto udp comment 'Unbound DNS privado VPN'
-sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto tcp comment 'Unbound DNS privado VPN'
+    # Presupuesto acotado de memoria para VPS de 1 GB RAM
+    num-threads: 1
+    msg-cache-size: 8m
+    rrset-cache-size: 16m
+```
+
+Valida la sintaxis, reinicia Unbound y comprueba que **no escucha** en `0.0.0.0`:
+
+```bash
+sudo unbound-checkconf
 sudo systemctl enable --now unbound
+sudo ss -ulnp | grep ':53'
+# Salida esperada: solo 127.0.0.1:53 y 10.8.0.1:53 (nunca 0.0.0.0:53)
 ```
 
 ---
 
 ## Configuración de Clientes, Split Tunnel y Provisión QR
 
-Dependiendo del objetivo de uso, puedes configurar el cliente en modo completo (navegación privada en redes públicas) o en modo dividido (acceso exclusivo a servicios administrativos o bases de datos internas):
+El cliente solo necesita un archivo de texto plano de ~15 líneas. La directiva `AllowedIPs` del lado del cliente decide si opera en modo **Full Tunnel** (todo Internet pasa por el VPS) o **Split Tunnel** (solo el acceso a tu red privada o servidores internos pasa por el túnel).
 
-| Perfil de Enrutamiento | Valor de `AllowedIPs` en Cliente | Comportamiento y Caso de Uso |
-|---|---|---|
-| Full Tunnel (Navegación Segura) | `0.0.0.0/0, ::/0` | Todo el tráfico IPv4 e IPv6 sale cifrado por el servidor VPN; requiere `DNS = 10.8.0.1`. |
-| Split Tunnel (Solo Red Privada) | `10.8.0.0/24` | Solo los paquetes hacia `10.8.0.x` usan el túnel; la navegación web usa tu conexión local directa. |
-| Split Tunnel + Red Interna Cloud | `10.8.0.0/24, 172.16.0.0/12` | Permite administrar paneles internos o VPC privadas sin redirigir streaming ni descargas generales. |
-
-### Perfil Completo para Escritorio y Móvil (`laptop.conf`)
+### Perfil Full Tunnel para Escritorio y Móvil (`laptop.conf`)
 
 ```ini
-# /etc/wireguard/clients/laptop.conf
+# laptop.conf — Perfil completo sin fugas DNS ni IPv6
 [Interface]
-PrivateKey = <CONTENIDO_DE_/etc/wireguard/clients/laptop_private.key>
-Address = 10.8.0.2/32
+PrivateKey = <CONTENIDO_DE_laptop.key>
+Address = 10.8.0.2/32, fd42:42:42::2/128
+DNS = 10.8.0.1
 MTU = 1420
 
-# Apunta al resolver recursivo privado Unbound dentro del túnel (cero DNS Leaks)
-DNS = 10.8.0.1
-
 [Peer]
-PublicKey = <CONTENIDO_DE_/etc/wireguard/server_public.key>
-PresharedKey = <CONTENIDO_DE_/etc/wireguard/clients/laptop.psk>
-Endpoint = <IP_PUBLICA_DEL_SERVIDOR>:51820
-
-# Full Tunnel IPv4 e IPv6 (evita fugas por tráfico IPv6 fuera del túnel)
+PublicKey = <CONTENIDO_DE_server.pub>
+PresharedKey = <CONTENIDO_DE_laptop.psk>
+Endpoint = vpn.tudominio.com:51820
+# Full Tunnel Dual-Stack:
 AllowedIPs = 0.0.0.0/0, ::/0
-
-# Mantiene viva la asignación NAT en routers móviles y CGNAT cada 25 segundos
+# Mantener vivo el mapeo NAT en routers domésticos o CGNAT móvil cada 25 s
 PersistentKeepalive = 25
 ```
 
-Para importar la configuración en la aplicación oficial de WireGuard en iOS o Android sin enviar claves privadas por correo ni aplicaciones de mensajería, genera el código QR directamente en tu terminal SSH:
+Si prefieres **Split Tunnel** para administrar tus servidores privados sin desviar tráfico de videollamadas o descargas pesadas, sustituye únicamente `AllowedIPs` por la subred interna del túnel (`AllowedIPs = 10.8.0.0/24`).
+
+Para importar el perfil en iOS o Android sin transferir archivos privados por correo ni mensajería:
 
 ```bash
-sudo qrencode -t ansiutf8 < /etc/wireguard/clients/laptop.conf
+# Renderizar código QR efímero directamente en la terminal SSH
+qrencode -t ansiutf8 < laptop.conf
 ```
 
 ---
 
-## Auditoría Forense, Diagnóstico y Resolución de Edge Cases
+## Operación en Producción: Rotación de Claves y Revocación Sin Corte
 
-Una vez conectado el cliente, utiliza las siguientes herramientas de bajo nivel para verificar que no existan fugas, bloqueos de enrutamiento ni errores de fragmentación:
+En un entorno real, un teléfono puede perderse o un equipo portátil puede quedar comprometido. A diferencia de configuraciones estáticas que obligan a reiniciar la interfaz `wg0` desconectando a todos los usuarios activos, WireGuard permite revocar o rotar un peer **en caliente** con **0 ms de interrupción** para los demás clientes:
 
-| Comando de Diagnóstico | Propósito Operativo y Resultado Esperado |
-|---|---|
-| sudo wg show | Muestra pares activos, endpoint remoto actual, tiempo desde el último handshake (< 2 min) y bytes `received / sent`. |
-| sudo ss -ulnp \| grep 51820 | Confirma que el socket UDP del kernel está escuchando correctamente en el puerto `51820`. |
-| sudo tcpdump -ni wg0 | Captura en tiempo real paquetes IP internos ya descifrados circulando por el túnel virtual. |
-| sudo iptables -t nat -L POSTROUTING -v -n | Verifica que los paquetes de `10.8.0.0/24` están incrementando el contador de la regla `MASQUERADE`. |
-| curl -s https://ifconfig.me | Ejecutado en el cliente conectado: debe devolver exclusivamente la IP pública del servidor VPN. |
-| sudo wg syncconf wg0 <(wg-quick strip wg0) | Recarga pares agregados o revocados en caliente sin desconectar las sesiones activas de otros clientes. |
+```bash
+# 1. Revocar inmediatamente un peer comprometido en memoria del kernel
+sudo wg set wg0 peer <CLAVE_PUBLICA_COMPROMETIDA> remove
 
-### Resolución de Casos Límite en Producción
+# 2. Eliminar el bloque [Peer] correspondiente en /etc/wireguard/wg0.conf para persistencia
+# 3. Aplicar cambios de configuración sin reiniciar la interfaz (cero cortes a otros peers)
+sudo wg syncconf wg0 <(sudo wg-quick strip wg0)
+```
 
-1. **Handshake activo pero el cliente no carga páginas web:**
-   * Causa habitual: `DEFAULT_FORWARD_POLICY` en `/etc/default/ufw` sigue en `DROP` o el nombre de la interfaz (`eth0`) en `/etc/ufw/before.rules` no coincide con la interfaz física real del servidor (`ens3` o `enp1s0`).
-2. **Carga lenta, imágenes cortadas o fallos TLS en redes celulares 4G/5G o PPPoE:**
-   * Causa: El enlace físico del operador móvil tiene una MTU menor a `1500` bytes (habitualmente `1480` o `1492`), provocando que paquetes de `1420` bytes más cabeceras UDP superen el límite y sean descartados silenciosamente. Reduce `MTU = 1360` o `MTU = 1280` en ambos extremos.
-3. **Pérdida de conectividad tras minutos de inactividad en móvil:**
-   * Causa: Los operadores celulares bajo CGNAT expiran las tablas de estado UDP tras 30 a 60 segundos sin tráfico. Mantener `PersistentKeepalive = 25` en el cliente envía un datagrama mínimo autenticado cada 25 segundos para preservar el mapeo NAT.
-4. **Conflicto de direcciones IP al conectarse desde la red local de una oficina:**
-   * Causa: Usar `192.168.1.0/24` o `192.168.0.0/24` como rango del túnel VPN provoca colisiones con el router local. Utilizar `10.8.0.0/24` o una subred menos común como `10.214.0.0/24` elimina por completo el solapamiento de rutas.
+> [!TIP]
+> **Limpieza de claves privadas de clientes en el servidor:** Una vez entregado el perfil o escaneado el código QR en el dispositivo del usuario, elimina `/etc/wireguard/keys/laptop.key` del servidor. El servidor solo necesita la clave pública (`laptop.pub`) y la `PresharedKey`; no almacenar claves privadas de clientes en el VPS reduce drásticamente el radio de impacto ante un compromiso del host.
+
+---
+
+## Auditoría Forense, Diagnóstico y Resolución de Casos Límite
+
+Verificar que el túnel está "conectado" en la interfaz gráfica no prueba que sea seguro ni que enrute bien. Esta secuencia audita la conexión de extremo a extremo desde el servidor y desde el cliente:
+
+```bash
+# En el servidor: comprobar handshakes recientes, tráfico cifrado real y endpoints activos
+sudo wg show
+
+# En el servidor: verificar que llegan datagramas UDP cifrados en el puerto 51820
+sudo tcpdump -ni eth0 udp port 51820 -nn -c 10
+
+# En el servidor: confirmar que el tráfico descifrado fluye por la interfaz virtual wg0
+sudo tcpdump -ni wg0 -nn -c 10
+
+# Desde el cliente conectado: verificar IP pública de salida y resolver DNS activo
+curl -s https://ifconfig.me && echo ""
+dig +short example.com @10.8.0.1
+```
+
+### Matriz de Diagnóstico de Casos Límite en Producción
+
+| Síntoma en Producción | Causa Raíz Habitual | Verificación y Solución Exacta |
+|---|---|---|
+| Handshake exitoso pero sin acceso a Internet | `ip_forward = 0`, regla `MASQUERADE` con interfaz incorrecta (`eth0` vs `ens5`) o UFW bloqueando `FORWARD`. | Ejecutar `sysctl net.ipv4.ip_forward` y `sudo iptables -t nat -L POSTROUTING -v -n`; corregir nombre de interfaz en `wg0.conf` y regla `ufw route allow`. |
+| Sitios cargan a medias o SSH se congela al listar archivos | Paquetes grandes descartados por MTU excedido en redes móviles CGNAT o PPPoE (*Path MTU Blackhole*). | Reducir `MTU = 1280` o `1360` en el cliente y mantener la regla `--clamp-mss-to-pmtu` en `PostUp` del servidor. |
+| Handshake nunca ocurre (`latest handshake` vacío) | Puerto UDP `51820` cerrado en el firewall del proveedor cloud (AWS Lightsail / Security Group) o clave pública desalineada. | Verificar reglas entrantes UDP `51820` en la consola cloud y capturar llegada con `sudo tcpdump -ni eth0 udp port 51820`. |
+| Sitios web muestran el país real del cliente pese a VPN activa | Fuga DNS hacia el router local o tráfico IPv6 saliendo por fuera de `wg0`. | Confirmar `DNS = 10.8.0.1` y `AllowedIPs = 0.0.0.0/0, ::/0` en el cliente; validar que Unbound responda en `10.8.0.1:53`. |
+| El túnel funciona pero Docker bloquea el reenvío | Docker cambia la política de la cadena `FORWARD` de iptables a DROP al arrancar. | Asegurar reglas explícitas `-I FORWARD -i wg0 -j ACCEPT` en `PostUp` o en la cadena `DOCKER-USER`. |
+| La conexión móvil muere tras 3 minutos de inactividad | El router CGNAT del operador elimina el mapeo UDP por inactividad. | Mantener `PersistentKeepalive = 25` en el bloque `[Peer]` del cliente móvil. |
 
 ---
 
 ## Checklist de Seguridad y Validación Final
 
-- [x] **Permisos Criptográficos Estrictos:** Claves privadas y `/etc/wireguard/wg0.conf` protegidos con `chmod 600` y `umask 077` exclusivamente para `root`.
-- [x] **Defensa Post-Cuántica (`PSK`):** Cada par configurado con `PresharedKey` única de 256 bits mezclada en `Noise_IKpsk2`.
-- [x] **Integración Limpia con UFW:** Regla `MASQUERADE` declarada en `/etc/ufw/before.rules`, `DEFAULT_FORWARD_POLICY="ACCEPT"` activo y puerto único UDP `51820` expuesto al exterior.
-- [x] **Resolver DNS Propio Sin Fugas:** Unbound escuchando únicamente en `10.8.0.1:53` con `access-control` restringido a `10.8.0.0/24` y enrutamiento completo `::/0` en perfiles *Full Tunnel*.
-- [x] **Recarga Sin Cortes Operativos:** Altas y bajas de clientes aplicadas en caliente mediante `wg syncconf` sin reiniciar `wg-quick@wg0`.
-- [x] **Auditoría End-to-End Validada:** Handshake confirmado con `wg show`, contadores NAT activos e IP pública de salida verificada desde el cliente.
+- [x] Permisos estrictos `0600` verificados en `/etc/wireguard/wg0.conf` y `/etc/wireguard/keys/*`.
+- [x] Claves privadas de clientes eliminadas del servidor tras su provisión inicial (solo se conserva `PublicKey` y `PresharedKey`).
+- [x] `net.ipv4.ip_forward = 1`, `net.ipv6.conf.all.forwarding = 1` y BBR activos y persistentes en `/etc/sysctl.d/99-wireguard.conf`.
+- [x] Reglas de NAT Masquerade y TCP MSS Clamping (`--clamp-mss-to-pmtu`) verificadas en `PostUp` / `PostDown`.
+- [x] Puerto UDP `51820` abierto únicamente en el firewall perimetral y silencio total confirmado ante sondas no autenticadas.
+- [x] Unbound DNS enlazado exclusivamente a `127.0.0.1:53` y `10.8.0.1:53`, inaccesible desde la IP pública del servidor.
+- [x] Rotación y revocación en caliente probadas mediante `wg syncconf` con **0 ms** de corte para peers activos.

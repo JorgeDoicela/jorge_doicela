@@ -1,333 +1,372 @@
 > [!IMPORTANT]
 > **Executive Summary:**  
-> Subscribing to a commercial VPN does not eliminate interception risk or metadata logging; it simply shifts trust from your ISP to an opaque third party observing all outbound traffic. Deploying a self-hosted WireGuard node on Debian or Ubuntu solves this by executing encryption directly inside Linux kernel space in under **4,000 lines of code**, achieving a memory footprint below **10 MB RAM**, near-zero UDP latency, and modern cryptography powered by the Noise_IKpsk2 protocol (Curve25519, ChaCha20-Poly1305, and BLAKE2s). This engineering guide covers full tunnel architecture, Cryptokey Routing, clean UFW and Netfilter integration, DNS leak prevention with a private Unbound resolver, and zero-trace desktop/mobile client provisioning.
+> Subscribing to a commercial VPN does not eliminate traffic observation—it merely moves the vantage point from your local ISP to a third-party vendor whose infrastructure you cannot audit. This project documents the architecture, reproducible deployment, and production operation of a self-hosted private VPN built on WireGuard over Debian 13 and Ubuntu 24.04 LTS, running entirely inside Linux kernel space with Noise (`IKpsk2`) cryptography, local recursive DNS resolution via Unbound to eliminate leaks, Dual-Stack IPv4/IPv6 routing, and perimeter hardening with UFW and Netfilter. The result is a silent tunnel invisible to external port scans with a resident memory footprint under **15 MB RAM**, added latency below **2 ms**, and line-rate Gigabit throughput without user-space context switches.
 
 ---
 
-## Conceptual Model: What Happens on Public Networks and How a Private Tunnel Works
+## Conceptual Model: What Actually Happens on Public Networks and How a Private Tunnel Works
 
-When a device joins public Wi-Fi in an airport, coffee shop, or hotel, the local router and network operator control the first hop of every packet. Even when visiting HTTPS websites, body payloads are encrypted, yet the local network still observes visited domains through plaintext DNS queries, the target hostname inside TLS ClientHello (SNI), packet sizes, and exact connection timestamps.
+Whenever you join a public Wi-Fi network (at an airport, coffee shop, or hotel) or browse over a local ISP, every packet leaving your device exposes observable metadata before reaching its destination. Even when websites use HTTPS, the access point and carrier can inspect:
 
-A self-hosted Virtual Private Network operates as an armored envelope inside an opaque container stretching from your laptop or phone to a server under your exclusive control (such as a cloud VPS or a Linux board on your home network):
+* **Plaintext DNS queries:** Every domain you visit is logged if your device resolves names through the DHCP-assigned DNS server.
+* **SNI (Server Name Indication):** The target hostname exchanged during standard TLS negotiation.
+* **Traffic volume, destination, and timing patterns:** Destination IP addresses, session durations, and target ports.
 
-* **Encapsulation on the origin device:** Before an IP packet leaves your Wi-Fi or cellular radio, the virtual `wg0` interface encrypts both the payload and inner IP headers, wrapping the result inside a standard UDP datagram.
-* **Opaque transit over untrusted links:** Coffee shop routers and intermediate ISPs observe only encrypted UDP datagrams traveling toward a single destination IP and port (`51820`). They cannot inspect queried domains, inject unencrypted ads, or alter a single bit without invalidating the cryptographic authentication tag.
-* **Kernel decapsulation and egress:** Your server receives the UDP datagram, verifies its cryptographic signature directly inside the Linux kernel, extracts the original IP packet, and forwards it to the Internet while rewriting the private tunnel IP to its own public IP via NAT Masquerade.
+A real-world analogy clarifies the shift. Browsing without a tunnel is like mailing sealed envelopes through a local post office: nobody reads the letter inside (HTTPS), yet every clerk sees the sender, recipient, envelope thickness, and dispatch time. A self-hosted WireGuard tunnel places all of your envelopes inside an opaque armored courier bag traveling directly from your device to your own Linux server; the intermediate network only sees encrypted UDP datagrams flowing to a single endpoint, while your server unseals the bag, resolves domains internally, and delivers requests to the Internet from its own network interface.
 
 ### Why WireGuard Over OpenVPN or IPsec
 
-For over two decades, VPN deployments relied on heavy user-space daemons such as OpenVPN or complex negotiation stacks like IPsec. WireGuard redesigned the data plane around auditable minimalism and fixed cryptographic primitives:
+Unlike legacy VPN stacks built on heavy user-space daemons and sprawling cipher-negotiation state machines, WireGuard was designed for and merged directly into the mainline Linux kernel (since **5.6**) with a minimal attack surface: roughly **4,000 auditable lines of code** compared to hundreds of thousands in OpenVPN or strongSwan.
 
-| Technical Parameter | WireGuard | OpenVPN | IPsec (strongSwan / IKEv2) |
+| Technical Criterion | OpenVPN (TLS/UDP) | IPsec / IKEv2 (strongSwan) | WireGuard (Linux Kernel) |
 |---|---|---|---|
-| Codebase size | ~4,000 lines (auditable by one engineer) | > 100,000 lines + OpenSSL | > 400,000 lines |
-| Execution plane | Native Linux kernel space | User space (`tun` + context switches) | Hybrid (Kernel XFRM + IKE daemon) |
-| Cryptographic primitives | Fixed & modern (Curve25519, ChaCha20-Poly1305, BLAKE2s) | Negotiable (misconfiguration *downgrade* risk) | Negotiable (multiple legacy suites) |
-| Idle memory footprint | < 10 MB RAM, 0% CPU when idle | ~30 - 80 MB per process | ~25 - 50 MB |
-| Network roaming (Wi-Fi to 4G) | Seamless and instantaneous without reconnect | Requires TLS renegotiation (3 - 10 s) | Requires MOBIKE and frequent reconnects |
-| Port scanner visibility | Stealth: silently drops unauthenticated packets | Responds to TLS handshake probes | Responds to IKE probes |
+| Execution space | User space (`tun` + memory copies) | Kernel + user-space IKE daemon | 100% inside Linux kernel space |
+| Codebase size | ~100,000+ lines (+ OpenSSL) | ~400,000+ lines | ~4,000 auditable lines |
+| Cryptographic agility | Negotiable (prone to downgrade if misconfigured) | Complex suite and profile matrix | Fixed, versioned primitives (Noise `IKpsk2`) |
+| Scan visibility | Responds on open TCP/UDP ports | Responds to IKE probes on port `500`/`4500` | Complete silence (DROP on unauthenticated packets) |
+| Mobile reconnect time | 2 to 8 seconds on Wi-Fi to 4G/5G handoff | 1 to 4 seconds | Instantaneous (seamless key-based *roaming*) |
+| Baseline memory footprint | 35 to 80 MB per instance | 40 to 90 MB | < 15 MB including Unbound DNS resolver |
 
 ---
 
-## Core VPN Architecture Glossary
+## Technical Glossary of VPN Architecture
 
-| Term | Operational Definition |
-|---|---|
-| Virtual interface wg0 | Logical Linux kernel network device responsible for encrypting outbound traffic and decrypting valid inbound UDP datagrams from authorized peers. |
-| Cryptokey Routing (AllowedIPs) | WireGuard's bidirectional routing table binding a public key to specific CIDR subnets: it defines both outbound routing targets and allowed inbound source IPs. |
-| Noise_IKpsk2 protocol | Authenticated key exchange completed in a single round-trip (*1-RTT*) providing Perfect Forward Secrecy and optional Pre-Shared Key mixing. |
-| NAT Masquerade | Dynamic source address translation in Netfilter rewriting the client private tunnel IP (`10.8.0.2`) to the server public IP on the egress interface. |
-| Full Tunnel vs. Split Tunnel | In full tunnel mode (`0.0.0.0/0, ::/0`), all Internet traffic traverses the VPN; in split tunnel mode (`10.8.0.0/24`), only private resource traffic uses the tunnel. |
-| MTU | Maximum unfragmented packet size in bytes; subtracting UDP and WireGuard encapsulation headers, setting `1420` bytes prevents silent stalls on cellular links. |
+To follow every configuration directive and network diagnostic cleanly without hidden prerequisites, these are the core terms used throughout the deployment:
+
+| Term | Technical Definition | Role in This Project |
+|---|---|---|
+| Virtual interface (`wg0`) | Kernel-managed network adapter that encrypts and decrypts IP packets on the fly. | Accepts client IP packets and encapsulates them into encrypted UDP datagrams. |
+| Peer | Authorized VPN node uniquely identified by its Curve25519 public key. | Replaces passwords and sprawling PKI chains with concise cryptographic key pairs. |
+| Cryptokey Routing | Internal kernel table binding each public key to the CIDR prefixes it is permitted to send and receive. | Merges authentication and routing: any packet from an IP not bound to that key is dropped by the kernel. |
+| Noise Handshake (`IKpsk2`) | Single round-trip (1-RTT) authenticated key exchange with an optional pre-shared symmetric key for post-quantum resistance. | Establishes ephemeral session keys rotated every **120 seconds** for Perfect Forward Secrecy. |
+| IP Forwarding | Linux kernel capability to route packets arriving on one interface (`wg0`) out through another (`eth0`). | Without `net.ipv4.ip_forward=1`, packets reach the server but never leave toward the Internet. |
+| NAT Masquerade | Rewriting the private tunnel source IP (`10.8.0.x`) to the server's public IP upon egress. | Allows remote hosts to return replies to the VPS, which translates them back to the proper peer via Conntrack. |
+| MTU (Maximum Transmission Unit) | Maximum IP packet size in bytes that can traverse a link without fragmentation. | Accounting for UDP + WireGuard overhead (**60 bytes** in IPv4, **80 bytes** in IPv6) prevents stalled HTTPS transfers. |
+| Split Tunnel vs Full Tunnel | Routing only private subnets (`10.8.0.0/24`) versus all traffic (`0.0.0.0/0`). | Lets you choose between complete privacy on public Wi-Fi (Full) or low-overhead private server access (Split). |
+| Recursive resolver (Unbound) | Local DNS server querying root nameservers directly with DNSSEC validation and zero commercial intermediaries. | Eliminates ISP DNS leaks and keeps domain lookups strictly inside your own host. |
 
 ---
 
 ## Tunnel Architecture, Routing, and Silent Handshake
 
-The diagram below traces the exact path of an IP packet from the client browser out to the Internet through the Linux server kernel and UFW rules:
+Every packet follows a deterministic path from the client device to the Internet with zero user-space proxy daemons duplicating buffers or exposing unnecessary ports.
 
 ```mermaid
 flowchart LR
     subgraph Client ["Client Device (Laptop / Mobile)"]
-        App["Browser / Terminal\n(Source IP: 10.8.0.2)"]
-        WGClient["Interface wg0\nChaCha20-Poly1305\nMTU: 1420"]
+        App["Browser / Terminal"] --> WGClient["wg0 Interface\n10.8.0.2/32\nMTU 1420"]
     end
 
-    subgraph UntrustedNet ["Untrusted Public Network (Wi-Fi / 4G)"]
-        UDP["UDP Datagram :51820\nOpaque Encrypted Payload"]
+    subgraph PublicNet ["Untrusted Public Network (Wi-Fi / ISP)"]
+        UDP["UDP :51820 Datagrams\nChaCha20-Poly1305\n(Opaque traffic)"]
     end
 
-    subgraph Server ["Debian / Ubuntu Linux Server (Kernel Space)"]
-        UFW["UFW / Netfilter Perimeter\nAllows UDP 51820 Only"]
-        WGServer["Kernel Module wireguard\nValidates Public Key + AllowedIPs"]
-        Unbound["Unbound DNS (:53)\nListens on 10.8.0.1 Only"]
-        Routing["net.ipv4.ip_forward = 1\nFORWARD Chain"]
-        NAT["*nat POSTROUTING Rule\nMASQUERADE on eth0"]
+    subgraph VPS ["Debian 13 / Ubuntu 24.04 Server"]
+        UFWNode["Netfilter / UFW\nAllows only UDP :51820"] --> WGServer["wg0 Interface\n10.8.0.1/24"]
+        WGServer -->|"Queries :53"| Unbound["Unbound DNS\n10.8.0.1:53\n(Recursive + DNSSEC)"]
+        WGServer -->|"External traffic"| NAT["NAT Masquerade\n(POSTROUTING -> eth0)"]
     end
 
-    App -->|"Plaintext IP packet"| WGClient
-    WGClient -->|"Encapsulates in UDP"| UDP
-    UDP --> UFW
-    UFW --> WGServer
-    WGServer -->|"DNS queries"| Unbound
-    WGServer -->|"Decrypted web traffic"| Routing
-    Routing --> NAT
-    NAT -->|"Egress to Internet"| Internet(("Internet / Private Network"))
+    WGClient --> UDP
+    UDP --> UFWNode
+    NAT --> Internet["Public Internet"]
 ```
 
-### Silent Authentication Anatomy (Stealth)
+### Cryptographic Anatomy and Silent Authentication (Stealth)
 
-An open TCP port running OpenVPN or SSH responds to any Internet scanner sending a `SYN` packet. WireGuard inverts this behavior by enforcing silent cryptographic authentication before returning a single byte:
+WireGuard enforces a fixed, modern cryptographic suite:
+
+* **Key exchange:** Curve25519 (ECDH) optionally combined with a 256-bit symmetric `PresharedKey` for defense-in-depth against *harvest now, decrypt later* quantum threats.
+* **Authenticated encryption (AEAD):** ChaCha20 for confidentiality and Poly1305 for per-packet integrity, delivering strong software performance even on ARM CPUs lacking AES-NI instructions.
+* **Hashing and key derivation:** BLAKE2s and HKDF to derive ephemeral session keys rotated automatically every few minutes.
+
+A decisive operational property is complete silence toward unauthorized scanners. When Nmap or Masscan probes UDP port `51820`, the kernel validates the cryptographic signature of the very first packet against registered public keys. Any packet failing verification triggers an immediate silent DROP with zero response bytes—rendering the port indistinguishable from a closed or filtered host.
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    participant E as Scanner / Attacker
-    participant C as Authorized Client (Private Key C)
-    participant S as WireGuard Server (UDP 51820)
+    participant Attacker as External Scanner (Unauthorized)
+    participant Client as Authorized Peer (Laptop)
+    participant Kernel as Linux Kernel (WireGuard :51820)
 
-    E->>S: Random UDP probe or port scan packet
-    S--xS: Missing or invalid MAC signature -> Silent DROP (0 bytes returned)
-    Note over E,S: External scanners (Nmap) observe UDP 51820 only as open|filtered
+    Attacker->>Kernel: Random UDP probe to port 51820
+    Note over Kernel: Invalid signature or unknown key -> Silent DROP (0 response bytes)
 
-    C->>S: Handshake Initiation (Ephemeral Key C + Timestamp + MAC with Server Public Key S)
-    S->>C: Handshake Response (Server Ephemeral Key S + Symmetric Session Keys)
-    Note over C,S: Tunnel active in 1-RTT (< 5 ms). Automatic key rotation every 120 seconds.
+    Client->>Kernel: Handshake Initiation (Curve25519 + TAI64N timestamp + MAC)
+    Note over Kernel: Validates public key and anti-replay timestamp
+    Kernel-->>Client: Handshake Response (Ephemeral session keys)
+    Client->>Kernel: IP packets encapsulated in ChaCha20-Poly1305
+    Kernel-->>Client: Encrypted replies (Automatic key rotation every 120 s)
 ```
 
 ---
 
-## Step-by-Step Deployment on Debian and Ubuntu
+## Addressing and Subnet Design (Dual-Stack IPv4/IPv6)
 
-This entire procedure is verified for Debian GNU/Linux (12 / 13) and Ubuntu Server LTS (22.04 / 24.04) using exclusively the standard `apt`, systemd, and UFW stack.
+Planning the CIDR layout before creating configuration files prevents future collisions with home LANs (`192.168.1.0/24`), corporate networks (`10.0.0.0/24`), and Docker bridges (`172.17.0.0/16`).
 
-### Step 1: Installation and Key Generation with Strict Permissions
+| Component | IPv4 Subnet (RFC 1918) | IPv6 ULA Subnet (RFC 4193) | Purpose |
+|---|---|---|---|
+| Full tunnel network | `10.8.0.0/24` | `fd42:42:42::/64` | Isolated private space for up to **253 concurrent peers**. |
+| Server interface (`wg0`) | `10.8.0.1/24` | `fd42:42:42::1/64` | Tunnel gateway and exclusive bind address for Unbound DNS. |
+| Peer 1 (Primary laptop) | `10.8.0.2/32` | `fd42:42:42::2/128` | Administration and engineering workstation. |
+| Peer 2 (Mobile phone) | `10.8.0.3/32` | `fd42:42:42::3/128` | Encrypted browsing on Wi-Fi and cellular networks with seamless *roaming*. |
+| Peer 3 (Backup / Tablet) | `10.8.0.4/32` | `fd42:42:42::4/128` | Secondary access revocable independently. |
 
-Never generate private keys with world-readable permissions (`0644`). Setting `umask 077` inside a subshell before invoking `wg genkey` ensures every file is created readable solely by `root` (`0600`):
+> [!NOTE]
+> **Why Dual-Stack IPv6 ULA (`fd42:...`) prevents silent leaks:** If a client joins a Wi-Fi network with native IPv6 connectivity while your tunnel only routes `0.0.0.0/0` (IPv4), the OS will send IPv6 traffic outside the VPN directly through the local gateway. Including `::/0` in a Dual-Stack tunnel closes that silent bypass completely.
+
+---
+
+## Step-by-Step Deployment on Debian 13 and Ubuntu 24.04 LTS
+
+Every command below is validated for Debian/Ubuntu servers using systemd and UFW.
+
+### Step 1: Installation and Key Generation With Strict Permissions
+
+Never generate private keys under default permissions (`0644`), which allow any local user to read them. Setting `umask 077` inside a subshell ensures every key file is created with strict `0600` (`root`-only) permissions from the first byte.
 
 ```bash
-# 1. Install WireGuard tools and QR code generator for mobile devices
+# Update package indexes and install WireGuard tools plus QR generator
 sudo apt update && sudo apt install -y wireguard wireguard-tools qrencode
 
-# 2. Create working directory with strict permissions
-sudo mkdir -p /etc/wireguard/clients
-sudo chmod 700 /etc/wireguard
+# Identify your exact default egress network interface (e.g. eth0, ens5, enp1s0)
+ip -br route show default
 
-# 3. Generate Curve25519 key pairs and a 256-bit Pre-Shared Key (PSK)
-sudo bash -c '
-  umask 077
-  wg genkey | tee /etc/wireguard/server_private.key | wg pubkey > /etc/wireguard/server_public.key
-  wg genkey | tee /etc/wireguard/clients/laptop_private.key | wg pubkey > /etc/wireguard/clients/laptop_public.key
-  wg genpsk > /etc/wireguard/clients/laptop.psk
+# Generate server keypair and pre-shared key (PSK) for the first client
+sudo install -d -m 700 /etc/wireguard/keys
+sudo bash -c 'umask 077
+  wg genkey | tee /etc/wireguard/keys/server.key | wg pubkey > /etc/wireguard/keys/server.pub
+  wg genkey | tee /etc/wireguard/keys/laptop.key | wg pubkey > /etc/wireguard/keys/laptop.pub
+  wg genpsk > /etc/wireguard/keys/laptop.psk
 '
+
+# Verify strict permissions (must show -rw------- root root)
+sudo ls -la /etc/wireguard/keys
 ```
 
-> [!TIP]
-> The `laptop.psk` file mixes a 256-bit symmetric pre-shared key into the `Noise_IKpsk2` handshake. Even if an adversary records encrypted traffic today and breaks Curve25519 decades later using quantum computing, past sessions remain undecipherable (*Harvest Now, Decrypt Later*).
+### Step 2: Enable IP Forwarding and Tune Kernel UDP Buffers
 
-### Step 2: Enable Kernel IP Forwarding and Tune UDP Buffers
-
-By default, Linux drops packets arriving on one interface (`wg0`) destined for another (`eth0`). Create a persistent configuration in `/etc/sysctl.d/99-wireguard.conf` enabling packet forwarding, automatic MTU probing, and tuned UDP receive/send buffers:
+Linux disables packet forwarding between interfaces by default. Raising UDP socket receive/send ceilings and enabling BBR congestion control also improves throughput over mobile links with intermittent packet loss.
 
 ```bash
-sudo tee /etc/sysctl.d/99-wireguard.conf > /dev/null << 'EOF'
-# Enable packet forwarding between VPN tunnel and public interface
+# /etc/sysctl.d/99-wireguard.conf — Kernel routing and network tuning
+sudo tee /etc/sysctl.d/99-wireguard.conf > /dev/null <<'EOF'
+# Enable IPv4 and IPv6 forwarding between wg0 and the external interface
 net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding = 1
 
-# Automatic MTU probing to avoid black-hole stalls on PPPoE/LTE links
-net.ipv4.tcp_mtu_probing = 1
+# Enable BBR congestion control for high-latency or mobile tunnels
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
 
-# Moderate UDP socket buffer increase for traffic bursts
-net.core.rmem_max = 26214400
-net.core.wmem_max = 26214400
+# Expand UDP socket buffers to prevent drops during encrypted traffic bursts
+net.core.rmem_max = 4194304
+net.core.wmem_max = 4194304
 EOF
 
-# Apply parameters live without rebooting
+# Apply settings immediately and confirm
 sudo sysctl --system
+sysctl net.ipv4.ip_forward net.ipv6.conf.all.forwarding net.ipv4.tcp_congestion_control
 ```
 
 ### Step 3: Configure the Server Interface (`/etc/wireguard/wg0.conf`)
 
-First, verify the exact name of the primary network interface connected to the Internet on your server (typically `eth0`, `ens3`, or `enp1s0`):
-
-```bash
-ip -o -4 route show to default | awk '{print $5}'
-```
-
-Create `/etc/wireguard/wg0.conf` using the private subnet `10.8.0.0/24` (avoid `192.168.1.0/24` to prevent collisions with home or hotel routers when connecting remotely). Explicitly set `SaveConfig = false` so systemd never overwrites your comments or structure on service shutdown:
+Replace `eth0` with the public interface name discovered in Step 1 and paste the keys generated under `/etc/wireguard/keys/`. Setting `SaveConfig = false` ensures manual edits are never overwritten on service stop.
 
 ```ini
-# /etc/wireguard/wg0.conf
+# /etc/wireguard/wg0.conf — Required permissions: chmod 600
 [Interface]
-Address = 10.8.0.1/24
+Address = 10.8.0.1/24, fd42:42:42::1/64
 ListenPort = 51820
+PrivateKey = <CONTENTS_OF_server.key>
 MTU = 1420
 SaveConfig = false
-PrivateKey = <CONTENT_OF_/etc/wireguard/server_private.key>
 
-# Client 1: Workstation / Laptop
+# NAT Masquerade and TCP MSS Clamping rules attached to interface lifecycle
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE; iptables -t mangle -A FORWARD -i %i -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE; iptables -t mangle -D FORWARD -i %i -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+
+# Peer 1: Primary laptop
 [Peer]
-PublicKey = <CONTENT_OF_/etc/wireguard/clients/laptop_public.key>
-PresharedKey = <CONTENT_OF_/etc/wireguard/clients/laptop.psk>
-AllowedIPs = 10.8.0.2/32
+PublicKey = <CONTENTS_OF_laptop.pub>
+PresharedKey = <CONTENTS_OF_laptop.psk>
+AllowedIPs = 10.8.0.2/32, fd42:42:42::2/128
 ```
 
-Restrict permissions to `600`:
+Lock down file permissions and enable the persistent systemd unit:
 
 ```bash
 sudo chmod 600 /etc/wireguard/wg0.conf
-```
-
-### Step 4: Clean Integration with UFW and NAT Masquerade
-
-Instead of mixing ad-hoc `PostUp` rules that fight against UFW, place source address translation directly inside the `*nat` table of `/etc/ufw/before.rules` and enable UFW forwarding. Replace `eth0` with the interface name detected in Step 3:
-
-```bash
-# 1. Allow packet forwarding in UFW
-sudo sed -i 's/^DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw
-
-# 2. Prepend the *nat section to /etc/ufw/before.rules if not already present
-sudo tee /etc/ufw/before.rules.tmp > /dev/null << 'EOF'
-# NAT Masquerade rules for WireGuard VPN subnet
-*nat
-:POSTROUTING ACCEPT [0:0]
--A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
-COMMIT
-
-EOF
-sudo cat /etc/ufw/before.rules | sudo tee -a /etc/ufw/before.rules.tmp > /dev/null
-sudo mv /etc/ufw/before.rules.tmp /etc/ufw/before.rules
-sudo chmod 640 /etc/ufw/before.rules
-```
-
-Open UDP port `51820`, allow routed traffic between `wg0` and `eth0`, reload UFW, and start `wg-quick@wg0`:
-
-```bash
-sudo ufw allow 51820/udp comment 'WireGuard VPN'
-sudo ufw route allow in on wg0 out on eth0
-sudo ufw reload
-
 sudo systemctl enable --now wg-quick@wg0
+sudo systemctl status wg-quick@wg0 --no-pager
+```
+
+### Step 4: Clean UFW Integration and Scoped Forwarding Policy
+
+When UFW manages Netfilter, its default forwarding policy (`DEFAULT_FORWARD_POLICY`) is DROP. Rather than opening forwarding globally, allow only UDP `51820` externally and scope routed forwarding strictly to traffic arriving on `wg0`.
+
+```bash
+# 1. Open only the WireGuard UDP port on the public interface
+sudo ufw allow 51820/udp comment 'WireGuard VPN'
+
+# 2. Permit forwarding strictly from the VPN subnet out through eth0
+sudo ufw route allow in on wg0 out on eth0 from 10.8.0.0/24 to any comment 'WireGuard NAT forward'
+
+# 3. Allow local DNS queries strictly from connected VPN peers
+sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto udp comment 'Unbound DNS for VPN peers'
+sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto tcp comment 'Unbound DNS TCP for VPN peers'
+
+# 4. Reload and audit active firewall rules
+sudo ufw reload
+sudo ufw status verbose
 ```
 
 ---
 
-## DNS Leak Prevention with a Private Local Resolver (Unbound)
+## Preventing DNS Leaks With a Local Recursive Resolver (Unbound)
 
-Encrypting IP packets while the operating system continues querying the local router's DNS server (`192.168.1.1`) leaks every visited domain to the Wi-Fi owner (**DNS Leak**). Routing queries to public resolvers inside the tunnel fixes the local leak, but still exposes domain lookups to that external provider.
-
-The cleanest architecture deploys a private recursive DNS resolver using Unbound listening exclusively on the internal tunnel IP (`10.8.0.1`), keeping port `53` completely closed to the public Internet:
+Encrypting HTTP traffic achieves little if the client still sends DNS queries to a café router or an external profiling resolver. Running **Unbound** directly on the VPS bound exclusively to `10.8.0.1` keeps every lookup inside your infrastructure while guaranteeing port `53` is never exposed to the public Internet (preventing DNS amplification abuse).
 
 ```bash
-# 1. Install Unbound on the VPN server
-sudo apt install -y unbound
+# Install Unbound and official IANA root hints
+sudo apt install -y unbound dns-root-data
+```
 
-# 2. Bind exclusively to the internal tunnel address 10.8.0.1
-sudo tee /etc/unbound/unbound.conf.d/wireguard-dns.conf > /dev/null << 'EOF'
+Create a dedicated configuration file at `/etc/unbound/unbound.conf.d/wireguard.conf`:
+
+```ini
+# /etc/unbound/unbound.conf.d/wireguard.conf
 server:
+    # Bind strictly to loopback and the internal VPN gateway address
+    interface: 127.0.0.1
     interface: 10.8.0.1
     port: 53
     do-ip4: yes
-    do-ip6: no
+    do-ip6: yes
     do-udp: yes
     do-tcp: yes
 
-    # Accept DNS queries solely from the private VPN tunnel subnet
-    access-control: 127.0.0.1/32 allow
+    # Strict ACL: refuse any source outside localhost and the VPN subnet
+    access-control: 127.0.0.0/8 allow
     access-control: 10.8.0.0/24 allow
     access-control: 0.0.0.0/0 refuse
 
-    # Privacy and hardening
+    # Privacy, QNAME minimization, and DNSSEC hardening
+    qname-minimisation: yes
     hide-identity: yes
     hide-version: yes
-    qname-minimisation: yes
     harden-glue: yes
     harden-dnssec-stripped: yes
     prefetch: yes
-EOF
 
-# 3. Allow DNS queries exclusively from wg0 in UFW
-sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto udp comment 'Private VPN Unbound DNS'
-sudo ufw allow in on wg0 to 10.8.0.1 port 53 proto tcp comment 'Private VPN Unbound DNS'
+    # Bounded memory budget for 1 GB RAM VPS hosts
+    num-threads: 1
+    msg-cache-size: 8m
+    rrset-cache-size: 16m
+```
+
+Validate syntax, start Unbound, and confirm it is **not** bound to `0.0.0.0`:
+
+```bash
+sudo unbound-checkconf
 sudo systemctl enable --now unbound
+sudo ss -ulnp | grep ':53'
+# Expected output: only 127.0.0.1:53 and 10.8.0.1:53 (never 0.0.0.0:53)
 ```
 
 ---
 
 ## Client Configuration, Split Tunneling, and QR Provisioning
 
-Depending on your operational goal, configure clients in full tunnel mode (private browsing on untrusted Wi-Fi) or split tunnel mode (exclusive access to internal admin dashboards or databases):
+Each client requires only a ~15-line plaintext profile. The client's `AllowedIPs` directive controls whether it operates as a **Full Tunnel** (all Internet traffic exits via the VPS) or a **Split Tunnel** (only private management subnets traverse the tunnel).
 
-| Routing Profile | Client `AllowedIPs` Value | Behavior and Use Case |
-|---|---|---|
-| Full Tunnel (Secure Browsing) | `0.0.0.0/0, ::/0` | All IPv4 and IPv6 traffic exits encrypted through the VPN server; requires `DNS = 10.8.0.1`. |
-| Split Tunnel (Private Subnet Only) | `10.8.0.0/24` | Only packets destined for `10.8.0.x` enter the tunnel; general web browsing uses your local ISP directly. |
-| Split Tunnel + Cloud VPC | `10.8.0.0/24, 172.16.0.0/12` | Grants private access to internal dashboards or cloud VPCs without routing streaming or bulk downloads. |
-
-### Full Profile for Desktop and Mobile (`laptop.conf`)
+### Full Tunnel Profile for Desktop and Mobile (`laptop.conf`)
 
 ```ini
-# /etc/wireguard/clients/laptop.conf
+# laptop.conf — Full Dual-Stack profile with zero DNS leaks
 [Interface]
-PrivateKey = <CONTENT_OF_/etc/wireguard/clients/laptop_private.key>
-Address = 10.8.0.2/32
+PrivateKey = <CONTENTS_OF_laptop.key>
+Address = 10.8.0.2/32, fd42:42:42::2/128
+DNS = 10.8.0.1
 MTU = 1420
 
-# Point to the private Unbound recursive resolver inside the tunnel (zero DNS Leaks)
-DNS = 10.8.0.1
-
 [Peer]
-PublicKey = <CONTENT_OF_/etc/wireguard/server_public.key>
-PresharedKey = <CONTENT_OF_/etc/wireguard/clients/laptop.psk>
-Endpoint = <SERVER_PUBLIC_IP>:51820
-
-# Full Tunnel IPv4 & IPv6 (prevents out-of-tunnel IPv6 leaks)
+PublicKey = <CONTENTS_OF_server.pub>
+PresharedKey = <CONTENTS_OF_laptop.psk>
+Endpoint = vpn.yourdomain.com:51820
+# Dual-Stack Full Tunnel:
 AllowedIPs = 0.0.0.0/0, ::/0
-
-# Keep NAT mappings alive behind mobile routers and CGNAT every 25 seconds
+# Keep NAT mappings alive behind home routers or mobile CGNAT every 25 s
 PersistentKeepalive = 25
 ```
 
-To import the profile into the official WireGuard iOS or Android app without sending private keys over messaging apps or email, render the QR code directly in your SSH terminal:
+For **Split Tunnel** administration of private servers without routing video calls or heavy downloads through the VPS, replace `AllowedIPs` with the internal tunnel CIDR (`AllowedIPs = 10.8.0.0/24`).
+
+To provision iOS or Android devices without sending private keys over email or messaging apps:
 
 ```bash
-sudo qrencode -t ansiutf8 < /etc/wireguard/clients/laptop.conf
+# Render an ephemeral QR code directly inside the SSH terminal
+qrencode -t ansiutf8 < laptop.conf
 ```
 
 ---
 
-## Forensic Auditing, Diagnostics, and Edge-Case Resolution
+## Production Operations: Live Key Rotation and Zero-Downtime Peer Revocation
 
-Once connected, use the following low-level diagnostics to verify there are no DNS leaks, forwarding blocks, or packet fragmentation issues:
+In production, a phone can be lost or a laptop compromised. Instead of restarting `wg0` and dropping every active user session, WireGuard supports **live revocation and configuration reload** with **0 ms downtime** for healthy peers:
 
-| Diagnostic Command | Operational Purpose and Expected Output |
-|---|---|
-| sudo wg show | Displays active peers, current remote endpoint, time since last handshake (< 2 min), and `received / sent` byte counters. |
-| sudo ss -ulnp \| grep 51820 | Confirms the kernel UDP socket is listening properly on port `51820`. |
-| sudo tcpdump -ni wg0 | Captures decrypted inner IP packets flowing across the virtual tunnel interface in real time. |
-| sudo iptables -t nat -L POSTROUTING -v -n | Verifies that packets from `10.8.0.0/24` increment the `MASQUERADE` rule byte and packet counters. |
-| curl -s https://ifconfig.me | Run on the connected client: must return exclusively the VPN server public IP. |
-| sudo wg syncconf wg0 <(wg-quick strip wg0) | Applies newly added or revoked peers live without dropping active sessions for other connected clients. |
+```bash
+# 1. Immediately evict a compromised peer from kernel memory
+sudo wg set wg0 peer <COMPROMISED_PUBLIC_KEY> remove
 
-### Production Edge-Case Troubleshooting
+# 2. Remove the matching [Peer] block from /etc/wireguard/wg0.conf for persistence
+# 3. Synchronize config live without restarting the interface
+sudo wg syncconf wg0 <(sudo wg-quick strip wg0)
+```
 
-1. **Handshake succeeds, but client cannot load web pages:**
-   * Common cause: `DEFAULT_FORWARD_POLICY` in `/etc/default/ufw` is still `DROP`, or the interface name (`eth0`) in `/etc/ufw/before.rules` does not match the server's actual NIC (`ens3` or `enp1s0`).
-2. **Slow loading, stalled images, or TLS hangs on 4G/5G cellular or PPPoE links:**
-   * Cause: The carrier physical link has an MTU smaller than `1500` bytes (often `1480` or `1492`), causing `1420`-byte inner packets plus UDP headers to exceed the path limit and drop silently. Lower `MTU = 1360` or `MTU = 1280` on both ends.
-3. **Connectivity drops after minutes of mobile inactivity:**
-   * Cause: Carrier-grade NAT (CGNAT) expires idle UDP state tables within 30 to 60 seconds. Keeping `PersistentKeepalive = 25` on the client sends a minimal authenticated datagram every 25 seconds to preserve NAT mappings.
-4. **IP address conflicts when connecting from an office LAN:**
-   * Cause: Using `192.168.1.0/24` or `192.168.0.0/24` as the VPN tunnel range collides with local office routers. Using `10.8.0.0/24` or an uncommon range like `10.214.0.0/24` eliminates route overlaps.
+> [!TIP]
+> **Purge client private keys from the server:** Once the client profile is delivered or the QR code is scanned, delete `/etc/wireguard/keys/laptop.key` from the VPS. The server only needs the peer's public key (`laptop.pub`) and `PresharedKey`; keeping client private keys off the server sharply reduces blast radius if the host is ever compromised.
 
 ---
 
-## Security and Validation Checklist
+## Forensic Audit, Diagnostics, and Production Edge Cases
 
-- [x] **Strict Cryptographic Permissions:** Private keys and `/etc/wireguard/wg0.conf` restricted with `chmod 600` and `umask 077` owned solely by `root`.
-- [x] **Post-Quantum Defense (`PSK`):** Every peer configured with a unique 256-bit `PresharedKey` mixed into `Noise_IKpsk2`.
-- [x] **Clean UFW Integration:** `MASQUERADE` rule declared in `/etc/ufw/before.rules`, `DEFAULT_FORWARD_POLICY="ACCEPT"` active, and only UDP port `51820` exposed externally.
-- [x] **Leak-Free Private DNS Resolver:** Unbound listening exclusively on `10.8.0.1:53` with `access-control` restricted to `10.8.0.0/24` and full `::/0` routing enforced in *Full Tunnel* profiles.
-- [x] **Zero-Downtime Peer Reloads:** Peer additions and revocations applied live via `wg syncconf` without restarting `wg-quick@wg0`.
-- [x] **End-to-End Audit Verified:** Handshake confirmed via `wg show`, active NAT counters verified, and public egress IP validated externally from the client.
+Seeing a "Connected" indicator in a GUI does not prove traffic is routed securely or free of leaks. Run this end-to-end audit sequence across both server and client:
+
+```bash
+# On the server: verify recent handshakes, live byte counters, and active endpoints
+sudo wg show
+
+# On the server: confirm encrypted UDP datagrams arrive on port 51820
+sudo tcpdump -ni eth0 udp port 51820 -nn -c 10
+
+# On the server: confirm decrypted IP packets traverse the virtual wg0 interface
+sudo tcpdump -ni wg0 -nn -c 10
+
+# From the connected client: verify egress public IP and active DNS resolver
+curl -s https://ifconfig.me && echo ""
+dig +short example.com @10.8.0.1
+```
+
+### Production Edge-Case Diagnostic Matrix
+
+| Production Symptom | Root Cause | Exact Verification and Fix |
+|---|---|---|
+| Handshake succeeds but no Internet access | `ip_forward = 0`, wrong egress interface in `MASQUERADE` (`eth0` vs `ens5`), or UFW dropping `FORWARD`. | Check `sysctl net.ipv4.ip_forward` and `sudo iptables -t nat -L POSTROUTING -v -n`; fix interface name in `wg0.conf` and `ufw route allow`. |
+| Pages load partially or SSH hangs on large output | Oversized packets dropped on CGNAT or PPPoE links (*Path MTU Blackhole*). | Lower client MTU to `1280` or `1360` and retain `--clamp-mss-to-pmtu` in server `PostUp`. |
+| Handshake never completes (`latest handshake` empty) | UDP port `51820` blocked in cloud firewall (AWS Lightsail / Security Group) or mismatched public keys. | Verify inbound UDP `51820` in cloud console and trace arrival with `sudo tcpdump -ni eth0 udp port 51820`. |
+| Websites expose client's real country despite VPN | DNS leaking to local router or IPv6 traffic bypassing `wg0`. | Confirm `DNS = 10.8.0.1` and `AllowedIPs = 0.0.0.0/0, ::/0` on the client; verify Unbound answers on `10.8.0.1:53`. |
+| Tunnel connects but Docker breaks forwarding | Docker switches the iptables `FORWARD` chain policy to DROP on startup. | Insert explicit `-I FORWARD -i wg0 -j ACCEPT` rules in `PostUp` or inside the `DOCKER-USER` chain. |
+| Mobile tunnel stalls after 3 minutes idle | Carrier CGNAT expires the idle UDP translation entry. | Keep `PersistentKeepalive = 25` enabled in the mobile client's `[Peer]` block. |
+
+---
+
+## Security and Final Validation Checklist
+
+- [x] Strict `0600` permissions verified on `/etc/wireguard/wg0.conf` and `/etc/wireguard/keys/*`.
+- [x] Client private keys deleted from the server after initial provisioning (only `PublicKey` and `PresharedKey` retained).
+- [x] `net.ipv4.ip_forward = 1`, `net.ipv6.conf.all.forwarding = 1`, and BBR active and persistent in `/etc/sysctl.d/99-wireguard.conf`.
+- [x] NAT Masquerade and TCP MSS Clamping (`--clamp-mss-to-pmtu`) verified in `PostUp` / `PostDown`.
+- [x] UDP port `51820` opened exclusively at the perimeter firewall with complete silence confirmed against unauthenticated probes.
+- [x] Unbound DNS bound exclusively to `127.0.0.1:53` and `10.8.0.1:53`, unreachable from the server's public IP.
+- [x] Live peer revocation and reload validated via `wg syncconf` with **0 ms** downtime for active peers.

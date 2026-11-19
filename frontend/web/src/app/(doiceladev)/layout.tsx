@@ -93,6 +93,11 @@ export default async function RootLayout({
       <head>
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base (llms.txt)" />
         <link rel="icon" href="/doiceladev/logo/logo_fondo_circular_color_.webp" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var c=(t==='light'||t==='dark')?t:'dark';var r=document.documentElement;r.classList.remove('light','dark');r.classList.add(c);r.style.colorScheme=c;}catch(e){}})();`,
+          }}
+        />
         <DoiceladevJsonLd locale={locale} />
       </head>
       <body className="font-sans min-h-full theme-doiceladev bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-400 relative" suppressHydrationWarning>

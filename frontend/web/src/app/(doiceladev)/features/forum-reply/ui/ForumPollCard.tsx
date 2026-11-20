@@ -9,12 +9,14 @@ interface ForumPollCardProps {
   topicId: number;
   question?: string;
   initialOptions: ForumPollOption[];
+  isClosed?: boolean;
 }
 
 export function ForumPollCard({
   topicId,
   question,
   initialOptions,
+  isClosed = false,
 }: ForumPollCardProps) {
   const tDetail = useTranslations('Detail');
   const [options, setOptions] = useState<ForumPollOption[]>(initialOptions);
@@ -43,7 +45,7 @@ export function ForumPollCard({
   const totalVotes = options.reduce((acc, opt) => acc + (opt.votes || 0), 0);
 
   const handleVote = async (optionId: number) => {
-    if (submittingId !== null) return;
+    if (isClosed || submittingId !== null) return;
     setSubmittingId(optionId);
     setError(null);
 
@@ -134,9 +136,16 @@ export function ForumPollCard({
   return (
     <section className="my-8 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
-          {tDetail('pollTitle')}
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
+            {tDetail('pollTitle')}
+          </h2>
+          {isClosed && (
+            <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+              {tDetail('pollClosed')}
+            </span>
+          )}
+        </div>
         <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">
           {tDetail('pollTotalVotes', { count: totalVotes })}
         </span>
@@ -153,16 +162,20 @@ export function ForumPollCard({
           const pct =
             totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
           const isSelected = votedOptionId === opt.id;
-          const showResults = votedOptionId !== null;
+          const showResults = isClosed || votedOptionId !== null;
 
           return (
             <button
               key={opt.id}
               type="button"
               onClick={() => handleVote(opt.id)}
-              disabled={submittingId !== null}
+              disabled={isClosed || submittingId !== null}
               aria-pressed={isSelected}
-              className={`group relative w-full text-left overflow-hidden rounded-xl px-4 py-2.5 transition-all cursor-pointer glass-btn-neumorphic ${
+              className={`group relative w-full text-left overflow-hidden rounded-xl px-4 py-2.5 transition-all ${
+                isClosed
+                  ? 'cursor-default opacity-90'
+                  : 'cursor-pointer glass-btn-neumorphic'
+              } ${
                 isSelected ? 'shadow-[var(--btn-shadow-hover)]' : ''
               }`}
             >

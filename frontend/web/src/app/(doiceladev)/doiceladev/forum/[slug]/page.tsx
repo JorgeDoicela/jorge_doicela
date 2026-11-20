@@ -65,11 +65,20 @@ export default async function ForumTopicDetailPage({ params }: Params) {
     locale,
   );
 
-  // Control gobernado por el corpus: solo se muestra el panel si el debate está resuelto
-  const forumRows = topic.isSolved
+  // Control gobernado por el corpus: status resuelto o cerrado
+  const statusLabel = topic.isClosed
+    ? tCard('closed')
+    : topic.isSolved
+      ? tCard('solved')
+      : null;
+
+  const forumRows = statusLabel
     ? [
-        { label: tMeta('status'), value: tCard('solved') },
-        { label: tMeta('replies'), value: String(topic.replies?.length ?? topic.repliesCount ?? 0) },
+        { label: tMeta('status'), value: statusLabel },
+        {
+          label: tMeta('replies'),
+          value: String(topic.replies?.length ?? topic.repliesCount ?? 0),
+        },
       ]
     : [];
 

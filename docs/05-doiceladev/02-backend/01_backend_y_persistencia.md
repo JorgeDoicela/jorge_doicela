@@ -174,6 +174,7 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `POST /doiceladev/forum/replies` | - | Publicar respuesta (raíz o anidada con `parentId`) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/replies/:id/vote` | - | Votar respuesta útil (`likes + 1`) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/replies/:id/unvote` | - | Retirar voto de respuesta (`MAX(0, likes - 1)`) protegida con `ForumThrottleGuard` |
+| | `DELETE /doiceladev/forum/replies/:id` | - | Eliminar respuesta propia con decremento atómico de `repliesCount` protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/:id/poll/:optionId/vote` | - | Registrar o cambiar voto en encuesta (`previousOptionId` opcional) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/:id/poll/:optionId/unvote` | - | Retirar voto de opción de encuesta (`MAX(0, votes - 1)`) protegida con `ForumThrottleGuard` |
 | **IA** | `GET /doiceladev/ai` | `category`, `tag`, `search`, `sortBy`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, etiqueta, búsqueda, ordenamiento e idioma |

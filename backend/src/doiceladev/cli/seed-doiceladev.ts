@@ -162,6 +162,7 @@ interface ForumSeedData {
     coverImage?: string;
     pollQuestion?: string;
     isSolved: boolean;
+    isClosed?: boolean;
     isPinned: boolean;
     orderPriority?: number;
     repliesCount: number;
@@ -466,6 +467,7 @@ export function seedDoiceladev(
       coverImage    TEXT,
       pollQuestion  TEXT,
       isSolved      INTEGER NOT NULL DEFAULT 0,
+      isClosed      INTEGER NOT NULL DEFAULT 0,
       isPinned      INTEGER NOT NULL DEFAULT 0,
       orderPriority INTEGER NOT NULL DEFAULT 0,
       repliesCount  INTEGER NOT NULL DEFAULT 0,
@@ -877,10 +879,10 @@ export function seedDoiceladev(
     const insertTopic = db.prepare(`
       INSERT INTO forum_topics
         (id, slug, title, content, excerpt, author, category, tags, language, metaAlign, coverImage, pollQuestion,
-         isSolved, isPinned, orderPriority, repliesCount, views, createdAt, updatedAt)
+         isSolved, isClosed, isPinned, orderPriority, repliesCount, views, createdAt, updatedAt)
       VALUES
         (@id, @slug, @title, @content, @excerpt, @author, @category, @tags, @language, @metaAlign, @coverImage, @pollQuestion,
-         @isSolved, @isPinned, @orderPriority, @repliesCount, @views, @createdAt, @updatedAt)
+         @isSolved, @isClosed, @isPinned, @orderPriority, @repliesCount, @views, @createdAt, @updatedAt)
       ON CONFLICT(id) DO UPDATE SET
         slug          = excluded.slug,
         title         = excluded.title,
@@ -894,6 +896,7 @@ export function seedDoiceladev(
         coverImage    = excluded.coverImage,
         pollQuestion  = excluded.pollQuestion,
         isSolved      = excluded.isSolved,
+        isClosed      = excluded.isClosed,
         isPinned      = excluded.isPinned,
         orderPriority = excluded.orderPriority,
         createdAt     = excluded.createdAt,
@@ -938,6 +941,7 @@ export function seedDoiceladev(
         coverImage: topic.coverImage ?? null,
         pollQuestion: topic.pollQuestion ?? null,
         isSolved: topic.isSolved ? 1 : 0,
+        isClosed: topic.isClosed ? 1 : 0,
         isPinned: topic.isPinned ? 1 : 0,
         orderPriority: topic.orderPriority || 0,
         language: topic.language || 'es',

@@ -63,6 +63,9 @@ export class ForumTopic {
   isSolved: boolean;
 
   @Column({ default: false })
+  isClosed: boolean;
+
+  @Column({ default: false })
   isPinned: boolean;
 
   @Column({ default: 0 })

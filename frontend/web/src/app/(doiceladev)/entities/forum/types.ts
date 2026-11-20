@@ -31,6 +31,7 @@ export interface ForumTopic {
   pollQuestion?: string;
   metaAlign?: string;
   isSolved: boolean;
+  isClosed: boolean;
   isPinned: boolean;
   repliesCount: number;
   views: number;

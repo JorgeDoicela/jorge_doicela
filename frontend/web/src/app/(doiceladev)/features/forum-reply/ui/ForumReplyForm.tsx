@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import { ForumTopic, ForumReply } from '../../../entities/forum/types';
 import { API_URL } from '../../../shared';
+import { DoiceladevTextarea } from '../../../shared/ui';
 
 interface ForumReplyFormProps {
   topic: ForumTopic;
@@ -23,23 +23,28 @@ export function ForumReplyForm({
   onCancelReply,
   onReplySent,
 }: ForumReplyFormProps) {
-  const router = useRouter();
   const tDetail = useTranslations('Detail');
   const [replyContent, setReplyContent] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [contentTooltip, setContentTooltip] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const handlePostReply = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = replyContent.trim();
+    if (!trimmed) {
+      setContentTooltip(tDetail('replyRequired'));
+      return;
+    }
     if (trimmed.length < 3) {
-      setErrorMsg(tDetail('replyMinLength'));
+      setContentTooltip(tDetail('replyMinLength'));
       return;
     }
 
     setSubmitting(true);
+    setContentTooltip(null);
     setErrorMsg(null);
     setSuccessMsg(null);
 
@@ -81,7 +86,6 @@ export function ForumReplyForm({
       setReplyContent('');
       setSuccessMsg(tDetail('replySuccess'));
       onCancelReply?.();
-      router.refresh();
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : tDetail('replyError'));
     } finally {
@@ -90,7 +94,7 @@ export function ForumReplyForm({
   };
 
   return (
-    <form onSubmit={handlePostReply} className="mt-6 space-y-3">
+    <form onSubmit={handlePostReply} noValidate className="mt-6 space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h4 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100">
           {tDetail('joinDiscussion')}
@@ -124,16 +128,15 @@ export function ForumReplyForm({
           className="w-full px-4 py-3 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] outline-none text-xs sm:text-[13px] font-medium text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 transition-colors focus:border-blue-500/40 dark:focus:border-cyan-400/40 block"
         />
 
-        {/* Campo 2: Área de escritura en su propio panel cóncavo */}
-        <textarea
+        {/* Campo 2: Área de escritura con globo neumórfico reusable */}
+        <DoiceladevTextarea
           value={replyContent}
           onChange={(e) => setReplyContent(e.target.value)}
           placeholder={tDetail('replyPlaceholder')}
           rows={4}
-          required
-          minLength={3}
           maxLength={4000}
-          className="w-full px-4 py-3 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] outline-none text-xs sm:text-[13px] font-sans text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 resize-none leading-relaxed transition-colors focus:border-blue-500/40 dark:focus:border-cyan-400/40 block"
+          errorTooltip={contentTooltip}
+          onClearError={() => setContentTooltip(null)}
         />
       </div>
 

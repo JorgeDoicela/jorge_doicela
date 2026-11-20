@@ -139,6 +139,12 @@ export class ForumService {
         throw new NotFoundException(`Tema #${dto.topicId} no encontrado`);
       }
 
+      if (topic.isClosed) {
+        throw new BadRequestException(
+          'Este debate está cerrado y ya no admite nuevas respuestas.',
+        );
+      }
+
       if (dto.parentId) {
         const parentReply = await manager.findOne(ForumReply, {
           where: { id: dto.parentId, topicId: dto.topicId },
@@ -167,9 +173,14 @@ export class ForumService {
   async voteReply(replyId: number): Promise<ForumReply> {
     const reply = await this.replyRepository.findOne({
       where: { id: replyId },
+      relations: { topic: true },
     });
     if (!reply) {
       throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+    }
+
+    if (reply.topic?.isClosed) {
+      throw new BadRequestException('El debate está cerrado.');
     }
 
     await this.replyRepository.increment({ id: replyId }, 'likes', 1);
@@ -178,6 +189,18 @@ export class ForumService {
   }
 
   async unvoteReply(replyId: number): Promise<ForumReply> {
+    const reply = await this.replyRepository.findOne({
+      where: { id: replyId },
+      relations: { topic: true },
+    });
+    if (!reply) {
+      throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+    }
+
+    if (reply.topic?.isClosed) {
+      throw new BadRequestException('El debate está cerrado.');
+    }
+
     await this.replyRepository
       .createQueryBuilder()
       .update(ForumReply)
@@ -195,12 +218,75 @@ export class ForumService {
     return updated;
   }
 
+  async deleteReply(
+    replyId: number,
+  ): Promise<{ success: boolean; deletedCount: number }> {
+    return this.dataSource.transaction(async (manager) => {
+      const reply = await manager.findOne(ForumReply, {
+        where: { id: replyId },
+      });
+      if (!reply) {
+        throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+      }
+
+      // Conteo recursivo de hijos y subhijos para decrementar exactamente repliesCount
+      const allTopicReplies = await manager.find(ForumReply, {
+        where: { topicId: reply.topicId },
+        select: { id: true, parentId: true },
+      });
+
+      const idsToDelete = new Set<number>([replyId]);
+      let added = true;
+      while (added) {
+        added = false;
+        for (const r of allTopicReplies) {
+          if (
+            r.parentId &&
+            idsToDelete.has(r.parentId) &&
+            !idsToDelete.has(r.id)
+          ) {
+            idsToDelete.add(r.id);
+            added = true;
+          }
+        }
+      }
+
+      const totalDeleted = idsToDelete.size;
+
+      // TypeORM con CASCADE elimina reply y sus dependientes
+      await manager.delete(ForumReply, Array.from(idsToDelete));
+
+      await manager
+        .createQueryBuilder()
+        .update(ForumTopic)
+        .set({
+          repliesCount: () => `MAX(0, repliesCount - ${totalDeleted})`,
+        })
+        .where('id = :topicId', { topicId: reply.topicId })
+        .execute();
+
+      return { success: true, deletedCount: totalDeleted };
+    });
+  }
+
   async votePollOption(
     topicId: number,
     optionId: number,
     previousOptionId?: number,
   ): Promise<ForumPollOption[]> {
     return this.dataSource.transaction(async (manager) => {
+      const topic = await manager.findOne(ForumTopic, {
+        where: { id: topicId },
+      });
+      if (!topic) {
+        throw new NotFoundException(`Debate #${topicId} no encontrado`);
+      }
+      if (topic.isClosed) {
+        throw new BadRequestException(
+          'La encuesta de este debate está cerrada.',
+        );
+      }
+
       const option = await manager.findOne(ForumPollOption, {
         where: { id: optionId, topicId },
       });
@@ -235,6 +321,16 @@ export class ForumService {
     topicId: number,
     optionId: number,
   ): Promise<ForumPollOption[]> {
+    const topic = await this.topicRepository.findOne({
+      where: { id: topicId },
+    });
+    if (!topic) {
+      throw new NotFoundException(`Debate #${topicId} no encontrado`);
+    }
+    if (topic.isClosed) {
+      throw new BadRequestException('La encuesta de este debate está cerrada.');
+    }
+
     const option = await this.pollOptionRepository.findOne({
       where: { id: optionId, topicId },
     });

@@ -5,5 +5,6 @@ export * from './ScrollToTopButton';
 export * from './ArticleCover';
 export * from './CategoryFilterBar';
 export * from './DoiceladevSelect';
+export * from './DoiceladevTextarea';
 export * from './ModuleFilterToolbar';
 export * from './ArticleMetaPanel';

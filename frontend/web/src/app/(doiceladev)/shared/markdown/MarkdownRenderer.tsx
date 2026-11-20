@@ -20,6 +20,7 @@ interface GlossarySpanProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const EXTERNAL_HREF_RE = /^https?:\/\//i;
+const EMPTY_GLOSSARY_TERMS: GlossaryTerm[] = [];
 
 /**
  * Normaliza defensivamente sintaxis pseudo-LaTeX o flechas matemáticas a Markdown / Unicode limpio,
@@ -92,7 +93,7 @@ function slugifyHeading(text: string): string {
 }
 function MarkdownRendererBase({
   content,
-  glossaryTerms = [],
+  glossaryTerms = EMPTY_GLOSSARY_TERMS,
   variant = 'default',
 }: MarkdownRendererProps) {
   const sanitizedContent = useMemo(() => normalizeMarkdownContent(content), [content]);

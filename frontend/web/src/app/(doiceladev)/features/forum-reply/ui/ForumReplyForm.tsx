@@ -113,8 +113,8 @@ export function ForumReplyForm({
         )}
       </div>
 
-      <div className="space-y-1.5">
-        {/* Campo 1 separado: Nombre o Alias en su propio panel cóncavo */}
+      <div className="space-y-2.5">
+        {/* Campo 1: Nombre o Alias en su propio panel cóncavo */}
         <input
           type="text"
           value={authorName}
@@ -124,7 +124,7 @@ export function ForumReplyForm({
           className="w-full px-4 py-3 rounded-2xl glass-concave-panel border border-slate-200/80 dark:border-white/[0.06] outline-none text-xs sm:text-[13px] font-medium text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 transition-colors focus:border-blue-500/40 dark:focus:border-cyan-400/40 block"
         />
 
-        {/* Campo 2 separado: Área de escritura en su propio panel cóncavo */}
+        {/* Campo 2: Área de escritura en su propio panel cóncavo */}
         <textarea
           value={replyContent}
           onChange={(e) => setReplyContent(e.target.value)}

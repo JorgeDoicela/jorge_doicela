@@ -70,7 +70,7 @@ export function ForumDiscussionSection({
     setVotingId(replyId);
 
     const isUnvoting = votedIds.has(replyId);
-    const previousReplies = replies;
+    const previousLikes = replies.find((r) => r.id === replyId)?.likes;
     const previousVotedIds = new Set(votedIds);
 
     // Actualización optimista inmediata (0 ms)
@@ -119,7 +119,13 @@ export function ForumDiscussionSection({
         );
       }
     } catch {
-      setReplies(previousReplies);
+      if (typeof previousLikes === 'number') {
+        setReplies((prev) =>
+          prev.map((r) =>
+            r.id === replyId ? { ...r, likes: previousLikes } : r,
+          ),
+        );
+      }
       setVotedIds(previousVotedIds);
       try {
         window.localStorage.setItem(

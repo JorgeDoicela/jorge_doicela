@@ -178,13 +178,6 @@ export class ForumService {
   }
 
   async unvoteReply(replyId: number): Promise<ForumReply> {
-    const reply = await this.replyRepository.findOne({
-      where: { id: replyId },
-    });
-    if (!reply) {
-      throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
-    }
-
     await this.replyRepository
       .createQueryBuilder()
       .update(ForumReply)
@@ -192,8 +185,14 @@ export class ForumService {
       .where('id = :replyId', { replyId })
       .execute();
 
-    reply.likes = Math.max(0, (reply.likes || 0) - 1);
-    return reply;
+    const updated = await this.replyRepository.findOne({
+      where: { id: replyId },
+    });
+    if (!updated) {
+      throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+    }
+
+    return updated;
   }
 
   async votePollOption(
@@ -201,32 +200,34 @@ export class ForumService {
     optionId: number,
     previousOptionId?: number,
   ): Promise<ForumPollOption[]> {
-    const option = await this.pollOptionRepository.findOne({
-      where: { id: optionId, topicId },
-    });
-    if (!option) {
-      throw new NotFoundException(
-        `Opción de encuesta #${optionId} no encontrada en el debate #${topicId}`,
-      );
-    }
+    return this.dataSource.transaction(async (manager) => {
+      const option = await manager.findOne(ForumPollOption, {
+        where: { id: optionId, topicId },
+      });
+      if (!option) {
+        throw new NotFoundException(
+          `Opción de encuesta #${optionId} no encontrada en el debate #${topicId}`,
+        );
+      }
 
-    if (previousOptionId && previousOptionId !== optionId) {
-      await this.pollOptionRepository
-        .createQueryBuilder()
-        .update(ForumPollOption)
-        .set({ votes: () => 'MAX(0, votes - 1)' })
-        .where('id = :prevId AND topicId = :topicId', {
-          prevId: previousOptionId,
-          topicId,
-        })
-        .execute();
-    }
+      if (previousOptionId && previousOptionId !== optionId) {
+        await manager
+          .createQueryBuilder()
+          .update(ForumPollOption)
+          .set({ votes: () => 'MAX(0, votes - 1)' })
+          .where('id = :prevId AND topicId = :topicId', {
+            prevId: previousOptionId,
+            topicId,
+          })
+          .execute();
+      }
 
-    await this.pollOptionRepository.increment({ id: optionId }, 'votes', 1);
+      await manager.increment(ForumPollOption, { id: optionId }, 'votes', 1);
 
-    return this.pollOptionRepository.find({
-      where: { topicId },
-      order: { displayOrder: 'ASC' },
+      return manager.find(ForumPollOption, {
+        where: { topicId },
+        order: { displayOrder: 'ASC' },
+      });
     });
   }
 

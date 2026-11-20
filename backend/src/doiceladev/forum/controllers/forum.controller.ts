@@ -11,6 +11,7 @@ import {
 import { ForumService } from '../services/forum.service';
 import { CreateForumReplyDto } from '../dto/create-forum-reply.dto';
 import { GetForumTopicsQueryDto } from '../dto/get-forum-topics-query.dto';
+import { VotePollOptionDto } from '../dto/vote-poll-option.dto';
 import { ForumThrottleGuard } from '../guards/forum-throttle.guard';
 
 @Controller('doiceladev/forum')
@@ -63,13 +64,13 @@ export class ForumController {
   async votePollOption(
     @Param('id', ParseIntPipe) id: number,
     @Param('optionId', ParseIntPipe) optionId: number,
-    @Body('previousOptionId') previousOptionId?: number,
+    @Body() body?: VotePollOptionDto,
   ) {
-    const prevId =
-      typeof previousOptionId === 'number' && !Number.isNaN(previousOptionId)
-        ? previousOptionId
-        : undefined;
-    return this.forumService.votePollOption(id, optionId, prevId);
+    return this.forumService.votePollOption(
+      id,
+      optionId,
+      body?.previousOptionId,
+    );
   }
 
   @Post(':id/poll/:optionId/unvote')

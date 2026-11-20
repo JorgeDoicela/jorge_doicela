@@ -87,13 +87,18 @@ export function ForumPollCard({
         ? `${API_URL}/doiceladev/forum/${topicId}/poll/${optionId}/unvote`
         : `${API_URL}/doiceladev/forum/${topicId}/poll/${optionId}/vote`;
 
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: isUnvoting
-          ? undefined
-          : JSON.stringify({ previousOptionId: previousOptionId ?? undefined }),
-      });
+      const res = await fetch(
+        endpoint,
+        isUnvoting
+          ? { method: 'POST' }
+          : {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(
+                previousOptionId ? { previousOptionId } : {},
+              ),
+            },
+      );
 
       if (!res.ok) {
         throw new Error(tDetail('pollVoteError'));

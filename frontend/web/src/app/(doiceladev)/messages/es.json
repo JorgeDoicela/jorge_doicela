@@ -271,7 +271,7 @@
         "cancelReply": "Cancelar respuesta",
         "replyMinLength": "La respuesta debe tener al menos 3 caracteres.",
         "replyError": "No pudimos publicar tu respuesta. Intenta nuevamente.",
-        "replySuccess": "Respuesta publicada correctamente.",
+        "replySuccess": "Respuesta publicada correctamente",
         "pollTitle": "Encuesta del Debate",
         "pollClosed": "Encuesta Finalizada",
         "pollTotalVotes": "{count, plural, =1 {1 voto} other {# votos}}",

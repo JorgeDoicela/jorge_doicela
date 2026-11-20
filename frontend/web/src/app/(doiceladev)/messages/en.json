@@ -271,7 +271,7 @@
         "cancelReply": "Cancel reply",
         "replyMinLength": "Reply must be at least 3 characters long.",
         "replyError": "Could not publish your reply. Please try again.",
-        "replySuccess": "Reply published successfully.",
+        "replySuccess": "Reply published successfully",
         "pollTitle": "Discussion Poll",
         "pollClosed": "Poll Concluded",
         "pollTotalVotes": "{count, plural, =1 {1 vote} other {# votes}}",

@@ -165,6 +165,10 @@ export function ForumDiscussionSection({
   };
 
   const handleSelectReplyTarget = (reply: ForumReply) => {
+    if (replyTarget?.id === reply.id) {
+      setReplyTarget(null);
+      return;
+    }
     setReplyTarget({ id: reply.id, author: reply.author });
     formAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
@@ -311,7 +315,12 @@ export function ForumDiscussionSection({
               <button
                 type="button"
                 onClick={() => handleSelectReplyTarget(reply)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-btn-neumorphic text-[11px] font-mono font-medium text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
+                aria-pressed={replyTarget?.id === reply.id}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-btn-neumorphic text-[11px] font-mono transition-all cursor-pointer ${
+                  replyTarget?.id === reply.id
+                    ? 'font-bold text-slate-900 dark:text-white shadow-[var(--btn-shadow-hover)]'
+                    : 'font-medium text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white'
+                }`}
               >
                 <CornerDownRight className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{tDetail('replyAction')}</span>

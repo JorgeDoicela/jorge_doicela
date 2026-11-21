@@ -1,3 +1,2 @@
 export * from './types';
-export * from './api/useCategoriesHub';
-export * from './api/useCategoryArticles';
+export * from './api/useCategoriesDirectory';

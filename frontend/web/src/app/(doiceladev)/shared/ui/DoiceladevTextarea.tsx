@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useId, useRef } from 'react';
 import { AlertCircle } from 'lucide-react';
 
 export interface DoiceladevTextareaProps
@@ -26,6 +26,7 @@ export const DoiceladevTextarea = forwardRef<
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipId = useId();
 
   // Auto-cierre temporal tras 4 segundos si el usuario no interactúa
   useEffect(() => {
@@ -77,7 +78,7 @@ export const DoiceladevTextarea = forwardRef<
         onChange={handleChange}
         onFocus={handleFocus}
         aria-invalid={Boolean(errorTooltip)}
-        aria-describedby={errorTooltip ? 'textarea-error-tooltip' : undefined}
+        aria-describedby={errorTooltip ? tooltipId : undefined}
         className={`w-full px-4 py-3 rounded-2xl glass-concave-panel border outline-none text-xs sm:text-[13px] font-sans text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 resize-none leading-relaxed transition-all block ${
           errorTooltip
             ? 'border-amber-500/60 dark:border-amber-400/60 ring-1 ring-amber-500/30'
@@ -89,7 +90,7 @@ export const DoiceladevTextarea = forwardRef<
       {/* Globo / Tooltip Neumórfico Flotante Centrado con auto-cierre */}
       {errorTooltip && (
         <div
-          id="textarea-error-tooltip"
+          id={tooltipId}
           role="alert"
           onClick={() => onClearError?.()}
           className="absolute z-30 -bottom-2.5 left-1/2 -translate-x-1/2 translate-y-full animate-in fade-in slide-in-from-top-1 zoom-in-95 duration-150 select-none cursor-pointer"
@@ -102,9 +103,10 @@ export const DoiceladevTextarea = forwardRef<
 
           {/* Panel Flotante Neumórfico Glass */}
           <div className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl glass-convex-panel border border-slate-200/90 dark:border-white/10 shadow-[var(--btn-shadow)] text-slate-800 dark:text-zinc-100 text-[11.5px] font-mono font-medium backdrop-blur-xl hover:opacity-90 transition-opacity">
-            <span className="w-4 h-4 rounded-full bg-amber-500/15 dark:bg-amber-400/20 text-amber-600 dark:text-amber-400 inline-flex items-center justify-center shrink-0">
-              <AlertCircle className="w-3 h-3 stroke-[2.5]" aria-hidden="true" />
-            </span>
+            <AlertCircle
+              className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 stroke-[2.2]"
+              aria-hidden="true"
+            />
             <span className="whitespace-nowrap">{errorTooltip}</span>
           </div>
         </div>

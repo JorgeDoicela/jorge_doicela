@@ -48,7 +48,7 @@ export function RelatedArticlesNav({
               title={item.title}
               category={item.category}
               coverImage={item.coverImage}
-              categoryMeta={item.categoryMeta || tNav(item.category as any)}
+              categoryMeta={item.categoryMeta || tNav(item.category as never)}
               excerpt={item.excerpt}
             />
           </div>

@@ -1,6 +1,6 @@
 import type { DoiceladevArticleCategory } from '../../shared/ui/ArticleCover';
 
-export interface CategoryHubItem {
+export interface CategoryDirectoryItem {
   slug: string;
   label: string;
   count: number;

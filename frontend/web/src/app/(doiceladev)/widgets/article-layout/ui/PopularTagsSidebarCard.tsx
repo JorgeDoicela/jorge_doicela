@@ -43,8 +43,8 @@ export function PopularTagsSidebarCard({
         for (const list of collections) {
             if (!Array.isArray(list)) continue;
             for (const item of list) {
-                if (!item || typeof (item as any).tags !== 'string') continue;
-                const rawTags = (item as any).tags as string;
+                if (!item || !('tags' in item) || typeof item.tags !== 'string') continue;
+                const rawTags = item.tags;
                 const splitTags = rawTags
                     .split(',')
                     .map((t) => t.trim().toLowerCase())

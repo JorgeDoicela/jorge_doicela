@@ -67,11 +67,11 @@ export function CategoryNav({
     const categoryOptions: SelectOption<DoiceladevSection>[] = React.useMemo(() => {
         const primary = DOICELADEV_CATEGORY_KEYS.map((cat) => ({
             value: cat.id,
-            label: t(cat.key as any),
+            label: t(cat.key as never),
         }));
         const taxonomies = DOICELADEV_TAXONOMY_KEYS.map((tax) => ({
             value: tax.id,
-            label: t(tax.key as any),
+            label: t(tax.key as never),
         }));
         return [...primary, ...taxonomies];
     }, [t]);
@@ -125,7 +125,7 @@ export function CategoryNav({
                                     : 'text-zinc-600 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
                         >
-                            <span>{t(cat.key as any)}</span>
+                            <span>{t(cat.key as never)}</span>
                         </Link>
                     );
                 })}
@@ -153,7 +153,7 @@ export function CategoryNav({
                                     : 'text-zinc-500 dark:text-zinc-400 hover:text-[var(--foreground)] hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
                         >
-                            <span>{t(tax.key as any)}</span>
+                            <span>{t(tax.key as never)}</span>
                         </Link>
                     );
                 })}

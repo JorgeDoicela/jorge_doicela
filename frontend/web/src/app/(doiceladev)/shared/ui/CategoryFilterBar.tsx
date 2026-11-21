@@ -65,27 +65,27 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
 
       // 1. Caso canónico de 'all'
       if (id.toLowerCase() === 'all') {
-        if (tFilters.has('all' as any)) return tFilters('all' as any);
-        if (t.has('all' as any)) return t('all' as any);
+        if (tFilters.has('all' as never)) return tFilters('all' as never);
+        if (t.has('all' as never)) return t('all' as never);
         return 'Todos';
       }
 
       // 2. Probar coincidencia exacta y en minúsculas por id
-      if (tFilters.has(id as any)) {
-        return tFilters(id as any);
+      if (tFilters.has(id as never)) {
+        return tFilters(id as never);
       }
       const lowerId = id.toLowerCase();
-      if (tFilters.has(lowerId as any)) {
-        return tFilters(lowerId as any);
+      if (tFilters.has(lowerId as never)) {
+        return tFilters(lowerId as never);
       }
 
       // 3. Probar coincidencia por label si difiere
-      if (label && tFilters.has(label as any)) {
-        return tFilters(label as any);
+      if (label && tFilters.has(label as never)) {
+        return tFilters(label as never);
       }
       const lowerLabel = label.toLowerCase();
-      if (lowerLabel && tFilters.has(lowerLabel as any)) {
-        return tFilters(lowerLabel as any);
+      if (lowerLabel && tFilters.has(lowerLabel as never)) {
+        return tFilters(lowerLabel as never);
       }
 
       // 4. Fallback cosmético premium: nunca mostrar guiones bajos ni cadenas técnicas crudas

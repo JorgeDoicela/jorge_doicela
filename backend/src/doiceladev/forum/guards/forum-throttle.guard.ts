@@ -23,6 +23,8 @@ export class ForumThrottleGuard implements CanActivate {
   private readonly tracking = new Map<string, ThrottleRecord>();
   private readonly MAX_REQUESTS = 15;
   private readonly WINDOW_MS = 60 * 1000;
+  private readonly PURGE_THRESHOLD = 300;
+  private readonly MAX_TRACKED_IPS = 2000;
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
@@ -35,11 +37,17 @@ export class ForumThrottleGuard implements CanActivate {
     const now = Date.now();
     const record = this.tracking.get(clientIp);
 
-    if (this.tracking.size > 300) {
+    if (this.tracking.size > this.PURGE_THRESHOLD) {
       for (const [ip, data] of this.tracking.entries()) {
         if (now > data.resetTime) {
           this.tracking.delete(ip);
         }
+      }
+      // Techo duro FIFO para blindar la RAM en el VPS de 1 GB ante ráfagas distribuidas
+      while (this.tracking.size >= this.MAX_TRACKED_IPS) {
+        const oldest = this.tracking.keys().next();
+        if (oldest.done) break;
+        this.tracking.delete(oldest.value);
       }
     }
 

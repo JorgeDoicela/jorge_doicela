@@ -173,6 +173,13 @@ export function matchInlineCodeGlossary(
   return null;
 }
 
+interface MdastNode {
+  type: string;
+  value?: string;
+  children?: MdastNode[];
+  data?: Record<string, unknown>;
+}
+
 /**
  * Plugin de Remark que enriquece el AST de Markdown con los términos del glosario.
  * Ejecuta el recorrido del árbol MDAST una sola vez de forma determinista y estática,
@@ -181,13 +188,13 @@ export function matchInlineCodeGlossary(
  */
 export function createRemarkGlossary(terms: GlossaryTerm[]) {
   return () => {
-    return (tree: any) => {
+    return (tree: MdastNode) => {
       if (!terms || terms.length === 0) return;
 
       const matchers = buildGlossaryMatchers(terms);
       const seenSlugs = new Set<string>();
 
-      function walk(node: any, parent: any, index: number): number | void {
+      function walk(node: MdastNode, parent: MdastNode | null, index: number): number | void {
         if (!node) return;
 
         // Proteger encabezados, bloques de código cercados, código en línea, enlaces y HTML crudo
@@ -204,7 +211,7 @@ export function createRemarkGlossary(terms: GlossaryTerm[]) {
         // Inspeccionar nodos de texto plano
         if (node.type === 'text' && typeof node.value === 'string' && parent && Array.isArray(parent.children)) {
           let text = node.value;
-          const newNodes: any[] = [];
+          const newNodes: MdastNode[] = [];
 
           while (text.length > 0) {
             let earliestMatch: {

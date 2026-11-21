@@ -9,7 +9,6 @@ import { DoiceladevTextarea } from '../../../shared/ui';
 
 interface ForumReplyFormProps {
   topic: ForumTopic;
-  locale: string;
   parentId?: number | null;
   replyingToAuthor?: string | null;
   onCancelReply?: () => void;

@@ -16,7 +16,7 @@ export function AiCard({ resource, priority = false }: AiCardProps) {
 
   const catKey = resource.category?.toLowerCase() || '';
   const categoryLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
+    ? (tFilters.has(catKey as never) ? tFilters(catKey as never) : catKey.replace(/_/g, ' '))
     : '';
 
   const moduleLabel = tNav('ai');

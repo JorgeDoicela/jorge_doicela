@@ -4,6 +4,7 @@ import {
   Post,
   Delete,
   Body,
+  Headers,
   Param,
   Query,
   ParseIntPipe,
@@ -62,8 +63,11 @@ export class ForumController {
 
   @Delete('replies/:id')
   @UseGuards(ForumThrottleGuard)
-  async deleteReply(@Param('id', ParseIntPipe) id: number) {
-    return this.forumService.deleteReply(id);
+  async deleteReply(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('x-reply-delete-token') deleteToken?: string,
+  ) {
+    return this.forumService.deleteReply(id, deleteToken);
   }
 
   @Post(':id/poll/:optionId/vote')

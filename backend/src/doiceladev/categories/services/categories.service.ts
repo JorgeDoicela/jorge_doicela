@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { GetCategoriesQueryDto } from '../dto/get-categories-query.dto';
 import { GetCategoryArticlesQueryDto } from '../dto/get-category-articles-query.dto';
+import { stripMarkdownToPlainText } from '../../common/utils/strip-markdown.util';
 
 interface CategoryTableConfig {
   table: string;
@@ -15,7 +16,7 @@ interface CategoryTableConfig {
   featCol: string;
 }
 
-export interface CategoryHubItem {
+export interface CategoryDirectoryItem {
   slug: string;
   label: string;
   count: number;
@@ -46,43 +47,32 @@ export interface CategoryArticlesResponse {
 }
 
 const CATEGORY_ALIAS_MAP: Record<string, string> = {
-  // CVE
   analisis_de_cve: 'cve_analysis',
   análisis_de_cve: 'cve_analysis',
   cve_analysis: 'cve_analysis',
   cve: 'cve_analysis',
-  // Hardening
   guias_de_bastionado: 'hardening_guide',
   guías_de_bastionado: 'hardening_guide',
   hardening_guide: 'hardening_guide',
-  // Advisory
   avisos_de_seguridad: 'advisory',
   advisory: 'advisory',
-  // Writeup
   writeups_tecnicos: 'writeup',
   writeups_técnicos: 'writeup',
   writeup: 'writeup',
-  // Pentest
   pruebas_de_intrusion: 'pentest',
   pruebas_de_intrusión: 'pentest',
   pentest: 'pentest',
-  // Servers
   servidores_linux: 'servers',
   servidores_y_linux: 'servers',
   servers: 'servers',
-  // CI/CD
   ci_cd_despliegues: 'ci_cd',
   ci_cd: 'ci_cd',
-  // Containers
   contenedores_docker: 'containers',
   containers: 'containers',
-  // Web
   ecosistema_web: 'web',
   web: 'web',
-  // Frameworks
   frameworks_web: 'frameworks',
   frameworks: 'frameworks',
-  // AI
   servidores_mcp: 'mcp_server',
   mcp_server: 'mcp_server',
   modelos_llm: 'llm',
@@ -90,7 +80,6 @@ const CATEGORY_ALIAS_MAP: Record<string, string> = {
   frameworks_agenticos: 'agent',
   frameworks_agénticos: 'agent',
   agent: 'agent',
-  // Development
   backend_apis: 'backend',
   backend: 'backend',
   frontend_ui: 'frontend',
@@ -111,7 +100,6 @@ const CATEGORY_ALIAS_MAP: Record<string, string> = {
   seguridad: 'security',
   security: 'security',
   cybersecurity: 'security',
-  // Blog Personal
   lecciones_aprendidas: 'lessons',
   lessons: 'lessons',
   errores_postmortems: 'postmortems',
@@ -217,27 +205,31 @@ export class CategoriesService {
   ) {}
 
   async getAllCategories(
-    query: GetCategoriesQueryDto,
-  ): Promise<CategoryHubItem[]> {
+    query: GetCategoriesQueryDto = {},
+  ): Promise<CategoryDirectoryItem[]> {
     const lang = query.lang || 'es';
-    const isEn = lang === 'en';
 
     try {
+      const perTableRows = await Promise.all(
+        this.tableConfigs.map(async (config) => {
+          const rows: Array<{ category: string; cnt: number }> =
+            await this.dataSource.query(
+              `SELECT category, COUNT(*) as cnt
+               FROM ${config.table}
+               WHERE language = ? AND category IS NOT NULL AND TRIM(category) != ''
+               GROUP BY category`,
+              [lang],
+            );
+          return { domain: config.categoryDomain, rows };
+        }),
+      );
+
       const categoryMap = new Map<
         string,
         { count: number; modules: Set<string> }
       >();
 
-      for (const config of this.tableConfigs) {
-        const rows: Array<{ category: string; cnt: number }> =
-          await this.dataSource.query(
-            `SELECT category, COUNT(*) as cnt 
-           FROM ${config.table} 
-           WHERE language = ? AND category IS NOT NULL AND TRIM(category) != ''
-           GROUP BY category`,
-            [lang],
-          );
-
+      for (const { domain, rows } of perTableRows) {
         for (const row of rows) {
           const rawSlug = String(row.category || '')
             .trim()
@@ -249,26 +241,25 @@ export class CategoriesService {
           }
           const entry = categoryMap.get(rawSlug)!;
           entry.count += Number(row.cnt) || 0;
-          entry.modules.add(config.categoryDomain);
+          entry.modules.add(domain);
         }
       }
 
-      const results: CategoryHubItem[] = Array.from(categoryMap.entries()).map(
-        ([slug, data]) => ({
-          slug,
-          label: this.formatCategoryLabel(slug, isEn),
-          count: data.count,
-          modules: Array.from(data.modules),
-        }),
-      );
+      const results: CategoryDirectoryItem[] = Array.from(
+        categoryMap.entries(),
+      ).map(([slug, data]) => ({
+        slug,
+        label: slug,
+        count: data.count,
+        modules: Array.from(data.modules),
+      }));
 
-      // Ordenar por cantidad de artículos descendente, luego alfabéticamente
       return results.sort(
-        (a, b) => b.count - a.count || a.label.localeCompare(b.label),
+        (a, b) => b.count - a.count || a.slug.localeCompare(b.slug),
       );
     } catch (error) {
       this.logger.error(
-        `Error al listar categorías: ${error instanceof Error ? error.message : error}`,
+        `Error al listar categorías: ${error instanceof Error ? error.message : String(error)}`,
       );
       return [];
     }
@@ -276,13 +267,13 @@ export class CategoriesService {
 
   async getArticlesByCategory(
     categorySlug: string,
-    query: GetCategoryArticlesQueryDto,
+    query: GetCategoryArticlesQueryDto = {},
   ): Promise<CategoryArticlesResponse> {
     let rawSlug = categorySlug || '';
     try {
       rawSlug = decodeURIComponent(categorySlug);
     } catch {
-      // ignore
+      // Mantener valor original si el encoding es inválido
     }
     const cleanSlug = rawSlug
       .trim()
@@ -298,17 +289,14 @@ export class CategoriesService {
           CATEGORY_ALIAS_MAP[unaccented] ||
           cleanSlug;
     const lang = query.lang || 'es';
-    const isEn = lang === 'en';
     const page = Math.max(1, Number(query.page) || 1);
     const limit = Math.max(1, Math.min(100, Number(query.limit) || 20));
     const search = query.search?.trim().toLowerCase() || '';
 
-    try {
-      const allArticles: CategoryArticleItem[] = [];
-
-      for (const config of this.tableConfigs) {
+    const perTableResults = await Promise.all(
+      this.tableConfigs.map(async (config) => {
         const whereClauses: string[] = ['language = ?'];
-        const params: any[] = [lang];
+        const params: Array<string | number> = [lang];
 
         if (normalizedSlug !== 'all') {
           whereClauses.push('LOWER(category) = ?');
@@ -331,24 +319,27 @@ export class CategoriesService {
           coverImage?: string;
           createdAt: string;
           publishedAt?: string;
-          orderPriority?: number;
         }> = await this.dataSource.query(
-          `SELECT id, slug, category, ${config.titleCol} AS title, ${config.descCol} AS excerpt, coverImage, 
-                  createdAt, ${config.dateCol} AS publishedAt,
-                  orderPriority
+          `SELECT id, slug, category, ${config.titleCol} AS title, ${config.descCol} AS excerpt, coverImage,
+                  createdAt, ${config.dateCol} AS publishedAt
            FROM ${config.table}
            WHERE ${whereClauses.join(' AND ')}`,
           params,
         );
 
-        for (const row of rows) {
+        return rows.map((row): CategoryArticleItem => {
           const sub = (row.category || normalizedSlug || '')
             .trim()
             .toLowerCase();
           const dateStr = new Date(
             row.publishedAt || row.createdAt || Date.now(),
           ).toISOString();
-          allArticles.push({
+          const excerpt =
+            config.type === 'forum'
+              ? stripMarkdownToPlainText(row.excerpt, 220) || null
+              : row.excerpt || null;
+
+          return {
             id: `${config.type}-${row.id}`,
             href: `${config.routePrefix}/${row.slug}`,
             title: row.title,
@@ -357,119 +348,36 @@ export class CategoriesService {
               ? `${config.categoryDomain} • ${sub}`
               : config.categoryDomain,
             coverImage: row.coverImage,
-            excerpt: row.excerpt || null,
+            excerpt,
             date: dateStr,
-          });
-        }
-      }
+          };
+        });
+      }),
+    );
 
-      // Ordenar cronológicamente descendente
-      allArticles.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      );
+    const allArticles = perTableResults
+      .flat()
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-      const totalCount = allArticles.length;
-      const totalPages = Math.ceil(totalCount / limit) || 1;
-      const startIndex = (page - 1) * limit;
-      const paginatedArticles = allArticles.slice(
-        startIndex,
-        startIndex + limit,
-      );
-
-      return {
-        category: {
-          slug: normalizedSlug,
-          label:
-            normalizedSlug === 'all'
-              ? isEn
-                ? 'All Categories'
-                : 'Todas las Categorías'
-              : this.formatCategoryLabel(normalizedSlug, isEn),
-          totalCount,
-        },
-        articles: paginatedArticles,
-        page,
-        limit,
-        totalPages,
-      };
-    } catch (error) {
-      this.logger.error(
-        `Error al obtener publicaciones de categoría '${categorySlug}': ${error instanceof Error ? error.message : error}`,
-      );
-      return {
-        category: {
-          slug: normalizedSlug,
-          label:
-            normalizedSlug === 'all'
-              ? isEn
-                ? 'All Categories'
-                : 'Todas las Categorías'
-              : this.formatCategoryLabel(normalizedSlug, isEn),
-          totalCount: 0,
-        },
-        articles: [],
-        page,
-        limit,
-        totalPages: 0,
-      };
+    if (normalizedSlug !== 'all' && !search && allArticles.length === 0) {
+      throw new NotFoundException(`Categoría "${categorySlug}" no encontrada`);
     }
-  }
 
-  private formatCategoryLabel(cat: string, isEn: boolean): string {
-    const map: Record<string, { es: string; en: string }> = {
-      hardening_guide: { es: 'Guías de Bastionado', en: 'Hardening Guides' },
-      advisory: { es: 'Avisos de Seguridad', en: 'Security Advisories' },
-      cve_analysis: { es: 'Análisis de CVE', en: 'CVE Analysis' },
-      writeup: { es: 'Writeups Técnicos', en: 'Technical Writeups' },
-      pentest: { es: 'Pruebas de Intrusión', en: 'Penetration Testing' },
-      mcp_server: { es: 'Servidores MCP', en: 'MCP Servers' },
-      llm: { es: 'Modelos LLM', en: 'LLM Models' },
-      agent: { es: 'Frameworks Agénticos', en: 'Agentic Frameworks' },
-      ci_cd: { es: 'CI/CD & Despliegues', en: 'CI/CD & Deployments' },
-      servers: { es: 'Servidores & Linux', en: 'Servers & Linux' },
-      containers: { es: 'Contenedores & Docker', en: 'Containers & Docker' },
-      clean_code: { es: 'Código Limpio', en: 'Clean Code' },
-      hardening: { es: 'Seguridad & Bastionado', en: 'Security & Hardening' },
-      architecture: {
-        es: 'Arquitectura de Software',
-        en: 'Software Architecture',
+    const totalCount = allArticles.length;
+    const totalPages = Math.ceil(totalCount / limit) || 1;
+    const startIndex = (page - 1) * limit;
+    const paginatedArticles = allArticles.slice(startIndex, startIndex + limit);
+
+    return {
+      category: {
+        slug: normalizedSlug,
+        label: normalizedSlug,
+        totalCount,
       },
-      devops: { es: 'Cloud & DevOps', en: 'Cloud & DevOps' },
-      web: { es: 'Ecosistema Web', en: 'Web Ecosystem' },
-      backend: { es: 'Backend & APIs', en: 'Backend & APIs' },
-      frontend: { es: 'Frontend & UI', en: 'Frontend & UI' },
-      mobile: { es: 'Móvil & Multiplataforma', en: 'Mobile & Cross-Platform' },
-      frameworks: { es: 'Frameworks & Web', en: 'Frameworks & Web' },
-      framework: { es: 'Frameworks', en: 'Frameworks' },
-      general: { es: 'Comunidad General', en: 'General Community' },
-      tool: { es: 'Herramientas', en: 'Tools' },
-      security: { es: 'Ciberseguridad', en: 'Cybersecurity' },
-      cybersecurity: { es: 'Ciberseguridad', en: 'Cybersecurity' },
-      dataset: { es: 'Datasets', en: 'Datasets' },
-      platform: { es: 'Plataformas', en: 'Platforms' },
-      lessons: { es: 'Lecciones Aprendidas', en: 'Lessons Learned' },
-      postmortems: {
-        es: 'Errores & Post-Mortems',
-        en: 'Failures & Post-Mortems',
-      },
-      opinion: { es: 'Ensayos & Opinión', en: 'Essays & Opinion' },
-      career: { es: 'Carrera Técnica', en: 'Engineering Career' },
-      journal: { es: 'Bitácora de Ingeniería', en: 'Engineering Log' },
-      networking: { es: 'Redes & mTLS', en: 'Networking & mTLS' },
-      cloud: { es: 'Cloud & VPS', en: 'Cloud & VPS' },
-      databases: { es: 'Bases de Datos', en: 'Databases' },
-      open_source: { es: 'Open Source', en: 'Open Source' },
-      tools: { es: 'Herramientas', en: 'Tools' },
-      ai: { es: 'Inteligencia Artificial', en: 'Artificial Intelligence' },
-      help: { es: 'Soporte & Dudas', en: 'Help & Q&A' },
-      monitoring: {
-        es: 'Monitoreo & Telemetría',
-        en: 'Monitoring & Telemetry',
-      },
-      zero_ram: { es: 'Optimización de Recursos', en: 'Resource Optimization' },
+      articles: paginatedArticles,
+      page,
+      limit,
+      totalPages,
     };
-    const found = map[cat.toLowerCase()];
-    if (found) return isEn ? found.en : found.es;
-    return cat.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   }
 }

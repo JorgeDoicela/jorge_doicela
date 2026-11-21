@@ -30,7 +30,7 @@ export function ForumDiscussionSection({
     }
   }, [topic.replies]);
   const [votedIds, setVotedIds] = useState<Set<number>>(new Set());
-  const [myReplyIds, setMyReplyIds] = useState<Set<number>>(new Set());
+  const [myReplyTokens, setMyReplyTokens] = useState<Record<number, string>>({});
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [votingId, setVotingId] = useState<number | null>(null);
@@ -57,12 +57,15 @@ export function ForumDiscussionSection({
       const mySaved = window.localStorage.getItem(MY_REPLIES_KEY);
       if (mySaved) {
         const parsedMy = JSON.parse(mySaved) as unknown;
-        if (Array.isArray(parsedMy)) {
-          setMyReplyIds(
-            new Set(
-              parsedMy.map((n) => Number(n)).filter((n) => !Number.isNaN(n)),
-            ),
-          );
+        if (parsedMy && typeof parsedMy === 'object' && !Array.isArray(parsedMy)) {
+          const validTokens: Record<number, string> = {};
+          for (const [k, v] of Object.entries(parsedMy as Record<string, unknown>)) {
+            const idNum = Number(k);
+            if (!Number.isNaN(idNum) && typeof v === 'string' && v.trim().length > 0) {
+              validTokens[idNum] = v;
+            }
+          }
+          setMyReplyTokens(validTokens);
         }
       }
     } catch {
@@ -178,23 +181,25 @@ export function ForumDiscussionSection({
       if (prev.some((r) => r.id === created.id)) return prev;
       return [...prev, created];
     });
-    setMyReplyIds((prev) => {
-      const next = new Set(prev);
-      next.add(created.id);
-      try {
-        window.localStorage.setItem(
-          MY_REPLIES_KEY,
-          JSON.stringify(Array.from(next)),
-        );
-      } catch {
-        // Silencioso
-      }
-      return next;
-    });
+    if (created.deleteToken) {
+      const token = created.deleteToken;
+      setMyReplyTokens((prev) => {
+        const next = { ...prev, [created.id]: token };
+        try {
+          window.localStorage.setItem(MY_REPLIES_KEY, JSON.stringify(next));
+        } catch {
+          // Silencioso
+        }
+        return next;
+      });
+    }
   };
 
   const handleDeleteReply = async (replyId: number) => {
     if (deletingId !== null) return;
+    const deleteToken = myReplyTokens[replyId];
+    if (!deleteToken) return;
+
     setDeletingId(replyId);
     setConfirmDeleteId(null);
     const previousReplies = replies;
@@ -212,26 +217,30 @@ export function ForumDiscussionSection({
       }
     }
 
+    if (replyTarget && idsToDelete.has(replyTarget.id)) {
+      setReplyTarget(null);
+    }
+
     setReplies((prev) => prev.filter((r) => !idsToDelete.has(r.id)));
 
     try {
       const res = await fetch(`${API_URL}/doiceladev/forum/replies/${replyId}`, {
         method: 'DELETE',
+        headers: {
+          'x-reply-delete-token': deleteToken,
+        },
       });
       if (!res.ok) {
         throw new Error('Delete failed');
       }
 
-      setMyReplyIds((prev) => {
-        const next = new Set(prev);
+      setMyReplyTokens((prev) => {
+        const next = { ...prev };
         for (const id of idsToDelete) {
-          next.delete(id);
+          delete next[id];
         }
         try {
-          window.localStorage.setItem(
-            MY_REPLIES_KEY,
-            JSON.stringify(Array.from(next)),
-          );
+          window.localStorage.setItem(MY_REPLIES_KEY, JSON.stringify(next));
         } catch {
           // Silencioso
         }
@@ -247,7 +256,7 @@ export function ForumDiscussionSection({
   const renderReply = (reply: ForumReply, depth: number = 0) => {
     const childReplies = childrenByParent.get(reply.id) || [];
     const hasVoted = votedIds.has(reply.id);
-    const isMyReply = myReplyIds.has(reply.id);
+    const isMyReply = Boolean(myReplyTokens[reply.id]);
 
     return (
       <div
@@ -414,7 +423,6 @@ export function ForumDiscussionSection({
           <div ref={formAnchorRef}>
             <ForumReplyForm
               topic={topic}
-              locale={locale}
               parentId={replyTarget?.id ?? null}
               replyingToAuthor={replyTarget?.author ?? null}
               onCancelReply={() => setReplyTarget(null)}

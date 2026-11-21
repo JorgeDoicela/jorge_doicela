@@ -16,7 +16,7 @@ export function InfrastructureCard({ post, priority = false }: InfrastructureCar
   const moduleLabel = tNav('infrastructure');
   const catKey = post.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
+    ? (tFilters.has(catKey as never) ? tFilters(catKey as never) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

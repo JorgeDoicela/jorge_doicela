@@ -122,6 +122,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
+            url: 'https://doiceladev.jorgedoicela.com/categories',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        },
+        {
+            url: 'https://doiceladev.jorgedoicela.com/tags',
+            lastModified: now,
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        },
+        {
             url: 'https://doiceladev.jorgedoicela.com/infrastructure/firewall-linux-ufw-netfilter-seguridad-servidores',
             lastModified: now,
             changeFrequency: 'monthly',

@@ -27,6 +27,12 @@ export function ForumPollCard({
   const storageKey = `doicela_forum_poll_${topicId}`;
 
   useEffect(() => {
+    setOptions(initialOptions);
+  }, [initialOptions]);
+
+  useEffect(() => {
+    setVotedOptionId(null);
+    setError(null);
     try {
       const saved = window.localStorage.getItem(storageKey);
       if (saved) {
@@ -141,8 +147,9 @@ export function ForumPollCard({
             {tDetail('pollTitle')}
           </h2>
           {isClosed && (
-            <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
-              {tDetail('pollClosed')}
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-amber-700 dark:text-amber-300">
+              <span aria-hidden="true">•</span>
+              <span>{tDetail('pollClosed')}</span>
             </span>
           )}
         </div>

@@ -1,22 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { DoiceladevPageLayout } from '../../widgets/page-layout';
-import { useCategoriesHub } from '../../entities/categories';
+import { useCategoriesDirectory } from '../../entities/categories';
 import { useFuzzyFilter } from '../../shared';
+import { DoiceladevSearchInput } from '../../shared/ui';
+
+function formatFallbackCategoryLabel(slug: string): string {
+  return slug.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 export default function CategoriesDirectoryPage() {
   const tNav = useTranslations('Nav');
-  const t = useTranslations('CategoriesHub');
+  const tFilters = useTranslations('Filters');
+  const t = useTranslations('CategoriesDirectory');
   const [search, setSearch] = useState('');
-  const { categories, loading, error } = useCategoriesHub();
+  const { categories, loading, error } = useCategoriesDirectory();
 
-  const filteredCategories = useFuzzyFilter(categories, {
+  const localizedCategories = useMemo(
+    () =>
+      categories.map((cat) => {
+        const key = cat.slug.trim().toLowerCase();
+        const displayLabel = tFilters.has(key as never)
+          ? tFilters(key as never)
+          : formatFallbackCategoryLabel(key);
+        return {
+          ...cat,
+          displayLabel,
+        };
+      }),
+    [categories, tFilters],
+  );
+
+  const filteredCategories = useFuzzyFilter(localizedCategories, {
     search,
     searchKeys: [
-      { name: 'label', weight: 2.5 },
+      { name: 'displayLabel', weight: 2.5 },
       { name: 'slug', weight: 1.5 },
       { name: 'modules', weight: 1.0 },
     ],
@@ -39,15 +60,12 @@ export default function CategoriesDirectoryPage() {
           </p>
 
           <div className="flex items-center justify-center pt-2">
-            <div className="relative w-full max-w-md shrink-0">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('searchPlaceholder')}
-                className="w-full px-5 py-2.5 rounded-2xl glass-concave-panel text-sm text-[var(--foreground)] placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-inner transition-all duration-200"
-              />
-            </div>
+            <DoiceladevSearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder={t('searchPlaceholder')}
+              accentColor="blue"
+            />
           </div>
         </header>
 
@@ -87,7 +105,7 @@ export default function CategoriesDirectoryPage() {
                   className="group p-5 sm:p-6 rounded-2xl glass-convex-panel border border-slate-200/80 dark:border-white/[0.07] hover:border-slate-300 dark:hover:border-white/15 transition-all duration-300 shadow-md hover:shadow-xl flex items-center cursor-pointer"
                 >
                   <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
-                    {cat.label}
+                    {cat.displayLabel}
                   </h2>
                 </Link>
               ))}

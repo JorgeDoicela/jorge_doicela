@@ -46,7 +46,7 @@ backend/src/doiceladev/
 ├── common/                            # DTOs, ENTIDADES Y UTILIDADES COMPARTIDAS DEL MÓDULO DOICELADEV
 │   ├── dto/doiceladev-query.dto.ts    # Clase base con search, lang, tag, sortBy, limit y page
 │   ├── entities/{tag.entity.ts, content-tag.entity.ts}
-│   └── utils/category-aggregation.util.ts # Agregación SQL GROUP BY reutilizable O(1) RAM
+│   └── utils/{category-aggregation.util.ts, strip-markdown.util.ts} # Agregación SQL GROUP BY O(1) RAM y sanitizador de extractos Markdown
 │
 ├── news/                              # 1. NOTICIAS Y TENDENCIAS (Solo lectura GET)
 │   ├── news.module.ts
@@ -64,11 +64,12 @@ backend/src/doiceladev/
 │
 ├── forum/                             # 3. FOROS Y DEBATES COMUNITARIOS (Respuestas anidadas + Votos + Encuestas)
 │   ├── forum.module.ts
-│   ├── controllers/forum.controller.ts # GET /doiceladev/forum, POST /replies, POST /replies/:id/vote, POST /:id/poll/:optionId/vote
-│   ├── guards/forum-throttle.guard.ts  # Rate limiting en memoria por IP (15 req/min)
+│   ├── controllers/forum.controller.ts # GET /doiceladev/forum, POST /replies, POST /replies/:id/vote|unvote, DELETE /replies/:id, POST /:id/poll/:optionId/vote|unvote
+│   ├── guards/forum-throttle.guard.ts  # Rate limiting en memoria por IP (15 req/min, techo FIFO 2000 IPs)
 │   ├── services/forum.service.ts
+│   ├── services/forum.service.spec.ts  # Pruebas unitarias de respuestas, borrado autenticado por token y encuestas
 │   ├── entities/{forum-topic.entity.ts, forum-reply.entity.ts, forum-poll-option.entity.ts}
-│   └── dto/{create-forum-reply.dto.ts, get-forum-topics-query.dto.ts}
+│   └── dto/{create-forum-reply.dto.ts, get-forum-topics-query.dto.ts, vote-poll-option.dto.ts}
 │
 ├── ai/                                # 4. INTELIGENCIA ARTIFICIAL Y AGENTES (Solo lectura GET)
 │   ├── ai.module.ts
@@ -129,17 +130,17 @@ backend/src/doiceladev/
 │   ├── dto/{get-recommendations-query.dto.ts, recommendation-card.dto.ts}
 │   └── services/recommendations.service.ts
 │
-├── categories/                       # 12. HUB TRANSVERSAL DE CATEGORÍAS (NIVEL 2)
+├── categories/                       # 12. DIRECTORIO TRANSVERSAL DE CATEGORÍAS (NIVEL 2)
 │   ├── categories.module.ts
 │   ├── controllers/categories.controller.ts # GET /doiceladev/categories, GET /doiceladev/categories/:slug
 │   ├── dto/{get-categories-query.dto.ts, get-category-articles-query.dto.ts}
-│   └── services/categories.service.ts # Agrupación indexada de las 8 tablas de contenido
+│   └── services/{categories.service.ts, categories.service.spec.ts} # Agrupación paralela de slugs canónicos + 404 real
 │
-├── tags/                             # 13. HUB TRANSVERSAL DE ETIQUETAS (NIVEL 3)
+├── tags/                             # 13. DIRECTORIO TRANSVERSAL DE ETIQUETAS (NIVEL 3)
 │   ├── tags.module.ts
-│   ├── controllers/tags.controller.ts # GET /doiceladev/tags, GET /doiceladev/tags/:slug
+│   ├── controllers/tags.controller.ts # GET /doiceladev/tags?lang=es|en, GET /doiceladev/tags/:slug
 │   ├── dto/{get-tags-query.dto.ts, get-tag-articles-query.dto.ts}
-│   └── services/tags.service.ts      # Cruce relacional normalizado mediante tags y content_tags
+│   └── services/{tags.service.ts, tags.service.spec.ts} # Conteo localizado por idioma (UNION ALL) + 404 real
 │
 └── newsletter/                       # 14. SERVICIO DE SUSCRIPCIONES Y AUDIENCIAS TÉCNICAS
     ├── newsletter.module.ts
@@ -174,7 +175,7 @@ Todos los endpoints `GET` aceptan el parámetro opcional de consulta `?lang=es|e
 | | `POST /doiceladev/forum/replies` | - | Publicar respuesta (raíz o anidada con `parentId`) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/replies/:id/vote` | - | Votar respuesta útil (`likes + 1`) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/replies/:id/unvote` | - | Retirar voto de respuesta (`MAX(0, likes - 1)`) protegida con `ForumThrottleGuard` |
-| | `DELETE /doiceladev/forum/replies/:id` | - | Eliminar respuesta propia con decremento atómico de `repliesCount` protegida con `ForumThrottleGuard` |
+| | `DELETE /doiceladev/forum/replies/:id` | Header `x-reply-delete-token` | Eliminar respuesta propia validando token criptográfico SHA-256 (y debate abierto) con borrado recursivo y decremento atómico de `repliesCount`, protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/:id/poll/:optionId/vote` | - | Registrar o cambiar voto en encuesta (`previousOptionId` opcional) protegida con `ForumThrottleGuard` |
 | | `POST /doiceladev/forum/:id/poll/:optionId/unvote` | - | Retirar voto de opción de encuesta (`MAX(0, votes - 1)`) protegida con `ForumThrottleGuard` |
 | **IA** | `GET /doiceladev/ai` | `category`, `tag`, `search`, `sortBy`, `lang` | Catálogo de modelos, agentes y MCP servers filtrable por categoría, etiqueta, búsqueda, ordenamiento e idioma |
@@ -233,9 +234,9 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 * `blog_posts`: `id`, `slug`, `title`, `subtitle`, `excerpt`, `contentMarkdown`, `author`, `category`, `tags`, `language`, `series`, `coverImage`, `views`, `likes`, `featured`, `orderPriority`, `publishedAt`, `createdAt`, `updatedAt`.  
   * **Restricción:** `CHECK (category IN ('lessons', 'postmortems', 'opinion', 'career', 'journal'))`.
   * **Índices:** `IDX_blog_posts_slug_lang (slug, language) UNIQUE`, `IDX_blog_posts_feed (language, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_series_feed (language, series, orderPriority DESC, publishedAt DESC)`, `IDX_blog_posts_feat_feed (language, featured, orderPriority DESC, publishedAt DESC)`.
-* `forum_topics`: `id`, `slug`, `title`, `excerpt`, `content`, `author`, `category`, `tags`, `language`, `coverImage`, `pollQuestion`, `isSolved`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
+* `forum_topics`: `id`, `slug`, `title`, `excerpt`, `content`, `author`, `category`, `tags`, `language`, `metaAlign`, `coverImage`, `pollQuestion`, `isSolved`, `isClosed`, `isPinned`, `orderPriority`, `repliesCount`, `views`, `createdAt`, `updatedAt`.  
   * **Índices:** `IDX_forum_topics_slug_lang (slug, language) UNIQUE`, `IDX_forum_topics_feed (language, isPinned DESC, orderPriority DESC, createdAt DESC)`, `IDX_forum_topics_cat_feed (language, category, isPinned DESC, orderPriority DESC, createdAt DESC)`.
-* `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `createdAt`, `updatedAt`.  
+* `forum_replies`: `id`, `topicId` (FK), `parentId` (FK autorreferencial), `author`, `content`, `isAcceptedAnswer`, `likes`, `deleteTokenHash` (`select: false`), `createdAt`, `updatedAt`.  
   * **Integridad:** `FOREIGN KEY (topicId) REFERENCES forum_topics(id) ON DELETE CASCADE`, `FOREIGN KEY (parentId) REFERENCES forum_replies(id) ON DELETE CASCADE`.  
   * **Índices:** `IDX_forum_replies_topic (topicId)`, `IDX_forum_replies_parent (parentId)`, `IDX_forum_replies_topic_created (topicId, createdAt ASC)`.
 * `forum_poll_options`: `id`, `topicId` (FK), `label`, `votes`, `displayOrder`, `createdAt`.  
@@ -271,7 +272,7 @@ Todas las tablas cuentan con índices compuestos cubrientes alineados con los fi
 
 ## 5. Algoritmo de Inteligencia Editorial Global (SmartScore)
 
-Todos los servicios del backend calculan dinámicamente un `smart_score` compuesto en sus consultas `findAll` para ordenar los contenidos con criterio enterprise:
+Todos los servicios del backend calculan dinámicamente un `smart_score` compuesto en sus consultas `findAll` para ordenar los contenidos por relevancia técnica:
 
 $$\text{SmartScore} = (\text{featured} \times 1000) + \text{DomainWeight} + (\text{orderPriority} \times 20) + (\text{engagement}) + \text{RecencyTiebreaker}$$
 

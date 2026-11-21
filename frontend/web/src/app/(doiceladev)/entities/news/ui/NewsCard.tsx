@@ -27,7 +27,7 @@ export function NewsCard({ article, priority = false }: NewsCardProps) {
   const moduleLabel = tNav('news');
   const catKey = article.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
+    ? (tFilters.has(catKey as never) ? tFilters(catKey as never) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

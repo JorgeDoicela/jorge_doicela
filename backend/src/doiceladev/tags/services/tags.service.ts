@@ -1,7 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { GetTagsQueryDto } from '../dto/get-tags-query.dto';
 import { GetTagArticlesQueryDto } from '../dto/get-tag-articles-query.dto';
+import { stripMarkdownToPlainText } from '../../common/utils/strip-markdown.util';
 
 interface TagTableConfig {
   table: string;
@@ -13,7 +15,7 @@ interface TagTableConfig {
   dateCol: string;
 }
 
-export interface TagHubItem {
+export interface TagDirectoryItem {
   id: number;
   slug: string;
   label: string;
@@ -127,19 +129,34 @@ export class TagsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async getAllTags(): Promise<TagHubItem[]> {
+  async getAllTags(query: GetTagsQueryDto = {}): Promise<TagDirectoryItem[]> {
+    const lang = query.lang || 'es';
+
     try {
+      const configs = Object.values(this.tableConfigs);
+      const unionSql = configs
+        .map(
+          (c) =>
+            `SELECT '${c.type}' AS content_type, id FROM ${c.table} WHERE language = ?`,
+        )
+        .join(' UNION ALL ');
+      const params: string[] = configs.map(() => lang);
+
       const rows: Array<{
         id: number;
         slug: string;
         label: string;
         count: number;
       }> = await this.dataSource.query(
-        `SELECT t.id, t.slug, t.label, COUNT(ct.content_id) as count
+        `SELECT t.id, t.slug, t.label, COUNT(*) AS count
          FROM tags t
-         LEFT JOIN content_tags ct ON t.id = ct.tag_id
+         INNER JOIN content_tags ct ON t.id = ct.tag_id
+         INNER JOIN (${unionSql}) localized
+           ON localized.content_type = ct.content_type
+          AND localized.id = ct.content_id
          GROUP BY t.id, t.slug, t.label
          ORDER BY count DESC, t.label ASC`,
+        params,
       );
 
       return rows.map((r) => ({
@@ -152,7 +169,7 @@ export class TagsService {
       }));
     } catch (error) {
       this.logger.error(
-        `Error al listar tags: ${error instanceof Error ? error.message : error}`,
+        `Error al listar tags: ${error instanceof Error ? error.message : String(error)}`,
       );
       return [];
     }
@@ -160,225 +177,152 @@ export class TagsService {
 
   async getArticlesByTag(
     tagSlug: string,
-    query: GetTagArticlesQueryDto,
+    query: GetTagArticlesQueryDto = {},
   ): Promise<TagArticlesResponse> {
-    const normalizedSlug = tagSlug.trim().toLowerCase();
+    let rawSlug = tagSlug || '';
+    try {
+      rawSlug = decodeURIComponent(tagSlug);
+    } catch {
+      // Mantener valor original si el encoding es inválido
+    }
+    const normalizedSlug = rawSlug.trim().toLowerCase();
     const lang = query.lang || 'es';
-    const isEn = lang === 'en';
     const page = Math.max(1, Number(query.page) || 1);
     const limit = Math.max(1, Math.min(100, Number(query.limit) || 20));
     const search = query.search?.trim().toLowerCase() || '';
 
-    try {
-      const allArticles: TagArticleItem[] = [];
+    let tagLabel = normalizedSlug;
+    let allArticles: TagArticleItem[] = [];
 
-      if (normalizedSlug === 'all') {
-        for (const config of Object.values(this.tableConfigs)) {
-          const whereClauses: string[] = ['language = ?'];
-          const params: any[] = [lang];
-
-          if (search) {
-            whereClauses.push(
-              `(LOWER(${config.titleCol}) LIKE ? OR LOWER(${config.descCol}) LIKE ?)`,
-            );
-            params.push(`%${search}%`, `%${search}%`);
-          }
-
-          const rows: Array<{
-            id: number;
-            slug: string;
-            category: string;
-            title: string;
-            excerpt?: string;
-            coverImage?: string;
-            createdAt: string;
-            publishedAt?: string;
-          }> = await this.dataSource.query(
-            `SELECT id, slug, category, ${config.titleCol} AS title, ${config.descCol} AS excerpt, coverImage, 
-                    createdAt, ${config.dateCol} AS publishedAt
-             FROM ${config.table}
-             WHERE ${whereClauses.join(' AND ')}`,
-            params,
-          );
-
-          for (const row of rows) {
-            const sub = (row.category || '').trim().toLowerCase();
-            const dateStr = new Date(
-              row.publishedAt || row.createdAt || Date.now(),
-            ).toISOString();
-
-            allArticles.push({
-              id: `${config.type}-${row.id}`,
-              href: `${config.routePrefix}/${row.slug}`,
-              title: row.title,
-              category: config.categoryDomain,
-              categoryMeta: sub
-                ? `${config.categoryDomain} • ${sub}`
-                : config.categoryDomain,
-              coverImage: row.coverImage,
-              excerpt: row.excerpt || null,
-              date: dateStr,
-            });
-          }
-        }
-      } else {
-        // 1. Obtener tag
-        const tagRows: Array<{ id: number; slug: string; label: string }> =
-          await this.dataSource.query(
-            `SELECT id, slug, label FROM tags WHERE LOWER(slug) = ? LIMIT 1`,
-            [normalizedSlug],
-          );
-
-        if (!tagRows || tagRows.length === 0) {
-          return {
-            tag: { slug: normalizedSlug, label: normalizedSlug, totalCount: 0 },
-            articles: [],
-            page,
-            limit,
-            totalPages: 0,
-          };
-        }
-
-        const tagRecord = tagRows[0];
-
-        // 2. Obtener vinculaciones en content_tags
-        const contentTagRows: Array<{
-          content_type: string;
-          content_id: number;
-        }> = await this.dataSource.query(
-          `SELECT content_type, content_id FROM content_tags WHERE tag_id = ?`,
-          [tagRecord.id],
+    if (normalizedSlug === 'all') {
+      const perTableResults = await Promise.all(
+        Object.values(this.tableConfigs).map((config) =>
+          this.queryTableArticles(config, lang, search),
+        ),
+      );
+      allArticles = perTableResults.flat();
+    } else {
+      const tagRows: Array<{ id: number; slug: string; label: string }> =
+        await this.dataSource.query(
+          `SELECT id, slug, label FROM tags WHERE LOWER(slug) = ? LIMIT 1`,
+          [normalizedSlug],
         );
 
-        if (!contentTagRows || contentTagRows.length === 0) {
-          return {
-            tag: {
-              slug: tagRecord.slug,
-              label: tagRecord.label,
-              totalCount: 0,
-            },
-            articles: [],
-            page,
-            limit,
-            totalPages: 0,
-          };
-        }
-
-        // Agrupar IDs por tipo de contenido
-        const idsByType = new Map<string, number[]>();
-        for (const item of contentTagRows) {
-          if (!idsByType.has(item.content_type)) {
-            idsByType.set(item.content_type, []);
-          }
-          idsByType.get(item.content_type)!.push(item.content_id);
-        }
-
-        for (const [type, ids] of idsByType.entries()) {
-          const config = this.tableConfigs[type];
-          if (!config || ids.length === 0) continue;
-
-          const placeholders = ids.map(() => '?').join(',');
-          const whereClauses: string[] = [
-            `language = ?`,
-            `id IN (${placeholders})`,
-          ];
-          const params: any[] = [lang, ...ids];
-
-          if (search) {
-            whereClauses.push(
-              `(LOWER(${config.titleCol}) LIKE ? OR LOWER(${config.descCol}) LIKE ?)`,
-            );
-            params.push(`%${search}%`, `%${search}%`);
-          }
-
-          const rows: Array<{
-            id: number;
-            slug: string;
-            category: string;
-            title: string;
-            excerpt?: string;
-            coverImage?: string;
-            createdAt: string;
-            publishedAt?: string;
-          }> = await this.dataSource.query(
-            `SELECT id, slug, category, ${config.titleCol} AS title, ${config.descCol} AS excerpt, coverImage, 
-                    createdAt, ${config.dateCol} AS publishedAt
-             FROM ${config.table}
-             WHERE ${whereClauses.join(' AND ')}`,
-            params,
-          );
-
-          for (const row of rows) {
-            const sub = (row.category || '').trim().toLowerCase();
-            const dateStr = new Date(
-              row.publishedAt || row.createdAt || Date.now(),
-            ).toISOString();
-
-            allArticles.push({
-              id: `${config.type}-${row.id}`,
-              href: `${config.routePrefix}/${row.slug}`,
-              title: row.title,
-              category: config.categoryDomain,
-              categoryMeta: sub
-                ? `${config.categoryDomain} • ${sub}`
-                : config.categoryDomain,
-              coverImage: row.coverImage,
-              excerpt: row.excerpt || null,
-              date: dateStr,
-            });
-          }
-        }
+      if (!tagRows || tagRows.length === 0) {
+        throw new NotFoundException(`Etiqueta "${tagSlug}" no encontrada`);
       }
 
-      // Ordenar cronológicamente descendente
-      allArticles.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      const tagRecord = tagRows[0];
+      tagLabel = tagRecord.label || tagRecord.slug;
+
+      const contentTagRows: Array<{
+        content_type: string;
+        content_id: number;
+      }> = await this.dataSource.query(
+        `SELECT content_type, content_id FROM content_tags WHERE tag_id = ?`,
+        [tagRecord.id],
       );
 
-      const totalCount = allArticles.length;
-      const totalPages = Math.ceil(totalCount / limit) || 1;
-      const startIndex = (page - 1) * limit;
-      const paginatedArticles = allArticles.slice(
-        startIndex,
-        startIndex + limit,
-      );
+      const idsByType = new Map<string, number[]>();
+      for (const item of contentTagRows) {
+        const list = idsByType.get(item.content_type) || [];
+        list.push(item.content_id);
+        idsByType.set(item.content_type, list);
+      }
 
-      return {
-        tag: {
-          slug: normalizedSlug,
-          label:
-            normalizedSlug === 'all'
-              ? isEn
-                ? 'All Tags'
-                : 'Todas las Etiquetas'
-              : normalizedSlug,
-          totalCount,
-        },
-        articles: paginatedArticles,
-        page,
-        limit,
-        totalPages,
-      };
-    } catch (error) {
-      this.logger.error(
-        `Error al obtener artículos por tag '${tagSlug}': ${error instanceof Error ? error.message : error}`,
+      const perTableResults = await Promise.all(
+        Array.from(idsByType.entries()).map(([type, ids]) => {
+          const config = this.tableConfigs[type];
+          if (!config || ids.length === 0) return Promise.resolve([]);
+          return this.queryTableArticles(config, lang, search, ids);
+        }),
       );
-      return {
-        tag: {
-          slug: normalizedSlug,
-          label:
-            normalizedSlug === 'all'
-              ? isEn
-                ? 'All Tags'
-                : 'Todas las Etiquetas'
-              : normalizedSlug,
-          totalCount: 0,
-        },
-        articles: [],
-        page,
-        limit,
-        totalPages: 0,
-      };
+      allArticles = perTableResults.flat();
     }
+
+    allArticles.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
+
+    const totalCount = allArticles.length;
+    const totalPages = Math.ceil(totalCount / limit) || 1;
+    const startIndex = (page - 1) * limit;
+    const paginatedArticles = allArticles.slice(startIndex, startIndex + limit);
+
+    return {
+      tag: {
+        slug: normalizedSlug,
+        label: tagLabel,
+        totalCount,
+      },
+      articles: paginatedArticles,
+      page,
+      limit,
+      totalPages,
+    };
+  }
+
+  private async queryTableArticles(
+    config: TagTableConfig,
+    lang: string,
+    search: string,
+    ids?: number[],
+  ): Promise<TagArticleItem[]> {
+    const whereClauses: string[] = ['language = ?'];
+    const params: Array<string | number> = [lang];
+
+    if (ids && ids.length > 0) {
+      const placeholders = ids.map(() => '?').join(',');
+      whereClauses.push(`id IN (${placeholders})`);
+      params.push(...ids);
+    }
+
+    if (search) {
+      whereClauses.push(
+        `(LOWER(${config.titleCol}) LIKE ? OR LOWER(${config.descCol}) LIKE ?)`,
+      );
+      params.push(`%${search}%`, `%${search}%`);
+    }
+
+    const rows: Array<{
+      id: number;
+      slug: string;
+      category: string;
+      title: string;
+      excerpt?: string;
+      coverImage?: string;
+      createdAt: string;
+      publishedAt?: string;
+    }> = await this.dataSource.query(
+      `SELECT id, slug, category, ${config.titleCol} AS title, ${config.descCol} AS excerpt, coverImage,
+              createdAt, ${config.dateCol} AS publishedAt
+       FROM ${config.table}
+       WHERE ${whereClauses.join(' AND ')}`,
+      params,
+    );
+
+    return rows.map((row): TagArticleItem => {
+      const sub = (row.category || '').trim().toLowerCase();
+      const dateStr = new Date(
+        row.publishedAt || row.createdAt || Date.now(),
+      ).toISOString();
+      const excerpt =
+        config.type === 'forum'
+          ? stripMarkdownToPlainText(row.excerpt, 220) || null
+          : row.excerpt || null;
+
+      return {
+        id: `${config.type}-${row.id}`,
+        href: `${config.routePrefix}/${row.slug}`,
+        title: row.title,
+        category: config.categoryDomain,
+        categoryMeta: sub
+          ? `${config.categoryDomain} • ${sub}`
+          : config.categoryDomain,
+        coverImage: row.coverImage,
+        excerpt,
+        date: dateStr,
+      };
+    });
   }
 }

@@ -151,20 +151,20 @@ export function DoiceladevCardMeta({
       if (!trimmed) return '';
       const lower = trimmed.toLowerCase();
       const canonical = CANONICAL_CATEGORY_MAP[lower] || lower;
-      if (tNav.has(canonical as any)) {
-        return tNav(canonical as any);
+      if (tNav.has(canonical as never)) {
+        return tNav(canonical as never);
       }
-      if (tFilters.has(canonical as any)) {
-        return tFilters(canonical as any);
+      if (tFilters.has(canonical as never)) {
+        return tFilters(canonical as never);
       }
-      if (tNav.has(lower as any)) {
-        return tNav(lower as any);
+      if (tNav.has(lower as never)) {
+        return tNav(lower as never);
       }
-      if (tFilters.has(lower as any)) {
-        return tFilters(lower as any);
+      if (tFilters.has(lower as never)) {
+        return tFilters(lower as never);
       }
-      if (tFilters.has(trimmed as any)) {
-        return tFilters(trimmed as any);
+      if (tFilters.has(trimmed as never)) {
+        return tFilters(trimmed as never);
       }
       return trimmed.replace(/_/g, ' ');
     },

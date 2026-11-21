@@ -140,20 +140,3 @@ export function parseTechStack(techStack?: string): string[] {
     .filter(Boolean);
   return Array.from(new Set(items));
 }
-
-/**
- * Determina la alineación visual de la ficha técnica (ArticleMetaPanel) para la publicación.
- * Por defecto aplica el estándar uniforme a la izquierda ('left').
- * Permite control individual por artículo si se incluye la directiva HTML comment:
- * <!-- meta: center --> o <!-- meta-align: center -->
- */
-export function parseMetaAlign(contentMarkdown?: string): 'left' | 'center' {
-  if (!contentMarkdown) return 'left';
-  const match = contentMarkdown.match(
-    /<!--\s*meta(?:-align)?:\s*(left|center)\s*-->/i,
-  );
-  if (match && match[1]) {
-    return match[1].toLowerCase() as 'left' | 'center';
-  }
-  return 'left';
-}

@@ -2,7 +2,9 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
+import { createHash, randomBytes, timingSafeEqual } from 'crypto';
 import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { ForumTopic, ForumCategory } from '../entities/forum-topic.entity';
@@ -14,6 +16,23 @@ import {
   aggregateModuleCategories,
   CategoryCountOption,
 } from '../../common/utils/category-aggregation.util';
+
+export type CreatedForumReply = Omit<ForumReply, 'deleteTokenHash'> & {
+  deleteToken: string;
+};
+
+function hashDeleteToken(token: string): string {
+  return createHash('sha256').update(token).digest('hex');
+}
+
+function verifyDeleteToken(token: string, expectedHash: string): boolean {
+  const actualBuf = Buffer.from(hashDeleteToken(token), 'utf8');
+  const expectedBuf = Buffer.from(expectedHash, 'utf8');
+  if (actualBuf.length !== expectedBuf.length) {
+    return false;
+  }
+  return timingSafeEqual(actualBuf, expectedBuf);
+}
 
 @Injectable()
 export class ForumService {
@@ -130,7 +149,7 @@ export class ForumService {
     return topic;
   }
 
-  async createReply(dto: CreateForumReplyDto): Promise<ForumReply> {
+  async createReply(dto: CreateForumReplyDto): Promise<CreatedForumReply> {
     return this.dataSource.transaction(async (manager) => {
       const topic = await manager.findOne(ForumTopic, {
         where: { id: dto.topicId },
@@ -156,17 +175,24 @@ export class ForumService {
         }
       }
 
+      const deleteToken = randomBytes(24).toString('hex');
       const reply = manager.create(ForumReply, {
         topicId: dto.topicId,
         parentId: dto.parentId,
         content: dto.content.trim(),
         author: dto.author?.trim() || 'Comunidad Tech',
+        deleteTokenHash: hashDeleteToken(deleteToken),
       });
       const savedReply = await manager.save(reply);
 
       await manager.increment(ForumTopic, { id: topic.id }, 'repliesCount', 1);
 
-      return savedReply;
+      const { deleteTokenHash: _discarded, ...safeReply } = savedReply;
+      void _discarded;
+      return {
+        ...safeReply,
+        deleteToken,
+      };
     });
   }
 
@@ -220,13 +246,40 @@ export class ForumService {
 
   async deleteReply(
     replyId: number,
+    deleteToken?: string,
   ): Promise<{ success: boolean; deletedCount: number }> {
+    const trimmedToken = deleteToken?.trim();
+    if (!trimmedToken) {
+      throw new ForbiddenException(
+        'Se requiere un token de propiedad válido para eliminar esta respuesta.',
+      );
+    }
+
     return this.dataSource.transaction(async (manager) => {
-      const reply = await manager.findOne(ForumReply, {
-        where: { id: replyId },
-      });
+      const reply = await manager
+        .createQueryBuilder(ForumReply, 'reply')
+        .addSelect('reply.deleteTokenHash')
+        .leftJoinAndSelect('reply.topic', 'topic')
+        .where('reply.id = :replyId', { replyId })
+        .getOne();
+
       if (!reply) {
         throw new NotFoundException(`Respuesta #${replyId} no encontrada`);
+      }
+
+      if (reply.topic?.isClosed) {
+        throw new BadRequestException(
+          'Este debate está cerrado y no admite eliminar respuestas.',
+        );
+      }
+
+      if (
+        !reply.deleteTokenHash ||
+        !verifyDeleteToken(trimmedToken, reply.deleteTokenHash)
+      ) {
+        throw new ForbiddenException(
+          'No tienes permisos para eliminar esta respuesta.',
+        );
       }
 
       // Conteo recursivo de hijos y subhijos para decrementar exactamente repliesCount

@@ -411,7 +411,7 @@ export function seedDoiceladev(
       coverImage    TEXT,
       views         INTEGER NOT NULL DEFAULT 0,
       likes         INTEGER NOT NULL DEFAULT 0,
-      publishedAt   DATETIME DEFAULT CURRENT_TIMESTAMP,
+      publishedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       createdAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -434,14 +434,14 @@ export function seedDoiceladev(
                     CHECK (category IN ('lessons','postmortems','opinion','career','journal')),
       tags          TEXT    NOT NULL DEFAULT 'architecture,clean-code',
       language      TEXT    NOT NULL DEFAULT 'es',
-      metaAlign     TEXT    NOT NULL DEFAULT 'left' CHECK (metaAlign IN ('left','center')),
+      metaAlign     TEXT    NOT NULL DEFAULT 'left',
       series        TEXT,
       coverImage    TEXT,
       views         INTEGER NOT NULL DEFAULT 0,
       likes         INTEGER NOT NULL DEFAULT 0,
       featured      INTEGER NOT NULL DEFAULT 0,
       orderPriority INTEGER NOT NULL DEFAULT 0,
-      publishedAt   DATETIME DEFAULT CURRENT_TIMESTAMP,
+      publishedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       createdAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -487,6 +487,7 @@ export function seedDoiceladev(
       content          TEXT    NOT NULL,
       isAcceptedAnswer INTEGER NOT NULL DEFAULT 0,
       likes            INTEGER NOT NULL DEFAULT 0,
+      deleteTokenHash  TEXT,
       createdAt        DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt        DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (topicId)  REFERENCES forum_topics(id)   ON DELETE CASCADE,
@@ -561,7 +562,7 @@ export function seedDoiceladev(
       likes           INTEGER NOT NULL DEFAULT 0,
       featured        INTEGER NOT NULL DEFAULT 0,
       orderPriority   INTEGER NOT NULL DEFAULT 0,
-      publishedAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
+      publishedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       createdAt       DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt       DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -700,16 +701,18 @@ export function seedDoiceladev(
 
     -- ── NEWSLETTER SUBSCRIBERS ───────────────────────────────────────────────
     CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-      id         INTEGER PRIMARY KEY AUTOINCREMENT,
-      email      TEXT    NOT NULL UNIQUE,
-      status     TEXT    NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'unsubscribed')),
-      source     TEXT    NOT NULL DEFAULT 'general',
-      language   TEXT    NOT NULL DEFAULT 'es',
-      createdAt  DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updatedAt  DATETIME DEFAULT CURRENT_TIMESTAMP
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      email            TEXT    NOT NULL UNIQUE,
+      status           TEXT    NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'unsubscribed')),
+      unsubscribeToken TEXT,
+      source           TEXT    NOT NULL DEFAULT 'general',
+      language         TEXT    NOT NULL DEFAULT 'es',
+      createdAt        DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt        DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_newsletter_subscribers_email ON newsletter_subscribers (email);
     CREATE INDEX        IF NOT EXISTS IDX_newsletter_subscribers_status_created ON newsletter_subscribers (status, createdAt);
+    CREATE INDEX        IF NOT EXISTS IDX_newsletter_subscribers_unsubscribe_token ON newsletter_subscribers (unsubscribeToken);
   `);
 
   const srcDir = path.resolve(__dirname, '../../../src/doiceladev/corpus');
@@ -849,7 +852,7 @@ export function seedDoiceladev(
       const updDate = item.updatedAt || pubDate;
       const result = insertBlog.run({
         ...item,
-        category: item.category || 'architecture',
+        category: item.category || 'opinion',
         coverImage: item.coverImage ?? null,
         featured: item.featured ? 1 : 0,
         orderPriority: item.orderPriority || 0,

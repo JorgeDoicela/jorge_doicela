@@ -14,6 +14,7 @@ export interface ForumReply {
   content: string;
   isAcceptedAnswer: boolean;
   likes: number;
+  deleteToken?: string;
   createdAt: string;
   updatedAt: string;
 }

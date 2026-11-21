@@ -37,6 +37,9 @@ export class ForumReply {
   @Column({ default: 0 })
   likes: number;
 
+  @Column({ type: 'varchar', length: 64, nullable: true, select: false })
+  deleteTokenHash?: string | null;
+
   @ManyToOne(() => ForumTopic, (topic) => topic.replies, {
     onDelete: 'CASCADE',
   })

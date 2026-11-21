@@ -16,7 +16,7 @@ export function SecurityCard({ post, priority = false }: SecurityCardProps) {
   const moduleLabel = tNav('cybersecurity');
   const catKey = post.category?.toLowerCase() || '';
   const catLabel = catKey
-    ? (tFilters.has(catKey as any) ? tFilters(catKey as any) : catKey.replace(/_/g, ' '))
+    ? (tFilters.has(catKey as never) ? tFilters(catKey as never) : catKey.replace(/_/g, ' '))
     : '';
   const metaText = catLabel ? `${moduleLabel} • ${catLabel}` : moduleLabel;
 

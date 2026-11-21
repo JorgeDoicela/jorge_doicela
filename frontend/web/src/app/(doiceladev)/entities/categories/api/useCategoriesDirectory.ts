@@ -4,32 +4,34 @@ import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { API_URL } from '../../../shared';
 import { safeFetchJson } from '../../../shared/lib/fetchJson';
-import type { TagHubItem } from '../types';
+import type { CategoryDirectoryItem } from '../types';
 
-export function useTagsHub() {
+export function useCategoriesDirectory() {
   const locale = useLocale();
-  const [tags, setTags] = useState<TagHubItem[]>([]);
+  const [categories, setCategories] = useState<CategoryDirectoryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    const fetchTags = async () => {
+    const fetchCategories = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const url = `${API_URL}/doiceladev/tags?lang=${locale}`;
-        const data = await safeFetchJson<TagHubItem[] | { data: TagHubItem[] }>(url);
+        const url = `${API_URL}/doiceladev/categories?lang=${locale}`;
+        const data = await safeFetchJson<
+          CategoryDirectoryItem[] | { data: CategoryDirectoryItem[] }
+        >(url);
 
         if (isMounted) {
           const list = Array.isArray(data) ? data : data?.data || [];
-          setTags(list);
+          setCategories(list);
         }
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
-        console.error('Error al obtener catálogo de tags:', msg);
+        console.error('Error al obtener catálogo de categorías:', msg);
         if (isMounted) {
           setError(msg);
         }
@@ -40,13 +42,12 @@ export function useTagsHub() {
       }
     };
 
-    fetchTags();
+    fetchCategories();
 
     return () => {
       isMounted = false;
     };
   }, [locale]);
 
-  return { tags, loading, error };
+  return { categories, loading, error };
 }
-

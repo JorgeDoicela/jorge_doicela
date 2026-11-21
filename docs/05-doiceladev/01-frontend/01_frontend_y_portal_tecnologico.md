@@ -45,24 +45,24 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts
 │
 ├── shared/                           # CAPA 6: UI Kit, Markdown, SEO, Lib y Tipos Agnósticos
-│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel
-│   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
+│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, DoiceladevSelect, DoiceladevSearchInput, DoiceladevTextarea, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel
+│   ├── markdown/                     # MarkdownRenderer (default | compact) + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # DoiceladevJsonLd (Schema JSON-LD)
-│   ├── lib/                          # api, serverFetch, fetchJson, articlePage (metadata, fechas y carga paralela unificada)
+│   ├── lib/                          # api, serverFetch, fetchJson, articlePage, stripMarkdown, theme-context
 │   └── types/                        # filter.ts, glossary.ts, recommendation.ts, spotlight.ts
 │
 ├── entities/                         # CAPA 5: Modelos, Hooks API, Tarjetas de Entidad y Borradores Markdown
 │   ├── news/                         # NewsCard, NewsGrid, useNews, drafts/, types.ts, index.ts
 │   ├── blog/                         # BlogCard, BlogGrid, useBlog, drafts/, types.ts, index.ts
-│   ├── forum/                        # ForumGrid, TopicCard, TopicCardSkeleton, useForum, drafts/, types.ts, index.ts
+│   ├── forum/                        # ForumGrid, TopicCard, useForum, drafts/, types.ts, index.ts
 │   ├── ai/                           # AiCard, AiGrid, useAi, drafts/, types.ts, index.ts
 │   ├── cybersecurity/                # SecurityCard, SecurityGrid, useCybersecurity, drafts/, types.ts, index.ts
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
 │   ├── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
-│   ├── categories/                   # Directorio de Categorías (Nivel 2): useCategoriesHub, useCategoryArticles, types.ts, index.ts
-│   └── tags/                         # Directorio de Etiquetas (Nivel 3): useTagsHub, useTagArticles, types.ts, index.ts
+│   ├── categories/                   # Directorio de Categorías (Nivel 2): useCategoriesDirectory, types.ts, index.ts
+│   └── tags/                         # Directorio de Etiquetas (Nivel 3): useTagsDirectory, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
 │   ├── spotlight-search/             # SpotlightProvider, useSpotlight, SpotlightModal (Cmd + K, indexación y búsqueda por tags)
@@ -131,7 +131,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
   * Componente universal desacoplado en la Capa 6 (`shared/ui`) que estandariza la cabecera técnica o pie de artículo en los 8 módulos editoriales (`tutorials`, `ai`, `cybersecurity`, `infrastructure`, `projects`, `blog`, `news`, `forum`).
   * **Consumo de Campos Estructurados (Separación de Contenido vs. Metadatos):** Muestra de forma declarativa columnas de base de datos (`prerequisites`, `techStack`, `specs`, `cveId`, `affectedSystems`, `remediation`, `series`, `status`, `links`) independientes de `contentMarkdown`, alimentadas desde `corpus/*.json` / `doiceladev.sqlite`. Si un registro carece de datos estructurados, retorna `null` eliminando el panel automáticamente.
   * **Homologación Declarativa Sin Valores Forzados por Defecto:**
-    * *Foros (`forum`):* Se erradicó la inyección incondicional de columnas con valor por defecto en SQLite (`isSolved: false` y `repliesCount: 0`). El panel solo se activa si el debate está resuelto (`isSolved: true`), permaneciendo completamente oculto (`null`) en debates abiertos ordinarios.
+    * *Foros (`forum`):* Se erradicó la inyección incondicional de columnas con valor por defecto en SQLite (`isSolved: false` y `repliesCount: 0`). El panel solo se activa si el debate está cerrado (`isClosed: true`) o resuelto (`isSolved: true`), permaneciendo completamente oculto (`null`) en debates abiertos ordinarios.
     * *Proyectos (`projects`):* Se erradicó la inyección forzada de `status` (con default `'active'` en SQLite). La fila de estado y los badges técnicos se gobiernan exclusivamente mediante la presencia de `techStack` en el corpus; si el proyecto no define stack técnico, el panel retorna `null` y no se muestra.
   * **Alineación Estandarizada y Control Granular por Base de Datos (`metaAlign` y `ArticleMetaAlignConfig`):**
     * **Estándar Profesional a la Izquierda por Defecto (`align: 'left'`):** Todas las publicaciones en los 8 módulos aplican de manera predeterminada alineación unificada a la izquierda (`text-left`, `justify-start` en título, etiquetas, valores, badges técnicos y enlaces externos), eliminando el efecto de "isla flotante centrada" y garantizando consistencia visual con el flujo de lectura occidental del artículo.
@@ -166,7 +166,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
     * **Hardening (`hardening`):** Escudos de blindaje, mTLS y sockets seguros en gradientes ámbar/cobre con resplandor dorado.
     * **Cloud (`cloud`):** Topologías de nube híbrida y orquestación systemd en gradientes azul cielo.
   * Refracción vítrea, texturas de ingeniería (`.tech-grid-bg`) y badges animados de `★ DESTACADO` en artículos de alta prioridad editorial.
-* **Sistema de Relevancia y Ordenamiento Inteligente Enterprise (`sortBy`):**
+* **Sistema de Relevancia y Ordenamiento Inteligente (`sortBy`):**
   * Tanto la página de categoría `/infrastructure` como el Portal de DoicelaDev integran un algoritmo de ponderación matemática en el backend:
     $$\text{SmartScore} = (\text{featured} \times 1000) + (\text{orderPriority} \times 20) + (\text{likes} \times 4) + (\text{views} \times 1.5)$$
   * Esto garantiza que los artículos insignia (como el análisis forense del incidente P1 y la arquitectura en 1 GB de RAM) encabecen la experiencia del usuario, evitando el desplazamiento errático de nuevas publicaciones al fondo.
@@ -187,7 +187,6 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
     * **Geometría Fidedigna:** Replica de forma exacta la envolvente exterior (`p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#16202c]/80 border border-slate-200/80 dark:border-white/[0.07]`), el contenedor de portada 16:9 (`aspect-video rounded-xl bg-slate-200/70 dark:bg-white/5 animate-pulse`), la barra de metadatos mono (`h-3 w-28`), las 2 líneas de titular (`h-4 w-11/12` y `h-4 w-3/5`) y las 2 líneas de extracto (`h-3 w-full` y `h-3 w-4/5`).
     * **Integración Universal en Grillas:** Adoptado de forma homogénea en los 8 catálogos de módulo (`NewsGrid`, `BlogGrid`, `AiGrid`, `SecurityGrid`, `InfrastructureGrid`, `ProjectGrid`, `TutorialGrid`, `ForumGrid`), en el carrusel de destacados (`FeaturedCarousel`) y en el feed principal del portal (`DoiceladevPortalFeed`), todos bajo la cuadrícula canónica `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full`.
     * **Skeletons Especializados Adicionales:**
-      * [`TopicCardSkeleton`](/doiceladev/entities/forum/ui/TopicCardSkeleton.tsx) para discusiones de foro (`/forum` y `ForumSection`), emulando el panel horizontal con metadatos, titular, snippet y contadores de respuestas.
       * Skeleton de categorías (`/categories`) calibrado con la altura real del botón neumórfico compacto (`min-h-[68px] sm:min-h-[76px]`).
       * Skeleton de etiquetas (`/tags`) con contenedor flexible centrado (`flex flex-wrap gap-2.5 sm:gap-3 justify-center`) y píldoras `# tag` con anchos aleatorizados controlados, eliminando cuadrículas artificiales.
       * Sidebars editoriales (`FeaturedPostsSidebarCard`, `ExploreTopicsSidebarCard`, `PopularTagsSidebarCard`) sincronizados con la tipografía y guías de árbol del diseño activo.
@@ -338,7 +337,7 @@ Cada módulo físico corresponde al **Nivel 1** del modelo taxonómico del siste
 | **Advertencias y oraciones completas** | `` **bypassea por completo las reglas de UFW** `` | `*bypassea* las directivas de UFW` con concepto **Default Deny** | Negritas de más de 3 palabras saturan el campo visual y degradan la elegancia editorial. |
 | **Analogías y listas didácticas** | `* **Los Puertos (Ports):** Son...` | `* **Puertos:** Puertas numeradas...` | Erradica artículos gramaticales ("Los") y redundancias en inglés para maximizar la síntesis técnica. |
 | **Herramientas y tecnologías en prosa** | `` `Docker` ``, `` `Linux` ``, `` `Nginx` `` | Docker, Linux, Nginx (texto plano) | Solo llevan backticks cuando se refieren al comando de consola (`` `docker run` ``, `` `nginx -t` ``). |
-  3. **Tablas Técnicas de Ingeniería Enterprise Data-Grid Pro ([`TableBlock.tsx`](/doiceladev/shared/markdown/components/TableBlock.tsx)):**
+  3. **Tablas Técnicas de Ingeniería Data-Grid Pro ([`TableBlock.tsx`](/doiceladev/shared/markdown/components/TableBlock.tsx)):**
       * Marco de cristal convexo (`glass-convex-panel`) con borde vítreo perimetral y sombra de elevación suave (`shadow-lg`).
      * Cabecera `thead` con sutil desenfoque (`backdrop-blur-md`), línea guía inferior `border-blue-500/30` y tipografía mono técnica en mayúsculas (`text-[11px] uppercase tracking-wider font-bold`).
      * **Diferenciación Estructural de Clave/Parámetro:** La primera columna (`td:first-child`, ancho fijo `28%`) posee tipografía mono seminegrita, fondo sutil contrastado (`bg-black/[0.015] dark:bg-white/[0.015]`) y borde divisorio vertical para identificar inmediatamente la clave del parámetro frente a los valores y detalles.

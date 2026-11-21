@@ -296,8 +296,6 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             )}
           </div>
 
-          <div className="hidden sm:block h-4 w-px bg-zinc-200 dark:bg-zinc-800 select-none mx-0.5" />
-
           {/* Desktop-only: Modo Enfoque Inmersivo */}
           {onToggleFocusMode && (
             <button

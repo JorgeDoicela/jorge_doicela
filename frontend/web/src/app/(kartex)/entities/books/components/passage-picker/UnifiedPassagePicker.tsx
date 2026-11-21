@@ -75,6 +75,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
   // Limpiar búsqueda y estados al cerrar el selector
   useEffect(() => {
     if (!isOpen) {
+      setActiveTab('ALL');
       setSearchQuery('');
       setSelectedBookForChapters(null);
       setSelectedChapterForVerses(null);
@@ -197,6 +198,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     const ch = selectedChapterForVerses || selectedChapter || 1;
     onSelectPassage(targetBookId, ch, null);
     setIsOpen(false);
+    setActiveTab('ALL');
     setSearchQuery('');
     setSelectedBookForChapters(null);
     setSelectedChapterForVerses(null);
@@ -208,6 +210,7 @@ export const UnifiedPassagePicker: React.FC<UnifiedPassagePickerProps> = ({
     const ch = selectedChapterForVerses || selectedChapter || 1;
     onSelectPassage(targetBookId, ch, verseNum);
     setIsOpen(false);
+    setActiveTab('ALL');
     setSearchQuery('');
     setSelectedBookForChapters(null);
     setSelectedChapterForVerses(null);

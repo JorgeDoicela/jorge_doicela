@@ -36,9 +36,10 @@ export const CommentariesPassageNavigator: React.FC<CommentariesPassageNavigator
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedBookId, setExpandedBookId] = useState<number | null>(selectedBookId || 1);
 
-  // Limpiar búsqueda automáticamente cuando se cierra el panel lateral
+  // Limpiar búsqueda y restablecer filtro de testamentos al cerrar el panel lateral
   useEffect(() => {
     if (!passageContext?.isLeftSidebarOpen) {
+      setActiveTab('ALL');
       setSearchQuery('');
     }
   }, [passageContext?.isLeftSidebarOpen]);
@@ -78,6 +79,7 @@ export const CommentariesPassageNavigator: React.FC<CommentariesPassageNavigator
   }, [books, activeTab, searchQuery, tBooks]);
 
   const handleSelectChapter = (bookId: number, chapter: number) => {
+    setActiveTab('ALL');
     setSearchQuery('');
     if (passageContext) {
       passageContext.setPassage(bookId, chapter);

@@ -159,7 +159,7 @@ export const VerseList: React.FC<VerseListProps> = ({
         className="fixed inset-0 z-50 overflow-y-auto bg-background text-foreground transition-colors duration-200 px-4 sm:px-8 md:px-12 lg:px-24 py-6 flex flex-col items-center animate-fade-in"
       >
         {/* Barra Flotante Superior Minimalista de Modo Enfoque */}
-        <div className="w-full max-w-5xl xl:max-w-6xl flex items-center justify-between mb-8 pb-3 border-b border-border/40 text-xs font-mono">
+        <div className="w-full max-w-5xl xl:max-w-6xl flex items-center justify-between mb-8 text-xs font-mono">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-sm">
               {selectedBookName} {selectedChapter}

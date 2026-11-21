@@ -67,12 +67,14 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
   const [selectedChapterForVerses, setSelectedChapterForVerses] = useState<{ bookId: number; chapter: number } | null>(null);
 
   const onPanelClose = () => {
+    setActiveTab('ALL');
     setSearchQuery('');
     setSelectedChapterForVerses(null);
     handleClose();
   };
 
   const handleSelectPassage = (bookId: number, chapter: number, verse: number | null = null) => {
+    setActiveTab('ALL');
     setSearchQuery('');
     setSelectedChapterForVerses(null);
     if (propOnSelectPassage) {
@@ -86,9 +88,10 @@ export const KartexNavigationSidebar: React.FC<KartexNavigationSidebarProps> = (
     }
   };
 
-  // Limpiar texto de búsqueda automáticamente cada vez que el sidebar se cierra o se sale de él
+  // Limpiar texto de búsqueda y restablecer el filtro de testamentos automáticamente al cerrar el sidebar
   useEffect(() => {
     if (!isOpen) {
+      setActiveTab('ALL');
       setSearchQuery('');
       setSelectedChapterForVerses(null);
     }

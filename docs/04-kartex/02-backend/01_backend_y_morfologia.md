@@ -171,5 +171,24 @@ backend/src/kartex/
 * **`GET /kartex/dictionaries/entries`**: Búsqueda paginada e indexada con motor **External Content FTS5** (`bible_dictionary_entries_fts`, `unicode61 remove_diacritics 2`) sobre términos, etimología y definición, filtro por diccionario, letra A-Z o categoría temática (`?q=arca&letter=A&category=artifact&page=1&limit=20&lang=es|en`).
 * **`GET /kartex/dictionaries/entries/:id`**: Entrada enciclopédica completa con definición, etimología, referencias bíblicas e hipervínculos relacionados (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
 
+---
+
+## 4. Herramientas CLI y Automatización de Ingesta
+
+### 4.1 Script CLI de Ingesta de Comentarios (`import-commentaries.ts`)
+Ubicado en `backend/src/kartex/cli/import-commentaries.ts` e invocado vía scripts de npm:
+* **Comandos:**
+  * `pnpm --filter backend import:matthew-henry [--book=GEN] [--chapters=1-10] [--nt] [--ot] [--all] [--force]`
+  * `pnpm --filter backend import:jfb [--book=JUA] [--chapters=1-5]`
+* **Flujo Operativo:**
+  1. Consulta el catálogo remoto de la API de Dominio Público (HelloAO / CrossWire SWORD).
+  2. Mapea códigos canónicos y USFM (`resolveCanonicalBook`).
+  3. Divide la introducción capitular (`entryType: 'chapter_intro'`) y los bloques exegéticos versículo a versículo (`entryType: 'passage'`).
+  4. Normaliza referencias bíblicas clásicas (ej. `Gen 2:1-3` $\rightarrow$ `Génesis 2:1-3`) para compatibilidad directa con `bibleReferenceParser` en el frontend.
+  5. Traduce asíncronamente al español preservando la estructura exegética original y sin sobrescribir capítulos previamente curados a menos que se incluya `--force`.
+  6. Escribe o actualiza los archivos modulares en `corpus/commentaries/{authorId}/{es,en}/{fileName}`.
+  7. Llama automáticamente a `seedCorpus()` para insertar en `kartex.sqlite` y reconstruir el índice FTS5.
+
+
 
 

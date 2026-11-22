@@ -1,0 +1,66 @@
+{
+  "dictionaryId": "easton-1897",
+  "language": "es",
+  "entries": [
+    {
+      "id": "easton-ark-covenant",
+      "term": "Arca de la Alianza",
+      "normalizedTerm": "arca de la alianza",
+      "letter": "A",
+      "category": "artifact",
+      "etymology": "Hebreo: אֲרוֹן הַבְּרִית (Arón Habrit), 'Cofre del Testimonio'",
+      "definitionMarkdown": "El cofre sagrado construido según el modelo revelado por Dios a Moisés en el monte Sinaí (Éxodo 25:10-22). Estaba hecho de madera de acacia revestida de oro puro por dentro y por fuera, de dos codos y medio de longitud, un codo y medio de anchura y un codo y medio de altura.\n\n### Construcción y Mobiliario\nSobre el arca se hallaba la cubierta de oro macizo denominada el **Propiciatorio** (*kapporeth*), en cuyos extremos reposaban dos querubines de oro labrados a martillo con sus alas extendidas cubriendo el trono de la gracia, entre los cuales se manifestaba la presencia divina de la *Shejiná*.\n\n### Contenido Sagrado\nSegún el testimonio canónico (Éxodo 25:16; Hebreos 9:4), el arca contenía:\n* Las dos tablas de piedra de la Ley grabadas con el Decálogo.\n* Una vasija de oro que contenía el maná del desierto.\n* La vara de Aarón que floreció como confirmación de la elección sacerdotal.\n\n### Trayectoria Histórica\nEl arca precedió al campamento israelita durante la travesía del desierto, detuvo las aguas del río Jordán ante Josué y rodeó los muros de Jericó. Más tarde permaneció en Silo, fue capturada temporalmente por los filisteos en tiempos de Elí, repatriada a Quiriat-jearim y finalmente trasladada por David a Jerusalén para ser entronizada en el *Sancta Sanctorum* del Templo de Salomón (1 Reyes 8:1-9).",
+      "biblicalReferences": [
+        { "reference": "Éxodo 25:10-22", "context": "Instrucciones arquitectónicas y propósito del propiciatorio" },
+        { "reference": "1 Reyes 8:1-9", "context": "Dedicación del Templo de Salomón y depósito del Arca" },
+        { "reference": "Hebreos 9:4-5", "context": "Descripción neotestamentaria del tabernáculo y su contenido" }
+      ],
+      "relatedTerms": ["Propiciatorio", "Tabernáculo", "Melquisedec", "Pascua"]
+    },
+    {
+      "id": "easton-justification",
+      "term": "Justificación",
+      "normalizedTerm": "justificacion",
+      "letter": "J",
+      "category": "theology",
+      "etymology": "Griego: δικαίωσις (dikaiōsis); hebreo: צְדָקָה (tsedaqah)",
+      "definitionMarkdown": "Un acto judicial forense de la libre gracia de Dios por el cual Él declara justo al pecador culpable, perdona todos sus pecados y lo acepta como legalmente justo delante de su tribunal divino.\n\n### Causa y Fundamento\nLa justificación no se basa en ninguna justicia inherente producida por el hombre ni en obras de la ley moral o ceremonial (Romanos 3:20; Gálatas 2:16). Se fundamenta exclusivamente en la justicia perfecta y la expiación vicaria de Jesucristo imputada al creyente.\n\n### El Instrumento de Recepción\nEl único medio instrumental para recibir la justificación es la **fe viva en Cristo Jesús** (Romanos 5:1). La fe no es el mérito que compra la salvación, sino la mano receptora vacía que descansa en la promesa y en la obra consumada de la cruz.",
+      "biblicalReferences": [
+        { "reference": "Romanos 3:21-28", "context": "Manifestación de la justicia de Dios sin la ley mediante la fe" },
+        { "reference": "Romanos 5:1-2", "context": "Paz para con Dios tras ser justificados por la fe" },
+        { "reference": "Gálatas 2:16", "context": "Imposibilidad de ser justificado por las obras de la ley" }
+      ],
+      "relatedTerms": ["Abraham", "Pascua", "Melquisedec", "Arca de la Alianza"]
+    },
+    {
+      "id": "easton-melchizedek",
+      "term": "Melquisedec",
+      "normalizedTerm": "melquisedec",
+      "letter": "M",
+      "category": "person",
+      "etymology": "Hebreo: מַלְכִּי־צֶדֶק (Malki-Tsedeq), 'Rey de Justicia'",
+      "definitionMarkdown": "Rey de Salem (antiguo nombre de Jerusalén) y sacerdote del Dios Altísimo (*El Elyon*). Aparece en Génesis 14:18-20 saliendo al encuentro de Abram tras la derrota de Quedorlaomer y los reyes confederados.\n\n### Encuentro con Abram\nMelquisedec ofreció pan y vino a Abram, bendijo al patriarca en el nombre del Creador del cielo y de la tierra, y Abram le entregó los diezmos de todo el botín, reconociendo la primacía de su dignidad sacerdotal.\n\n### Significado Tipológico en Cristo\nEn el Salmo 110:4, el sacerdocio mesiánico es jurado solemnemente por Dios: *«Tú eres sacerdote para siempre según el orden de Melquisedec»*. La Epístola a los Hebreos (Hebreos 7:1-17) expone ampliamente que Melquisedec es el tipo eminente del sacerdocio eterno de Jesucristo, el cual supera al sacerdocio levítico aarónico porque no depende de linaje carnal, es incorruptible, y une en una sola persona el trono real y el altar sacerdotal.",
+      "biblicalReferences": [
+        { "reference": "Génesis 14:18-20", "context": "Encuentro histórico en el valle de Save con Abram" },
+        { "reference": "Salmos 110:4", "context": "Profecía mesiánica del sacerdocio eterno" },
+        { "reference": "Hebreos 7:1-17", "context": "Exposición teológica de la superioridad de su orden" }
+      ],
+      "relatedTerms": ["Jerusalén", "Abraham", "Justificación"]
+    },
+    {
+      "id": "easton-passover",
+      "term": "Pascua",
+      "normalizedTerm": "pascua",
+      "letter": "P",
+      "category": "custom",
+      "etymology": "Hebreo: פֶּסַח (Pésaj), 'Pasar por alto', 'Eximir'; griego: Πάσχα (Pásja)",
+      "definitionMarkdown": "La primera de las tres grandes solemnidades anuales del calendario hebreo, instituida la noche de la liberación de Israel de la esclavitud en Egipto (Éxodo 12:1-28).\n\n### El Ritual del Cordero Pascual\nEl diez del mes de Nisán (Abib) cada familia tomaba un cordero macho de un año, sin defecto. El catorce de Nisán al atardecer era inmolado y su sangre se aplicaba con un manojo de hisopo en los dos postes y el dintel de las casas. Al ver la sangre, el ángel destructor pasaba de largo sin herir a los primogénitos israelitas.\n\n### Cumplimiento Tipológico\nEl apóstol Pablo enseña categóricamente: *«Porque nuestra Pascua, que es Cristo, ya fue sacrificada por nosotros»* (1 Corintios 5:7). El cordero pascual inmaculado anticipaba la muerte redentora de Jesucristo, cuya sangre protege de la ira divina y garantiza la reconciliación eterna.",
+      "biblicalReferences": [
+        { "reference": "Éxodo 12:1-28", "context": "Institución de la primera pascua en Egipto" },
+        { "reference": "1 Corintios 5:7-8", "context": "Cristo como la verdadera Pascua cumplida" },
+        { "reference": "Juan 1:29", "context": "He aquí el Cordero de Dios que quita el pecado del mundo" }
+      ],
+      "relatedTerms": ["Justificación", "Arca de la Alianza", "Jerusalén"]
+    }
+  ]
+}

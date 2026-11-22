@@ -1,0 +1,21 @@
+{
+  "dictionaryId": "hitchcock-1869",
+  "language": "es",
+  "entries": [
+    {
+      "id": "hitchcock-abraham",
+      "term": "Abraham",
+      "normalizedTerm": "abraham",
+      "letter": "A",
+      "category": "person",
+      "etymology": "Hebreo: אַבְרָהָם (Avraham), 'Padre de una multitud de naciones'",
+      "definitionMarkdown": "Originalmente llamado **Abram** (*Padre excelso* o *Padre exaltado*). Dios cambió su nombre a Abraham al ratificar su pacto incondicional con él en Génesis 17:5: *«Porque te he puesto por padre de muchedumbre de gentes»*.\n\n### Significado Onomástico y Espiritual\nEl cambio de nombre representó la metamorfosis de un patriarca individual a progenitor de una descendencia incontable como las estrellas y las arenas del mar, que culmina en la bendición de todas las familias de la tierra a través de su Simiente prometida, Cristo Jesús (Gálatas 3:16).",
+      "biblicalReferences": [
+        { "reference": "Génesis 12:1-3", "context": "Llamamiento inicial de Abram en Harán" },
+        { "reference": "Génesis 17:5", "context": "Cambio solemne de nombre y pacto de la circuncisión" },
+        { "reference": "Romanos 4:1-12", "context": "Abraham como padre de todos los creyentes por la fe" }
+      ],
+      "relatedTerms": ["Melquisedec", "Justificación", "Jerusalén"]
+    }
+  ]
+}

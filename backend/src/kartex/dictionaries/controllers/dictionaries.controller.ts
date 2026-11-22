@@ -22,16 +22,18 @@ export class DictionariesController {
 
   /**
    * Recuento de términos disponibles por letra A-Z
-   * GET /api/kartex/dictionaries/letters?dictionaryId=easton-1897-es&lang=es
+   * GET /api/kartex/dictionaries/letters?dictionaryId=easton-1897&category=theology&lang=es
    */
   @Get('letters')
   async getLetters(
     @Query('dictionaryId') dictionaryId?: string,
+    @Query('category') category?: string,
     @Query('lang') lang?: string,
   ): Promise<{ letter: string; count: number }[]> {
     return this.dictionariesService.getAvailableLetters(
       dictionaryId,
       lang || 'es',
+      category,
     );
   }
 

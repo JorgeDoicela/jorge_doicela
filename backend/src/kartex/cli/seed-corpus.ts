@@ -186,15 +186,21 @@ interface SeedBibleDictionary {
 interface SeedBibleDictionaryEntry {
   id: string;
   language?: string;
-  dictionaryId: string;
+  dictionaryId?: string;
   term: string;
-  normalizedTerm: string;
-  letter: string;
-  category: string;
+  normalizedTerm?: string;
+  letter?: string;
+  category?: string;
   etymology?: string;
   definitionMarkdown: string;
   biblicalReferences?: { reference: string; context: string }[];
   relatedTerms?: string[];
+}
+
+interface SeedBibleDictionaryEnvelope {
+  dictionaryId?: string;
+  language?: string;
+  entries: SeedBibleDictionaryEntry[];
 }
 
 export const CANONICAL_BOOKS = [
@@ -273,21 +279,20 @@ export function seedCorpus(
 ) {
   const startTime = Date.now();
   console.log(
-    `[CorpusSeeder] 🚀 Recreando base de datos desde cero: ${dbPath}...`,
+    `[CorpusSeeder] Sincronizando y sembrando base de datos: ${dbPath}...`,
   );
 
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   db.pragma('synchronous = NORMAL');
 
-  // 1. Reset limpio total de las 8 tablas del corpus
-  console.log('[CorpusSeeder] Purgando tablas anteriores (Reset Limpio)...');
+  // 1. Recreación limpia de tablas del corpus editorial preservando el caché de versículos (books, translations, verses)
+  console.log(
+    '[CorpusSeeder] Reiniciando tablas del corpus editorial (preservando caché de versículos)...',
+  );
   db.exec(`
     DROP TABLE IF EXISTS morphology_tokens;
     DROP TABLE IF EXISTS lexicon_entries;
-    DROP TABLE IF EXISTS verses;
-    DROP TABLE IF EXISTS translations;
-    DROP TABLE IF EXISTS books;
     DROP TABLE IF EXISTS historical_places;
     DROP TABLE IF EXISTS timeline_events;
     DROP TABLE IF EXISTS archaeology_articles;
@@ -299,11 +304,12 @@ export function seedCorpus(
     DROP TABLE IF EXISTS commentary_entries;
     DROP TABLE IF EXISTS commentary_entries_fts;
     DROP TABLE IF EXISTS commentary_authors;
+    DROP TABLE IF EXISTS bible_dictionary_entries_fts;
     DROP TABLE IF EXISTS bible_dictionary_entries;
     DROP TABLE IF EXISTS bible_dictionaries;
 
 
-    CREATE TABLE books (
+    CREATE TABLE IF NOT EXISTS books (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR NOT NULL,
       abbreviation VARCHAR NOT NULL UNIQUE,
@@ -312,14 +318,14 @@ export function seedCorpus(
     );
     CREATE INDEX IF NOT EXISTS IDX_books_testament ON books(testament);
 
-    CREATE TABLE translations (
+    CREATE TABLE IF NOT EXISTS translations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR NOT NULL,
       abbreviation VARCHAR NOT NULL UNIQUE,
       language VARCHAR NOT NULL
     );
 
-    CREATE TABLE verses (
+    CREATE TABLE IF NOT EXISTS verses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       chapter INTEGER NOT NULL,
       verseNumber INTEGER NOT NULL,
@@ -544,19 +550,41 @@ export function seedCorpus(
       biblicalReferences TEXT,
       relatedTerms TEXT,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (id, language)
+      PRIMARY KEY (id, language),
+      FOREIGN KEY (dictionaryId, language) REFERENCES bible_dictionaries(id, language) ON DELETE CASCADE
     );
     CREATE INDEX IDX_dict_term_lang ON bible_dictionary_entries(normalizedTerm, language);
     CREATE INDEX IDX_dict_letter ON bible_dictionary_entries(dictionaryId, letter, language);
     CREATE INDEX IDX_dict_category ON bible_dictionary_entries(category, language);
+
+    -- Motor de búsqueda textual FTS5 External Content para Diccionarios Bíblicos (cero duplicación de texto en disco)
+    DROP TABLE IF EXISTS bible_dictionary_entries_fts;
+    CREATE VIRTUAL TABLE IF NOT EXISTS bible_dictionary_entries_fts USING fts5(
+      id UNINDEXED,
+      language UNINDEXED,
+      dictionaryId UNINDEXED,
+      term,
+      normalizedTerm,
+      etymology,
+      definitionMarkdown,
+      content='bible_dictionary_entries',
+      content_rowid='rowid',
+      tokenize='unicode61 remove_diacritics 2'
+    );
   `);
 
-  // Sembrar los 66 libros canónicos de forma segura
+  // Sembrar los 66 libros canónicos de forma segura (UPSERT sin invalidar claves foráneas)
   console.log('[CorpusSeeder] Sembrando catálogo de 66 libros canónicos...');
   const seedBooksTx = db.transaction(() => {
-    const insertStmt = db.prepare(
-      'INSERT INTO books (id, name, abbreviation, "order", testament) VALUES (?, ?, ?, ?, ?)',
-    );
+    const insertStmt = db.prepare(`
+      INSERT INTO books (id, name, abbreviation, "order", testament)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        name = excluded.name,
+        abbreviation = excluded.abbreviation,
+        "order" = excluded."order",
+        testament = excluded.testament
+    `);
 
     for (const b of CANONICAL_BOOKS) {
       insertStmt.run(b.id, b.name, b.abbreviation, b.id, b.testament);
@@ -564,10 +592,8 @@ export function seedCorpus(
   });
   seedBooksTx();
 
-  // Sembrar las 5 traducciones oficiales autorizadas
-  console.log(
-    '[CorpusSeeder] Sembrando catálogo de 5 traducciones oficiales...',
-  );
+  // Sembrar las traducciones oficiales autorizadas (UPSERT sin invalidar claves foráneas)
+  console.log('[CorpusSeeder] Sembrando catálogo de traducciones oficiales...');
   const OFFICIAL_TRANSLATIONS = [
     {
       id: 1,
@@ -608,9 +634,14 @@ export function seedCorpus(
   ];
 
   const seedTranslationsTx = db.transaction(() => {
-    const insertStmt = db.prepare(
-      'INSERT INTO translations (id, name, abbreviation, language) VALUES (?, ?, ?, ?)',
-    );
+    const insertStmt = db.prepare(`
+      INSERT INTO translations (id, name, abbreviation, language)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        name = excluded.name,
+        abbreviation = excluded.abbreviation,
+        language = excluded.language
+    `);
     for (const t of OFFICIAL_TRANSLATIONS) {
       insertStmt.run(t.id, t.name, t.abbreviation, t.language);
     }
@@ -704,10 +735,12 @@ export function seedCorpus(
           translationId = Number(info.lastInsertRowid);
         }
 
-        // 3. Inserción Transaccional por Lotes (Batch Chunks)
+        // 3. Inserción Transaccional por Lotes (UPSERT que preserva el ID primario y el caché)
         const insertStmt = db.prepare(`
-          INSERT OR REPLACE INTO verses (bookId, translationId, chapter, verseNumber, text)
+          INSERT INTO verses (bookId, translationId, chapter, verseNumber, text)
           VALUES (?, ?, ?, ?, ?)
+          ON CONFLICT(translationId, bookId, chapter, verseNumber) DO UPDATE SET
+            text = excluded.text
         `);
 
         const insertBatch = db.transaction((chapters: ChapterItem[]) => {
@@ -734,7 +767,7 @@ export function seedCorpus(
         );
       } catch (err) {
         console.error(
-          `[CorpusSeeder] ⚠️ Error procesando archivo ${file} en ${transFolder}:`,
+          `[CorpusSeeder] Error procesando archivo ${file} en ${transFolder}:`,
           err,
         );
       }
@@ -1054,7 +1087,7 @@ export function seedCorpus(
   const commentariesDir = path.join(corpusDir, 'commentaries');
   if (fs.existsSync(commentariesDir)) {
     console.log(
-      '[CommentariesSeeder] 📖 Sembrando corpus de comentarios bíblicos...',
+      '[CommentariesSeeder] Sembrando corpus de comentarios bíblicos...',
     );
     // A. Commentary Authors
     const authorsPath = path.join(commentariesDir, 'commentary_authors.json');
@@ -1217,7 +1250,7 @@ export function seedCorpus(
   const dictionariesDir = path.join(corpusDir, 'dictionaries');
   if (fs.existsSync(dictionariesDir)) {
     console.log(
-      '[DictionariesSeeder] 📚 Sembrando corpus de diccionarios bíblicos...',
+      '[DictionariesSeeder] Sembrando corpus de diccionarios bíblicos...',
     );
     // A. Dictionaries Catalog
     const dictPath = path.join(dictionariesDir, 'dictionaries.json');
@@ -1251,54 +1284,126 @@ export function seedCorpus(
       );
     }
 
-    // B. Dictionary Entries
-    const entriesPath = path.join(dictionariesDir, 'dictionary_entries.json');
-    if (fs.existsSync(entriesPath)) {
-      const entries = JSON.parse(
-        fs.readFileSync(entriesPath, 'utf8'),
-      ) as SeedBibleDictionaryEntry[];
-      const insertEntry = db.prepare(`
-        INSERT INTO bible_dictionary_entries (id, language, dictionaryId, term, normalizedTerm, letter, category, etymology, definitionMarkdown, biblicalReferences, relatedTerms)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `);
-      const txEntries = db.transaction((items: SeedBibleDictionaryEntry[]) => {
+    // B. Dictionary Entries (Subcarpetas Modulares por Obra/Idioma)
+    const insertDictEntry = db.prepare(`
+      INSERT OR REPLACE INTO bible_dictionary_entries (
+        id, language, dictionaryId, term, normalizedTerm, letter, category, etymology, definitionMarkdown, biblicalReferences, relatedTerms
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    const txDictEntries = db.transaction(
+      (
+        items: SeedBibleDictionaryEntry[],
+        defaults?: { dictionaryId?: string; language?: string },
+      ) => {
+        let count = 0;
         for (const e of items) {
-          insertEntry.run(
-            e.id,
-            e.language || 'es',
-            e.dictionaryId,
-            e.term,
+          const rawDictId = e.dictionaryId || defaults?.dictionaryId;
+          const lang = (e.language || defaults?.language || 'es').trim();
+          if (!e.id || !rawDictId || !e.term) continue;
+
+          const canonicalDictId = rawDictId.trim().replace(/-(es|en)$/i, '');
+          const normalized =
             e.normalizedTerm ||
-              e.term
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, ''),
-            e.letter || e.term.charAt(0).toUpperCase(),
+            e.term
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .trim();
+          const letter = (
+            e.letter ||
+            normalized.charAt(0) ||
+            e.term.charAt(0)
+          ).toUpperCase();
+
+          insertDictEntry.run(
+            e.id.replace(/-(es|en)$/i, ''),
+            lang,
+            canonicalDictId,
+            e.term,
+            normalized,
+            letter,
             e.category || 'theology',
             e.etymology || null,
             e.definitionMarkdown,
             JSON.stringify(e.biblicalReferences || []),
             JSON.stringify(e.relatedTerms || []),
           );
+          count++;
         }
-      });
-      txEntries(entries);
-      console.log(
-        `[DictionariesSeeder] -> ${entries.length} entradas enciclopédicas de diccionario indexadas.`,
-      );
+        return count;
+      },
+    );
 
-      // C. Actualizar recuento de entradas en el catálogo de diccionarios
-      const updateCounts = db.prepare(`
-        UPDATE bible_dictionaries
-        SET entriesCount = (
-          SELECT COUNT(*)
-          FROM bible_dictionary_entries
-          WHERE bible_dictionary_entries.dictionaryId = bible_dictionaries.id
-            AND bible_dictionary_entries.language = bible_dictionaries.language
-        )
-      `);
-      updateCounts.run();
+    const collectDictionaryEntryFiles = (dir: string): string[] => {
+      const results: string[] = [];
+      for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
+        const fullPath = path.join(dir, dirent.name);
+        if (dirent.isDirectory()) {
+          results.push(...collectDictionaryEntryFiles(fullPath));
+        } else if (
+          dirent.isFile() &&
+          dirent.name.endsWith('.json') &&
+          dirent.name !== 'dictionaries.json'
+        ) {
+          results.push(fullPath);
+        }
+      }
+      return results;
+    };
+
+    const dictEntryFiles = collectDictionaryEntryFiles(dictionariesDir);
+    let totalDictEntries = 0;
+
+    for (const filePath of dictEntryFiles) {
+      const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8')) as
+        | SeedBibleDictionaryEntry[]
+        | SeedBibleDictionaryEnvelope;
+
+      if (Array.isArray(parsed)) {
+        totalDictEntries += txDictEntries(parsed);
+      } else if (parsed && Array.isArray(parsed.entries)) {
+        totalDictEntries += txDictEntries(parsed.entries, {
+          dictionaryId: parsed.dictionaryId,
+          language: parsed.language,
+        });
+      }
     }
+
+    // Reconstrucción atómica del índice External Content FTS5, triggers y recuento de entradas por diccionario
+    db.exec(`
+      INSERT INTO bible_dictionary_entries_fts(bible_dictionary_entries_fts) VALUES('rebuild');
+
+      CREATE TRIGGER IF NOT EXISTS trg_bible_dict_entries_ai AFTER INSERT ON bible_dictionary_entries BEGIN
+        INSERT INTO bible_dictionary_entries_fts(rowid, id, language, dictionaryId, term, normalizedTerm, etymology, definitionMarkdown)
+        VALUES (new.rowid, new.id, new.language, new.dictionaryId, new.term, new.normalizedTerm, new.etymology, new.definitionMarkdown);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS trg_bible_dict_entries_ad AFTER DELETE ON bible_dictionary_entries BEGIN
+        INSERT INTO bible_dictionary_entries_fts(bible_dictionary_entries_fts, rowid, id, language, dictionaryId, term, normalizedTerm, etymology, definitionMarkdown)
+        VALUES ('delete', old.rowid, old.id, old.language, old.dictionaryId, old.term, old.normalizedTerm, old.etymology, old.definitionMarkdown);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS trg_bible_dict_entries_au AFTER UPDATE ON bible_dictionary_entries BEGIN
+        INSERT INTO bible_dictionary_entries_fts(bible_dictionary_entries_fts, rowid, id, language, dictionaryId, term, normalizedTerm, etymology, definitionMarkdown)
+        VALUES ('delete', old.rowid, old.id, old.language, old.dictionaryId, old.term, old.normalizedTerm, old.etymology, old.definitionMarkdown);
+        INSERT INTO bible_dictionary_entries_fts(rowid, id, language, dictionaryId, term, normalizedTerm, etymology, definitionMarkdown)
+        VALUES (new.rowid, new.id, new.language, new.dictionaryId, new.term, new.normalizedTerm, new.etymology, new.definitionMarkdown);
+      END;
+
+      UPDATE bible_dictionaries
+      SET entriesCount = (
+        SELECT COUNT(*)
+        FROM bible_dictionary_entries
+        WHERE bible_dictionary_entries.dictionaryId = bible_dictionaries.id
+          AND bible_dictionary_entries.language = bible_dictionaries.language
+      );
+    `);
+
+    console.log(
+      `[DictionariesSeeder] -> ${totalDictEntries} entradas enciclopédicas de diccionario indexadas (${dictEntryFiles.length} archivos).`,
+    );
   }
 
   // ==========================================

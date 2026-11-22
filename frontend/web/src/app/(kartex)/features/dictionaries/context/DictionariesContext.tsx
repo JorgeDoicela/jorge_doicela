@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import {
   BibleDictionary,
@@ -24,6 +24,7 @@ interface DictionariesContextType {
   setSelectedCategory: (cat: DictionaryCategory) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  selectRelatedTerm: (term: string) => void;
   entries: BibleDictionaryEntry[];
   selectedEntryId: string | null;
   setSelectedEntryId: (id: string | null) => void;
@@ -56,59 +57,82 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalEntries, setTotalEntries] = useState<number>(0);
 
+  const entriesAbortRef = useRef<AbortController | null>(null);
+
   // 1. Cargar catálogo de diccionarios al montar o cambiar de idioma
   useEffect(() => {
-    let isMounted = true;
-    fetchDictionaries(locale).then((data) => {
-      if (isMounted) {
+    const controller = new AbortController();
+    fetchDictionaries(locale, controller.signal).then((data) => {
+      if (!controller.signal.aborted) {
         setDictionaries(data);
       }
     });
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, [locale]);
 
-  // 2. Cargar recuento de letras A-Z
+  // 2. Cargar recuento de letras A-Z filtrado por diccionario y categoría
   useEffect(() => {
-    let isMounted = true;
-    fetchAvailableLetters(selectedDictionaryId, locale).then((letters) => {
-      if (isMounted) {
+    const controller = new AbortController();
+    fetchAvailableLetters(
+      selectedDictionaryId,
+      locale,
+      selectedCategory,
+      controller.signal,
+    ).then((letters) => {
+      if (!controller.signal.aborted) {
         setAvailableLetters(letters);
       }
     });
     return () => {
-      isMounted = false;
+      controller.abort();
     };
-  }, [selectedDictionaryId, locale]);
+  }, [selectedDictionaryId, selectedCategory, locale]);
 
-  // 3. Cargar entradas según los filtros activos con debounce para búsqueda
+  // 3. Cargar entradas según los filtros activos con AbortController y debounce
   const loadEntries = useCallback(async () => {
-    setIsLoading(true);
-    const result = await searchDictionaryEntries({
-      dictionaryId: selectedDictionaryId,
-      letter: selectedLetter,
-      category: selectedCategory,
-      q: searchQuery,
-      page,
-      limit: 25,
-      lang: locale,
-    });
-    setEntries(result.items);
-    setTotalPages(result.totalPages);
-    setTotalEntries(result.total);
-    setIsLoading(false);
+    if (entriesAbortRef.current) {
+      entriesAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    entriesAbortRef.current = controller;
 
-    // Auto-seleccionar la primera entrada si no hay ninguna válida seleccionada
-    if (result.items.length > 0) {
-      setSelectedEntryId((prev) => {
-        if (prev && result.items.some((item) => item.id === prev)) {
-          return prev;
-        }
-        return result.items[0]?.id || null;
-      });
-    } else {
-      setSelectedEntryId(null);
+    setIsLoading(true);
+    try {
+      const result = await searchDictionaryEntries(
+        {
+          dictionaryId: selectedDictionaryId,
+          letter: selectedLetter,
+          category: selectedCategory,
+          q: searchQuery,
+          page,
+          limit: 25,
+          lang: locale,
+        },
+        controller.signal,
+      );
+
+      if (controller.signal.aborted) return;
+
+      setEntries(result.items);
+      setTotalPages(result.totalPages);
+      setTotalEntries(result.total);
+
+      if (result.items.length > 0) {
+        setSelectedEntryId((prev) => {
+          if (prev && result.items.some((item) => item.id === prev)) {
+            return prev;
+          }
+          return result.items[0]?.id || null;
+        });
+      } else {
+        setSelectedEntryId(null);
+      }
+    } finally {
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+      }
     }
   }, [selectedDictionaryId, selectedLetter, selectedCategory, searchQuery, page, locale]);
 
@@ -118,6 +142,19 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }, 150);
     return () => clearTimeout(timer);
   }, [loadEntries]);
+
+  useEffect(() => {
+    return () => {
+      entriesAbortRef.current?.abort();
+    };
+  }, []);
+
+  const selectRelatedTerm = useCallback((term: string) => {
+    setSelectedLetter('all');
+    setSelectedCategory('all');
+    setSearchQuery(term);
+    setPage(1);
+  }, []);
 
   // Diccionario activo
   const activeDictionary = useMemo(() => {
@@ -153,6 +190,7 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
       selectedCategory,
       setSelectedCategory: (cat: DictionaryCategory) => {
         setSelectedCategory(cat);
+        setSelectedLetter('all');
         setSelectedEntryId(null);
         setPage(1);
       },
@@ -161,6 +199,7 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setSearchQuery(q);
         setPage(1);
       },
+      selectRelatedTerm,
       entries,
       selectedEntryId,
       setSelectedEntryId,
@@ -180,6 +219,7 @@ export const DictionariesProvider: React.FC<{ children: React.ReactNode }> = ({ 
       selectedLetter,
       selectedCategory,
       searchQuery,
+      selectRelatedTerm,
       entries,
       selectedEntryId,
       activeEntry,

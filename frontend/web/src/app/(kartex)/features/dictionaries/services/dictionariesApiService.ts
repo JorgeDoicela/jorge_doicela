@@ -6,27 +6,22 @@ import {
   SearchEntriesResult,
 } from '../types';
 
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-}
-
 /**
  * Consulta el catálogo de diccionarios bíblicos disponibles
  */
-export async function fetchDictionaries(locale: string = 'es'): Promise<BibleDictionary[]> {
+export async function fetchDictionaries(
+  locale: string = 'es',
+  signal?: AbortSignal,
+): Promise<BibleDictionary[]> {
   try {
     const res = await fetch(`${API_URL}/kartex/dictionaries?lang=${locale}`, {
       headers: { Accept: 'application/json' },
+      signal,
     });
-    if (!res.ok) {
-      throw new Error(`HTTP error ${res.status}`);
-    }
+    if (!res.ok) return [];
     const json = await res.json();
     return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
-  } catch (err) {
-    console.error('[DictionariesApi] Error al obtener diccionarios:', err);
+  } catch {
     return [];
   }
 }
@@ -37,32 +32,39 @@ export async function fetchDictionaries(locale: string = 'es'): Promise<BibleDic
 export async function fetchDictionaryById(
   id: string,
   locale: string = 'es',
+  signal?: AbortSignal,
 ): Promise<BibleDictionary | null> {
   try {
-    const res = await fetch(`${API_URL}/kartex/dictionaries/${encodeURIComponent(id)}?lang=${locale}`, {
-      headers: { Accept: 'application/json' },
-    });
+    const res = await fetch(
+      `${API_URL}/kartex/dictionaries/${encodeURIComponent(id)}?lang=${locale}`,
+      {
+        headers: { Accept: 'application/json' },
+        signal,
+      },
+    );
     if (!res.ok) return null;
     const json = await res.json();
     return json?.data ?? (json?.id ? json : null);
-  } catch (err) {
-    console.error(`[DictionariesApi] Error al obtener diccionario ${id}:`, err);
+  } catch {
     return null;
   }
 }
 
 /**
- * Búsqueda paginada indexada de entradas de diccionario
+ * Búsqueda paginada indexada de entradas de diccionario con FTS5
  */
-export async function searchDictionaryEntries(params: {
-  dictionaryId?: string;
-  letter?: string;
-  category?: string;
-  q?: string;
-  page?: number;
-  limit?: number;
-  lang?: string;
-}): Promise<SearchEntriesResult> {
+export async function searchDictionaryEntries(
+  params: {
+    dictionaryId?: string;
+    letter?: string;
+    category?: string;
+    q?: string;
+    page?: number;
+    limit?: number;
+    lang?: string;
+  },
+  signal?: AbortSignal,
+): Promise<SearchEntriesResult> {
   const query = new URLSearchParams();
   if (params.dictionaryId && params.dictionaryId !== 'all') {
     query.set('dictionaryId', params.dictionaryId);
@@ -83,6 +85,7 @@ export async function searchDictionaryEntries(params: {
   try {
     const res = await fetch(`${API_URL}/kartex/dictionaries/entries?${query.toString()}`, {
       headers: { Accept: 'application/json' },
+      signal,
     });
     if (!res.ok) {
       return { items: [], total: 0, page: 1, limit: 20, totalPages: 1 };
@@ -92,8 +95,7 @@ export async function searchDictionaryEntries(params: {
     return raw?.items
       ? raw
       : { items: [], total: 0, page: 1, limit: 20, totalPages: 1 };
-  } catch (err) {
-    console.error('[DictionariesApi] Error en búsqueda de entradas:', err);
+  } catch {
     return { items: [], total: 0, page: 1, limit: 20, totalPages: 1 };
   }
 }
@@ -104,16 +106,20 @@ export async function searchDictionaryEntries(params: {
 export async function fetchDictionaryEntryById(
   id: string,
   locale: string = 'es',
+  signal?: AbortSignal,
 ): Promise<BibleDictionaryEntry | null> {
   try {
-    const res = await fetch(`${API_URL}/kartex/dictionaries/entries/${encodeURIComponent(id)}?lang=${locale}`, {
-      headers: { Accept: 'application/json' },
-    });
+    const res = await fetch(
+      `${API_URL}/kartex/dictionaries/entries/${encodeURIComponent(id)}?lang=${locale}`,
+      {
+        headers: { Accept: 'application/json' },
+        signal,
+      },
+    );
     if (!res.ok) return null;
     const json = await res.json();
     return json?.data ?? (json?.id ? json : null);
-  } catch (err) {
-    console.error(`[DictionariesApi] Error al obtener entrada ${id}:`, err);
+  } catch {
     return null;
   }
 }
@@ -124,22 +130,27 @@ export async function fetchDictionaryEntryById(
 export async function fetchAvailableLetters(
   dictionaryId?: string,
   locale: string = 'es',
+  category?: string,
+  signal?: AbortSignal,
 ): Promise<LetterCount[]> {
   const query = new URLSearchParams();
   if (dictionaryId && dictionaryId !== 'all') {
     query.set('dictionaryId', dictionaryId);
+  }
+  if (category && category !== 'all') {
+    query.set('category', category);
   }
   query.set('lang', locale);
 
   try {
     const res = await fetch(`${API_URL}/kartex/dictionaries/letters?${query.toString()}`, {
       headers: { Accept: 'application/json' },
+      signal,
     });
     if (!res.ok) return [];
     const json = await res.json();
     return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
-  } catch (err) {
-    console.error('[DictionariesApi] Error al obtener letras:', err);
+  } catch {
     return [];
   }
 }
@@ -150,16 +161,20 @@ export async function fetchAvailableLetters(
 export async function lookupDictionaryTerm(
   term: string,
   locale: string = 'es',
+  signal?: AbortSignal,
 ): Promise<BibleDictionaryEntry[]> {
   try {
-    const res = await fetch(`${API_URL}/kartex/dictionaries/lookup/${encodeURIComponent(term)}?lang=${locale}`, {
-      headers: { Accept: 'application/json' },
-    });
+    const res = await fetch(
+      `${API_URL}/kartex/dictionaries/lookup/${encodeURIComponent(term)}?lang=${locale}`,
+      {
+        headers: { Accept: 'application/json' },
+        signal,
+      },
+    );
     if (!res.ok) return [];
     const json = await res.json();
     return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
-  } catch (err) {
-    console.error(`[DictionariesApi] Error en lookup de ${term}:`, err);
+  } catch {
     return [];
   }
 }

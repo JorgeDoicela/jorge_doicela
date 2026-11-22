@@ -2,34 +2,38 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import {
   BookMarked,
-  BookOpen,
-  Calendar,
   ShieldCheck,
-  Tag,
-  Sparkles,
-  ExternalLink,
-  Layers,
-  Compass,
 } from 'lucide-react';
 import { useDictionaries } from '../context/DictionariesContext';
 import { useKartexPassageSafe } from '../../../entities/passage';
 import { StudySidePanel } from '../../../shared/ui';
+import {
+  renderLinkedScriptureText,
+  ScriptureClickOptions,
+} from '../../commentaries/utils/bibleReferenceParser';
 
 export const DictionariesInspector: React.FC = () => {
   const {
     activeEntry,
     activeDictionary,
-    setSelectedEntryId,
-    setSearchQuery,
+    selectRelatedTerm,
     dictionaries,
   } = useDictionaries();
 
   const passageContext = useKartexPassageSafe();
   const tStudio = useTranslations('Studio');
   const tDict = useTranslations('Dictionaries');
+
+  const handleClose = passageContext?.toggleRightInspector ?? (() => {});
+  const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 360;
+  const setRightInspectorWidth = passageContext?.setRightInspectorWidth ?? (() => {});
+  const resetRightInspectorWidth = passageContext?.resetRightInspectorWidth ?? (() => {});
+
+  const scriptureOptions: ScriptureClickOptions = {
+    onSelectPassage: passageContext?.setPassage,
+  };
 
   // Si la entrada activa tiene un diccionario específico, usarlo; si no, el activo
   const dictionary =
@@ -40,11 +44,15 @@ export const DictionariesInspector: React.FC = () => {
       side="right"
       title={tStudio('toggleDictionariesInspector') || tDict('inspectorTitle')}
       icon={<BookMarked className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
-      storageKey="kartex_dictionaries_inspector_w"
-      defaultWidth={360}
-      collapseTitle={tStudio('closeInspector') || tDict('closeInspector')}
+      ariaLabel={tStudio('toggleDictionariesInspector') || tDict('inspectorTitle')}
+      isOpen={passageContext?.isRightInspectorOpen ?? false}
+      onClose={handleClose}
+      width={rightInspectorWidth}
+      onResize={setRightInspectorWidth}
+      onReset={resetRightInspectorWidth}
+      collapseTitle={tStudio('closeInspector') || tDict('closeSidebar')}
     >
-      <StudySidePanel.Body className="space-y-4">
+      <StudySidePanel.Body className="p-3 space-y-4">
         {activeEntry ? (
           <div className="space-y-4">
             {/* Ficha del Término y Etimología */}
@@ -98,7 +106,7 @@ export const DictionariesInspector: React.FC = () => {
               </div>
             )}
 
-            {/* Pasajes Bíblicos Respaldados */}
+            {/* Pasajes Bíblicos Respaldados Interactivos */}
             {activeEntry.biblicalReferences && activeEntry.biblicalReferences.length > 0 && (
               <div className="space-y-2">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block px-1">
@@ -110,10 +118,8 @@ export const DictionariesInspector: React.FC = () => {
                       key={idx}
                       className="p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs space-y-1"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-zinc-900 dark:text-zinc-100">
-                          {ref.reference}
-                        </span>
+                      <div className="flex items-center justify-between font-mono font-bold">
+                        {renderLinkedScriptureText(ref.reference, scriptureOptions)}
                       </div>
                       <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
                         {ref.context}
@@ -135,7 +141,7 @@ export const DictionariesInspector: React.FC = () => {
                     <button
                       key={idx}
                       type="button"
-                      onClick={() => setSearchQuery(term)}
+                      onClick={() => selectRelatedTerm(term)}
                       className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 hover:decoration-zinc-500"
                     >
                       {term}

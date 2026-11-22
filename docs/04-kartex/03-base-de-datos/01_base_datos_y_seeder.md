@@ -102,6 +102,25 @@ La base de datos física `kartex.sqlite` está optimizada para lecturas ultra-r�
                                  │ VIRTUAL TABLE FTS5: commentary_entries_fts             │
                                  │ (External Content FTS5 + unicode61 remove_diacritics 2)│
                                  └────────────────────────────────────────────────────────┘
+
+┌────────────────────────┐       ┌────────────────────────────────────────────────────────┐
+│   bible_dictionaries   │       │                bible_dictionary_entries                │
+├────────────────────────┤       ├────────────────────────────────────────────────────────┤
+│ id (PK)                │       │ id (PK)                                                │
+│ language (PK)          │       │ language (PK)                                          │
+│ slug (UQ + language)   │       │ dictionaryId (FK -> bible_dictionaries.id, language)   │
+│ title                  │       │ term                                                   │
+│ author                 │       │ normalizedTerm (IDX + language)                        │
+│ era                    │       │ letter (IDX + dictionaryId + language)                 │
+│ year                   │       │ category (IDX + language)                              │
+│ entriesCount           │       │ etymology                                              │
+│ theologicalFocus       │       │ definitionMarkdown                                     │
+│ description            │       │ biblicalReferences (JSON)                              │
+│ license                │       │ relatedTerms (JSON)                                    │
+└────────────────────────┘       ├────────────────────────────────────────────────────────┤
+                                 │ VIRTUAL TABLE FTS5: bible_dictionary_entries_fts       │
+                                 │ (External Content FTS5 + unicode61 remove_diacritics 2)│
+                                 └────────────────────────────────────────────────────────┘
 ```
 
 
@@ -109,28 +128,35 @@ La base de datos física `kartex.sqlite` está optimizada para lecturas ultra-r�
 
 ## 2. Organización del Corpus Bíblico y Recursos Históricos
 
-Los textos fuente se organizan exclusivamente en archivos JSON estructurados bajo `backend/src/kartex/corpus/`:
+Los textos fuente de Dominio Público se organizan exclusivamente en archivos JSON estructurados bajo `backend/src/kartex/corpus/` y se siembran en `kartex.sqlite`:
 
 ```text
 backend/src/kartex/corpus/
-├── rv1960/01_genesis.json        # Reina-Valera 1960
-├── nvi/01_genesis.json           # Nueva Versión Internacional
-├── lbla/01_genesis.json          # La Biblia de las Américas
-├── jer/01_genesis.json           # Biblia de Jerusalén
-├── kjv/01_genesis.json           # King James Version
-├── bhs/01_genesis.json           # Biblia Hebraica Stuttgartensia (Hebreo)
-├── lxx/01_genesis.json           # Septuaginta (Griego Koiné)
+├── bhs/01_genesis.json           # Biblia Hebraica Stuttgartensia (Hebreo Masorético)
+├── na28/40_mateo.json            # Texto Crítico Griego (Nuevo Testamento)
+├── rv1909/                       # Reina-Valera 1909 (Dominio Público)
+│   ├── 01_genesis.json
+│   └── 40_mateo.json
+├── morphology/                   # Léxicos Strong y Tokens Morfológicos Interlineales
+│   ├── genesis_lexicon.json
+│   ├── genesis_tokens.json
+│   ├── matthew_lexicon.json
+│   └── matthew_tokens.json
+├── pericopes/                    # Subtítulos y Divisiones Canónicas Bilingües
+│   └── pericopes.json
 ├── historical/                   # Fuentes de Contexto Histórico Bilingüe (ES / EN)
 │   ├── atlas_locations.json      # Coordenadas WGS84, regiones y excavaciones
 │   ├── timeline_events.json      # Monarcas, profetas e imperios
 │   └── archaeology_articles.json # Artículos de epigrafía y manuscritos
 ├── commentaries/                 # Corpus de Comentarios Bíblicos Clásicos (ES / EN)
-│   ├── commentary_authors.json   # Obras y biografías de comentaristas en Dominio Público (Matthew Henry y JFB)
-│   ├── matthew-henry/            # Archivos modulares por idioma (es/ | en/) y libro
-│   └── jfb/                      # Archivos modulares por idioma (es/ | en/) y libro
+│   ├── commentary_authors.json   # Obras y biografías en Dominio Público (Matthew Henry y JFB)
+│   ├── matthew-henry/            # Archivos modulares por idioma (es/ | en/) y libro (01_genesis.json...)
+│   └── jfb/                      # Archivos modulares por idioma (es/ | en/) y libro (01_genesis.json...)
 ├── dictionaries/                 # Diccionarios Bíblicos Clásicos y Enciclopedia A-Z (ES / EN)
 │   ├── dictionaries.json         # Obras enciclopédicas (Easton 1897, Smith 1884, Hitchcock 1869)
-│   └── dictionary_entries.json   # Artículos y definiciones teológicas e históricas A-Z
+│   ├── easton-1897/              # Archivos modulares por idioma (es/entries.json | en/entries.json)
+│   ├── smith-1884/               # Archivos modulares por idioma (es/entries.json | en/entries.json)
+│   └── hitchcock-1869/           # Archivos modulares por idioma (es/entries.json | en/entries.json)
 └── evangelism/                   # Fuentes de Evangelización y Apologética (ES / EN)
     ├── pathways.json             # Rutas y secuencias bíblicas (Camino de Romanos, Puente a la Vida)
     ├── objections.json           # Objeciones escépticas y defensas exegéticas
@@ -140,41 +166,36 @@ backend/src/kartex/corpus/
 
 ---
 
-## 3. Seeder Atómico y Recreación Limpia desde Cero (`seed-corpus.ts`)
+## 3. Seeder Transaccional e Ingesta Híbrida (`seed-corpus.ts`)
 
-La persistencia del corpus bíblico e histórico sigue el principio de **Ingestión Determinista Inmutable (Deterministic Clean Ingestion)**. Tratamos la base de datos `kartex.sqlite` como un artefacto generado de forma pura y reproducible desde los archivos JSON fuente.
+La persistencia de `kartex.sqlite` combina **Preservación de Caché Bíblico** (para capítulos descargados bajo demanda vía `ApiBibleService`) con **Ingestión Determinista Inmutable** (para todos los módulos exegéticos y enciclopédicos del `corpus/`). En tiempo de ejecución, NestJS nunca lee los archivos JSON del disco: todas las consultas se ejecutan directamente contra `kartex.sqlite`.
 
-### 3.1 Flujo de Recreación Limpia
-Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
+### 3.1 Flujo de Sembrado y Sincronización
+Al ejecutar `pnpm --filter backend seed:kartex` (o `pnpm seed:all`), se ejecuta un proceso atómico:
 
-1. **Purga Total Previa (`Reset Limpio`):** Ejecuta `DROP TABLE IF EXISTS` en estricto orden de dependencias relacionales para las tablas del corpus (`morphology_tokens`, `lexicon_entries`, `verses`, `translations`, `books`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`, `commentary_entries_fts`, `commentary_entries`, `commentary_authors`, `bible_dictionary_entries`, `bible_dictionaries`).
-2. **Recreación de Esquema e Índices:** Crea las tablas de forma limpia definiendo sus restricciones, claves foráneas, índices B-Tree optimizados (`IDX_verse_unique`, `IDX_morph_token_unique`, `IDX_timeline_start`, `IDX_articles_slug_lang`, `IDX_pathways_slug`, `IDX_objections_cat`, `IDX_tracts_slug`, `IDX_commentary_passage`, `IDX_commentary_author`, `IDX_dict_term_lang`, `IDX_dict_letter`, `IDX_dict_category`) y la tabla virtual FTS5 `commentary_entries_fts` con tokenizador `unicode61 remove_diacritics 2` y triggers de sincronización atómica (`ai`, `ad`, `au`).
-3. **Sembrado Canónico y Textual por Lotes:** Inserta los 66 libros canónicos, versiones y procesa los versículos por lotes transaccionales (`better-sqlite3`).
-4. **Sembrado de Contexto Histórico Bilingüe:** Inserta las ubicaciones geográficas del atlas WGS84, eventos cronológicos de sincronía y artículos de arqueología/epigrafía en español e inglés.
-5. **Sembrado de Evangelización y Apologética:** Inserta rutas salvíficas estructuradas, banco de objeciones exegéticas y tratados listos para predicar.
-6. **Sembrado de Comentarios Bíblicos Clásicos:** Inserta el catálogo de obras/autores clásicos en dominio público y las notas exegéticas granulares versículo por versículo indexadas por coordenadas bíblicas con replicación automática en el índice invertido FTS5.
-7. **Sembrado de Diccionarios Bíblicos Clásicos:** Inserta las obras enciclopédicas históricas (Easton, Smith, Hitchcock) y sus artículos lexicográficos/teológicos con términos normalizados, desglose etimológico e hipervínculos relacionados.
+1. **Preservación del Caché de Versículos (`books`, `translations`, `verses`):** Utiliza `CREATE TABLE IF NOT EXISTS` y sentencias `INSERT ... ON CONFLICT DO UPDATE` (UPSERT que conserva los IDs primarios). De este modo, al resembrar el corpus editorial no se pierden los capítulos bíblicos previamente descargados y cacheados en `kartex.sqlite` desde YouVersion / API.Bible.
+2. **Purga y Recreación Limpia del Corpus Editorial:** Ejecuta `DROP TABLE IF EXISTS` exclusivamente sobre las tablas del corpus local (`morphology_tokens`, `lexicon_entries`, `historical_places`, `timeline_events`, `archaeology_articles`, `evangelism_pathways`, `evangelism_objections`, `evangelism_tracts`, `commentary_entries_fts`, `commentary_entries`, `commentary_authors`, `bible_dictionary_entries_fts`, `bible_dictionary_entries`, `bible_dictionaries`), garantizando que cualquier registro eliminado o renombrado en los archivos JSON desaparezca sin dejar datos huérfanos.
+3. **Índices B-Tree y Motores External Content FTS5:** Crea índices compuestos y las tablas virtuales `commentary_entries_fts` (`content='commentary_entries'`) y `bible_dictionary_entries_fts` (`content='bible_dictionary_entries'`) con tokenizador `unicode61 remove_diacritics 2`, comando atómico `rebuild` y triggers de sincronización (`ai`, `ad`, `au`), evitando duplicar texto en disco o memoria RAM.
+4. **Sembrado de Comentarios y Diccionarios Bíblicos Clásicos:** Recorre recursivamente las subcarpetas modulares por autor/obra e idioma (`es/`, `en/`), normaliza los códigos de libro mediante `resolveCanonicalBook`, inserta las entradas en transacción (`db.transaction`) y recalcula automáticamente `entriesCount` por autor y diccionario.
 
 
 ### 3.2 Beneficios Arquitectónicos
-* **Cero Residuos ni Datos Huérfanos:** Si se renombran slugs, corrigen versículos o ajustan fechas en los JSON, no quedan registros obsoletos ni desalineados.
-* **Idempotencia Absoluta:** La ingestión es una función pura: `JSONs en corpus/ ──► kartex.sqlite`.
-* **Optimización Física (1 GB de RAM en VPS):** Recrear SQLite desde cero genera un árbol B-Tree limpio y compacto sin páginas fragmentadas ni *bloated space*.
-* **Aislamiento de Usuarios:** Al no mezclar transacciones de usuario con el corpus de referencia, `kartex.sqlite` puede destruirse y recrearse en cualquier momento sin afectar el estado del sistema.
+* **Cero Lectura de JSON en Runtime (1 GB de RAM en VPS):** En producción, los archivos `.json` de `corpus/` solo se leen durante el despliegue (`seed:all`). El servidor NestJS responde todas las peticiones leyendo únicamente las filas indexadas desde `kartex.sqlite`.
+* **Cero Residuos en el Corpus Editorial y Caché Bíblico Intacto:** El corpus exegético es 100% determinista (`corpus/**/*.json ──► kartex.sqlite`), mientras que el caché de capítulos bíblicos descargados se preserva entre ejecuciones del seeder.
 
 ### 3.3 Rendimiento y Operación
 * **Comando:**
   ```bash
   pnpm --filter backend seed:kartex
   ```
-* **Rendimiento Medido:** Procesa y recrea todo el corpus en **~110 ms**.
+* **Rendimiento Medido:** Procesa y sincroniza todo el corpus en **~90 ms**.
 * **Consumo de Memoria:** `< 180 MB` de RAM durante el sembrado.
 * **Salida de Ejecución Típica:**
   ```text
-  [CorpusSeeder] 🚀 Recreando base de datos desde cero: kartex.sqlite...
-  [CorpusSeeder] Purgando tablas anteriores (Reset Limpio)...
+  [CorpusSeeder] Sincronizando y sembrando base de datos: kartex.sqlite...
+  [CorpusSeeder] Reiniciando tablas del corpus editorial (preservando caché de versículos)...
   [CorpusSeeder] Sembrando catálogo de 66 libros canónicos...
-  [CorpusSeeder] Sembrando catálogo de 5 traducciones oficiales...
+  [CorpusSeeder] Sembrando catálogo de traducciones oficiales...
   [CorpusSeeder] Procesando בְּרֵאשִׁית (GEN) en BHS...
   [CorpusSeeder] Procesando Mateo (MAT) en NA28...
   [CorpusSeeder] Procesando Génesis (GEN) en RV1909...
@@ -184,10 +205,18 @@ Al ejecutar el comando del seeder, se realiza un proceso atómico en 4 fases:
   [HistoricalSeeder] -> 6 ubicaciones geográficas indexadas.
   [HistoricalSeeder] -> 34 entidades cronológicas indexadas.
   [HistoricalSeeder] -> 6 artículos arqueológicos indexados.
-  [EvangelismSeeder] -> 3 rutas bíblicas evangelísticas indexadas.
-  [EvangelismSeeder] -> 10 objeciones apologéticas indexadas.
-  [EvangelismSeeder] -> 5 tratados y bosquejos homiléticos indexados.
-  [CorpusSeeder] Completado con éxito: 161 versículos indexados en 110 ms. Consumo de RAM: 177.60 MB.
+  [CorpusSeeder] Sembrando Corpus de Evangelización...
+  [EvangelismSeeder] -> 6 rutas evangelísticas indexadas.
+  [EvangelismSeeder] -> 8 objeciones apologéticas indexadas.
+  [EvangelismSeeder] -> 4 tratados y bosquejos indexados.
+  [CommentariesSeeder] Sembrando corpus de comentarios bíblicos...
+  [CommentariesSeeder] -> 4 autores/obras de comentarios indexados.
+  [CommentariesSeeder] -> 28 notas exegéticas de comentarios indexadas (10 archivos).
+  [DictionariesSeeder] Sembrando corpus de diccionarios bíblicos...
+  [DictionariesSeeder] -> 6 diccionarios bíblicos clásicos indexados.
+  [DictionariesSeeder] -> 14 entradas enciclopédicas de diccionario indexadas (6 archivos).
+  [PericopesSeeder] -> 32 perícopas temáticas indexadas.
+  [CorpusSeeder] Completado con éxito: 161 versículos indexados en 92 ms. Consumo de RAM: 173.59 MB.
   ```
 * **Automatización CI/CD:** Se ejecuta automáticamente tras cada despliegue en GitHub Actions para mantener `kartex.sqlite` sincronizada con el repositorio.
 

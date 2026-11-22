@@ -320,6 +320,31 @@ export interface ScriptureClickOptions {
   onSelectPassage?: (bookId: number, chapter: number, verse?: number) => void;
 }
 
+export interface ParsedScriptureRef {
+  bookId: number;
+  bookAbbr: string;
+  chapter: number;
+  verse?: number;
+}
+
+export function parseScriptureReference(reference: string): ParsedScriptureRef | null {
+  if (!reference) return null;
+  SCRIPTURE_REF_REGEX.lastIndex = 0;
+  const match = SCRIPTURE_REF_REGEX.exec(reference.trim());
+  if (!match) return null;
+  const rawBook = match[1].toLowerCase().trim().replace(/\s+/g, ' ');
+  const bookInfo = SCRIPTURE_BOOK_MAP[rawBook];
+  if (!bookInfo) return null;
+  const chapter = parseInt(match[2], 10);
+  const verse = match[3] ? parseInt(match[3], 10) : undefined;
+  return {
+    bookId: bookInfo.id,
+    bookAbbr: bookInfo.abbr,
+    chapter,
+    verse,
+  };
+}
+
 /**
  * Analiza un fragmento de texto puro y convierte cualquier cita canónica reconocida
  * en un enlace interactivo hacia el Lector / Inspector Bíblico de Kartex.
@@ -353,7 +378,7 @@ export function renderLinkedScriptureText(
 
       const chapter = parseInt(chapterStr, 10);
       const verse = verseStartStr ? parseInt(verseStartStr, 10) : undefined;
-      const targetUrl = `/study/standard?book=${bookInfo.abbr}&chapter=${chapter}${verse ? `&verse=${verse}` : ''}`;
+      const targetUrl = `/study/standard?book=${bookInfo.id}&chapter=${chapter}${verse ? `&verse=${verse}` : ''}`;
 
       elements.push(
         <Link
@@ -365,7 +390,7 @@ export function renderLinkedScriptureText(
               options.onSelectPassage(bookInfo.id, chapter, verse);
             }
           }}
-          title={`Examinar ${fullMatch} en el Lector Canónico`}
+          title={fullMatch}
           className="text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 font-medium underline underline-offset-2 decoration-amber-500/40 hover:decoration-amber-500 transition-colors cursor-pointer"
         >
           {fullMatch}

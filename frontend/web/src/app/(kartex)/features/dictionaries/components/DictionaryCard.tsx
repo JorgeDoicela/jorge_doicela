@@ -2,8 +2,12 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { BibleDictionaryEntry, BibleDictionary } from '../types';
+import {
+  renderLinkedScriptureText,
+  ScriptureClickOptions,
+} from '../../commentaries/utils/bibleReferenceParser';
+import { useKartexPassageSafe } from '../../../entities/passage';
 
 interface DictionaryCardProps {
   entry: BibleDictionaryEntry;
@@ -13,24 +17,27 @@ interface DictionaryCardProps {
   onSelectRelatedTerm?: (term: string) => void;
 }
 
-function renderFormattedText(text: string): React.ReactNode {
+function renderFormattedText(
+  text: string,
+  options?: ScriptureClickOptions,
+): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
         <strong key={index} className="font-semibold text-zinc-900 dark:text-zinc-100">
-          {part.slice(2, -2)}
+          {renderLinkedScriptureText(part.slice(2, -2), options)}
         </strong>
       );
     }
     if (part.startsWith('*') && part.endsWith('*')) {
       return (
         <em key={index} className="italic text-zinc-800 dark:text-zinc-200">
-          {part.slice(1, -1)}
+          {renderLinkedScriptureText(part.slice(1, -1), options)}
         </em>
       );
     }
-    return part;
+    return renderLinkedScriptureText(part, options);
   });
 }
 
@@ -42,6 +49,11 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
   onSelectRelatedTerm,
 }) => {
   const tDict = useTranslations('Dictionaries');
+  const passageContext = useKartexPassageSafe();
+
+  const scriptureOptions: ScriptureClickOptions = {
+    onSelectPassage: passageContext?.setPassage,
+  };
 
   // Mapeo accesible y armónico de colores de categorías
   const categoryConfig: Record<string, { label: string; text: string }> = {
@@ -78,6 +90,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
 
   return (
     <article
+      id={`dictionary-entry-${entry.id}`}
       onClick={onSelect}
       className={`group relative p-6 rounded-2xl border transition-all duration-200 cursor-pointer ${
         isSelected
@@ -85,7 +98,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           : 'bg-white dark:bg-[#121214] sepia:bg-card-bg border-zinc-200/80 dark:border-zinc-800/80 sepia:border-border hover:border-zinc-300 dark:hover:border-zinc-700 sepia:hover:border-card-hover-border hover:shadow-xs'
       }`}
     >
-      {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
+      {/* Metadatos Editoriales Limpios */}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2.5 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
           <span className={`font-semibold ${currentCat.text}`}>
@@ -120,13 +133,13 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
         </div>
       )}
 
-      {/* Definición en Markdown Formateado */}
+      {/* Definición en Markdown Formateado con Citas Bíblicas Interactivas */}
       <div className="prose prose-zinc dark:prose-invert max-w-none text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed space-y-3 font-serif">
         {entry.definitionMarkdown.split('\n\n').map((paragraph, idx) => {
           if (paragraph.startsWith('### ')) {
             return (
               <h4 key={idx} className="text-sm font-sans font-semibold text-zinc-900 dark:text-zinc-100 mt-4 mb-2">
-                {paragraph.replace('### ', '')}
+                {renderFormattedText(paragraph.replace('### ', ''), scriptureOptions)}
               </h4>
             );
           }
@@ -135,7 +148,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
               <div key={idx} className="pl-4 border-l-2 border-zinc-300 dark:border-zinc-700 space-y-1.5 text-zinc-700 dark:text-zinc-300">
                 {paragraph.split('\n').map((line, lIdx) => (
                   <p key={lIdx} className="leading-relaxed">
-                    {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''))}
+                    {renderFormattedText(line.replace(/^(\* |\d+\. )/, ''), scriptureOptions)}
                   </p>
                 ))}
               </div>
@@ -143,7 +156,7 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
           }
           return (
             <p key={idx} className="leading-relaxed">
-              {renderFormattedText(paragraph)}
+              {renderFormattedText(paragraph, scriptureOptions)}
             </p>
           );
         })}
@@ -152,19 +165,19 @@ export const DictionaryCard: React.FC<DictionaryCardProps> = ({
       {/* Citas Bíblicas y Términos Relacionados en el pie de la tarjeta */}
       {(entry.biblicalReferences?.length || entry.relatedTerms?.length) ? (
         <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 space-y-3">
-          {/* Citas Bíblicas */}
+          {/* Citas Bíblicas Interactivas */}
           {entry.biblicalReferences && entry.biblicalReferences.length > 0 && (
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs">
               <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold mr-0.5">
-                {tDict('citationsLabel')}:
+                {tDict('citationsLabel')}
               </span>
               {entry.biblicalReferences.map((ref, rIdx) => (
                 <span
                   key={rIdx}
                   title={ref.context}
-                  className="font-mono text-xs text-zinc-700 dark:text-zinc-300 sepia:text-accents-6 hover:text-zinc-900 dark:hover:text-zinc-100 sepia:hover:text-foreground underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 sepia:decoration-border transition-colors"
+                  className="font-mono text-xs"
                 >
-                  {ref.reference}
+                  {renderLinkedScriptureText(ref.reference, scriptureOptions)}
                 </span>
               ))}
             </div>

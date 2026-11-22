@@ -6,11 +6,7 @@ import {
   BookMarked,
   Check,
   ChevronRight,
-  Sparkles,
   Library,
-  Layers,
-  Tag,
-  Search,
 } from 'lucide-react';
 import { useDictionaries } from '../context/DictionariesContext';
 import { useKartexPassageSafe } from '../../../entities/passage';
@@ -34,17 +30,25 @@ export const DictionariesSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dictionaries' | 'terms'>('dictionaries');
   const handleClose = passageContext?.toggleLeftSidebar ?? (() => {});
 
+  const leftSidebarWidth = passageContext?.leftSidebarWidth ?? 280;
+  const setLeftSidebarWidth = passageContext?.setLeftSidebarWidth ?? (() => {});
+  const resetLeftSidebarWidth = passageContext?.resetLeftSidebarWidth ?? (() => {});
+
   return (
     <StudySidePanel
       side="left"
       title={tStudio('toggleDictionariesSidebar') || tDict('sidebarTitle')}
       icon={<BookMarked className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />}
-      storageKey="kartex_dictionaries_sidebar_w"
-      defaultWidth={320}
+      ariaLabel={tStudio('toggleDictionariesSidebar') || tDict('sidebarTitle')}
+      isOpen={passageContext?.isLeftSidebarOpen ?? false}
+      onClose={handleClose}
+      width={leftSidebarWidth}
+      onResize={setLeftSidebarWidth}
+      onReset={resetLeftSidebarWidth}
       collapseTitle={tStudio('closeSidebar') || tDict('closeSidebar')}
     >
       {/* Barra de Sub-Pestañas: Obras y Términos */}
-      <StudySidePanel.Toolbar>
+      <StudySidePanel.Toolbar className="p-2.5">
         <div className="grid grid-cols-2 gap-1 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-xs">
           <button
             type="button"
@@ -94,8 +98,8 @@ export const DictionariesSidebar: React.FC = () => {
               }}
               className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
                 selectedDictionaryId === 'all'
-                  ? 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                  : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700'
+                  ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                  : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600'
               }`}
             >
               <div className="space-y-0.5">
@@ -126,14 +130,21 @@ export const DictionariesSidebar: React.FC = () => {
                   }}
                   className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-2 group ${
                     isSelected
-                      ? 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                      : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700'
+                      ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                      : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600'
                   }`}
                 >
                   <div className="space-y-1 min-w-0 flex-1">
-                    <span className="text-xs font-semibold block truncate">
-                      {dict.title}
-                    </span>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-semibold block truncate">
+                        {dict.title}
+                      </span>
+                      {typeof dict.entriesCount === 'number' && dict.entriesCount > 0 && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 shrink-0">
+                          {dict.entriesCount}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[11px] text-zinc-500 dark:text-zinc-400 block font-mono">
                       {dict.author} ({dict.year})
                     </span>
@@ -174,14 +185,18 @@ export const DictionariesSidebar: React.FC = () => {
                     type="button"
                     onClick={() => {
                       setSelectedEntryId(entry.id);
+                      if (typeof document !== 'undefined') {
+                        const el = document.getElementById(`dictionary-entry-${entry.id}`);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
                       if (typeof window !== 'undefined' && window.innerWidth < 1024) {
                         handleClose();
                       }
                     }}
                     className={`w-full text-left p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2 group ${
                       isSelected
-                        ? 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
-                        : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700'
+                        ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold shadow-xs'
+                        : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600'
                     }`}
                   >
                     <div className="space-y-0.5 min-w-0 flex-1">

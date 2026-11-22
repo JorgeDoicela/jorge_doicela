@@ -1,0 +1,21 @@
+{
+  "dictionaryId": "hitchcock-1869",
+  "language": "en",
+  "entries": [
+    {
+      "id": "hitchcock-abraham",
+      "term": "Abraham",
+      "normalizedTerm": "abraham",
+      "letter": "A",
+      "category": "person",
+      "etymology": "Hebrew: אַבְרָהָם (Avraham), 'Father of a great multitude'",
+      "definitionMarkdown": "Originally named **Abram** (*Exalted father*). God conferred the new covenant name Abraham in Genesis 17:5: *«For I have made you the father of a multitude of nations»*.\n\n### Onomastic and Spiritual Significance\nThe name transition marks the expansion from head of an individual clan to father of all who believe across all nations, finding ultimate fulfillment in Christ the promised Seed (Galatians 3:16).",
+      "biblicalReferences": [
+        { "reference": "Genesis 12:1-3", "context": "Original call of Abram out of Ur and Haran" },
+        { "reference": "Genesis 17:5", "context": "Covenantal conferral of the name Abraham" },
+        { "reference": "Romans 4:1-12", "context": "Abraham as archetype of justification by faith" }
+      ],
+      "relatedTerms": ["Melchizedek", "Justification", "Jerusalem"]
+    }
+  ]
+}

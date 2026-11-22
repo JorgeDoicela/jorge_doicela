@@ -72,6 +72,17 @@ Todas las fuentes tipográficas integradas en la plataforma residen encapsuladas
 * **Rutas Soteriológicas:** Progresión canónica de pasajes (Camino de Romanos, El Puente a la Vida, Las Cuatro Verdades) sobre traducciones de dominio público o autorizadas.
 * **Banco de Objeciones:** Respuestas apologéticas fundamentadas en exégesis bíblica e historia documental.
 
+### 3.5 Comentarios Bíblicos Clásicos (Dominio Público Universal)
+A diferencia de las traducciones bíblicas contemporáneas con copyright, los comentarios exegéticos integrados pertenecen íntegramente al **Dominio Público Universal**, por lo que su corpus bilingüe (`es` / `en`) se versiona en `backend/src/kartex/corpus/commentaries/` y se siembra directamente en `kartex.sqlite` (`commentary_entries` + `commentary_entries_fts`):
+* **Matthew Henry (`matthew-henry`):** *An Exposition of the Old and New Testaments (1706–1714)* $\rightarrow$ Dominio Público Universal.
+* **Jamieson, Fausset & Brown (`jfb`):** *A Commentary, Critical, Experimental, and Practical on the Old and New Testaments (1871)* $\rightarrow$ Dominio Público Universal.
+
+### 3.6 Diccionarios Bíblicos Clásicos (Dominio Público Universal)
+Las obras enciclopédicas del módulo de Diccionarios pertenecen al **Dominio Público Universal**, versionadas en `backend/src/kartex/corpus/dictionaries/` y sembradas en `kartex.sqlite` (`bible_dictionary_entries` + `bible_dictionary_entries_fts`):
+* **Easton's Bible Dictionary (`easton-1897`):** *Illustrated Bible Dictionary (M. G. Easton, 1897)* $\rightarrow$ Dominio Público Universal.
+* **Smith's Bible Dictionary (`smith-1884`):** *A Dictionary of the Bible (William Smith, 1884)* $\rightarrow$ Dominio Público Universal.
+* **Hitchcock's Bible Names Dictionary (`hitchcock-1869`):** *An Interpreting Dictionary of Scripture Proper Names (Roswell D. Hitchcock, 1869)* $\rightarrow$ Dominio Público Universal.
+
 ---
 
 ## 4. Arquitectura de Integración API.Bible en NestJS

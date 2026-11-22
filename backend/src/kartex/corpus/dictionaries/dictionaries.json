@@ -1,10 +1,10 @@
 [
   {
-    "id": "easton-1897-es",
+    "id": "easton-1897",
     "slug": "easton-1897",
     "language": "es",
     "title": "Diccionario Bíblico Ilustrado Easton (1897)",
-    "author": "Matthew George Easton (1823-1894)",
+    "author": "M. G. Easton (1823-1894)",
     "era": "Siglo XIX (1897, Escocia)",
     "year": 1897,
     "theologicalFocus": "Exposición Teológica, Histórica, Geográfica y Costumbres del Cercano Oriente",
@@ -12,11 +12,11 @@
     "license": "Dominio Público Universal"
   },
   {
-    "id": "easton-1897-en",
+    "id": "easton-1897",
     "slug": "easton-1897",
     "language": "en",
     "title": "Easton's Illustrated Bible Dictionary (1897)",
-    "author": "Matthew George Easton (1823-1894)",
+    "author": "M. G. Easton (1823-1894)",
     "era": "19th Century (1897, Scotland)",
     "year": 1897,
     "theologicalFocus": "Theological Exposition, Historical Context, Geography, and Ancient Near Eastern Customs",
@@ -24,7 +24,7 @@
     "license": "Universal Public Domain"
   },
   {
-    "id": "smith-1884-es",
+    "id": "smith-1884",
     "slug": "smith-1884",
     "language": "es",
     "title": "Diccionario Bíblico Smith (1884)",
@@ -36,7 +36,7 @@
     "license": "Dominio Público Universal"
   },
   {
-    "id": "smith-1884-en",
+    "id": "smith-1884",
     "slug": "smith-1884",
     "language": "en",
     "title": "Smith's Bible Dictionary (1884)",
@@ -48,11 +48,11 @@
     "license": "Universal Public Domain"
   },
   {
-    "id": "hitchcock-1869-es",
+    "id": "hitchcock-1869",
     "slug": "hitchcock-1869",
     "language": "es",
     "title": "Diccionario de Nombres Bíblicos Hitchcock (1869)",
-    "author": "Roswell Dwight Hitchcock (1817-1887)",
+    "author": "R. D. Hitchcock (1817-1887)",
     "era": "Siglo XIX (1869, Estados Unidos)",
     "year": 1869,
     "theologicalFocus": "Onomástica Bíblica, Etimología Hebrea y Griega, Significado Espiritual",
@@ -60,11 +60,11 @@
     "license": "Dominio Público Universal"
   },
   {
-    "id": "hitchcock-1869-en",
+    "id": "hitchcock-1869",
     "slug": "hitchcock-1869",
     "language": "en",
     "title": "Hitchcock's Bible Names Dictionary (1869)",
-    "author": "Roswell Dwight Hitchcock (1817-1887)",
+    "author": "R. D. Hitchcock (1817-1887)",
     "era": "19th Century (1869, United States)",
     "year": 1869,
     "theologicalFocus": "Biblical Onomastics, Hebrew & Greek Etymology, Spiritual Significance",

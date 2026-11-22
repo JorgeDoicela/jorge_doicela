@@ -165,11 +165,11 @@ backend/src/kartex/
 * **`GET /kartex/commentaries/passage/:bookId/:chapter`**: Retorna todas las notas exegéticas de un capítulo o versículo específico ordenadas canónicamente por `bookOrder`, `chapter` y `verseStart` (`?verse=1&authorId=&lang=es|en`).
 
 ### 3.10 Diccionarios Bíblicos Clásicos (`/kartex/dictionaries/*`)
-* **`GET /kartex/dictionaries`**: Catálogo de diccionarios bíblicos disponibles en dominio público (`?lang=es|en`). Retorna título, autor, época, año y recuento de entradas.
-* **`GET /kartex/dictionaries/:id`**: Perfil y metadata histórica detallada de una obra enciclopédica por ID o slug (`?lang=es|en`). Lanza `NotFoundException` si no existe.
-* **`GET /kartex/dictionaries/letters`**: Recuento agregado instantáneo de términos disponibles por letra A-Z (`?dictionaryId=easton-1897-es&lang=es|en`) para navegación alfabética en milisegundos.
-* **`GET /kartex/dictionaries/entries`**: Búsqueda paginada e indexada de artículos con soporte de normalización diacrítica (insensible a acentos), filtro por diccionario, letra A-Z o categoría temática (`?q=jerusalen&letter=J&category=toponym&page=1&limit=20&lang=es|en`).
-* **`GET /kartex/dictionaries/entries/:id`**: Entrada enciclopédica completa con definición, etimología, referencias bíblicas e hipervínculos relacionados (`?lang=es|en`). Lanza `NotFoundException` si no existe.
+* **`GET /kartex/dictionaries`**: Catálogo de diccionarios bíblicos en dominio público (`?lang=es|en`) con IDs bilingües canónicos (`easton-1897`, `smith-1884`, `hitchcock-1869`) y recuento `entriesCount`.
+* **`GET /kartex/dictionaries/:id`**: Perfil y metadata histórica detallada de una obra enciclopédica por ID o slug (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
+* **`GET /kartex/dictionaries/letters`**: Recuento agregado instantáneo de términos disponibles por letra A-Z filtrado por diccionario y categoría (`?dictionaryId=easton-1897&category=theology&lang=es|en`).
+* **`GET /kartex/dictionaries/entries`**: Búsqueda paginada e indexada con motor **External Content FTS5** (`bible_dictionary_entries_fts`, `unicode61 remove_diacritics 2`) sobre términos, etimología y definición, filtro por diccionario, letra A-Z o categoría temática (`?q=arca&letter=A&category=artifact&page=1&limit=20&lang=es|en`).
+* **`GET /kartex/dictionaries/entries/:id`**: Entrada enciclopédica completa con definición, etimología, referencias bíblicas e hipervínculos relacionados (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
 
 
 

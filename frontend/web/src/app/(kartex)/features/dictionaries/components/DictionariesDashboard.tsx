@@ -6,12 +6,9 @@ import {
   BookMarked,
   Search,
   Filter,
-  Sparkles,
-  Layers,
-  BookOpen,
-  Tag,
   ChevronLeft,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import { useDictionaries } from '../context/DictionariesContext';
 import { DictionaryCard } from './DictionaryCard';
@@ -24,14 +21,13 @@ export const DictionariesDashboard: React.FC = () => {
 
   const {
     dictionaries,
-    selectedDictionaryId,
-    setSelectedDictionaryId,
     selectedLetter,
     setSelectedLetter,
     selectedCategory,
     setSelectedCategory,
     searchQuery,
     setSearchQuery,
+    selectRelatedTerm,
     entries,
     selectedEntryId,
     setSelectedEntryId,
@@ -78,16 +74,25 @@ export const DictionariesDashboard: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            {/* Buscador en tiempo real */}
+            {/* Buscador FTS5 en tiempo real */}
             <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 sepia:text-accents-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 sepia:text-accents-4 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={tDict('searchPlaceholder')}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 sepia:bg-inner-card border border-zinc-200 dark:border-zinc-800 sepia:border-border text-sm text-zinc-900 dark:text-zinc-100 sepia:text-foreground placeholder-zinc-400 dark:placeholder-zinc-500 sepia:placeholder:text-accents-4 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 sepia:focus:border-foreground transition-colors"
+                className="w-full pl-9 pr-8 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 sepia:bg-inner-card border border-zinc-200 dark:border-zinc-800 sepia:border-border text-sm text-zinc-900 dark:text-zinc-100 sepia:text-foreground placeholder-zinc-400 dark:placeholder-zinc-500 sepia:placeholder:text-accents-4 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 sepia:focus:border-foreground transition-colors"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -120,8 +125,8 @@ export const DictionariesDashboard: React.FC = () => {
                     isSelected
                       ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 sepia:bg-foreground sepia:text-background shadow-xs scale-105'
                       : hasItems
-                      ? 'bg-white dark:bg-zinc-900 sepia:bg-card-bg text-zinc-800 dark:text-zinc-200 sepia:text-foreground border border-zinc-200 dark:border-zinc-800 sepia:border-border hover:border-zinc-400 dark:hover:border-zinc-600 sepia:hover:border-card-hover-border'
-                      : 'bg-zinc-50 dark:bg-zinc-950/50 sepia:bg-inner-card/50 text-zinc-300 dark:text-zinc-700 sepia:text-accents-3 border border-transparent cursor-not-allowed opacity-40'
+                        ? 'bg-white dark:bg-zinc-900 sepia:bg-card-bg text-zinc-800 dark:text-zinc-200 sepia:text-foreground border border-zinc-200 dark:border-zinc-800 sepia:border-border hover:border-zinc-400 dark:hover:border-zinc-600 sepia:hover:border-card-hover-border'
+                        : 'bg-zinc-50 dark:bg-zinc-950/50 sepia:bg-inner-card/50 text-zinc-300 dark:text-zinc-700 sepia:text-accents-3 border border-transparent cursor-not-allowed opacity-40'
                   }`}
                 >
                   {letter}
@@ -189,7 +194,7 @@ export const DictionariesDashboard: React.FC = () => {
                 dictionary={dict}
                 isSelected={selectedEntryId === entry.id}
                 onSelect={() => setSelectedEntryId(entry.id)}
-                onSelectRelatedTerm={(term) => setSearchQuery(term)}
+                onSelectRelatedTerm={selectRelatedTerm}
               />
             );
           })}

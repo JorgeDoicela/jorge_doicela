@@ -46,18 +46,19 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
    - Presentación general de la plataforma y corpus textual.
    - Live Preview interactivo con comparación de textos (Salmos 23 en RV1960 vs BHS Hebreo).
    - Vitrina de los 9 módulos de Kartex con iconos SVG.
-2. **Espacio de Estudio e Investigación:**
+2. **Espacio de Estudio e Investigación (`/kartex/study/*`):**
    - Header unificado persistente (`KartexHeaderNav.tsx`) con navegación macro en desktop y menú móvil.
-   - Barra de control exegético integrada (`KartexPassageToolbar.tsx`).
-   - **Módulo 1: Kartex Lector (`/kartex/reader`):** Prosa continua y versículo a versículo sin distracciones.
-   - **Módulo 2: Kartex Paralelo (`/kartex/parallel`):** Comparación simultánea de 2 a 4 versiones con herramienta de diff textual (LCS).
-   - **Módulo 3: Kartex Interlineal (`/kartex/interlinear`):** Desglose morfológico palabra por palabra (BHS/NA28) con lematización y Strong.
-   - **Módulo 4: Kartex Lexicón (`/kartex/lexicon`):** Léxicos Strong BDB/Thayer/Gesenius y ocurrencias canónicas.
-   - **Módulo 5: Kartex Atlas (`/kartex/atlas`):** Atlas Georreferenciado WGS84 con canvas vectorial y filtro por épocas.
-   - **Módulo 6: Kartex Cronología (`/kartex/timeline`):** Cronología sincrónica de reyes de Judá/Israel e imperios coetáneos.
-   - **Módulo 7: Kartex Arqueología (`/kartex/archaeology`):** Catálogo de evidencia material y epigráfica con fichas históricas.
-   - **Módulo 8: Kartex Evangelismo (`/kartex/evangelism`):** Rutas bíblicas estructuradas, banco apologético y tratados.
-   - **Módulo 9: Kartex Exégesis (`/kartex/exegesis`):** Espacio integrador de análisis exegético profundo.
+   - Layout con inyección selectiva de proveedores (`ScopedModuleProviders`) y dock inferior móvil (`KartexMobileStudyDock.tsx`).
+   - **Módulo 1: Kartex Lector (`/kartex/study/standard` o `/kartex/study`):** Prosa continua y versículo a versículo con perícopas, audio Web Speech API y modo enfoque.
+   - **Módulo 2: Kartex Paralelo (`/kartex/study/parallel`):** Comparación simultánea de 2 a 4 versiones con herramienta de diff textual (LCS).
+   - **Módulo 3: Kartex Interlineal (`/kartex/study/interlinear`):** Desglose morfológico palabra por palabra (BHS/NA28) con lematización y Strong.
+   - **Módulo 4: Kartex Lexicón (`/kartex/study/word-study`):** Léxicos Strong BDB/Thayer/Gesenius y ocurrencias canónicas.
+   - **Módulo 5: Kartex Comentarios (`/kartex/study/commentaries`):** Corpus exegético bilingüe (Matthew Henry y Jamieson-Fausset-Brown) con motor External Content FTS5, cobertura por libro/capítulo y búsqueda local/global.
+   - **Módulo 6: Kartex Diccionarios (`/kartex/study/dictionaries`):** Enciclopedia y diccionarios bíblicos clásicos A-Z (Easton, Smith, Hitchcock).
+   - **Módulo 7: Kartex Atlas (`/kartex/study/atlas`):** Atlas Georreferenciado WGS84 con canvas vectorial y filtro por épocas.
+   - **Módulo 8: Kartex Cronología (`/kartex/study/timeline`):** Cronología sincrónica de reyes de Judá/Israel e imperios coetáneos.
+   - **Módulo 9: Kartex Arqueología (`/kartex/study/archaeology`):** Catálogo de evidencia material y epigráfica con fichas históricas.
+   - **Módulo 10: Kartex Evangelismo (`/kartex/study/evangelism`):** Rutas bíblicas estructuradas, banco apologético y tratados.
 
 ### 2.2 Capas y Catálogo Feature-Sliced Design (FSD Canónico)
 * **`providers/`**: `theme-provider.tsx` (next-themes encapsulado).
@@ -83,9 +84,11 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
    * `parallel-view/` $\rightarrow$ Comparador multiversión y módulo interno `textual-diff` (LCS).
    * `interlinear/` $\rightarrow$ `interlinearApiService` (`GET /kartex/morphology/passage`).
    * `lexicons/` $\rightarrow$ `lexiconApiService` (`GET /kartex/morphology/lexicon`).
-   * `atlas/` $\rightarrow$ `atlasApiService` (`GET /kartex/historical/atlas/places`).
-   * `timeline/` $\rightarrow$ `timelineApiService` (`GET /kartex/historical/timeline`).
-   * `archaeology-feed/` $\rightarrow$ `archaeologyApiService` (`GET /kartex/historical/articles`).
+   * `commentaries/` $\rightarrow$ `commentariesApiService` (`GET /kartex/commentaries`, `/coverage`, `/authors`, `/passage/:bookId/:chapter`).
+   * `dictionaries/` $\rightarrow$ `dictionariesApiService` (`GET /kartex/dictionaries`, `/letters`, `/entries`).
+   * `atlas/` $\rightarrow$ `atlasApiService` (`GET /kartex/atlas/places`).
+   * `timeline/` $\rightarrow$ `timelineApiService` (`GET /kartex/timeline`).
+   * `archaeology-feed/` $\rightarrow$ `archaeologyApiService` (`GET /kartex/archaeology/articles`).
    * `evangelism/` $\rightarrow$ `evangelismApiService` (`GET /kartex/evangelism/*`).
 
 ---
@@ -111,6 +114,11 @@ Esta habilidad define los estándares técnicos, el modelo de datos relacional, 
 * `evangelism_pathways` (id, language, slug, title, subtitle, description, theologicalFocus, steps)
 * `evangelism_objections` (id, language, category, question, summary, biblicalAnswer, keyVerses, practicalAdvice)
 * `evangelism_tracts` (id, language, slug, title, targetAudience, summary, fullOutline, prayerOfFaith, nextSteps)
+* `commentary_authors` (id, language, name, author, era, theologicalFocus, biography, historicalWork, license, entriesCount)
+* `commentary_entries` (id, language, authorId, bookId, bookOrder, entryType, chapter, verseStart, verseEnd, title, contentMarkdown, tags) + tabla virtual `commentary_entries_fts` (External Content FTS5 `unicode61 remove_diacritics 2`)
+* `bible_dictionaries` (id, language, slug, title, author, era, year, entriesCount, theologicalFocus, description, license)
+* `bible_dictionary_entries` (id, language, dictionaryId, term, normalizedTerm, letter, category, etymology, definitionMarkdown, biblicalReferences, relatedTerms)
+* `pericopes` (id, bookId, chapter, startVerse, endVerse, title, titleEn, orderIndex)
 
 ---
 

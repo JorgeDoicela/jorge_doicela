@@ -1,0 +1,17 @@
+{
+  "authorId": "jfb",
+  "bookId": "GEN",
+  "language": "es",
+  "entries": [
+    {
+      "id": "jfb-gen-1-1",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 2,
+      "title": "Análisis Morfológico y Crítico de Bereshit Bara Elohim",
+      "contentMarkdown": "### Exégesis Textual de Génesis 1:1-2\n\n* **En el principio (*Bərēʾšîṯ*):** Carece deliberadamente del artículo definido en el texto masorético hebreo, señalando un punto absoluto e inconmensurable en la eternidad pasada en el que el tiempo mismo fue inaugurado.\n* **Creó (*bārāʾ*):** Este verbo en el Tanaj hebreo se atribuye de manera exclusiva a la actividad divina. Nunca tiene un sujeto humano ni especifica materia prima preexistente.\n* **La Tierra estaba desordenada y vacía (*Tōhū wā-ḇōhū*):** Estado primordial de desolación y plasticidad previa a los seis días de estructuración y poblamiento.",
+      "tags": ["Bereshit", "Bara", "Hebreo", "Morfología"]
+    }
+  ]
+}

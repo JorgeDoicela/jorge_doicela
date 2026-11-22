@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../../common/database/database-path.util';
+import { resolveCanonicalBook } from '../commentaries/utils/book-code.util';
 
 interface VerseItem {
   verse: number;
@@ -150,15 +151,23 @@ interface SeedCommentaryAuthor {
 
 interface SeedCommentaryEntry {
   id: string;
-  authorId: string;
-  bookId: string;
+  authorId?: string;
+  bookId?: string;
+  entryType?: 'book_intro' | 'chapter_intro' | 'passage';
   chapter: number;
   verseStart: number;
-  verseEnd?: number;
+  verseEnd?: number | null;
   language?: string;
   title: string;
   contentMarkdown: string;
   tags?: string[];
+}
+
+interface SeedCommentaryBookEnvelope {
+  authorId?: string;
+  bookId?: string;
+  language?: string;
+  entries: SeedCommentaryEntry[];
 }
 
 interface SeedBibleDictionary {
@@ -465,6 +474,7 @@ export function seedCorpus(
       biography TEXT NOT NULL,
       historicalWork VARCHAR(256) NOT NULL,
       license VARCHAR(128) NOT NULL,
+      entriesCount INTEGER DEFAULT 0,
       PRIMARY KEY (id, language)
     );
     CREATE INDEX IDX_commentary_author_lang ON commentary_authors(language);
@@ -474,45 +484,35 @@ export function seedCorpus(
       language VARCHAR(10) NOT NULL DEFAULT 'es',
       authorId VARCHAR(64) NOT NULL,
       bookId VARCHAR(16) NOT NULL,
+      bookOrder INTEGER NOT NULL DEFAULT 1,
+      entryType VARCHAR(24) NOT NULL DEFAULT 'passage',
       chapter INTEGER NOT NULL,
       verseStart INTEGER NOT NULL,
       verseEnd INTEGER,
       title VARCHAR(256) NOT NULL,
       contentMarkdown TEXT NOT NULL,
       tags TEXT,
-      PRIMARY KEY (id, language)
+      PRIMARY KEY (id, language),
+      FOREIGN KEY (bookOrder) REFERENCES books(id) ON DELETE CASCADE,
+      FOREIGN KEY (authorId, language) REFERENCES commentary_authors(id, language) ON DELETE CASCADE
     );
     CREATE INDEX IF NOT EXISTS IDX_commentary_passage ON commentary_entries(bookId, chapter, verseStart, verseEnd);
+    CREATE INDEX IF NOT EXISTS IDX_commentary_canonical_order ON commentary_entries(bookOrder, chapter, verseStart);
     CREATE INDEX IF NOT EXISTS IDX_commentary_author ON commentary_entries(authorId, language);
 
-    -- Motor de búsqueda textual de alto rendimiento FTS5 con tokenizador unicode sin acentos
+    -- Motor de búsqueda textual FTS5 External Content (cero duplicación de texto en disco para VPS 1 GB RAM)
     DROP TABLE IF EXISTS commentary_entries_fts;
     CREATE VIRTUAL TABLE IF NOT EXISTS commentary_entries_fts USING fts5(
-      id,
-      language,
-      authorId,
-      bookId,
+      id UNINDEXED,
+      language UNINDEXED,
+      authorId UNINDEXED,
+      bookId UNINDEXED,
       title,
       contentMarkdown,
+      content='commentary_entries',
+      content_rowid='rowid',
       tokenize='unicode61 remove_diacritics 2'
     );
-
-    CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_ai AFTER INSERT ON commentary_entries BEGIN
-      INSERT INTO commentary_entries_fts(rowid, id, language, authorId, bookId, title, contentMarkdown)
-      VALUES (new.rowid, new.id, new.language, new.authorId, new.bookId, new.title, new.contentMarkdown);
-    END;
-
-    CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_ad AFTER DELETE ON commentary_entries BEGIN
-      INSERT INTO commentary_entries_fts(commentary_entries_fts, rowid, id, language, authorId, bookId, title, contentMarkdown)
-      VALUES ('delete', old.rowid, old.id, old.language, old.authorId, old.bookId, old.title, old.contentMarkdown);
-    END;
-
-    CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_au AFTER UPDATE ON commentary_entries BEGIN
-      INSERT INTO commentary_entries_fts(commentary_entries_fts, rowid, id, language, authorId, bookId, title, contentMarkdown)
-      VALUES ('delete', old.rowid, old.id, old.language, old.authorId, old.bookId, old.title, old.contentMarkdown);
-      INSERT INTO commentary_entries_fts(rowid, id, language, authorId, bookId, title, contentMarkdown)
-      VALUES (new.rowid, new.id, new.language, new.authorId, new.bookId, new.title, new.contentMarkdown);
-    END;
 
     CREATE TABLE bible_dictionaries (
       id VARCHAR(64) NOT NULL,
@@ -636,7 +636,10 @@ export function seedCorpus(
       transFolder === 'historical' ||
       transFolder === 'morphology' ||
       transFolder === 'evangelism' ||
-      transFolder === 'literary'
+      transFolder === 'literary' ||
+      transFolder === 'commentaries' ||
+      transFolder === 'dictionaries' ||
+      transFolder === 'pericopes'
     )
       continue;
     const transPath = path.join(corpusDir, transFolder);
@@ -1084,23 +1087,48 @@ export function seedCorpus(
       );
     }
 
-    // B. Commentary Entries
-    const entriesPath = path.join(commentariesDir, 'commentary_entries.json');
-    if (fs.existsSync(entriesPath)) {
-      const entries = JSON.parse(
-        fs.readFileSync(entriesPath, 'utf8'),
-      ) as SeedCommentaryEntry[];
-      const insertEntry = db.prepare(`
-        INSERT INTO commentary_entries (id, language, authorId, bookId, chapter, verseStart, verseEnd, title, contentMarkdown, tags)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `);
-      const txEntries = db.transaction((items: SeedCommentaryEntry[]) => {
+    // B. Commentary Entries (Base + Subcarpetas Modulares por Autor/Idioma/Libro)
+    const insertEntry = db.prepare(`
+      INSERT OR REPLACE INTO commentary_entries (
+        id, language, authorId, bookId, bookOrder, entryType, chapter, verseStart, verseEnd, title, contentMarkdown, tags
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    const txEntries = db.transaction(
+      (
+        items: SeedCommentaryEntry[],
+        defaults?: { authorId?: string; bookId?: string; language?: string },
+      ) => {
+        let count = 0;
         for (const e of items) {
+          const rawAuthorId = e.authorId || defaults?.authorId;
+          const rawBookId = e.bookId || defaults?.bookId;
+          const lang = (e.language || defaults?.language || 'es').trim();
+
+          if (!e.id || !rawAuthorId || !rawBookId) continue;
+
+          const resolvedBook = resolveCanonicalBook(rawBookId);
+          const canonicalBookId = resolvedBook
+            ? resolvedBook.bookId
+            : rawBookId.trim().toUpperCase();
+          const bookOrder = resolvedBook ? resolvedBook.bookOrder : 1;
+
+          const entryType =
+            e.entryType ||
+            (e.chapter === 0
+              ? 'book_intro'
+              : e.verseStart === 0
+                ? 'chapter_intro'
+                : 'passage');
+
           insertEntry.run(
             e.id,
-            e.language || 'es',
-            e.authorId,
-            e.bookId,
+            lang,
+            rawAuthorId,
+            canonicalBookId,
+            bookOrder,
+            entryType,
             e.chapter,
             e.verseStart,
             e.verseEnd ?? null,
@@ -1108,13 +1136,81 @@ export function seedCorpus(
             e.contentMarkdown,
             JSON.stringify(e.tags || []),
           );
+          count++;
         }
-      });
-      txEntries(entries);
-      console.log(
-        `[CommentariesSeeder] -> ${entries.length} notas exegéticas de comentarios indexadas.`,
-      );
+        return count;
+      },
+    );
+
+    const collectCommentaryEntryFiles = (dir: string): string[] => {
+      const results: string[] = [];
+      for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
+        const fullPath = path.join(dir, dirent.name);
+        if (dirent.isDirectory()) {
+          results.push(...collectCommentaryEntryFiles(fullPath));
+        } else if (
+          dirent.isFile() &&
+          dirent.name.endsWith('.json') &&
+          dirent.name !== 'commentary_authors.json'
+        ) {
+          results.push(fullPath);
+        }
+      }
+      return results;
+    };
+
+    const entryFiles = collectCommentaryEntryFiles(commentariesDir);
+    let totalCommentaryEntries = 0;
+
+    for (const filePath of entryFiles) {
+      const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8')) as
+        | SeedCommentaryEntry[]
+        | SeedCommentaryBookEnvelope;
+
+      if (Array.isArray(parsed)) {
+        totalCommentaryEntries += txEntries(parsed);
+      } else if (parsed && Array.isArray(parsed.entries)) {
+        totalCommentaryEntries += txEntries(parsed.entries, {
+          authorId: parsed.authorId,
+          bookId: parsed.bookId,
+          language: parsed.language,
+        });
+      }
     }
+
+    // Reconstrucción atómica del índice External Content FTS5 y activación de triggers post-ingesta
+    db.exec(`
+      INSERT INTO commentary_entries_fts(commentary_entries_fts) VALUES('rebuild');
+
+      CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_ai AFTER INSERT ON commentary_entries BEGIN
+        INSERT INTO commentary_entries_fts(rowid, id, language, authorId, bookId, title, contentMarkdown)
+        VALUES (new.rowid, new.id, new.language, new.authorId, new.bookId, new.title, new.contentMarkdown);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_ad AFTER DELETE ON commentary_entries BEGIN
+        INSERT INTO commentary_entries_fts(commentary_entries_fts, rowid, id, language, authorId, bookId, title, contentMarkdown)
+        VALUES ('delete', old.rowid, old.id, old.language, old.authorId, old.bookId, old.title, old.contentMarkdown);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS trg_commentary_entries_au AFTER UPDATE ON commentary_entries BEGIN
+        INSERT INTO commentary_entries_fts(commentary_entries_fts, rowid, id, language, authorId, bookId, title, contentMarkdown)
+        VALUES ('delete', old.rowid, old.id, old.language, old.authorId, old.bookId, old.title, old.contentMarkdown);
+        INSERT INTO commentary_entries_fts(rowid, id, language, authorId, bookId, title, contentMarkdown)
+        VALUES (new.rowid, new.id, new.language, new.authorId, new.bookId, new.title, new.contentMarkdown);
+      END;
+
+      UPDATE commentary_authors
+      SET entriesCount = (
+        SELECT COUNT(*)
+        FROM commentary_entries
+        WHERE commentary_entries.authorId = commentary_authors.id
+          AND commentary_entries.language = commentary_authors.language
+      );
+    `);
+
+    console.log(
+      `[CommentariesSeeder] -> ${totalCommentaryEntries} notas exegéticas de comentarios indexadas (${entryFiles.length} archivos).`,
+    );
   }
 
   // 9. Sembrado del Módulo de Diccionarios Bíblicos

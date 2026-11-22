@@ -1,12 +1,18 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { CommentaryAuthor, CommentaryEntry } from '../types';
+import {
+  CommentaryAuthor,
+  CommentaryBookCoverage,
+  CommentaryEntry,
+  CommentarySearchScope,
+} from '../types';
 import {
   fetchCommentaryAuthors,
   fetchCommentaries,
+  fetchCommentariesCoverage,
 } from '../services/commentariesApiService';
 import { useKartexPassageSafe } from '../../../entities/passage';
 import { BOOK_ID_TO_ABBR } from '../../../entities/passage/data/crossReferencesData';
@@ -19,7 +25,11 @@ interface CommentariesContextValue {
   setSelectedEntryId: (id: string | null) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  searchScope: CommentarySearchScope;
+  setSearchScope: (scope: CommentarySearchScope) => void;
   entries: CommentaryEntry[];
+  coverage: CommentaryBookCoverage[];
+  coverageByBookId: Record<string, CommentaryBookCoverage>;
   isLoading: boolean;
   refreshCommentaries: () => void;
   activeAuthor?: CommentaryAuthor;
@@ -39,50 +49,95 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
   const [selectedAuthorId, setSelectedAuthorId] = useState<string>(() => authorParam || 'all');
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchScope, setSearchScope] = useState<CommentarySearchScope>('all');
   const [entries, setEntries] = useState<CommentaryEntry[]>([]);
+  const [coverage, setCoverage] = useState<CommentaryBookCoverage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const entriesAbortRef = useRef<AbortController | null>(null);
 
   // Sincronizar reactivamente si cambia el autor en los query params
   useEffect(() => {
     if (authorParam && authorParam !== selectedAuthorId) {
       setSelectedAuthorId(authorParam);
     }
-  }, [authorParam]);
+  }, [authorParam, selectedAuthorId]);
 
-  // Obtener abreviatura del libro actual del pasaje (ej. 'GEN', 'JHN')
+  // Obtener abreviatura canónica del libro actual (ej. 'GEN', 'JUA')
   const currentBookAbbr = useMemo(() => {
+    if (passageContext?.selectedBook?.abbreviation) {
+      return passageContext.selectedBook.abbreviation;
+    }
     if (!passageContext?.selectedBookId) return undefined;
     return BOOK_ID_TO_ABBR[passageContext.selectedBookId] || undefined;
-  }, [passageContext?.selectedBookId]);
+  }, [passageContext?.selectedBook?.abbreviation, passageContext?.selectedBookId]);
 
   const currentChapter = passageContext?.selectedChapter;
 
-  // Cargar catálogo de autores
+  // Cargar catálogo de autores con cancelación limpia
   useEffect(() => {
-    let isMounted = true;
-    fetchCommentaryAuthors(locale).then((data) => {
-      if (isMounted) {
+    const controller = new AbortController();
+    fetchCommentaryAuthors(locale, controller.signal).then((data) => {
+      if (!controller.signal.aborted) {
         setAuthors(data);
       }
     });
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, [locale]);
 
-  // Cargar comentarios filtrados sin acoplar selectedEntryId
+  // Cargar mapa de cobertura por libro y capítulos para el autor e idioma activos
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchCommentariesCoverage(selectedAuthorId, locale, controller.signal).then((data) => {
+      if (!controller.signal.aborted) {
+        setCoverage(data);
+      }
+    });
+    return () => {
+      controller.abort();
+    };
+  }, [selectedAuthorId, locale]);
+
+  const coverageByBookId = useMemo(() => {
+    const map: Record<string, CommentaryBookCoverage> = {};
+    for (const item of coverage) {
+      map[item.bookId] = item;
+    }
+    return map;
+  }, [coverage]);
+
+  // Cargar comentarios filtrados con AbortController para evitar race conditions
   const loadEntries = useCallback(async () => {
+    if (entriesAbortRef.current) {
+      entriesAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    entriesAbortRef.current = controller;
+
     setIsLoading(true);
     try {
+      const hasSearchQuery = searchQuery.trim().length > 0;
+      const isGlobalSearch = hasSearchQuery && searchScope === 'all';
       const parsedVerse = verseParam ? parseInt(verseParam, 10) : undefined;
-      const data = await fetchCommentaries({
-        bookId: currentBookAbbr,
-        chapter: currentChapter,
-        verse: !isNaN(Number(parsedVerse)) ? parsedVerse : undefined,
-        authorId: selectedAuthorId,
-        q: searchQuery,
-        lang: locale,
-      });
+
+      const data = await fetchCommentaries(
+        {
+          bookId: isGlobalSearch ? undefined : currentBookAbbr,
+          chapter: isGlobalSearch ? undefined : currentChapter,
+          verse:
+            !isGlobalSearch && !isNaN(Number(parsedVerse)) ? parsedVerse : undefined,
+          authorId: selectedAuthorId,
+          q: hasSearchQuery ? searchQuery : undefined,
+          lang: locale,
+          limit: isGlobalSearch ? 80 : 100,
+        },
+        controller.signal,
+      );
+
+      if (controller.signal.aborted) return;
+
       setEntries(data);
       setSelectedEntryId((prev) => {
         if (data.length === 0) return null;
@@ -90,17 +145,35 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
         return stillExists ? prev : data[0].id;
       });
     } finally {
-      setIsLoading(false);
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+      }
     }
-  }, [currentBookAbbr, currentChapter, selectedAuthorId, searchQuery, locale, verseParam]);
+  }, [
+    currentBookAbbr,
+    currentChapter,
+    selectedAuthorId,
+    searchQuery,
+    searchScope,
+    locale,
+    verseParam,
+  ]);
 
   // Debounce de 150ms para amortiguar entradas de búsqueda y sincronizar consultas
   useEffect(() => {
     const timer = setTimeout(() => {
       loadEntries();
     }, 150);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [loadEntries]);
+
+  useEffect(() => {
+    return () => {
+      entriesAbortRef.current?.abort();
+    };
+  }, []);
 
   const activeAuthor = useMemo(() => {
     if (selectedAuthorId === 'all') return authors[0];
@@ -126,7 +199,11 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
       setSelectedEntryId,
       searchQuery,
       setSearchQuery,
+      searchScope,
+      setSearchScope,
       entries,
+      coverage,
+      coverageByBookId,
       isLoading,
       refreshCommentaries: loadEntries,
       activeAuthor,
@@ -138,7 +215,10 @@ export function CommentariesProvider({ children }: { children: React.ReactNode }
       handleSelectAuthorId,
       selectedEntryId,
       searchQuery,
+      searchScope,
       entries,
+      coverage,
+      coverageByBookId,
       isLoading,
       loadEntries,
       activeAuthor,

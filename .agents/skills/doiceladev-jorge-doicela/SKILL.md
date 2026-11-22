@@ -42,7 +42,7 @@ frontend/web/src/app/(doiceladev)/
 │   └── index.ts                      # Barrel export de providers
 │
 ├── shared/                           # CAPA 6: UI Kit agnóstico, suite Markdown, SEO, Lib y Tipos
-│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, DoiceladevSelect, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel, ModuleFilterToolbar, CategoryFilterBar
+│   ├── ui/                           # DoiceladevCard, DoiceladevCardSkeleton, DoiceladevSelect, DoiceladevSearchInput, DoiceladevTextarea, BackToPortalButton, ScrollToTopButton, ArticleCover, ArticleMetaPanel, ModuleFilterToolbar, CategoryFilterBar
 │   ├── markdown/                     # MarkdownRenderer + CodeBlock, MermaidBlock, TableBlock, CalloutBlock
 │   ├── seo/                          # DoiceladevJsonLd (Schema.org JSON-LD bilingüe)
 │   ├── lib/                          # api.ts (API_URL aislado), serverFetch, fetchJson, articlePage.ts, theme-context.tsx, useFuzzyFilter.ts
@@ -57,6 +57,8 @@ frontend/web/src/app/(doiceladev)/
 │   ├── tutorials/                    # TutorialCard, TutorialGrid, TutorialStepWizard, useTutorials, drafts/, types.ts, index.ts
 │   ├── projects/                     # ProjectCard, ProjectGrid, ProjectActions, useProjects, drafts/, types.ts, index.ts
 │   ├── infrastructure/               # InfrastructureCard, InfrastructureGrid, useInfrastructure, drafts/ (es/en .md), types.ts, index.ts
+│   ├── categories/                   # useCategoriesDirectory, types.ts, index.ts
+│   ├── tags/                         # useTagsDirectory, types.ts, index.ts
 │   └── portal/                       # DoiceladevPortalFeed, useDoiceladevPortal, types.ts, index.ts
 │
 ├── features/                         # CAPA 4: Acciones e Interactividad del Usuario
@@ -125,7 +127,7 @@ backend/src/doiceladev/
 ├── common/                            # Contratos y utilidades compartidas de DoicelaDev
 │   ├── dto/doiceladev-query.dto.ts    # Query base: search, lang, tag, sortBy (smart|recent|popular), limit, page
 │   ├── entities/{tag.entity.ts, content-tag.entity.ts}
-│   └── utils/category-aggregation.util.ts # Agregación SQL GROUP BY reutilizable O(1) RAM
+│   └── utils/{category-aggregation.util.ts, strip-markdown.util.ts} # Agregación SQL GROUP BY O(1) RAM y limpieza de Markdown
 │
 ├── corpus/                            # DATASETS JSON ESTRUCTURADOS (FUENTE DE VERDAD)
 │   ├── news.json

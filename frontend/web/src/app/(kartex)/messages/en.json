@@ -211,7 +211,7 @@
     "engine5Title": "Lexicon (Dictionaries & Strong's Concordance)",
     "engine5Desc": "Look up original definitions and biblical meanings of key terms using trusted reference lexicons and Strong's concordance.",
     "engineCommentariesTitle": "Biblical Commentaries (Classical Exegesis)",
-    "engineCommentariesDesc": "Explore historical notes and verse-by-verse exposition from public domain reference works (Matthew Henry, Jamieson-Fausset-Brown, Geneva 1599, John Gill).",
+    "engineCommentariesDesc": "Explore historical notes and verse-by-verse exposition from classical public domain reference works (Matthew Henry and Jamieson-Fausset-Brown).",
     "engineDictionariesTitle": "Biblical Dictionaries (Theological Encyclopedia)",
     "engineDictionariesDesc": "Access encyclopedic definitions, proper names, toponyms, and theological concepts from classical works (Easton, Smith, Hitchcock).",
     "engine6Title": "Smart Bible Search",
@@ -1135,7 +1135,7 @@
   },
   "Commentaries": {
     "title": "Exegetical Corpus & Classical Commentaries",
-    "subtitle": "Historical exegesis, grammatical notes and verse-by-verse exposition from public domain reference works (Matthew Henry, Jamieson-Fausset-Brown, Geneva 1599, John Gill).",
+    "subtitle": "Historical exegesis, grammatical notes and verse-by-verse exposition from classical public domain reference works (Matthew Henry and Jamieson-Fausset-Brown).",
     "allAuthors": "All Classical Sources",
     "allCount": "All",
     "filterByAuthor": "Author:",
@@ -1165,7 +1165,12 @@
     "emptyInspectorDesc": "Select a classical source or exegetical note to explore its biography, historical era, and hermeneutical method.",
     "selectedPassageFallback": "Selected Passage",
     "chapterPrefix": "Chapter",
-    "classicalExegesisFallback": "Classical Exegesis"
+    "classicalExegesisFallback": "Classical Exegesis",
+    "chapterOverview": "Overview",
+    "bookIntroduction": "Introduction",
+    "scopeChapter": "This chapter",
+    "scopeAllBible": "All Scripture",
+    "jumpToPassage": "Go to passage"
   },
   "Dictionaries": {
     "title": "Classical Biblical Dictionaries",

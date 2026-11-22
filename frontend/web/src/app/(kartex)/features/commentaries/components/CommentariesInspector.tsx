@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Calendar,
   ScrollText,
-  User,
 } from 'lucide-react';
 import { useCommentaries } from '../context/CommentariesContext';
 import { useKartexPassageSafe } from '../../../entities/passage';
@@ -32,6 +31,7 @@ export const CommentariesInspector: React.FC = () => {
   const passageContext = useKartexPassageSafe();
   const tStudio = useTranslations('Studio');
   const tComm = useTranslations('Commentaries');
+  const tBooks = useTranslations('Books');
 
   const [activeTab, setActiveTab] = useState<'authors' | 'pericopes' | 'profile'>('authors');
   const handleClose = passageContext?.toggleRightInspector ?? (() => {});
@@ -39,12 +39,24 @@ export const CommentariesInspector: React.FC = () => {
   const currentBook = passageContext?.selectedBook;
   const currentChapter = passageContext?.selectedChapter;
 
+  const localizedBookName = currentBook
+    ? tBooks.has(currentBook.abbreviation as any)
+      ? tBooks(currentBook.abbreviation as any)
+      : currentBook.name
+    : tComm('selectedPassageFallback');
+
   const rightInspectorWidth = passageContext?.rightInspectorWidth ?? 380;
   const setRightInspectorWidth = passageContext?.setRightInspectorWidth ?? (() => {});
   const resetRightInspectorWidth = passageContext?.resetRightInspectorWidth ?? (() => {});
 
   // Si la entrada activa tiene un autor específico, usarlo; si no, el activo
   const author = authors.find((a) => a.id === activeEntry?.authorId) || activeAuthor;
+
+  const formatEntryVerseLabel = (verseStart: number, verseEnd?: number | null, entryType?: string) => {
+    if (entryType === 'book_intro') return tComm('bookIntroduction');
+    if (entryType === 'chapter_intro' || verseStart === 0) return tComm('chapterOverview');
+    return `v.${verseStart}${verseEnd && verseEnd !== verseStart ? `-${verseEnd}` : ''}`;
+  };
 
   return (
     <StudySidePanel
@@ -66,7 +78,7 @@ export const CommentariesInspector: React.FC = () => {
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left min-w-0">
             <BookOpen className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
             <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">
-              {currentBook?.name || tComm('selectedPassageFallback')} {currentChapter ? `· Cap. ${currentChapter}` : ''}
+              {localizedBookName} {currentChapter ? `· ${tStudio('chapterShort', { chapter: currentChapter })}` : ''}
             </span>
           </div>
 
@@ -80,7 +92,7 @@ export const CommentariesInspector: React.FC = () => {
                   ? 'opacity-30 cursor-not-allowed text-zinc-400'
                   : 'hover:border-zinc-400 dark:hover:border-zinc-600 text-zinc-600 dark:text-zinc-300 shadow-xs cursor-pointer active:scale-95'
               }`}
-              title="Capítulo anterior"
+              title={tStudio('prevVerse')}
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
@@ -88,7 +100,7 @@ export const CommentariesInspector: React.FC = () => {
               type="button"
               onClick={passageContext?.nextChapter}
               className="h-7 w-7 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center hover:border-zinc-400 dark:hover:border-zinc-600 text-zinc-600 dark:text-zinc-300 shadow-xs cursor-pointer transition-all active:scale-95"
-              title="Capítulo siguiente"
+              title={tStudio('nextVerse')}
             >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -198,9 +210,16 @@ export const CommentariesInspector: React.FC = () => {
                   }`}
                 >
                   <div className="space-y-1 min-w-0 flex-1">
-                    <span className="text-xs font-semibold block truncate">
-                      {item.author}
-                    </span>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-semibold block truncate">
+                        {item.author}
+                      </span>
+                      {typeof item.entriesCount === 'number' && item.entriesCount > 0 && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 shrink-0">
+                          {item.entriesCount}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[11px] text-zinc-500 dark:text-zinc-400 block font-mono">
                       {item.era}
                     </span>
@@ -222,7 +241,7 @@ export const CommentariesInspector: React.FC = () => {
           <div className="space-y-2">
             <div className="px-1 mb-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
-                {currentBook?.name || tComm('selectedPassageFallback')} {currentChapter ? `· ${tComm('chapterPrefix')} ${currentChapter}` : ''}
+                {localizedBookName} {currentChapter ? `· ${tComm('chapterPrefix')} ${currentChapter}` : ''}
               </span>
             </div>
 
@@ -242,6 +261,10 @@ export const CommentariesInspector: React.FC = () => {
                     type="button"
                     onClick={() => {
                       setSelectedEntryId(entry.id);
+                      if (typeof document !== 'undefined') {
+                        const el = document.getElementById(`commentary-entry-${entry.id}`);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
                       if (typeof window !== 'undefined' && window.innerWidth < 1024) {
                         handleClose();
                       }
@@ -254,8 +277,7 @@ export const CommentariesInspector: React.FC = () => {
                   >
                     <div className="space-y-0.5 min-w-0 flex-1">
                       <span className="text-[11px] font-mono font-bold text-zinc-900 dark:text-zinc-100 block">
-                        v.{entry.verseStart}
-                        {entry.verseEnd && entry.verseEnd !== entry.verseStart ? `-${entry.verseEnd}` : ''}
+                        {formatEntryVerseLabel(entry.verseStart, entry.verseEnd, entry.entryType)}
                       </span>
                       <span className="text-xs font-medium block truncate">
                         {entry.title}
@@ -332,10 +354,15 @@ export const CommentariesInspector: React.FC = () => {
                     </span>
                     <div className="space-y-1">
                       <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 font-mono block">
-                        {currentBook?.name || activeEntry.bookId} {activeEntry.chapter}:{activeEntry.verseStart}
-                        {activeEntry.verseEnd && activeEntry.verseEnd !== activeEntry.verseStart
-                          ? `-${activeEntry.verseEnd}`
-                          : ''}
+                        {tBooks.has(activeEntry.bookId as any)
+                          ? tBooks(activeEntry.bookId as any)
+                          : activeEntry.bookId}{' '}
+                        {activeEntry.chapter} ·{' '}
+                        {formatEntryVerseLabel(
+                          activeEntry.verseStart,
+                          activeEntry.verseEnd,
+                          activeEntry.entryType,
+                        )}
                       </span>
                       <p className="text-xs text-zinc-700 dark:text-zinc-300 line-clamp-2">
                         {activeEntry.title}

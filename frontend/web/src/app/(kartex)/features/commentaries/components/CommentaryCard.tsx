@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import { ArrowUpRight } from 'lucide-react';
 import { CommentaryEntry, CommentaryAuthor } from '../types';
 import { renderLinkedScriptureText, ScriptureClickOptions } from '../utils/bibleReferenceParser';
 import { useKartexPassageSafe } from '../../../entities/passage';
@@ -48,18 +49,55 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
   bookName,
 }) => {
   const tComm = useTranslations('Commentaries');
+  const tBooks = useTranslations('Books');
   const passageContext = useKartexPassageSafe();
 
   const handleSelectPassage = onSelectPassage || passageContext?.setPassage;
   const scriptureOptions: ScriptureClickOptions = {
     onSelectPassage: handleSelectPassage,
   };
-  const verseRangeText = entry.verseEnd && entry.verseEnd !== entry.verseStart
-    ? `${entry.verseStart}-${entry.verseEnd}`
-    : `${entry.verseStart}`;
+
+  const localizedBookName = tBooks.has(entry.bookId as any)
+    ? tBooks(entry.bookId as any)
+    : bookName || entry.bookId;
+
+  const isBookIntro = entry.entryType === 'book_intro' || entry.chapter === 0;
+  const isChapterIntro =
+    !isBookIntro && (entry.entryType === 'chapter_intro' || entry.verseStart === 0);
+
+  const passageHeaderText = isBookIntro
+    ? `${localizedBookName} · ${tComm('bookIntroduction')}`
+    : isChapterIntro
+      ? `${localizedBookName} ${entry.chapter} · ${tComm('chapterOverview')}`
+      : `${localizedBookName} ${entry.chapter}:${
+          entry.verseEnd && entry.verseEnd !== entry.verseStart
+            ? `${entry.verseStart}-${entry.verseEnd}`
+            : `${entry.verseStart}`
+        }`;
+
+  const currentBookAbbr = passageContext?.selectedBook?.abbreviation;
+  const currentChapter = passageContext?.selectedChapter;
+  const isFromDifferentChapter =
+    (currentBookAbbr && currentBookAbbr !== entry.bookId) ||
+    (currentChapter && entry.chapter > 0 && currentChapter !== entry.chapter);
+
+  const handleJumpToEntryChapter = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const targetBookOrder =
+      entry.bookOrder ||
+      passageContext?.books.find((b) => b.abbreviation === entry.bookId)?.id;
+    if (targetBookOrder && handleSelectPassage) {
+      handleSelectPassage(
+        targetBookOrder,
+        Math.max(1, entry.chapter),
+        entry.verseStart > 0 ? entry.verseStart : undefined,
+      );
+    }
+  };
 
   return (
     <article
+      id={`commentary-entry-${entry.id}`}
       onClick={onSelect}
       className={`group relative p-6 rounded-2xl border transition-all duration-200 cursor-pointer ${
         isSelected
@@ -67,11 +105,11 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
           : 'bg-white dark:bg-[#121214] sepia:bg-card-bg border-zinc-200/80 dark:border-zinc-800/80 sepia:border-border hover:border-zinc-300 dark:hover:border-zinc-700 sepia:hover:border-card-hover-border hover:shadow-xs'
       }`}
     >
-      {/* Metadatos Editoriales Limpios (Sin pastillas ni cajas) */}
+      {/* Metadatos Editoriales Limpios */}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2.5 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100 sepia:text-foreground">
-            {bookName || entry.bookId} {entry.chapter}:{verseRangeText}
+            {passageHeaderText}
           </span>
           {author && (
             <>
@@ -82,9 +120,23 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
             </>
           )}
         </div>
-        <span className="text-zinc-400 dark:text-zinc-500 sepia:text-accents-4 font-mono text-[11px]">
-          {author?.era || tComm('classicalExegesisFallback')}
-        </span>
+
+        <div className="flex items-center gap-2">
+          {isFromDifferentChapter && (
+            <button
+              type="button"
+              onClick={handleJumpToEntryChapter}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-[11px] font-mono text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors cursor-pointer"
+              title={tComm('jumpToPassage')}
+            >
+              <span>{tComm('jumpToPassage')}</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </button>
+          )}
+          <span className="text-zinc-400 dark:text-zinc-500 sepia:text-accents-4 font-mono text-[11px]">
+            {author?.era || tComm('classicalExegesisFallback')}
+          </span>
+        </div>
       </div>
 
       {/* Título de la Perícopa */}
@@ -137,4 +189,3 @@ export const CommentaryCard: React.FC<CommentaryCardProps> = ({
     </article>
   );
 };
-

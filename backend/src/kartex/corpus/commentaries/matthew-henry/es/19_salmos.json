@@ -1,0 +1,27 @@
+{
+  "authorId": "matthew-henry",
+  "bookId": "SAL",
+  "language": "es",
+  "entries": [
+    {
+      "id": "mh-sal-23-1",
+      "entryType": "passage",
+      "chapter": 23,
+      "verseStart": 1,
+      "verseEnd": 4,
+      "title": "Jehová como Pastor Eterno y el Valle de Sombra de Muerte",
+      "contentMarkdown": "### Seguridad Incondicional en la Providencia de Dios\n\nDavid, habiendo sido pastor en su juventud, habla con conocimiento experimental del cuidado tierno, vigilante y constante que un pastor prodiga a sus ovejas indefensas.\n\n* **«Jehová es mi pastor; nada me faltará»:** Quien tiene a Dios por pastor no puede carecer de nada que sea verdaderamente bueno para su alma. Su providencia no solo alimenta en delicados pastos, sino que sacia la sed en aguas de reposo y conforta el alma.\n* **El Valle de Sombra de Muerte:** El creyente puede caminar *por* el valle, pero no permanece enterrado en él; lo atraviesa. La vara y el cayado del Pastor disipan el terror de la muerte.",
+      "tags": ["Salmo 23", "Pastor", "Providencia", "Consuelo"]
+    },
+    {
+      "id": "mh-sal-23-5",
+      "entryType": "passage",
+      "chapter": 23,
+      "verseStart": 5,
+      "verseEnd": 6,
+      "title": "La Mesa Preparada ante los Angustiadores y la Casa de Jehová para Siempre",
+      "contentMarkdown": "### De la Provisión en el Desierto a la Morada Eterna\n\nLa metáfora pasa del pastor en los campos al anfitrión real que recibe a su siervo en banquete solemne:\n\n1. **Abundancia en Medio de la Prueba (v. 5):** Dios adereza mesa delante de los enemigos, unge la cabeza con aceite de gozo y hace que la copa esté rebosando.\n2. **La Esperanza Final (v. 6):** «Ciertamente el bien y la misericordia me seguirán todos los días de mi vida». La experiencia de la bondad pasada de Dios asegura su fidelidad futura hasta habitar en la casa de Jehová por largos días.",
+      "tags": ["Salmo 23", "Misericordia", "Perseverancia", "Esperanza Eterna"]
+    }
+  ]
+}

@@ -85,19 +85,22 @@ La base de datos física `kartex.sqlite` está optimizada para lecturas ultra-r�
 ├────────────────────────┤       ├────────────────────────────────────────────────────────┤
 │ id (PK)                │       │ id (PK)                                                │
 │ language (PK)          │       │ language (PK)                                          │
-│ name                   │       │ authorId (IDX -> commentary_authors.id)                │
-│ author                 │       │ bookId (IDX)                                           │
-│ era                    │       │ chapter (IDX)                                          │
-│ theologicalFocus       │       │ verseStart                                             │
-│ biography              │       │ verseEnd                                               │
-│ historicalWork         │       │ title                                                  │
-│ license                │       │ contentMarkdown                                        │
-└────────────────────────┘       │ tags (JSON)                                            │
+│ name                   │       │ authorId (FK -> commentary_authors.id, language)       │
+│ author                 │       │ bookId (IDX, código canónico normalizado)              │
+│ era                    │       │ bookOrder (FK -> books.id, 1..66)                      │
+│ theologicalFocus       │       │ entryType ('book_intro' | 'chapter_intro' | 'passage') │
+│ biography              │       │ chapter (IDX)                                          │
+│ historicalWork         │       │ verseStart                                             │
+│ license                │       │ verseEnd                                               │
+│ entriesCount           │       │ title                                                  │
+└────────────────────────┘       │ contentMarkdown                                        │
+                                 │ tags (JSON)                                            │
                                  ├────────────────────────────────────────────────────────┤
                                  │ INDEX(bookId, chapter, verseStart, verseEnd)           │
+                                 │ INDEX(bookOrder, chapter, verseStart)                  │
                                  │ INDEX(authorId, language)                              │
                                  │ VIRTUAL TABLE FTS5: commentary_entries_fts             │
-                                 │ (unicode61 remove_diacritics 2 + auto sync triggers)   │
+                                 │ (External Content FTS5 + unicode61 remove_diacritics 2)│
                                  └────────────────────────────────────────────────────────┘
 ```
 
@@ -122,8 +125,9 @@ backend/src/kartex/corpus/
 │   ├── timeline_events.json      # Monarcas, profetas e imperios
 │   └── archaeology_articles.json # Artículos de epigrafía y manuscritos
 ├── commentaries/                 # Corpus de Comentarios Bíblicos Clásicos (ES / EN)
-│   ├── commentary_authors.json   # Obras y biografías de comentaristas en Dominio Público
-│   └── commentary_entries.json   # Notas exegéticas versículo a versículo
+│   ├── commentary_authors.json   # Obras y biografías de comentaristas en Dominio Público (Matthew Henry y JFB)
+│   ├── matthew-henry/            # Archivos modulares por idioma (es/ | en/) y libro
+│   └── jfb/                      # Archivos modulares por idioma (es/ | en/) y libro
 ├── dictionaries/                 # Diccionarios Bíblicos Clásicos y Enciclopedia A-Z (ES / EN)
 │   ├── dictionaries.json         # Obras enciclopédicas (Easton 1897, Smith 1884, Hitchcock 1869)
 │   └── dictionary_entries.json   # Artículos y definiciones teológicas e históricas A-Z

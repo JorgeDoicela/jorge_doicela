@@ -35,7 +35,8 @@ backend/src/kartex/
 │   ├── morphology/            # Tokens WLC y Léxicos Strong BDB/Gesenius (*.json)
 │   ├── commentaries/          # Obras clásicas y notas exegéticas bilingües (*.json)
 │   │   ├── commentary_authors.json
-│   │   └── commentary_entries.json
+│   │   ├── matthew-henry/     # Exposición de Matthew Henry (es/ y en/ por libro)
+│   │   └── jfb/               # Comentario Crítico Jamieson-Fausset-Brown (es/ y en/ por libro)
 │   └── historical/            # Atlas WGS84, Cronología y Arqueología (*.json)
 │       ├── atlas_locations.json
 │       ├── timeline_events.json
@@ -157,10 +158,11 @@ backend/src/kartex/
 * **`GET /kartex/evangelism/tracts/:slug`**: Detalle de un tratado con bosquejo por puntos, ilustración, oración de fe y pasos de discipulado (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
 
 ### 3.9 Comentarios Bíblicos y Exégesis Clásica (`/kartex/commentaries/*`)
-* **`GET /kartex/commentaries`**: Búsqueda y filtrado de notas exegéticas por libro, capítulo, versículo, autor o consulta de texto (`?bookId=GEN&chapter=1&verse=1&authorId=matthew-henry&q=&lang=es|en`).
-* **`GET /kartex/commentaries/authors`**: Catálogo de obras y comentaristas canónicos en dominio público (`?lang=es|en`).
+* **`GET /kartex/commentaries`**: Búsqueda y filtrado de notas exegéticas por libro (normalizado vía `resolveCanonicalBook` aceptando código español, USFM o ID 1-66), capítulo (`0` para introducción de libro), versículo (`0` para síntesis de capítulo), tipo (`entryType`), autor o consulta de texto indexada en FTS5 (`?bookId=GEN&chapter=1&verse=1&authorId=matthew-henry&q=&lang=es|en`).
+* **`GET /kartex/commentaries/coverage`**: Mapa indexado de cobertura por libro y capítulos con comentarios catalogados para el autor e idioma activos (`?authorId=matthew-henry&lang=es|en`).
+* **`GET /kartex/commentaries/authors`**: Catálogo de obras y comentaristas canónicos en dominio público con contador `entriesCount` (`?lang=es|en`).
 * **`GET /kartex/commentaries/authors/:id`**: Detalle biográfico, obra y enfoque hermenéutico de un autor por ID (`?lang=es|en`). Lanza `EntityNotFoundError` si no existe.
-* **`GET /kartex/commentaries/passage/:bookId/:chapter`**: Retorna todas las notas exegéticas de un capítulo o versículo específico optimizado para inspectores laterales (`?verse=1&lang=es|en`).
+* **`GET /kartex/commentaries/passage/:bookId/:chapter`**: Retorna todas las notas exegéticas de un capítulo o versículo específico ordenadas canónicamente por `bookOrder`, `chapter` y `verseStart` (`?verse=1&authorId=&lang=es|en`).
 
 ### 3.10 Diccionarios Bíblicos Clásicos (`/kartex/dictionaries/*`)
 * **`GET /kartex/dictionaries`**: Catálogo de diccionarios bíblicos disponibles en dominio público (`?lang=es|en`). Retorna título, autor, época, año y recuento de entradas.

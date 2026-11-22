@@ -29,4 +29,7 @@ export class CommentaryAuthorEntity {
 
   @Column({ length: 128 })
   license: string;
+
+  @Column({ type: 'integer', default: 0 })
+  entriesCount: number;
 }

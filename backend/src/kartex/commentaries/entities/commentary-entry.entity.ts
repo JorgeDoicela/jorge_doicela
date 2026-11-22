@@ -1,7 +1,10 @@
 import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 
+export type CommentaryEntryType = 'book_intro' | 'chapter_intro' | 'passage';
+
 @Entity('commentary_entries')
 @Index(['bookId', 'chapter', 'verseStart', 'verseEnd'])
+@Index(['bookOrder', 'chapter', 'verseStart'])
 @Index(['authorId', 'language'])
 export class CommentaryEntryEntity {
   @PrimaryColumn({ length: 64 })
@@ -19,6 +22,13 @@ export class CommentaryEntryEntity {
   bookId: string;
 
   @Index()
+  @Column({ type: 'integer', default: 1 })
+  bookOrder: number;
+
+  @Column({ length: 24, default: 'passage' })
+  entryType: CommentaryEntryType;
+
+  @Index()
   @Column({ type: 'integer' })
   chapter: number;
 
@@ -26,7 +36,7 @@ export class CommentaryEntryEntity {
   verseStart: number;
 
   @Column({ type: 'integer', nullable: true })
-  verseEnd: number;
+  verseEnd: number | null;
 
   @Column({ length: 256 })
   title: string;

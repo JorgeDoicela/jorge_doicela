@@ -1,0 +1,27 @@
+{
+  "authorId": "matthew-henry",
+  "bookId": "SAL",
+  "language": "en",
+  "entries": [
+    {
+      "id": "mh-sal-23-1",
+      "entryType": "passage",
+      "chapter": 23,
+      "verseStart": 1,
+      "verseEnd": 4,
+      "title": "The Lord as the Shepherd of the Soul in the Valley of the Shadow",
+      "contentMarkdown": "### Unshakeable Security in God's Goodness\n\nDavid, having been himself a shepherd in his youth, speaks from personal and experimental knowledge of the tender, vigilant, and ceaseless care a shepherd lavishes upon defenceless sheep.\n\n* **'The Lord is my shepherd; I shall not want':** He who possesses God for his shepherd cannot lack any good thing necessary for life and godliness. His grace feeds in green pastures, refreshes beside still waters, and restores the soul.\n* **The Valley of the Shadow of Death:** The saint walks *through* the dark valley, not dwelling therein; he journeys past it. The rod and staff of the Shepherd banish the terror of death.",
+      "tags": ["Psalm 23", "Shepherd", "Providence", "Comfort"]
+    },
+    {
+      "id": "mh-sal-23-5",
+      "entryType": "passage",
+      "chapter": 23,
+      "verseStart": 5,
+      "verseEnd": 6,
+      "title": "The Table Prepared in the Presence of Enemies and the House of the Lord Forever",
+      "contentMarkdown": "### From Wilderness Provision to the Eternal Dwelling\n\nThe imagery shifts from the shepherd in the pastures to the royal host welcoming His servant to a solemn banquet:\n\n1. **Bounty Amidst Trial (v. 5):** God prepares a table in the presence of enemies, anoints the head with the oil of gladness, and causes the cup of blessing to run over.\n2. **The Final Assurance (v. 6):** 'Surely goodness and mercy shall follow me all the days of my life.' Past experience of divine goodness is the pledge of future fidelity until we dwell in the house of the Lord forever.",
+      "tags": ["Psalm 23", "Mercy", "Perseverance", "Eternal Hope"]
+    }
+  ]
+}

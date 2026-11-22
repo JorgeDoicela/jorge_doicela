@@ -1,0 +1,17 @@
+{
+  "authorId": "jfb",
+  "bookId": "JUA",
+  "language": "en",
+  "entries": [
+    {
+      "id": "jfb-jhn-1-1",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 3,
+      "title": "Greek Syntax and Clauses of Saint John's Prologue",
+      "contentMarkdown": "### Grammatical Note on John 1:1c\n\n* **'And the Word was God' (*καὶ θεὸς ἦν ὁ λόγος*):**\n  Notice that *θεός* functions as a predicate nominative and is anarthrous (without article), whereas *ὁ λόγος* takes the definite article. Under Colwell's syntactic canon, an anarthrous pre-verbal predicate nominative highlights **divine essence and nature**, thereby refuting both Sabellianism (merging the Persons) and Arianism (reducing Christ to a creature).",
+      "tags": ["John 1:1", "Colwell Rule", "Greek", "NA28"]
+    }
+  ]
+}

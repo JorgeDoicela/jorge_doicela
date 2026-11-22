@@ -1,8 +1,12 @@
 import { Controller, Get, Query, Param, ParseIntPipe } from '@nestjs/common';
-import { CommentariesService } from '../services/commentaries.service';
+import {
+  CommentariesService,
+  CommentaryBookCoverage,
+} from '../services/commentaries.service';
 import {
   GetCommentariesQueryDto,
   GetCommentariesPassageQueryDto,
+  GetCommentariesCoverageQueryDto,
 } from '../dto/get-commentaries-query.dto';
 import { CommentaryAuthorEntity } from '../entities/commentary-author.entity';
 import { CommentaryEntryEntity } from '../entities/commentary-entry.entity';
@@ -16,6 +20,13 @@ export class CommentariesController {
     @Query() query: GetCommentariesQueryDto,
   ): Promise<CommentaryEntryEntity[]> {
     return this.commentariesService.getCommentaries(query);
+  }
+
+  @Get('coverage')
+  async getCoverage(
+    @Query() query: GetCommentariesCoverageQueryDto,
+  ): Promise<CommentaryBookCoverage[]> {
+    return this.commentariesService.getCoverage(query);
   }
 
   @Get('authors')
@@ -44,6 +55,7 @@ export class CommentariesController {
       chapter,
       query.verse,
       query.lang,
+      query.authorId,
     );
   }
 }

@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min, Max, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class GetCommentariesQueryDto {
@@ -9,18 +9,23 @@ export class GetCommentariesQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  @Min(1)
+  @Min(0)
   chapter?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  @Min(1)
+  @Min(0)
   verse?: number;
 
   @IsOptional()
   @IsString()
   authorId?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['book_intro', 'chapter_intro', 'passage'])
+  entryType?: 'book_intro' | 'chapter_intro' | 'passage';
 
   @IsOptional()
   @IsString()
@@ -34,7 +39,7 @@ export class GetCommentariesQueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(100)
+  @Max(200)
   limit?: number;
 
   @IsOptional()
@@ -48,7 +53,22 @@ export class GetCommentariesPassageQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
+  @Min(0)
   verse?: number;
+
+  @IsOptional()
+  @IsString()
+  authorId?: string;
+
+  @IsOptional()
+  @IsString()
+  lang?: string;
+}
+
+export class GetCommentariesCoverageQueryDto {
+  @IsOptional()
+  @IsString()
+  authorId?: string;
 
   @IsOptional()
   @IsString()

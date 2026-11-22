@@ -1,0 +1,17 @@
+{
+  "authorId": "jfb",
+  "bookId": "JUA",
+  "language": "es",
+  "entries": [
+    {
+      "id": "jfb-jhn-1-1",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 3,
+      "title": "Sintaxis Griega y Cláusulas del Prólogo de San Juan",
+      "contentMarkdown": "### Nota Gramatical sobre Juan 1:1c\n\n* **«Y el Verbo era Dios» (*καὶ θεὸς ἦν ὁ λόγος*):**\n  Nótese que *θεός* es predicado nominativo y carece de artículo definido (*anarthrous*), mientras que *ὁ λόγος* posee el artículo. Por la regla gramatical de Colwell, cuando un predicado nominativo precede al verbo copulativo *ἦν*, típicamente no lleva artículo para enfatizar la **naturaleza cualitativa y la esencia divina**, refutando tanto el sabelianismo (confusión de personas) como el arrianismo (negación de la deidad).",
+      "tags": ["Juan 1:1", "Regla de Colwell", "Griego", "NA28"]
+    }
+  ]
+}

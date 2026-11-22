@@ -1,0 +1,97 @@
+{
+  "authorId": "matthew-henry",
+  "bookId": "GEN",
+  "language": "en",
+  "entries": [
+    {
+      "id": "mh-gen-1-intro",
+      "entryType": "chapter_intro",
+      "chapter": 1,
+      "verseStart": 0,
+      "verseEnd": null,
+      "title": "Chapter 1 Overview: The Six Days of Creation and the Sovereign Order of the Cosmos",
+      "contentMarkdown": "### The Foundation of All Revealed Religion\n\nThe foundation of all true religion is the doctrine of the creation of the universe by the sovereign wisdom and almighty power of God. In this opening chapter of Genesis we find the work of the Creator admirably ordered across six successive days:\n\n1. **The Absolute Beginning and Primordial Matter (vv. 1-2):** The creation of heaven and earth out of nothing (*ex nihilo*) and the quickening agency of the Spirit of God upon the deep.\n2. **The Three Days of Separation and Forming (vv. 3-13):** Light on the first day, the expanse of the firmament on the second, and the gathering of the seas together with the vegetation of the dry land on the third.\n3. **The Three Days of Adornment and Filling (vv. 14-31):** The celestial luminaries on the fourth day, birds and sea creatures on the fifth, and land animals crowned by the creation of man in the image of God on the sixth day.",
+      "tags": ["Genesis 1", "Hexameron", "Creation", "Sovereignty of God"]
+    },
+    {
+      "id": "mh-gen-1-1",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 2,
+      "title": "The Creation of Heaven and Earth Out of Nothing and the Agency of the Spirit",
+      "contentMarkdown": "### The Beginning of Time and the Cosmos\n\nThe very first verse of the Bible establishes an immovable bulwark against atheism and pantheism. The world did not exist from all eternity; it had a definite beginning. Nor was it fashioned by chance or a fortuitous clash of atoms, but by the counsel and almighty power of God.\n\n1. **The Author of Creation (*Elohim*):** The Hebrew plural noun coupled with the singular verb (*bara*, created) intimates from the very threshold of Scripture a plurality of Persons in the unity of the Godhead: Father, Eternal Word, and Holy Spirit co-operating in creation.\n2. **Creation Out of Nothing (*Creatio ex nihilo*):** Human artisans fashion their works out of pre-existing materials; God summoned both matter itself and its form into being by the sovereign fiat of His will.\n3. **The Primordial Condition of the Earth (v. 2):** The earth was 'without form and void' (*tohu va-bohu*), destitute of order and inhabitants, shrouded in darkness. Such is the unregenerate human soul before converting grace: confusion and emptiness until the Spirit of God moves upon the heart.",
+      "tags": ["Creation", "Genesis 1", "Elohim", "Ex nihilo", "Holy Spirit"]
+    },
+    {
+      "id": "mh-gen-1-3",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 3,
+      "verseEnd": 5,
+      "title": "The First Day: The Fiat of Light and Its Division from Darkness",
+      "contentMarkdown": "### 'Let There Be Light: And There Was Light'\n\nThe first recorded word spoken by God in creation was a command for illumination. Wherever God begins His work, whether in the cosmos or in the regenerate soul, He begins with light.\n\n* **The Efficacy of the Divine Word:** God required no instruments nor protracted labour; He spoke, and it was done. His word carries almighty power in itself.\n* **The Creator's Approbation:** 'And God saw the light, that it was good.' Light is sweet and pleasant, an emblem of truth, holiness, and heavenly joy.\n* **The Perpetual Division:** God divided the light from the darkness, for what fellowship hath light with darkness? In this present world day and night succeed each other continually to teach us to work while it is day and to wait patiently through nights of affliction; in heaven there is perpetual day without night, and in perdition utter darkness without light.",
+      "tags": ["First Day", "Light", "Word of God", "Providence"]
+    },
+    {
+      "id": "mh-gen-1-6",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 6,
+      "verseEnd": 8,
+      "title": "The Second Day: The Expanse of the Firmament and the Waters Above and Below",
+      "contentMarkdown": "### The Celestial Vault and Atmospheric Order\n\nOn the second day God established the expanse (*raqia*) between the waters covering the globe and the vapours suspended in the clouds.\n\n* **Sovereignty Over the Elements:** The clouds of heaven, laden with vast treasures of water, are bound up in the thin air as in garments by the hand of God, so that they do not deluge the earth at once, but distil in gentle showers of mercy.\n* **The Visible Heavens:** God called the firmament 'Heaven', reminding us that the very air we breathe every moment proclaims the glory and faithfulness of the Almighty.",
+      "tags": ["Second Day", "Firmament", "Heavens", "Cosmic Order"]
+    },
+    {
+      "id": "mh-gen-1-9",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 9,
+      "verseEnd": 13,
+      "title": "The Third Day: The Bounds of the Sea and the Fruitfulness of the Earth",
+      "contentMarkdown": "### The Double Work of the Third Day\n\nThe third day comprises two sovereign acts of providential goodness:\n\n1. **The Gathering of the Waters and Appearance of Dry Land (vv. 9-10):** The waters that covered the earth were gathered into oceanic basins to prepare a firm habitation for man. God set bars and doors to the deep, saying, 'Hitherto shalt thou come, but no further.'\n2. **The Earth Clothed with Herbage and Fruit (vv. 11-13):** Before creating living creatures, divine wisdom furnished the house and spread the table. The earth brought forth grass, seed, and fruit-bearing trees 'after their kind' even before the sun was set in the firmament on the fourth day, demonstrating that the fruitfulness of the earth depends directly upon God's word rather than merely upon secondary causes.",
+      "tags": ["Third Day", "Seas", "Providence", "Vegetation"]
+    },
+    {
+      "id": "mh-gen-1-14",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 14,
+      "verseEnd": 19,
+      "title": "The Fourth Day: Sun, Moon, and Stars Appointed for Seasons and Days",
+      "contentMarkdown": "### The Luminaries in the Firmament of Heaven\n\nOn the fourth day the administration of light by day and night is committed to the sun, moon, and stars.\n\n* **Refutation of Astral Idolatry:** Moses deliberately records that the sun and moon were not made until the fourth day—after light and vegetation already existed—to strip the heavenly bodies of all pretensions to deity. They are not gods to be worshipped, but lamps kindled by the Creator to serve man's habitation.\n* **Signs for Seasons, Days, and Years:** The regular circuit of the heavenly bodies measures our time so that we may learn to number our days and apply our hearts unto wisdom.",
+      "tags": ["Fourth Day", "Luminaries", "Biblical Astronomy", "Seasons"]
+    },
+    {
+      "id": "mh-gen-1-20",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 20,
+      "verseEnd": 25,
+      "title": "The Fifth and Sixth Days (Part I): The Creation of Living Creatures",
+      "contentMarkdown": "### Filling the Seas, the Air, and the Dry Land\n\nOnce the earthly habitation was prepared, God proceeded to replenish it with creatures endowed with the breath of life:\n\n1. **Winged Fowl and Marine Creatures (vv. 20-23):** From great sea creatures to birds flying across the expanse, they receive the first explicit benediction of increase ('Be fruitful, and multiply'). The inexhaustible variety of species beneath the waters and in the air testifies to the manifold wisdom of God.\n2. **Land Animals (vv. 24-25):** Domestic cattle, creeping things, and beasts of the earth are formed each after its kind, subject to the order and dominion soon to be entrusted to man.",
+      "tags": ["Fifth Day", "Sixth Day", "Living Creatures", "Creational Blessing"]
+    },
+    {
+      "id": "mh-gen-1-26",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 26,
+      "verseEnd": 28,
+      "title": "The Crown of Creation: Man Created in the Image and Likeness of God",
+      "contentMarkdown": "### The Trinitarian Counsel and the Dignity of Man\n\nThe creation of man is introduced with a solemnity that distinguishes him from all other creatures:\n\n1. **Divine Consultation ('Let Us Make Man'):** In prior works God said, 'Let there be', or 'Let the earth bring forth'; when coming to man, the Three Persons of the Blessed Trinity hold eternal counsel: 'Let Us make man in Our image, after Our likeness.'\n2. **The Image of God (*Imago Dei*):** It does not consist in bodily shape—for God is a Spirit—but in the rational and immortal nature of the soul, in its original moral rectitude (true knowledge, righteousness, and holiness), and in man's calling to exercise benevolent vice-regency over the visible creation.\n3. **Male and Female and the Cultural Mandate (vv. 27-28):** God created them in essential equality as bearers of His image, blessed them, and instituted responsible stewardship over all the earth.",
+      "tags": ["Imago Dei", "Biblical Anthropology", "Trinitarian Counsel", "Stewardship"]
+    },
+    {
+      "id": "mh-gen-1-29",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 29,
+      "verseEnd": 31,
+      "title": "The Provision of Daily Sustenance and the Final Verdict: 'Behold, It Was Very Good'",
+      "contentMarkdown": "### The Bounty of the Creator and the Perfection of His Work\n\nThe chapter closes with two declarations of enduring comfort:\n\n* **Sustenance Appointed by Grace (vv. 29-30):** He who gave us life also appoints our daily bread. Even in his state of innocence, man depended upon the grant of his Maker.\n* **The Supreme Review of Creation (v. 31):** 'And God saw every thing that He had made, and, behold, it was very good.' When we review our own works we always find defects; in God's work there was no flaw, disproportion, or error. All came pure and perfect from the Creator's hand; whatever ruin and sorrow now afflict the world proceed not from God's original creation, but from the rebellion of sin which Christ came to redeem and restore.",
+      "tags": ["Providence", "Goodness of Creation", "Sixth Day", "Divine Perfection"]
+    }
+  ]
+}

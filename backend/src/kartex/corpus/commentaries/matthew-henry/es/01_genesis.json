@@ -1,0 +1,97 @@
+{
+  "authorId": "matthew-henry",
+  "bookId": "GEN",
+  "language": "es",
+  "entries": [
+    {
+      "id": "mh-gen-1-intro",
+      "entryType": "chapter_intro",
+      "chapter": 1,
+      "verseStart": 0,
+      "verseEnd": null,
+      "title": "Síntesis Expositiva del Capítulo 1: El Hexamerón y el Orden de la Creación",
+      "contentMarkdown": "### El Fundamento de Toda Revelación Divina\n\nEl fundamento de toda religión verdadera es la doctrina de la creación del universo por la sabiduría y el poder soberano de Dios. Este primer capítulo de Génesis registra la obra del Creador distribuida con orden admirable a lo largo de seis días:\n\n1. **El Principio Absoluto y la Materia Primordial (vv. 1-2):** La creación del cielo y de la tierra de la nada (*ex nihilo*) y la acción vivificadora del Espíritu de Dios sobre el abismo.\n2. **Los Tres Días de Separación yFormación (vv. 3-13):** La creación de la luz en el primer día, la expansión del firmamento en el segundo, y la separación de los mares junto con la vegetación de la tierra en el tercero.\n3. **Los Tres Días de Ornamento y Poblamiento (vv. 14-31):** Las lumbreras celestes en el cuarto día, las aves y peces en el quinto, y los animales terrestres coronados con la creación del hombre a imagen de Dios en el sexto día.",
+      "tags": ["Génesis 1", "Hexamerón", "Creación", "Soberanía de Dios"]
+    },
+    {
+      "id": "mh-gen-1-1",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 2,
+      "title": "La Creación del Cielo y la Tierra de la Nada y la Obra del Espíritu",
+      "contentMarkdown": "### El Comienzo del Tiempo y del Cosmos\n\nEl primer versículo de la Biblia nos suministra una respuesta firme contra el ateísmo y el panteísmo. El mundo no existió desde la eternidad; tuvo un principio. Tampoco fue formado por casualidad ni por una concurrencia ciega de átomos, sino por el supremo consejo y la omnipotencia de Dios.\n\n1. **El Autor de la Creación (*Elohim*):** El nombre plural en hebreo unido al verbo singular (*bara*, creó) insinúa desde la primera línea de la Escritura la pluralidad de personas en la unidad de la esencia divina: el Padre, el Verbo eterno y el Espíritu Santo obrando en perfecta armonía.\n2. **Creación de la Nada (*Creatio ex nihilo*):** En las obras del arte humano el artífice trabaja sobre materia preexistente; pero Dios llamó a la existencia tanto la materia misma como su forma por el decreto soberano de su voluntad.\n3. **El Estado Inicial de la Tierra (v. 2):** La tierra estaba «desordenada y vacía» (*tohu va-bohu*), sin ornamento ni habitantes, envuelta en tinieblas. Así es también el corazón humano antes de la obra de la gracia regeneradora: confusión y vacío espiritual hasta que el Espíritu de Dios se mueve sobre él.",
+      "tags": ["Creación", "Génesis 1", "Elohim", "Ex nihilo", "Espíritu Santo"]
+    },
+    {
+      "id": "mh-gen-1-3",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 3,
+      "verseEnd": 5,
+      "title": "El Primer Día: El Decreto de la Luz y su Separación de las Tinieblas",
+      "contentMarkdown": "### «Sea la Luz; y Fue la Luz»\n\nLa primera palabra hablada por Dios en la creación fue un mandato de iluminación. Donde Dios comienza su obra, tanto en el cosmos como en el alma regenerada, lo primero que introduce es la luz.\n\n* **El Poder de la Palabra Divina:** Dios no necesitó instrumentos ni esfuerzo prolongado; habló y fue hecho. Su palabra es eficaz por sí misma.\n* **La Aprobación del Creador:** «Y vio Dios que la luz era buena». La luz es dulce y agradable, emblema de la verdad, la santidad y el gozo celestial.\n* **La Separación Permanente:** Dios separó la luz de las tinieblas, pues ninguna comunión tiene la luz con las tinieblas. En la tierra actual el día y la noche se alternan continuamente para enseñarnos a trabajar mientras dura el día y a esperar con paciencia cuando atraviesa la noche de la aflicción; pero en el cielo sólo habrá día eterno sin noche, y en el infierno sólo tinieblas sin luz.",
+      "tags": ["Primer Día", "Luz", "Palabra de Dios", "Providencia"]
+    },
+    {
+      "id": "mh-gen-1-6",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 6,
+      "verseEnd": 8,
+      "title": "El Segundo Día: La Expansión del Firmamento y el Orden Atmosférico",
+      "contentMarkdown": "### La Bóveda Celeste y las Aguas Superiores e Inferiores\n\nEn el segundo día Dios estableció la expansión (*raqia*) entre las aguas que cubrían la superficie terrestre y los vapores suspendidos en las nubes.\n\n* **Dominio sobre los Elementos:** Las nubes del cielo, cargadas de millones de toneladas de agua, permanecen suspendidas en el aire como en odres cerrados por la mano de Dios, para no anegar la tierra sino regarla con medida y misericordia.\n* **Los Cielos Visibles:** Dios llamó a la expansión «Cielos», recordándonos que aun la atmósfera que respiramos cada instante declara la gloria y la fidelidad del Todopoderoso.",
+      "tags": ["Segundo Día", "Firmamento", "Cielos", "Orden Cósmico"]
+    },
+    {
+      "id": "mh-gen-1-9",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 9,
+      "verseEnd": 13,
+      "title": "El Tercer Día: Los Límites del Mar y la Provisión Vegetal de la Tierra",
+      "contentMarkdown": "### La Doble Obra del Tercer Día\n\nEl tercer día comprende dos actos soberanos de benevolencia providencial:\n\n1. **La Reunión de las Aguas y la Aparición de lo Seco (vv. 9-10):** Las aguas que cubrían toda la esfera fueron recogidas en las cuencas oceánicas para preparar habitación firme al hombre. Dios puso puertas y cerrojos al mar diciendo: «Hasta aquí llegarás, y no pasarás adelante».\n2. **La Tierra Vestida de Vegetación y Fruto (vv. 11-13):** Antes de crear a los seres vivientes, la sabiduría divina amuebló la casa y preparó la mesa. La tierra produjo hierba, semilla y árboles frutales «según su género», todavía antes de que el sol fuese colocado en el cuarto día, para demostrar que la fertilidad de la tierra depende de la palabra de Dios y no meramente de causas secundarias.",
+      "tags": ["Tercer Día", "Mares", "Providencia", "Naturaleza"]
+    },
+    {
+      "id": "mh-gen-1-14",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 14,
+      "verseEnd": 19,
+      "title": "El Cuarto Día: El Sol, la Luna y las Estrellas como Servidores del Tiempo",
+      "contentMarkdown": "### Las Lumbreras en la Expansión de los Cielos\n\nEn el cuarto día se encomienda el gobierno luminoso del día y de la noche al sol, la luna y las estrellas.\n\n* **Refutación de la Idolatría Astral:** Moisés relata deliberadamente que el sol y la luna no fueron creados sino hasta el cuarto día —después de que ya existían la luz y las plantas— para despojar a los astros de toda pretensión de divinidad. No son dioses a quienes el hombre deba adorar, sino siervos encendidos por el Creador para alumbrar la habitación del hombre.\n* **Señales para las Estaciones, Días y Años:** El curso regular de los cuerpos celestes mide nuestros días para que aprendamos a contarlos de tal modo que traigamos al corazón sabiduría.",
+      "tags": ["Cuarto Día", "Lumbreras", "Astronomía Bíblica", "Tiempo"]
+    },
+    {
+      "id": "mh-gen-1-20",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 20,
+      "verseEnd": 25,
+      "title": "El Quinto y Sexto Día (Primera Parte): La Creación de la Vida Animal",
+      "contentMarkdown": "### El Poblamiento de los Mares, los Cielos y la Tierra Firme\n\nUna vez preparada la morada terrestre, Dios procede a poblarla de criaturas dotadas de aliento de vida:\n\n1. **Aves y Criaturas Marinas (vv. 20-23):** Desde los grandes monstruos marinos hasta las aves que surcan los cielos reciben la primera bendición explícita de multiplicación («Fructificad y multiplicaos»). La variedad inagotable de especies bajo las aguas y en el aire testifica la multiforme sabiduría divina.\n2. **Animales Terrestres (vv. 24-25):** Ganado doméstico, reptiles y bestias del campo son formados cada uno según su especie, sujetos al orden y propósito que Dios habría de confiar al cuidado del hombre.",
+      "tags": ["Quinto Día", "Sexto Día", "Vida Animal", "Bendición Creacional"]
+    },
+    {
+      "id": "mh-gen-1-26",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 26,
+      "verseEnd": 28,
+      "title": "La Corona de la Creación: El Hombre Creado a Imagen y Semejanza de Dios",
+      "contentMarkdown": "### El Consejo Trinitario y la Dignidad del Ser Humano\n\nLa creación del hombre se introduce con una solemnidad única que lo distingue de todas las demás criaturas:\n\n1. **Deliberación Divina («Hagamos al hombre»):** En las obras anteriores Dios dijo «Sea» o «Produzca»; pero al llegar al hombre, las tres Personas de la Deidad celebran consejo eterno: «Hagamos al hombre a nuestra imagen, conforme a nuestra semejanza».\n2. **La Imagen de Dios (*Imago Dei*):** No consiste en figura corporal —pues Dios es Espíritu—, sino en la naturaleza racional e inmortal del alma, en su rectitud moral original (conocimiento verdadero, justicia y santidad) y en su vocación de representar el gobierno benigno de Dios sobre la creación visible.\n3. **Varón y Hembra y el Mandato Cultural (vv. 27-28):** Dios los creó en igualdad de dignidad esencial como portadores de su imagen, los bendijo e instituyó la mayordomía responsable sobre toda la tierra.",
+      "tags": ["Imago Dei", "Antropología Bíblica", "Consejo Trinitario", "Mayordomía"]
+    },
+    {
+      "id": "mh-gen-1-29",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 29,
+      "verseEnd": 31,
+      "title": "La Provisión del Sustento y el Veredicto Final: «He Aquí que Era Bueno en Gran Manera»",
+      "contentMarkdown": "### La Generosidad del Creador y la Perfección de su Obra\n\nEl capítulo concluye con dos declaraciones de consuelo permanente:\n\n* **El Sustento Asignado por Gracia (vv. 29-30):** Aquel que nos dio la vida nos asigna también el pan cotidiano. Aun en su estado de inocencia, el hombre dependía de la concesión diaria de su Hacedor.\n* **La Revisión Suprema de la Obra (v. 31):** «Y vio Dios todo lo que había hecho, y he aquí que era bueno en gran manera». En las obras humanas siempre hallamos defectos al revisarlas; pero en la obra de Dios no hubo tacha, desproporción ni error alguno. Todo salió limpio y perfecto de las manos del Creador; si hoy hay ruina y dolor en el mundo, no provienen de la creación original de Dios, sino de la rebelión del pecado que Cristo vino a redimir y restaurar.",
+      "tags": ["Providencia", "Bondad de la Creación", "Sexto Día", "Perfección Divina"]
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import { useKartexPassageSafe } from '../../../entities/passage';
 import { Book } from '../../../entities/books';
 import { getChaptersForBookId } from '../../../shared/data/canonData';
 import { StudySidePanel } from '../../../shared/ui';
+import { useCommentaries } from '../context/CommentariesContext';
 
 export interface CommentariesPassageNavigatorProps {
   onChapterSelect?: (bookId: number, chapter: number) => void;
@@ -27,6 +28,7 @@ export const CommentariesPassageNavigator: React.FC<CommentariesPassageNavigator
   const tStudio = useTranslations('Studio');
   const tBooks = useTranslations('Books');
   const passageContext = useKartexPassageSafe();
+  const { coverageByBookId } = useCommentaries();
 
   const books = passageContext?.books ?? [];
   const selectedBookId = passageContext?.selectedBookId ?? 1;
@@ -140,6 +142,8 @@ export const CommentariesPassageNavigator: React.FC<CommentariesPassageNavigator
           const isSelected = selectedBookId === book.id;
           const localizedName = getBookTitle(book);
           const totalChapters = getChaptersForBookId(book.id);
+          const bookCoverage = coverageByBookId[book.abbreviation];
+          const hasBookEntries = Boolean(bookCoverage && bookCoverage.entriesCount > 0);
 
           return (
             <div key={book.id} className="rounded-xl overflow-hidden transition-colors">
@@ -159,7 +163,12 @@ export const CommentariesPassageNavigator: React.FC<CommentariesPassageNavigator
                   </span>
                   <span className="truncate font-medium">{localizedName}</span>
                 </div>
-                <div className="flex items-center shrink-0 ml-1">
+                <div className="flex items-center gap-1.5 shrink-0 ml-1">
+                  {hasBookEntries && (
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+                      {bookCoverage.entriesCount}
+                    </span>
+                  )}
                   {isExpanded ? (
                     <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
                   ) : (
@@ -168,24 +177,30 @@ export const CommentariesPassageNavigator: React.FC<CommentariesPassageNavigator
                 </div>
               </button>
 
-              {/* Acordeón de Capítulos en Cuadrícula Ergonómica (Estilo Lector Estándar) */}
+              {/* Acordeón de Capítulos en Cuadrícula Ergonómica */}
               {isExpanded && (
                 <div className="p-3 bg-zinc-50/80 dark:bg-black border-y border-zinc-100 dark:border-zinc-800/80 my-1 rounded-xl">
                   <div className="grid grid-cols-5 gap-1.5">
                     {Array.from({ length: totalChapters }, (_, i) => i + 1).map((chap) => {
                       const isCurrentChapter = isSelected && selectedChapter === chap;
+                      const hasChapterEntries = Boolean(bookCoverage?.chapters.includes(chap));
                       return (
                         <button
                           key={chap}
                           type="button"
                           onClick={() => handleSelectChapter(book.id, chap)}
-                          className={`h-8 rounded-lg text-xs font-mono font-medium transition-colors flex items-center justify-center cursor-pointer ${
+                          className={`relative h-8 rounded-lg text-xs font-mono font-medium transition-colors flex items-center justify-center cursor-pointer ${
                             isCurrentChapter
                               ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-bold'
-                              : 'border border-zinc-200/90 dark:border-zinc-800/90 bg-white dark:bg-[#0a0a0a] text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                              : hasChapterEntries
+                                ? 'border border-zinc-400/80 dark:border-zinc-600 bg-white dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 font-semibold hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                                : 'border border-zinc-200/90 dark:border-zinc-800/90 bg-white dark:bg-[#0a0a0a] text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                           }`}
                         >
                           {chap}
+                          {hasChapterEntries && !isCurrentChapter && (
+                            <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-zinc-900 dark:bg-zinc-100" />
+                          )}
                         </button>
                       );
                     })}

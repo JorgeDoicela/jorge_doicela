@@ -1,0 +1,17 @@
+{
+  "authorId": "jfb",
+  "bookId": "GEN",
+  "language": "en",
+  "entries": [
+    {
+      "id": "jfb-gen-1-1",
+      "entryType": "passage",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 2,
+      "title": "Morphological and Critical Analysis of Bereshit Bara Elohim",
+      "contentMarkdown": "### Textual Exegesis of Genesis 1:1-2\n\n* **In the beginning (*Bərēʾšîṯ*):** Intentionally lacks the definite article in the Masoretic Hebrew text, pointing to an absolute and primordial boundary in past eternity where time itself was inaugurated.\n* **Created (*bārāʾ*):** Throughout the Hebrew Tanakh, this verb is strictly and exclusively reserved for divine agency. It never takes a human subject nor mentions pre-existing raw material.\n* **Without form and void (*Tōhū wā-ḇōhū*):** The primordial unformed condition prior to the six successive days of ordering and filling.",
+      "tags": ["Bereshit", "Bara", "Hebrew", "Morphology"]
+    }
+  ]
+}

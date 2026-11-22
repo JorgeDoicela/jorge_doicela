@@ -211,7 +211,7 @@
     "engine5Title": "Lexicón (Diccionarios y Concordancia Strong)",
     "engine5Desc": "Consulta el significado original de cada palabra mediante diccionarios bíblicos reconocidos y las definiciones de la concordancia Strong.",
     "engineCommentariesTitle": "Comentarios Bíblicos (Exégesis Clásica)",
-    "engineCommentariesDesc": "Explora notas históricas y exposición versículo a versículo de comentaristas de dominio público (Matthew Henry, Jamieson-Fausset-Brown, Ginebra 1599, John Gill).",
+    "engineCommentariesDesc": "Explora notas históricas y exposición versículo a versículo de comentaristas clásicos en dominio público (Matthew Henry y Jamieson-Fausset-Brown).",
     "engineDictionariesTitle": "Diccionarios Bíblicos (Enciclopedia Teológica)",
     "engineDictionariesDesc": "Accede a definiciones enciclopédicas, nombres propios, topónimos y conceptos teológicos de obras clásicas (Easton, Smith, Hitchcock).",
     "engine6Title": "Buscador Bíblico Inteligente",
@@ -1135,7 +1135,7 @@
   },
   "Commentaries": {
     "title": "Corpus Exegético & Comentarios Clásicos",
-    "subtitle": "Exégesis histórica, notas gramaticales y exposición versículo por versículo de las obras clásicas en dominio público (Matthew Henry, Jamieson-Fausset-Brown, Ginebra 1599, John Gill).",
+    "subtitle": "Exégesis histórica, notas gramaticales y exposición versículo por versículo de las obras clásicas en dominio público (Matthew Henry y Jamieson-Fausset-Brown).",
     "allAuthors": "Todas las Fuentes Clásicas",
     "allCount": "Todos",
     "filterByAuthor": "Autor:",
@@ -1165,7 +1165,12 @@
     "emptyInspectorDesc": "Selecciona una fuente clásica o una nota exegética para explorar su biografía, época histórica y método hermenéutico.",
     "selectedPassageFallback": "Pasaje Seleccionado",
     "chapterPrefix": "Capítulo",
-    "classicalExegesisFallback": "Exégesis Clásica"
+    "classicalExegesisFallback": "Exégesis Clásica",
+    "chapterOverview": "Síntesis",
+    "bookIntroduction": "Introducción",
+    "scopeChapter": "Este capítulo",
+    "scopeAllBible": "Toda la Biblia",
+    "jumpToPassage": "Ir al pasaje"
   },
   "Dictionaries": {
     "title": "Diccionarios Bíblicos Clásicos",

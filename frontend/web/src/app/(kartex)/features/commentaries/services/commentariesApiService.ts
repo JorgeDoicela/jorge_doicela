@@ -1,12 +1,22 @@
 import { API_URL } from '../../../../config';
-import { CommentaryAuthor, CommentaryEntry, CommentaryFilterParams } from '../types';
+import {
+  CommentaryAuthor,
+  CommentaryBookCoverage,
+  CommentaryEntry,
+  CommentaryFilterParams,
+} from '../types';
 
-export async function fetchCommentaryAuthors(lang: string = 'es'): Promise<CommentaryAuthor[]> {
+export async function fetchCommentaryAuthors(
+  lang: string = 'es',
+  signal?: AbortSignal,
+): Promise<CommentaryAuthor[]> {
   try {
     const params = new URLSearchParams();
     if (lang) params.append('lang', lang);
 
-    const res = await fetch(`${API_URL}/kartex/commentaries/authors?${params.toString()}`);
+    const res = await fetch(`${API_URL}/kartex/commentaries/authors?${params.toString()}`, {
+      signal,
+    });
     if (!res.ok) return [];
 
     const json = await res.json();
@@ -19,12 +29,16 @@ export async function fetchCommentaryAuthors(lang: string = 'es'): Promise<Comme
 export async function fetchCommentaryAuthorById(
   id: string,
   lang: string = 'es',
+  signal?: AbortSignal,
 ): Promise<CommentaryAuthor | null> {
   try {
     const params = new URLSearchParams();
     if (lang) params.append('lang', lang);
 
-    const res = await fetch(`${API_URL}/kartex/commentaries/authors/${encodeURIComponent(id)}?${params.toString()}`);
+    const res = await fetch(
+      `${API_URL}/kartex/commentaries/authors/${encodeURIComponent(id)}?${params.toString()}`,
+      { signal },
+    );
     if (!res.ok) return null;
 
     const json = await res.json();
@@ -34,8 +48,31 @@ export async function fetchCommentaryAuthorById(
   }
 }
 
+export async function fetchCommentariesCoverage(
+  authorId?: string,
+  lang: string = 'es',
+  signal?: AbortSignal,
+): Promise<CommentaryBookCoverage[]> {
+  try {
+    const params = new URLSearchParams();
+    if (authorId && authorId !== 'all') params.append('authorId', authorId);
+    if (lang) params.append('lang', lang);
+
+    const res = await fetch(`${API_URL}/kartex/commentaries/coverage?${params.toString()}`, {
+      signal,
+    });
+    if (!res.ok) return [];
+
+    const json = await res.json();
+    return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchCommentaries(
   filters: CommentaryFilterParams = {},
+  signal?: AbortSignal,
 ): Promise<CommentaryEntry[]> {
   try {
     const params = new URLSearchParams();
@@ -48,6 +85,9 @@ export async function fetchCommentaries(
     }
     if (filters.authorId && filters.authorId !== 'all') {
       params.append('authorId', filters.authorId);
+    }
+    if (filters.entryType) {
+      params.append('entryType', filters.entryType);
     }
     if (filters.q && filters.q.trim()) {
       params.append('q', filters.q.trim());
@@ -62,7 +102,9 @@ export async function fetchCommentaries(
       params.append('offset', filters.offset.toString());
     }
 
-    const res = await fetch(`${API_URL}/kartex/commentaries?${params.toString()}`);
+    const res = await fetch(`${API_URL}/kartex/commentaries?${params.toString()}`, {
+      signal,
+    });
     if (!res.ok) return [];
 
     const json = await res.json();
@@ -77,6 +119,7 @@ export async function fetchCommentariesByPassage(
   chapter: number,
   verse?: number,
   lang: string = 'es',
+  signal?: AbortSignal,
 ): Promise<CommentaryEntry[]> {
   try {
     const params = new URLSearchParams();
@@ -89,6 +132,7 @@ export async function fetchCommentariesByPassage(
 
     const res = await fetch(
       `${API_URL}/kartex/commentaries/passage/${encodeURIComponent(bookId)}/${chapter}?${params.toString()}`,
+      { signal },
     );
     if (!res.ok) return [];
 

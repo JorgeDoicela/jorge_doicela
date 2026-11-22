@@ -60,7 +60,7 @@ export function KartexMobileAppSection() {
                 <div className="relative mx-auto md:mx-0 shrink-0 w-full max-w-[280px] sm:max-w-[300px]">
                     <div className="rounded-[44px] p-3 bg-zinc-950 border-[3px] border-zinc-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
                         <div className="rounded-[34px] bg-background border border-accents-2 overflow-hidden flex flex-col justify-between h-[510px] select-none text-left">
-                            <div className="pt-2 px-4 space-y-2 border-b border-accents-2/60 pb-2.5">
+                            <div className="pt-2 px-4 space-y-2 pb-2.5">
                                 <div className="flex items-center justify-between text-[10px] font-mono text-accents-4">
                                     <span>9:41</span>
                                     <div className="w-16 h-3.5 bg-black rounded-full mx-auto" />
@@ -70,14 +70,14 @@ export function KartexMobileAppSection() {
                                 </div>
                                 <div className="flex items-center justify-between pt-1 text-xs">
                                     <div className="font-semibold text-foreground">{tLanding('mobilePsalmTitle')}</div>
-                                    <div className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-accents-1 border border-accents-2 text-accents-5">
+                                    <div className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-accents-1 border border-border text-accents-5">
                                         NBLA
                                     </div>
                                 </div>
                             </div>
 
                             <div className="px-4 py-3 space-y-2.5 font-serif text-xs leading-relaxed overflow-hidden my-auto">
-                                <div className="text-[9px] font-mono text-accents-4 uppercase tracking-widest pb-1 border-b border-accents-2/40">
+                                <div className="text-[9px] font-mono text-accents-4 uppercase tracking-widest pb-1">
                                     {tLanding('mobilePsalmHeader')}
                                 </div>
                                 <p className="text-foreground/90">
@@ -98,7 +98,7 @@ export function KartexMobileAppSection() {
                                 </p>
                             </div>
 
-                            <div className="pt-2 pb-1.5 border-t border-accents-2/60 bg-accents-1/20">
+                            <div className="pt-2 pb-1.5 bg-accents-1/20">
                                 <div className="flex justify-around text-[10px] font-medium text-accents-4 px-2 pb-2">
                                     <span className="text-foreground font-semibold">{tLanding('mobileTabReader')}</span>
                                     <span>{tLanding('mobileTabParallel')}</span>

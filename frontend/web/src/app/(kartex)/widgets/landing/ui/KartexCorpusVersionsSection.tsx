@@ -99,7 +99,7 @@ export function KartexCorpusVersionsSection() {
                         >
                             <div className="space-y-3">
                                 {/* Cabecera de la versión */}
-                                <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2.5">
+                                <div className="flex items-center justify-between gap-2 pb-1">
                                     <div className="flex items-center gap-2.5">
                                         <span className="text-xl sm:text-[22px] font-mono font-bold tracking-tight text-foreground">
                                             {v.code}
@@ -141,7 +141,7 @@ export function KartexCorpusVersionsSection() {
                             </div>
 
                             {/* Pie de la tarjeta con titular de derechos y enlace directo */}
-                            <div className="flex items-center justify-between pt-3 mt-3 border-t border-border/60 text-xs">
+                            <div className="flex items-center justify-between pt-2 text-xs">
                                 <span className="text-[10px] font-mono text-accents-4 truncate max-w-[60%]">
                                     {v.source}
                                 </span>

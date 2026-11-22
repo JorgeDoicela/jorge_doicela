@@ -230,7 +230,7 @@ export function KartexEnginesCarousel() {
                                         </div>                                        {/* 1. LECTURA CLARA Y CONTINUA */}
                                         {idx === 0 && (
                                             <div className="absolute -bottom-3 sm:-bottom-5 -left-2 sm:-left-6 w-[96%] sm:w-[88%] z-20 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left space-y-2.5">
-                                                <div className="flex items-center justify-between text-[11px] font-mono text-accents-4 border-b border-border/70 pb-1.5">
+                                                <div className="flex items-center justify-between text-[11px] font-mono text-accents-4">
                                                     <span>{tLanding('psalm23Verse12')}</span>
                                                     <span className="px-2 py-0.5 rounded-full bg-foreground/10 text-foreground font-semibold text-[10px]">
                                                         {tLanding('proseMode')}
@@ -268,7 +268,7 @@ export function KartexEnginesCarousel() {
                                                             {tLanding('psalm23Ntv')}
                                                         </p>
                                                     </div>
-                                                    <div className="text-[10px] font-mono text-accents-4 pt-1 flex items-center justify-between border-t border-border/60">
+                                                    <div className="text-[10px] font-mono text-accents-4 pt-1 flex items-center justify-between">
                                                         <span>{tLanding('lcsAlgorithm')}</span>
                                                         <span className="text-emerald-500 font-semibold">{tLanding('nuancesDetected')}</span>
                                                     </div>
@@ -279,7 +279,7 @@ export function KartexEnginesCarousel() {
                                         {/* 3. TEXTO EN IDIOMAS ORIGINALES */}
                                         {idx === 2 && (
                                             <div className="absolute top-3 sm:top-4 inset-x-3 sm:inset-x-4 z-10 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
-                                                <div className="flex items-center justify-between border-b border-border pb-1.5">
+                                                <div className="flex items-center justify-between">
                                                     <div className="text-xl sm:text-2xl font-serif text-foreground font-bold tracking-wide" dir="rtl">
                                                         יְהוָ֥ה רֹ֝עִ֗י לֹ֣א אֶחְסָֽר׃
                                                     </div>
@@ -307,7 +307,7 @@ export function KartexEnginesCarousel() {
                                         {/* 4. DICCIONARIOS BÍBLICOS Y STRONG */}
                                         {idx === 3 && (
                                             <div className="absolute -bottom-3 sm:-bottom-5 -left-2 sm:-left-6 w-[92%] sm:w-[370px] z-20 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl text-left space-y-2">
-                                                <div className="flex items-center justify-between border-b border-border pb-1.5">
+                                                <div className="flex items-center justify-between">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-[10px] font-mono font-bold text-foreground bg-accents-1 px-2 py-0.5 rounded border border-border">H7462</span>
                                                         <span className="text-[10px] font-mono text-accents-4">{tLanding('bdbThayerLexicon')}</span>
@@ -322,7 +322,7 @@ export function KartexEnginesCarousel() {
                                                         {tLanding('feedFlock')}
                                                     </p>
                                                 </div>
-                                                <div className="flex items-center justify-between text-[10px] font-mono text-accents-4 pt-1 border-t border-border/60">
+                                                <div className="flex items-center justify-between text-[10px] font-mono text-accents-4 pt-1">
                                                     <span>LXX: <strong className="text-foreground font-serif">ποιμαίνω (G4165)</strong></span>
                                                     <span>{tLanding('psalmsIsaiah')}</span>
                                                 </div>
@@ -333,7 +333,7 @@ export function KartexEnginesCarousel() {
                                         {idx === 4 && (
                                             <>
                                                 <div className="absolute top-3.5 left-3.5 z-10 rounded-xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3 shadow-xl backdrop-blur-xl text-left max-w-[270px] space-y-1">
-                                                    <div className="flex items-center justify-between text-foreground font-semibold text-xs border-b border-border pb-1">
+                                                    <div className="flex items-center justify-between text-foreground font-semibold text-xs">
                                                         <div className="flex items-center gap-1.5">
                                                             <MapPin className="w-3.5 h-3.5 text-rose-500" />
                                                             <span>{tLanding('geoReferencedAtlas')}</span>
@@ -362,9 +362,8 @@ export function KartexEnginesCarousel() {
                                         {/* 6. LÍNEA DE TIEMPO HISTÓRICA */}
                                         {idx === 5 && (
                                             <div className="absolute bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-4 z-10 rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2.5">
-                                                <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
-                                                    <span className="font-mono font-bold text-foreground uppercase text-[10.5px] flex items-center gap-2">
-                                                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                                                <div className="flex items-center justify-between text-xs">
+                                                    <span className="font-mono font-bold text-foreground uppercase text-[10.5px]">
                                                         {tLanding('synchronousChronology')}
                                                     </span>
                                                     <span className="text-[10px] font-mono text-accents-4">{tLanding('eraRange')}</span>
@@ -390,9 +389,8 @@ export function KartexEnginesCarousel() {
                                         {idx === 6 && (
                                             <div className="absolute bottom-3.5 sm:bottom-4 right-3.5 sm:right-4 left-3.5 sm:left-auto sm:w-[350px] z-10">
                                                 <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2">
-                                                    <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
-                                                        <span className="font-mono font-bold text-foreground uppercase text-[10px] flex items-center gap-1.5">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                                                    <div className="flex items-center justify-between text-xs">
+                                                        <span className="font-mono font-bold text-foreground uppercase text-[10px]">
                                                             {tLanding('manuscriptRecord')}
                                                         </span>
                                                         <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1">
@@ -417,9 +415,8 @@ export function KartexEnginesCarousel() {
                                         {idx === 7 && (
                                             <div className="absolute bottom-3.5 sm:bottom-4 right-3.5 sm:right-4 left-3.5 sm:left-auto sm:w-[360px] z-10">
                                                 <div className="rounded-xl sm:rounded-2xl bg-background/95 dark:bg-[#0c0c0d]/95 border border-border/80 dark:border-zinc-800/80 p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl text-left space-y-2">
-                                                    <div className="flex items-center justify-between border-b border-border pb-1.5 text-xs">
-                                                        <span className="font-mono font-bold text-foreground uppercase text-[10px] flex items-center gap-1.5">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                                    <div className="flex items-center justify-between text-xs">
+                                                        <span className="font-mono font-bold text-foreground uppercase text-[10px]">
                                                             {tLanding('practicalApologetics')}
                                                         </span>
                                                         <span className="text-[9.5px] font-mono text-accents-4 px-1.5 py-0.5 rounded bg-accents-1">Kerygma & Missio Dei</span>

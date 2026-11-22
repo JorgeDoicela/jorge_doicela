@@ -53,7 +53,7 @@ export function KartexHeroSection({ studyUrl = '/study' }: KartexHeroSectionProp
                 {/* Capa 2: Tarjeta Flotante Superpuesta (Bordes nítidos y limpios sin sombra pesada) */}
                 <div className="w-full max-w-4xl mx-auto -mt-16 sm:-mt-24 relative z-10 px-4">
                     <div className="rounded-2xl sm:rounded-3xl border border-black/10 dark:border-white/15 bg-background/95 dark:bg-zinc-950/95 backdrop-blur-xl p-6 sm:p-7 text-left space-y-4">
-                        <div className="border-b border-accents-2 pb-3">
+                        <div>
                             <span className="text-xs font-mono text-accents-5 font-medium tracking-wide">
                                 {tLanding('previewPassageTitle')}
                             </span>

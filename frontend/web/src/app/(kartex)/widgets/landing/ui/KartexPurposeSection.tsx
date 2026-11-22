@@ -131,7 +131,7 @@ export function KartexPurposeSection() {
                                 </div>
 
                                 <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-5 shadow-inner mt-auto space-y-3">
-                                    <div className="flex items-center justify-between text-xs font-mono text-zinc-400 border-b border-zinc-800/80 pb-2.5">
+                                    <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
                                         <div className="flex items-center gap-1.5">
                                             <span className="px-2.5 py-1 rounded bg-white text-black text-[11px] font-semibold">Serif</span>
                                             <span className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] font-medium">Sans</span>
@@ -153,7 +153,7 @@ export function KartexPurposeSection() {
                                         </p>
                                     </div>
 
-                                    <div className="space-y-1.5 pt-1 text-xs text-zinc-300 border-t border-zinc-900">
+                                    <div className="space-y-1.5 pt-1 text-xs text-zinc-300">
                                         <div className="flex items-center gap-2">
                                             <Check className="w-3.5 h-3.5 text-white shrink-0" />
                                             <span className="text-[11.5px]">{tLanding('purposeDailyCard1Feature1')}</span>
@@ -173,9 +173,8 @@ export function KartexPurposeSection() {
                             {/* Tarjeta 2: Notas y Reflexiones */}
                             <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                 <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-5 shadow-inner mb-auto space-y-2.5">
-                                    <div className="flex items-center justify-between text-[11px] font-mono border-b border-zinc-800/80 pb-2">
+                                    <div className="flex items-center justify-between text-[11px] font-mono">
                                         <div className="flex items-center gap-2">
-                                            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                                             <span className="font-semibold text-zinc-200 text-xs">{tLanding('purposeDailyCard2NoteTitle')}</span>
                                         </div>
                                         <span className="px-2 py-0.5 rounded text-[10px] bg-zinc-900 text-zinc-300 border border-zinc-800 font-mono">
@@ -223,9 +222,8 @@ export function KartexPurposeSection() {
                                 </div>
 
                                 <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-5 shadow-inner mt-auto space-y-2.5">
-                                    <div className="flex items-center justify-between text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 font-semibold border-b border-zinc-800/80 pb-2">
+                                    <div className="flex items-center justify-between text-[10.5px] font-mono tracking-wider uppercase text-zinc-400 font-semibold">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                                             <span>{tLanding('purposeDailyCard3Tag')}</span>
                                         </div>
                                         <span className="text-[9.5px] text-zinc-500 font-normal lowercase tracking-normal font-mono">
@@ -242,7 +240,7 @@ export function KartexPurposeSection() {
                                         </p>
                                     </div>
 
-                                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-zinc-400 border-t border-zinc-900">
+                                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-zinc-400">
                                         <span className="text-zinc-400">{tLanding('purposeDailyCard3Action')}</span>
                                         <span className="text-white font-semibold">✦ 08:00 AM</span>
                                     </div>
@@ -285,7 +283,6 @@ export function KartexPurposeSection() {
                             <div className="bg-[#0a0a0a] border border-zinc-800/90 rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 flex flex-col justify-between min-h-[515px] sm:min-h-[535px] shadow-xl hover:border-zinc-700 transition-all">
                                 <div className="bg-black border border-zinc-800/80 rounded-[20px] p-4 sm:p-4.5 shadow-inner mb-auto space-y-2.5">
                                     <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-300 font-semibold">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
                                         <span>{tLanding('purposeCompareCard2Added')}</span>
                                     </div>
                                     <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80 text-xs font-serif text-zinc-200 leading-relaxed">
@@ -381,7 +378,7 @@ export function KartexPurposeSection() {
                                     <p className="text-xs sm:text-[13px] text-zinc-300 leading-relaxed">
                                         {tLanding('purposeOriginalsCard2Meaning')}
                                     </p>
-                                    <div className="text-[10.5px] font-mono text-zinc-500 pt-1.5 border-t border-zinc-800 font-medium">
+                                    <div className="text-[10.5px] font-mono text-zinc-500 font-medium">
                                         {tLanding('purposeOriginalsCard2Count')}
                                     </div>
                                 </div>
@@ -467,7 +464,7 @@ export function KartexPurposeSection() {
                                             <span>{tLanding('purposeHistoryCard1Stop4')}</span>
                                         </div>
                                     </div>
-                                    <div className="text-[9.5px] font-mono text-zinc-500 pt-1.5 border-t border-zinc-800">
+                                    <div className="text-[9.5px] font-mono text-zinc-500 pt-1.5">
                                         {tLanding('purposeHistoryCard1Distance')}
                                     </div>
                                 </div>
@@ -488,7 +485,7 @@ export function KartexPurposeSection() {
                                         <span className="text-white font-semibold">{tLanding('purposeHistoryCard2Era3')}</span>
                                         <span className="text-zinc-500 text-[9.5px]">{tLanding('eraEmpire')}</span>
                                     </div>
-                                    <div className="text-[9.5px] font-mono text-zinc-500 pt-1 border-t border-zinc-800">
+                                    <div className="text-[9.5px] font-mono text-zinc-500 pt-1">
                                         {tLanding('purposeHistoryCard2Time')}
                                     </div>
                                 </div>
@@ -529,7 +526,7 @@ export function KartexPurposeSection() {
                                     <div className="text-[10.5px] font-mono text-zinc-400">
                                         {tLanding('purposeHistoryCard3Site')}
                                     </div>
-                                    <div className="text-[9.5px] font-mono text-zinc-500 pt-1 border-t border-zinc-800">
+                                    <div className="text-[9.5px] font-mono text-zinc-500 pt-1">
                                         {tLanding('purposeHistoryCard3Date')}
                                     </div>
                                 </div>

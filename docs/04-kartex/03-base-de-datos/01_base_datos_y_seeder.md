@@ -184,9 +184,25 @@ Al ejecutar `pnpm --filter backend seed:kartex` (o `pnpm seed:all`), se ejecuta 
 * **Cero Residuos en el Corpus Editorial y Caché Bíblico Intacto:** El corpus exegético es 100% determinista (`corpus/**/*.json ──► kartex.sqlite`), mientras que el caché de capítulos bíblicos descargados se preserva entre ejecuciones del seeder.
 
 ### 3.3 Rendimiento y Operación
-* **Comando:**
+* **Comando de Siembra:**
   ```bash
   pnpm --filter backend seed:kartex
+  ```
+* **Comandos CLI de Ingesta Automatizada de Comentarios (`import-commentaries.ts`):**
+  Permiten descargar e indexar capítulos o libros completos de Matthew Henry o Jamieson-Fausset-Brown desde la API abierta de Dominio Público (HelloAO) hacia `backend/src/kartex/corpus/commentaries/{authorId}/{es,en}/`, generando automáticamente las versiones en inglés y español, normalizando las referencias bíblicas y ejecutando `seedCorpus()` al finalizar (sin sobrescribir capítulos ya curados salvo que se indique `--force`):
+  ```bash
+  # Importar capítulos específicos de un libro en Matthew Henry
+  pnpm --filter backend import:matthew-henry --book=GEN --chapters=1-10
+
+  # Importar uno o varios libros completos
+  pnpm --filter backend import:matthew-henry --book=GEN,JUA,ROM
+
+  # Importar por testamento (--nt / --ot) o toda la Biblia (--all)
+  pnpm --filter backend import:matthew-henry --nt
+  pnpm --filter backend import:matthew-henry --all
+
+  # Importar en Jamieson, Fausset & Brown (JFB)
+  pnpm --filter backend import:jfb --book=JUA --chapters=1-3
   ```
 * **Rendimiento Medido:** Procesa y sincroniza todo el corpus en **~90 ms**.
 * **Consumo de Memoria:** `< 180 MB` de RAM durante el sembrado.

@@ -83,9 +83,10 @@ jobs:
             CI=true pnpm --filter backend install --prod --frozen-lockfile --config.confirmModulesPurge=false
             pnpm --filter backend rebuild better-sqlite3
             
-            # 3. Sembrado atomico en archivos temporales .sqlite.tmp (protege la BD previa ante fallos de corpus)
+            # 3. Sembrado atomico en archivos temporales .sqlite.tmp (protege la BD previa ante fallos de corpus y preserva el cache de versiculos en kartex)
             mkdir -p backend/data
             rm -f backend/data/*.sqlite.tmp* 2>/dev/null || true
+            cp -f backend/data/kartex.sqlite backend/data/kartex.sqlite.tmp 2>/dev/null || true
 
             echo "==> [CI/CD] Sembrando base de datos temporal: kartex.sqlite.tmp..."
             DATABASE_KARTEX_PATH=./data/kartex.sqlite.tmp node backend/dist/kartex/cli/seed-corpus.js

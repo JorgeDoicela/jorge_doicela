@@ -9,7 +9,7 @@ import {
   GreekInterlinearVerse,
   InterlinearDisplaySettings,
 } from '../types';
-import { Volume2, Sparkles } from 'lucide-react';
+import { Volume2, Sparkles, X } from 'lucide-react';
 import { biblicalAudioService } from '../services/biblicalAudioService';
 import { useReaderAppearanceSettings } from '../../verses/hooks/useReaderAppearanceSettings';
 import { getReaderFontClass } from '../../verses/config/readerFonts';
@@ -41,6 +41,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
   const readerFontClass = getReaderFontClass(readerSettings.fontFamily);
 
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [pinnedTokenId, setPinnedTokenId] = useState<string | null>(null);
 
   const handlePlayAudio = (e: React.MouseEvent, token: HebrewAramaicToken | GreekToken) => {
     e.stopPropagation();
@@ -59,7 +60,14 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
     });
   };
 
-  const activeToken = tokens.find((t) => t.id === activeTokenId);
+  const handleTogglePinToken = (tok: HebrewAramaicToken | GreekToken) => {
+    setPinnedTokenId((prev) => (prev === tok.id ? null : tok.id));
+    onHoverToken(tok.id);
+  };
+
+  // Prioridad: Si hay una palabra anclada (fijada por clic), se usa esa; de lo contrario, la que tiene el hover
+  const currentTokenId = pinnedTokenId || activeTokenId;
+  const activeToken = tokens.find((t) => t.id === currentTokenId);
 
   return (
     <div className="p-6 rounded-2xl border border-accents-2 bg-background space-y-6 shadow-xs">
@@ -98,25 +106,31 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
             {t('textInLanguage')}
           </span>
           <span className="text-[10px] font-mono text-accents-4">
-            {t('hoverActive')}
+            {pinnedTokenId ? 'Palabra fijada para inspección' : t('hoverActive')}
           </span>
         </div>
 
         <div className={`p-5 rounded-xl bg-accents-1/40 border border-accents-2 text-base sm:text-lg leading-loose text-foreground ${readerFontClass}`}>
           {tokens.map((tok) => {
             const isHovered = activeTokenId === tok.id;
-            const isSelected = activeTokenId === tok.id;
+            const isPinned = pinnedTokenId === tok.id;
 
             return (
               <span
                 key={tok.id}
-                onMouseEnter={() => onHoverToken(tok.id)}
-                onMouseLeave={() => onHoverToken(null)}
-                onClick={() => onSelectToken(tok)}
+                onMouseEnter={() => {
+                  if (!pinnedTokenId) onHoverToken(tok.id);
+                }}
+                onMouseLeave={() => {
+                  if (!pinnedTokenId) onHoverToken(null);
+                }}
+                onClick={() => handleTogglePinToken(tok)}
                 className={`inline-block px-1.5 py-0.5 rounded-md cursor-pointer transition-all duration-150 mx-0.5 ${
-                  isHovered || isSelected
-                    ? 'bg-amber-500/20 text-foreground font-bold underline decoration-amber-500 decoration-2 underline-offset-4 shadow-xs'
-                    : 'hover:bg-accents-2'
+                  isPinned
+                    ? 'bg-amber-500/30 text-foreground font-bold ring-2 ring-amber-500 shadow-sm'
+                    : isHovered
+                      ? 'bg-amber-500/20 text-foreground font-bold underline decoration-amber-500 decoration-2 underline-offset-4 shadow-xs'
+                      : 'hover:bg-accents-2'
                 }`}
               >
                 {tok.gloss}
@@ -127,7 +141,9 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
       </div>
 
       {/* Panel Flotante de Inspección Rápida de la Palabra Activa */}
-      <div className="min-h-[56px] p-3 rounded-xl border border-accents-2 bg-accents-1/30 flex items-center">
+      <div className={`min-h-[56px] p-3 rounded-xl border transition-colors flex items-center ${
+        pinnedTokenId ? 'border-amber-500/50 bg-amber-500/5' : 'border-accents-2 bg-accents-1/30'
+      }`}>
         {activeToken ? (
           <div className="w-full flex flex-wrap items-center justify-between gap-4 animate-in fade-in duration-150">
             <div className="flex items-center gap-3">
@@ -155,7 +171,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
                 title={t('listenPronunciation')}
               >
                 {playingId === activeToken.id ? (
-                  <span className="text-amber-500">...</span>
+                  <span className="text-amber-500 font-bold">...</span>
                 ) : (
                   <>
                     <Volume2 className="w-3.5 h-3.5 text-accents-5" />
@@ -171,13 +187,27 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
               >
                 {t('seeMorphology')}
               </button>
+
+              {pinnedTokenId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPinnedTokenId(null);
+                    onHoverToken(null);
+                  }}
+                  className="p-1.5 rounded-lg text-accents-4 hover:text-foreground hover:bg-accents-2 transition-colors cursor-pointer"
+                  title="Deseleccionar palabra"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
         ) : (
           <div className="w-full flex items-center justify-between text-xs font-mono text-accents-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5 text-accents-4" />
-              <span>{t('hoverPrompt')}</span>
+              <span>Haz clic o pasa el cursor sobre una palabra para escucharla o ver su morfología</span>
             </div>
             <span className="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-accents-1 border border-accents-2">
               {t('hoverActive')}
@@ -198,6 +228,7 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
         >
           {tokens.map((tok) => {
             const isHovered = activeTokenId === tok.id;
+            const isPinned = pinnedTokenId === tok.id;
             const isGreek = 'greek' in tok;
             const originalText = isGreek ? tok.greek : tok.hebrew;
 
@@ -205,13 +236,19 @@ export const ReverseInterlinearReader: React.FC<ReverseInterlinearReaderProps> =
               <div
                 key={tok.id}
                 dir="ltr"
-                onMouseEnter={() => onHoverToken(tok.id)}
-                onMouseLeave={() => onHoverToken(null)}
-                onClick={() => onSelectToken(tok)}
+                onMouseEnter={() => {
+                  if (!pinnedTokenId) onHoverToken(tok.id);
+                }}
+                onMouseLeave={() => {
+                  if (!pinnedTokenId) onHoverToken(null);
+                }}
+                onClick={() => handleTogglePinToken(tok)}
                 className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col items-center justify-between text-center min-w-[95px] max-w-[130px] space-y-1.5 ${
-                  isHovered
-                    ? 'bg-amber-500/10 border-amber-500 shadow-md ring-2 ring-amber-500/40 scale-105'
-                    : 'bg-background border-accents-2 hover:border-accents-3 hover:bg-accents-1/50'
+                  isPinned
+                    ? 'bg-amber-500/15 border-amber-500 shadow-md ring-2 ring-amber-500 scale-105'
+                    : isHovered
+                      ? 'bg-amber-500/10 border-amber-500/70 shadow-sm scale-102'
+                      : 'bg-background border-accents-2 hover:border-accents-3 hover:bg-accents-1/50'
                 }`}
               >
                 {/* Palabra original */}

@@ -1,9 +1,7 @@
 import { TerminalConsole } from '../features/terminal';
 import { ProjectShowcase, type PortfolioProject } from '../features/projects';
 import { ContactForm } from '../features/contact';
-import { ThemeToggle } from '../components/ThemeToggle';
-import { LanguageToggle } from '../components/LanguageToggle';
-import { BackToPortalButton } from '../components/BackToPortalButton';
+import { PortfolioHeader } from '../components/PortfolioHeader';
 import { TypewriterRole } from '../components/TypewriterRole';
 import { ValuesPhilosophySection } from '../components/ValuesPhilosophySection';
 import { getLocale, getTranslations } from 'next-intl/server';
@@ -71,16 +69,8 @@ export default async function PortfolioPage() {
     return (
         <div className="min-h-screen bg-background text-foreground py-16 md:py-24 px-6 md:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
 
-            {/* Control Superior Izquierdo: Volver al Portal Principal */}
-            <div className="fixed top-4 left-4 z-50">
-                <BackToPortalButton />
-            </div>
-
-            {/* Controles Superiores Derechos (LanguageToggle + ThemeToggle) */}
-            <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-                <LanguageToggle />
-                <ThemeToggle />
-            </div>
+            {/* Cabecera Flotante con Ocultamiento Dinámico por Scroll */}
+            <PortfolioHeader />
 
             {/* Cabecera Principal */}
             <header className="w-full max-w-7xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">

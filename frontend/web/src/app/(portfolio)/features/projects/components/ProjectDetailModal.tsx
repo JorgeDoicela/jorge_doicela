@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { PortfolioProject } from '../types';
-import { ExternalLink, X, Cpu, Layers, BarChart3, ShieldCheck } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { PortfolioProject } from '../types';
+import { buildProjectSlides } from '../utils/buildProjectSlides';
+import { useOrbitalCarousel } from '../hooks/useOrbitalCarousel';
+import { ProjectSlideCard } from './ProjectSlideCard';
 
 interface ProjectDetailModalProps {
   project: PortfolioProject | null;
@@ -12,6 +15,12 @@ interface ProjectDetailModalProps {
   onClose: () => void;
 }
 
+/**
+ * Visor modal de Caso de Estudio con Pasarela Orbital 3D independiente por proyecto.
+ * Mantiene fija la cabecera del proyecto y el dock inferior de secciones/CTAs,
+ * mientras las secciones técnicas y galería multimedia orbitan en arco convexo
+ * navegables por arrastre de cursor, clic lateral, teclado o selector de capítulos.
+ */
 export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailModalProps) {
   const t = useTranslations('Projects');
   const [mounted, setMounted] = useState(false);
@@ -20,7 +29,29 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
     setMounted(true);
   }, []);
 
-  // Cerrar con tecla Escape y bloquear scroll del body
+  const slides = useMemo(
+    () => (project ? buildProjectSlides(project) : []),
+    [project],
+  );
+
+  const {
+    activeIndex,
+    isDragging,
+    canGoPrev,
+    canGoNext,
+    goTo,
+    goNext,
+    goPrev,
+    getSlideStyle,
+    handleCardSelect,
+    stageHandlers,
+  } = useOrbitalCarousel({
+    total: slides.length,
+    resetKey: project?.id ?? null,
+    isActive: isOpen && mounted,
+  });
+
+  // Cerrar con tecla Escape y bloquear scroll del documento principal
   useEffect(() => {
     if (!isOpen) return;
 
@@ -45,172 +76,209 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
       role="dialog"
       aria-modal="true"
       aria-labelledby="project-modal-title"
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-10"
+      className="fixed inset-0 z-[9999] flex flex-col justify-between overflow-hidden"
     >
-      {/* Backdrop con desenfoque de cristal oscuro global */}
+      {/* Backdrop cinematográfico oscuro */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity cursor-pointer"
+        className="fixed inset-0 bg-black/82 backdrop-blur-md transition-opacity cursor-pointer"
         aria-hidden="true"
       />
 
-      {/* Contenedor Modal Dark Luxury */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] bg-surface text-foreground border border-border-gold rounded-2xl shadow-2xl flex flex-col overflow-hidden z-10">
-        
-        {/* Cabecera del Modal */}
-        <div className="flex items-start justify-between p-6 md:p-8 border-b border-border-gold/30 bg-surface-raised/80">
-          <div className="flex flex-col gap-2 max-w-2xl">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono uppercase tracking-widest text-gold-400 font-semibold">
-                {project.role}
-              </span>
-            </div>
-            <h2
-              id="project-modal-title"
-              className="text-2xl md:text-3xl font-light text-foreground tracking-tight"
-            >
-              {project.title}
-            </h2>
-          </div>
+      {/* Cabecera Superior Fija del Proyecto */}
+      <header className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-5 sm:pt-7 pb-2 flex items-start justify-between gap-4 pointer-events-none">
+        <div className="flex flex-col gap-1.5 pointer-events-auto min-w-0">
+          <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-gold-400 font-semibold">
+            {project.role}
+          </span>
+          <h2
+            id="project-modal-title"
+            className="text-2xl sm:text-3xl md:text-4xl font-light text-white tracking-tight truncate"
+          >
+            {project.title}
+          </h2>
+        </div>
 
+        <div className="flex items-center gap-3 pointer-events-auto shrink-0">
+          {slides.length > 1 && (
+            <span className="hidden md:inline-block text-[11px] font-mono text-white/50 tracking-wider">
+              {t('modalDragHint')}
+            </span>
+          )}
           <button
+            type="button"
             onClick={onClose}
             aria-label={t('modalClose')}
-            className="p-2 rounded-lg text-foreground/60 hover:text-foreground hover:bg-foreground/10 border border-border/40 transition-colors cursor-pointer"
+            className="p-2.5 rounded-xl bg-surface/85 text-foreground/80 hover:text-foreground hover:border-gold-300/60 border border-border-gold/50 transition-all duration-200 cursor-pointer active:scale-95"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
+      </header>
 
-        {/* Cuerpo Scrolleable */}
-        <div className="p-6 md:p-8 overflow-y-auto space-y-8 text-sm text-foreground/80 font-light leading-relaxed">
-          
-          {/* 1. Visión General del Sistema */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-mono uppercase tracking-widest text-gold-300 flex items-center gap-2">
-              <Cpu className="w-4 h-4" />
-              <span>{t('modalOverviewTitle')}</span>
-            </h3>
-            <p className="text-sm md:text-base text-foreground/90 font-light leading-relaxed">
-              {project.overview || project.description}
-            </p>
-          </div>
+      {/* Escenario Central: Pasarela Orbital 3D ("Medio Planeta") */}
+      <div
+        {...stageHandlers}
+        className={`relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none touch-pan-y ${
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        }`}
+        style={{ perspective: '1250px' }}
+      >
+        {/* Arco sutil de horizonte planetario */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-32 left-1/2 -translate-x-1/2 w-[120%] max-w-[1100px] h-64 rounded-[100%] border-t border-gold-300/20 bg-[radial-gradient(ellipse_at_top,var(--glow-gold)_0%,transparent_68%)]"
+        />
 
-          {/* 2. El Reto de Ingeniería */}
-          {project.challenge && (
-            <div className="space-y-3 p-5 rounded-xl bg-surface-raised/30 border border-foreground/[0.06]">
-              <h3 className="text-xs font-mono uppercase tracking-widest text-gold-300 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4" />
-                <span>{t('modalChallengeTitle')}</span>
-              </h3>
-              <p className="text-xs md:text-sm text-foreground/80 font-light leading-relaxed">
-                {project.challenge}
-              </p>
-            </div>
-          )}
+        {/* Botón Lateral Izquierdo */}
+        {slides.length > 1 && (
+          <button
+            type="button"
+            onClick={goPrev}
+            disabled={!canGoPrev}
+            aria-label={t('modalPrevSlide')}
+            className="hidden sm:flex absolute left-4 md:left-8 z-40 items-center justify-center w-11 h-11 rounded-full bg-surface/85 border border-border-gold/50 text-foreground/80 hover:text-gold-200 hover:border-gold-300/70 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer active:scale-95 backdrop-blur-md"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        )}
 
-          {/* 3. Decisiones de Arquitectura */}
-          {project.architectureHighlights && project.architectureHighlights.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-xs font-mono uppercase tracking-widest text-gold-300 flex items-center gap-2">
-                <Layers className="w-4 h-4" />
-                <span>{t('modalArchitectureTitle')}</span>
-              </h3>
-              <ul className="space-y-2.5">
-                {project.architectureHighlights.map((highlight, i) => (
-                  <li key={i} className="flex items-start gap-3 text-xs md:text-sm text-foreground/80">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gold-400 shrink-0" />
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* 4. Stack Tecnológico */}
-          <div className="space-y-3 pt-2">
-            <span className="text-[11px] font-mono text-muted uppercase tracking-wider block">
-              {t('modalTechStack')}
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((tech, i) => (
-                <span
-                  key={i}
-                  className="text-xs font-mono px-3 py-1 rounded-lg border border-border bg-background/50 text-foreground/90 font-medium"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* 5. Ficha Técnica Editorial: Especificaciones y Telemetría al final */}
-          {project.metrics && project.metrics.length > 0 && (() => {
-            const metricsList = project.metrics;
+        {/* Pista 3D de Tarjetas */}
+        <div
+          className="relative w-full max-w-[660px] h-[420px] sm:h-[440px] mx-4 sm:mx-16"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {slides.map((slide, index) => {
+            const orbitalStyle = getSlideStyle(index);
             return (
-              <div className="p-5 rounded-xl bg-surface-raised/25 border border-foreground/[0.06] space-y-3.5">
-                <div className="flex items-center justify-between border-b border-border-gold/20 pb-2">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-gold-400 font-semibold">
-                    {t('modalTelemetry')}
-                  </span>
-                  <span className="text-[9px] font-mono text-muted uppercase tracking-wider">
-                    {t('modalVerifiedMetrics')}
-                  </span>
-                </div>
-                <div className="space-y-2.5 font-mono text-xs">
-                  {metricsList.map((m, i) => (
-                    <div key={i} className="flex items-baseline justify-between gap-3">
-                      <span className="text-foreground/75 shrink-0">{m.label}</span>
-                      <span className="grow border-b border-dotted border-border-gold/50 mb-1 opacity-60" />
-                      <span className="text-foreground font-semibold shrink-0 tracking-wide">{m.value}</span>
-                    </div>
-                  ))}
-                </div>
+              <div
+                key={slide.id}
+                onClick={() => handleCardSelect(index)}
+                role={index === activeIndex ? 'region' : 'button'}
+                tabIndex={index === activeIndex ? -1 : 0}
+                aria-current={index === activeIndex ? 'step' : undefined}
+                aria-label={
+                  slide.kind === 'media'
+                    ? `${t(slide.shortLabelKey)} ${slide.mediaIndex}`
+                    : t(slide.shortLabelKey)
+                }
+                onKeyDown={(e) => {
+                  if (index !== activeIndex && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    goTo(index);
+                  }
+                }}
+                className={`absolute inset-0 will-change-[transform,opacity,filter] ${
+                  isDragging
+                    ? 'transition-none'
+                    : 'transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]'
+                } ${index === activeIndex ? '' : 'cursor-pointer'}`}
+                style={{
+                  transform: orbitalStyle.transform,
+                  opacity: orbitalStyle.opacity,
+                  filter: orbitalStyle.filter,
+                  zIndex: orbitalStyle.zIndex,
+                  pointerEvents: orbitalStyle.pointerEvents,
+                }}
+              >
+                <ProjectSlideCard
+                  slide={slide}
+                  index={index}
+                  total={slides.length}
+                  isActive={index === activeIndex}
+                />
               </div>
             );
-          })()}
+          })}
         </div>
 
-        {/* Pie de Acciones / CTAs de Alta Gama */}
-        <div className="p-4 sm:p-6 border-t border-border/40 bg-surface-raised/50 flex flex-wrap items-center justify-between gap-3">
+        {/* Botón Lateral Derecho */}
+        {slides.length > 1 && (
           <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg text-xs font-mono text-muted hover:text-foreground border border-transparent hover:border-border transition-colors cursor-pointer"
+            type="button"
+            onClick={goNext}
+            disabled={!canGoNext}
+            aria-label={t('modalNextSlide')}
+            className="hidden sm:flex absolute right-4 md:right-8 z-40 items-center justify-center w-11 h-11 rounded-full bg-surface/85 border border-border-gold/50 text-foreground/80 hover:text-gold-200 hover:border-gold-300/70 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer active:scale-95 backdrop-blur-md"
           >
-            {t('modalClose')}
+            <ChevronRight className="w-5 h-5" />
           </button>
-
-          <div className="flex items-center gap-3">
-            {project.repoUrl && (
-              <a
-                href={project.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-surface hover:bg-surface-raised text-xs font-mono text-foreground transition-all duration-200"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                  <path d="M9 18c-4.51 2-5-2-7-2" />
-                </svg>
-                <span>{t('modalViewGithub')}</span>
-              </a>
-            )}
-
-            {project.demoUrl && (
-              <a
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gold-400 hover:bg-gold-300 text-black font-semibold text-xs font-mono transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                <span>{t('demoLabel')}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
-          </div>
-        </div>
+        )}
       </div>
+
+      {/* Dock Inferior Fijo: Selector Directo de Secciones + CTAs Globales */}
+      <footer className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-8 pb-5 sm:pb-7 pt-2 flex flex-col lg:flex-row items-center justify-between gap-4">
+        {/* Índice interactivo de secciones del proyecto */}
+        <nav
+          aria-label={project.title}
+          className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 lg:pb-0 scrollbar-none"
+        >
+          {slides.map((slide, index) => {
+            const active = index === activeIndex;
+            const label =
+              slide.kind === 'media'
+                ? `${t(slide.shortLabelKey)} ${slide.mediaIndex}`
+                : t(slide.shortLabelKey);
+            return (
+              <button
+                key={slide.id}
+                type="button"
+                onClick={() => goTo(index)}
+                aria-current={active ? 'step' : undefined}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                  active
+                    ? 'bg-gold-300 text-black font-semibold shadow-sm'
+                    : 'bg-surface/70 text-foreground/70 hover:text-foreground border border-border-gold/40 hover:border-gold-300/50'
+                }`}
+              >
+                <span className={active ? 'text-black/70' : 'text-gold-400/80'}>
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Acciones Globales del Proyecto */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {project.repoUrl && (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gold/50 bg-surface/90 hover:bg-surface-raised hover:border-gold-300/60 text-xs font-mono text-foreground transition-all duration-200"
+            >
+              <svg
+                className="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                <path d="M9 18c-4.51 2-5-2-7-2" />
+              </svg>
+              <span>{t('modalViewGithub')}</span>
+            </a>
+          )}
+
+          {project.demoUrl && (
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gold-400 hover:bg-gold-300 text-black font-semibold text-xs font-mono transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              <span>{t('demoLabel')}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          )}
+        </div>
+      </footer>
     </div>,
-    document.body
+    document.body,
   );
 }

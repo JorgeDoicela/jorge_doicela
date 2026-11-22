@@ -48,7 +48,15 @@
     "modalClose": "Close",
     "modalViewGithub": "View Code on GitHub",
     "caseStudyTitle": "View detailed case study",
-    "caseStudyArchitecture": "View case study and architecture"
+    "caseStudyArchitecture": "View case study and architecture",
+    "slideOverviewShort": "Overview",
+    "slideChallengeShort": "Challenge",
+    "slideArchitectureShort": "Architecture",
+    "slideStackTelemetryShort": "Stack & Telemetry",
+    "slideMediaShort": "Gallery",
+    "modalDragHint": "Drag or use ← → to explore",
+    "modalPrevSlide": "Previous section",
+    "modalNextSlide": "Next section"
   },
   "Stack": {
     "eyebrow": "Core Stack",

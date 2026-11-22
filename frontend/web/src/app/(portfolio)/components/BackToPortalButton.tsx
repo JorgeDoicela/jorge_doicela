@@ -21,13 +21,13 @@ export function BackToPortalButton() {
   return (
     <a
       href={portalUrl}
-      className="group flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase border border-border bg-card/60 hover:bg-card hover:border-gold-300/40 text-foreground hover:text-gold-200 transition-all duration-200 cursor-pointer active:scale-95 shadow-xs select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-gold-300/60"
+      className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono tracking-wider uppercase text-foreground/70 hover:text-gold-200 hover:bg-foreground/5 active:scale-95 transition-all duration-200 cursor-pointer select-none outline-none focus:outline-none"
       title={t('portal')}
       aria-label={t('portal')}
       id="portfolio-back-to-portal"
     >
       <ArrowLeft className="w-3.5 h-3.5 text-gold-300 transition-transform duration-200 group-hover:-translate-x-0.5" />
-      <span className="hidden sm:inline">{t('portalShort')}</span>
+      <span>{t('portalShort')}</span>
     </a>
   );
 }

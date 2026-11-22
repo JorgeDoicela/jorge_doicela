@@ -37,21 +37,29 @@ frontend/web/src/app/(portfolio)/
 │       └── page.tsx           # Vista dedicada a pantalla completa para SandboxTerminal
 │
 ├── components/                # COMPONENTES COMPARTIDOS DEL SUBDOMINIO
-│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (Dark Luxury, jorgedoicela.com / localhost)
-│   ├── ThemeToggle.tsx        # Conmutador de tema visual
-│   ├── LanguageToggle.tsx     # Selector de idioma (ES/EN)
+│   ├── PortfolioHeader.tsx    # Cabecera flotante con ocultamiento dinámico en scroll
+│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (sin cápsula, jorgedoicela.com / localhost)
+│   ├── ThemeToggle.tsx        # Conmutador de tema visual minimalista
+│   ├── LanguageToggle.tsx     # Selector de idioma minimalista (ES/EN)
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
 │   ├── ValuesPhilosophySection.tsx # Sección de valores y ética
 │   └── PortfolioJsonLd.tsx        # Marcado estructurado Schema.org ProfilePage
 │
+├── hooks/                     # HOOKS TRANSVERSALES DEL SUBDOMINIO
+│   └── usePortfolioHeaderScroll.ts # Control de visibilidad por scroll con histeresis y rAF
+│
 ├── features/                  # FEATURE-SLICED DESIGN (FSD)
 │   ├── projects/              # FEATURE: SHOWCASE DE PROYECTOS Y CASOS DE ESTUDIO
 │   │   ├── components/
-│   │   │   ├── ProjectShowcase.tsx     # Galería con filtros reactivos y botones Dark Luxury
-│   │   │   └── ProjectDetailModal.tsx  # Modal in-page de Casos de Estudio (createPortal)
+│   │   │   ├── ProjectShowcase.tsx     # Galería 2x2 con filtros reactivos y botones Dark Luxury
+│   │   │   ├── ProjectDetailModal.tsx  # Visor orbital 3D in-page de Casos de Estudio (createPortal)
+│   │   │   └── ProjectSlideCard.tsx    # Tarjeta polimórfica de sección/galería para la pasarela orbital
 │   │   ├── hooks/
-│   │   │   └── useProjects.ts          # Estado de filtrado por categoría y selección modal
-│   │   ├── types.ts                    # Interfaces de proyectos, métricas y casos de estudio
+│   │   │   ├── useProjects.ts          # Estado de filtrado por categoría y selección modal
+│   │   │   └── useOrbitalCarousel.ts   # Física de arrastre (PointerEvents), rueda, teclado y arco 3D GPU
+│   │   ├── utils/
+│   │   │   └── buildProjectSlides.ts   # Constructor determinista de slides (secciones + media) por proyecto
+│   │   ├── types.ts                    # Interfaces de proyectos, métricas, media y unión discriminada ProjectSlide
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
 │   ├── terminal/              # FEATURE: SISTEMA TRI-MODAL DE TERMINAL
@@ -98,15 +106,19 @@ frontend/web/src/app/(portfolio)/
   * **Código (Acción Secundaria):** Botón estilizado con icono SVG de GitHub y superficie elevada.
   * **Caso de estudio (Disparador Inmersivo):** Enlace interactivo que abre el caso de estudio técnico al hacer clic.
 
-### 3.2 Modal de Caso de Estudio (`ProjectDetailModal.tsx`)
+### 3.2 Visor Orbital 3D de Caso de Estudio (`ProjectDetailModal.tsx` & `ProjectSlideCard.tsx`)
 * **Aislamiento en `createPortal`:** Se inyecta como hijo directo de `document.body` con `z-[9999]`, evitando que cualquier propiedad `transform` o animación de contenedores padre atrape el modal.
-* **Preservación de Conexiones WebSocket:** Al ser un modal in-page, el usuario puede inspeccionar detalles arquitectónicos sin desmontar la página ni desconectar la sesión interactiva de la terminal.
-* **Jerarquía Editorial Aprobada:**
-  1. *Visión General del Sistema:* Propósito y valor que aporta el software.
-  2. *El Desafío Técnico & Restricciones:* Problemas complejos de memoria, concurrencia o indexación resueltos.
-  3. *Arquitectura & Decisiones de Ingeniería:* Patrones en capas, persistencia SQLite WAL y microarquitectura.
-  4. *Stack Tecnológico Empleado:* Badges de herramientas y frameworks.
-  5. *Especificaciones & Telemetría:* Ficha técnica con líneas punteadas continuas que unen métrica con su valor verificado.
+* **Preservación de Conexiones WebSocket:** Al ser un visor in-page, el usuario puede inspeccionar detalles arquitectónicos sin desmontar la página ni desconectar la sesión interactiva de la terminal.
+* **Pasarela Orbital 3D Independiente por Proyecto (`useOrbitalCarousel.ts`):**
+  * Cada proyecto construye dinámicamente su propia secuencia de tarjetas mediante `buildProjectSlides.ts` (unión discriminada `ProjectSlide`), manteniendo fija la cabecera (rol, título, cierre) y el dock inferior (índice directo de secciones y CTAs de GitHub/Demostración).
+  * Las tarjetas orbitan en un arco convexo acelerado por GPU (`perspective: 1250px`, `translate3d`, `rotateY`, `scale`, `blur` progresivo), donde la sección activa se muestra completamente plana y enfocada al frente mientras las adyacentes retroceden en profundidad a izquierda y derecha.
+  * Soporta arrastre táctil y con cursor (`PointerEvents` con resistencia elástica en extremos), clic directo en tarjetas laterales, rueda horizontal de trackpad, selector de capítulos inferior y atajos de teclado (`←`, `→`, `Esc`).
+* **Secciones Polimórficas y Escalabilidad Multimedia:**
+  1. *01 Visión General del Sistema (`overview`):* Propósito y alcance del software.
+  2. *02 El Desafío Técnico & Restricciones (`challenge`):* Problemas complejos de memoria, concurrencia o indexación resueltos.
+  3. *03 Arquitectura & Decisiones de Ingeniería (`architecture`):* Decisiones numeradas de diseño, persistencia SQLite WAL y microarquitectura.
+  4. *04 Stack Tecnológico & Telemetría (`stack-telemetry`):* Badges de herramientas junto a la ficha técnica editorial con líneas punteadas continuas (`border-dotted`).
+  5. *05+ Galería Multimedia (`media`):* Soporte nativo para imágenes y videos (`ProjectMedia`) que se inyectan automáticamente como slides adicionales en cuanto el proyecto incluye activos multimedia.
 
 ### 3.3 Ingestión Dinámica desde NestJS REST API (`portfolio.sqlite`)
 * **Consumo Directo:** La página del portafolio consulta directamente el endpoint `GET ${API_URL}/portfolio/projects?lang=${locale}` servido por `PortfolioProjectsController` en NestJS con revalidación ISR (`next: { revalidate: 60 }`).

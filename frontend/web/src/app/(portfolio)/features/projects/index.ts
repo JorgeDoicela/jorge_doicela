@@ -1,5 +1,13 @@
 export { ProjectDetailModal } from './components/ProjectDetailModal';
 export { ProjectShowcase } from './components/ProjectShowcase';
+export { ProjectSlideCard } from './components/ProjectSlideCard';
 export { useProjects } from './hooks/useProjects';
-export type { PortfolioProject, ProjectMedia } from './types';
-
+export { useOrbitalCarousel } from './hooks/useOrbitalCarousel';
+export { buildProjectSlides } from './utils/buildProjectSlides';
+export type {
+  PortfolioProject,
+  ProjectMedia,
+  ProjectMetric,
+  ProjectSlide,
+  ProjectSlideKind,
+} from './types';

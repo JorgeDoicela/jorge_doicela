@@ -15,7 +15,7 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return <div className="w-8 h-8" />;
+    return <div className="w-7 h-7 sm:w-8 sm:h-8" />;
   }
 
   const currentTheme = theme === 'system' ? resolvedTheme : theme;
@@ -23,15 +23,17 @@ export function ThemeToggle() {
 
   return (
     <button
+      type="button"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="flex items-center justify-center w-8 h-8 rounded-md bg-transparent text-gold-s hover:text-gold-p hover:bg-gold-b/20 transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-gold-p"
+      className="p-1.5 sm:p-2 rounded-md text-foreground/70 hover:text-foreground hover:bg-foreground/5 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center outline-none focus:outline-none select-none"
       aria-label={tNav('toggleTheme')}
+      title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
       id="portfolio-theme-toggle"
     >
       {isDark ? (
-        <Sun className="h-[15px] w-[15px]" strokeWidth={1.5} />
+        <Sun className="w-3.5 h-3.5 text-amber-400 hover:text-amber-300 transition-transform duration-300 hover:rotate-45" />
       ) : (
-        <Moon className="h-[15px] w-[15px]" strokeWidth={1.5} />
+        <Moon className="w-3.5 h-3.5 text-indigo-400 hover:text-indigo-300 transition-transform duration-300 hover:-rotate-12" />
       )}
     </button>
   );

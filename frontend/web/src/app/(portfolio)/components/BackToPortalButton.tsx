@@ -4,7 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-export function BackToPortalButton() {
+export interface BackToPortalButtonProps {
+  className?: string;
+  id?: string;
+}
+
+export function BackToPortalButton({
+  className = '',
+  id = 'portfolio-back-to-portal',
+}: BackToPortalButtonProps = {}) {
   const t = useTranslations('Nav');
   const [portalUrl, setPortalUrl] = useState('https://jorgedoicela.com');
 
@@ -21,10 +29,10 @@ export function BackToPortalButton() {
   return (
     <a
       href={portalUrl}
-      className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono tracking-wider uppercase text-foreground/70 hover:text-gold-200 hover:bg-foreground/5 active:scale-95 transition-all duration-200 cursor-pointer select-none outline-none focus:outline-none"
+      className={`group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono tracking-wider uppercase text-foreground/70 hover:text-gold-200 hover:bg-foreground/5 active:scale-95 transition-all duration-200 cursor-pointer select-none outline-none focus:outline-none ${className}`}
       title={t('portal')}
       aria-label={t('portal')}
-      id="portfolio-back-to-portal"
+      id={id}
     >
       <ArrowLeft className="w-3.5 h-3.5 text-gold-300 transition-transform duration-200 group-hover:-translate-x-0.5" />
       <span>{t('portalShort')}</span>

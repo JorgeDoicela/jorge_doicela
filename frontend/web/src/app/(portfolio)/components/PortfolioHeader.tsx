@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { BackToPortalButton } from './BackToPortalButton';
-import { LanguageToggle } from './LanguageToggle';
-import { ThemeToggle } from './ThemeToggle';
+import { PortfolioPreferences } from './PortfolioPreferences';
 import { usePortfolioHeaderScroll } from '../hooks/usePortfolioHeaderScroll';
 
 export function PortfolioHeader() {
@@ -20,12 +19,11 @@ export function PortfolioHeader() {
     >
       <div className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex items-center justify-between pointer-events-none">
         <div className={`flex items-center gap-1.5 sm:gap-2.5 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-          <BackToPortalButton />
+          <BackToPortalButton id="portfolio-header-back-to-portal" />
         </div>
 
         <div className={`flex items-center gap-2 sm:gap-3 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-          <LanguageToggle />
-          <ThemeToggle />
+          <PortfolioPreferences prefixId="portfolio-header" />
         </div>
       </div>
     </header>

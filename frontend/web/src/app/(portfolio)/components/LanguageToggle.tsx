@@ -4,7 +4,15 @@ import React, { useTransition } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-export function LanguageToggle() {
+export interface LanguageToggleProps {
+  className?: string;
+  id?: string;
+}
+
+export function LanguageToggle({
+  className = '',
+  id,
+}: LanguageToggleProps = {}) {
   const locale = useLocale();
   const tNav = useTranslations('Nav');
   const router = useRouter();
@@ -24,8 +32,9 @@ export function LanguageToggle() {
       type="button"
       onClick={toggleLanguage}
       disabled={isPending}
-      className="px-2 py-1 rounded-md text-foreground/75 hover:text-gold-300 hover:bg-gold-300/10 active:scale-95 transition-all duration-200 cursor-pointer text-xs font-mono tracking-wider outline-none focus:outline-none disabled:opacity-50 select-none"
+      className={`px-2 py-1 rounded-md text-foreground/75 hover:text-gold-300 hover:bg-gold-300/10 active:scale-95 transition-all duration-200 cursor-pointer text-xs font-mono tracking-wider outline-none focus:outline-none disabled:opacity-50 select-none ${className}`}
       aria-label={`${tNav('toggleLang')} (${locale.toUpperCase()})`}
+      id={id}
     >
       <span>{locale.toUpperCase()}</span>
     </button>

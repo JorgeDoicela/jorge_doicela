@@ -38,10 +38,11 @@ frontend/web/src/app/(portfolio)/
 │       └── page.tsx           # Vista dedicada a pantalla completa para SandboxTerminal
 │
 ├── components/                # COMPONENTES COMPARTIDOS DEL SUBDOMINIO
-│   ├── PortfolioHeader.tsx    # Cabecera flotante con ocultamiento dinámico en scroll
-│   ├── BackToPortalButton.tsx # Retorno directo al portal principal (sin cápsula, jorgedoicela.com / localhost)
+│   ├── PortfolioHeader.tsx    # Cabecera flotante con visibilidad dinámica y sincronización de colapso
+│   ├── BackToPortalButton.tsx # Retorno directo al portal principal con soporte de id y estilos desacoplados
 │   ├── ThemeToggle.tsx        # Conmutador de tema visual minimalista
 │   ├── LanguageToggle.tsx     # Selector de idioma minimalista (ES/EN)
+│   ├── PortfolioPreferences.tsx # Componente reutilizable que agrupa idioma y modo claro/oscuro
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
 │   ├── ValuesPhilosophySection.tsx # Sección de valores y ética
 │   └── PortfolioJsonLd.tsx        # Marcado estructurado Schema.org ProfilePage
@@ -151,10 +152,12 @@ flowchart TD
 
 ### 3.3 Componentes de Interfaz Dark/Light Luxury
 * **Cabecera Pura (`PortfolioHeader.tsx`):**
-  * Mantiene exclusivamente el botón de retorno [BackToPortalButton.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(portfolio)/components/BackToPortalButton.tsx) (`← PORTAL`), el selector de idioma `LanguageToggle.tsx` (`ES/EN`) y el conmutador de tema `ThemeToggle.tsx` (sol/luna dorados), sin botones ni menús redundantes.
+  * Sincronizada con el estado de colapso del sidebar: en pantallas grandes (`lg`), cuando el sidebar está visible, la cabecera superior se oculta suavemente evitando duplicidad de controles; al colapsar el sidebar en `lg`, o en pantallas móviles/tablets (`< lg`) donde el sidebar permanece oculto, la cabecera superior reaparece a ancho completo con `BackToPortalButton` y `PortfolioPreferences`.
 * **Sidebar Lateral Editorial con Divisor Interactivo (`PortfolioSideNav.tsx`):**
   * Sidebar estilizado sobre el mismo lienzo del portafolio (`w-52 fixed left-0 top-0 bottom-0 bg-background/95 backdrop-blur-md border-r border-border/40`), sin bloques oscuros pesados ni cajas alrededor de los ítems.
-  * **Logotipo Oficial Sin Fondo:** Cabecera alineada horizontalmente con `PortfolioHeader` mostrando el isotipo oficial `/portfolio/logo/logo_blanco.webp` (en modo oscuro) y `/portfolio/logo/logo_negro.webp` (en modo claro) junto a `PORTAFOLIO` en dorado, sin líneas de corte horizontales.
+  * **Cabecera Superior del Sidebar:** Integra el botón `BackToPortalButton` (`← PORTAL`) directamente alineado con la altura del encabezado.
+  * **Pie Inferior del Sidebar:** Integra el grupo de preferencias `PortfolioPreferences` con selector de idioma (`ES/EN`) y conmutador de tema claro/oscuro de forma limpia, minimalista y sin líneas divisorias.
+  * **Navegación Centrada Verticalmente:** El bloque de secciones (`PERFIL` e `INGENIERÍA`) se distribuye mediante `my-auto` en el centro del eje vertical del viewport, garantizando equilibrio espacial tanto en pantallas de alta resolución como en portátiles.
   * **Indicador Editorial Activo:** Línea guía vertical sutil (`border-l border-border/40`) con trazo dorado en el elemento activo (`border-gold-300`) e iconos limpios sin contenedores.
   * **Colapso Puro desde el Borde:** La línea divisoria derecha del sidebar actúa como zona de colapso con `cursor-col-resize`. Al hacer clic en el borde, el sidebar se oculta suavemente hacia la izquierda (`-translate-x-full`) sin mostrar botones ni pestañas flotantes.
   * **Re-apertura Invisible:** Cuando está colapsado, una franja en el borde izquierdo extremo de la pantalla cambia el cursor a `cursor-col-resize`, permitiendo reabrir el sidebar con un clic directo.

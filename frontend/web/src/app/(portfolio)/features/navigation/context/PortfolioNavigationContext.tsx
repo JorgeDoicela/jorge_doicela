@@ -13,6 +13,7 @@ interface PortfolioNavigationContextValue {
   items: readonly PortfolioNavItem[];
   activeId: string;
   isCollapsed: boolean;
+  isHydrated: boolean;
   toggleCollapsed: () => void;
   navigateTo: (item: PortfolioNavItem) => void;
 }
@@ -158,6 +159,7 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
         items: PORTFOLIO_NAV_ITEMS,
         activeId,
         isCollapsed,
+        isHydrated,
         toggleCollapsed,
         navigateTo,
       }}

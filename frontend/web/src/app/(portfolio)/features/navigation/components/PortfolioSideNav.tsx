@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { PORTFOLIO_NAV_GROUPS } from '../config/navItems';
 import { usePortfolioNavigation } from '../hooks/usePortfolioNavigation';
 import { NavIcon } from './NavIcon';
+import { BackToPortalButton } from '../../../components/BackToPortalButton';
+import { PortfolioPreferences } from '../../../components/PortfolioPreferences';
 
 export function PortfolioSideNav() {
   const t = useTranslations('SideNav');
@@ -37,92 +38,79 @@ export function PortfolioSideNav() {
           className="absolute top-0 bottom-0 -right-1.5 w-3 cursor-col-resize z-50 select-none hover:bg-gold-300/15 transition-colors"
         />
 
-        {/* Identidad superior alineada horizontalmente con PortfolioHeader */}
-        <div className="pt-6 md:pt-7 pb-6 px-6 flex items-center gap-2.5 shrink-0">
-          <div className="w-[22px] h-[22px] shrink-0 relative flex items-center justify-center opacity-90">
-            <Image
-              src="/portfolio/logo/logo_blanco.webp"
-              alt="Jorge Doicela"
-              width={22}
-              height={22}
-              className="w-full h-full object-contain hidden dark:block"
-              unoptimized
-            />
-            <Image
-              src="/portfolio/logo/logo_negro.webp"
-              alt="Jorge Doicela"
-              width={22}
-              height={22}
-              className="w-full h-full object-contain block dark:hidden"
-              unoptimized
-            />
-          </div>
-          <span className="text-[10.5px] font-mono tracking-[0.24em] uppercase text-gold-300 truncate">
-            {t('brandLabel')}
-          </span>
+        {/* Cabecera superior del Sidebar: Retorno al Portal */}
+        <div className="pt-6 md:pt-7 pb-4 px-5 flex items-center shrink-0">
+          <BackToPortalButton id="portfolio-sidenav-back-to-portal" />
         </div>
 
         {/* Navegación Editorial sin cajas ni bordes pesados */}
         <nav
           aria-label={t('sectionsAria')}
-          className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-8"
+          className="flex-1 overflow-y-auto px-5 py-4 flex flex-col"
         >
-          {PORTFOLIO_NAV_GROUPS.map((group) => {
-            const groupItems = items.filter((item) => item.group === group);
-            if (groupItems.length === 0) return null;
+          <div className="my-auto flex flex-col gap-8 w-full py-2">
+            {PORTFOLIO_NAV_GROUPS.map((group) => {
+              const groupItems = items.filter((item) => item.group === group);
+              if (groupItems.length === 0) return null;
 
-            return (
-              <div key={group} className="flex flex-col gap-2.5">
-                <span className="pl-3 text-[9.5px] font-mono tracking-[0.26em] uppercase text-gold-400/80">
-                  {t(`groups.${group}`)}
-                </span>
+              return (
+                <div key={group} className="flex flex-col gap-2.5">
+                  <span className="pl-3 text-[9.5px] font-mono tracking-[0.26em] uppercase text-gold-400/80">
+                    {t(`groups.${group}`)}
+                  </span>
 
-                <ul className="flex flex-col gap-0.5">
-                  {groupItems.map((item) => {
-                    const isActive = activeId === item.id;
-                    const label = t(`items.${item.labelKey}`);
+                  <ul className="flex flex-col gap-0.5">
+                    {groupItems.map((item) => {
+                      const isActive = activeId === item.id;
+                      const label = t(`items.${item.labelKey}`);
 
-                    return (
-                      <li key={item.id}>
-                        <button
-                          type="button"
-                          onClick={() => navigateTo(item)}
-                          aria-current={
-                            isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
-                          }
-                          className={`group relative w-full h-[38px] flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
-                            isActive
-                              ? 'border-gold-300 text-foreground'
-                              : 'border-transparent text-muted/85 hover:text-foreground'
-                          }`}
-                        >
-                          <NavIcon
-                            name={item.icon}
-                            className={`w-[15px] h-[15px] shrink-0 transition-colors duration-200 ${
+                      return (
+                        <li key={item.id}>
+                          <button
+                            type="button"
+                            onClick={() => navigateTo(item)}
+                            aria-current={
+                              isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
+                            }
+                            className={`group relative w-full h-[38px] flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
                               isActive
-                                ? 'text-gold-300'
-                                : 'text-muted/55 group-hover:text-gold-400'
-                            }`}
-                          />
-
-                          <span
-                            className={`font-mono text-[11.5px] tracking-[0.08em] truncate transition-all duration-200 ${
-                              isActive
-                                ? 'text-foreground font-medium translate-x-0.5'
-                                : 'text-muted group-hover:text-foreground group-hover:translate-x-0.5'
+                                ? 'border-gold-300 text-foreground'
+                                : 'border-transparent text-muted/85 hover:text-foreground'
                             }`}
                           >
-                            {label}
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            );
-          })}
+                            <NavIcon
+                              name={item.icon}
+                              className={`w-[15px] h-[15px] shrink-0 transition-colors duration-200 ${
+                                isActive
+                                  ? 'text-gold-300'
+                                  : 'text-muted/55 group-hover:text-gold-400'
+                              }`}
+                            />
+
+                            <span
+                              className={`font-mono text-[11.5px] tracking-[0.08em] truncate transition-all duration-200 ${
+                                isActive
+                                  ? 'text-foreground font-medium translate-x-0.5'
+                                  : 'text-muted group-hover:text-foreground group-hover:translate-x-0.5'
+                              }`}
+                            >
+                              {label}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
         </nav>
+
+        {/* Pie del Sidebar: Preferencias de interfaz (Idioma y Modo Claro/Oscuro) */}
+        <div className="pb-6 pt-2 px-5 flex items-center shrink-0">
+          <PortfolioPreferences prefixId="portfolio-sidenav" />
+        </div>
       </aside>
     </>
   );

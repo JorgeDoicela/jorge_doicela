@@ -121,12 +121,6 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
         className="relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none cursor-pointer"
         style={{ perspective: '1250px' }}
       >
-        {/* Arco sutil de horizonte planetario */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 left-1/2 -translate-x-1/2 w-[120%] max-w-[1300px] h-64 rounded-[100%] border-t border-gold-300/20 bg-[radial-gradient(ellipse_at_top,var(--glow-gold)_0%,transparent_68%)]"
-        />
-
         {/* Botón Lateral Izquierdo */}
         {slides.length > 1 && (
           <button

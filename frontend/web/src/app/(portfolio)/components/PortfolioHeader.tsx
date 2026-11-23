@@ -19,11 +19,11 @@ export function PortfolioHeader() {
     >
       <div className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex items-center justify-between pointer-events-none">
         <div className={`flex items-center gap-1.5 sm:gap-2.5 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-          <BackToPortalButton id="portfolio-header-back-to-portal" />
+          <BackToPortalButton id="portfolio-header-back-to-portal" className="-ml-2" />
         </div>
 
         <div className={`flex items-center gap-2 sm:gap-3 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-          <PortfolioPreferences prefixId="portfolio-header" />
+          <PortfolioPreferences prefixId="portfolio-header" className="-mr-1.5 sm:-mr-2" />
         </div>
       </div>
     </header>

@@ -14,14 +14,15 @@ export function PortfolioSideNav() {
 
   return (
     <>
-      {/* Zona reactiva en el extremo izquierdo de la pantalla cuando está colapsado:
-          invisible, solo cambia el cursor a cursor-col-resize para reabrir */}
+      {/* Zona reactiva en el extremo izquierdo de la pantalla cuando está colapsado */}
       {isCollapsed && (
         <div
           onClick={toggleCollapsed}
           title={t('expand')}
-          className="fixed left-0 top-0 bottom-0 w-3.5 z-50 hidden lg:block cursor-col-resize select-none"
-        />
+          className="group fixed left-0 top-0 bottom-0 w-3 z-50 hidden lg:block cursor-col-resize select-none"
+        >
+          <div className="w-[1.5px] h-full transition-colors duration-200 group-hover:bg-gold-300/60" />
+        </div>
       )}
 
       {/* Sidebar Lateral Editorial Dark/Light Luxury */}
@@ -31,84 +32,84 @@ export function PortfolioSideNav() {
           isCollapsed ? '-translate-x-full pointer-events-none' : 'translate-x-0 pointer-events-auto'
         }`}
       >
-        {/* Divisor interactivo en el borde derecho: solo cambia el cursor y oculta al hacer clic */}
+        {/* Divisor interactivo en el borde derecho: hit-area cómoda con indicador visual fino (1.5px) */}
         <div
           onClick={toggleCollapsed}
           title={t('collapse')}
-          className="absolute top-0 bottom-0 -right-1.5 w-3 cursor-col-resize z-50 select-none hover:bg-gold-300/15 transition-colors"
-        />
+          className="group absolute top-0 bottom-0 -right-1.5 w-3 cursor-col-resize z-50 select-none"
+        >
+          <div className="w-[1.5px] h-full mx-auto transition-colors duration-200 group-hover:bg-gold-300/60" />
+        </div>
 
-        {/* Cabecera superior del Sidebar: Retorno al Portal */}
-        <div className="pt-6 md:pt-7 pb-4 px-5 flex items-center shrink-0">
+        {/* Cabecera superior del Sidebar: Retorno al Portal con línea de separación */}
+        <div className="pt-6 md:pt-7 pb-4 px-5 flex items-center shrink-0 border-b border-border/40">
           <BackToPortalButton id="portfolio-sidenav-back-to-portal" />
         </div>
 
-        {/* Navegación Editorial sin cajas ni bordes pesados */}
+        {/* Navegación Editorial pura sin cajas ni bordes pesados */}
         <nav
           aria-label={t('sectionsAria')}
-          className="flex-1 overflow-y-auto px-5 py-4 flex flex-col"
+          className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-8 custom-scrollbar"
         >
-          <div className="my-auto flex flex-col gap-8 w-full py-2">
-            {PORTFOLIO_NAV_GROUPS.map((group) => {
-              const groupItems = items.filter((item) => item.group === group);
-              if (groupItems.length === 0) return null;
+          {PORTFOLIO_NAV_GROUPS.map((group) => {
+            const groupItems = items.filter((item) => item.group === group);
+            if (groupItems.length === 0) return null;
 
-              return (
-                <div key={group} className="flex flex-col gap-2.5">
-                  <span className="pl-3 text-[9.5px] font-mono tracking-[0.26em] uppercase text-gold-400/80">
-                    {t(`groups.${group}`)}
-                  </span>
+            return (
+              <div key={group} className="flex flex-col gap-2.5">
+                <span className="pl-3 text-[9.5px] font-mono tracking-[0.26em] uppercase text-gold-400/80">
+                  {t(`groups.${group}`)}
+                </span>
 
-                  <ul className="flex flex-col gap-0.5">
-                    {groupItems.map((item) => {
-                      const isActive = activeId === item.id;
-                      const label = t(`items.${item.labelKey}`);
+                <ul className="flex flex-col gap-0.5">
+                  {groupItems.map((item) => {
+                    const isActive = activeId === item.id;
+                    const label = t(`items.${item.labelKey}`);
 
-                      return (
-                        <li key={item.id}>
-                          <button
-                            type="button"
-                            onClick={() => navigateTo(item)}
-                            aria-current={
-                              isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
-                            }
-                            className={`group relative w-full h-[38px] flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
+                    return (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          onClick={() => navigateTo(item)}
+                          aria-current={
+                            isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
+                          }
+                          className={`group relative w-full h-[38px] flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
+                            isActive
+                              ? 'border-gold-300 text-foreground'
+                              : 'border-transparent text-muted/85 hover:text-foreground'
+                          }`}
+                        >
+                          <NavIcon
+                            name={item.icon}
+                            className={`w-[15px] h-[15px] shrink-0 transition-colors duration-200 ${
                               isActive
-                                ? 'border-gold-300 text-foreground'
-                                : 'border-transparent text-muted/85 hover:text-foreground'
+                                ? 'text-gold-300'
+                                : 'text-muted/55 group-hover:text-gold-400'
+                            }`}
+                          />
+
+                          <span
+                            className={`font-mono text-[11.5px] tracking-[0.08em] truncate transition-all duration-200 ${
+                              isActive
+                                ? 'text-foreground font-medium translate-x-0.5'
+                                : 'text-muted group-hover:text-foreground group-hover:translate-x-0.5'
                             }`}
                           >
-                            <NavIcon
-                              name={item.icon}
-                              className={`w-[15px] h-[15px] shrink-0 transition-colors duration-200 ${
-                                isActive
-                                  ? 'text-gold-300'
-                                  : 'text-muted/55 group-hover:text-gold-400'
-                              }`}
-                            />
-
-                            <span
-                              className={`font-mono text-[11.5px] tracking-[0.08em] truncate transition-all duration-200 ${
-                                isActive
-                                  ? 'text-foreground font-medium translate-x-0.5'
-                                  : 'text-muted group-hover:text-foreground group-hover:translate-x-0.5'
-                              }`}
-                            >
-                              {label}
-                            </span>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
+                            {label}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
         </nav>
 
-        {/* Pie del Sidebar: Preferencias de interfaz (Idioma y Modo Claro/Oscuro) */}
-        <div className="pb-6 pt-2 px-5 flex items-center shrink-0">
+        {/* Pie del Sidebar: Preferencias con línea de separación */}
+        <div className="py-3.5 px-5 flex items-center shrink-0 border-t border-border/40">
           <PortfolioPreferences prefixId="portfolio-sidenav" />
         </div>
       </aside>

@@ -20,6 +20,7 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 > * **Feature-Sliced Design (FSD):** El código se organiza en `features/terminal/` (consola SSH) y `features/contact/` (formulario).
 > * **Jerarquía de Componentes:** Componentes compartidos del subdominio en `(portfolio)/components/` vs componentes específicos en `features/<feature>/components/`.
 > * **Estética Dark Luxury y Tipografías Locales:** Fondos oscuros premium, acentos metálicos y dorados sutiles, tipografías auto-hospedadas bajo `(portfolio)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1** (Zero-External Network Fonts). La fuente monoespaciada se inyecta directamente a la emulación `@xterm/xterm` vía `var(--font-geist-mono)`.
+> * **Amplitud Horizontal y Layout Equilibrado:** Disposición panorámica de alto aprovechamiento espacial con contenedores `max-w-[1420px] 2xl:max-w-[1540px] mx-auto` en cabecera principal, cuerpo `main`, terminal y modal de proyectos, con `PortfolioHeader` flotante restringido a dicho eje de alineación para garantizar coherencia vertical perfecta en monitores widescreen y 2K sin generar dispersión visual.
 
 ---
 

@@ -86,7 +86,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
       />
 
       {/* Cabecera Superior Fija del Proyecto */}
-      <header className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-5 sm:pt-7 pb-2 flex items-start justify-between gap-4 pointer-events-none">
+      <header className="relative z-20 w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto px-5 sm:px-8 pt-5 sm:pt-7 pb-2 flex items-start justify-between gap-4 pointer-events-none">
         <div className="flex flex-col gap-1.5 pointer-events-auto min-w-0">
           <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-gold-400 font-semibold">
             {project.role}
@@ -127,7 +127,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
         {/* Arco sutil de horizonte planetario */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 left-1/2 -translate-x-1/2 w-[120%] max-w-[1100px] h-64 rounded-[100%] border-t border-gold-300/20 bg-[radial-gradient(ellipse_at_top,var(--glow-gold)_0%,transparent_68%)]"
+          className="pointer-events-none absolute -bottom-32 left-1/2 -translate-x-1/2 w-[120%] max-w-[1300px] h-64 rounded-[100%] border-t border-gold-300/20 bg-[radial-gradient(ellipse_at_top,var(--glow-gold)_0%,transparent_68%)]"
         />
 
         {/* Botón Lateral Izquierdo */}
@@ -145,7 +145,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
 
         {/* Pista 3D de Tarjetas */}
         <div
-          className="relative w-full max-w-[660px] h-[420px] sm:h-[440px] mx-4 sm:mx-16"
+          className="relative w-full max-w-[700px] 2xl:max-w-[760px] h-[420px] sm:h-[450px] mx-4 sm:mx-16"
           style={{ transformStyle: 'preserve-3d' }}
         >
           {slides.map((slide, index) => {
@@ -207,7 +207,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
       </div>
 
       {/* Dock Inferior Fijo: Selector Directo de Secciones + CTAs Globales */}
-      <footer className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-8 pb-5 sm:pb-7 pt-2 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <footer className="relative z-20 w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto px-5 sm:px-8 pb-5 sm:pb-7 pt-2 flex flex-col lg:flex-row items-center justify-between gap-4">
         {/* Índice interactivo de secciones del proyecto */}
         <nav
           aria-label={project.title}

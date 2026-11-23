@@ -43,7 +43,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           <h2 className="text-2xl md:text-3xl font-light text-foreground">
             {t('title')}
           </h2>
-          <p className="text-xs text-muted font-light max-w-2xl">
+          <p className="text-xs text-muted font-light max-w-3xl">
             {t('subtitle')}
           </p>
         </div>
@@ -67,7 +67,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
       </div>
 
       {/* Grid de Tarjetas Luxury */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
         {filteredProjects.map((project) => (
           <article
             key={project.id}

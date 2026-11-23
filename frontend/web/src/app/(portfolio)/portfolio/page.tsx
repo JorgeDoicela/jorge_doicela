@@ -67,13 +67,13 @@ export default async function PortfolioPage() {
     const projects = await getPortfolioProjects(locale);
 
     return (
-        <div className="min-h-screen bg-background text-foreground py-16 md:py-24 px-6 md:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
+        <div className="min-h-screen bg-background text-foreground py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
 
             {/* Cabecera Flotante con Ocultamiento Dinámico por Scroll */}
             <PortfolioHeader />
 
             {/* Cabecera Principal */}
-            <header className="w-full max-w-7xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">
+            <header className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
                         {tHeader('title')}
@@ -99,7 +99,7 @@ export default async function PortfolioPage() {
             </header>
 
             {/* Contenido Principal en Flujo Lineal y Asimétrico */}
-            <main className="w-full max-w-7xl mx-auto flex flex-col gap-20 animate-fade-up">
+            <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-20 animate-fade-up">
 
                 {/* Sección 1: Sobre Mí & Contactos */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
@@ -400,7 +400,7 @@ export default async function PortfolioPage() {
                         <h2 className="text-2xl md:text-3xl font-light text-foreground mb-1">
                             {tContact('thesisTitle')}
                         </h2>
-                        <p className="text-muted text-xs md:text-sm leading-relaxed font-light max-w-2xl">
+                        <p className="text-muted text-xs md:text-sm leading-relaxed font-light max-w-3xl">
                             {tContact('thesisDesc')}
                         </p>
                     </div>
@@ -441,7 +441,7 @@ export default async function PortfolioPage() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full max-w-7xl mx-auto mt-20 border-t border-border/60 pt-8 pb-12 flex items-center justify-center text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
+            <footer className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mt-20 border-t border-border/60 pt-8 pb-12 flex items-center justify-center text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
                 <span>{tFooter('copyright', { year: new Date().getFullYear().toString() })}</span>
             </footer>
 

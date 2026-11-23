@@ -140,9 +140,9 @@ export const SandboxTerminal: React.FC<SandboxTerminalProps> = ({
           </p>
           <button
             onClick={openCloudShell}
-            className="flex items-center gap-2.5 px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-gold-400 hover:bg-gold-300 text-background font-semibold text-xs font-mono transition-all shadow-xl hover:scale-105 cursor-pointer group"
+            className="flex items-center gap-2.5 px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-border-gold/70 bg-surface/90 hover:bg-surface-raised hover:border-gold-300/80 text-foreground font-semibold text-xs font-mono transition-all shadow-md hover:scale-105 cursor-pointer group"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className="w-3.5 h-3.5 fill-current text-gold-300" />
             <span>{buttonLabel}</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 transition-opacity" />
           </button>

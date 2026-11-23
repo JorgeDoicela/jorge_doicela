@@ -93,14 +93,12 @@ export function ProjectSlideCard({
                 <span className="text-[10px] font-mono uppercase tracking-widest text-muted block">
                   {t('modalTechStack')}
                 </span>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm font-mono text-foreground/85">
                   {slide.technologies.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="text-xs font-mono px-3 py-1 rounded-lg border border-border-gold/50 bg-background/60 text-foreground/90 font-medium"
-                    >
-                      {tech}
-                    </span>
+                    <React.Fragment key={i}>
+                      {i > 0 && <span className="text-gold-400/50 select-none">•</span>}
+                      <span>{tech}</span>
+                    </React.Fragment>
                   ))}
                 </div>
               </div>

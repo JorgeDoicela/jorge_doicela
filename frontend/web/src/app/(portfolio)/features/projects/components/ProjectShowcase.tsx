@@ -51,7 +51,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
               onClick={() => setActiveFilter(cat.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 cursor-pointer ${
                 activeFilter === cat.id
-                  ? 'bg-gold-300 text-black font-semibold shadow-sm'
+                  ? 'bg-surface border border-gold-300/80 text-foreground font-semibold shadow-sm'
                   : 'text-foreground/70 hover:text-foreground hover:bg-foreground/5 border border-border/40'
               }`}
             >
@@ -100,20 +100,18 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
               </div>
 
               {/* Stack de Tecnologías */}
-              <div className="flex flex-wrap gap-1.5 pt-2">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-2 text-xs font-mono text-foreground/75">
                 {project.technologies.map((tech, i) => (
-                  <span
-                    key={i}
-                    className="text-[10px] font-mono px-2 py-0.5 rounded-md border border-border/40 bg-background/50 text-foreground/80"
-                  >
-                    {tech}
-                  </span>
+                  <React.Fragment key={i}>
+                    {i > 0 && <span className="text-gold-400/50 select-none">•</span>}
+                    <span>{tech}</span>
+                  </React.Fragment>
                 ))}
               </div>
             </div>
 
             {/* Acciones & Enlaces de Alta Gama */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-5 mt-4 border-t border-border/30">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 mt-2">
               <button
                 type="button"
                 onClick={(e) => {
@@ -124,7 +122,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                 title={t('caseStudyArchitecture')}
               >
                 <BookOpen className="w-3.5 h-3.5 text-gold-400/80 group-hover/btn:text-gold-300 transition-colors" />
-                <span className="underline decoration-border/60 underline-offset-4 group-hover/btn:decoration-gold-300">
+                <span>
                   {t('caseStudyLabel')}
                 </span>
               </button>
@@ -156,7 +154,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-gold-400/15 border border-gold-400/40 hover:bg-gold-400 hover:text-black text-xs font-mono text-gold-300 font-semibold transition-all duration-200 shadow-sm cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/70 bg-surface/60 hover:bg-surface-raised hover:border-gold-300/40 text-xs font-mono text-foreground/80 hover:text-foreground transition-all duration-200 cursor-pointer"
                     title={t('viewDemo')}
                     aria-label={`${t('viewDemo')}: ${project.title}`}
                   >

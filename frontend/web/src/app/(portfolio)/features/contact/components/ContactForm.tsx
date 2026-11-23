@@ -122,16 +122,16 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 py-3 px-6 bg-gold-300 hover:bg-gold-200 text-stone-950 font-semibold tracking-[0.2em] uppercase text-xs rounded-lg transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+            className="w-full mt-2 py-3 px-6 border border-border-gold/70 bg-surface/90 hover:bg-surface-raised hover:border-gold-300/80 text-foreground font-semibold tracking-[0.2em] uppercase text-xs rounded-lg transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
           >
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin text-stone-950" />
+                <Loader2 className="w-4 h-4 animate-spin text-gold-300" />
                 <span>{t('sendingBtn')}</span>
               </>
             ) : (
               <>
-                <Send className="w-3.5 h-3.5 text-stone-950" />
+                <Send className="w-3.5 h-3.5 text-gold-300" />
                 <span>{t('sendBtn')}</span>
               </>
             )}

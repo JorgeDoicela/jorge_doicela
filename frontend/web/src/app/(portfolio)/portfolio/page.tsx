@@ -73,30 +73,22 @@ export default async function PortfolioPage() {
             <PortfolioHeader />
 
             {/* Cabecera Principal */}
-            <header className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 animate-fade-in">
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
-                        {tHeader('title')}
-                    </h1>
-                    <TypewriterRole
-                        roles={[
-                            tHeader('role1'),
-                            tHeader('role2'),
-                            tHeader('role3'),
-                            tHeader('role4')
-                        ]}
-                    />
-
-                </div>
-                <div className="flex flex-wrap items-center gap-3 text-xs font-mono tracking-widest uppercase text-gold-300">
-                    <span>{tHeader('aiBadge')}</span>
-                    <span className="opacity-60">-</span>
-                    <span>{tHeader('inProgress')}</span>
-                </div>
+            <header className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mb-16 md:mb-20 flex flex-col gap-2 animate-fade-in">
+                <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
+                    {tHeader('title')}
+                </h1>
+                <TypewriterRole
+                    roles={[
+                        tHeader('role1'),
+                        tHeader('role2'),
+                        tHeader('role3'),
+                        tHeader('role4')
+                    ]}
+                />
             </header>
 
             {/* Contenido Principal en Flujo Lineal y Asimétrico */}
-            <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-[85px] md:gap-[115px] animate-fade-up">
+            <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-[130px] md:gap-[175px] animate-fade-up">
 
                 {/* Sección 1: Sobre Mí & Contactos */}
                 <section id="about" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
@@ -180,34 +172,46 @@ export default async function PortfolioPage() {
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-2">
-                        <div className="flex flex-col gap-3">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">{tStack('client')}</span>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="luxury-badge">React</span>
-                                <span className="luxury-badge">Next.js 16</span>
-                                <span className="luxury-badge">TypeScript</span>
-                                <span className="luxury-badge">Tailwind CSS</span>
-                                <span className="luxury-badge">Expo (Mobile)</span>
+                        <div className="flex flex-col gap-2.5">
+                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">{tStack('client')}</span>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-foreground/80">
+                                <span>React</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>Next.js 16</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>TypeScript</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>Tailwind CSS</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>Expo (Mobile)</span>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-3">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">{tStack('server')}</span>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="luxury-badge">NestJS 11</span>
-                                <span className="luxury-badge">Node.js</span>
-                                <span className="luxury-badge">C# / .NET</span>
-                                <span className="luxury-badge">PHP / Laravel</span>
-                                <span className="luxury-badge">Python</span>
+                        <div className="flex flex-col gap-2.5">
+                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">{tStack('server')}</span>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-foreground/80">
+                                <span>NestJS 11</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>Node.js</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>C# / .NET</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>PHP / Laravel</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>Python</span>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-3">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/60 pb-1.5">{tStack('data')}</span>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="luxury-badge">SQLite (WAL)</span>
-                                <span className="luxury-badge">PostgreSQL</span>
-                                <span className="luxury-badge">AWS Lightsail</span>
-                                <span className="luxury-badge">Docker</span>
-                                <span className="luxury-badge">GitHub Actions</span>
+                        <div className="flex flex-col gap-2.5">
+                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">{tStack('data')}</span>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-foreground/80">
+                                <span>SQLite (WAL)</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>PostgreSQL</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>AWS Lightsail</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>Docker</span>
+                                <span className="text-gold-400/50 select-none">•</span>
+                                <span>GitHub Actions</span>
                             </div>
                         </div>
                     </div>
@@ -312,19 +316,25 @@ export default async function PortfolioPage() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-2">
                             <div className="flex flex-col gap-2.5">
-                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/40 pb-1">{tTools('systemsTitle')}</span>
-                                <div className="flex flex-wrap gap-2 mt-1">
-                                    <span className="luxury-badge">Arch Linux</span>
-                                    <span className="luxury-badge">Debian 13</span>
-                                    <span className="luxury-badge">Neovim</span>
-                                    <span className="luxury-badge">tmux</span>
-                                    <span className="luxury-badge">Alacritty</span>
-                                    <span className="luxury-badge">Hyprland</span>
-                                    <span className="luxury-badge">Figma</span>
+                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase">{tTools('systemsTitle')}</span>
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs font-mono text-foreground/80">
+                                    <span>Arch Linux</span>
+                                    <span className="text-gold-400/50 select-none">•</span>
+                                    <span>Debian 13</span>
+                                    <span className="text-gold-400/50 select-none">•</span>
+                                    <span>Neovim</span>
+                                    <span className="text-gold-400/50 select-none">•</span>
+                                    <span>tmux</span>
+                                    <span className="text-gold-400/50 select-none">•</span>
+                                    <span>Alacritty</span>
+                                    <span className="text-gold-400/50 select-none">•</span>
+                                    <span>Hyprland</span>
+                                    <span className="text-gold-400/50 select-none">•</span>
+                                    <span>Figma</span>
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase border-b border-border/40 pb-1">{tTools('studyTitle')}</span>
+                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase">{tTools('studyTitle')}</span>
                                 <span className="text-xs font-mono font-semibold text-foreground mt-1">{tTools('pdfTitle')}</span>
                                 <p className="text-muted text-xs leading-relaxed font-light">
                                     {tTools('pdfDesc')}
@@ -370,7 +380,7 @@ export default async function PortfolioPage() {
                         </div>
 
                         {/* Columna Lateral: Áreas de Contacto & Compromiso (1 col) */}
-                        <div className="md:col-span-1 md:pl-8 md:border-l border-border/40 flex flex-col justify-between py-2">
+                        <div className="md:col-span-1 flex flex-col justify-between py-2">
                             <div className="flex flex-col justify-center flex-1 pb-5 border-b border-border/40 gap-2">
                                 <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide">{tContact('area1Title')}</h3>
                                 <p className="text-muted text-[12px] leading-relaxed font-light">

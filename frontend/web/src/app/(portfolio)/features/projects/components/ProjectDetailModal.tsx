@@ -226,11 +226,11 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                 aria-current={active ? 'step' : undefined}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   active
-                    ? 'bg-gold-300 text-black font-semibold shadow-sm'
+                    ? 'bg-surface border border-gold-300/80 text-foreground font-semibold shadow-sm'
                     : 'bg-surface/70 text-foreground/70 hover:text-foreground border border-border-gold/40 hover:border-gold-300/50'
                 }`}
               >
-                <span className={active ? 'text-black/70' : 'text-gold-400/80'}>
+                <span className={active ? 'text-gold-300 font-semibold' : 'text-gold-400/80'}>
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <span>{label}</span>
@@ -269,7 +269,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
               href={project.demoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gold-400 hover:bg-gold-300 text-black font-semibold text-xs font-mono transition-all duration-200 shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gold/50 bg-surface/90 hover:bg-surface-raised hover:border-gold-300/60 text-xs font-mono text-foreground transition-all duration-200"
             >
               <span>{t('demoLabel')}</span>
               <ExternalLink className="w-3.5 h-3.5" />

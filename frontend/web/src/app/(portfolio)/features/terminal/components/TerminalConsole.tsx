@@ -165,7 +165,7 @@ export const TerminalConsole: React.FC = () => {
       className={`w-full font-mono text-sm relative transition-all duration-300 ${
         isFullscreen
           ? 'fixed inset-0 z-[99999] w-screen h-screen rounded-none bg-background p-6 md:p-10 flex flex-col overflow-hidden'
-          : 'w-full rounded-xl bg-surface/95 border border-border-gold/60 p-5 md:p-6 overflow-hidden'
+          : 'w-full rounded-xl bg-surface/95 border border-border-gold/60 p-5 md:p-6 min-h-[380px] sm:min-h-[460px] h-[480px] sm:h-[520px] flex flex-col overflow-hidden'
       }`}
     >
       {/* Capa de animación Matrix cuando está activa */}
@@ -191,9 +191,7 @@ export const TerminalConsole: React.FC = () => {
 
       {/* Área de Paneles (Layout Single o Split en 2 columnas/filas) */}
       <div
-        className={`w-full ${
-          isFullscreen ? 'flex-1 min-h-0' : ''
-        } ${
+        className={`w-full flex-1 min-h-0 ${
           activeTab.layout === 'split-vertical'
             ? 'grid grid-cols-1 md:grid-cols-2 gap-3 h-full'
             : activeTab.layout === 'split-horizontal'
@@ -249,7 +247,7 @@ export const TerminalConsole: React.FC = () => {
               onClick={() => setTerminalMode('vps')}
               className={`flex items-center px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono font-medium transition-all duration-200 cursor-pointer shrink-0 ${
                 terminalMode === 'vps'
-                  ? 'bg-gold-400 text-black font-semibold shadow-sm'
+                  ? 'bg-surface border border-border-gold text-gold-200 shadow-sm'
                   : 'text-muted hover:text-gold-200 hover:bg-white/[0.04]'
               }`}
             >
@@ -261,7 +259,7 @@ export const TerminalConsole: React.FC = () => {
               onClick={() => setTerminalMode('tunnel')}
               className={`flex items-center px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono font-medium transition-all duration-200 cursor-pointer shrink-0 ${
                 terminalMode === 'tunnel'
-                  ? 'bg-gold-400 text-black font-semibold shadow-sm'
+                  ? 'bg-surface border border-border-gold text-gold-200 shadow-sm'
                   : 'text-muted hover:text-gold-200 hover:bg-white/[0.04]'
               }`}
             >
@@ -412,9 +410,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
   return (
     <div
       onClick={handlePaneClick}
-      className={`flex flex-col rounded-lg transition-all duration-200 cursor-text ${
-        isFullscreen ? 'flex-1 min-h-0 h-full' : ''
-      } ${
+      className={`flex flex-col flex-1 min-h-0 rounded-lg transition-all duration-200 cursor-text ${
         isSplit
           ? `p-3 bg-surface-raised/40 border ${
               isActive
@@ -454,13 +450,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
       <div
         ref={containerRef}
         onClick={handlePaneClick}
-        className={`overflow-y-auto pr-1 space-y-2 select-text whitespace-pre-wrap leading-relaxed text-foreground/85 font-mono text-xs scrollbar-thin scrollbar-thumb-border-gold hover:scrollbar-thumb-gold-500/40 ${
-          isFullscreen
-            ? 'flex-1 min-h-0'
-            : isSplit
-            ? 'min-h-[220px] max-h-[380px]'
-            : 'min-h-[220px] max-h-[460px]'
-        }`}
+        className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-2 select-text whitespace-pre-wrap leading-relaxed text-foreground/85 font-mono text-xs scrollbar-thin scrollbar-thumb-border-gold hover:scrollbar-thumb-gold-500/40"
       >
         {pane.history.map((item) => {
           if (item.type === 'command') {

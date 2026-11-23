@@ -184,7 +184,7 @@ export const SandboxSecurityModal: React.FC<SandboxSecurityModalProps> = ({
             <button
               onClick={content.onAction}
               disabled={content.disabled}
-              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-gold-400 hover:bg-gold-300 disabled:bg-surface-raised disabled:border disabled:border-border-gold/60 disabled:text-muted disabled:hover:scale-100 disabled:cursor-not-allowed text-background font-semibold text-xs font-mono transition-all shadow-md hover:scale-105 cursor-pointer"
+              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg border border-border-gold/70 bg-surface/90 hover:bg-surface-raised hover:border-gold-300/80 disabled:bg-surface-raised disabled:border disabled:border-border-gold/60 disabled:text-muted disabled:hover:scale-100 disabled:cursor-not-allowed text-foreground font-semibold text-xs font-mono transition-all shadow-md hover:scale-105 cursor-pointer"
             >
               {content.actionIcon}
               <span>{content.actionLabel}</span>

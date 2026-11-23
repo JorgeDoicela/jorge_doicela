@@ -7,23 +7,15 @@ import {
   Req,
   HttpCode,
   HttpStatus,
-  Logger,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateWakeRequestDto } from '../dto/create-wake-request.dto';
-import { SandboxWakeRequestedEvent } from '../events/sandbox-wake-requested.event';
 import { ContactThrottleGuard } from '../guards/contact-throttle.guard';
 import { SandboxService } from '../services/sandbox.service';
 
 @Controller('portfolio/sandbox')
 export class SandboxController {
-  private readonly logger = new Logger(SandboxController.name);
-
-  constructor(
-    private readonly eventEmitter: EventEmitter2,
-    private readonly sandboxService: SandboxService,
-  ) {}
+  constructor(private readonly sandboxService: SandboxService) {}
 
   @Get('health')
   @HttpCode(HttpStatus.OK)
@@ -48,24 +40,6 @@ export class SandboxController {
       req.socket?.remoteAddress ||
       'unknown-ip';
 
-    this.logger.log(
-      `Solicitud de encendido de servidor privado recibida desde IP: ${clientIp} (${dto.name || 'Anónimo'}).`,
-    );
-
-    this.eventEmitter.emit(
-      'sandbox.wake.requested',
-      new SandboxWakeRequestedEvent(
-        dto.name,
-        dto.contact,
-        dto.note,
-        clientIp,
-        new Date(),
-      ),
-    );
-
-    return {
-      success: true,
-      message: 'Solicitud de encendido registrada y notificada con éxito.',
-    };
+    return this.sandboxService.requestWake(dto, clientIp);
   }
 }

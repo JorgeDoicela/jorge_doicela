@@ -14,7 +14,7 @@ import {
     RefreshCw
 } from 'lucide-react';
 
-import { API_URL } from '../../config';
+import { API_URL } from '../shared';
 
 interface RawProjectApiItem {
     id: number;
@@ -73,7 +73,7 @@ export default async function PortfolioPage() {
             <PortfolioHeader />
 
             {/* Cabecera Principal */}
-            <header className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8 animate-fade-in">
+            <header className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 animate-fade-in">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
                         {tHeader('title')}
@@ -99,7 +99,7 @@ export default async function PortfolioPage() {
             </header>
 
             {/* Contenido Principal en Flujo Lineal y Asimétrico */}
-            <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-20 animate-fade-up">
+            <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-[85px] md:gap-[115px] animate-fade-up">
 
                 {/* Sección 1: Sobre Mí & Contactos */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
@@ -176,12 +176,8 @@ export default async function PortfolioPage() {
                     </div>
                 </section>
 
-                <hr className="luxury-divider" />
-
                 {/* Sección 2: Showcase de Proyectos de Ingeniería */}
                 <ProjectShowcase projects={projects} />
-
-                <hr className="luxury-divider" />
 
                 {/* Sección 3: Tecnologías & Stack Principal */}
                 <section className="flex flex-col gap-6">
@@ -225,8 +221,6 @@ export default async function PortfolioPage() {
                         </div>
                     </div>
                 </section>
-
-                <hr className="luxury-divider" />
 
                 {/* Sección 4: Experiencia & Educación */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
@@ -287,8 +281,6 @@ export default async function PortfolioPage() {
                     </div>
                 </section>
 
-                <hr className="luxury-divider" />
-
                 {/* Sección 5: Nube, CI/CD y Hardening */}
                 <section className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 text-gold-300">
@@ -329,8 +321,6 @@ export default async function PortfolioPage() {
                     </div>
                 </section>
 
-                <hr className="luxury-divider" />
-
                 {/* Sección 6: Flujo & Herramientas */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
                     <div className="md:col-span-2 flex flex-col gap-4">
@@ -365,12 +355,8 @@ export default async function PortfolioPage() {
                     </div>
                 </section>
 
-                <hr className="luxury-divider" />
-
                 {/* Sección 7: Filosofía & Valores Fundamentales */}
                 <ValuesPhilosophySection />
-
-                <hr className="luxury-divider" />
 
                 {/* Sección 8: Consola Interactiva Virtual SSH */}
                 <section className="flex flex-col gap-4">
@@ -387,8 +373,6 @@ export default async function PortfolioPage() {
                     </div>
                     <TerminalConsole />
                 </section>
-
-                <hr className="luxury-divider" />
 
                 {/* Sección 9: Centro de Contacto Interactivo */}
                 <section className="flex flex-col gap-8">
@@ -441,7 +425,7 @@ export default async function PortfolioPage() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mt-20 border-t border-border/60 pt-8 pb-12 flex items-center justify-center text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
+            <footer className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mt-20 md:mt-28 pt-8 pb-12 flex items-center justify-center text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
                 <span>{tFooter('copyright', { year: new Date().getFullYear().toString() })}</span>
             </footer>
 

@@ -27,7 +27,7 @@ export function seedPortfolio(
     'portfolio.sqlite',
   ),
 ): void {
-  console.log(`[PortfolioSeeder] 🚀 Sembrando base de datos: ${dbPath}...`);
+  console.log(`[PortfolioSeeder] Sembrando base de datos: ${dbPath}...`);
 
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
@@ -41,7 +41,7 @@ export function seedPortfolio(
 
   if (!fs.existsSync(projectsPath)) {
     console.error(
-      `[PortfolioSeeder] ❌ Archivo de corpus no encontrado en src ni en dist: ${projectsPath}`,
+      `[PortfolioSeeder] ERROR: Archivo de corpus no encontrado en src ni en dist: ${projectsPath}`,
     );
     return;
   }
@@ -80,7 +80,7 @@ export function seedPortfolio(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       email TEXT NOT NULL,
-      subject TEXT,
+      subject TEXT NOT NULL DEFAULT 'Consulta de Portafolio',
       message TEXT NOT NULL,
       phone TEXT,
       serviceType TEXT,
@@ -129,7 +129,7 @@ export function seedPortfolio(
   tx();
 
   console.log(
-    `[PortfolioSeeder] ✅ ${projects.length} proyectos sembrados con éxito.`,
+    `[PortfolioSeeder] OK: ${projects.length} proyectos sembrados con éxito.`,
   );
   db.close();
 }

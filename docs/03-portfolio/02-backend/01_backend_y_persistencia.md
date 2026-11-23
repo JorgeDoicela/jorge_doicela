@@ -37,9 +37,9 @@ backend/src/portfolio/
 │   ├── portfolio.gateway.ts       # Gateway WebSocket para la terminal SSH simulada (/terminal)
 │   └── sandbox.gateway.ts         # Gateway WebSocket para el Live Linux Sandbox (/sandbox)
 ├── controllers/
-│   ├── contact.controller.ts      # Endpoint REST POST y GET para mensajes de contacto
+│   ├── contact.controller.ts      # Endpoint REST POST /portfolio/contact (protegido contra spam; sin GET público para proteger PII)
 │   ├── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects y /:slug
-│   └── sandbox.controller.ts      # Endpoints REST GET /portfolio/sandbox/health y POST /portfolio/sandbox/wake-request
+│   └── sandbox.controller.ts      # Endpoints REST GET /portfolio/sandbox/health y POST /portfolio/sandbox/wake-request (delegado a SandboxService)
 ├── events/
 │   ├── contact-message-created.event.ts # Evento de dominio de contacto
 │   └── sandbox-wake-requested.event.ts  # Evento de dominio de solicitud de encendido
@@ -321,11 +321,10 @@ new ValidationPipe({
 | Dominio | Método y Ruta | Parámetros Query | Descripción |
 |---|---|---|---|
 | **Proyectos** | `GET /portfolio/projects` | `lang` | Catálogo de proyectos filtrables por idioma (`?lang=es\|en`) |
-| | `GET /portfolio/projects/:slug` | `lang` | Detalle del proyecto por slug con soporte bilingüe |
-| **Contacto** | `POST /portfolio/contact` | - | Envío y validación de formulario (`CreateContactMessageDto`) |
-| | `GET /portfolio/contact` | - | Historial de mensajes para auditoría interna |
+| | `GET /portfolio/projects/:slug` | `lang` | Detalle del proyecto por slug canónico compartido entre idiomas (`es`/`en`) |
+| **Contacto** | `POST /portfolio/contact` | - | Envío y validación de formulario (`CreateContactMessageDto`) protegido con `ContactThrottleGuard` (sin `GET` público para evitar exposición de PII) |
 | **Sandbox** | `GET /portfolio/sandbox/health` | - | Sondeo de salud ultraliviano pre-flight (< 1ms, zero-Docker call) para verificar disponibilidad del host físico/túnel |
-| | `POST /portfolio/sandbox/wake-request` | - | Solicitud de aviso de encendido del servidor físico privado (`CreateWakeRequestDto`) con notificación a Telegram |
+| | `POST /portfolio/sandbox/wake-request` | - | Solicitud de aviso de encendido del servidor físico privado (`CreateWakeRequestDto`) delegada a `SandboxService` con notificación asíncrona a Telegram |
 
 ### 7.2 `PortfolioProjectsService` — Deserialización Nativa
 

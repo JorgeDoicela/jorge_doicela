@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ContactFormData } from '../types';
 import { API_URL } from '../../../shared';
 
 export type { ContactFormData };
 
 export function useContact() {
+  const t = useTranslations('Contact');
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -51,7 +53,7 @@ export function useContact() {
       if (!response.ok) {
         const errorMsg = Array.isArray(result?.message)
           ? result.message.join(' | ')
-          : result?.message || 'Error al enviar el mensaje.';
+          : result?.message || t('errorMsg');
         throw new Error(errorMsg);
       }
 
@@ -59,7 +61,7 @@ export function useContact() {
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      setError(msg || 'Ocurrió un error inesperado.');
+      setError(msg || t('errorMsg'));
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,9 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import Docker from 'dockerode';
 import * as stream from 'stream';
+import { CreateWakeRequestDto } from '../dto/create-wake-request.dto';
+import { SandboxWakeRequestedEvent } from '../events/sandbox-wake-requested.event';
 
 export interface SandboxSession {
   sessionId: string;
@@ -31,7 +34,7 @@ export class SandboxService implements OnModuleDestroy {
   private readonly mode: 'vps' | 'tunnel' =
     (process.env.SANDBOX_MODE as 'vps' | 'tunnel') || 'vps';
 
-  constructor() {
+  constructor(private readonly eventEmitter: EventEmitter2) {
     const socketPath =
       process.env.DOCKER_SOCKET_PATH ||
       (process.platform === 'win32'
@@ -42,6 +45,31 @@ export class SandboxService implements OnModuleDestroy {
     this.logger.log(
       `Dockerode inicializado [Modo: ${this.mode.toUpperCase()}] conectado a: ${socketPath}`,
     );
+  }
+
+  requestWake(
+    dto: CreateWakeRequestDto,
+    clientIp: string,
+  ): { success: boolean; message: string } {
+    this.logger.log(
+      `Solicitud de encendido de servidor privado recibida desde IP: ${clientIp} (${dto.name || 'Anónimo'}).`,
+    );
+
+    this.eventEmitter.emit(
+      'sandbox.wake.requested',
+      new SandboxWakeRequestedEvent(
+        dto.name,
+        dto.contact,
+        dto.note,
+        clientIp,
+        new Date(),
+      ),
+    );
+
+    return {
+      success: true,
+      message: 'Solicitud de encendido registrada y notificada con éxito.',
+    };
   }
 
   getMode(): 'vps' | 'tunnel' {

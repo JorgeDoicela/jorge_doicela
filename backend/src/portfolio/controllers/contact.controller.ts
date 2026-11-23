@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ContactMessagesService } from '../services/contact-messages.service';
 import { CreateContactMessageDto } from '../dto/create-contact-message.dto';
 import { ContactMessage } from '../entities/contact-message.entity';
@@ -16,10 +16,5 @@ export class ContactController {
     @Body() createContactMessageDto: CreateContactMessageDto,
   ): Promise<ContactMessage> {
     return this.contactMessagesService.create(createContactMessageDto);
-  }
-
-  @Get()
-  async findAll(): Promise<ContactMessage[]> {
-    return this.contactMessagesService.findAll();
   }
 }

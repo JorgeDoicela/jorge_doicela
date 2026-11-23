@@ -29,7 +29,7 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         'portfolio.sqlite',
       ),
       entities: [ContactMessage, PortfolioProject],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forFeature(
       [ContactMessage, PortfolioProject],

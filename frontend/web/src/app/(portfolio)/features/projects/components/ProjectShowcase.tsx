@@ -33,7 +33,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
   return (
     <section className="flex flex-col gap-8">
       {/* Encabezado de Sección */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border/40 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-gold-300">
             <span className="text-[10px] font-mono tracking-widest uppercase">
@@ -80,7 +80,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
             }}
             role="button"
             tabIndex={0}
-            aria-label={`Ver caso de estudio de ${project.title}`}
+            aria-label={`${t('caseStudyLabel')}: ${project.title}`}
             className="group relative flex flex-col justify-between p-6 rounded-xl border border-border/60 bg-surface/40 hover:bg-surface hover:border-gold-300/40 transition-all duration-300 cursor-pointer select-none"
           >
             <div className="flex flex-col gap-4">
@@ -146,7 +146,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/70 bg-surface/60 hover:bg-surface-raised hover:border-gold-300/40 text-xs font-mono text-foreground/80 hover:text-foreground transition-all duration-200 cursor-pointer"
                     title={t('viewRepo')}
-                    aria-label={`Ver código fuente de ${project.title}`}
+                    aria-label={`${t('viewRepo')}: ${project.title}`}
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
@@ -163,7 +163,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-gold-400/15 border border-gold-400/40 hover:bg-gold-400 hover:text-black text-xs font-mono text-gold-300 font-semibold transition-all duration-200 shadow-sm cursor-pointer"
                     title={t('viewDemo')}
-                    aria-label={`Ver demo en vivo de ${project.title}`}
+                    aria-label={`${t('viewDemo')}: ${project.title}`}
                   >
                     <span>{t('demoLabel')}</span>
                     <ExternalLink className="w-3.5 h-3.5" />

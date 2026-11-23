@@ -26,7 +26,7 @@
   },
   {
     "id": 2,
-    "slug": "kartex-platform-en",
+    "slug": "kartex-platform",
     "title": "Kartex",
     "description": "Biblical research and study platform featuring specialized exegesis modules, Masoretic BHS / NA28 morphology, Strong dictionaries, and Expo native mobile app.",
     "role": "Lead Architect & Full Stack Developer",
@@ -63,20 +63,20 @@
     "overview": "Portal tecnológico desacoplado que centraliza divulgación técnica, avisos de vulnerabilidades con matrices de remediación, fichas técnicas de agentes de IA y tutoriales interactivos con ejecución guiada.",
     "challenge": "Diseñar un monolito modular con 8 submódulos independientes sin acoplamiento, asegurando que cada dominio gestione sus propias entidades relacionales y soporte multiidioma con índices compuestos (slug, language).",
     "architectureHighlights": [
-      "Arquitectura en 3 capas puras por submódulo: controladores REST, servicios de dominio y 9 entidades TypeORM",
+      "Arquitectura en 3 capas puras por submódulo: 14 submódulos NestJS, controladores REST y 15 tablas relacionales TypeORM",
       "Asistente StepWizard interactivo con resaltado de sintaxis para guías de código paso a paso",
       "Diseño Neumorphism UI + Glassmorphism con paneles táctiles cóncavos/convexos y desenfoque vítreo",
-      "Sembrado transaccional atómico CLI (seed-doiceladev.ts) que procesa 8 tablas en menos de 25 ms"
+      "Sembrado transaccional atómico CLI (seed-doiceladev.ts) con persistencia SQLite en modo WAL"
     ],
     "metrics": [
       { "label": "Áreas Verticales", "value": "8" },
-      { "label": "Entidades Relacionales", "value": "9" },
+      { "label": "Tablas Relacionales", "value": "15" },
       { "label": "Latencia Promedio", "value": "< 20 ms" }
     ]
   },
   {
     "id": 4,
-    "slug": "doiceladev-platform-en",
+    "slug": "doiceladev-platform",
     "title": "DoicelaDev",
     "description": "Technology platform featuring 8 categories: cybersecurity advisories, AI models showcase, step-by-step interactive tutorials, and technical forums.",
     "role": "Full Stack & DevSecOps Developer",
@@ -86,22 +86,22 @@
     "demoUrl": "https://doiceladev.jorgedoicela.com",
     "featured": true,
     "overview": "Decoupled engineering portal uniting tech news, security advisories with remediation guides, AI reasoning models directory, and interactive code tutorials.",
-    "challenge": "Architecting a pure modular monolith composed of 8 independent submodules, guaranteeing domain isolation and compound unique index localized storage.",
+    "challenge": "Architecting a pure modular monolith composed of 14 independent submodules, guaranteeing domain isolation and compound unique index localized storage.",
     "architectureHighlights": [
-      "Pure 3-tier architecture per submodule: REST controllers, domain services, and 9 TypeORM entities",
+      "Pure 3-tier architecture per submodule: 14 NestJS submodules, REST controllers, and 15 TypeORM relational tables",
       "Interactive StepWizard code assistant featuring reproducible walkthroughs and syntax highlighting",
       "Neumorphism UI + Glassmorphism design tokens with concave/convex surfaces and frosted blurs",
-      "Atomic transactional CLI seeder (seed-doiceladev.ts) digesting 8 relational tables in under 25 ms"
+      "Atomic transactional CLI seeder (seed-doiceladev.ts) with SQLite WAL persistence"
     ],
     "metrics": [
       { "label": "Vertical Domains", "value": "8" },
-      { "label": "Database Entities", "value": "9" },
+      { "label": "Relational Tables", "value": "15" },
       { "label": "Average Latency", "value": "< 20 ms" }
     ]
   },
   {
     "id": 5,
-    "slug": "infraestructura-lightsail-vps",
+    "slug": "cloud-vps-architecture",
     "title": "Arquitectura Cloud VPS (1 GB RAM)",
     "description": "Despliegue de alta disponibilidad en AWS Lightsail (Debian 13) con Nginx mTLS, Cloudflare Edge, PM2 y pipeline CI/CD de GitHub Actions optimizado para 1 GB de RAM.",
     "role": "DevSecOps & Cloud Architect",
@@ -126,7 +126,7 @@
   },
   {
     "id": 6,
-    "slug": "cloud-infrastructure-lightsail",
+    "slug": "cloud-vps-architecture",
     "title": "Cloud VPS Architecture (1 GB RAM)",
     "description": "High-availability deployment on AWS Lightsail (Debian 13) featuring Nginx mTLS, Cloudflare Edge, PM2, and GitHub Actions CI/CD optimized for 1 GB RAM.",
     "role": "DevSecOps & Cloud Architect",
@@ -176,7 +176,7 @@
   },
   {
     "id": 8,
-    "slug": "terminal-ssh-websockets-en",
+    "slug": "terminal-ssh-websockets",
     "title": "Real-time Virtual SSH Terminal",
     "description": "Interactive UNIX terminal emulator over WebSockets (Socket.io) with virtual filesystem, ANSI color rendering, and secure command dispatching.",
     "role": "Backend & Frontend Developer",

@@ -38,13 +38,17 @@ frontend/web/src/app/(portfolio)/
 ├── fonts/                  # Tipografías locales autocontenidas (Geist-Variable, GeistMono-Variable)
 ├── messages/               # Diccionarios locales del portafolio (es.json, en.json)
 ├── portfolio/
-│   └── page.tsx            # Página principal del portafolio (9 secciones editoriales + SSR fallback)
+│   ├── page.tsx            # Página principal del portafolio (9 secciones editoriales SSR, layout 1420px-1540px)
+│   └── sandbox/
+│       └── page.tsx        # Vista dedicada fullscreen para SandboxTerminal
 ├── features/
 │   ├── projects/           # Feature: Showcase y catálogo de proyectos
-│   │   ├── components/     # ProjectShowcase.tsx, ProjectDetailModal.tsx
+│   │   ├── components/     # ProjectShowcase.tsx, ProjectDetailModal.tsx, ProjectSlideCard.tsx
+│   │   ├── hooks/          # useProjects.ts, useOrbitalCarousel.ts
+│   │   ├── utils/          # buildProjectSlides.ts
 │   │   └── types.ts        # Tipos e interfaces de proyectos y casos de estudio
 │   ├── terminal/           # Feature: Terminal virtual interactiva y Live Sandbox
-│   │   ├── components/     # TerminalConsole.tsx, SandboxTerminal.tsx, ServerOfflineBanner.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
+│   │   ├── components/     # TerminalConsole.tsx, SandboxTerminal.tsx, ServerOfflineBanner.tsx, SandboxSecurityModal.tsx, TerminalHeader.tsx, MatrixRain.tsx, MobileTerminalBanner.tsx
 │   │   ├── hooks/          # useTerminalSocket.ts, useSandboxTerminal.ts
 │   │   ├── utils/          # ansiParser.tsx
 │   │   └── types.ts        # Tipos de la terminal
@@ -55,7 +59,8 @@ frontend/web/src/app/(portfolio)/
 ├── shared/                 # Capa Shared FSD (Aislada del slice)
 │   ├── lib/                # api.ts (API_URL, SOCKET_URL, SANDBOX_TUNNEL_URL)
 │   └── index.ts            # Barril consolidado
-├── components/             # ThemeToggle.tsx, LanguageToggle.tsx, TypewriterRole.tsx, ValuesPhilosophySection.tsx
+├── components/             # PortfolioHeader.tsx, BackToPortalButton.tsx, ThemeToggle.tsx, LanguageToggle.tsx, TypewriterRole.tsx, ValuesPhilosophySection.tsx, PortfolioJsonLd.tsx
+├── hooks/                  # usePortfolioHeaderScroll.ts
 ├── globals.css             # Estilos específicos del portafolio
 └── layout.tsx              # Layout independiente con NextIntlClientProvider y generateMetadata dinámico
 ```
@@ -88,20 +93,20 @@ frontend/web/src/app/(portfolio)/
 ## 3. Backend, Corpus y Persistencia (NestJS 11)
 
 ### 3.1 Corpus Maestro, Sembrado Atómico y Ciclo de Datos
-* **Corpus:** `backend/src/portfolio/corpus/projects.json` (Fuente de verdad en Git con 8 proyectos bilingües y casos de estudio).
-* **Seeder:** `backend/src/portfolio/cli/seed-portfolio.ts` (Sembrado atómico en `portfolio.sqlite` usando `better-sqlite3` en modo WAL y transacción con `INSERT OR REPLACE`).
-* **Ciclo Obligatorio de Extensión de Datos de Proyectos:**
-  Ante cualquier nuevo campo o cambio en los proyectos (ej. métricas, retos, arquitectura, enlaces):
-  1. Actualizar el dataset en `corpus/projects.json` (ES y EN).
-  2. Actualizar la entidad TypeORM `portfolio-project.entity.ts`.
+* **Corpus de Proyectos:** `backend/src/portfolio/corpus/projects.json` (Fuente de verdad en Git con 8 proyectos bilingües `es`/`en` y slugs canónicos compartidos: `kartex-platform`, `doiceladev-platform`, `cloud-vps-architecture`, `terminal-ssh-websockets`).
+* **Corpus de Terminal Guiada:** `backend/src/portfolio/corpus/terminal.json` (Fuente de verdad bilingüe `es`/`en` con banner, ayuda, perfil, archivos virtuales, manuales y mensajes de sistema).
+* **Seeder:** `backend/src/portfolio/cli/seed-portfolio.ts` (Sembrado atómico en `portfolio.sqlite` usando `better-sqlite3` en modo WAL y transacción con `INSERT OR REPLACE` para `portfolio_projects` y `portfolio_terminal_profiles`, preservando `contact_messages`).
+* **Ciclo Obligatorio de Extensión de Datos:**
+  Ante cualquier nuevo campo o cambio en proyectos o terminal (ej. métricas, retos, arquitectura, comandos):
+  1. Actualizar el dataset en `corpus/projects.json` o `corpus/terminal.json` (ES y EN).
+  2. Actualizar la entidad TypeORM (`portfolio-project.entity.ts` o `terminal-profile.entity.ts`).
   3. Actualizar el esquema y sentencias en `seed-portfolio.ts`.
-  4. Actualizar el parseo en `portfolio-projects.service.ts`.
-  5. Ejecutar `pnpm --filter backend seed:portfolio` para reflejar en `portfolio.sqlite`.
-  6. Actualizar la interfaz TypeScript en `frontend/web/src/app/(portfolio)/features/projects/types.ts` y su fallback en `page.tsx`.
+  4. Ejecutar `pnpm --filter backend seed:portfolio` para reflejar en `portfolio.sqlite`.
+  5. Actualizar la interfaz TypeScript en `frontend/web/src/app/(portfolio)/features/*/types.ts`.
 
 ### 3.2 Gateways WebSockets (Socket.io) y Seguridad Blindada
 * **Terminal Guiada:** `PortfolioGateway` (`/terminal`)
-  * Simulación interactiva con sistema de archivos virtual in-memory en TypeScript (Cero superficie RCE).
+  * Emulación UNIX bilingüe (`es`/`en` vía handshake `query.lang` y evento `set-locale`) alimentada dinámicamente desde `portfolio_terminal_profiles` y `portfolio_projects` en `portfolio.sqlite` (Cero superficie RCE y cero contenido quemado).
   * Rate limiting por socket de 15 comandos/segundo (ventana deslizante) contra saturación del event loop.
   * Truncado de comandos a 1024 caracteres para prevenir desbordamientos de memoria.
 * **Live Linux Sandbox:** `SandboxGateway` (`/sandbox`)
@@ -113,15 +118,17 @@ frontend/web/src/app/(portfolio)/
 
 ### 3.3 Endpoints REST, Eventos y Entidades TypeORM
 * **Proyectos:**
-  * `GET /portfolio/projects?lang=es|en`: Listado bilingüe con tecnologías, métricas y puntos de arquitectura parseados.
-  * `GET /portfolio/projects/:slug`: Detalle individual por slug.
+  * `GET /portfolio/projects?lang=es|en`: Listado bilingüe con tecnologías, métricas y puntos de arquitectura deserializados nativamente por TypeORM (`simple-json`).
+  * `GET /portfolio/projects/:slug?lang=es|en`: Detalle individual por slug canónico bilingüe.
   * **Entidad:** `PortfolioProject` (`portfolio-project.entity.ts`) con índice único compuesto `@Index(['slug', 'language'], { unique: true })`.
+* **Terminal Guiada:**
+  * **Entidad:** `TerminalProfile` (`terminal-profile.entity.ts`, tabla `portfolio_terminal_profiles`) con índice único por `language`.
 * **Contacto:**
-  * `POST /portfolio/contact`: Recibe y valida `CreateContactMessageDto` (`name`, `email`, `message`).
-  * `GET /portfolio/contact`: Listado de mensajes para auditoría administrativa.
+  * `POST /portfolio/contact`: Recibe y valida `CreateContactMessageDto` (`name`, `email`, `subject`, `message`, `phone`, `serviceType`) protegido por `ContactThrottleGuard`. No existe endpoint `GET` público para proteger PII.
   * **Entidad:** `ContactMessage` (`contact-message.entity.ts`).
-* **Sandbox Wake Request (Aviso de Encendido):**
-  * `POST /portfolio/sandbox/wake-request`: Valida `CreateWakeRequestDto` (`name`, `contactInfo`, `notes`) protegido por `ContactThrottleGuard`. Emite `SandboxWakeRequestedEvent` para despacho asíncrono a Telegram.
+* **Sandbox Health & Wake Request:**
+  * `GET /portfolio/sandbox/health`: Sondeo de salud pre-flight (`< 1 ms`, zero-Docker call).
+  * `POST /portfolio/sandbox/wake-request`: Valida `CreateWakeRequestDto` (`name`, `contact`, `note`) protegido por `ContactThrottleGuard`. Delega a `SandboxService.requestWake()`, que emite `SandboxWakeRequestedEvent` para despacho asíncrono a Telegram.
 
 ---
 

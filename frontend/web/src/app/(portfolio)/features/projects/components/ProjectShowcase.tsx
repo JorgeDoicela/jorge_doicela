@@ -35,11 +35,6 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
       {/* Encabezado de Sección */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-gold-300">
-            <span className="text-[10px] font-mono tracking-widest uppercase">
-              {t('eyebrow')}
-            </span>
-          </div>
           <h2 className="text-2xl md:text-3xl font-light text-foreground">
             {t('title')}
           </h2>

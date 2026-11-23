@@ -101,9 +101,6 @@ export default async function PortfolioPage() {
                 {/* Sección 1: Sobre Mí & Contactos */}
                 <section id="about" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-4">
-                        <div className="flex items-center gap-2 text-gold-300">
-                            <span className="text-[10px] font-mono tracking-widest uppercase">{tAbout('title')}</span>
-                        </div>
                         <h2 className="text-2xl md:text-3xl font-light text-foreground mb-2">
                             {tAbout('title')}
                         </h2>
@@ -178,9 +175,6 @@ export default async function PortfolioPage() {
 
                 {/* Sección 3: Tecnologías & Stack Principal */}
                 <section id="stack" className="flex flex-col gap-6 scroll-mt-24">
-                    <div className="flex items-center gap-2 text-gold-300">
-                        <span className="text-[10px] font-mono tracking-widest uppercase">{tStack('eyebrow')}</span>
-                    </div>
                     <h2 className="text-2xl font-light text-foreground">
                         {tStack('title')}
                     </h2>
@@ -222,9 +216,6 @@ export default async function PortfolioPage() {
                 {/* Sección 4: Experiencia & Educación */}
                 <section id="experience" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-6">
-                        <div className="flex items-center gap-2 text-gold-300">
-                            <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eyebrow')}</span>
-                        </div>
                         <h2 className="text-2xl font-light text-foreground mb-2">
                             {tExp('title')}
                         </h2>
@@ -257,9 +248,6 @@ export default async function PortfolioPage() {
                     {/* Educación */}
                     <div className="flex flex-col gap-6 md:pl-6 md:border-l border-border/40 h-full justify-between">
                         <div className="flex flex-col gap-6">
-                            <div className="flex items-center gap-2 text-gold-300">
-                                <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eduEyebrow')}</span>
-                            </div>
                             <h2 className="text-2xl font-light text-foreground mb-2">
                                 {tExp('eduTitle')}
                             </h2>
@@ -280,9 +268,6 @@ export default async function PortfolioPage() {
 
                 {/* Sección 5: Nube, CI/CD y Hardening */}
                 <section id="cloud" className="flex flex-col gap-6 scroll-mt-24">
-                    <div className="flex items-center gap-2 text-gold-300">
-                        <span className="text-[10px] font-mono tracking-widest uppercase">{tCloud('eyebrow')}</span>
-                    </div>
                     <h2 className="text-2xl font-light text-foreground">
                         {tCloud('title')}
                     </h2>
@@ -321,9 +306,6 @@ export default async function PortfolioPage() {
                 {/* Sección 6: Flujo & Herramientas */}
                 <section id="tools" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-4">
-                        <div className="flex items-center gap-2 text-gold-300">
-                            <span className="text-[10px] font-mono tracking-widest uppercase">{tTools('eyebrow')}</span>
-                        </div>
                         <h2 className="text-2xl font-light text-foreground mb-2">
                             {tTools('title')}
                         </h2>
@@ -358,10 +340,7 @@ export default async function PortfolioPage() {
                 {/* Sección 8: Consola Interactiva Virtual SSH */}
                 <section id="terminal" className="flex flex-col gap-4 scroll-mt-24">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
-                        <div className="flex items-center gap-2 text-gold-300">
-                            <span className="text-[10px] font-mono tracking-widest uppercase">{tTerm('eyebrow')}</span>
-                        </div>
-                        <h2 className="text-xl font-light text-foreground mt-1">
+                        <h2 className="text-xl font-light text-foreground">
                             {tTerm('title')}
                         </h2>
                         <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
@@ -375,9 +354,6 @@ export default async function PortfolioPage() {
                 <section id="contact" className="flex flex-col gap-8 scroll-mt-24">
                     {/* Cabecera Editorial General */}
                     <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2 text-gold-300">
-                            <span className="text-[10px] font-mono tracking-widest uppercase">{tContact('eyebrow')}</span>
-                        </div>
                         <h2 className="text-2xl md:text-3xl font-light text-foreground mb-1">
                             {tContact('thesisTitle')}
                         </h2>

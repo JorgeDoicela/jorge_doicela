@@ -287,7 +287,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 
 La sección 9 del portafolio implementa una arquitectura editorial balanceada de 3 columnas (`gap-10 lg:gap-14 items-stretch`) diseñada bajo principios estrictos de UX/UI y estética Dark Luxury / Light Luxury:
 * **Cabecera Editorial General:**
-  * Eyebrow en monoespaciado (`Centro de Comunicación`), título de tesis cercano y reflexivo (`¿Tienes una idea, consulta o proyecto?`) y párrafo explicativo para el público general, unificando la entrada a toda la sección.
+  * Título de tesis cercano y reflexivo (`¿Tienes una idea, consulta o proyecto?`) y párrafo explicativo para el público general, unificando la entrada a toda la sección de forma sobria y directa (sin sobretítulos redundantes).
 * **Cuadrícula de Interacción Alineada (Formulario y Fichas al mismo nivel):**
   * **Columna Principal (`md:col-span-2`):** Formulario de contacto amplio (`ContactForm.tsx`) con tarjeta de lujo (`p-6 sm:p-8`), campos de *Nombre completo* y *Correo electrónico* en 2 columnas (`grid grid-cols-1 sm:grid-cols-2 gap-4`), maximizando el espacio de captura y evitando formularios comprimidos.
   * **Columna Lateral de Compromiso (`md:col-span-1` con `md:pl-8 md:border-l border-border/40`):**

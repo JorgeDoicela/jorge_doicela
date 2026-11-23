@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Cpu, ShieldCheck, Layers, BarChart3, Image as ImageIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ProjectSlide } from '../types';
 
@@ -27,21 +26,6 @@ export function ProjectSlideCard({
   const stepNumber = String(index + 1).padStart(2, '0');
   const totalNumber = String(total).padStart(2, '0');
 
-  const renderIcon = () => {
-    switch (slide.kind) {
-      case 'overview':
-        return <Cpu className="w-4 h-4 text-gold-300" />;
-      case 'challenge':
-        return <ShieldCheck className="w-4 h-4 text-gold-300" />;
-      case 'architecture':
-        return <Layers className="w-4 h-4 text-gold-300" />;
-      case 'stack-telemetry':
-        return <BarChart3 className="w-4 h-4 text-gold-300" />;
-      case 'media':
-        return <ImageIcon className="w-4 h-4 text-gold-300" />;
-    }
-  };
-
   return (
     <div
       className={`w-full h-full rounded-2xl bg-surface text-foreground border flex flex-col justify-between p-6 sm:p-8 overflow-hidden transition-colors duration-300 ${
@@ -52,16 +36,11 @@ export function ProjectSlideCard({
     >
       {/* Cabecera de la tarjeta */}
       <div className="flex items-center justify-between gap-3 pb-4 border-b border-border/50 shrink-0">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span className="p-1.5 rounded-lg bg-surface-raised border border-border-gold/40 shrink-0">
-            {renderIcon()}
-          </span>
-          <h3 className="text-xs font-mono uppercase tracking-[0.14em] text-gold-300 font-semibold truncate">
-            {slide.kind === 'media'
-              ? `${t(slide.titleKey)} ${slide.mediaIndex}/${slide.mediaTotal}`
-              : t(slide.titleKey)}
-          </h3>
-        </div>
+        <h3 className="text-xs font-mono uppercase tracking-[0.14em] text-gold-300 font-semibold truncate">
+          {slide.kind === 'media'
+            ? `${t(slide.titleKey)} ${slide.mediaIndex}/${slide.mediaTotal}`
+            : t(slide.titleKey)}
+        </h3>
 
         <span className="text-[11px] font-mono tracking-widest text-muted shrink-0">
           {stepNumber} / {totalNumber}

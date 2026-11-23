@@ -86,7 +86,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
       />
 
       {/* Cabecera Superior Fija del Proyecto */}
-      <header className="relative z-20 w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto px-5 sm:px-8 pt-5 sm:pt-7 pb-2 flex items-start justify-between gap-4 pointer-events-none">
+      <header className="relative z-20 w-full px-6 sm:px-10 md:px-14 pt-6 sm:pt-8 pb-3 flex items-start justify-between gap-4 pointer-events-none">
         <div className="flex flex-col gap-1.5 pointer-events-auto min-w-0">
           <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-gold-400 font-semibold">
             {project.role}
@@ -113,7 +113,12 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
 
       {/* Escenario Central: Pasarela Orbital 3D ("Medio Planeta") */}
       <div
-        className="relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        }}
+        className="relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none cursor-pointer"
         style={{ perspective: '1250px' }}
       >
         {/* Arco sutil de horizonte planetario */}
@@ -126,7 +131,10 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
         {slides.length > 1 && (
           <button
             type="button"
-            onClick={goPrev}
+            onClick={(e) => {
+              e.stopPropagation();
+              goPrev();
+            }}
             disabled={!canGoPrev}
             aria-label={t('modalPrevSlide')}
             className="hidden sm:flex absolute left-4 md:left-8 z-40 items-center justify-center w-11 h-11 rounded-full bg-surface/85 border border-border-gold/50 text-foreground/80 hover:text-gold-200 hover:border-gold-300/70 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer active:scale-95 backdrop-blur-md"
@@ -138,6 +146,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
         {/* Pista 3D de Tarjetas: área delimitada de interacción táctil y arrastre */}
         <div
           {...stageHandlers}
+          onClick={(e) => e.stopPropagation()}
           className={`relative w-full max-w-[700px] 2xl:max-w-[760px] h-[420px] sm:h-[450px] mx-4 sm:mx-16 touch-pan-y ${
             isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
@@ -191,7 +200,10 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
         {slides.length > 1 && (
           <button
             type="button"
-            onClick={goNext}
+            onClick={(e) => {
+              e.stopPropagation();
+              goNext();
+            }}
             disabled={!canGoNext}
             aria-label={t('modalNextSlide')}
             className="hidden sm:flex absolute right-4 md:right-8 z-40 items-center justify-center w-11 h-11 rounded-full bg-surface/85 border border-border-gold/50 text-foreground/80 hover:text-gold-200 hover:border-gold-300/70 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer active:scale-95 backdrop-blur-md"
@@ -202,7 +214,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
       </div>
 
       {/* Dock Inferior Fijo: Selector Directo de Secciones + CTAs Globales */}
-      <footer className="relative z-20 w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto px-5 sm:px-8 pb-5 sm:pb-7 pt-2 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <footer className="relative z-20 w-full px-6 sm:px-10 md:px-14 pb-6 sm:pb-8 pt-3 flex flex-col lg:flex-row items-center justify-between gap-4">
         {/* Índice interactivo de secciones del proyecto */}
         <nav
           aria-label={project.title}

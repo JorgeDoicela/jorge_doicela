@@ -26,7 +26,8 @@ Este documento detalla la arquitectura macro y micro, gateways de WebSockets, co
 backend/src/portfolio/
 ├── portfolio.module.ts            # Registro del módulo, gateways, controladores y entidades
 ├── corpus/
-│   └── projects.json              # Dataset JSON estructurado de proyectos (Fuente de Verdad)
+│   ├── projects.json              # Dataset JSON estructurado de proyectos bilingües (Fuente de Verdad)
+│   └── terminal.json              # Dataset JSON bilingüe de la Terminal Guiada (banner, comandos, archivos virtuales y manuales)
 ├── cli/
 │   └── seed-portfolio.ts          # Sembrado atómico CLI con better-sqlite3 en modo WAL
 ├── docker/
@@ -56,7 +57,8 @@ backend/src/portfolio/
 │   └── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos (TypeORM simple-json)
 ├── entities/
 │   ├── contact-message.entity.ts  # Entidad TypeORM para mensajes de contacto
-│   └── portfolio-project.entity.ts # Entidad TypeORM con índice compuesto (slug, language)
+│   ├── portfolio-project.entity.ts # Entidad TypeORM con índice compuesto (slug, language)
+│   └── terminal-profile.entity.ts # Entidad TypeORM bilingüe para perfiles y textos de la Terminal Guiada
 └── dto/
     ├── create-contact-message.dto.ts # DTO blindado con @MaxLength y validaciones estrictas
     └── create-wake-request.dto.ts    # DTO validado para solicitudes de aviso de encendido del servidor físico propio
@@ -356,6 +358,12 @@ new ValidationPipe({
   * `serviceType`: Tipo de servicio solicitado opcional (`string`, nullable).
   * `createdAt`: Timestamp automático.
   * **Índice:** `IDX_contact_messages_created_at` (en `createdAt` para ordenación cronológica $O(1)$).
+
+* `portfolio_terminal_profiles`:
+  * `id`: PK autoincremental.
+  * `language`: `'es'` o `'en'` (único con `IDX_portfolio_terminal_lang`).
+  * `banner`, `help`, `tmux`, `about`, `skills`, `contact`, `files`, `manuals`, `messages`: Columnas `simple-json` sembradas desde `corpus/terminal.json`.
+  * `PortfolioService` consume estos perfiles y los combina en tiempo real con `portfolio_projects` para servir `projects`, `ls ~/projects` y `cat ~/projects/<slug>.txt` en el idioma activo de la sesión WebSocket.
 
 ---
 

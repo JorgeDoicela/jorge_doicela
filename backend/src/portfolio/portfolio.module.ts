@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContactMessage } from './entities/contact-message.entity';
 import { PortfolioProject } from './entities/portfolio-project.entity';
+import { TerminalProfile } from './entities/terminal-profile.entity';
 import { PortfolioService } from './services/portfolio.service';
 import { ContactMessagesService } from './services/contact-messages.service';
 import { TelegramNotificationService } from './services/telegram-notification.service';
@@ -28,11 +29,11 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         'DATABASE_PORTFOLIO_PATH',
         'portfolio.sqlite',
       ),
-      entities: [ContactMessage, PortfolioProject],
+      entities: [ContactMessage, PortfolioProject, TerminalProfile],
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forFeature(
-      [ContactMessage, PortfolioProject],
+      [ContactMessage, PortfolioProject, TerminalProfile],
       'portfolioConnection',
     ),
   ],

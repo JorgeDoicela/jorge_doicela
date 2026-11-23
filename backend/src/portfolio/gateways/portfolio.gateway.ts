@@ -9,10 +9,14 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import { PortfolioService } from '../services/portfolio.service';
+import {
+  PortfolioService,
+  SupportedLocale,
+} from '../services/portfolio.service';
 
 interface ClientSessionState {
   cwd: string;
+  lang: SupportedLocale;
   sharedSessionId?: string;
   cols?: number;
   rows?: number;
@@ -45,39 +49,32 @@ export class PortfolioGateway
 {
   private readonly logger = new Logger(PortfolioGateway.name);
   private readonly clientStates = new Map<string, ClientSessionState>();
+  private readonly commandRateLimits = new Map<string, number[]>();
+  private readonly maxCommandsPerSecond = 15;
+  private readonly maxCommandLength = 1024;
 
   @WebSocketServer()
   server: Server;
 
   constructor(private readonly portfolioService: PortfolioService) {}
 
-  handleConnection(client: Socket) {
-    this.logger.log(`Client connected to terminal: ${client.id}`);
+  private extractLocale(raw?: unknown): SupportedLocale {
+    return raw === 'en' ? 'en' : 'es';
+  }
+
+  async handleConnection(client: Socket) {
+    const lang = this.extractLocale(client.handshake.query?.lang);
+    this.logger.log(
+      `Client connected to terminal: ${client.id} (lang: ${lang})`,
+    );
     this.clientStates.set(client.id, {
       cwd: '~',
+      lang,
       cols: 80,
       rows: 24,
     });
 
-    // Enviar banner inicial de bienvenida con formato ANSI
-    const welcomeBanner = [
-      '\x1b[90m┌────────────────────────────────────────────────────────────┐\x1b[0m',
-      '\x1b[90m│\x1b[0m  \x1b[1;33mJorge Ismael Doicela Molina • Portfolio Shell\x1b[0m             \x1b[90m│\x1b[0m',
-      '\x1b[90m│\x1b[0m  \x1b[36mFull-Stack & DevSecOps Developer • Debian GNU/Linux 13\x1b[0m    \x1b[90m│\x1b[0m',
-      '\x1b[90m└────────────────────────────────────────────────────────────┘\x1b[0m',
-      '',
-      '¡Bienvenido/a! Esta consola interactiva te permite explorar mi',
-      'perfil, proyectos destacados y habilidades técnicas.',
-      '',
-      '\x1b[1;33mComandos recomendados para comenzar:\x1b[0m',
-      '  • \x1b[1;33mabout\x1b[0m     \x1b[90m→\x1b[0m Perfil, formación y valores',
-      '  • \x1b[1;33mprojects\x1b[0m  \x1b[90m→\x1b[0m Proyectos de ingeniería destacados',
-      '  • \x1b[1;33mskills\x1b[0m    \x1b[90m→\x1b[0m Stack tecnológico y especialidades',
-      '  • \x1b[1;33mcontact\x1b[0m   \x1b[90m→\x1b[0m Canales oficiales (LinkedIn, GitHub, Email)',
-      '  • \x1b[1;33mneofetch\x1b[0m  \x1b[90m→\x1b[0m Especificaciones del sistema y servidor',
-      '  • \x1b[1;33mhelp\x1b[0m      \x1b[90m→\x1b[0m Lista completa de comandos Unix disponibles',
-      '',
-    ].join('\n');
+    const welcomeBanner = await this.portfolioService.getWelcomeBanner(lang);
 
     client.emit('terminal-output', {
       output: welcomeBanner,
@@ -87,22 +84,42 @@ export class PortfolioGateway
     });
   }
 
-  private readonly commandRateLimits = new Map<string, number[]>();
-  private readonly maxCommandsPerSecond = 15;
-  private readonly maxCommandLength = 1024;
-
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected from terminal: ${client.id}`);
     this.clientStates.delete(client.id);
     this.commandRateLimits.delete(client.id);
   }
 
-  @SubscribeMessage('execute-command')
-  handleCommand(
-    @MessageBody()
-    payload: { command: string; tabId?: string; paneId?: string } | string,
+  @SubscribeMessage('set-locale')
+  handleSetLocale(
+    @MessageBody() payload: { lang?: string },
     @ConnectedSocket() client: Socket,
   ) {
+    const state = this.clientStates.get(client.id);
+    if (state) {
+      state.lang = this.extractLocale(payload?.lang);
+      this.clientStates.set(client.id, state);
+    }
+  }
+
+  @SubscribeMessage('execute-command')
+  async handleCommand(
+    @MessageBody()
+    payload:
+      | { command: string; tabId?: string; paneId?: string; lang?: string }
+      | string,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const state = this.clientStates.get(client.id) || {
+      cwd: '~',
+      lang: 'es' as SupportedLocale,
+    };
+    const effectiveLang =
+      typeof payload === 'object' && payload?.lang
+        ? this.extractLocale(payload.lang)
+        : state.lang;
+    state.lang = effectiveLang;
+
     const now = Date.now();
     let timestamps = this.commandRateLimits.get(client.id) || [];
     timestamps = timestamps.filter((t) => now - t < 1000);
@@ -111,12 +128,13 @@ export class PortfolioGateway
       this.logger.warn(
         `[${client.id}] Rate limit de comandos excedido (> ${this.maxCommandsPerSecond}/s)`,
       );
+      const rateLimitMsg =
+        await this.portfolioService.getRateLimitMessage(effectiveLang);
       client.emit('terminal-output', {
         command: '',
-        output:
-          '\x1b[31m[SEGURIDAD] Límite de comandos por segundo excedido. Por favor espera un momento.\x1b[0m',
-        cwd: this.clientStates.get(client.id)?.cwd || '~',
-        prompt: `jorge@debian:${this.clientStates.get(client.id)?.cwd || '~'}$ `,
+        output: rateLimitMsg,
+        cwd: state.cwd,
+        prompt: `jorge@debian:${state.cwd}$ `,
       });
       return;
     }
@@ -127,7 +145,6 @@ export class PortfolioGateway
     let rawCommand =
       typeof payload === 'string' ? payload : payload?.command || '';
 
-    // Sanitizar longitud máxima del comando para prevenir ataques de saturación de memoria
     if (rawCommand.length > this.maxCommandLength) {
       rawCommand = rawCommand.slice(0, this.maxCommandLength);
     }
@@ -135,19 +152,22 @@ export class PortfolioGateway
     const tabId = typeof payload === 'object' ? payload?.tabId : undefined;
     const paneId = typeof payload === 'object' ? payload?.paneId : undefined;
 
-    const state = this.clientStates.get(client.id) || { cwd: '~' };
     this.logger.debug(
-      `[${client.id}] Executing command at [${state.cwd}] — ${rawCommand.length} chars`,
+      `[${client.id}] Executing command at [${state.cwd}] (${effectiveLang}) — ${rawCommand.length} chars`,
     );
 
-    const result = this.portfolioService.executeCommand(rawCommand, state.cwd);
+    const result = await this.portfolioService.executeCommand(
+      rawCommand,
+      state.cwd,
+      effectiveLang,
+    );
 
     if (result.newCwd !== undefined) {
       state.cwd = result.newCwd;
       this.clientStates.set(client.id, state);
     }
 
-    const responsePayload = {
+    client.emit('terminal-output', {
       command: rawCommand,
       output: result.output,
       cwd: state.cwd,
@@ -156,22 +176,20 @@ export class PortfolioGateway
       actionPayload: result.actionPayload,
       tabId,
       paneId,
-    };
-
-    // Emitir respuesta al cliente
-    client.emit('terminal-output', responsePayload);
+    });
   }
 
   @SubscribeMessage('tab-complete')
-  handleTabComplete(
+  async handleTabComplete(
     @MessageBody() payload: { input: string; cwd?: string },
     @ConnectedSocket() client: Socket,
   ) {
     const state = this.clientStates.get(client.id);
     const cwd = payload?.cwd || state?.cwd || '~';
-    const completions = this.portfolioService.getCompletions(
+    const completions = await this.portfolioService.getCompletions(
       payload?.input || '',
       cwd,
+      state?.lang,
     );
 
     client.emit('tab-complete-result', {
@@ -187,7 +205,6 @@ export class PortfolioGateway
   ) {
     const state = this.clientStates.get(client.id);
     if (state && payload) {
-      // Sanitización idéntica a sandbox.service.ts para evitar valores extremos en el estado de sesión
       state.cols = Math.max(
         40,
         Math.min(300, Math.floor(Number(payload.cols) || 80)),

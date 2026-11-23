@@ -21,6 +21,19 @@ interface PortfolioProjectItem {
   metrics?: { label: string; value: string }[];
 }
 
+interface TerminalProfileItem {
+  language: string;
+  banner: string[];
+  help: string[];
+  tmux: string[];
+  about: string[];
+  skills: string[];
+  contact: string[];
+  files: Record<string, string[]>;
+  manuals: Record<string, string[]>;
+  messages: Record<string, string>;
+}
+
 export function seedPortfolio(
   dbPath: string = resolveDatabasePath(
     'DATABASE_PORTFOLIO_PATH',
@@ -32,26 +45,45 @@ export function seedPortfolio(
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
 
-  const srcPath = path.resolve(
-    __dirname,
-    '../../../src/portfolio/corpus/projects.json',
-  );
-  const distPath = path.resolve(__dirname, '../corpus/projects.json');
-  const projectsPath = fs.existsSync(srcPath) ? srcPath : distPath;
+  const resolveCorpusPath = (filename: string): string => {
+    const srcPath = path.resolve(
+      __dirname,
+      `../../../src/portfolio/corpus/${filename}`,
+    );
+    const distPath = path.resolve(__dirname, `../corpus/${filename}`);
+    return fs.existsSync(srcPath) ? srcPath : distPath;
+  };
+
+  const projectsPath = resolveCorpusPath('projects.json');
+  const terminalPath = resolveCorpusPath('terminal.json');
 
   if (!fs.existsSync(projectsPath)) {
     console.error(
       `[PortfolioSeeder] ERROR: Archivo de corpus no encontrado en src ni en dist: ${projectsPath}`,
     );
+    db.close();
     return;
   }
 
-  const rawProjects = fs.readFileSync(projectsPath, 'utf-8');
-  const projects = JSON.parse(rawProjects) as PortfolioProjectItem[];
+  if (!fs.existsSync(terminalPath)) {
+    console.error(
+      `[PortfolioSeeder] ERROR: Archivo de corpus de terminal no encontrado: ${terminalPath}`,
+    );
+    db.close();
+    return;
+  }
 
-  // Recrear tabla de proyectos (catálogo puro) y preservar tabla de mensajes
+  const projects = JSON.parse(
+    fs.readFileSync(projectsPath, 'utf-8'),
+  ) as PortfolioProjectItem[];
+  const terminalProfiles = JSON.parse(
+    fs.readFileSync(terminalPath, 'utf-8'),
+  ) as TerminalProfileItem[];
+
+  // Recrear tablas de catálogo (proyectos + perfiles de terminal) y preservar mensajes de contacto
   db.exec(`
     DROP TABLE IF EXISTS portfolio_projects;
+    DROP TABLE IF EXISTS portfolio_terminal_profiles;
 
     CREATE TABLE portfolio_projects (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -75,6 +107,24 @@ export function seedPortfolio(
 
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_project_slug_lang ON portfolio_projects (slug, language);
     CREATE INDEX IF NOT EXISTS IDX_portfolio_project_lang_order ON portfolio_projects (language, orderIndex);
+
+    CREATE TABLE portfolio_terminal_profiles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      language TEXT NOT NULL UNIQUE,
+      banner TEXT NOT NULL,
+      help TEXT NOT NULL,
+      tmux TEXT NOT NULL,
+      about TEXT NOT NULL,
+      skills TEXT NOT NULL,
+      contact TEXT NOT NULL,
+      files TEXT NOT NULL,
+      manuals TEXT NOT NULL,
+      messages TEXT NOT NULL,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_terminal_lang ON portfolio_terminal_profiles (language);
 
     CREATE TABLE IF NOT EXISTS contact_messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -101,6 +151,14 @@ export function seedPortfolio(
     )
   `);
 
+  const insertTerminalProfile = db.prepare(`
+    INSERT OR REPLACE INTO portfolio_terminal_profiles (
+      language, banner, help, tmux, about, skills, contact, files, manuals, messages
+    ) VALUES (
+      @language, @banner, @help, @tmux, @about, @skills, @contact, @files, @manuals, @messages
+    )
+  `);
+
   const tx = db.transaction(() => {
     for (let idx = 0; idx < projects.length; idx++) {
       const p = projects[idx];
@@ -124,12 +182,27 @@ export function seedPortfolio(
         orderIndex: idx,
       });
     }
+
+    for (const profile of terminalProfiles) {
+      insertTerminalProfile.run({
+        language: profile.language,
+        banner: JSON.stringify(profile.banner),
+        help: JSON.stringify(profile.help),
+        tmux: JSON.stringify(profile.tmux),
+        about: JSON.stringify(profile.about),
+        skills: JSON.stringify(profile.skills),
+        contact: JSON.stringify(profile.contact),
+        files: JSON.stringify(profile.files),
+        manuals: JSON.stringify(profile.manuals),
+        messages: JSON.stringify(profile.messages),
+      });
+    }
   });
 
   tx();
 
   console.log(
-    `[PortfolioSeeder] OK: ${projects.length} proyectos sembrados con éxito.`,
+    `[PortfolioSeeder] OK: ${projects.length} proyectos y ${terminalProfiles.length} perfiles de terminal sembrados con éxito.`,
   );
   db.close();
 }

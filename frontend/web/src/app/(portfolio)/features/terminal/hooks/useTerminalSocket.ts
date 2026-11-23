@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useLocale } from 'next-intl';
 import { io, Socket } from 'socket.io-client';
 import { SOCKET_URL } from '../../../shared';
 import {
@@ -12,6 +13,7 @@ import {
 } from '../types';
 
 export const useTerminalSocket = () => {
+  const locale = useLocale();
   const [tabs, setTabs] = useState<TerminalTab[]>([
     {
       id: 'tab-1',
@@ -42,15 +44,17 @@ export const useTerminalSocket = () => {
   const [completionInput, setCompletionInput] = useState<string>('');
 
   const socketRef = useRef<Socket | null>(null);
+  const initialLocaleRef = useRef<string>(locale);
   const commandHistoriesRef = useRef<Record<string, string[]>>({
     'pane-1': ['about', 'projects', 'skills', 'contact'],
   });
   const historyIndicesRef = useRef<Record<string, number>>({});
   const inputDraftsRef = useRef<Record<string, string>>({});
 
-  // Inicializar Socket.io
+  // Inicializar Socket.io con idioma activo
   useEffect(() => {
     const socket = io(`${SOCKET_URL}/terminal`, {
+      query: { lang: initialLocaleRef.current },
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 15,
       reconnectionDelay: 1000,
@@ -83,6 +87,13 @@ export const useTerminalSocket = () => {
       socket.disconnect();
     };
   }, []);
+
+  // Sincronizar cambio de idioma en caliente con la sesión activa del gateway
+  useEffect(() => {
+    if (socketRef.current?.connected) {
+      socketRef.current.emit('set-locale', { lang: locale });
+    }
+  }, [locale]);
 
   const handleIncomingOutput = (data: TerminalOutputPayload | string) => {
     const rawOutput = typeof data === 'string' ? data : data.output;

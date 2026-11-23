@@ -1,4 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TerminalProfile } from '../entities/terminal-profile.entity';
+import { PortfolioProject } from '../entities/portfolio-project.entity';
+import { PortfolioProjectsService } from './portfolio-projects.service';
+
+export type SupportedLocale = 'es' | 'en';
 
 export interface CommandExecutionResult {
   output: string;
@@ -17,209 +24,224 @@ interface VirtualFile {
   children?: Record<string, VirtualFile>;
 }
 
-@Injectable()
-export class PortfolioService {
-  private readonly serverStartTime = Date.now();
+const SKILLS_JSON_CONTENT = JSON.stringify(
+  {
+    developer: 'Jorge Doicela',
+    focus: 'Full-Stack & DevSecOps',
+    languages: ['TypeScript', 'JavaScript', 'C#', 'PHP', 'Python', 'C', 'C++'],
+    frontend: ['React 19', 'Next.js 16', 'TailwindCSS v4', 'Expo'],
+    backend: ['NestJS 11', 'ASP.NET Core', 'Laravel', 'Blade', 'Node.js'],
+    databases: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'SQLite'],
+    cloud_devops: [
+      'AWS Lightsail',
+      'Docker',
+      'GitHub Actions',
+      'Cloudflare',
+      'Nginx',
+      'PM2',
+    ],
+    systems: ['Arch Linux', 'Debian 13', 'Neovim', 'tmux', 'Hyprland'],
+  },
+  null,
+  2,
+);
 
-  // Virtual Filesystem Definition
-  private readonly rootFilesystem: Record<string, VirtualFile> = {
-    home: {
-      type: 'dir',
-      name: 'home',
-      permissions: 'drwxr-xr-x',
-      updatedAt: 'Aug 14 12:00',
-      children: {
-        jorge: {
-          type: 'dir',
-          name: 'jorge',
-          permissions: 'drwxr-xr-x',
-          updatedAt: 'Aug 14 12:00',
-          children: {
-            'README.md': {
-              type: 'file',
-              name: 'README.md',
-              size: 1420,
-              permissions: '-rw-r--r--',
-              updatedAt: 'Aug 14 12:05',
-              content: [
-                '\x1b[1;33m# Jorge Ismael Doicela Molina\x1b[0m',
-                'Full-Stack & DevSecOps Developer | Debian GNU/Linux 13',
-                '',
-                'Bienvenido/a a mi entorno de desarrollo interactivo. Esta terminal te permite',
-                'explorar mis proyectos, habilidades técnicas y arquitectura de sistemas.',
-                '',
-                '\x1b[36mComandos recomendados: about, projects, skills, contact, neofetch, help\x1b[0m',
-              ].join('\n'),
-            },
-            'skills.json': {
-              type: 'file',
-              name: 'skills.json',
-              size: 980,
-              permissions: '-rw-r--r--',
-              updatedAt: 'Aug 14 12:10',
-              content: JSON.stringify(
-                {
-                  developer: 'Jorge Doicela',
-                  focus: 'Full-Stack & DevSecOps',
-                  languages: [
-                    'TypeScript',
-                    'JavaScript',
-                    'C#',
-                    'PHP',
-                    'Python',
-                    'C',
-                    'C++',
-                  ],
-                  frontend: [
-                    'React 19',
-                    'Next.js 16',
-                    'TailwindCSS v4',
-                    'Vite',
-                    'HTML5/CSS3',
-                  ],
-                  backend: [
-                    'NestJS',
-                    'ASP.NET Core',
-                    'Laravel',
-                    'Blade',
-                    'Node.js',
-                  ],
-                  databases: [
-                    'PostgreSQL',
-                    'MySQL',
-                    'MongoDB',
-                    'Redis',
-                    'SQLite',
-                  ],
-                  cloud_devops: [
-                    'AWS Lightsail',
-                    'Docker',
-                    'GitHub Actions',
-                    'Cloudflare',
-                    'Nginx',
-                    'PM2',
-                  ],
-                  systems: [
-                    'Arch Linux',
-                    'Debian',
-                    'Neovim',
-                    'tmux',
-                    'Hyprland',
-                  ],
-                },
-                null,
-                2,
-              ),
-            },
-            'experience.log': {
-              type: 'file',
-              name: 'experience.log',
-              size: 1250,
-              permissions: '-rw-r--r--',
-              updatedAt: 'Aug 14 12:15',
-              content: [
-                '\x1b[1;32m[2024 - Presente] Emplifi\x1b[0m',
-                '  Rol: Full-Stack Developer',
-                '  Descripción: Desarrollo de APIs REST, optimización de consultas SQL y mejoras en UI.',
-                '',
-                '\x1b[1;32m[2023 - 2024] Consejo Nacional de Competencias (CNC)\x1b[0m',
-                '  Rol: Desarrollador Backend & DevOps',
-                '  Descripción: Estabilización de arquitectura, módulos en NestJS/Laravel y empaquetado Docker.',
-              ].join('\n'),
-            },
-            'contact.txt': {
-              type: 'file',
-              name: 'contact.txt',
-              size: 450,
-              permissions: '-rw-r--r--',
-              updatedAt: 'Aug 14 12:20',
-              content: [
-                'Canales de Contacto Directo:',
-                '  \x1b[33mEmail:\x1b[0m    jorge.doicela.m@gmail.com',
-                '  \x1b[34mLinkedIn:\x1b[0m https://www.linkedin.com/in/jorgedoicela',
-                '  \x1b[35mGitHub:\x1b[0m   https://github.com/JorgeDoicela',
-                '  \x1b[36mTikTok:\x1b[0m   https://tiktok.com/@jorge.doicela',
-                '  \x1b[32mUbicación:\x1b[0m Quito, Ecuador (UTC-5)',
-              ].join('\n'),
-            },
-            'faith.md': {
-              type: 'file',
-              name: 'faith.md',
-              size: 620,
-              permissions: '-rw-r--r--',
-              updatedAt: 'Aug 14 12:25',
-              content: [
-                '\x1b[1;33m# Principios y Valores\x1b[0m',
-                'Mi trabajo e ingeniería están fundamentados en valores cristianos:',
-                'Integridad, excelencia en el servicio, honestidad técnica y mejora continua.',
-                '"Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres." - Colosenses 3:23',
-              ].join('\n'),
-            },
-            projects: {
-              type: 'dir',
-              name: 'projects',
-              permissions: 'drwxr-xr-x',
-              updatedAt: 'Aug 14 12:30',
-              children: {
-                'kartex.txt': {
-                  type: 'file',
-                  name: 'kartex.txt',
-                  size: 512,
-                  permissions: '-rw-r--r--',
-                  updatedAt: 'Aug 14 12:30',
-                  content:
-                    'Kartex: Plataforma de investigación bíblica y exégesis con Next.js, NestJS y SQLite.',
-                },
-                'doiceladev.txt': {
-                  type: 'file',
-                  name: 'doiceladev.txt',
-                  size: 580,
-                  permissions: '-rw-r--r--',
-                  updatedAt: 'Aug 14 12:30',
-                  content:
-                    'DoicelaDev: Plataforma de contenidos sobre IA, Ciberseguridad, Noticias, Tutoriales y Foros.',
-                },
-                'portfolio.txt': {
-                  type: 'file',
-                  name: 'portfolio.txt',
-                  size: 490,
-                  permissions: '-rw-r--r--',
-                  updatedAt: 'Aug 14 12:30',
-                  content:
-                    'Portafolio: Plataforma interactiva con catálogo de proyectos, arquitectura de sistemas y consola sobre WebSockets.',
-                },
+@Injectable()
+export class PortfolioService implements OnModuleInit {
+  private readonly logger = new Logger(PortfolioService.name);
+  private readonly serverStartTime = Date.now();
+  private readonly profileCache = new Map<SupportedLocale, TerminalProfile>();
+
+  constructor(
+    @InjectRepository(TerminalProfile, 'portfolioConnection')
+    private readonly terminalProfileRepository: Repository<TerminalProfile>,
+    private readonly projectsService: PortfolioProjectsService,
+  ) {}
+
+  async onModuleInit(): Promise<void> {
+    await this.loadProfiles();
+  }
+
+  private normalizeLang(lang?: string): SupportedLocale {
+    return lang === 'en' ? 'en' : 'es';
+  }
+
+  private async loadProfiles(): Promise<void> {
+    const profiles = await this.terminalProfileRepository.find();
+    this.profileCache.clear();
+    for (const profile of profiles) {
+      const lang = this.normalizeLang(profile.language);
+      this.profileCache.set(lang, profile);
+    }
+    this.logger.log(
+      `Perfiles de terminal cargados desde portfolio.sqlite: [${Array.from(this.profileCache.keys()).join(', ')}]`,
+    );
+  }
+
+  private async getProfile(lang?: string): Promise<TerminalProfile> {
+    const normalized = this.normalizeLang(lang);
+    let profile = this.profileCache.get(normalized);
+    if (!profile) {
+      const fromDb = await this.terminalProfileRepository.findOne({
+        where: { language: normalized },
+      });
+      if (fromDb) {
+        this.profileCache.set(normalized, fromDb);
+        profile = fromDb;
+      }
+    }
+    if (!profile && normalized !== 'es') {
+      return this.getProfile('es');
+    }
+    if (!profile) {
+      throw new Error(
+        'Perfil de terminal no encontrado en portfolio.sqlite. Ejecuta pnpm --filter backend seed:portfolio.',
+      );
+    }
+    return profile;
+  }
+
+  async getWelcomeBanner(lang?: string): Promise<string> {
+    const profile = await this.getProfile(lang);
+    return profile.banner.join('\n');
+  }
+
+  async getRateLimitMessage(lang?: string): Promise<string> {
+    const profile = await this.getProfile(lang);
+    return profile.messages.rateLimit;
+  }
+
+  private buildProjectFiles(
+    projects: PortfolioProject[],
+    profile: TerminalProfile,
+  ): Record<string, VirtualFile> {
+    const children: Record<string, VirtualFile> = {};
+    for (const project of projects) {
+      const filename = `${project.slug}.txt`;
+      const lines = [
+        `\x1b[1;33m# ${project.title}\x1b[0m`,
+        `${profile.messages.roleLabel}: ${project.role}`,
+        `${profile.messages.stackLabel}: ${project.technologies.join(', ')}`,
+        '',
+        project.overview || project.description,
+      ];
+      if (project.demoUrl) {
+        lines.push('', `URL: ${project.demoUrl}`);
+      }
+      const content = lines.join('\n');
+      children[filename] = {
+        type: 'file',
+        name: filename,
+        size: Buffer.byteLength(content, 'utf8'),
+        permissions: '-rw-r--r--',
+        updatedAt: 'Nov 23 09:00',
+        content,
+      };
+    }
+    return children;
+  }
+
+  private async buildFilesystem(
+    lang: SupportedLocale,
+  ): Promise<Record<string, VirtualFile>> {
+    const [profile, projects] = await Promise.all([
+      this.getProfile(lang),
+      this.projectsService.findAll(lang),
+    ]);
+
+    const readmeContent = profile.files.readme.join('\n');
+    const expContent = profile.files.experience.join('\n');
+    const contactContent = profile.files.contactFile.join('\n');
+    const faithContent = profile.files.faith.join('\n');
+    const archContent = profile.files.architecture.join('\n');
+
+    return {
+      home: {
+        type: 'dir',
+        name: 'home',
+        permissions: 'drwxr-xr-x',
+        updatedAt: 'Nov 23 09:00',
+        children: {
+          jorge: {
+            type: 'dir',
+            name: 'jorge',
+            permissions: 'drwxr-xr-x',
+            updatedAt: 'Nov 23 09:00',
+            children: {
+              'README.md': {
+                type: 'file',
+                name: 'README.md',
+                size: Buffer.byteLength(readmeContent, 'utf8'),
+                permissions: '-rw-r--r--',
+                updatedAt: 'Nov 23 09:00',
+                content: readmeContent,
               },
-            },
-            docs: {
-              type: 'dir',
-              name: 'docs',
-              permissions: 'drwxr-xr-x',
-              updatedAt: 'Aug 14 12:35',
-              children: {
-                'architecture.md': {
-                  type: 'file',
-                  name: 'architecture.md',
-                  size: 850,
-                  permissions: '-rw-r--r--',
-                  updatedAt: 'Aug 14 12:35',
-                  content:
-                    'Monorepo modular con desacoplamiento total en pnpm, NestJS consolidado y Next.js multi-subdominio.',
+              'skills.json': {
+                type: 'file',
+                name: 'skills.json',
+                size: Buffer.byteLength(SKILLS_JSON_CONTENT, 'utf8'),
+                permissions: '-rw-r--r--',
+                updatedAt: 'Nov 23 09:00',
+                content: SKILLS_JSON_CONTENT,
+              },
+              'experience.log': {
+                type: 'file',
+                name: 'experience.log',
+                size: Buffer.byteLength(expContent, 'utf8'),
+                permissions: '-rw-r--r--',
+                updatedAt: 'Nov 23 09:00',
+                content: expContent,
+              },
+              'contact.txt': {
+                type: 'file',
+                name: 'contact.txt',
+                size: Buffer.byteLength(contactContent, 'utf8'),
+                permissions: '-rw-r--r--',
+                updatedAt: 'Nov 23 09:00',
+                content: contactContent,
+              },
+              'faith.md': {
+                type: 'file',
+                name: 'faith.md',
+                size: Buffer.byteLength(faithContent, 'utf8'),
+                permissions: '-rw-r--r--',
+                updatedAt: 'Nov 23 09:00',
+                content: faithContent,
+              },
+              projects: {
+                type: 'dir',
+                name: 'projects',
+                permissions: 'drwxr-xr-x',
+                updatedAt: 'Nov 23 09:00',
+                children: this.buildProjectFiles(projects, profile),
+              },
+              docs: {
+                type: 'dir',
+                name: 'docs',
+                permissions: 'drwxr-xr-x',
+                updatedAt: 'Nov 23 09:00',
+                children: {
+                  'architecture.md': {
+                    type: 'file',
+                    name: 'architecture.md',
+                    size: Buffer.byteLength(archContent, 'utf8'),
+                    permissions: '-rw-r--r--',
+                    updatedAt: 'Nov 23 09:00',
+                    content: archContent,
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-  };
+    };
+  }
 
-  /**
-   * Resuelve el nodo de directorio según la ruta virtual actual
-   */
-  private resolveDirectory(cwd: string): {
-    dir: VirtualFile | null;
-    path: string;
-  } {
+  private resolveDirectory(
+    rootFilesystem: Record<string, VirtualFile>,
+    cwd: string,
+  ): { dir: VirtualFile | null; path: string } {
     let normalized = cwd.trim();
     if (normalized.startsWith('~')) {
       normalized = '/home/jorge' + normalized.slice(1);
@@ -232,7 +254,7 @@ export class PortfolioService {
     let current: VirtualFile = {
       type: 'dir',
       name: 'root',
-      children: this.rootFilesystem,
+      children: rootFilesystem,
     };
 
     for (const segment of segments) {
@@ -249,17 +271,19 @@ export class PortfolioService {
     return { dir: current, path: normalized };
   }
 
-  /**
-   * Ejecuta un comando con soporte de sesión de directorio (cwd)
-   */
-  executeCommand(
+  async executeCommand(
     command: string,
     currentCwd: string = '~',
-  ): CommandExecutionResult {
+    lang?: string,
+  ): Promise<CommandExecutionResult> {
     const rawTrimmed = command.trim();
     if (!rawTrimmed) {
       return { output: '' };
     }
+
+    const locale = this.normalizeLang(lang);
+    const profile = await this.getProfile(locale);
+    const msg = profile.messages;
 
     const parts = rawTrimmed.split(/\s+/);
     const cmd = parts[0].toLowerCase();
@@ -267,90 +291,41 @@ export class PortfolioService {
 
     switch (cmd) {
       case 'help':
-        return {
-          output: [
-            '\x1b[1;33mComandos Disponibles del Sistema:\x1b[0m',
-            '  \x1b[1;33mabout\x1b[0m                  \x1b[90m→\x1b[0m Información biográfica, perfil y valores',
-            '  \x1b[1;33mprojects\x1b[0m               \x1b[90m→\x1b[0m Proyectos de ingeniería destacados',
-            '  \x1b[1;33mskills\x1b[0m                 \x1b[90m→\x1b[0m Stack de tecnologías y especialidades',
-            '  \x1b[1;33mcontact\x1b[0m                \x1b[90m→\x1b[0m Canales oficiales de contacto y redes',
-            '  \x1b[1;33mneofetch\x1b[0m               \x1b[90m→\x1b[0m Especificaciones completas del sistema y servidor',
-            '  \x1b[1;33mhelp\x1b[0m                   \x1b[90m→\x1b[0m Muestra este menú de ayuda interactivo',
-            '  \x1b[1;33mls [-la]\x1b[0m               \x1b[90m→\x1b[0m Lista archivos y carpetas del directorio actual',
-            '  \x1b[1;33mcd <directorio>\x1b[0m        \x1b[90m→\x1b[0m Cambia el directorio de trabajo actual',
-            '  \x1b[1;33mcat <archivo>\x1b[0m          \x1b[90m→\x1b[0m Muestra el contenido de un archivo de texto',
-            '  \x1b[1;33mpwd\x1b[0m                    \x1b[90m→\x1b[0m Imprime la ruta del directorio de trabajo actual',
-            '  \x1b[1;33mwhoami\x1b[0m                 \x1b[90m→\x1b[0m Muestra el usuario y permisos de la sesión',
-            '  \x1b[1;33mdate\x1b[0m                   \x1b[90m→\x1b[0m Muestra la hora y fecha en huso horario de Quito (UTC-5)',
-            '  \x1b[1;33muptime\x1b[0m                 \x1b[90m→\x1b[0m Tiempo de actividad ininterrumpida del servidor',
-            '  \x1b[1;33mman <comando>\x1b[0m          \x1b[90m→\x1b[0m Abre el manual detallado de un comando',
-            '  \x1b[1;33mecho <texto>\x1b[0m           \x1b[90m→\x1b[0m Imprime texto o variables de entorno ($USER, $HOST)',
-            '  \x1b[1;33mcurl <url>\x1b[0m             \x1b[90m→\x1b[0m Simula una petición HTTP REST',
-            '  \x1b[1;33mgit log\x1b[0m                \x1b[90m→\x1b[0m Historial cronológico de commits e hitos de carrera',
-            '  \x1b[1;33msudo <comando>\x1b[0m         \x1b[90m→\x1b[0m Ejecución de privilegios elevados (simulado)',
-            '  \x1b[1;33mtmux\x1b[0m                   \x1b[90m→\x1b[0m Multiplexor de terminal, división de paneles y atajos',
-            '  \x1b[1;33mmatrix\x1b[0m                 \x1b[90m→\x1b[0m Inicia la animación digital rain de Matrix',
-            '  \x1b[1;33mclear\x1b[0m                  \x1b[90m→\x1b[0m Limpia la pantalla de la consola',
-            '  \x1b[1;33mexit\x1b[0m                   \x1b[90m→\x1b[0m Cierra el panel o la sesión de consola',
-          ].join('\n'),
-        };
+        return { output: profile.help.join('\n') };
 
       case 'tmux':
-        return {
-          output: [
-            '\x1b[1;33mTerminal Multiplexer (tmux) • Debian GNU/Linux 13\x1b[0m',
-            '\x1b[90m------------------------------------------------------------\x1b[0m',
-            '  \x1b[1;33msplit-v\x1b[0m (o \x1b[33mCtrl+B %\x1b[0m)    \x1b[90m→\x1b[0m Divide la consola en 2 columnas verticales',
-            '  \x1b[1;33msplit-h\x1b[0m (o \x1b[33mCtrl+B "\x1b[0m)    \x1b[90m→\x1b[0m Divide la consola en 2 filas horizontales',
-            '  \x1b[1;33munsplit\x1b[0m (o \x1b[33mexit\x1b[0m)        \x1b[90m→\x1b[0m Cierra el panel actual y vuelve a 1 columna',
-            '  \x1b[1;33mCtrl+B c\x1b[0m               \x1b[90m→\x1b[0m Abre una nueva ventana/pestaña',
-            '  \x1b[1;33mCtrl+B 0..4\x1b[0m            \x1b[90m→\x1b[0m Cambia directamente a la ventana número N',
-            '',
-            '\x1b[90m(También puedes usar el botón [split] en la cabecera superior)\x1b[0m',
-          ].join('\n'),
-        };
-
-      case 'projects':
-        return {
-          output: [
-            '\x1b[1;33mProyectos de Ingeniería Destacados:\x1b[0m',
-            '\x1b[90m------------------------------------------------------------\x1b[0m',
-            '  \x1b[1;33m1. Kartex\x1b[0m                  \x1b[90m[kartex.jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m Lead Architect & Full Stack Developer',
-            '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite (WAL), Expo Mobile, TypeScript',
-            '     \x1b[90m• Resumen:\x1b[0m Plataforma de investigación bíblica con 9 módulos y morfología Strong.',
-            '',
-            '  \x1b[1;33m2. DoicelaDev Platform\x1b[0m      \x1b[90m[doiceladev.jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m Full Stack & DevSecOps Developer',
-            '     \x1b[33m• Stack:\x1b[0m Next.js 16, NestJS 11, SQLite, Neumorphism UI, Glassmorphism',
-            '     \x1b[90m• Resumen:\x1b[0m Monolito modular con 7 áreas temáticas y 9 entidades TypeORM.',
-            '',
-            '  \x1b[1;33m3. Arquitectura Cloud VPS\x1b[0m   \x1b[90m[jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m Cloud & DevSecOps',
-            '     \x1b[33m• Stack:\x1b[0m AWS Lightsail, Debian 13, Nginx mTLS, PM2, GitHub Actions CI/CD',
-            '     \x1b[90m• Resumen:\x1b[0m Despliegue de alta disponibilidad y cero downtime en 1 GB RAM.',
-            '',
-            '  \x1b[1;33m4. Consola Web Interactiva\x1b[0m  \x1b[90m[portfolio.jorgedoicela.com]\x1b[0m',
-            '     \x1b[33m• Rol:\x1b[0m Backend & Frontend Developer',
-            '     \x1b[33m• Stack:\x1b[0m NestJS WebSockets, Socket.io, TypeScript, ANSI Parser',
-            '     \x1b[90m• Resumen:\x1b[0m Emulador UNIX interactivo sobre WebSockets.',
-            '',
-            '\x1b[90m(Puedes usar "open doiceladev" o "open kartex" para abrirlos directamente)\x1b[0m',
-          ].join('\n'),
-        };
+        return { output: profile.tmux.join('\n') };
 
       case 'about':
-        return {
-          output: [
-            '\x1b[1;33mJorge Ismael Doicela Molina\x1b[0m',
-            '\x1b[90m------------------------------------------------------------\x1b[0m',
-            'Desarrollador de Software radicado en \x1b[33mQuito, Ecuador\x1b[0m, guiado por principios y valores cristianos.',
-            'Estudiante de \x1b[1;33mIngeniería en Inteligencia Artificial y Ciberseguridad\x1b[0m en la Universidad Bolivariana del Ecuador (UB).',
+        return { output: profile.about.join('\n') };
+
+      case 'skills':
+        return { output: profile.skills.join('\n') };
+
+      case 'contact':
+        return { output: profile.contact.join('\n') };
+
+      case 'projects': {
+        const projects = await this.projectsService.findAll(locale);
+        const lines: string[] = [
+          msg.projectsHeader,
+          '\x1b[90m------------------------------------------------------------\x1b[0m',
+        ];
+        projects.forEach((project, idx) => {
+          const host = project.demoUrl
+            ? project.demoUrl.replace(/^https?:\/\//, '')
+            : project.slug;
+          lines.push(
+            `  \x1b[1;33m${idx + 1}. ${project.title}\x1b[0m  \x1b[90m[${host}]\x1b[0m`,
+            `     \x1b[33m• ${msg.roleLabel}:\x1b[0m ${project.role}`,
+            `     \x1b[33m• ${msg.stackLabel}:\x1b[0m ${project.technologies.join(', ')}`,
+            `     \x1b[90m• ${msg.summaryLabel}:\x1b[0m ${project.description}`,
             '',
-            'Especializado en arquitecturas limpias, desarrollo Full-Stack (Next.js, NestJS, .NET, Laravel),',
-            'diseño de APIs REST de alto rendimiento y administración de infraestructura segura (DevSecOps, Docker, AWS).',
-          ].join('\n'),
-        };
+          );
+        });
+        lines.push(msg.projectsHint);
+        return { output: lines.join('\n') };
+      }
 
       case 'neofetch':
         return {
@@ -366,39 +341,11 @@ export class PortfolioService {
             '\x1b[90m      /  |   |  \\       \x1b[1;33mWM:\x1b[0m Hyprland (Wayland compositor)',
             '\x1b[90m     /___|___|___\\      \x1b[1;33mEditor:\x1b[0m Neovim (LazyVim custom config)',
             '\x1b[90m                        \x1b[1;33mCPU:\x1b[0m AMD EPYC Processor (1 vCPU)',
-            '\x1b[90m                        \x1b[1;33mMemory:\x1b[0m 420MB / 1024MB (41% - Optimized)',
+            '\x1b[90m                        \x1b[1;33mMemory:\x1b[0m ~170MB / 1024MB (Optimized)',
             '\x1b[90m                        \x1b[1;33mFaith:\x1b[0m \x1b[1;33mActive (Glory to God)\x1b[0m',
             '\x1b[90m                        \x1b[1;33mSecurity:\x1b[0m \x1b[1;33mDevSecOps & Hardening active\x1b[0m',
             '',
             '\x1b[40m   \x1b[41m   \x1b[42m   \x1b[43m   \x1b[44m   \x1b[45m   \x1b[46m   \x1b[47m   \x1b[0m',
-          ].join('\n'),
-        };
-
-      case 'skills':
-        return {
-          output: [
-            '\x1b[1;33mStack Tecnológico & Especialidades:\x1b[0m',
-            '\x1b[90m------------------------------------------------------------\x1b[0m',
-            '  \x1b[1;33mFrontend:\x1b[0m       React 19, Next.js 16, TypeScript, TailwindCSS v4, Vite',
-            '  \x1b[1;33mBackend:\x1b[0m        NestJS, ASP.NET Core (.NET 9), C#, Laravel, Blade, PHP, Python',
-            '  \x1b[1;33mBases de Datos:\x1b[0m PostgreSQL, MySQL, MongoDB, Redis, SQLite (better-sqlite3)',
-            '  \x1b[1;33mDevSecOps:\x1b[0m      Docker, AWS Lightsail, GitHub Actions CI/CD, Nginx, Cloudflare',
-            '  \x1b[1;33mEntorno:\x1b[0m        Arch Linux, Debian, Neovim, tmux, Hyprland, Sioyek, Figma',
-            '  \x1b[1;33mSeguridad:\x1b[0m      Hardening de servidores, SSL Estricto, Validación de DTOs, OWASP Top 10',
-          ].join('\n'),
-        };
-
-      case 'contact':
-        return {
-          output: [
-            '\x1b[1;33mCanales Oficiales de Comunicación:\x1b[0m',
-            '  \x1b[33m• Correo:\x1b[0m    jorge.doicela.m@gmail.com',
-            '  \x1b[34m• LinkedIn:\x1b[0m  https://www.linkedin.com/in/jorgedoicela',
-            '  \x1b[35m• GitHub:\x1b[0m    https://github.com/JorgeDoicela',
-            '  \x1b[36m• TikTok:\x1b[0m    https://tiktok.com/@jorge.doicela',
-            '  \x1b[32m• Ubicación:\x1b[0m Quito, Ecuador (UTC-5)',
-            '',
-            '\x1b[90m(Puedes usar "open linkedin" o "open github" para abrirlos directamente)\x1b[0m',
           ].join('\n'),
         };
 
@@ -417,17 +364,20 @@ export class PortfolioService {
 
       case 'date': {
         const now = new Date();
-        const formatted = new Intl.DateTimeFormat('es-EC', {
-          timeZone: 'America/Guayaquil',
-          weekday: 'short',
-          year: 'numeric',
-          month: 'short',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZoneName: 'short',
-        }).format(now);
+        const formatted = new Intl.DateTimeFormat(
+          locale === 'en' ? 'en-US' : 'es-EC',
+          {
+            timeZone: 'America/Guayaquil',
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short',
+          },
+        ).format(now);
         return { output: formatted };
       }
 
@@ -438,20 +388,15 @@ export class PortfolioService {
 
       case 'echo': {
         let text = args.join(' ');
-        // Sustitución de variables conocidas y seguras
         text = text
           .replace(/\$USER/g, 'jorge')
           .replace(/\$HOST/g, 'debian')
           .replace(/\$SHELL/g, '/bin/zsh')
           .replace(/\$HOME/g, '/home/jorge')
           .replace(/\$PWD/g, currentCwd);
-        // Sanitizar secuencias de escape de control ANSI arbitrarias para evitar
-        // inyección de terminal (cursor repositioning, clear screen, change window title, etc.)
-        // Solo se permiten secuencias de color (\x1b[Nm) y texto plano.
         const esc = String.fromCharCode(27);
         const ansiPattern = esc + '\\[(?![0-9;]*m)[^a-zA-Z]*[a-zA-Z]';
         text = text.replace(new RegExp(ansiPattern, 'g'), '');
-        // Eliminar caracteres de control excepto newline (10) y tab (9)
         text = Array.from(text)
           .filter((char) => {
             const code = char.charCodeAt(0);
@@ -479,25 +424,15 @@ export class PortfolioService {
         return { output: '', action: 'clear' };
 
       case 'exit':
-        return {
-          output: '\x1b[33mSesión de consola interactiva finalizada.\x1b[0m',
-          action: 'exit',
-        };
+        return { output: msg.exit, action: 'exit' };
 
       case 'matrix':
-        return {
-          output:
-            '\x1b[1;32mIniciando secuencia de flujo Matrix... (Presiona cualquier tecla para salir)\x1b[0m',
-          action: 'matrix',
-        };
+        return { output: msg.matrixStart, action: 'matrix' };
 
       case 'open': {
         const target = (args[0] || '').toLowerCase();
         if (!target) {
-          return {
-            output:
-              'Uso: open <github|linkedin|tiktok|email|doiceladev|kartex|portfolio>',
-          };
+          return { output: msg.openUsage };
         }
         let url = '';
         if (target.includes('github')) url = 'https://github.com/JorgeDoicela';
@@ -517,12 +452,12 @@ export class PortfolioService {
           url = target;
         else {
           return {
-            output: `Destino desconocido: "${target}". Opciones: github, linkedin, tiktok, email, doiceladev, kartex.`,
+            output: msg.openUnknown.replace('{target}', target),
           };
         }
 
         return {
-          output: `\x1b[32mRedirigiendo a ${url}...\x1b[0m`,
+          output: msg.openRedirect.replace('{url}', url),
           action: 'open',
           actionPayload: url,
         };
@@ -562,44 +497,44 @@ export class PortfolioService {
             output: [
               '\x1b[33mcommit 7f3b8a1c9e4d2a (HEAD -> main, origin/main)\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
-              'Date:   Wed Aug 14 12:00:00 2024 -0500',
+              'Date:   Mon Nov 23 09:00:00 2026 -0500',
               '',
-              '    feat: implement terminal SSH emulated shell with WebSockets & tmux tabs',
+              '    feat(portfolio): migrate guided terminal to bilingual SQLite corpus',
               '',
               '\x1b[33mcommit 5a2d8e1f0c4b3a\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
-              'Date:   Mon Jun 10 18:30:12 2024 -0500',
+              'Date:   Mon Jun 10 18:30:12 2025 -0500',
               '',
               '    feat: complete DoicelaDev platform & Kartex research platform',
               '',
               '\x1b[33mcommit 3e1f9a2b8c4d5e\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
-              'Date:   Sun Mar 03 14:15:40 2024 -0500',
+              'Date:   Sun Mar 03 14:15:40 2025 -0500',
               '',
-              '    feat: setup AWS Lightsail VPS, Cloudflare SSL Full (Strict) & CI/CD pipeline',
+              '    feat: setup AWS Lightsail VPS, Cloudflare mTLS & CI/CD pipeline',
               '',
               '\x1b[33mcommit 1a9b8c7d6e5f4a\x1b[0m',
               'Author: Jorge Doicela <jorge.doicela.m@gmail.com>',
-              'Date:   Tue Jan 02 09:00:00 2024 -0500',
+              'Date:   Tue Jan 02 09:00:00 2025 -0500',
               '',
               '    feat: initialize high-cohesion isolated monorepo architecture',
             ].join('\n'),
           };
         }
-        return {
-          output: 'Uso de git en la terminal virtual: git log',
-        };
+        return { output: msg.gitUsage };
       }
 
       case 'man': {
         const topic = (args[0] || '').toLowerCase();
         if (!topic) {
-          return {
-            output:
-              '¿Qué página de manual deseas consultar? Ejemplo: man ls, man cat, man cd',
-          };
+          return { output: msg.manUsage };
         }
-        return { output: this.getManualPage(topic) };
+        const entry = profile.manuals[topic];
+        return {
+          output: entry
+            ? entry.join('\n')
+            : msg.manNotFound.replace('{topic}', topic),
+        };
       }
 
       case 'ls': {
@@ -608,12 +543,10 @@ export class PortfolioService {
         const isAll =
           args.includes('-a') || args.includes('-la') || args.includes('-al');
 
-        const { dir } = this.resolveDirectory(currentCwd);
+        const rootFs = await this.buildFilesystem(locale);
+        const { dir } = this.resolveDirectory(rootFs, currentCwd);
         if (!dir || !dir.children) {
-          return {
-            output:
-              '\x1b[31mls: no se puede acceder al directorio actual\x1b[0m',
-          };
+          return { output: msg.lsError };
         }
 
         const entries = Object.values(dir.children);
@@ -621,10 +554,10 @@ export class PortfolioService {
           const lines: string[] = [`total ${entries.length * 4}`];
           if (isAll) {
             lines.push(
-              `drwxr-xr-x 2 jorge jorge 4096 Aug 14 12:00 \x1b[1;34m.\x1b[0m`,
+              `drwxr-xr-x 2 jorge jorge 4096 Nov 23 09:00 \x1b[1;34m.\x1b[0m`,
             );
             lines.push(
-              `drwxr-xr-x 3 jorge jorge 4096 Aug 14 12:00 \x1b[1;34m..\x1b[0m`,
+              `drwxr-xr-x 3 jorge jorge 4096 Nov 23 09:00 \x1b[1;34m..\x1b[0m`,
             );
           }
           for (const item of entries) {
@@ -632,22 +565,22 @@ export class PortfolioService {
             const perm =
               item.permissions || (isDir ? 'drwxr-xr-x' : '-rw-r--r--');
             const size = String(item.size || 4096).padStart(6, ' ');
-            const date = item.updatedAt || 'Aug 14 12:00';
+            const date = item.updatedAt || 'Nov 23 09:00';
             const name = isDir
               ? `\x1b[1;34m${item.name}/\x1b[0m`
               : `\x1b[0m${item.name}\x1b[0m`;
             lines.push(`${perm} 1 jorge jorge ${size} ${date} ${name}`);
           }
           return { output: lines.join('\n') };
-        } else {
-          const names = entries.map((item) =>
-            item.type === 'dir' ? `\x1b[1;34m${item.name}/\x1b[0m` : item.name,
-          );
-          if (isAll) {
-            names.unshift('\x1b[1;34m.\x1b[0m', '\x1b[1;34m..\x1b[0m');
-          }
-          return { output: names.join('    ') };
         }
+
+        const names = entries.map((item) =>
+          item.type === 'dir' ? `\x1b[1;34m${item.name}/\x1b[0m` : item.name,
+        );
+        if (isAll) {
+          names.unshift('\x1b[1;34m.\x1b[0m', '\x1b[1;34m..\x1b[0m');
+        }
+        return { output: names.join('    ') };
       }
 
       case 'cd': {
@@ -660,10 +593,7 @@ export class PortfolioService {
           if (currentCwd === '~' || currentCwd === '/home/jorge') {
             return { output: '', newCwd: '/home' };
           }
-          if (currentCwd === '/home') {
-            return { output: '', newCwd: '/' };
-          }
-          if (currentCwd === '/') {
+          if (currentCwd === '/home' || currentCwd === '/') {
             return { output: '', newCwd: '/' };
           }
           const segments = currentCwd.split('/').filter(Boolean);
@@ -681,11 +611,12 @@ export class PortfolioService {
         prospectivePath = prospectivePath
           .replace(/\/+/g, '/')
           .replace(/\/$/, '');
-        const { dir } = this.resolveDirectory(prospectivePath);
+        const rootFs = await this.buildFilesystem(locale);
+        const { dir } = this.resolveDirectory(rootFs, prospectivePath);
 
         if (!dir || dir.type !== 'dir') {
           return {
-            output: `\x1b[31mcd: no existe el directorio o carpeta: ${target}\x1b[0m`,
+            output: msg.cdNotFound.replace('{target}', target),
           };
         }
 
@@ -699,20 +630,21 @@ export class PortfolioService {
       case 'cat': {
         const target = args[0];
         if (!target) {
-          return { output: 'Uso: cat <nombre_archivo>' };
+          return { output: msg.catUsage };
         }
 
-        const { dir } = this.resolveDirectory(currentCwd);
+        const rootFs = await this.buildFilesystem(locale);
+        const { dir } = this.resolveDirectory(rootFs, currentCwd);
         if (!dir || !dir.children || !dir.children[target]) {
           return {
-            output: `\x1b[31mcat: ${target}: No existe el archivo en el directorio actual\x1b[0m`,
+            output: msg.catNotFound.replace('{target}', target),
           };
         }
 
         const file = dir.children[target];
         if (file.type === 'dir') {
           return {
-            output: `\x1b[31mcat: ${target}: Es un directorio (usa 'cd' o 'ls')\x1b[0m`,
+            output: msg.catIsDir.replace('{target}', target),
           };
         }
 
@@ -721,24 +653,27 @@ export class PortfolioService {
 
       default:
         return {
-          output: `\x1b[31mzsh: comando no encontrado: ${command}\x1b[0m. Escribe \x1b[33mhelp\x1b[0m para ver la lista de comandos disponibles.`,
+          output: msg.cmdNotFound.replace('{command}', command),
         };
     }
   }
 
-  /**
-   * Generador de autocompletado para la tecla Tab
-   */
-  getCompletions(currentInput: string, currentCwd: string): string[] {
+  async getCompletions(
+    currentInput: string,
+    currentCwd: string,
+    lang?: string,
+  ): Promise<string[]> {
     const trimmed = currentInput.trimStart();
     const parts = trimmed.split(/\s+/);
 
     const availableCommands = [
       'help',
       'about',
-      'neofetch',
+      'projects',
       'skills',
       'contact',
+      'neofetch',
+      'tmux',
       'ls',
       'cd',
       'cat',
@@ -766,7 +701,9 @@ export class PortfolioService {
     const lastArg = parts[parts.length - 1];
 
     if (['cat', 'cd', 'ls'].includes(cmd)) {
-      const { dir } = this.resolveDirectory(currentCwd);
+      const locale = this.normalizeLang(lang);
+      const rootFs = await this.buildFilesystem(locale);
+      const { dir } = this.resolveDirectory(rootFs, currentCwd);
       if (!dir || !dir.children) return [];
 
       const entries = Object.keys(dir.children);
@@ -801,56 +738,9 @@ export class PortfolioService {
 
   private getFormattedUptime(): string {
     const elapsedSeconds =
-      Math.floor((Date.now() - this.serverStartTime) / 1000) + 14400; // +4h offset
+      Math.floor((Date.now() - this.serverStartTime) / 1000) + 14400;
     const hours = Math.floor(elapsedSeconds / 3600);
     const minutes = Math.floor((elapsedSeconds % 3600) / 60);
     return `${hours} hours, ${minutes} mins`;
-  }
-
-  private getManualPage(command: string): string {
-    const manuals: Record<string, string> = {
-      ls: [
-        '\x1b[1mNOMBRE\x1b[0m',
-        '    ls - lista los contenidos de un directorio',
-        '\x1b[1mSINOPSIS\x1b[0m',
-        '    ls [-l] [-a] [-la] [directorio]',
-        '\x1b[1mDESCRIPCIÓN\x1b[0m',
-        '    Lista información sobre los archivos (en el directorio actual por defecto).',
-        '    -a, --all        no oculta entradas que comiencen con .',
-        '    -l               usa un formato de listado largo con permisos y tamaños',
-      ].join('\n'),
-      cat: [
-        '\x1b[1mNOMBRE\x1b[0m',
-        '    cat - concatena y muestra archivos en la salida estándar',
-        '\x1b[1mSINOPSIS\x1b[0m',
-        '    cat <archivo>',
-        '\x1b[1mEJEMPLO\x1b[0m',
-        '    cat README.md',
-        '    cat skills.json',
-      ].join('\n'),
-      cd: [
-        '\x1b[1mNOMBRE\x1b[0m',
-        '    cd - cambia el directorio de trabajo de la terminal',
-        '\x1b[1mSINOPSIS\x1b[0m',
-        '    cd [directorio | ~ | ..]',
-      ].join('\n'),
-      neofetch: [
-        '\x1b[1mNOMBRE\x1b[0m',
-        '    neofetch - herramienta CLI para desplegar información del sistema',
-        '\x1b[1mDESCRIPCIÓN\x1b[0m',
-        '    Muestra un resumen estilizado del hardware, sistema operativo, kernel y estado del VPS.',
-      ].join('\n'),
-      matrix: [
-        '\x1b[1mNOMBRE\x1b[0m',
-        '    matrix - simulador visual de lluvia digital de código',
-        '\x1b[1mDESCRIPCIÓN\x1b[0m',
-        '    Inicia una animación de caracteres cayendo en cascada en la terminal. Se desactiva al presionar cualquier tecla.',
-      ].join('\n'),
-    };
-
-    return (
-      manuals[command] ||
-      `No hay entrada en el manual para "${command}". Escribe "help" para ver comandos disponibles.`
-    );
   }
 }

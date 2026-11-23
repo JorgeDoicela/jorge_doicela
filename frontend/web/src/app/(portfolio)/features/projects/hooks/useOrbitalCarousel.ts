@@ -217,10 +217,10 @@ export function useOrbitalCarousel({
           : Math.max(0.18, 1 - absOffset * 0.48);
 
       const blurPx = absOffset < 0.06 ? 0 : Math.min(2.2, absOffset * 1.05);
-      const zIndex = Math.round(30 - absOffset * 10);
+      const zIndex = Math.max(1, Math.round(50 - absOffset * 20));
 
       return {
-        transform: `translate3d(${translateXPercent}%, ${translateYPx}px, ${translateZPx}px) rotateY(${rotateYDeg}deg) scale(${scale})`,
+        transform: `perspective(1200px) translate3d(${translateXPercent}%, ${translateYPx}px, ${translateZPx}px) rotateY(${rotateYDeg}deg) scale(${scale})`,
         opacity,
         filter: blurPx > 0 ? `blur(${blurPx.toFixed(2)}px)` : 'none',
         zIndex,

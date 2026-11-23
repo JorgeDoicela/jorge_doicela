@@ -499,7 +499,6 @@ export function seedCorpus(
       contentMarkdown TEXT NOT NULL,
       tags TEXT,
       PRIMARY KEY (id, language),
-      FOREIGN KEY (bookOrder) REFERENCES books(id) ON DELETE CASCADE,
       FOREIGN KEY (authorId, language) REFERENCES commentary_authors(id, language) ON DELETE CASCADE
     );
     CREATE INDEX IF NOT EXISTS IDX_commentary_passage ON commentary_entries(bookId, chapter, verseStart, verseEnd);
@@ -1090,6 +1089,7 @@ export function seedCorpus(
       '[CommentariesSeeder] Sembrando corpus de comentarios bíblicos...',
     );
     // A. Commentary Authors
+    const seededAuthorKeys = new Set<string>();
     const authorsPath = path.join(commentariesDir, 'commentary_authors.json');
     if (fs.existsSync(authorsPath)) {
       const authors = JSON.parse(
@@ -1101,9 +1101,11 @@ export function seedCorpus(
       `);
       const txAuthors = db.transaction((items: SeedCommentaryAuthor[]) => {
         for (const a of items) {
+          const lang = a.language || 'es';
+          seededAuthorKeys.add(`${a.id}::${lang}`);
           insertAuthor.run(
             a.id,
-            a.language || 'es',
+            lang,
             a.name,
             a.author,
             a.era,
@@ -1140,6 +1142,15 @@ export function seedCorpus(
           const lang = (e.language || defaults?.language || 'es').trim();
 
           if (!e.id || !rawAuthorId || !rawBookId) continue;
+          if (
+            seededAuthorKeys.size > 0 &&
+            !seededAuthorKeys.has(`${rawAuthorId}::${lang}`)
+          ) {
+            console.warn(
+              `[CommentariesSeeder] Omitiendo entrada '${e.id}' (autor '${rawAuthorId}' [${lang}] no registrado en catálogo).`,
+            );
+            continue;
+          }
 
           const resolvedBook = resolveCanonicalBook(rawBookId);
           const canonicalBookId = resolvedBook
@@ -1175,18 +1186,28 @@ export function seedCorpus(
       },
     );
 
-    const collectCommentaryEntryFiles = (dir: string): string[] => {
+    const collectCommentaryEntryFiles = (baseDir: string): string[] => {
       const results: string[] = [];
-      for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
-        const fullPath = path.join(dir, dirent.name);
-        if (dirent.isDirectory()) {
-          results.push(...collectCommentaryEntryFiles(fullPath));
-        } else if (
-          dirent.isFile() &&
-          dirent.name.endsWith('.json') &&
-          dirent.name !== 'commentary_authors.json'
-        ) {
-          results.push(fullPath);
+      if (!fs.existsSync(baseDir)) return results;
+      const authorDirs = fs
+        .readdirSync(baseDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory());
+
+      for (const authorDir of authorDirs) {
+        const authorPath = path.join(baseDir, authorDir.name);
+        const langDirs = fs
+          .readdirSync(authorPath, { withFileTypes: true })
+          .filter((d) => d.isDirectory());
+
+        for (const langDir of langDirs) {
+          const langPath = path.join(authorPath, langDir.name);
+          const files = fs
+            .readdirSync(langPath, { withFileTypes: true })
+            .filter((f) => f.isFile() && f.name.endsWith('.json'));
+
+          for (const file of files) {
+            results.push(path.join(langPath, file.name));
+          }
         }
       }
       return results;
@@ -1253,6 +1274,7 @@ export function seedCorpus(
       '[DictionariesSeeder] Sembrando corpus de diccionarios bíblicos...',
     );
     // A. Dictionaries Catalog
+    const seededDictKeys = new Set<string>();
     const dictPath = path.join(dictionariesDir, 'dictionaries.json');
     if (fs.existsSync(dictPath)) {
       const dictionaries = JSON.parse(
@@ -1264,9 +1286,11 @@ export function seedCorpus(
       `);
       const txDict = db.transaction((items: SeedBibleDictionary[]) => {
         for (const d of items) {
+          const lang = d.language || 'es';
+          seededDictKeys.add(`${d.id}::${lang}`);
           insertDict.run(
             d.id,
-            d.language || 'es',
+            lang,
             d.slug,
             d.title,
             d.author,
@@ -1304,6 +1328,16 @@ export function seedCorpus(
           if (!e.id || !rawDictId || !e.term) continue;
 
           const canonicalDictId = rawDictId.trim().replace(/-(es|en)$/i, '');
+          if (
+            seededDictKeys.size > 0 &&
+            !seededDictKeys.has(`${canonicalDictId}::${lang}`)
+          ) {
+            console.warn(
+              `[DictionariesSeeder] Omitiendo entrada '${e.id}' (diccionario '${canonicalDictId}' [${lang}] no registrado en catálogo).`,
+            );
+            continue;
+          }
+
           const normalized =
             e.normalizedTerm ||
             e.term
@@ -1336,18 +1370,28 @@ export function seedCorpus(
       },
     );
 
-    const collectDictionaryEntryFiles = (dir: string): string[] => {
+    const collectDictionaryEntryFiles = (baseDir: string): string[] => {
       const results: string[] = [];
-      for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
-        const fullPath = path.join(dir, dirent.name);
-        if (dirent.isDirectory()) {
-          results.push(...collectDictionaryEntryFiles(fullPath));
-        } else if (
-          dirent.isFile() &&
-          dirent.name.endsWith('.json') &&
-          dirent.name !== 'dictionaries.json'
-        ) {
-          results.push(fullPath);
+      if (!fs.existsSync(baseDir)) return results;
+      const dictDirs = fs
+        .readdirSync(baseDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory());
+
+      for (const dictDir of dictDirs) {
+        const dictPath = path.join(baseDir, dictDir.name);
+        const langDirs = fs
+          .readdirSync(dictPath, { withFileTypes: true })
+          .filter((d) => d.isDirectory());
+
+        for (const langDir of langDirs) {
+          const langPath = path.join(dictPath, langDir.name);
+          const files = fs
+            .readdirSync(langPath, { withFileTypes: true })
+            .filter((f) => f.isFile() && f.name.endsWith('.json'));
+
+          for (const file of files) {
+            results.push(path.join(langPath, file.name));
+          }
         }
       }
       return results;

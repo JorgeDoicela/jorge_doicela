@@ -119,7 +119,6 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
           }
         }}
         className="relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none cursor-pointer"
-        style={{ perspective: '1250px' }}
       >
         {/* Botón Lateral Izquierdo */}
         {slides.length > 1 && (
@@ -144,7 +143,6 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
           className={`relative w-full max-w-[700px] 2xl:max-w-[760px] h-[420px] sm:h-[450px] mx-4 sm:mx-16 touch-pan-y ${
             isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
-          style={{ transformStyle: 'preserve-3d' }}
         >
           {slides.map((slide, index) => {
             const orbitalStyle = getSlideStyle(index);
@@ -166,7 +164,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                     goTo(index);
                   }
                 }}
-                className={`absolute inset-0 will-change-[transform,opacity,filter] ${
+                className={`absolute inset-0 w-full h-full will-change-[transform,opacity,filter] ${
                   isDragging
                     ? 'transition-none'
                     : 'transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]'

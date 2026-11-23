@@ -179,7 +179,7 @@ flowchart TD
 * **Preservación de Conexiones WebSocket:** Al ser un visor in-page, el usuario puede inspeccionar detalles arquitectónicos sin desmontar la página ni desconectar la sesión interactiva de la terminal.
 * **Pasarela Orbital 3D Independiente por Proyecto (`useOrbitalCarousel.ts`):**
   * Cada proyecto construye dinámicamente su propia secuencia de tarjetas mediante `buildProjectSlides.ts` (unión discriminada `ProjectSlide`), manteniendo fija la cabecera (rol, título, cierre) y el dock inferior (índice directo de secciones y CTAs de GitHub/Demostración).
-  * Las tarjetas orbitan en un arco convexo acelerado por GPU (`perspective: 1250px`, `translate3d`, `rotateY`, `scale`, `blur` progresivo), donde la sección activa se muestra completamente plana y enfocada al frente mientras las adyacentes retroceden en profundidad a izquierda y derecha.
+  * Las tarjetas orbitan en un arco convexo acelerado por GPU (`perspective(1200px)` por tarjeta, `translate3d`, `rotateY`, `scale`, `blur` progresivo y estratificación determinista de `z-index`), donde la sección activa se muestra completamente plana y enfocada al frente (`z-index: 50`) mientras las adyacentes retroceden en profundidad a izquierda y derecha sin colisiones ni solapamientos invertidos de renderizado.
   * Soporta arrastre táctil y con cursor (`PointerEvents` con resistencia elástica en extremos), clic directo en tarjetas laterales, rueda horizontal de trackpad, selector de capítulos inferior y atajos de teclado (`←`, `→`, `Esc`).
 * **Secciones Polimórficas y Escalabilidad Multimedia:**
   1. *01 Visión General del Sistema (`overview`):* Propósito y alcance del software.

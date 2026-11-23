@@ -54,7 +54,6 @@
     "slideArchitectureShort": "Architecture",
     "slideStackTelemetryShort": "Stack & Telemetry",
     "slideMediaShort": "Gallery",
-    "modalDragHint": "Drag or use ← → to explore",
     "modalPrevSlide": "Previous section",
     "modalNextSlide": "Next section"
   },
@@ -272,6 +271,31 @@
     "kartex": "Kartex",
     "toggleLang": "Switch language",
     "toggleTheme": "Toggle theme"
+  },
+  "SideNav": {
+    "ariaLabel": "Portfolio side navigation",
+    "sectionsAria": "Portfolio sections and modules",
+    "brandLabel": "Portfolio",
+    "indexTitle": "Menu",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "openMobile": "Open sections menu",
+    "closeMobile": "Close sections menu",
+    "groups": {
+      "overview": "Profile",
+      "engineering": "Engineering"
+    },
+    "items": {
+      "about": "About",
+      "projects": "Projects",
+      "stack": "Stack",
+      "experience": "Experience",
+      "cloud": "Cloud",
+      "tools": "Tools",
+      "philosophy": "Philosophy",
+      "terminal": "Terminal",
+      "contact": "Contact"
+    }
   },
   "Footer": {
     "copyright": "© {year} Jorge Doicela. All rights reserved."

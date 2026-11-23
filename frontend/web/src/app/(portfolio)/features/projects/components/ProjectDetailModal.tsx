@@ -100,11 +100,6 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
         </div>
 
         <div className="flex items-center gap-3 pointer-events-auto shrink-0">
-          {slides.length > 1 && (
-            <span className="hidden md:inline-block text-[11px] font-mono text-white/50 tracking-wider">
-              {t('modalDragHint')}
-            </span>
-          )}
           <button
             type="button"
             onClick={onClose}
@@ -118,10 +113,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
 
       {/* Escenario Central: Pasarela Orbital 3D ("Medio Planeta") */}
       <div
-        {...stageHandlers}
-        className={`relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none touch-pan-y ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
-        }`}
+        className="relative z-10 flex-1 w-full flex items-center justify-center overflow-hidden select-none"
         style={{ perspective: '1250px' }}
       >
         {/* Arco sutil de horizonte planetario */}
@@ -143,9 +135,12 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
           </button>
         )}
 
-        {/* Pista 3D de Tarjetas */}
+        {/* Pista 3D de Tarjetas: área delimitada de interacción táctil y arrastre */}
         <div
-          className="relative w-full max-w-[700px] 2xl:max-w-[760px] h-[420px] sm:h-[450px] mx-4 sm:mx-16"
+          {...stageHandlers}
+          className={`relative w-full max-w-[700px] 2xl:max-w-[760px] h-[420px] sm:h-[450px] mx-4 sm:mx-16 touch-pan-y ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
           style={{ transformStyle: 'preserve-3d' }}
         >
           {slides.map((slide, index) => {

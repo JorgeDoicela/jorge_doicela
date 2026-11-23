@@ -5,6 +5,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./theme-provider";
 import PortfolioJsonLd from "./components/PortfolioJsonLd";
+import { PortfolioNavigationProvider, PortfolioSideNav } from "./features/navigation";
 
 const geistSans = localFont({
     src: "./fonts/Geist-Variable.woff2",
@@ -86,7 +87,10 @@ export default async function RootLayout({
             <body className="min-h-full flex flex-col">
                 <NextIntlClientProvider messages={messages} locale={locale}>
                     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-                        {children}
+                        <PortfolioNavigationProvider>
+                            {children}
+                            <PortfolioSideNav />
+                        </PortfolioNavigationProvider>
                     </ThemeProvider>
                 </NextIntlClientProvider>
             </body>

@@ -67,7 +67,7 @@ export default async function PortfolioPage() {
     const projects = await getPortfolioProjects(locale);
 
     return (
-        <div className="min-h-screen bg-background text-foreground py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
+        <div className="portfolio-shell min-h-screen bg-background text-foreground py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
 
             {/* Cabecera Flotante con Ocultamiento Dinámico por Scroll */}
             <PortfolioHeader />
@@ -88,13 +88,10 @@ export default async function PortfolioPage() {
                     />
 
                 </div>
-                <div className="flex flex-wrap gap-2">
-                    <span className="luxury-badge">
-                        <span>{tHeader('aiBadge')}</span>
-                    </span>
-                    <span className="luxury-badge luxury-pulse">
-                        <span>{tHeader('inProgress')}</span>
-                    </span>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-mono tracking-widest uppercase text-gold-300">
+                    <span>{tHeader('aiBadge')}</span>
+                    <span className="opacity-60">-</span>
+                    <span>{tHeader('inProgress')}</span>
                 </div>
             </header>
 
@@ -102,7 +99,7 @@ export default async function PortfolioPage() {
             <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-[85px] md:gap-[115px] animate-fade-up">
 
                 {/* Sección 1: Sobre Mí & Contactos */}
-                <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+                <section id="about" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-gold-300">
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tAbout('title')}</span>
@@ -180,7 +177,7 @@ export default async function PortfolioPage() {
                 <ProjectShowcase projects={projects} />
 
                 {/* Sección 3: Tecnologías & Stack Principal */}
-                <section className="flex flex-col gap-6">
+                <section id="stack" className="flex flex-col gap-6 scroll-mt-24">
                     <div className="flex items-center gap-2 text-gold-300">
                         <span className="text-[10px] font-mono tracking-widest uppercase">{tStack('eyebrow')}</span>
                     </div>
@@ -223,7 +220,7 @@ export default async function PortfolioPage() {
                 </section>
 
                 {/* Sección 4: Experiencia & Educación */}
-                <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+                <section id="experience" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-6">
                         <div className="flex items-center gap-2 text-gold-300">
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tExp('eyebrow')}</span>
@@ -282,7 +279,7 @@ export default async function PortfolioPage() {
                 </section>
 
                 {/* Sección 5: Nube, CI/CD y Hardening */}
-                <section className="flex flex-col gap-6">
+                <section id="cloud" className="flex flex-col gap-6 scroll-mt-24">
                     <div className="flex items-center gap-2 text-gold-300">
                         <span className="text-[10px] font-mono tracking-widest uppercase">{tCloud('eyebrow')}</span>
                     </div>
@@ -322,7 +319,7 @@ export default async function PortfolioPage() {
                 </section>
 
                 {/* Sección 6: Flujo & Herramientas */}
-                <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+                <section id="tools" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-gold-300">
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tTools('eyebrow')}</span>
@@ -359,7 +356,7 @@ export default async function PortfolioPage() {
                 <ValuesPhilosophySection />
 
                 {/* Sección 8: Consola Interactiva Virtual SSH */}
-                <section className="flex flex-col gap-4">
+                <section id="terminal" className="flex flex-col gap-4 scroll-mt-24">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
                         <div className="flex items-center gap-2 text-gold-300">
                             <span className="text-[10px] font-mono tracking-widest uppercase">{tTerm('eyebrow')}</span>
@@ -375,7 +372,7 @@ export default async function PortfolioPage() {
                 </section>
 
                 {/* Sección 9: Centro de Contacto Interactivo */}
-                <section className="flex flex-col gap-8">
+                <section id="contact" className="flex flex-col gap-8 scroll-mt-24">
                     {/* Cabecera Editorial General */}
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2 text-gold-300">

@@ -24,7 +24,7 @@ export function LanguageToggle() {
       type="button"
       onClick={toggleLanguage}
       disabled={isPending}
-      className="px-2 py-1 rounded-md text-foreground/70 hover:text-foreground hover:bg-foreground/5 active:scale-95 transition-colors duration-200 cursor-pointer text-xs font-medium tracking-tight outline-none focus:outline-none disabled:opacity-50 select-none"
+      className="px-2 py-1 rounded-md text-foreground/75 hover:text-gold-300 hover:bg-gold-300/10 active:scale-95 transition-all duration-200 cursor-pointer text-xs font-mono tracking-wider outline-none focus:outline-none disabled:opacity-50 select-none"
       aria-label={`${tNav('toggleLang')} (${locale.toUpperCase()})`}
     >
       <span>{locale.toUpperCase()}</span>

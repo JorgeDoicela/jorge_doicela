@@ -50,6 +50,19 @@ frontend/web/src/app/(portfolio)/
 │   └── usePortfolioHeaderScroll.ts # Control de visibilidad por scroll con histeresis y rAF
 │
 ├── features/                  # FEATURE-SLICED DESIGN (FSD)
+│   ├── navigation/            # FEATURE: NAVEGACIÓN HÍBRIDA (SECCIONES Y RUTAS DEDICADAS)
+│   │   ├── components/
+│   │   │   ├── PortfolioSideNav.tsx    # Sidebar lateral colapsable desde la línea divisoria (cursor-col-resize)
+│   │   │   └── NavIcon.tsx             # Mapeo tipado y desacoplado de iconos Lucide
+│   │   ├── config/
+│   │   │   └── navItems.ts             # Registro declarativo de secciones (01..09) y futuras rutas
+│   │   ├── context/
+│   │   │   └── PortfolioNavigationContext.tsx # Fuente única de verdad reactiva (React Context)
+│   │   ├── hooks/
+│   │   │   └── usePortfolioNavigation.ts      # Hook consumidor tipado con guard clause
+│   │   ├── types.ts                    # Contratos TypeScript (PortfolioNavItem, unión discriminada)
+│   │   └── index.ts                    # Barril de exportación pública de la feature
+│   │
 │   ├── projects/              # FEATURE: SHOWCASE DE PROYECTOS Y CASOS DE ESTUDIO
 │   │   ├── components/
 │   │   │   ├── ProjectShowcase.tsx     # Galería 2x2 con filtros reactivos y botones Dark Luxury
@@ -98,7 +111,59 @@ frontend/web/src/app/(portfolio)/
 
 ---
 
-## 3. Showcase de Proyectos y Casos de Estudio de Ingeniería (`features/projects/`)
+## 3. Sistema de Navegación Híbrida y Drawer Editorial (`features/navigation/`)
+
+La navegación del portafolio está concebida bajo una arquitectura orientada a datos que soporta de forma nativa dos fases operativas: scroll suave a secciones en la vista principal y enrutamiento hacia páginas o módulos dedicados de Next.js, sin requerir reescrituras de componentes ni parches.
+
+```mermaid
+flowchart TD
+    Layout["RootLayout (layout.tsx)"] --> NavProvider["PortfolioNavigationProvider (React Context)"]
+    NavProvider --> Header["PortfolioHeader (fixed top-5)"]
+    NavProvider --> SideNav["PortfolioSideNav (Drawer z-60)"]
+    NavProvider --> Page["PortfolioPage (page.tsx)"]
+    
+    Header --> NavButton["PortfolioNavButton ('MENÚ')"]
+    NavButton -- "toggle()" --> NavProvider
+    
+    SideNav -- "navigateTo(item)" --> CheckKind{"item.kind"}
+    CheckKind -- "'section'" --> SmoothScroll["document.getElementById(anchor).scrollIntoView()"]
+    CheckKind -- "'route'" --> RoutePush["router.push(item.href)"]
+    
+    Page --> Observers["IntersectionObserver (scroll-spy)"]
+    Observers -- "setActiveId(id)" --> NavProvider
+```
+
+### 3.1 Modelo de Datos y Contratos Tipados (`types.ts` & `config/navItems.ts`)
+* **Unión Discriminada `PortfolioNavItem`:**
+  * `kind: 'section'`: Para anclas dentro de la página raíz (`anchor: 'about' | 'projects' | 'stack' | ...`). Si el usuario está en una subruta (ej. `/sandbox`), navega a `/#${item.anchor}`.
+  * `kind: 'route'`: Para futuras páginas o módulos dedicados (`href: string`), resolviendo la navegación mediante `router.push(item.href)`.
+* **Registro Canónico (`PORTFOLIO_NAV_ITEMS`):**
+  * Organización en dos grupos semánticos: `overview` (`Perfil`: Sobre Mí, Proyectos, Stack, Experiencia) e `engineering` (`Ingeniería`: Cloud, Herramientas, Filosofía, Terminal, Contacto).
+  * Iconografía desacoplada mediante el componente `NavIcon.tsx` mapeando tipadamente a `lucide-react`.
+
+### 3.2 Fuente Única de Verdad (`PortfolioNavigationContext.tsx`)
+* **Proveedor Centralizado en Layout (`layout.tsx`):** `PortfolioNavigationProvider` envuelve todo el árbol del subdominio, garantizando que el estado `isOpen`, `activeId` y las acciones `open()`, `close()`, `toggle()`, `navigateTo()` estén sincronizados entre la cabecera fija, el panel lateral y cualquier página actual o futura.
+* **Scroll-Spy Eficiente:** `IntersectionObserver` con margen `rootMargin: '-18% 0px -62% 0px'` calcula la sección activa en tiempo real sin saturar el hilo principal ni registrar listeners repetitivos de scroll.
+* **Accesibilidad (WCAG AA):**
+  * Cierre por tecla `Escape`.
+  * Bloqueo reactivo de scroll en el documento (`document.body.style.overflow = 'hidden'`) mientras el menú permanece abierto.
+  * `role="dialog"`, `aria-modal="true"` y atributos `aria-expanded` / `aria-current` dinámicos.
+
+### 3.3 Componentes de Interfaz Dark/Light Luxury
+* **Cabecera Pura (`PortfolioHeader.tsx`):**
+  * Mantiene exclusivamente el botón de retorno [BackToPortalButton.tsx](file:///c:/Users/DESARROLLADOR/Desktop/Proyectos/jorge_doicela/frontend/web/src/app/(portfolio)/components/BackToPortalButton.tsx) (`← PORTAL`), el selector de idioma `LanguageToggle.tsx` (`ES/EN`) y el conmutador de tema `ThemeToggle.tsx` (sol/luna dorados), sin botones ni menús redundantes.
+* **Sidebar Lateral Editorial con Divisor Interactivo (`PortfolioSideNav.tsx`):**
+  * Sidebar estilizado sobre el mismo lienzo del portafolio (`w-52 fixed left-0 top-0 bottom-0 bg-background/95 backdrop-blur-md border-r border-border/40`), sin bloques oscuros pesados ni cajas alrededor de los ítems.
+  * **Logotipo Oficial Sin Fondo:** Cabecera alineada horizontalmente con `PortfolioHeader` mostrando el isotipo oficial `/portfolio/logo/logo_blanco.webp` (en modo oscuro) y `/portfolio/logo/logo_negro.webp` (en modo claro) junto a `PORTAFOLIO` en dorado, sin líneas de corte horizontales.
+  * **Indicador Editorial Activo:** Línea guía vertical sutil (`border-l border-border/40`) con trazo dorado en el elemento activo (`border-gold-300`) e iconos limpios sin contenedores.
+  * **Colapso Puro desde el Borde:** La línea divisoria derecha del sidebar actúa como zona de colapso con `cursor-col-resize`. Al hacer clic en el borde, el sidebar se oculta suavemente hacia la izquierda (`-translate-x-full`) sin mostrar botones ni pestañas flotantes.
+  * **Re-apertura Invisible:** Cuando está colapsado, una franja en el borde izquierdo extremo de la pantalla cambia el cursor a `cursor-col-resize`, permitiendo reabrir el sidebar con un clic directo.
+  * **Desplazamiento Fluido del Layout (`globals.css`):** Mediante `.portfolio-shell` y `.portfolio-shell-header`, el contenido del portafolio se desplaza `13rem` al abrirse y regresa fluidamente a `padding-left: 0` al colapsarse, manteniendo la alineación y centrado natural de la página.
+* **Anclas Semánticas en Contenido:** Cada una de las 9 secciones en `page.tsx`, `ProjectShowcase.tsx` y `ValuesPhilosophySection.tsx` cuenta con su respectivo atributo `id` semántico y clase de desplazamiento `scroll-mt-24` para que el encabezado no oculte el título al deslizarse.
+
+---
+
+## 4. Showcase de Proyectos y Casos de Estudio de Ingeniería (`features/projects/`)
 
 ### 3.1 Tarjetas de Catálogo (`ProjectShowcase.tsx`)
 * **Filtrado por Categorías:** Clasificación dinámica por etiquetas técnicas (`Full Stack`, `Cloud & DevSecOps`, `IA & Sistemas`).
@@ -127,11 +192,11 @@ frontend/web/src/app/(portfolio)/
 
 ---
 
-## 4. Sistema Tri-Modal de Terminal Interactiva (WebSockets)
+## 5. Sistema Tri-Modal de Terminal Interactiva (WebSockets)
 
 El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalConsole.tsx`, con estética Dark Luxury, soporte de pantalla completa mediante `createPortal` y multitarea Unix.
 
-### 4.1 Modo 1: Terminal Guiada (`useTerminalSocket.ts`)
+### 5.1 Modo 1: Terminal Guiada (`useTerminalSocket.ts`)
 * **Namespace:** Conecta a `${API_URL}/terminal` (puerto 3000) sobre WebSockets bidireccionales con Socket.io.
 * **Propósito:** Navegación guiada sin fricción para conocer proyectos, biografía, habilidades y comandos Unix preprogramados (`skills`, `about`, `projects`, `contact`, `neofetch`, `matrix`, `tmux`).
 * **Multiplexor de Terminal (Modo tmux):**
@@ -147,7 +212,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
   * **Rate Limiting Deslizante por Socket (`PortfolioGateway`):** Ventana deslizante estricta de 15 comandos por segundo por conexión para impedir ataques de denegación de servicio (DoS) o agotamiento de CPU en el event loop de Node.js.
   * **Truncado Preventivo de Comandos:** Comandos limitados estrictamente a 1024 caracteres (`cmd.slice(0, 1024)`) para evitar saturación de memoria en strings in-memory.
 
-### 4.2 Modo 2: Terminal en la Nube — AWS Lightsail (`useSandboxTerminal.ts?mode=vps`)
+### 5.2 Modo 2: Terminal en la Nube — AWS Lightsail (`useSandboxTerminal.ts?mode=vps`)
 * **Namespace:** Conecta a `${API_URL}/sandbox` con `targetMode: 'vps'`.
 * **Badge e Identidad en terminal:** `EN VIVO • AWS CLOUD`.
 * **Banner de bienvenida dinámico en shell:**
@@ -165,7 +230,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
   * `neofetch`, `htop`, `nano`, `tree`: Herramientas completas del sistema Linux.
   * `help`: Listado completo con descripción de todos los comandos disponibles.
 
-### 4.3 Modo 3: Terminal en Servidor Propio (`useSandboxTerminal.ts?mode=tunnel`)
+### 5.3 Modo 3: Terminal en Servidor Propio (`useSandboxTerminal.ts?mode=tunnel`)
 * **Namespace:** Conecta a `${SANDBOX_TUNNEL_URL}/sandbox` (`https://tunnel.jorgedoicela.com/sandbox` o variable `NEXT_PUBLIC_SANDBOX_TUNNEL_URL`) con `targetMode: 'tunnel'`.
 * **Badge e Identidad en terminal:** `EN VIVO • SERVIDOR LOCAL`.
 * **Banner de bienvenida dinámico en shell:**
@@ -177,7 +242,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Pre-flight Health Probe con AbortSignal:** Antes de inicializar el WebSocket en modo túnel, `startSession()` realiza una consulta previa ultraliviana `GET ${SANDBOX_TUNNEL_URL}/portfolio/sandbox/health` con timeout estricto de 3 segundos (`AbortSignal.timeout(3000)`). Si el túnel de Cloudflare está caído (Error 1033 o host apagado), la petición falla en menos de 400 ms sin colgar el cliente Socket.IO ni dejar conexiones zombis.
 * **Mismos comandos interactivos nativos que el Modo 2**, con la diferencia de identidad del host y recursos expandidos.
 
-### 4.4 Barra de Control Inferior (Footer Consolidado estilo AWS CloudShell)
+### 5.4 Barra de Control Inferior (Footer Consolidado estilo AWS CloudShell)
 * **Apertura de Ventana Emergente Dedicada:** El botón de lanzamiento calcula el centro de la pantalla del usuario (`1080x680px`) y abre una ventana popup independiente con `toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,noopener,noreferrer`, aislando el proceso y evitando colisiones de atajos de teclado de Linux (`Ctrl+W`, `Ctrl+T`) con el navegador.
 * **Consola Superior Pura:** El canvas xterm.js inicia desde el pixel superior del viewport sin barras distractoras arriba.
 * **Barra de Herramientas Inferior (Footer Adaptativo sin Saltos de Layout):**
@@ -188,7 +253,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
     * Temporizador dinámico de sesión activa (`04:33`).
     * Botón de salida `[ Finalizar ]` / `[ Reconectar ]`, y selectores `LanguageToggle` / `ThemeToggle`.
 
-### 4.5 Seguridad y Sincronización en el Hook `useSandboxTerminal.ts`
+### 5.5 Seguridad y Sincronización en el Hook `useSandboxTerminal.ts`
 * **Sincronización Multiventana Local (`BroadcastChannel`):** Canal `portfolio_sandbox_multitab` que coordina pestañas locales en tiempo real con `senderTabId` inmutable. Cuando una pestaña inicia o transfiere la terminal, las demás pestañas abiertas lo detectan inmediatamente y pasan al estado `replaced` sin generar llamadas redundantes al servidor.
 * **Modal Dark Luxury de Seguridad y Concurrencia (`SandboxSecurityModal.tsx`):** Cuando la sesión entra en un estado de seguridad (`concurrency_limit`, `replaced`, `cooldown`, `rate_limited` o `blocked`), la interfaz renderiza una tarjeta centrada con estética Dark Luxury idéntica a `ServerOfflineBanner.tsx` (resplandor ambiental dorado, badge superior, título claro, reloj regresivo en cooldown, botón de acción y enlace directo `[ ← Volver al Portafolio ]`).
 * **Handover PTY en Caliente y Replay de Scrollback:** Al confirmar la transferencia, el socket emite `{ forceReplace: true }`. El backend transfiere el stream interactivo del contenedor Docker sin destruirlo, y la nueva pestaña recibe el buffer de salida previo (`scrollback`), restaurando instantáneamente el prompt, comandos y texto sin parpadeos ni pérdidas de datos.
@@ -198,7 +263,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 * **Limpieza en desmontaje:** `socket.disconnect()` + `xterm.dispose()` + `channel.close()` garantizan cero fugas de memoria o listeners huérfanos.
 * **Reconexión limitada:** `reconnectionAttempts: 5` para evitar tempestades de reconexión en sesiones caídas.
 
-### 4.6 Manejo de Servidor Físico Fuera de Línea (`ServerOfflineBanner.tsx`)
+### 5.6 Manejo de Servidor Físico Fuera de Línea (`ServerOfflineBanner.tsx`)
 * **Detección sin Fallback Forzado a AWS:** Cuando el visitante selecciona el Modo 3 (`targetMode === 'tunnel'`) y el servidor físico privado está apagado o inaccesible, el sistema **no** redirige silenciosamente a AWS. Se respeta la transparencia del hardware físico propio.
 * **Presentación Dark Luxury & Light Luxury Unificada:**
   * Renderiza `ServerOfflineBanner.tsx` como un modal overlay centrado sobre la terminal (`absolute inset-0 z-20`), manteniendo el canvas xterm montado debajo sin destruirlo.
@@ -216,7 +281,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 
 ---
 
-## 5. Centro de Comunicación
+## 6. Centro de Comunicación
 
 La sección 9 del portafolio implementa una arquitectura editorial balanceada de 3 columnas (`gap-10 lg:gap-14 items-stretch`) diseñada bajo principios estrictos de UX/UI y estética Dark Luxury / Light Luxury:
 * **Cabecera Editorial General:**
@@ -232,7 +297,7 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
 
 ---
 
-## 6. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
+## 7. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
 * **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Portfolio.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
 * **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` para indexación de perfil y proyectos en buscadores web e IA.
@@ -243,7 +308,7 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
 
 ---
 
-## 7. Estética Visual y Dark Luxury
+## 8. Estética Visual y Dark Luxury
 
 * **Paleta de Negros Profundos:** Fondo `#08080a` con elevaciones graduales en `#111116` y bordes oscuros de alta definición.
 * **Acentos Metálicos y Dorados:** Resaltes sutiles en tonos oro suave / bronce / titanio para insignias, estado de terminal y focos de acción.

@@ -31,7 +31,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
   ];
 
   return (
-    <section className="flex flex-col gap-8">
+    <section id="projects" className="flex flex-col gap-8 scroll-mt-24">
       {/* Encabezado de Sección */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">

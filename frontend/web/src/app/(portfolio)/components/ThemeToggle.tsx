@@ -25,15 +25,15 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="p-1.5 sm:p-2 rounded-md text-foreground/70 hover:text-foreground hover:bg-foreground/5 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center outline-none focus:outline-none select-none"
+      className="group p-1.5 sm:p-2 rounded-md hover:bg-gold-300/10 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center outline-none focus:outline-none select-none"
       aria-label={tNav('toggleTheme')}
       title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
       id="portfolio-theme-toggle"
     >
       {isDark ? (
-        <Sun className="w-3.5 h-3.5 text-amber-400 hover:text-amber-300 transition-transform duration-300 hover:rotate-45" />
+        <Sun className="w-3.5 h-3.5 text-gold-300 group-hover:text-gold-100 transition-all duration-300 group-hover:rotate-45" />
       ) : (
-        <Moon className="w-3.5 h-3.5 text-indigo-400 hover:text-indigo-300 transition-transform duration-300 hover:-rotate-12" />
+        <Moon className="w-3.5 h-3.5 text-gold-400 group-hover:text-gold-200 transition-all duration-300 group-hover:-rotate-12" />
       )}
     </button>
   );

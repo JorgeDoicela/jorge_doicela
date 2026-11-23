@@ -8,7 +8,7 @@ export const ValuesPhilosophySection: React.FC = () => {
 
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+    <section id="philosophy" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
       {/* Filosofía & Valores (Columna izquierda y central - 2 cols) */}
       <div className="md:col-span-2 flex flex-col gap-4">
         <div className="flex items-center gap-2 text-gold-300">

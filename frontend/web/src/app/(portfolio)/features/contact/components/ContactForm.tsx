@@ -9,7 +9,7 @@ export function ContactForm() {
   const t = useTranslations('Contact');
 
   return (
-    <div className="w-full bg-surface border border-border-gold rounded-2xl p-6 sm:p-8 shadow-2xl luxury-glow-hover transition-all duration-300">
+    <div className="w-full bg-surface border border-border-gold rounded-2xl p-6 sm:p-8 transition-colors duration-300">
       <div className="text-left mb-6">
         <h3 className="text-lg sm:text-xl font-light tracking-[0.15em] uppercase text-foreground mb-1.5">
           {t('title')}

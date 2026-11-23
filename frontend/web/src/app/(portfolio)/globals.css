@@ -317,6 +317,31 @@ body::after {
   text-transform: uppercase;
 }
 
+/* Desplazamiento fluido sincronizado con el Sidebar en pantallas de escritorio (lg+) */
+.portfolio-shell {
+  transition: padding-left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-shell-header {
+  transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 1024px) {
+  .portfolio-shell {
+    padding-left: 13rem;
+  }
+  :root[data-portfolio-nav="collapsed"] .portfolio-shell {
+    padding-left: 0;
+  }
+
+  .portfolio-shell-header {
+    left: 13rem;
+  }
+  :root[data-portfolio-nav="collapsed"] .portfolio-shell-header {
+    left: 0;
+  }
+}
+
 /* Ocultar badge flotante de desarrollo de Next.js para no tapar la terminal */
 nextjs-portal,
 [data-nextjs-toast-wrapper],

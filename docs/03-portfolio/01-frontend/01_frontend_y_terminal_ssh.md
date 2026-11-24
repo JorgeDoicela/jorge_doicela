@@ -33,7 +33,17 @@ frontend/web/src/app/(portfolio)/
 ├── layout.tsx                 # Layout raíz con localFont(), ThemeProvider local y PortfolioJsonLd
 ├── theme-provider.tsx         # Proveedor de tema claro/oscuro
 ├── portfolio/
-│   ├── page.tsx               # Contenedor principal de vistas (SPA interactiva)
+│   ├── page.tsx               # Contenedor principal de vistas (Resumen ejecutivo + terminal + contacto)
+│   ├── about/
+│   │   └── page.tsx           # Página dedicada (/about) con perfil extendido, filosofía y líneas de enfoque
+│   ├── projects/
+│   │   └── page.tsx           # Página dedicada (/projects) con el catálogo completo de proyectos
+│   ├── stack/
+│   │   └── page.tsx           # Página dedicada (/stack) con catálogo de tecnologías y entorno Linux
+│   ├── experience/
+│   │   └── page.tsx           # Página dedicada (/experience) con línea de tiempo laboral y formación detallada
+│   ├── engineering/
+│   │   └── page.tsx           # Página dedicada (/engineering) con arquitectura Cloud, DevSecOps, IA y telemetría real
 │   └── sandbox/
 │       └── page.tsx           # Vista dedicada a pantalla completa para SandboxTerminal
 │
@@ -65,8 +75,10 @@ frontend/web/src/app/(portfolio)/
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
 │   ├── projects/              # FEATURE: SHOWCASE DE PROYECTOS Y CASOS DE ESTUDIO
+│   │   ├── api/
+│   │   │   └── getProjects.ts          # Cliente HTTP SSR/ISR desacoplado dentro de la feature
 │   │   ├── components/
-│   │   │   ├── ProjectShowcase.tsx     # Galería 2x2 con filtros reactivos y botones Dark Luxury
+│   │   │   ├── ProjectShowcase.tsx     # Galería 2x2 con filtros reactivos, botones Dark Luxury y link opcional a /projects
 │   │   │   ├── ProjectDetailModal.tsx  # Visor orbital 3D in-page de Casos de Estudio (createPortal)
 │   │   │   └── ProjectSlideCard.tsx    # Tarjeta polimórfica de sección/galería para la pasarela orbital
 │   │   ├── hooks/
@@ -75,6 +87,15 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── utils/
 │   │   │   └── buildProjectSlides.ts   # Constructor determinista de slides (secciones + media) por proyecto
 │   │   ├── types.ts                    # Interfaces de proyectos, métricas, media y unión discriminada ProjectSlide
+│   │   └── index.ts                    # Barril de exportación pública de la feature
+│   │
+│   ├── experience/            # FEATURE: TRAYECTORIA LABORAL Y FORMACIÓN ACADÉMICA
+│   │   ├── api/
+│   │   │   └── getExperience.ts        # Cliente HTTP SSR/ISR desacoplado dentro de la feature
+│   │   ├── components/
+│   │   │   ├── ExperienceSection.tsx   # Resumen ejecutivo en Home con enlace a /experience
+│   │   │   └── ExperienceDetailView.tsx # Línea de tiempo detallada y tarjetas de formación para /experience
+│   │   ├── types.ts                    # Contratos PortfolioExperienceItem y ExperienceType
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
 │   ├── terminal/              # FEATURE: SISTEMA TRI-MODAL DE TERMINAL

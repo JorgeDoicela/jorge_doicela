@@ -1,0 +1,188 @@
+[
+  {
+    "id": 1,
+    "slug": "istpet-software-developer",
+    "language": "es",
+    "type": "work",
+    "title": "ISTPET",
+    "subtitle": "Desarrollador de Software",
+    "period": "Actual",
+    "companyUrl": "https://istpet.edu.ec",
+    "description": "Desarrollo y mantenimiento de sistemas institucionales, plataformas web y soluciones de software para la gestión académica y administrativa en istpet.edu.ec.",
+    "highlights": [
+      "Ingeniería y evolución de módulos web para procesos académicos y administrativos.",
+      "Integración de APIs internas, persistencia relacional y validación estricta de datos.",
+      "Soporte técnico, optimización de consultas y despliegue continuo de servicios institucionales."
+    ],
+    "technologies": ["TypeScript", "Next.js", "NestJS", "PHP / Laravel", "PostgreSQL"],
+    "featured": true,
+    "orderIndex": 1
+  },
+  {
+    "id": 2,
+    "slug": "istpet-software-developer",
+    "language": "en",
+    "type": "work",
+    "title": "ISTPET",
+    "subtitle": "Software Developer",
+    "period": "Present",
+    "companyUrl": "https://istpet.edu.ec",
+    "description": "Engineering and maintaining institutional platforms, web applications, and software systems supporting academic and administrative operations at istpet.edu.ec.",
+    "highlights": [
+      "Engineering and evolution of web modules for academic and administrative workflows.",
+      "Integration of internal REST APIs, relational persistence, and strict input validation.",
+      "Performance tuning, query optimization, and continuous maintenance of institutional systems."
+    ],
+    "technologies": ["TypeScript", "Next.js", "NestJS", "PHP / Laravel", "PostgreSQL"],
+    "featured": true,
+    "orderIndex": 1
+  },
+  {
+    "id": 3,
+    "slug": "emplifi-fullstack",
+    "language": "es",
+    "type": "work",
+    "title": "Emplifi",
+    "subtitle": "Full-Stack Developer",
+    "period": "Experiencia Previa",
+    "companyUrl": null,
+    "description": "Desarrollo Full-Stack y optimización de APIs para el sistema de gestión de recursos humanos, mejorando el rendimiento general y la persistencia de datos.",
+    "highlights": [
+      "Optimización de endpoints y consultas SQL reduciendo tiempos de respuesta en módulos de talento humano.",
+      "Implementación de vistas interactivas y flujos de validación en frontend y backend.",
+      "Mantenimiento evolutivo de arquitectura modular garantizando integridad referencial."
+    ],
+    "technologies": ["React", "TypeScript", "C# / .NET", "SQL Server", "REST APIs"],
+    "featured": true,
+    "orderIndex": 2
+  },
+  {
+    "id": 4,
+    "slug": "emplifi-fullstack",
+    "language": "en",
+    "type": "work",
+    "title": "Emplifi",
+    "subtitle": "Full-Stack Developer",
+    "period": "Previous Experience",
+    "companyUrl": null,
+    "description": "Full-Stack development and API performance optimization for the human resources management system, enhancing data persistence and throughput.",
+    "highlights": [
+      "Optimized backend API endpoints and SQL queries to improve latency across HR management modules.",
+      "Built responsive UI views and end-to-end validation flows across client and server.",
+      "Maintained modular codebase architecture ensuring strict relational data integrity."
+    ],
+    "technologies": ["React", "TypeScript", "C# / .NET", "SQL Server", "REST APIs"],
+    "featured": true,
+    "orderIndex": 2
+  },
+  {
+    "id": 5,
+    "slug": "cnc-backend",
+    "language": "es",
+    "type": "work",
+    "title": "Consejo Nacional de Competencias (CNC)",
+    "subtitle": "Desarrollador Backend",
+    "period": "Experiencia Previa",
+    "companyUrl": null,
+    "description": "Estabilización de código, desarrollo de módulos backend y despliegue contenedorizado con Docker para la Plataforma de Capacitaciones institucional.",
+    "highlights": [
+      "Refactorización y estabilización de servicios backend heredados para eliminar fallos en producción.",
+      "Desarrollo de nuevos módulos de gestión académica para la Plataforma de Capacitaciones.",
+      "Contenedorización de la aplicación con Docker para entornos reproducibles y despliegue seguro."
+    ],
+    "technologies": ["PHP / Laravel", "MySQL", "Docker", "Linux", "REST APIs"],
+    "featured": true,
+    "orderIndex": 3
+  },
+  {
+    "id": 6,
+    "slug": "cnc-backend",
+    "language": "en",
+    "type": "work",
+    "title": "National Competencies Council (CNC)",
+    "subtitle": "Backend Developer",
+    "period": "Previous Experience",
+    "companyUrl": null,
+    "description": "Code stabilization, backend module development, and containerized Docker deployment for the institutional Training Platform.",
+    "highlights": [
+      "Refactored and stabilized legacy backend services to eliminate runtime failures in production.",
+      "Engineered new training management modules for the institutional Capacity Building Platform.",
+      "Containerized services using Docker for deterministic environments and reliable deployments."
+    ],
+    "technologies": ["PHP / Laravel", "MySQL", "Docker", "Linux", "REST APIs"],
+    "featured": true,
+    "orderIndex": 3
+  },
+  {
+    "id": 7,
+    "slug": "ub-ai-cybersecurity",
+    "language": "es",
+    "type": "education",
+    "title": "Ingeniería en Inteligencia Artificial y Ciberseguridad",
+    "subtitle": "UB - En progreso",
+    "period": "En progreso",
+    "companyUrl": null,
+    "description": "Formación universitaria orientada a sistemas inteligentes, arquitectura de software segura, hardening de infraestructura y análisis de vulnerabilidades.",
+    "highlights": [
+      "Fundamentos de Inteligencia Artificial, aprendizaje automático y sistemas distribuidos.",
+      "Ciberseguridad defensiva, criptografía aplicada y seguridad en redes."
+    ],
+    "technologies": ["Python", "IA / ML", "Ciberseguridad", "Linux"],
+    "featured": true,
+    "orderIndex": 4
+  },
+  {
+    "id": 8,
+    "slug": "ub-ai-cybersecurity",
+    "language": "en",
+    "type": "education",
+    "title": "B.S. in Artificial Intelligence & Cybersecurity",
+    "subtitle": "UB - In progress",
+    "period": "In progress",
+    "companyUrl": null,
+    "description": "Undergraduate engineering program focused on intelligent systems, secure software architecture, infrastructure hardening, and threat mitigation.",
+    "highlights": [
+      "Core foundations in Artificial Intelligence, machine learning, and distributed systems.",
+      "Defensive cybersecurity, applied cryptography, and perimeter network security."
+    ],
+    "technologies": ["Python", "AI / ML", "Cybersecurity", "Linux"],
+    "featured": true,
+    "orderIndex": 4
+  },
+  {
+    "id": 9,
+    "slug": "traversari-software-dev",
+    "language": "es",
+    "type": "education",
+    "title": "Tecnólogo Superior en Desarrollo de Software",
+    "subtitle": "Tecnológico Traversari - Titulado",
+    "period": "Titulado",
+    "companyUrl": null,
+    "description": "Titulación tecnológica superior enfocada en ingeniería de software, bases de datos relacionales, programación orientada a objetos y desarrollo web.",
+    "highlights": [
+      "Diseño y modelado de bases de datos relacionales y programación estructurada.",
+      "Desarrollo de aplicaciones web, móviles y arquitecturas cliente-servidor."
+    ],
+    "technologies": ["Java", "C#", "PHP", "SQL", "Web"],
+    "featured": true,
+    "orderIndex": 5
+  },
+  {
+    "id": 10,
+    "slug": "traversari-software-dev",
+    "language": "en",
+    "type": "education",
+    "title": "Higher Technical Degree in Software Development",
+    "subtitle": "Tecnológico Traversari - Graduated",
+    "period": "Graduated",
+    "companyUrl": null,
+    "description": "Higher technical degree focused on software engineering, relational database modeling, object-oriented programming, and web development.",
+    "highlights": [
+      "Relational database design, SQL modeling, and object-oriented software engineering.",
+      "Web, mobile, and client-server application architecture."
+    ],
+    "technologies": ["Java", "C#", "PHP", "SQL", "Web"],
+    "featured": true,
+    "orderIndex": 5
+  }
+]

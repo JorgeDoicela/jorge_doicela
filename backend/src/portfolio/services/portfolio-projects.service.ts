@@ -10,15 +10,30 @@ export class PortfolioProjectsService {
     private readonly projectRepository: Repository<PortfolioProject>,
   ) {}
 
-  async findAll(language?: string): Promise<PortfolioProject[]> {
+  async findAll(
+    language?: string,
+    featured?: boolean,
+  ): Promise<PortfolioProject[]> {
     const lang = language === 'en' ? 'en' : 'es';
+    const buildWhere = (
+      targetLang: string,
+    ): FindOptionsWhere<PortfolioProject> => {
+      const where: FindOptionsWhere<PortfolioProject> = {
+        language: targetLang,
+      };
+      if (featured !== undefined) {
+        where.featured = featured;
+      }
+      return where;
+    };
+
     let projects = await this.projectRepository.find({
-      where: { language: lang },
+      where: buildWhere(lang),
       order: { orderIndex: 'ASC', createdAt: 'DESC' },
     });
     if (projects.length === 0 && lang !== 'es') {
       projects = await this.projectRepository.find({
-        where: { language: 'es' },
+        where: buildWhere('es'),
         order: { orderIndex: 'ASC', createdAt: 'DESC' },
       });
     }

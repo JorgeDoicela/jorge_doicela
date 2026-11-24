@@ -1,9 +1,9 @@
 import type { PortfolioNavGroup, PortfolioNavItem } from '../types';
 
 /**
- * Registro declarativo de navegación del Portafolio.
- * - kind: 'section' realiza scroll suave al ancla en / (o navega a /#anchor desde subpáginas).
- * - kind: 'route' navega a módulos o páginas dedicadas de Next.js (ej. /sandbox, /projects).
+ * Registro declarativo de navegación del Portafolio (7 ejes atemporales).
+ * - kind: 'route' navega a páginas dedicadas respaldadas por portfolio.sqlite (/about, /projects, /stack, /experience, /engineering).
+ * - kind: 'section' realiza scroll suave al ancla interactiva en el Home (/terminal, /contact).
  */
 export const PORTFOLIO_NAV_GROUPS: readonly PortfolioNavGroup[] = [
   'overview',
@@ -11,13 +11,11 @@ export const PORTFOLIO_NAV_GROUPS: readonly PortfolioNavGroup[] = [
 ] as const;
 
 export const PORTFOLIO_NAV_ITEMS: readonly PortfolioNavItem[] = [
-  { id: 'about', labelKey: 'about', group: 'overview', icon: 'user', kind: 'section', anchor: 'about' },
-  { id: 'projects', labelKey: 'projects', group: 'overview', icon: 'projects', kind: 'section', anchor: 'projects' },
-  { id: 'stack', labelKey: 'stack', group: 'overview', icon: 'stack', kind: 'section', anchor: 'stack' },
-  { id: 'experience', labelKey: 'experience', group: 'overview', icon: 'experience', kind: 'section', anchor: 'experience' },
-  { id: 'cloud', labelKey: 'cloud', group: 'engineering', icon: 'cloud', kind: 'section', anchor: 'cloud' },
-  { id: 'tools', labelKey: 'tools', group: 'engineering', icon: 'tools', kind: 'section', anchor: 'tools' },
-  { id: 'philosophy', labelKey: 'philosophy', group: 'engineering', icon: 'philosophy', kind: 'section', anchor: 'philosophy' },
+  { id: 'about', labelKey: 'about', group: 'overview', icon: 'user', kind: 'route', href: '/about' },
+  { id: 'projects', labelKey: 'projects', group: 'overview', icon: 'projects', kind: 'route', href: '/projects' },
+  { id: 'stack', labelKey: 'stack', group: 'overview', icon: 'stack', kind: 'route', href: '/stack' },
+  { id: 'experience', labelKey: 'experience', group: 'overview', icon: 'experience', kind: 'route', href: '/experience' },
+  { id: 'engineering', labelKey: 'engineering', group: 'engineering', icon: 'cloud', kind: 'route', href: '/engineering' },
   { id: 'terminal', labelKey: 'terminal', group: 'engineering', icon: 'terminal', kind: 'section', anchor: 'terminal' },
   { id: 'contact', labelKey: 'contact', group: 'engineering', icon: 'contact', kind: 'section', anchor: 'contact' },
 ] as const;

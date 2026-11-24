@@ -1,5 +1,10 @@
+import Link from 'next/link';
 import { TerminalConsole } from '../features/terminal';
-import { ProjectShowcase, type PortfolioProject } from '../features/projects';
+import { ProjectShowcase, getPortfolioProjects } from '../features/projects';
+import { ExperienceSection, getPortfolioExperience } from '../features/experience';
+import { StackSection, getPortfolioStack } from '../features/stack';
+import { EngineeringSection, getPortfolioEngineering } from '../features/engineering';
+import { getPortfolioProfile } from '../features/about';
 import { ContactForm } from '../features/contact';
 import { PortfolioHeader } from '../components/PortfolioHeader';
 import { TypewriterRole } from '../components/TypewriterRole';
@@ -8,63 +13,26 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import {
     Mail,
     MapPin,
+    ArrowRight,
     ArrowUpRight,
-    Shield,
-    Server,
-    RefreshCw
 } from 'lucide-react';
-
-import { API_URL } from '../shared';
-
-interface RawProjectApiItem {
-    id: number;
-    slug: string;
-    title: string;
-    description: string;
-    role: string;
-    technologies: string[] | string;
-    language: string;
-    repoUrl?: string;
-    demoUrl?: string;
-    featured: boolean;
-    overview?: string;
-    challenge?: string;
-    architectureHighlights?: string[];
-    metrics?: { label: string; value: string }[];
-    media?: { type: 'image' | 'video'; url: string; caption?: string }[];
-}
-
-async function getPortfolioProjects(locale: string): Promise<PortfolioProject[]> {
-    const res = await fetch(`${API_URL}/portfolio/projects?lang=${locale}`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) {
-        throw new Error(`Error al obtener proyectos del portafolio desde la API (status: ${res.status})`);
-    }
-    const json = await res.json();
-    const rawProjects: RawProjectApiItem[] = Array.isArray(json) ? json : json.data || [];
-    return rawProjects.map((p) => ({
-        ...p,
-        technologies: Array.isArray(p.technologies)
-            ? p.technologies
-            : (typeof p.technologies === 'string' && p.technologies.trim().startsWith('[')
-                ? JSON.parse(p.technologies)
-                : (typeof p.technologies === 'string' ? p.technologies.split(',').map((s: string) => s.trim()) : [])),
-    }));
-}
 
 export default async function PortfolioPage() {
     const locale = await getLocale();
     const tHeader = await getTranslations('Header');
     const tAbout = await getTranslations('About');
-    const tStack = await getTranslations('Stack');
-    const tExp = await getTranslations('Experience');
-    const tCloud = await getTranslations('Cloud');
-    const tTools = await getTranslations('Tools');
     const tContact = await getTranslations('Contact');
     const tTerm = await getTranslations('Terminal');
     const tFooter = await getTranslations('Footer');
-    const projects = await getPortfolioProjects(locale);
+
+    const [profile, projects, stackItems, experienceItems, engineeringPillars] =
+        await Promise.all([
+            getPortfolioProfile(locale),
+            getPortfolioProjects(locale, { featured: true }),
+            getPortfolioStack(locale, { featured: true }),
+            getPortfolioExperience(locale, { featured: true }),
+            getPortfolioEngineering(locale, { featured: true }),
+        ]);
 
     return (
         <div className="portfolio-shell min-h-screen bg-background text-foreground py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
@@ -93,12 +61,22 @@ export default async function PortfolioPage() {
                 {/* Sección 1: Sobre Mí & Contactos */}
                 <section id="about" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
                     <div className="md:col-span-2 flex flex-col gap-4">
-                        <h2 className="text-2xl md:text-3xl font-light text-foreground mb-2">
-                            {tAbout('title')}
-                        </h2>
+                        <div className="flex items-baseline justify-between gap-4 mb-2">
+                            <h2 className="text-2xl md:text-3xl font-light text-foreground">
+                                {tAbout('title')}
+                            </h2>
+                            <Link
+                                href="/about"
+                                className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors shrink-0"
+                            >
+                                <span>{tAbout('viewMore')}</span>
+                                <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                            </Link>
+                        </div>
                         <div className="text-foreground/75 text-xs md:text-sm leading-relaxed font-light space-y-4">
-                            <p>{tAbout('p1')}</p>
-                            <p>{tAbout('p2')}</p>
+                            {profile.bio.map((paragraph, idx) => (
+                                <p key={idx}>{paragraph}</p>
+                            ))}
                         </div>
                     </div>
 
@@ -137,12 +115,12 @@ export default async function PortfolioPage() {
                             <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                         </a>
                         <a
-                            href="mailto:jorge.doicela.m@gmail.com"
+                            href={`mailto:${profile.email}`}
                             className="flex items-center justify-between p-3 rounded-lg border border-border bg-background/30 hover:bg-surface-raised transition-all duration-300 text-xs text-foreground/80 hover:text-foreground font-mono"
                         >
                             <span className="flex items-center gap-2">
                                 <Mail className="w-4 h-4 text-gold-300" />
-                                <span>jorge.doicela.m@gmail.com</span>
+                                <span>{profile.email}</span>
                             </span>
                             <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                         </a>
@@ -155,7 +133,7 @@ export default async function PortfolioPage() {
                         >
                             <span className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4 text-gold-300" />
-                                <span>Quito, Ecuador</span>
+                                <span>{profile.location}</span>
                             </span>
                             <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                         </a>
@@ -163,191 +141,21 @@ export default async function PortfolioPage() {
                 </section>
 
                 {/* Sección 2: Showcase de Proyectos de Ingeniería */}
-                <ProjectShowcase projects={projects} />
+                <ProjectShowcase projects={projects} viewAllHref="/projects" />
 
-                {/* Sección 3: Tecnologías & Stack Principal */}
-                <section id="stack" className="flex flex-col gap-6 scroll-mt-24">
-                    <h2 className="text-2xl font-light text-foreground">
-                        {tStack('title')}
-                    </h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-2">
-                        <div className="flex flex-col gap-2.5">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">{tStack('client')}</span>
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-foreground/80">
-                                <span>React</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>Next.js 16</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>TypeScript</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>Tailwind CSS</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>{tStack('expo')}</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2.5">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">{tStack('server')}</span>
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-foreground/80">
-                                <span>NestJS 11</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>Node.js</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>C# / .NET</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>PHP / Laravel</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>Python</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2.5">
-                            <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">{tStack('data')}</span>
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-foreground/80">
-                                <span>SQLite (WAL)</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>PostgreSQL</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>AWS Lightsail</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>Docker</span>
-                                <span className="text-gold-400/50 select-none">•</span>
-                                <span>GitHub Actions</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                {/* Sección 3: Tecnologías & Stack Principal (Marquee SQLite) */}
+                <StackSection items={stackItems} viewAllHref="/stack" />
 
                 {/* Sección 4: Experiencia & Educación */}
-                <section id="experience" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
-                    <div className="md:col-span-2 flex flex-col gap-6">
-                        <h2 className="text-2xl font-light text-foreground mb-2">
-                            {tExp('title')}
-                        </h2>
+                <ExperienceSection items={experienceItems} viewAllHref="/experience" />
 
-                        <div className="space-y-8">
-                            <div className="border-l border-border-gold pl-4 relative">
-                                <div className="absolute w-2 h-2 rounded-full bg-gold-400 -left-[5px] top-1.5 luxury-pulse"></div>
-                                <div className="flex justify-between items-start mb-1.5">
-                                    <h3 className="text-sm font-mono text-foreground font-semibold">{tExp('role1Title')}</h3>
-                                    <span className="text-[10px] font-mono text-muted uppercase">{tExp('role1Sub')}</span>
-                                </div>
-                                <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
-                                    {tExp('role1Desc')}
-                                </p>
-                            </div>
+                {/* Sección 5: Ingeniería, Cloud & DevSecOps */}
+                <EngineeringSection pillars={engineeringPillars} viewAllHref="/engineering" />
 
-                            <div className="border-l border-border-gold pl-4 relative">
-                                <div className="absolute w-2 h-2 rounded-full bg-gold-500 -left-[5px] top-1.5"></div>
-                                <div className="flex justify-between items-start mb-1.5">
-                                    <h3 className="text-sm font-mono text-foreground font-semibold">{tExp('role2Title')}</h3>
-                                    <span className="text-[10px] font-mono text-muted uppercase">{tExp('role2Sub')}</span>
-                                </div>
-                                <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
-                                    {tExp('role2Desc')}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Educación */}
-                    <div className="flex flex-col gap-6 md:pl-6 md:border-l border-border/40 h-full justify-between">
-                        <div className="flex flex-col gap-6">
-                            <h2 className="text-2xl font-light text-foreground mb-2">
-                                {tExp('eduTitle')}
-                            </h2>
-
-                            <div className="space-y-5">
-                                <div>
-                                    <h3 className="text-xs md:text-sm font-mono text-foreground font-semibold">{tExp('edu1Title')}</h3>
-                                    <p className="text-[10px] text-gold-400 font-mono mt-1">{tExp('edu1Sub')}</p>
-                                </div>
-                                <div className="border-t border-border/30 pt-4">
-                                    <h3 className="text-xs md:text-sm font-mono text-foreground font-semibold">{tExp('edu2Title')}</h3>
-                                    <p className="text-[10px] text-muted font-mono mt-1">{tExp('edu2Sub')}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Sección 5: Nube, CI/CD y Hardening */}
-                <section id="cloud" className="flex flex-col gap-6 scroll-mt-24">
-                    <h2 className="text-2xl font-light text-foreground">
-                        {tCloud('title')}
-                    </h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-2">
-                        <div className="flex flex-col gap-2.5">
-                            <div className="flex items-center gap-2">
-                                <Server className="w-4.5 h-4.5 text-gold-400" />
-                                <h3 className="text-xs font-mono font-semibold text-foreground">{tCloud('pillar1Title')}</h3>
-                            </div>
-                            <p className="text-muted text-xs leading-relaxed font-light">
-                                {tCloud('pillar1Desc')}
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:px-4 md:border-x border-border/40">
-                            <div className="flex items-center gap-2">
-                                <RefreshCw className="w-4.5 h-4.5 text-gold-400" />
-                                <h3 className="text-xs font-mono font-semibold text-foreground">{tCloud('pillar2Title')}</h3>
-                            </div>
-                            <p className="text-muted text-xs leading-relaxed font-light">
-                                {tCloud('pillar2Desc')}
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2.5">
-                            <div className="flex items-center gap-2">
-                                <Shield className="w-4.5 h-4.5 text-gold-400" />
-                                <h3 className="text-xs font-mono font-semibold text-foreground">{tCloud('pillar3Title')}</h3>
-                            </div>
-                            <p className="text-muted text-xs leading-relaxed font-light">
-                                {tCloud('pillar3Desc')}
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Sección 6: Flujo & Herramientas */}
-                <section id="tools" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
-                    <div className="md:col-span-2 flex flex-col gap-4">
-                        <h2 className="text-2xl font-light text-foreground mb-2">
-                            {tTools('title')}
-                        </h2>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-2">
-                            <div className="flex flex-col gap-2.5">
-                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase">{tTools('systemsTitle')}</span>
-                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs font-mono text-foreground/80">
-                                    <span>Arch Linux</span>
-                                    <span className="text-gold-400/50 select-none">•</span>
-                                    <span>Debian 13</span>
-                                    <span className="text-gold-400/50 select-none">•</span>
-                                    <span>Neovim</span>
-                                    <span className="text-gold-400/50 select-none">•</span>
-                                    <span>tmux</span>
-                                    <span className="text-gold-400/50 select-none">•</span>
-                                    <span>Alacritty</span>
-                                    <span className="text-gold-400/50 select-none">•</span>
-                                    <span>Hyprland</span>
-                                    <span className="text-gold-400/50 select-none">•</span>
-                                    <span>Figma</span>
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <span className="text-[10.5px] font-mono text-gold-400 tracking-wider uppercase">{tTools('studyTitle')}</span>
-                                <span className="text-xs font-mono font-semibold text-foreground mt-1">{tTools('pdfTitle')}</span>
-                                <p className="text-muted text-xs leading-relaxed font-light">
-                                    {tTools('pdfDesc')}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Sección 7: Filosofía & Valores Fundamentales */}
+                {/* Sección 6: Filosofía & Valores Fundamentales */}
                 <ValuesPhilosophySection />
 
-                {/* Sección 8: Consola Interactiva Virtual SSH */}
+                {/* Sección 7: Consola Interactiva Virtual SSH */}
                 <section id="terminal" className="flex flex-col gap-4 scroll-mt-24">
                     <div className="flex flex-col gap-1.5 px-2 md:px-0">
                         <h2 className="text-xl font-light text-foreground">
@@ -360,7 +168,7 @@ export default async function PortfolioPage() {
                     <TerminalConsole />
                 </section>
 
-                {/* Sección 9: Centro de Contacto Interactivo */}
+                {/* Sección 8: Centro de Contacto Interactivo */}
                 <section id="contact" className="flex flex-col gap-8 scroll-mt-24">
                     {/* Cabecera Editorial General */}
                     <div className="flex flex-col gap-2">
@@ -415,4 +223,3 @@ export default async function PortfolioPage() {
         </div>
     );
 }
-

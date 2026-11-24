@@ -1,0 +1,67 @@
+[
+  { "id": 1, "slug": "react", "language": "es", "category": "frontend", "name": "React", "level": "Producción", "summary": "Arquitectura de interfaces reactivas, hooks personalizados y renderizado concurrente.", "featured": true, "orderIndex": 1 },
+  { "id": 2, "slug": "react", "language": "en", "category": "frontend", "name": "React", "level": "Production", "summary": "Reactive UI architecture, custom hooks, and concurrent rendering.", "featured": true, "orderIndex": 1 },
+
+  { "id": 3, "slug": "nextjs-16", "language": "es", "category": "frontend", "name": "Next.js 16", "level": "Producción", "summary": "App Router, SSR/ISR, middleware multi-subdominio y compilación Standalone.", "featured": true, "orderIndex": 2 },
+  { "id": 4, "slug": "nextjs-16", "language": "en", "category": "frontend", "name": "Next.js 16", "level": "Production", "summary": "App Router, SSR/ISR, multi-subdomain middleware, and Standalone builds.", "featured": true, "orderIndex": 2 },
+
+  { "id": 5, "slug": "typescript", "language": "es", "category": "frontend", "name": "TypeScript", "level": "Producción", "summary": "Tipado estricto de extremo a extremo, contratos discriminados y cero any.", "featured": true, "orderIndex": 3 },
+  { "id": 6, "slug": "typescript", "language": "en", "category": "frontend", "name": "TypeScript", "level": "Production", "summary": "End-to-end strict typing, discriminated unions, and zero implicit any.", "featured": true, "orderIndex": 3 },
+
+  { "id": 7, "slug": "tailwind-css", "language": "es", "category": "frontend", "name": "Tailwind CSS", "level": "Producción", "summary": "Sistemas de diseño tokenizados Dark/Light, responsive ergonómico y CSS puro.", "featured": true, "orderIndex": 4 },
+  { "id": 8, "slug": "tailwind-css", "language": "en", "category": "frontend", "name": "Tailwind CSS", "level": "Production", "summary": "Tokenized Dark/Light design systems, ergonomic responsive layouts, and pure CSS.", "featured": true, "orderIndex": 4 },
+
+  { "id": 9, "slug": "expo-mobile", "language": "es", "category": "frontend", "name": "Expo (Móvil)", "level": "Producción", "summary": "Aplicaciones móviles nativas multiplataforma con arquitectura Offline-First.", "featured": true, "orderIndex": 5 },
+  { "id": 10, "slug": "expo-mobile", "language": "en", "category": "frontend", "name": "Expo (Mobile)", "level": "Production", "summary": "Cross-platform native mobile applications with Offline-First architecture.", "featured": true, "orderIndex": 5 },
+
+  { "id": 11, "slug": "nestjs-11", "language": "es", "category": "backend", "name": "NestJS 11", "level": "Producción", "summary": "Monolitos modulares en 3 capas, WebSockets Socket.io, Guards y eventos desacoplados.", "featured": true, "orderIndex": 10 },
+  { "id": 12, "slug": "nestjs-11", "language": "en", "category": "backend", "name": "NestJS 11", "level": "Production", "summary": "3-tier modular monoliths, Socket.io WebSockets, Guards, and decoupled events.", "featured": true, "orderIndex": 10 },
+
+  { "id": 13, "slug": "nodejs", "language": "es", "category": "backend", "name": "Node.js", "level": "Producción", "summary": "Servicios asíncronos de baja latencia optimizados para entornos restringidos en RAM.", "featured": true, "orderIndex": 11 },
+  { "id": 14, "slug": "nodejs", "language": "en", "category": "backend", "name": "Node.js", "level": "Production", "summary": "Low-latency asynchronous services tuned for tight RAM budgets.", "featured": true, "orderIndex": 11 },
+
+  { "id": 15, "slug": "csharp-dotnet", "language": "es", "category": "backend", "name": "C# / .NET", "level": "Producción", "summary": "APIs empresariales en ASP.NET Core, Clean Architecture y acceso optimizado a datos.", "featured": true, "orderIndex": 12 },
+  { "id": 16, "slug": "csharp-dotnet", "language": "en", "category": "backend", "name": "C# / .NET", "level": "Production", "summary": "Enterprise ASP.NET Core APIs, Clean Architecture, and optimized data access.", "featured": true, "orderIndex": 12 },
+
+  { "id": 17, "slug": "php-laravel", "language": "es", "category": "backend", "name": "PHP / Laravel", "level": "Producción", "summary": "Sistemas institucionales, motores Blade, colas y mantenimiento evolutivo.", "featured": true, "orderIndex": 13 },
+  { "id": 18, "slug": "php-laravel", "language": "en", "category": "backend", "name": "PHP / Laravel", "level": "Production", "summary": "Institutional web platforms, Blade templating, queues, and legacy stabilization.", "featured": true, "orderIndex": 13 },
+
+  { "id": 19, "slug": "python", "language": "es", "category": "backend", "name": "Python", "level": "Especialización", "summary": "Automatización, scripting de seguridad, procesamiento de datos e IA aplicada.", "featured": true, "orderIndex": 14 },
+  { "id": 20, "slug": "python", "language": "en", "category": "backend", "name": "Python", "level": "Specialization", "summary": "Automation, security scripting, data pipelines, and applied AI workflows.", "featured": true, "orderIndex": 14 },
+
+  { "id": 21, "slug": "sqlite-wal", "language": "es", "category": "data_devops", "name": "SQLite (WAL)", "level": "Producción", "summary": "Persistencia embebida ultra-ligera con better-sqlite3, modo WAL e índices compuestos.", "featured": true, "orderIndex": 20 },
+  { "id": 22, "slug": "sqlite-wal", "language": "en", "category": "data_devops", "name": "SQLite (WAL)", "level": "Production", "summary": "Ultra-lightweight embedded persistence with better-sqlite3, WAL mode, and compound indices.", "featured": true, "orderIndex": 20 },
+
+  { "id": 23, "slug": "postgresql", "language": "es", "category": "data_devops", "name": "PostgreSQL", "level": "Producción", "summary": "Modelado relacional estricto, optimización de planes de consulta e integridad ACID.", "featured": true, "orderIndex": 21 },
+  { "id": 24, "slug": "postgresql", "language": "en", "category": "data_devops", "name": "PostgreSQL", "level": "Production", "summary": "Strict relational modeling, query plan tuning, and ACID transactional integrity.", "featured": true, "orderIndex": 21 },
+
+  { "id": 25, "slug": "aws-lightsail", "language": "es", "category": "data_devops", "name": "AWS Lightsail", "level": "Producción", "summary": "Administración de instancias Debian 13, Nginx, PM2 y presupuestos de 1 GB RAM.", "featured": true, "orderIndex": 22 },
+  { "id": 26, "slug": "aws-lightsail", "language": "en", "category": "data_devops", "name": "AWS Lightsail", "level": "Production", "summary": "Debian 13 VPS operations, Nginx reverse proxying, PM2, and 1 GB RAM budgeting.", "featured": true, "orderIndex": 22 },
+
+  { "id": 27, "slug": "docker", "language": "es", "category": "data_devops", "name": "Docker", "level": "Producción", "summary": "Contenedorización reproducible y sandboxes Linux endurecidos con cgroups y seccomp.", "featured": true, "orderIndex": 23 },
+  { "id": 28, "slug": "docker", "language": "en", "category": "data_devops", "name": "Docker", "level": "Production", "summary": "Reproducible containerization and hardened Linux sandboxes with cgroups and seccomp.", "featured": true, "orderIndex": 23 },
+
+  { "id": 29, "slug": "github-actions", "language": "es", "category": "data_devops", "name": "GitHub Actions", "level": "Producción", "summary": "Pipelines CI/CD con compilación offloaded, verificación de tipos y despliegue SSH.", "featured": true, "orderIndex": 24 },
+  { "id": 30, "slug": "github-actions", "language": "en", "category": "data_devops", "name": "GitHub Actions", "level": "Production", "summary": "CI/CD pipelines with offloaded builds, strict type checking, and SSH deployments.", "featured": true, "orderIndex": 24 },
+
+  { "id": 31, "slug": "cloudflare-mtls", "language": "es", "category": "ai_security", "name": "Cloudflare mTLS & WAF", "level": "Producción", "summary": "Autenticación mutua TLS en origen, reglas de firewall y mitigación de abuso.", "featured": false, "orderIndex": 30 },
+  { "id": 32, "slug": "cloudflare-mtls", "language": "en", "category": "ai_security", "name": "Cloudflare mTLS & WAF", "level": "Production", "summary": "Origin mutual TLS authentication, firewall policies, and abuse mitigation.", "featured": false, "orderIndex": 30 },
+
+  { "id": 33, "slug": "owasp-hardening", "language": "es", "category": "ai_security", "name": "Hardening & OWASP", "level": "Especialización", "summary": "Sanitización estricta DTO, headers Helmet, rate limiting y aislamiento de privilegios.", "featured": false, "orderIndex": 31 },
+  { "id": 34, "slug": "owasp-hardening", "language": "en", "category": "ai_security", "name": "Hardening & OWASP", "level": "Specialization", "summary": "Strict DTO sanitization, Helmet headers, rate limiting, and least-privilege isolation.", "featured": false, "orderIndex": 31 },
+
+  { "id": 35, "slug": "applied-ai-llms", "language": "es", "category": "ai_security", "name": "IA Aplicada & LLMs", "level": "En evolución", "summary": "Integración de APIs de razonamiento, estructuración de contexto (llms.txt) y agentes.", "featured": false, "orderIndex": 32 },
+  { "id": 36, "slug": "applied-ai-llms", "language": "en", "category": "ai_security", "name": "Applied AI & LLMs", "level": "Evolving", "summary": "Reasoning model API integrations, structured context dossiers (llms.txt), and agents.", "featured": false, "orderIndex": 32 },
+
+  { "id": 37, "slug": "arch-debian-linux", "language": "es", "category": "tools", "name": "Arch Linux / Debian 13", "level": "Diario", "summary": "Entorno de trabajo principal y servidor de producción bajo filosofía minimalista Unix.", "featured": false, "orderIndex": 40 },
+  { "id": 38, "slug": "arch-debian-linux", "language": "en", "category": "tools", "name": "Arch Linux / Debian 13", "level": "Daily", "summary": "Primary workstation and production server operating systems under Unix minimalism.", "featured": false, "orderIndex": 40 },
+
+  { "id": 39, "slug": "neovim-tmux", "language": "es", "category": "tools", "name": "Neovim · tmux · Alacritty", "level": "Diario", "summary": "Flujo de desarrollo orientado a teclado con multiplexación de sesiones y baja latencia.", "featured": false, "orderIndex": 41 },
+  { "id": 40, "slug": "neovim-tmux", "language": "en", "category": "tools", "name": "Neovim · tmux · Alacritty", "level": "Daily", "summary": "Keyboard-driven development workflow with session multiplexing and low latency.", "featured": false, "orderIndex": 41 },
+
+  { "id": 41, "slug": "hyprland-figma", "language": "es", "category": "tools", "name": "Hyprland · Figma", "level": "Diario", "summary": "Gestor de ventanas en mosaico Wayland y prototipado de interfaces editoriales.", "featured": false, "orderIndex": 42 },
+  { "id": 42, "slug": "hyprland-figma", "language": "en", "category": "tools", "name": "Hyprland · Figma", "level": "Daily", "summary": "Wayland tiling window manager and editorial UI system prototyping.", "featured": false, "orderIndex": 42 },
+
+  { "id": 43, "slug": "sioyek", "language": "es", "category": "tools", "name": "Sioyek Lector PDF", "level": "Estudio", "summary": "Navegación ágil por teclado para lectura de papers, RFCs y estudio técnico profundo.", "featured": false, "orderIndex": 43 },
+  { "id": 44, "slug": "sioyek", "language": "en", "category": "tools", "name": "Sioyek PDF Reader", "level": "Research", "summary": "Keyboard-driven PDF reader tailored for academic papers, RFCs, and technical study.", "featured": false, "orderIndex": 43 }
+]

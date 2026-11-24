@@ -104,7 +104,9 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
   useEffect(() => {
     if (!isHome) {
       const matchedRoute = PORTFOLIO_NAV_ITEMS.find(
-        (item) => item.kind === 'route' && pathname.startsWith(item.href)
+        (item) =>
+          item.kind === 'route' &&
+          (pathname.startsWith(item.href) || pathname.startsWith(`/portfolio${item.href}`))
       );
       if (matchedRoute) {
         setActiveId(matchedRoute.id);

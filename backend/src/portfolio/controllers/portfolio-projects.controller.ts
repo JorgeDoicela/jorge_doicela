@@ -15,8 +15,11 @@ export class PortfolioProjectsController {
   @Get()
   async getAllProjects(
     @Query('lang') lang?: string,
+    @Query('featured') featured?: string,
   ): Promise<PortfolioProject[]> {
-    return this.projectsService.findAll(lang);
+    const parsedFeatured =
+      featured === 'true' ? true : featured === 'false' ? false : undefined;
+    return this.projectsService.findAll(lang, parsedFeatured);
   }
 
   @Get(':slug')

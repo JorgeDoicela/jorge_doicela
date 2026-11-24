@@ -370,3 +370,24 @@ nextjs-portal:hover,
   opacity: 1 !important;
   pointer-events: auto !important;
 }
+
+/* ─── CARRUSEL INFINITO MARQUEE POR SECCIÓN (Stack Tecnológico) ───── */
+@keyframes portfolio-marquee-left {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-portfolio-marquee-left {
+  animation: portfolio-marquee-left 22s linear infinite;
+}
+
+.marquee-track:hover .animate-portfolio-marquee-left,
+.marquee-track:active .animate-portfolio-marquee-left {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-portfolio-marquee-left {
+    animation: none;
+  }
+}

@@ -3,6 +3,7 @@ export type PortfolioNavLabelKey =
   | 'projects'
   | 'stack'
   | 'experience'
+  | 'engineering'
   | 'cloud'
   | 'tools'
   | 'philosophy'

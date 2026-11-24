@@ -1,0 +1,178 @@
+[
+  {
+    "id": 1,
+    "slug": "cloud-1gb-ram-architecture",
+    "language": "es",
+    "domain": "cloud",
+    "title": "Infraestructura Cloud (1 GB RAM)",
+    "badge": "AWS Lightsail",
+    "summary": "Despliegue en AWS Lightsail (Debian 13) optimizado para ejecutar 4 plataformas simultáneamente con estabilidad continua bajo 1 GB de RAM.",
+    "details": [
+      "Consolidación física de runtimes: 1 proceso NestJS (puerto 3000) y 1 proceso Next.js Standalone (puerto 3001) gestionados por PM2.",
+      "Aislamiento lógico absoluto ('Cajas Negras'): bases de datos SQLite independientes en modo WAL y cero dependencias cruzadas.",
+      "Entrega Zero-RAM desde Nginx para activos estáticos, manifiestos PWA y archivos llms.txt en menos de 1 ms."
+    ],
+    "metrics": [
+      { "label": "Presupuesto RAM", "value": "1 GB" },
+      { "label": "Huella Operativa", "value": "~170 MB" },
+      { "label": "Apps Activas", "value": "4" }
+    ],
+    "technologies": ["AWS Lightsail", "Debian 13", "Nginx", "PM2", "SQLite WAL"],
+    "featured": true,
+    "orderIndex": 1
+  },
+  {
+    "id": 2,
+    "slug": "cloud-1gb-ram-architecture",
+    "language": "en",
+    "domain": "cloud",
+    "title": "Cloud Infrastructure (1 GB RAM)",
+    "badge": "AWS Lightsail",
+    "summary": "AWS Lightsail (Debian 13) deployment engineered to sustain 4 concurrent platforms reliably within a strict 1 GB RAM physical envelope.",
+    "details": [
+      "Physical runtime consolidation: 1 NestJS process (port 3000) and 1 Next.js Standalone process (port 3001) orchestrated via PM2.",
+      "Strict logical isolation ('Black Boxes'): independent SQLite WAL databases with zero cross-domain imports.",
+      "Zero-RAM Nginx static serving for assets, PWA manifests, and llms.txt dossiers in under 1 ms."
+    ],
+    "metrics": [
+      { "label": "RAM Budget", "value": "1 GB" },
+      { "label": "Memory Footprint", "value": "~170 MB" },
+      { "label": "Active Platforms", "value": "4" }
+    ],
+    "technologies": ["AWS Lightsail", "Debian 13", "Nginx", "PM2", "SQLite WAL"],
+    "featured": true,
+    "orderIndex": 1
+  },
+  {
+    "id": 3,
+    "slug": "automation-cicd-pipelines",
+    "language": "es",
+    "domain": "systems",
+    "title": "Automatización & CI/CD",
+    "badge": "GitHub Actions",
+    "summary": "Pipelines de GitHub Actions con compilación externa (offloaded builds), verificación estricta de tipos y entrega determinista sin caídas.",
+    "details": [
+      "Compilación completa de monorepo pnpm en runners de GitHub para proteger la CPU y RAM del VPS de producción.",
+      "Controles de calidad automatizados: escaneo de secretos pre-commit (Husky), ESLint y TypeScript estricto.",
+      "Transferencia diferencial segura por rsync sobre SSH, sembrado atómico de corpus JSON y recarga controlada en PM2."
+    ],
+    "metrics": [
+      { "label": "Build en VPS", "value": "0%" },
+      { "label": "Validación", "value": "Pre-commit + CI" },
+      { "label": "Despliegue", "value": "Determinista" }
+    ],
+    "technologies": ["GitHub Actions", "pnpm Monorepo", "Husky", "rsync", "SSH"],
+    "featured": true,
+    "orderIndex": 2
+  },
+  {
+    "id": 4,
+    "slug": "automation-cicd-pipelines",
+    "language": "en",
+    "domain": "systems",
+    "title": "Automation & CI/CD",
+    "badge": "GitHub Actions",
+    "summary": "GitHub Actions pipelines with offloaded compilation, strict type verification, and deterministic zero-downtime delivery.",
+    "details": [
+      "Full pnpm monorepo builds executed on GitHub runners to keep production VPS CPU and memory completely untouched.",
+      "Automated quality gates: pre-commit secret scanning (Husky), ESLint, and strict TypeScript verification.",
+      "Differential SSH rsync transfers, atomic JSON corpus seeding, and graceful PM2 reloads."
+    ],
+    "metrics": [
+      { "label": "VPS Build Load", "value": "0%" },
+      { "label": "Quality Gates", "value": "Pre-commit + CI" },
+      { "label": "Delivery", "value": "Deterministic" }
+    ],
+    "technologies": ["GitHub Actions", "pnpm Monorepo", "Husky", "rsync", "SSH"],
+    "featured": true,
+    "orderIndex": 2
+  },
+  {
+    "id": 5,
+    "slug": "hardening-devsecops-mtls",
+    "language": "es",
+    "domain": "security",
+    "title": "Hardening & DevSecOps",
+    "badge": "Defense-in-Depth",
+    "summary": "Seguridad perimetral con Cloudflare mTLS, aislamiento de contenedores Docker en 5 capas y sanitización estricta de entradas.",
+    "details": [
+      "Cloudflare Authenticated Origin Pulls (mTLS) en Nginx rechazando cualquier tráfico directo hacia la IP del servidor.",
+      "Live Linux Sandbox aislado con NetworkMode none, CapDrop ALL, ReadonlyRootfs, cgroups (64 MB RAM / 0.25 CPU) y pids-limit=50.",
+      "Validación global NestJS (whitelist + forbidNonWhitelisted), cabeceras Helmet y rate limiting en memoria contra abuso."
+    ],
+    "metrics": [
+      { "label": "Capas Sandbox", "value": "5" },
+      { "label": "Acceso IP Directa", "value": "Bloqueado (mTLS)" },
+      { "label": "Límite PIDs", "value": "≤ 50" }
+    ],
+    "technologies": ["Cloudflare mTLS", "Docker Security", "Helmet", "NestJS Guards", "UFW"],
+    "featured": true,
+    "orderIndex": 3
+  },
+  {
+    "id": 6,
+    "slug": "hardening-devsecops-mtls",
+    "language": "en",
+    "domain": "security",
+    "title": "Hardening & DevSecOps",
+    "badge": "Defense-in-Depth",
+    "summary": "Perimeter defense via Cloudflare mTLS, 5-layer hardened Docker sandboxes, and strict input sanitization across all APIs.",
+    "details": [
+      "Cloudflare Authenticated Origin Pulls (mTLS) enforced at Nginx to drop all direct-to-IP origin probes.",
+      "Air-gapped Live Linux Sandbox enforcing NetworkMode none, CapDrop ALL, ReadonlyRootfs, cgroups (64 MB RAM), and pids-limit=50.",
+      "Global NestJS ValidationPipe (whitelist + forbidNonWhitelisted), Helmet headers, and in-memory throttling guards."
+    ],
+    "metrics": [
+      { "label": "Sandbox Layers", "value": "5" },
+      { "label": "Direct IP Access", "value": "Blocked (mTLS)" },
+      { "label": "PIDs Cap", "value": "≤ 50" }
+    ],
+    "technologies": ["Cloudflare mTLS", "Docker Security", "Helmet", "NestJS Guards", "UFW"],
+    "featured": true,
+    "orderIndex": 3
+  },
+  {
+    "id": 7,
+    "slug": "ai-ready-systems-and-geo",
+    "language": "es",
+    "domain": "ai",
+    "title": "Sistemas Preparados para IA & GEO",
+    "badge": "IA & Ciberseguridad",
+    "summary": "Diseño de arquitecturas legibles para agentes y modelos de lenguaje, combinando dossiers estructurados, datos semánticos y control de acceso.",
+    "details": [
+      "Exposición estructurada mediante dossiers llms.txt dedicados por subdominio y marcado semántico Schema.org (JSON-LD).",
+      "Investigación y desarrollo continuo en integración segura de LLMs, mitigación de prompt injection y automatización con agentes.",
+      "Base académica en curso en Ingeniería en Inteligencia Artificial y Ciberseguridad aplicada a sistemas de producción."
+    ],
+    "metrics": [
+      { "label": "Dossiers IA", "value": "llms.txt + JSON-LD" },
+      { "label": "Enfoque", "value": "Seguridad + LLMs" },
+      { "label": "Estado", "value": "Evolución Activa" }
+    ],
+    "technologies": ["LLMs", "llms.txt", "Schema.org JSON-LD", "Python", "AI Security"],
+    "featured": false,
+    "orderIndex": 4
+  },
+  {
+    "id": 8,
+    "slug": "ai-ready-systems-and-geo",
+    "language": "en",
+    "domain": "ai",
+    "title": "AI-Ready Systems & GEO",
+    "badge": "AI & Cybersecurity",
+    "summary": "Engineering machine-readable architectures combining structured LLM dossiers, semantic metadata, and secure AI integrations.",
+    "details": [
+      "Structured knowledge exposure through per-subdomain llms.txt dossiers and Schema.org JSON-LD graphs.",
+      "Ongoing R&D in secure LLM integration, prompt injection mitigation, and agentic workflow automation.",
+      "Academic specialization in Artificial Intelligence & Cybersecurity engineering applied to production systems."
+    ],
+    "metrics": [
+      { "label": "AI Dossiers", "value": "llms.txt + JSON-LD" },
+      { "label": "Focus", "value": "Security + LLMs" },
+      { "label": "Status", "value": "Active Evolution" }
+    ],
+    "technologies": ["LLMs", "llms.txt", "Schema.org JSON-LD", "Python", "AI Security"],
+    "featured": false,
+    "orderIndex": 4
+  }
+]

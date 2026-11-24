@@ -24,7 +24,9 @@ export const getApiUrl = (): string => {
 
 export const API_URL = isClient
   ? getApiUrl()
-  : normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000');
+  : process.env.NODE_ENV !== 'production'
+    ? normalizeApiUrl(process.env.INTERNAL_API_URL || 'http://localhost:3000')
+    : normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000');
 
 export const getSocketUrl = (): string => {
   if (isClient) {
@@ -81,3 +83,14 @@ export const SANDBOX_TUNNEL_URL = isClient
   ? getSandboxTunnelUrl()
   : process.env.NEXT_PUBLIC_SANDBOX_TUNNEL_URL ||
     'https://tunnel.jorgedoicela.com';
+
+export function normalizeStringArray(val: string[] | string | undefined): string[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    if (val.trim().startsWith('[')) {
+      return JSON.parse(val) as string[];
+    }
+    return val.split(',').map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+}

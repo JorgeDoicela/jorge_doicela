@@ -1,17 +1,19 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { PortfolioProject } from '../types';
 import { useProjects } from '../hooks/useProjects';
-import { ExternalLink, BookOpen } from 'lucide-react';
+import { ExternalLink, BookOpen, ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ProjectDetailModal } from './ProjectDetailModal';
 
 interface ProjectShowcaseProps {
   projects: PortfolioProject[];
+  viewAllHref?: string;
 }
 
-export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
+export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps) {
   const t = useTranslations('Projects');
   const {
     activeFilter,
@@ -174,6 +176,18 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
         isOpen={isModalOpen}
         onClose={handleCloseDetail}
       />
+
+      {viewAllHref && (
+        <div className="flex justify-end pt-1">
+          <Link
+            href={viewAllHref}
+            className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors"
+          >
+            <span>{t('viewAll')}</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

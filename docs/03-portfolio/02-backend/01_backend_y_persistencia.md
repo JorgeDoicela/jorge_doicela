@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, gateways de WebSockets, co
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `PortfolioGateway` (WebSockets `/terminal`), `SandboxGateway` (WebSockets `/sandbox`) y `ContactController` + `PortfolioProjectsController` (REST).
->   2. *Lógica de Negocio:* `PortfolioService`, `SandboxService` y `ContactMessagesService`.
->   3. *Acceso a Datos:* Entidades `ContactMessage` y `PortfolioProject` en TypeORM con driver `better-sqlite3`.
+>   1. *Presentación:* `PortfolioGateway` (WebSockets `/terminal`), `SandboxGateway` (WebSockets `/sandbox`), `ContactController`, `PortfolioProjectsController` y `PortfolioExperienceController` (REST).
+>   2. *Lógica de Negocio:* `PortfolioService`, `SandboxService`, `ContactMessagesService`, `PortfolioProjectsService` y `PortfolioExperienceService`.
+>   3. *Acceso a Datos:* Entidades `ContactMessage`, `PortfolioProject`, `PortfolioExperience` y `TerminalProfile` en TypeORM con driver `better-sqlite3`.
 
 ---
 
@@ -27,6 +27,10 @@ backend/src/portfolio/
 ├── portfolio.module.ts            # Registro del módulo, gateways, controladores y entidades
 ├── corpus/
 │   ├── projects.json              # Dataset JSON estructurado de proyectos bilingües (Fuente de Verdad)
+│   ├── experience.json            # Dataset JSON bilingüe de trayectoria laboral y formación académica
+│   ├── profile.json               # Dataset JSON bilingüe de perfil biográfico, filosofía y áreas de enfoque
+│   ├── stack.json                 # Dataset JSON bilingüe de tecnologías, especialidades y entorno Linux
+│   ├── engineering.json           # Dataset JSON bilingüe de pilares de ingeniería (Cloud, Seguridad, Sistemas, IA)
 │   └── terminal.json              # Dataset JSON bilingüe de la Terminal Guiada (banner, comandos, archivos virtuales y manuales)
 ├── cli/
 │   └── seed-portfolio.ts          # Sembrado atómico CLI con better-sqlite3 en modo WAL
@@ -39,7 +43,8 @@ backend/src/portfolio/
 │   └── sandbox.gateway.ts         # Gateway WebSocket para el Live Linux Sandbox (/sandbox)
 ├── controllers/
 │   ├── contact.controller.ts      # Endpoint REST POST /portfolio/contact (protegido contra spam; sin GET público para proteger PII)
-│   ├── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects y /:slug
+│   ├── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects (?lang, ?featured) y /:slug
+│   ├── portfolio-experience.controller.ts # Endpoint REST GET /portfolio/experience (?lang, ?featured, ?type)
 │   └── sandbox.controller.ts      # Endpoints REST GET /portfolio/sandbox/health y POST /portfolio/sandbox/wake-request (delegado a SandboxService)
 ├── events/
 │   ├── contact-message-created.event.ts # Evento de dominio de contacto
@@ -54,10 +59,12 @@ backend/src/portfolio/
 │   ├── sandbox-security.service.ts # Gobernanza de acceso, concurrencia 1:1 por IP, cooldown y jail
 │   ├── contact-messages.service.ts # Servicio de persistencia y emisión de eventos
 │   ├── telegram-notification.service.ts # Servicio de comunicación HTTP con la API de Telegram
-│   └── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos (TypeORM simple-json)
+│   ├── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos (TypeORM simple-json)
+│   └── portfolio-experience.service.ts # Servicio de consulta bilingüe de trayectoria laboral y formación
 ├── entities/
 │   ├── contact-message.entity.ts  # Entidad TypeORM para mensajes de contacto
 │   ├── portfolio-project.entity.ts # Entidad TypeORM con índice compuesto (slug, language)
+│   ├── portfolio-experience.entity.ts # Entidad TypeORM con índice compuesto (slug, language) para experiencia y formación
 │   └── terminal-profile.entity.ts # Entidad TypeORM bilingüe para perfiles y textos de la Terminal Guiada
 └── dto/
     ├── create-contact-message.dto.ts # DTO blindado con @MaxLength y validaciones estrictas

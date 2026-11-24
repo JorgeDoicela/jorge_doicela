@@ -185,11 +185,12 @@ flowchart TD
   * Las tarjetas orbitan en un arco convexo acelerado por GPU (`perspective(1200px)` por tarjeta, `translate3d`, `rotateY`, `scale`, `blur` progresivo y estratificación determinista de `z-index`), donde la sección activa se muestra completamente plana y enfocada al frente (`z-index: 50`) mientras las adyacentes retroceden en profundidad a izquierda y derecha sin colisiones ni solapamientos invertidos de renderizado.
   * Soporta arrastre táctil y con cursor (`PointerEvents` con resistencia elástica en extremos), clic directo en tarjetas laterales, rueda horizontal de trackpad, selector de capítulos inferior y atajos de teclado (`←`, `→`, `Esc`).
 * **Secciones Polimórficas y Escalabilidad Multimedia:**
-  1. *01 Visión General del Sistema (`overview`):* Propósito y alcance del software.
-  2. *02 El Desafío Técnico & Restricciones (`challenge`):* Problemas complejos de memoria, concurrencia o indexación resueltos.
-  3. *03 Arquitectura & Decisiones de Ingeniería (`architecture`):* Decisiones numeradas de diseño, persistencia SQLite WAL y microarquitectura.
-  4. *04 Stack Tecnológico & Telemetría (`stack-telemetry`):* Badges de herramientas junto a la ficha técnica editorial con líneas punteadas continuas (`border-dotted`).
-  5. *05+ Galería Multimedia (`media`):* Soporte nativo para imágenes y videos (`ProjectMedia`) que se inyectan automáticamente como slides adicionales en cuanto el proyecto incluye activos multimedia.
+  * **Cabecera Limpia de Tarjeta (`ProjectSlideCard.tsx`):** Título de sección en tipografía monoespaciada dorada (`text-xs font-mono uppercase tracking-[0.14em] text-gold-300`) flotando limpiamente sin números ordinales ni bordes divisorios horizontales superiores.
+  1. *Visión General del Sistema (`overview`):* Propósito y alcance del software.
+  2. *El Desafío Técnico & Restricciones (`challenge`):* Problemas complejos de memoria, concurrencia o indexación resueltos.
+  3. *Arquitectura & Decisiones de Ingeniería (`architecture`):* Decisiones numeradas de diseño, persistencia SQLite WAL y microarquitectura.
+  4. *Stack Tecnológico & Telemetría (`stack-telemetry`):* Badges de herramientas junto a la ficha técnica editorial con líneas punteadas continuas (`border-dotted`).
+  5. *Galería Multimedia (`media`):* Soporte nativo para imágenes y videos (`ProjectMedia`) que se inyectan automáticamente como slides adicionales en cuanto el proyecto incluye activos multimedia.
 
 ### 3.3 Ingestión Dinámica desde NestJS REST API (`portfolio.sqlite`)
 * **Consumo Directo:** La página del portafolio consulta directamente el endpoint `GET ${API_URL}/portfolio/projects?lang=${locale}` servido por `PortfolioProjectsController` en NestJS con revalidación ISR (`next: { revalidate: 60 }`).

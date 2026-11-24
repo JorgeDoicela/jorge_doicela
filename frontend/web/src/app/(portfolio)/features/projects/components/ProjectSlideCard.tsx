@@ -18,13 +18,9 @@ interface ProjectSlideCardProps {
  */
 export function ProjectSlideCard({
   slide,
-  index,
-  total,
   isActive,
 }: ProjectSlideCardProps) {
   const t = useTranslations('Projects');
-  const stepNumber = String(index + 1).padStart(2, '0');
-  const totalNumber = String(total).padStart(2, '0');
 
   return (
     <div
@@ -34,17 +30,13 @@ export function ProjectSlideCard({
           : 'border-border/70 shadow-xl hover:border-gold-400/50'
       }`}
     >
-      {/* Cabecera de la tarjeta */}
-      <div className="flex items-center justify-between gap-3 pb-4 border-b border-border/50 shrink-0">
+      {/* Cabecera de la tarjeta: Título limpio sin numeración ni línea horizontal */}
+      <div className="flex items-center gap-3 shrink-0 mb-1">
         <h3 className="text-xs font-mono uppercase tracking-[0.14em] text-gold-300 font-semibold truncate">
           {slide.kind === 'media'
             ? `${t(slide.titleKey)} ${slide.mediaIndex}/${slide.mediaTotal}`
             : t(slide.titleKey)}
         </h3>
-
-        <span className="text-[11px] font-mono tracking-widest text-muted shrink-0">
-          {stepNumber} / {totalNumber}
-        </span>
       </div>
 
       {/* Cuerpo polimórfico por tipo de sección */}

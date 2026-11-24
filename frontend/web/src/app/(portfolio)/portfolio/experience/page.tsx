@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { PortfolioHeader } from '../../components/PortfolioHeader';
 import { ExperienceDetailView, getPortfolioExperience } from '../../features/experience';
@@ -24,15 +22,7 @@ export default async function PortfolioExperiencePage() {
       <PortfolioHeader />
 
       <div className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-12 animate-fade-up">
-        <div className="flex flex-col gap-4 border-b border-border/40 pb-8">
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-1.5 text-xs font-mono text-gold-400 hover:text-gold-200 transition-colors w-fit"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
-            <span>{t('backToPortfolio')}</span>
-          </Link>
-
+        <div className="flex flex-col gap-3 border-b border-border/40 pb-8">
           <h1 className="text-3xl md:text-4xl font-light text-foreground tracking-tight">
             {t('pageTitle')}
           </h1>

@@ -3,11 +3,8 @@
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PORTFOLIO_NAV_ITEMS, SIDENAV_STORAGE_KEY } from '../config/navItems';
+import { isPortfolioHomePath } from '../../../shared';
 import type { PortfolioNavItem } from '../types';
-
-function isPortfolioHomePath(pathname: string): boolean {
-  return pathname === '/' || pathname === '/portfolio';
-}
 
 interface PortfolioNavigationContextValue {
   items: readonly PortfolioNavItem[];
@@ -28,7 +25,7 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
   const router = useRouter();
   const isHome = isPortfolioHomePath(pathname);
 
-  const [activeId, setActiveId] = useState<string>(PORTFOLIO_NAV_ITEMS[0]?.id ?? 'about');
+  const [activeId, setActiveId] = useState<string>('');
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
@@ -138,6 +135,8 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
 
         if (visibleEntries.length > 0) {
           setActiveId(visibleEntries[0].target.id);
+        } else {
+          setActiveId('');
         }
       },
       {
@@ -155,8 +154,7 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
         const lastSection = sectionItems[sectionItems.length - 1];
         if (lastSection) setActiveId(lastSection.id);
       } else if (window.scrollY < 80) {
-        const firstSection = sectionItems[0];
-        if (firstSection) setActiveId(firstSection.id);
+        setActiveId('');
       }
     };
 

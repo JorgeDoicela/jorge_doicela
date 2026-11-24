@@ -183,8 +183,12 @@
   },
   "Terminal": {
     "eyebrow": "CONSOLA INTERACTIVA",
-    "title": "Consola Web Interactiva",
-    "subtitle": "Explora mis proyectos, arquitectura y comandos en una consola interactiva en tiempo real sobre WebSockets.",
+    "title": "Consola Web & Laboratorio CTF",
+    "subtitle": "Explora comandos Unix en tiempo real, accede al Live Linux Sandbox en Docker y resuelve retos Capture The Flag con validación criptográfica.",
+    "pageTitle": "Terminal SSH & Laboratorio Interactivo",
+    "pageSubtitle": "Entorno interactivo tri-modal (Consola Guiada, Docker Sandbox y Túnel Hardware) con retos de Ciberseguridad y Capture The Flag.",
+    "backToPortfolio": "Volver al Portafolio",
+    "launchCta": "Abrir Terminal & Laboratorio",
     "connecting": "Conectando al servidor interactivo...",
     "connected": "Conexión establecida con éxito.",
     "disconnected": "Desconectado del servidor.",
@@ -216,6 +220,22 @@
     "unsplitTooltip": "Unificar paneles (exit / unsplit)",
     "matrixCloseHint": "Haz clic o presiona cualquier tecla para salir de Matrix",
     "matrixActiveBanner": "MODO MATRIX ACTIVO • HAZ CLIC O PRESIONA CUALQUIER TECLA PARA SALIR"
+  },
+  "Labs": {
+    "eyebrow": "Capture The Flag • Ciberseguridad",
+    "title": "Retos Interactivos de Laboratorio",
+    "subtitle": "Resuelve los desafíos directamente desde la terminal superior y envía la flag capturada. La validación se realiza en el backend mediante SHA-256.",
+    "solvedLabel": "resueltos",
+    "diffEasy": "Fácil",
+    "diffMedium": "Medio",
+    "diffHard": "Difícil",
+    "completedBadge": "Capturada",
+    "showHint": "Ver pista",
+    "hideHint": "Ocultar pista",
+    "submitFlag": "Validar flag",
+    "flagValid": "Flag correcta (+{points} pts).",
+    "flagInvalid": "Flag incorrecta. Revisa la pista o inspecciona la terminal.",
+    "verifyError": "No se pudo validar la flag en este momento."
   },
   "SandboxTerminal": {
     "statusConnected": "CONECTADO",
@@ -317,7 +337,8 @@
     "toggleTheme": "Cambiar tema",
     "switchToLight": "Cambiar a modo claro",
     "switchToDark": "Cambiar a modo oscuro",
-    "preferences": "Preferencias de interfaz"
+    "preferences": "Preferencias de interfaz",
+    "scrollToTop": "Volver arriba"
   },
   "SideNav": {
     "ariaLabel": "Navegación lateral del portafolio",

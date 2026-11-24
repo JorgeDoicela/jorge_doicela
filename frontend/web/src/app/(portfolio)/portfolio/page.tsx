@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { TerminalConsole } from '../features/terminal';
 import { ProjectShowcase, getPortfolioProjects } from '../features/projects';
 import { ExperienceSection, getPortfolioExperience } from '../features/experience';
 import { StackSection, getPortfolioStack } from '../features/stack';
@@ -15,6 +14,8 @@ import {
     MapPin,
     ArrowRight,
     ArrowUpRight,
+    Terminal as TerminalIcon,
+    Flag,
 } from 'lucide-react';
 
 export default async function PortfolioPage() {
@@ -155,17 +156,51 @@ export default async function PortfolioPage() {
                 {/* Sección 6: Filosofía & Valores Fundamentales */}
                 <ValuesPhilosophySection />
 
-                {/* Sección 7: Consola Interactiva Virtual SSH */}
-                <section id="terminal" className="flex flex-col gap-4 scroll-mt-24">
-                    <div className="flex flex-col gap-1.5 px-2 md:px-0">
-                        <h2 className="text-xl font-light text-foreground">
+                {/* Sección 7: Acceso Directo a Terminal SSH & Laboratorio CTF (Zero-WebSocket en Home) */}
+                <section id="terminal" className="flex flex-col gap-5 scroll-mt-24">
+                    <div className="flex items-baseline justify-between gap-4">
+                        <h2 className="text-2xl font-light text-foreground">
                             {tTerm('title')}
                         </h2>
-                        <p className="text-muted text-xs md:text-sm leading-relaxed font-light">
-                            {tTerm('subtitle')}
-                        </p>
+                        <Link
+                            href="/terminal"
+                            className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors shrink-0"
+                        >
+                            <span>{tTerm('launchCta')}</span>
+                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                        </Link>
                     </div>
-                    <TerminalConsole />
+
+                    <Link
+                        href="/terminal"
+                        className="group p-6 sm:p-8 rounded-xl border border-border-gold/60 bg-surface/60 hover:bg-surface hover:border-gold-300/60 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6"
+                    >
+                        <div className="flex flex-col gap-3 max-w-2xl">
+                            <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-gold-400 uppercase tracking-wider">
+                                <span className="inline-flex items-center gap-1.5">
+                                    <TerminalIcon className="w-3.5 h-3.5" />
+                                    <span>SSH WebSockets • Docker Sandbox</span>
+                                </span>
+                                <span className="text-border-gold">•</span>
+                                <span className="inline-flex items-center gap-1.5">
+                                    <Flag className="w-3.5 h-3.5" />
+                                    <span>Capture The Flag (CTF)</span>
+                                </span>
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted font-light leading-relaxed">
+                                {tTerm('subtitle')}
+                            </p>
+                            <div className="font-mono text-xs text-foreground/75 bg-background/60 border border-border/50 rounded-lg px-4 py-2.5 w-fit">
+                                <span className="text-gold-300">jorge@debian:~$</span>{' '}
+                                <span>ls -la && cat .audit_backup</span>
+                            </div>
+                        </div>
+
+                        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-gold-400/50 bg-gold-400/10 group-hover:bg-gold-400/20 text-xs font-mono text-gold-200 transition-colors shrink-0 w-fit">
+                            <span>{tTerm('launchCta')}</span>
+                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                        </div>
+                    </Link>
                 </section>
 
                 {/* Sección 8: Centro de Contacto Interactivo */}

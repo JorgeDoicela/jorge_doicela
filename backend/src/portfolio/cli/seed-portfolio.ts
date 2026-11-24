@@ -92,6 +92,22 @@ interface PortfolioEngineeringCorpusItem {
   orderIndex: number;
 }
 
+interface PortfolioLabCorpusItem {
+  id: number;
+  slug: string;
+  language: string;
+  category: string;
+  difficulty: string;
+  title: string;
+  briefing: string;
+  hint: string;
+  points: number;
+  targetMode: string;
+  flagHash: string;
+  active: boolean;
+  orderIndex: number;
+}
+
 export function seedPortfolio(
   dbPath: string = resolveDatabasePath(
     'DATABASE_PORTFOLIO_PATH',
@@ -130,6 +146,7 @@ export function seedPortfolio(
   const stackItems = loadJson<PortfolioStackCorpusItem[]>('stack.json');
   const engineeringPillars =
     loadJson<PortfolioEngineeringCorpusItem[]>('engineering.json');
+  const labChallenges = loadJson<PortfolioLabCorpusItem[]>('labs.json');
 
   // Recrear tablas de catálogo preservando contact_messages (PII / mensajes reales)
   db.exec(`
@@ -139,6 +156,7 @@ export function seedPortfolio(
     DROP TABLE IF EXISTS portfolio_profiles;
     DROP TABLE IF EXISTS portfolio_stack_items;
     DROP TABLE IF EXISTS portfolio_engineering_pillars;
+    DROP TABLE IF EXISTS portfolio_lab_challenges;
 
     CREATE TABLE portfolio_projects (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -259,6 +277,27 @@ export function seedPortfolio(
     CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_eng_slug_lang ON portfolio_engineering_pillars (slug, language);
     CREATE INDEX IF NOT EXISTS IDX_portfolio_eng_lang_dom_order ON portfolio_engineering_pillars (language, domain, orderIndex);
 
+    CREATE TABLE portfolio_lab_challenges (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL,
+      language TEXT NOT NULL DEFAULT 'es',
+      category TEXT NOT NULL DEFAULT 'ctf',
+      difficulty TEXT NOT NULL DEFAULT 'easy',
+      title TEXT NOT NULL,
+      briefing TEXT NOT NULL,
+      hint TEXT NOT NULL,
+      points INTEGER NOT NULL DEFAULT 100,
+      targetMode TEXT NOT NULL DEFAULT 'simulated',
+      flagHash TEXT NOT NULL,
+      active INTEGER NOT NULL DEFAULT 1,
+      orderIndex INTEGER NOT NULL DEFAULT 0,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE UNIQUE INDEX IF NOT EXISTS IDX_portfolio_lab_slug_lang ON portfolio_lab_challenges (slug, language);
+    CREATE INDEX IF NOT EXISTS IDX_portfolio_lab_lang_order ON portfolio_lab_challenges (language, orderIndex);
+
     CREATE TABLE IF NOT EXISTS contact_messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -324,6 +363,14 @@ export function seedPortfolio(
       id, slug, language, domain, title, badge, summary, details, metrics, technologies, featured, orderIndex
     ) VALUES (
       @id, @slug, @language, @domain, @title, @badge, @summary, @details, @metrics, @technologies, @featured, @orderIndex
+    )
+  `);
+
+  const insertLab = db.prepare(`
+    INSERT OR REPLACE INTO portfolio_lab_challenges (
+      id, slug, language, category, difficulty, title, briefing, hint, points, targetMode, flagHash, active, orderIndex
+    ) VALUES (
+      @id, @slug, @language, @category, @difficulty, @title, @briefing, @hint, @points, @targetMode, @flagHash, @active, @orderIndex
     )
   `);
 
@@ -435,12 +482,30 @@ export function seedPortfolio(
         orderIndex: pillar.orderIndex ?? 0,
       });
     }
+
+    for (const lab of labChallenges) {
+      insertLab.run({
+        id: lab.id,
+        slug: lab.slug,
+        language: lab.language || 'es',
+        category: lab.category || 'ctf',
+        difficulty: lab.difficulty || 'easy',
+        title: lab.title,
+        briefing: lab.briefing,
+        hint: lab.hint,
+        points: lab.points ?? 100,
+        targetMode: lab.targetMode || 'simulated',
+        flagHash: lab.flagHash,
+        active: lab.active ? 1 : 0,
+        orderIndex: lab.orderIndex ?? 0,
+      });
+    }
   });
 
   tx();
 
   console.log(
-    `[PortfolioSeeder] OK: ${projects.length} proyectos, ${experiences.length} experiencias, ${profiles.length} perfiles, ${stackItems.length} tecnologías, ${engineeringPillars.length} pilares de ingeniería y ${terminalProfiles.length} perfiles de terminal sembrados con éxito.`,
+    `[PortfolioSeeder] OK: ${projects.length} proyectos, ${experiences.length} experiencias, ${profiles.length} perfiles, ${stackItems.length} tecnologías, ${engineeringPillars.length} pilares, ${labChallenges.length} retos CTF y ${terminalProfiles.length} perfiles de terminal sembrados con éxito.`,
   );
   db.close();
 }

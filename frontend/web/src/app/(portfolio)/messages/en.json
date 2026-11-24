@@ -183,8 +183,12 @@
   },
   "Terminal": {
     "eyebrow": "INTERACTIVE CONSOLE",
-    "title": "Interactive Web Console",
-    "subtitle": "Explore my projects, architecture, and commands in a real-time interactive console over WebSockets.",
+    "title": "Interactive Console & CTF Lab",
+    "subtitle": "Explore live Unix commands, launch an isolated Docker Linux Sandbox, and solve Capture The Flag challenges with server-side validation.",
+    "pageTitle": "SSH Terminal & Interactive Lab",
+    "pageSubtitle": "Tri-modal interactive environment (Guided Shell, Docker Sandbox, and Hardware Tunnel) paired with Cybersecurity & Capture The Flag challenges.",
+    "backToPortfolio": "Back to Portfolio",
+    "launchCta": "Open Terminal & Lab",
     "connecting": "Connecting to interactive server...",
     "connected": "Connection established successfully.",
     "disconnected": "Disconnected from server.",
@@ -216,6 +220,22 @@
     "unsplitTooltip": "Unsplit panes (exit / unsplit)",
     "matrixCloseHint": "Click or press any key to exit Matrix",
     "matrixActiveBanner": "MATRIX MODE ACTIVE • CLICK OR PRESS ANY KEY TO EXIT"
+  },
+  "Labs": {
+    "eyebrow": "Capture The Flag • Cybersecurity",
+    "title": "Interactive Lab Challenges",
+    "subtitle": "Solve the challenges directly inside the terminal above and submit the captured flag. Verification runs server-side using SHA-256.",
+    "solvedLabel": "solved",
+    "diffEasy": "Easy",
+    "diffMedium": "Medium",
+    "diffHard": "Hard",
+    "completedBadge": "Captured",
+    "showHint": "Show hint",
+    "hideHint": "Hide hint",
+    "submitFlag": "Verify flag",
+    "flagValid": "Valid flag (+{points} pts).",
+    "flagInvalid": "Invalid flag. Check the hint or inspect the terminal.",
+    "verifyError": "Could not verify the flag right now."
   },
   "SandboxTerminal": {
     "statusConnected": "CONNECTED",
@@ -317,7 +337,8 @@
     "toggleTheme": "Toggle theme",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
-    "preferences": "Interface preferences"
+    "preferences": "Interface preferences",
+    "scrollToTop": "Back to top"
   },
   "SideNav": {
     "ariaLabel": "Portfolio side navigation",

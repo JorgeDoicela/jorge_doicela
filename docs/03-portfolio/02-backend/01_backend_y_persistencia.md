@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, gateways de WebSockets, co
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `PortfolioGateway` (WebSockets `/terminal`), `SandboxGateway` (WebSockets `/sandbox`), `ContactController`, `PortfolioProjectsController` y `PortfolioExperienceController` (REST).
->   2. *Lógica de Negocio:* `PortfolioService`, `SandboxService`, `ContactMessagesService`, `PortfolioProjectsService` y `PortfolioExperienceService`.
->   3. *Acceso a Datos:* Entidades `ContactMessage`, `PortfolioProject`, `PortfolioExperience` y `TerminalProfile` en TypeORM con driver `better-sqlite3`.
+>   1. *Presentación:* `PortfolioGateway` (WebSockets `/terminal`), `SandboxGateway` (WebSockets `/sandbox`) y 7 controladores REST (`Contact`, `PortfolioProjects`, `PortfolioExperience`, `PortfolioProfile`, `PortfolioStack`, `PortfolioEngineering`, `PortfolioLabs`, `Sandbox`).
+>   2. *Lógica de Negocio:* Servicios desacoplados por dominio (`PortfolioService`, `SandboxService`, `ContactMessagesService`, `PortfolioProjectsService`, `PortfolioExperienceService`, `PortfolioProfileService`, `PortfolioStackService`, `PortfolioEngineeringService`, `PortfolioLabsService`).
+>   3. *Acceso a Datos:* 7 entidades TypeORM aisladas en `portfolio.sqlite` (`ContactMessage`, `PortfolioProject`, `PortfolioExperience`, `PortfolioProfile`, `PortfolioStackItem`, `PortfolioEngineeringPillar`, `PortfolioLabChallenge`, `TerminalProfile`) con driver `better-sqlite3` en modo WAL.
 
 ---
 
@@ -31,6 +31,7 @@ backend/src/portfolio/
 │   ├── profile.json               # Dataset JSON bilingüe de perfil biográfico, filosofía y áreas de enfoque
 │   ├── stack.json                 # Dataset JSON bilingüe de tecnologías, especialidades y entorno Linux
 │   ├── engineering.json           # Dataset JSON bilingüe de pilares de ingeniería (Cloud, Seguridad, Sistemas, IA)
+│   ├── labs.json                  # Dataset JSON bilingüe de retos Capture The Flag (CTF) con hashes SHA-256
 │   └── terminal.json              # Dataset JSON bilingüe de la Terminal Guiada (banner, comandos, archivos virtuales y manuales)
 ├── cli/
 │   └── seed-portfolio.ts          # Sembrado atómico CLI con better-sqlite3 en modo WAL
@@ -45,6 +46,10 @@ backend/src/portfolio/
 │   ├── contact.controller.ts      # Endpoint REST POST /portfolio/contact (protegido contra spam; sin GET público para proteger PII)
 │   ├── portfolio-projects.controller.ts # Endpoint REST GET /portfolio/projects (?lang, ?featured) y /:slug
 │   ├── portfolio-experience.controller.ts # Endpoint REST GET /portfolio/experience (?lang, ?featured, ?type)
+│   ├── portfolio-profile.controller.ts # Endpoint REST GET /portfolio/profile (?lang)
+│   ├── portfolio-stack.controller.ts # Endpoint REST GET /portfolio/stack (?lang, ?featured, ?category)
+│   ├── portfolio-engineering.controller.ts # Endpoints REST GET /portfolio/engineering y /telemetry
+│   ├── portfolio-labs.controller.ts # Endpoints REST GET /portfolio/labs y POST /portfolio/labs/verify (SHA-256 + LabsThrottleGuard)
 │   └── sandbox.controller.ts      # Endpoints REST GET /portfolio/sandbox/health y POST /portfolio/sandbox/wake-request (delegado a SandboxService)
 ├── events/
 │   ├── contact-message-created.event.ts # Evento de dominio de contacto
@@ -52,23 +57,33 @@ backend/src/portfolio/
 ├── listeners/
 │   └── telegram-notification.listener.ts # Listener asíncrono que procesa eventos y despacha a Telegram
 ├── guards/
-│   └── contact-throttle.guard.ts  # Guard de Rate Limiting en memoria para mitigar spam/DDoS
+│   ├── contact-throttle.guard.ts  # Guard de Rate Limiting en memoria para formulario de contacto (4/min)
+│   └── labs-throttle.guard.ts     # Guard de Rate Limiting aislado para validación CTF (15/min)
 ├── services/
-│   ├── portfolio.service.ts       # Intérprete y procesador de comandos Unix de la terminal guiada
+│   ├── portfolio.service.ts       # Intérprete Unix virtual con dotfiles en ls y utilidades base64/hex para CTF
 │   ├── sandbox.service.ts         # Orquestador y hardening de contenedores Docker efímeros (dockerode)
 │   ├── sandbox-security.service.ts # Gobernanza de acceso, concurrencia 1:1 por IP, cooldown y jail
 │   ├── contact-messages.service.ts # Servicio de persistencia y emisión de eventos
 │   ├── telegram-notification.service.ts # Servicio de comunicación HTTP con la API de Telegram
 │   ├── portfolio-projects.service.ts # Servicio de consulta bilingüe de proyectos (TypeORM simple-json)
-│   └── portfolio-experience.service.ts # Servicio de consulta bilingüe de trayectoria laboral y formación
+│   ├── portfolio-experience.service.ts # Servicio de consulta bilingüe de trayectoria laboral, formación y certificaciones
+│   ├── portfolio-profile.service.ts # Servicio de consulta bilingüe de perfil biográfico y filosofía
+│   ├── portfolio-stack.service.ts # Servicio de consulta bilingüe de tecnologías y entorno Linux
+│   ├── portfolio-engineering.service.ts # Servicio de pilares de ingeniería y snapshot de telemetría real
+│   └── portfolio-labs.service.ts  # Servicio CTF con validación criptográfica SHA-256 en tiempo constante (timingSafeEqual)
 ├── entities/
 │   ├── contact-message.entity.ts  # Entidad TypeORM para mensajes de contacto
 │   ├── portfolio-project.entity.ts # Entidad TypeORM con índice compuesto (slug, language)
 │   ├── portfolio-experience.entity.ts # Entidad TypeORM con índice compuesto (slug, language) para experiencia y formación
+│   ├── portfolio-profile.entity.ts # Entidad TypeORM de perfil biográfico y filosofía (language único)
+│   ├── portfolio-stack-item.entity.ts # Entidad TypeORM de stack tecnológico y entorno (slug, language)
+│   ├── portfolio-engineering-pillar.entity.ts # Entidad TypeORM de pilares Cloud/Seguridad/Sistemas/IA
+│   ├── portfolio-lab-challenge.entity.ts # Entidad TypeORM de retos CTF (flagHash oculto con select: false)
 │   └── terminal-profile.entity.ts # Entidad TypeORM bilingüe para perfiles y textos de la Terminal Guiada
 └── dto/
     ├── create-contact-message.dto.ts # DTO blindado con @MaxLength y validaciones estrictas
-    └── create-wake-request.dto.ts    # DTO validado para solicitudes de aviso de encendido del servidor físico propio
+    ├── create-wake-request.dto.ts    # DTO validado para solicitudes de aviso de encendido del servidor físico propio
+    └── verify-lab-flag.dto.ts        # DTO validado (slug + flag) para verificación CTF
 ```
 
 ---

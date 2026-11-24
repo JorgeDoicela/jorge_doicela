@@ -5,6 +5,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "./theme-provider";
 import PortfolioJsonLd from "./components/PortfolioJsonLd";
+import { ScrollToTopButton } from "./components/ScrollToTopButton";
 import { PortfolioNavigationProvider, PortfolioSideNav } from "./features/navigation";
 
 const geistSans = localFont({
@@ -90,6 +91,7 @@ export default async function RootLayout({
                         <PortfolioNavigationProvider>
                             {children}
                             <PortfolioSideNav />
+                            <ScrollToTopButton />
                         </PortfolioNavigationProvider>
                     </ThemeProvider>
                 </NextIntlClientProvider>

@@ -208,6 +208,35 @@ export class PortfolioService implements OnModuleInit {
                 updatedAt: 'Nov 23 09:00',
                 content: faithContent,
               },
+              '.audit_backup': {
+                type: 'file',
+                name: '.audit_backup',
+                size: 112,
+                permissions: '-rw-------',
+                updatedAt: 'Nov 24 03:14',
+                content:
+                  '# VPS 1GB RAM Audit Snapshot\nstatus=hardened\naudit_flag=FLAG{dotfile_recon_1gb_ram}\n',
+              },
+              logs: {
+                type: 'dir',
+                name: 'logs',
+                permissions: 'drwxr-xr-x',
+                updatedAt: 'Nov 24 04:20',
+                children: {
+                  'mtls_audit.log': {
+                    type: 'file',
+                    name: 'mtls_audit.log',
+                    size: 268,
+                    permissions: '-rw-r-----',
+                    updatedAt: 'Nov 24 04:20',
+                    content: [
+                      '[2026-11-24T04:18:02Z] nginx-mtls INFO  origin_pull=verified client_dn=CN=Cloudflare',
+                      '[2026-11-24T04:19:11Z] nginx-mtls WARN  direct_ip_probe=dropped src=198.51.100.42',
+                      '[2026-11-24T04:20:00Z] nginx-mtls AUDIT token_b64=RkxBR3ttdGxzX2Nsb3VkZmxhcmVfaGFyZGVuaW5nfQ==',
+                    ].join('\n'),
+                  },
+                },
+              },
               projects: {
                 type: 'dir',
                 name: 'projects',
@@ -228,6 +257,20 @@ export class PortfolioService implements OnModuleInit {
                     permissions: '-rw-r--r--',
                     updatedAt: 'Nov 23 09:00',
                     content: archContent,
+                  },
+                  '.sandbox_seccomp.cfg': {
+                    type: 'file',
+                    name: '.sandbox_seccomp.cfg',
+                    size: 164,
+                    permissions: '-rw-------',
+                    updatedAt: 'Nov 24 05:00',
+                    content: [
+                      '# Docker Live Sandbox Hardening Profile',
+                      'network_mode=none',
+                      'pids_limit=50',
+                      'memory_mb=64',
+                      'seccomp_hex=464c41477b6367726f7570735f6169726761705f355f6c61796572737d',
+                    ].join('\n'),
                   },
                 },
               },
@@ -549,7 +592,9 @@ export class PortfolioService implements OnModuleInit {
           return { output: msg.lsError };
         }
 
-        const entries = Object.values(dir.children);
+        const entries = Object.values(dir.children).filter(
+          (item) => isAll || !item.name.startsWith('.'),
+        );
         if (isLong) {
           const lines: string[] = [`total ${entries.length * 4}`];
           if (isAll) {
@@ -651,6 +696,59 @@ export class PortfolioService implements OnModuleInit {
         return { output: file.content || '' };
       }
 
+      case 'base64': {
+        const isDecode = args[0] === '-d' || args[0] === '--decode';
+        const payload = isDecode ? args.slice(1).join(' ') : args.join(' ');
+        if (!payload) {
+          return {
+            output:
+              locale === 'en'
+                ? 'Usage: base64 [-d] <text>'
+                : 'Uso: base64 [-d] <texto>',
+          };
+        }
+        try {
+          const result = isDecode
+            ? Buffer.from(payload, 'base64').toString('utf8')
+            : Buffer.from(payload, 'utf8').toString('base64');
+          return { output: result };
+        } catch {
+          return {
+            output:
+              locale === 'en'
+                ? '\x1b[31mbase64: invalid input\x1b[0m'
+                : '\x1b[31mbase64: entrada inválida\x1b[0m',
+          };
+        }
+      }
+
+      case 'hex': {
+        const isDecode = args[0] === '-d' || args[0] === '--decode';
+        const payload = (
+          isDecode ? args.slice(1).join('') : args.join(' ')
+        ).trim();
+        if (!payload) {
+          return {
+            output:
+              locale === 'en'
+                ? 'Usage: hex [-d] <hex_or_text>'
+                : 'Uso: hex [-d] <hex_o_texto>',
+          };
+        }
+        if (isDecode && !/^[0-9a-fA-F]+$/.test(payload)) {
+          return {
+            output:
+              locale === 'en'
+                ? '\x1b[31mhex: invalid hexadecimal string\x1b[0m'
+                : '\x1b[31mhex: cadena hexadecimal inválida\x1b[0m',
+          };
+        }
+        const result = isDecode
+          ? Buffer.from(payload, 'hex').toString('utf8')
+          : Buffer.from(payload, 'utf8').toString('hex');
+        return { output: result };
+      }
+
       default:
         return {
           output: msg.cmdNotFound.replace('{command}', command),
@@ -688,6 +786,8 @@ export class PortfolioService implements OnModuleInit {
       'sudo',
       'open',
       'matrix',
+      'base64',
+      'hex',
       'clear',
       'exit',
     ];

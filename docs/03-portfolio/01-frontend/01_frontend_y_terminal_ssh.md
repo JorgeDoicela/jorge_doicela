@@ -44,6 +44,8 @@ frontend/web/src/app/(portfolio)/
 │   │   └── page.tsx           # Página dedicada (/experience) con línea de tiempo laboral y formación detallada
 │   ├── engineering/
 │   │   └── page.tsx           # Página dedicada (/engineering) con arquitectura Cloud, DevSecOps, IA y telemetría real
+│   ├── terminal/
+│   │   └── page.tsx           # Página dedicada (/terminal) con Consola Tri-Modal + Tablero Interactivo CTF (features/labs)
 │   └── sandbox/
 │       └── page.tsx           # Vista dedicada a pantalla completa para SandboxTerminal
 │
@@ -54,6 +56,7 @@ frontend/web/src/app/(portfolio)/
 │   ├── LanguageToggle.tsx     # Selector de idioma minimalista (ES/EN)
 │   ├── PortfolioPreferences.tsx # Componente reutilizable que agrupa idioma y modo claro/oscuro
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
+│   ├── ScrollToTopButton.tsx  # Botón flotante reutilizable (inferior derecha) con rAF y ocultamiento en /sandbox
 │   ├── ValuesPhilosophySection.tsx # Sección de valores y ética
 │   └── PortfolioJsonLd.tsx        # Marcado estructurado Schema.org ProfilePage
 │
@@ -74,6 +77,14 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── types.ts                    # Contratos TypeScript (PortfolioNavItem, unión discriminada)
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
+│   ├── about/                 # FEATURE: PERFIL BIOGRÁFICO Y FILOSOFÍA
+│   │   ├── api/
+│   │   │   └── getProfile.ts           # Cliente HTTP SSR/ISR desacoplado dentro de la feature
+│   │   ├── components/
+│   │   │   └── AboutDetailView.tsx     # Vista completa de perfil, filosofía y áreas de enfoque para /about
+│   │   ├── types.ts                    # Contratos PortfolioProfileData y ProfilePillar
+│   │   └── index.ts                    # Barril de exportación pública de la feature
+│   │
 │   ├── projects/              # FEATURE: SHOWCASE DE PROYECTOS Y CASOS DE ESTUDIO
 │   │   ├── api/
 │   │   │   └── getProjects.ts          # Cliente HTTP SSR/ISR desacoplado dentro de la feature
@@ -89,6 +100,15 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── types.ts                    # Interfaces de proyectos, métricas, media y unión discriminada ProjectSlide
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
+│   ├── stack/                 # FEATURE: STACK TECNOLÓGICO Y ENTORNO LINUX
+│   │   ├── api/
+│   │   │   └── getStack.ts             # Cliente HTTP SSR/ISR desacoplado dentro de la feature
+│   │   ├── components/
+│   │   │   ├── StackSection.tsx        # Cinta marquee continua en 3 columnas para el Home con enlace a /stack
+│   │   │   └── StackDetailView.tsx     # Catálogo completo filtrable por 5 categorías para /stack
+│   │   ├── types.ts                    # Contratos PortfolioStackItem y StackCategoryType
+│   │   └── index.ts                    # Barril de exportación pública de la feature
+│   │
 │   ├── experience/            # FEATURE: TRAYECTORIA LABORAL Y FORMACIÓN ACADÉMICA
 │   │   ├── api/
 │   │   │   └── getExperience.ts        # Cliente HTTP SSR/ISR desacoplado dentro de la feature
@@ -96,6 +116,23 @@ frontend/web/src/app/(portfolio)/
 │   │   │   ├── ExperienceSection.tsx   # Resumen ejecutivo en Home con enlace a /experience
 │   │   │   └── ExperienceDetailView.tsx # Línea de tiempo detallada y tarjetas de formación para /experience
 │   │   ├── types.ts                    # Contratos PortfolioExperienceItem y ExperienceType
+│   │   └── index.ts                    # Barril de exportación pública de la feature
+│   │
+│   ├── engineering/           # FEATURE: ARQUITECTURA, CLOUD, SEGURIDAD E IA
+│   │   ├── api/
+│   │   │   └── getEngineering.ts       # Cliente HTTP para pilares (ISR) y telemetría en vivo (no-store)
+│   │   ├── components/
+│   │   │   ├── EngineeringSection.tsx  # Resumen en 3 columnas para el Home con enlace a /engineering
+│   │   │   └── EngineeringDetailView.tsx # Panel de telemetría real + pilares filtrables por dominio para /engineering
+│   │   ├── types.ts                    # Contratos PortfolioEngineeringPillar y ServerTelemetrySnapshot
+│   │   └── index.ts                    # Barril de exportación pública de la feature
+│   │
+│   ├── labs/                  # FEATURE: RETOS CAPTURE THE FLAG (CTF)
+│   │   ├── api/
+│   │   │   └── labsApi.ts              # Consulta de retos GET y validación SHA-256 POST (/portfolio/labs/verify)
+│   │   ├── components/
+│   │   │   └── LabsBoard.tsx           # Tablero interactivo CTF con marcador, pistas progresivas y progreso localStorage
+│   │   ├── types.ts                    # Contratos PortfolioLabChallenge y VerifyFlagResponse
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
 │   ├── terminal/              # FEATURE: SISTEMA TRI-MODAL DE TERMINAL

@@ -51,7 +51,7 @@ export const useTerminalSocket = () => {
   const historyIndicesRef = useRef<Record<string, number>>({});
   const inputDraftsRef = useRef<Record<string, string>>({});
 
-  // Inicializar Socket.io con idioma activo
+  // Inicializar Socket.io con idioma activo (diferido 1 tick para evitar abortos de StrictMode/Fast Refresh)
   useEffect(() => {
     const socket = io(`${SOCKET_URL}/terminal`, {
       query: { lang: initialLocaleRef.current },
@@ -59,6 +59,7 @@ export const useTerminalSocket = () => {
       reconnectionAttempts: 15,
       reconnectionDelay: 1000,
       timeout: 10000,
+      autoConnect: false,
     });
     socketRef.current = socket;
 
@@ -83,8 +84,17 @@ export const useTerminalSocket = () => {
       setCompletions(data.completions);
     });
 
+    const connectTimer = window.setTimeout(() => {
+      socket.connect();
+    }, 0);
+
     return () => {
-      socket.disconnect();
+      window.clearTimeout(connectTimer);
+      socket.removeAllListeners();
+      if (socket.connected || socket.active) {
+        socket.disconnect();
+      }
+      socketRef.current = null;
     };
   }, []);
 

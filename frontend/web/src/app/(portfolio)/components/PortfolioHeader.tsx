@@ -1,12 +1,17 @@
 'use client';
 
 import React from 'react';
+import { Menu } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { BackToPortalButton } from './BackToPortalButton';
 import { PortfolioPreferences } from './PortfolioPreferences';
 import { usePortfolioHeaderScroll } from '../hooks/usePortfolioHeaderScroll';
+import { usePortfolioNavigation } from '../features/navigation';
 
 export function PortfolioHeader() {
   const isVisible = usePortfolioHeaderScroll();
+  const tNav = useTranslations('SideNav');
+  const { toggleMobile, isMobileOpen } = usePortfolioNavigation();
 
   return (
     <header
@@ -18,8 +23,24 @@ export function PortfolioHeader() {
       }`}
     >
       <div className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex items-center justify-between pointer-events-none">
-        <div className={`flex items-center gap-1.5 sm:gap-2.5 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-          <BackToPortalButton id="portfolio-header-back-to-portal" className="-ml-2" />
+        <div className={`flex items-center gap-1 sm:gap-2 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+          {/* Botón de 3 líneas a la izquierda (visible solo en móvil/tablet < lg) */}
+          <button
+            type="button"
+            onClick={toggleMobile}
+            aria-label={isMobileOpen ? tNav('closeMobile') : tNav('openMobile')}
+            aria-expanded={isMobileOpen}
+            className="lg:hidden p-1.5 rounded-md text-foreground/75 hover:text-gold-300 hover:bg-gold-300/10 active:scale-95 transition-all duration-200 cursor-pointer outline-none focus:outline-none -ml-1.5"
+            id="portfolio-header-mobile-menu-trigger"
+          >
+            <Menu className="w-4 h-4 text-gold-300" />
+          </button>
+
+          {/* Palabra PORTAL: sin flecha en móvil (< lg) junto a las 3 líneas, con flecha clásica en PC (lg+) */}
+          <BackToPortalButton
+            id="portfolio-header-back-to-portal"
+            arrowClassName="hidden lg:inline-block"
+          />
         </div>
 
         <div className={`flex items-center gap-2 sm:gap-3 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>

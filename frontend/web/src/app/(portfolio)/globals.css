@@ -329,7 +329,7 @@ body::after {
 
 @media (min-width: 1024px) {
   .portfolio-shell {
-    padding-left: calc(13rem + 3rem);
+    padding-left: calc(184px + 3rem);
   }
   :root[data-portfolio-nav="collapsed"] .portfolio-shell {
     padding-left: 3rem;

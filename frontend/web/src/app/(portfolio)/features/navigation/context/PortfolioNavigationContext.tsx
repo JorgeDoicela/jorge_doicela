@@ -14,7 +14,10 @@ interface PortfolioNavigationContextValue {
   activeId: string;
   isCollapsed: boolean;
   isHydrated: boolean;
+  isMobileOpen: boolean;
   toggleCollapsed: () => void;
+  toggleMobile: () => void;
+  closeMobile: () => void;
   navigateTo: (item: PortfolioNavItem) => void;
 }
 
@@ -28,6 +31,7 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
   const [activeId, setActiveId] = useState<string>(PORTFOLIO_NAV_ITEMS[0]?.id ?? 'about');
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
+  const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
 
   // Hidratar preferencia de colapso desde localStorage
   useEffect(() => {
@@ -63,6 +67,38 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
       return next;
     });
   }, []);
+
+  const toggleMobile = useCallback(() => {
+    setIsMobileOpen((prev) => !prev);
+  }, []);
+
+  const closeMobile = useCallback(() => {
+    setIsMobileOpen(false);
+  }, []);
+
+  // Bloquear scroll en body cuando el drawer móvil está abierto y permitir cierre con Escape
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobileOpen]);
+
+  // Cerrar drawer móvil automáticamente al cambiar de ruta
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   // Scroll-spy con IntersectionObserver en la vista principal
   useEffect(() => {
@@ -132,6 +168,7 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
 
   const navigateTo = useCallback(
     (item: PortfolioNavItem) => {
+      setIsMobileOpen(false);
       if (item.kind === 'route') {
         setActiveId(item.id);
         router.push(item.href);
@@ -160,7 +197,10 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
         activeId,
         isCollapsed,
         isHydrated,
+        isMobileOpen,
         toggleCollapsed,
+        toggleMobile,
+        closeMobile,
         navigateTo,
       }}
     >

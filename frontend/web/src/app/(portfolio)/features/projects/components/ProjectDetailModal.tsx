@@ -224,15 +224,12 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                 type="button"
                 onClick={() => goTo(index)}
                 aria-current={active ? 'step' : undefined}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                className={`flex items-center px-3 py-1.5 rounded-lg text-[11px] font-mono tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   active
                     ? 'bg-surface border border-gold-300/80 text-foreground font-semibold shadow-sm'
                     : 'bg-surface/70 text-foreground/70 hover:text-foreground border border-border-gold/40 hover:border-gold-300/50'
                 }`}
               >
-                <span className={active ? 'text-gold-300 font-semibold' : 'text-gold-400/80'}>
-                  {String(index + 1).padStart(2, '0')}
-                </span>
                 <span>{label}</span>
               </button>
             );

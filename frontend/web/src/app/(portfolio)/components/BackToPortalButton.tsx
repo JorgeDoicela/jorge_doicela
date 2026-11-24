@@ -7,11 +7,15 @@ import { useTranslations } from 'next-intl';
 export interface BackToPortalButtonProps {
   className?: string;
   id?: string;
+  showArrow?: boolean;
+  arrowClassName?: string;
 }
 
 export function BackToPortalButton({
   className = '',
   id = 'portfolio-back-to-portal',
+  showArrow = true,
+  arrowClassName = '',
 }: BackToPortalButtonProps = {}) {
   const t = useTranslations('Nav');
   const [portalUrl, setPortalUrl] = useState('https://jorgedoicela.com');
@@ -34,7 +38,9 @@ export function BackToPortalButton({
       aria-label={t('portal')}
       id={id}
     >
-      <ArrowLeft className="w-3.5 h-3.5 text-gold-300 transition-transform duration-200 group-hover:-translate-x-0.5" />
+      {showArrow && (
+        <ArrowLeft className={`w-3.5 h-3.5 text-gold-300 transition-transform duration-200 group-hover:-translate-x-0.5 ${arrowClassName}`} />
+      )}
       <span>{t('portalShort')}</span>
     </a>
   );

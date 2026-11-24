@@ -304,6 +304,11 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
 
 ## 7. Internacionalización, SEO Dinámico y Dossier para IA (next-intl, Schema.org & GEO)
 
+* **Arquitectura Bilingüe Simétrica (100% Español / Inglés):**
+  * Diccionarios deterministas y desacoplados en `frontend/web/src/app/(portfolio)/messages/es.json` y `en.json`, cubriendo la totalidad de secciones (Header, About, Projects, Stack, Experience, Cloud, Tools, Philosophy, Terminal, Contact, Footer, Nav, SideNav, SandboxTerminal, SandboxStandalone y SandboxSecurityModal).
+  * **Categorías Técnicas Localizadas (`Stack`):** Traducción idiomática rigurosa (`Cliente & Frontend` / `Client & Frontend`, `Servidor & Backend` / `Server & Backend`, `Datos & DevSecOps` / `Data & DevSecOps`, y `Expo (Móvil)` / `Expo (Mobile)`), manteniendo nombres propios tecnológicos invariables (`React`, `Next.js 16`, `NestJS 11`, `AWS Lightsail`, etc.).
+  * **Consola y WebSocket Bilingües:** La terminal emulada y el sandbox Linux adaptan dinámicamente sus respuestas, mensajes de estado del sistema, banners de ayuda y avisos de reconexión según el `locale` activo negociado en el handshake del socket (`?lang=es|en`).
+  * **Controles Globales de Accesibilidad:** Conmutadores de tema y lenguaje con atributos `title` y `aria-label` completamente localizados sin literales estáticos en el código.
 * **Metadatos SEO Dinámicos (`generateMetadata`):** Conectado al namespace `Portfolio.Metadata` en `src/messages/es.json` y `src/messages/en.json`, con tarjetas completas Open Graph y Twitter.
 * **Datos Estructurados Schema.org (`PortfolioJsonLd.tsx`):** Inyección de esquema `ProfilePage` y `Person` para indexación de perfil y proyectos en buscadores web e IA.
 * **Dossier Especializado para IA (`public/portfolio/llms.txt`):** Resumen detallado del perfil técnico, proyectos y comandos de terminal en `portfolio.jorgedoicela.com/llms.txt`.

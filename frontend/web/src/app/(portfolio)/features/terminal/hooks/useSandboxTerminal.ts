@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useLocale } from 'next-intl';
 import { io, Socket } from 'socket.io-client';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
@@ -34,6 +35,7 @@ export interface UseSandboxTerminalOptions {
 }
 
 export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
+  const locale = useLocale();
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const xtermRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
@@ -234,7 +236,10 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
         } catch (probeErr) {
           console.warn('[Sandbox] Sondeo de salud del túnel falló:', probeErr);
           setStatus('error');
-          const msg = `No se pudo conectar con el Servidor Físico Propio (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`;
+          const msg =
+            locale === 'en'
+              ? `Could not connect to dedicated physical hardware (${SANDBOX_TUNNEL_URL}). Tunnel or host is currently offline.`
+              : `No se pudo conectar con el Servidor Físico Propio (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`;
           setErrorMessage(msg);
           return;
         }
@@ -272,12 +277,18 @@ export const useSandboxTerminal = (options?: UseSandboxTerminalOptions) => {
     socket.on('connect_error', (err) => {
       console.error('[Sandbox] Error de conexión WebSocket:', err);
       setStatus('error');
+      const isEn = locale === 'en';
       const msg = isTunnel
-        ? `No se pudo conectar con el Servidor Físico Propio (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`
+        ? isEn
+          ? `Could not connect to dedicated physical hardware (${SANDBOX_TUNNEL_URL}). Tunnel or host is currently offline.`
+          : `No se pudo conectar con el Servidor Físico Propio (${SANDBOX_TUNNEL_URL}). El túnel o equipo local no están activos en este momento.`
+        : isEn
+        ? `Failed to connect to AWS Cloud server: ${err.message}`
         : `Fallo al conectar con el servidor Cloud en AWS: ${err.message}`;
       setErrorMessage(msg);
       if (xtermRef.current) {
-        xtermRef.current.write(`\r\n\x1b[31m[ERROR DE CONEXIÓN]: ${msg}\x1b[0m\r\n`);
+        const errPrefix = isEn ? '[CONNECTION ERROR]' : '[ERROR DE CONEXIÓN]';
+        xtermRef.current.write(`\r\n\x1b[31m${errPrefix}: ${msg}\x1b[0m\r\n`);
       }
     });
 

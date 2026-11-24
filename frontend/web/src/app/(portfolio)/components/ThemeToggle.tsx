@@ -35,7 +35,7 @@ export function ThemeToggle({
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={`group p-1.5 sm:p-2 rounded-md hover:bg-gold-300/10 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center outline-none focus:outline-none select-none ${className}`}
       aria-label={tNav('toggleTheme')}
-      title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+      title={isDark ? tNav('switchToLight') : tNav('switchToDark')}
       id={id}
     >
       {isDark ? (

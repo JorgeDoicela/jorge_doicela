@@ -431,7 +431,10 @@ export const useTerminalSocket = () => {
         const errorItem: TerminalHistoryItem = {
           id: Math.random().toString(36).substring(2, 9),
           type: 'system',
-          content: '\x1b[31m[Error]: Conexión con el servidor perdida. Intentando reconectar...\x1b[0m',
+          content:
+            locale === 'en'
+              ? '\x1b[31m[Error]: Server connection lost. Attempting to reconnect...\x1b[0m'
+              : '\x1b[31m[Error]: Conexión con el servidor perdida. Intentando reconectar...\x1b[0m',
           timestamp: Date.now(),
         };
         setTabs((prev) =>

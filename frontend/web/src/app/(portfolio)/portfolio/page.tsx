@@ -183,7 +183,7 @@ export default async function PortfolioPage() {
                                 <span className="text-gold-400/50 select-none">•</span>
                                 <span>Tailwind CSS</span>
                                 <span className="text-gold-400/50 select-none">•</span>
-                                <span>Expo (Mobile)</span>
+                                <span>{tStack('expo')}</span>
                             </div>
                         </div>
                         <div className="flex flex-col gap-2.5">

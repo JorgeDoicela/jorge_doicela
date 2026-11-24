@@ -62,7 +62,8 @@
     "title": "Technologies & Core Stack",
     "client": "Client & Frontend",
     "server": "Server & Backend",
-    "data": "Data & DevSecOps"
+    "data": "Data & DevSecOps",
+    "expo": "Expo (Mobile)"
   },
   "Experience": {
     "eyebrow": "Work Experience",
@@ -270,7 +271,10 @@
     "doiceladev": "DoicelaDev",
     "kartex": "Kartex",
     "toggleLang": "Switch language",
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Toggle theme",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
+    "preferences": "Interface preferences"
   },
   "SideNav": {
     "ariaLabel": "Portfolio side navigation",

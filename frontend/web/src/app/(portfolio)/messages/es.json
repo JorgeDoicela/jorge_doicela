@@ -60,9 +60,10 @@
   "Stack": {
     "eyebrow": "Stack Principal",
     "title": "Tecnologías & Stack Principal",
-    "client": "Client & Frontend",
-    "server": "Server & Backend",
-    "data": "Data & DevSecOps"
+    "client": "Cliente & Frontend",
+    "server": "Servidor & Backend",
+    "data": "Datos & DevSecOps",
+    "expo": "Expo (Móvil)"
   },
   "Experience": {
     "eyebrow": "Experiencia Laboral",
@@ -270,7 +271,10 @@
     "doiceladev": "DoicelaDev",
     "kartex": "Kartex",
     "toggleLang": "Cambiar idioma",
-    "toggleTheme": "Cambiar tema"
+    "toggleTheme": "Cambiar tema",
+    "switchToLight": "Cambiar a modo claro",
+    "switchToDark": "Cambiar a modo oscuro",
+    "preferences": "Preferencias de interfaz"
   },
   "SideNav": {
     "ariaLabel": "Navegación lateral del portafolio",

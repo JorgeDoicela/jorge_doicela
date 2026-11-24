@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { LanguageToggle } from './LanguageToggle';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -21,13 +22,15 @@ export function PortfolioPreferences({
   prefixId = 'pref',
   orientation = 'horizontal',
 }: PortfolioPreferencesProps) {
+  const tNav = useTranslations('Nav');
+
   return (
     <div
       className={`flex items-center ${
         orientation === 'vertical' ? 'flex-col gap-2' : 'gap-1.5 sm:gap-2'
       } ${className}`}
       role="group"
-      aria-label="Preferencias de interfaz"
+      aria-label={tNav('preferences')}
     >
       <LanguageToggle id={`${prefixId}-language-toggle`} />
       <ThemeToggle id={`${prefixId}-theme-toggle`} />

@@ -34,19 +34,9 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
           </div>
         </div>
 
-        {/* Panel Lateral de Ficha y Conexiones */}
+        {/* Panel Lateral de Conexiones */}
         <aside className="flex flex-col gap-4 lg:pl-6 lg:border-l border-border/40">
-          <div className="p-4 rounded-xl border border-border-gold/50 bg-surface/50 space-y-2.5">
-            <div className="flex items-center gap-2 text-[11px] font-mono text-gold-400 uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-gold-400 luxury-pulse" />
-              <span>{tAbout('statusLabel')}</span>
-            </div>
-            <p className="text-xs font-mono text-foreground/90">
-              {profile.availability}
-            </p>
-          </div>
-
-          <span className="text-[10px] font-mono text-gold-300 tracking-widest uppercase mt-2">
+          <span className="text-[10px] font-mono text-gold-300 tracking-widest uppercase">
             {tAbout('connections')}
           </span>
 

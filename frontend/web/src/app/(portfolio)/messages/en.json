@@ -10,7 +10,7 @@
     "role1": "Full Stack Developer",
     "role2": "AI & Cybersecurity Engineering Student",
     "role3": "Cloud & DevSecOps",
-    "role4": "Software Engineering • Clean Architecture"
+    "role4": "Software Development • Clean Architecture"
   },
   "About": {
     "title": "About Me",
@@ -101,7 +101,7 @@
     "edu2Sub": "Tecnológico Traversari - Graduated",
     "viewAll": "View full career timeline",
     "pageTitle": "Career Timeline & Education",
-    "pageSubtitle": "Detailed software engineering track record, production responsibilities, tech stacks, and academic background.",
+    "pageSubtitle": "Detailed software development track record, production responsibilities, tech stacks, and academic background.",
     "highlightsLabel": "Responsibilities & Achievements",
     "stackUsedLabel": "Tech Stack",
     "backToPortfolio": "Back to Portfolio"
@@ -160,7 +160,7 @@
     "thesisTitle": "Have an idea, question, or project in mind?",
     "thesisDesc": "Whether you want to collaborate on building an application, have technical questions regarding the architecture of this portfolio, or wish to discuss job opportunities, my inbox is always open.",
     "area1Title": "01 / Projects & Development",
-    "area1Desc": "End-to-end web application engineering, robust API design, and full-stack software optimization.",
+    "area1Desc": "End-to-end web application development, robust API design, and full-stack software optimization.",
     "area2Title": "02 / Technical Inquiries",
     "area2Desc": "Questions about the virtual SSH terminal, the 9 exegesis modules, or this monorepo? Feel free to ask.",
     "area3Title": "03 / Personal Reply",
@@ -183,7 +183,7 @@
     "viewAll": "Go to contact",
     "launchCta": "Send a Message",
     "pageTitle": "Contact & Inquiries",
-    "pageSubtitle": "Direct channel for software engineering collaborations, architecture consulting, career opportunities, or technical inquiries."
+    "pageSubtitle": "Direct channel for software development collaborations, architecture consulting, career opportunities, or technical inquiries."
   },
   "Terminal": {
     "eyebrow": "INTERACTIVE CONSOLE",

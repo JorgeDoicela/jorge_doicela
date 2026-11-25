@@ -155,10 +155,10 @@
     "language": "es",
     "type": "education",
     "title": "Tecnólogo Superior en Desarrollo de Software",
-    "subtitle": "Tecnológico Traversari - Titulado",
-    "period": "Titulado",
+    "subtitle": "Tecnológico Traversari - Egresado",
+    "period": "Egresado",
     "companyUrl": null,
-    "description": "Titulación tecnológica superior enfocada en ingeniería de software, bases de datos relacionales, programación orientada a objetos y desarrollo web.",
+    "description": "Formación tecnológica superior enfocada en desarrollo de software, bases de datos relacionales, programación orientada a objetos y desarrollo web.",
     "highlights": [
       "Diseño y modelado de bases de datos relacionales y programación estructurada.",
       "Desarrollo de aplicaciones web, móviles y arquitecturas cliente-servidor."

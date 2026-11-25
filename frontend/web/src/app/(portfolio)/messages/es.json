@@ -10,7 +10,7 @@
     "role1": "Full Stack Developer",
     "role2": "Estudiante de Ingeniería en IA & Ciberseguridad",
     "role3": "Cloud & DevSecOps",
-    "role4": "Ingeniería de Software • Arquitectura Limpia"
+    "role4": "Desarrollo de Software • Arquitectura Limpia"
   },
   "About": {
     "title": "Sobre Mí",
@@ -98,10 +98,10 @@
     "edu1Title": "Ingeniería en Inteligencia Artificial y Ciberseguridad",
     "edu1Sub": "UB - En progreso",
     "edu2Title": "Tecnólogo Superior en Desarrollo de Software",
-    "edu2Sub": "Tecnológico Traversari - Titulado",
+    "edu2Sub": "Tecnológico Traversari - Egresado",
     "viewAll": "Ver trayectoria completa",
     "pageTitle": "Trayectoria Profesional & Formación",
-    "pageSubtitle": "Historial detallado de ingeniería de software, responsabilidades en producción, stack empleado y formación académica.",
+    "pageSubtitle": "Historial detallado de desarrollo de software, responsabilidades en producción, stack empleado y formación académica.",
     "highlightsLabel": "Responsabilidades & Logros",
     "stackUsedLabel": "Stack Empleado",
     "backToPortfolio": "Volver al Portafolio"

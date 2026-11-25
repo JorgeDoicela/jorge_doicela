@@ -14,7 +14,7 @@ const DEFAULT_ROLES = [
   'Full Stack Developer',
   'AI & Cybersecurity Engineering Student',
   'Cloud & DevSecOps',
-  'Software Engineering • Clean Architecture',
+  'Software Development • Clean Architecture',
 ];
 
 export const TypewriterRole: React.FC<TypewriterRoleProps> = ({

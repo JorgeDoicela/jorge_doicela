@@ -1,13 +1,13 @@
 # Portafolio | Jorge Ismael Doicela Molina
 
-> Portafolio de ingeniería de software, catálogo de proyectos, arquitectura de sistemas, perfil técnico y consola interactiva de Jorge Doicela.
+> Portafolio de desarrollo de software, catálogo de proyectos, arquitectura de sistemas, perfil técnico y consola interactiva de Jorge Doicela.
 
 ## Información General
 - **URL Canónica:** https://portfolio.jorgedoicela.com
 - **Autor / Desarrollador:** Jorge Ismael Doicela Molina
 - **Ubicación:** Quito, Pichincha, Ecuador
-- **Educación:** Ingeniería en Inteligencia Artificial y Ciberseguridad (Universidad Bolivariana - En progreso); Tecnólogo Superior en Desarrollo de Software (Instituto Tecnológico Superior Traversari - ISTPET, Titulado)
-- **Especialidad:** Ingeniería de Software, DevOps, SysAdmin Linux (Debian 13 y Arch Linux), Arquitectura Backend (NestJS / C#), Frontend React/Next.js y Ciberseguridad
+- **Educación:** Estudiante de Ingeniería en Inteligencia Artificial y Ciberseguridad (Universidad Bolivariana - En progreso); Egresado en Desarrollo de Software (Instituto Tecnológico Superior Traversari - ISTPET)
+- **Especialidad:** Desarrollo de Software Full-Stack, DevOps, SysAdmin Linux (Debian 13 y Arch Linux), Arquitectura Backend (NestJS / C#), Frontend React/Next.js y Ciberseguridad
 - **Estética Visual:** Dark Luxury (fondos oscuros profundos `#08080a`, toques metálicos refinados, tipografía Geist y alto contraste)
 
 ---

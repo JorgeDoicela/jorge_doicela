@@ -2,7 +2,7 @@
   {
     "language": "es",
     "fullName": "Jorge Ismael Doicela Molina",
-    "headline": "Ingeniero de Software Full-Stack, Cloud & DevSecOps",
+    "headline": "Desarrollador de Software Full-Stack, Cloud & DevSecOps",
     "location": "Quito, Ecuador",
     "email": "jorge.doicela.m@gmail.com",
     "availability": "Disponible para proyectos y colaboraciones técnicas",
@@ -11,7 +11,7 @@
       "Mi experiencia abarca el desarrollo Full-Stack, trabajando con tecnologías frontend y backend como React, Next.js, NestJS, Laravel / Blade y .NET, lenguajes de programación como PHP, C#, Python, C y C++, además de bases de datos relacionales (PostgreSQL y MySQL) y no relacionales (MongoDB). Integro prácticas de DevSecOps y principios de diseño seguro desde el inicio del ciclo de desarrollo."
     ],
     "extendedBio": [
-      "Actualmente me desempeño como Desarrollador de Software en el ISTPET (istpet.edu.ec) y curso la carrera de Ingeniería en Inteligencia Artificial y Ciberseguridad en la Universidad Bolivariana del Ecuador (UB), complementando mi titulación previa como Tecnólogo Superior en Desarrollo de Software.",
+      "Actualmente me desempeño como Desarrollador de Software en el ISTPET (istpet.edu.ec) y curso la carrera de Ingeniería en Inteligencia Artificial y Ciberseguridad en la Universidad Bolivariana del Ecuador (UB), complementando mi formación previa como egresado en Tecnología Superior en Desarrollo de Software.",
       "Mi metodología de trabajo se basa en resolver la causa raíz de cada problema técnico en lugar de aplicar parches temporales. Diseño ecosistemas desacoplados que operan con máxima eficiencia de memoria, contratos de tipos estrictos y endurecimiento de seguridad en cada capa."
     ],
     "philosophyQuote": "“Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres.”",
@@ -48,17 +48,17 @@
   {
     "language": "en",
     "fullName": "Jorge Ismael Doicela Molina",
-    "headline": "Full-Stack Software Engineer, Cloud & DevSecOps",
+    "headline": "Full-Stack Software Developer, Cloud & DevSecOps",
     "location": "Quito, Ecuador",
     "email": "jorge.doicela.m@gmail.com",
-    "availability": "Available for engineering projects and technical collaborations",
+    "availability": "Available for software development projects and technical collaborations",
     "bio": [
-      "Software developer based in Quito, Ecuador, guided by Christian values. Passionate about building web platforms, native and multiplatform applications, and administering local and cloud infrastructure with an engineering mindset focused on scalable architecture, resilience, and Infrastructure as Code (IaC).",
-      "My engineering experience encompasses Full-Stack development utilizing modern stacks such as React, Next.js, NestJS, Laravel / Blade, and .NET, programming languages including PHP, C#, Python, C, and C++, alongside relational databases (PostgreSQL and MySQL) and NoSQL stores (MongoDB). I integrate DevSecOps practices and secure-by-design principles across every stage of the lifecycle."
+      "Software developer based in Quito, Ecuador, guided by Christian values. Passionate about building web platforms, native and multiplatform applications, and administering local and cloud infrastructure with a mindset focused on scalable architecture, resilience, and Infrastructure as Code (IaC).",
+      "My experience encompasses Full-Stack development utilizing modern stacks such as React, Next.js, NestJS, Laravel / Blade, and .NET, programming languages including PHP, C#, Python, C, and C++, alongside relational databases (PostgreSQL and MySQL) and NoSQL stores (MongoDB). I integrate DevSecOps practices and secure-by-design principles across every stage of the lifecycle."
     ],
     "extendedBio": [
-      "I currently work as a Software Developer at ISTPET (istpet.edu.ec) while pursuing a B.S. in Artificial Intelligence and Cybersecurity at Universidad Bolivariana del Ecuador (UB), building upon my Higher Technical Degree in Software Development.",
-      "My engineering methodology centers on resolving root causes rather than applying temporary patches. I architect decoupled systems engineered for strict memory efficiency, end-to-end type safety, and defense-in-depth security."
+      "I currently work as a Software Developer at ISTPET (istpet.edu.ec) while studying Artificial Intelligence and Cybersecurity Engineering at Universidad Bolivariana del Ecuador (UB), building upon my previous background as a Software Development graduate.",
+      "My methodology centers on resolving root causes rather than applying temporary patches. I architect decoupled systems designed for strict memory efficiency, end-to-end type safety, and defense-in-depth security."
     ],
     "philosophyQuote": "“Whatever you do, work heartily, as for the Lord and not for men.”",
     "philosophyVerse": "Colossians 3:23",

@@ -75,21 +75,20 @@ export function useHelicalTimeline(
                 return;
             }
 
-            // Progreso exacto desde el primer nodo hasta el último nodo de la curva (0..1)
+            // Progreso sincronizado 1:1 con el scroll desde el primer nodo (arriba en scrollY=0) hasta el último nodo
             const firstNodeY = nodeYs.length > 0 ? nodeYs[0] : 0;
             const lastNodeY = nodeYs.length > 1 ? nodeYs[nodeYs.length - 1] : trackHeight;
-            const span = Math.max(lastNodeY - firstNodeY, 1);
-            const triggerY = viewportHeight * 0.58;
-            const rawProgress = (triggerY - (trackRect.top + firstNodeY)) / span;
-
-            // Completar suavemente al 100% al llegar al final del documento si el último nodo ya es visible
             const docHeight = document.documentElement.scrollHeight;
-            const remainingScroll = Math.max(0, docHeight - (window.scrollY + viewportHeight));
-            const isLastNodeInView = trackRect.top + lastNodeY <= viewportHeight;
-            const bottomBoost =
-                isLastNodeInView && remainingScroll < 140 ? 1 - remainingScroll / 140 : 0;
-
-            const scrollProgress = Math.min(1, Math.max(0, Math.max(rawProgress, bottomBoost)));
+            const maxScroll = Math.max(1, docHeight - viewportHeight);
+            const lastNodeDocY = trackRect.top + window.scrollY + lastNodeY;
+            const endScroll = Math.max(
+                1,
+                Math.min(maxScroll, lastNodeDocY - viewportHeight * 0.65)
+            );
+            const scrollProgress =
+                lastNodeY > firstNodeY
+                    ? Math.min(1, Math.max(0, window.scrollY / endScroll))
+                    : 1;
 
             // Fase orbital de cada tarjeta respecto al centro del viewport (solo en Desktop)
             const range = Math.max(viewportHeight * 0.58, 280);

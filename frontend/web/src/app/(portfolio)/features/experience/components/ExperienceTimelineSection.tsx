@@ -80,7 +80,7 @@ function OrganicCurveSpine({
             width={CURVE_SVG_WIDTH}
             height={trackHeight}
             viewBox={`0 0 ${CURVE_SVG_WIDTH} ${trackHeight}`}
-            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none z-10 overflow-visible"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none z-0 overflow-visible"
             aria-hidden="true"
         >
             <defs>
@@ -174,22 +174,22 @@ function HelicalCard({
     const typeLabel = isEducation ? eduBadgeLabel : workBadgeLabel;
     const NodeIcon = isEducation ? GraduationCap : Briefcase;
 
-    // Zona de lectura nítida al centro (|delta| < 0.22) o cuando el cursor está encima (0% borroso).
-    // Fuera de esa zona, la tarjeta orbita en 3D (arco en X, profundidad en Z y giro Y/X) como cámara rodeando el eje.
+    // Zona de lectura nítida al centro (|delta| < 0.24) o cuando el cursor está encima (0% borroso).
+    // Bisagra fija junto al tallo; la parte exterior de la tarjeta se pliega hacia adentro/atrás en perspectiva 3D.
     const absDelta = Math.abs(delta);
     const sign = delta >= 0 ? 1 : -1;
     const shouldAnimate3D = isDesktop && !reducedMotion && !hoverGlow.active;
-    const orbitalAmount = shouldAnimate3D ? smoothstep(0.22, 1.0, absDelta) : 0;
+    const orbitalAmount = shouldAnimate3D ? smoothstep(0.24, 1.0, absDelta) : 0;
     const signedOrbit = sign * orbitalAmount;
 
-    const sideDir = isLeft ? 1 : -1;
-    const rotateY = sideDir * signedOrbit * 36;
-    const rotateX = -signedOrbit * 12;
-    const translateZ = -orbitalAmount * 150;
-    const translateX = -sideDir * orbitalAmount * 42;
-    const translateY = signedOrbit * 18;
-    const scale = 1 - orbitalAmount * 0.14;
-    const opacity = reducedMotion || !isDesktop ? 1 : 1 - orbitalAmount * 0.45;
+    // Derecha (isLeft=false): rotateY > 0 pliega el borde derecho (exterior) hacia adentro (-Z).
+    // Izquierda (isLeft=true): rotateY < 0 pliega el borde izquierdo (exterior) hacia adentro (-Z).
+    const rotateY = (isLeft ? -1 : 1) * orbitalAmount * 22;
+    const rotateX = -signedOrbit * 8;
+    const translateZ = -orbitalAmount * 64;
+    const translateY = signedOrbit * 10;
+    const scale = 1 - orbitalAmount * 0.08;
+    const opacity = reducedMotion || !isDesktop ? 1 : 1 - orbitalAmount * 0.36;
 
     const isFlatCrisp = orbitalAmount < 0.005;
     const isInFocus = absDelta < 0.34;
@@ -211,7 +211,7 @@ function HelicalCard({
     return (
         <article
             ref={registerRef}
-            className="group relative grid grid-cols-1 md:grid-cols-2 items-start gap-4 md:gap-0 pl-9 md:pl-0"
+            className="group relative z-10 grid grid-cols-1 md:grid-cols-2 items-start gap-4 md:gap-0 pl-9 md:pl-0"
             style={isDesktop && !reducedMotion ? { perspective: '980px' } : undefined}
         >
             {/* Nodo Móvil (< md) */}
@@ -288,10 +288,10 @@ function HelicalCard({
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     style={{
-                        transformOrigin: isLeft ? 'calc(100% + 44px) 38px' : '-44px 38px',
+                        transformOrigin: isLeft ? 'right 38px' : 'left 38px',
                         transform: isFlatCrisp
                             ? undefined
-                            : `translate3d(${translateX.toFixed(1)}px, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) rotateX(${rotateX.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
+                            : `translate3d(0, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) rotateX(${rotateX.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
                         opacity,
                     }}
                     className={`relative overflow-hidden p-6 sm:p-7 rounded-xl border bg-surface/88 flex flex-col gap-4 transition-[border-color,box-shadow,transform,opacity] duration-300 ease-out ${isInFocus || hoverGlow.active

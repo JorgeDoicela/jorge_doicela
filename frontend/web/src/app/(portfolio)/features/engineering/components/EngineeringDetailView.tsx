@@ -1,17 +1,15 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Activity, Cpu, RefreshCw, Server, Shield } from 'lucide-react';
+import { Cpu, RefreshCw, Server, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type {
   EngineeringDomainType,
   PortfolioEngineeringPillar,
-  ServerTelemetrySnapshot,
 } from '../types';
 
 interface EngineeringDetailViewProps {
   pillars: PortfolioEngineeringPillar[];
-  telemetry: ServerTelemetrySnapshot | null;
 }
 
 const DOMAIN_ORDER: EngineeringDomainType[] = ['cloud', 'security', 'systems', 'ai'];
@@ -26,16 +24,8 @@ const DOMAIN_ICONS: Record<
   ai: Cpu,
 };
 
-function formatUptime(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  if (hours > 0) return `${hours}h ${mins}m`;
-  return `${mins}m ${seconds % 60}s`;
-}
-
 export function EngineeringDetailView({
   pillars,
-  telemetry,
 }: EngineeringDetailViewProps) {
   const t = useTranslations('Engineering');
   const [activeDomain, setActiveDomain] = useState<'all' | EngineeringDomainType>('all');
@@ -53,42 +43,7 @@ export function EngineeringDetailView({
   }, [activeDomain, pillars]);
 
   return (
-    <div className="flex flex-col gap-12">
-      {/* Telemetría Real en Vivo del Backend */}
-      {telemetry && (
-        <section className="p-5 sm:p-6 rounded-xl border border-border-gold/50 bg-surface/50 flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-3">
-            <div className="flex items-center gap-2 text-xs font-mono text-gold-300 uppercase tracking-wider">
-              <Activity className="w-4 h-4 text-gold-400" />
-              <span>{t('telemetryTitle')}</span>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-gold-400">
-              <span className="w-2 h-2 rounded-full bg-gold-400 luxury-pulse" />
-              <span>{t('telemetryOperational')}</span>
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-muted uppercase">{t('telemetryRuntime')}</span>
-              <span className="text-foreground/90">{telemetry.runtime}</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-muted uppercase">{t('telemetryMemory')}</span>
-              <span className="text-foreground/90">{telemetry.memoryRssMb} MB RSS</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-muted uppercase">{t('telemetryUptime')}</span>
-              <span className="text-foreground/90">{formatUptime(telemetry.uptimeSeconds)}</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-muted uppercase">{t('telemetryPlatform')}</span>
-              <span className="text-foreground/90 uppercase">{telemetry.platform} / {telemetry.arch}</span>
-            </div>
-          </div>
-        </section>
-      )}
-
+    <div className="flex flex-col gap-10">
       {/* Filtros por Dominio de Ingeniería */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <button
@@ -129,17 +84,15 @@ export function EngineeringDetailView({
               className="p-6 sm:p-7 rounded-xl border border-border/60 bg-surface/40 flex flex-col justify-between gap-6"
             >
               <div className="flex flex-col gap-4">
-                <div className="flex items-start justify-between gap-3 border-b border-border/30 pb-4">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="p-2 rounded-lg bg-surface-raised border border-border/50 text-gold-300">
-                      <Icon className="w-4 h-4" />
-                    </div>
+                    <Icon className="w-4 h-4 text-gold-400 shrink-0" />
                     <h3 className="text-base font-mono text-foreground font-semibold">
                       {pillar.title}
                     </h3>
                   </div>
                   {pillar.badge && (
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-border-gold/40 text-gold-400 shrink-0">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-gold-400/90 shrink-0">
                       {pillar.badge}
                     </span>
                   )}
@@ -166,14 +119,11 @@ export function EngineeringDetailView({
                 )}
               </div>
 
-              <div className="flex flex-col gap-4 pt-4 border-t border-border/30">
+              <div className="flex flex-col gap-4 pt-1">
                 {pillar.metrics && pillar.metrics.length > 0 && (
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-4">
                     {pillar.metrics.map((metric, mIdx) => (
-                      <div
-                        key={mIdx}
-                        className="p-2.5 rounded-lg bg-background/50 border border-border/40 flex flex-col gap-0.5"
-                      >
+                      <div key={mIdx} className="flex flex-col gap-0.5">
                         <span className="text-[10px] font-mono text-muted truncate">
                           {metric.label}
                         </span>

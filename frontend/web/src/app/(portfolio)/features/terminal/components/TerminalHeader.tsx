@@ -52,7 +52,7 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-border-gold text-xs select-none">
+    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 mb-2 text-xs select-none">
       {/* Controles de ventana y pestañas Tmux */}
       <div className="flex items-center gap-3 overflow-x-auto max-w-[70%] scrollbar-none">
         {/* Luces de ventana sutiles estilo Dark Luxury */}

@@ -422,7 +422,7 @@ const SinglePane: React.FC<SinglePaneProps> = ({
     >
       {/* Cabecera del panel en modo split */}
       {isSplit && (
-        <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-border/30 text-[10px] font-mono select-none shrink-0">
+        <div className="flex items-center justify-between pb-1.5 mb-2 text-[10px] font-mono select-none shrink-0">
           <div className="flex items-center gap-1.5">
             <span
               className={`w-1.5 h-1.5 rounded-full ${

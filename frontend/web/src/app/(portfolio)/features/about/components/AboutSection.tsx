@@ -1,6 +1,6 @@
-import { getTranslations } from 'next-intl/server';
-import { Mail, MapPin, ArrowRight, ArrowUpRight } from 'lucide-react';
-import { PortfolioLink } from '../../../shared';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { Mail, MapPin, ArrowRight, ArrowUpRight, FileDown } from 'lucide-react';
+import { PortfolioLink, getPortfolioCvFilename, getPortfolioCvPath } from '../../../shared';
 import type { PortfolioProfileData } from '../types';
 
 interface AboutSectionProps {
@@ -9,8 +9,13 @@ interface AboutSectionProps {
 }
 
 export async function AboutSection({ profile, viewAllHref }: AboutSectionProps) {
-  const tAbout = await getTranslations('About');
-  const tContact = await getTranslations('Contact');
+  const [locale, tAbout, tContact] = await Promise.all([
+    getLocale(),
+    getTranslations('About'),
+    getTranslations('Contact'),
+  ]);
+  const cvPath = getPortfolioCvPath(locale);
+  const cvFilename = getPortfolioCvFilename(locale);
 
   return (
     <section id="about" className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start scroll-mt-24">
@@ -92,6 +97,19 @@ export async function AboutSection({ profile, viewAllHref }: AboutSectionProps) 
           <span className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-gold-300" />
             <span>{profile.location}</span>
+          </span>
+          <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+        </a>
+        <a
+          href={cvPath}
+          download={cvFilename}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between p-3 rounded-lg border border-border-gold/60 bg-background/30 hover:bg-surface-raised hover:border-gold-300/60 transition-all duration-300 text-xs text-foreground/85 hover:text-foreground font-mono"
+        >
+          <span className="flex items-center gap-2">
+            <FileDown className="w-4 h-4 text-gold-300" />
+            <span>{tAbout('cvLabel')}</span>
           </span>
           <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
         </a>

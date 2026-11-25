@@ -1,6 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { PortfolioEngineeringService } from '../services/portfolio-engineering.service';
-import type { ServerTelemetrySnapshot } from '../services/portfolio-engineering.service';
 import {
   EngineeringDomainType,
   PortfolioEngineeringPillar,
@@ -36,10 +35,5 @@ export class PortfolioEngineeringController {
       featured: parsedFeatured,
       domain: parsedDomain,
     });
-  }
-
-  @Get('telemetry')
-  getTelemetry(): ServerTelemetrySnapshot {
-    return this.engineeringService.getTelemetry();
   }
 }

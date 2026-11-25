@@ -29,13 +29,13 @@ export default function robots(): MetadataRoute.Robots {
             {
                 userAgent: aiBots,
                 allow: ['/', '/llms.txt'],
-                disallow: ['/api/', '/_next/', '/socket.io/'],
+                disallow: ['/api/', '/_next/', '/socket.io/', '/portfolio/cv/'],
             },
             // Regla general para navegadores, buscadores y rastreadores web estándar
             {
                 userAgent: '*',
                 allow: '/',
-                disallow: ['/api/', '/_next/', '/socket.io/'],
+                disallow: ['/api/', '/_next/', '/socket.io/', '/portfolio/cv/'],
             },
         ],
         // Sitemap unificado del servidor consolidado actual (1 GB RAM).

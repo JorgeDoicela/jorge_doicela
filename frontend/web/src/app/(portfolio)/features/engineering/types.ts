@@ -19,14 +19,3 @@ export interface PortfolioEngineeringPillar {
   featured: boolean;
   orderIndex: number;
 }
-
-export interface ServerTelemetrySnapshot {
-  runtime: string;
-  platform: string;
-  arch: string;
-  uptimeSeconds: number;
-  memoryRssMb: number;
-  heapUsedMb: number;
-  status: 'operational';
-  timestamp: string;
-}

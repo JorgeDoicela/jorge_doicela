@@ -126,7 +126,7 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── components/
 │   │   │   ├── EngineeringSection.tsx  # Resumen en 3 columnas para el Home con enlace a /engineering
 │   │   │   └── EngineeringDetailView.tsx # Panel de telemetría real + pilares filtrables por dominio para /engineering
-│   │   ├── types.ts                    # Contratos PortfolioEngineeringPillar y ServerTelemetrySnapshot
+│   │   ├── types.ts                    # Contrato PortfolioEngineeringPillar
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
 │   ├── labs/                  # FEATURE: RETOS CAPTURE THE FLAG (CTF)

@@ -48,7 +48,7 @@ backend/src/portfolio/
 │   ├── portfolio-experience.controller.ts # Endpoint REST GET /portfolio/experience (?lang, ?featured, ?type)
 │   ├── portfolio-profile.controller.ts # Endpoint REST GET /portfolio/profile (?lang)
 │   ├── portfolio-stack.controller.ts # Endpoint REST GET /portfolio/stack (?lang, ?featured, ?category)
-│   ├── portfolio-engineering.controller.ts # Endpoints REST GET /portfolio/engineering y /telemetry
+│   ├── portfolio-engineering.controller.ts # Endpoint REST GET /portfolio/engineering
 │   ├── portfolio-labs.controller.ts # Endpoints REST GET /portfolio/labs y POST /portfolio/labs/verify (SHA-256 + LabsThrottleGuard)
 │   └── sandbox.controller.ts      # Endpoints REST GET /portfolio/sandbox/health y POST /portfolio/sandbox/wake-request (delegado a SandboxService)
 ├── events/
@@ -350,7 +350,6 @@ new ValidationPipe({
 | **Stack** | `GET /portfolio/stack` | `lang`, `featured`, `category` | Catálogo de tecnologías y entorno Linux filtrable por categoría y estado destacado |
 | **Experiencia** | `GET /portfolio/experience` | `lang`, `featured`, `type` | Trayectoria laboral, educación y certificaciones filtrables por tipo (`work\|education\|certification`) |
 | **Ingeniería** | `GET /portfolio/engineering` | `lang`, `featured`, `domain` | Pilares de arquitectura Cloud, DevSecOps, sistemas e IA filtrables por dominio |
-| | `GET /portfolio/engineering/telemetry` | - | Snapshot en vivo de telemetría del runtime backend sin caché ISR |
 | **Labs (CTF)** | `GET /portfolio/labs` | `lang` | Listado de retos CTF activos sin exponer `flagHash` (`select: false`) |
 | | `POST /portfolio/labs/verify` | - | Validación de flag (`VerifyLabFlagDto`) mediante hash SHA-256 en tiempo constante (`timingSafeEqual`) protegida con `LabsThrottleGuard` |
 | **Contacto** | `POST /portfolio/contact` | - | Envío y validación de formulario (`CreateContactMessageDto`) protegido con `ContactThrottleGuard` (sin `GET` público para evitar exposición de PII) |

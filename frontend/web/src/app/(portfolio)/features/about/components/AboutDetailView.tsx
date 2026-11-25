@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { ArrowUpRight, Compass, Mail, MapPin, ShieldCheck } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { ArrowUpRight, Compass, FileDown, Mail, MapPin, ShieldCheck } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { getPortfolioCvFilename, getPortfolioCvPath } from '../../../shared';
 import type { PortfolioProfileData } from '../types';
 
 interface AboutDetailViewProps {
@@ -10,9 +11,12 @@ interface AboutDetailViewProps {
 }
 
 export function AboutDetailView({ profile }: AboutDetailViewProps) {
+  const locale = useLocale();
   const tAbout = useTranslations('About');
   const tPhil = useTranslations('Philosophy');
   const tContact = useTranslations('Contact');
+  const cvPath = getPortfolioCvPath(locale);
+  const cvFilename = getPortfolioCvFilename(locale);
 
   return (
     <div className="flex flex-col gap-16">
@@ -81,6 +85,20 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
             <span className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-gold-300 shrink-0" />
               <span>{profile.location}</span>
+            </span>
+            <ArrowUpRight className="w-3.5 h-3.5 opacity-60 shrink-0" />
+          </a>
+
+          <a
+            href={cvPath}
+            download={cvFilename}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between p-3 rounded-lg border border-border-gold/60 bg-background/30 hover:bg-surface-raised hover:border-gold-300/60 transition-all duration-300 text-xs text-foreground/85 hover:text-foreground font-mono"
+          >
+            <span className="flex items-center gap-2">
+              <FileDown className="w-4 h-4 text-gold-300 shrink-0" />
+              <span>{tAbout('cvLabel')}</span>
             </span>
             <ArrowUpRight className="w-3.5 h-3.5 opacity-60 shrink-0" />
           </a>

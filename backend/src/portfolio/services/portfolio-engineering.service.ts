@@ -1,22 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import * as os from 'os';
 import {
   EngineeringDomainType,
   PortfolioEngineeringPillar,
 } from '../entities/portfolio-engineering-pillar.entity';
-
-export interface ServerTelemetrySnapshot {
-  runtime: string;
-  platform: string;
-  arch: string;
-  uptimeSeconds: number;
-  memoryRssMb: number;
-  heapUsedMb: number;
-  status: 'operational';
-  timestamp: string;
-}
 
 @Injectable()
 export class PortfolioEngineeringService {
@@ -59,19 +47,5 @@ export class PortfolioEngineeringService {
     }
 
     return items;
-  }
-
-  getTelemetry(): ServerTelemetrySnapshot {
-    const mem = process.memoryUsage();
-    return {
-      runtime: `Node.js ${process.version}`,
-      platform: os.platform(),
-      arch: os.arch(),
-      uptimeSeconds: Math.floor(process.uptime()),
-      memoryRssMb: Math.round(mem.rss / (1024 * 1024)),
-      heapUsedMb: Math.round(mem.heapUsed / (1024 * 1024)),
-      status: 'operational',
-      timestamp: new Date().toISOString(),
-    };
   }
 }

@@ -4,7 +4,6 @@ import { PortfolioPageShell } from '../../components/PortfolioPageShell';
 import {
   EngineeringDetailView,
   getPortfolioEngineering,
-  getServerTelemetry,
 } from '../../features/engineering';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,15 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PortfolioEngineeringPage() {
   const locale = await getLocale();
   const t = await getTranslations('Engineering');
-
-  const [pillars, telemetry] = await Promise.all([
-    getPortfolioEngineering(locale),
-    getServerTelemetry(),
-  ]);
+  const pillars = await getPortfolioEngineering(locale);
 
   return (
     <PortfolioPageShell title={t('pageTitle')} subtitle={t('pageSubtitle')}>
-      <EngineeringDetailView pillars={pillars} telemetry={telemetry} />
+      <EngineeringDetailView pillars={pillars} />
     </PortfolioPageShell>
   );
 }

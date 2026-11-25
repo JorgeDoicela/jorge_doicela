@@ -2,7 +2,6 @@ import { API_URL, normalizeStringArray } from '../../../shared';
 import type {
   EngineeringDomainType,
   PortfolioEngineeringPillar,
-  ServerTelemetrySnapshot,
 } from '../types';
 
 /**
@@ -43,20 +42,4 @@ export async function getPortfolioEngineering(
       ? normalizeStringArray(item.technologies)
       : undefined,
   }));
-}
-
-/**
- * Obtiene telemetría en vivo del runtime backend sin caché ISR.
- */
-export async function getServerTelemetry(): Promise<ServerTelemetrySnapshot | null> {
-  try {
-    const res = await fetch(`${API_URL}/portfolio/engineering/telemetry`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return (json.data ?? json) as ServerTelemetrySnapshot;
-  } catch {
-    return null;
-  }
 }

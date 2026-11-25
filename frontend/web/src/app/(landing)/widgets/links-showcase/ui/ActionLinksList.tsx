@@ -2,13 +2,15 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { useSubdomainUrl } from '../../../shared/lib';
 
 export function ActionLinksList() {
+  const locale = useLocale();
   const t = useTranslations('Links');
   const { getSubdomainUrl } = useSubdomainUrl();
+  const cvFilename = locale === 'en' ? 'Jorge_Doicela_CV_EN.pdf' : 'Jorge_Doicela_CV_ES.pdf';
 
   const links = [
     {
@@ -32,8 +34,9 @@ export function ActionLinksList() {
     {
       id: 'cv',
       text: t('actionCv'),
-      href: getSubdomainUrl('portfolio'),
+      href: `/portfolio/cv/${cvFilename}`,
       isExternal: true,
+      download: cvFilename,
     },
     {
       id: 'consulta',
@@ -53,6 +56,7 @@ export function ActionLinksList() {
           <a
             key={link.id}
             href={link.href}
+            download={'download' in link ? link.download : undefined}
             target="_blank"
             rel="noopener noreferrer"
             className={buttonClass}

@@ -166,7 +166,7 @@ export function LabsBoard({ challenges }: LabsBoardProps) {
             >
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-border-gold/40 text-gold-400">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-gold-400/90">
                     {difficultyLabel(challenge.difficulty)} • {challenge.points} pts
                   </span>
                   {isSolved ? (
@@ -212,7 +212,7 @@ export function LabsBoard({ challenges }: LabsBoardProps) {
               </div>
 
               {/* Formulario de Validación de Flag */}
-              <div className="flex flex-col gap-2.5 pt-3 border-t border-border/30">
+              <div className="flex flex-col gap-2.5 pt-1">
                 <form
                   onSubmit={(e) => handleSubmit(e, challenge)}
                   className="flex items-center gap-2"

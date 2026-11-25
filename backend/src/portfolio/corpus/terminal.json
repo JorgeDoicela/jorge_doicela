@@ -96,13 +96,13 @@
         "\u001b[36mComandos recomendados: about, projects, skills, contact, neofetch, help\u001b[0m"
       ],
       "experience": [
-        "\u001b[1;32m[2024 - Presente] Emplifi\u001b[0m",
-        "  Rol: Full-Stack Developer",
-        "  Descripción: Desarrollo de APIs REST, optimización de consultas SQL y mejoras en UI.",
+        "\u001b[1;32m[Actual] ISTPET (istpet.edu.ec)\u001b[0m",
+        "  Rol: Desarrollador de Software",
+        "  Descripción: Desarrollo y mantenimiento de plataformas web y sistemas institucionales.",
         "",
-        "\u001b[1;32m[2023 - 2024] Consejo Nacional de Competencias (CNC)\u001b[0m",
-        "  Rol: Desarrollador Backend & DevOps",
-        "  Descripción: Estabilización de arquitectura, módulos en NestJS/Laravel y empaquetado Docker."
+        "\u001b[1;32m[Experiencia Previa] Consejo Nacional de Competencias (CNC)\u001b[0m",
+        "  Rol: Desarrollador Backend",
+        "  Descripción: Estabilización de código, módulos backend en Laravel y despliegue contenedorizado con Docker."
       ],
       "contactFile": [
         "Canales de Contacto Directo:",
@@ -288,13 +288,13 @@
         "\u001b[36mRecommended commands: about, projects, skills, contact, neofetch, help\u001b[0m"
       ],
       "experience": [
-        "\u001b[1;32m[2024 - Present] Emplifi\u001b[0m",
-        "  Role: Full-Stack Developer",
-        "  Description: REST API engineering, SQL query optimization, and UI enhancements.",
+        "\u001b[1;32m[Present] ISTPET (istpet.edu.ec)\u001b[0m",
+        "  Role: Software Developer",
+        "  Description: Development and maintenance of institutional web platforms and software systems.",
         "",
-        "\u001b[1;32m[2023 - 2024] National Competencies Council (CNC)\u001b[0m",
-        "  Role: Backend & DevOps Developer",
-        "  Description: Architecture stabilization, NestJS/Laravel modules, and Docker containerization."
+        "\u001b[1;32m[Previous Experience] National Competencies Council (CNC)\u001b[0m",
+        "  Role: Backend Developer",
+        "  Description: Code stabilization, Laravel backend modules, and containerized Docker deployment."
       ],
       "contactFile": [
         "Direct Contact Channels:",

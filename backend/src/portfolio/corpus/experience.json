@@ -38,44 +38,6 @@
     "orderIndex": 1
   },
   {
-    "id": 3,
-    "slug": "emplifi-fullstack",
-    "language": "es",
-    "type": "work",
-    "title": "Emplifi",
-    "subtitle": "Full-Stack Developer",
-    "period": "Experiencia Previa",
-    "companyUrl": null,
-    "description": "Desarrollo Full-Stack y optimización de APIs para el sistema de gestión de recursos humanos, mejorando el rendimiento general y la persistencia de datos.",
-    "highlights": [
-      "Optimización de endpoints y consultas SQL reduciendo tiempos de respuesta en módulos de talento humano.",
-      "Implementación de vistas interactivas y flujos de validación en frontend y backend.",
-      "Mantenimiento evolutivo de arquitectura modular garantizando integridad referencial."
-    ],
-    "technologies": ["React", "TypeScript", "C# / .NET", "SQL Server", "REST APIs"],
-    "featured": true,
-    "orderIndex": 2
-  },
-  {
-    "id": 4,
-    "slug": "emplifi-fullstack",
-    "language": "en",
-    "type": "work",
-    "title": "Emplifi",
-    "subtitle": "Full-Stack Developer",
-    "period": "Previous Experience",
-    "companyUrl": null,
-    "description": "Full-Stack development and API performance optimization for the human resources management system, enhancing data persistence and throughput.",
-    "highlights": [
-      "Optimized backend API endpoints and SQL queries to improve latency across HR management modules.",
-      "Built responsive UI views and end-to-end validation flows across client and server.",
-      "Maintained modular codebase architecture ensuring strict relational data integrity."
-    ],
-    "technologies": ["React", "TypeScript", "C# / .NET", "SQL Server", "REST APIs"],
-    "featured": true,
-    "orderIndex": 2
-  },
-  {
     "id": 5,
     "slug": "cnc-backend",
     "language": "es",
@@ -92,7 +54,7 @@
     ],
     "technologies": ["PHP / Laravel", "MySQL", "Docker", "Linux", "REST APIs"],
     "featured": true,
-    "orderIndex": 3
+    "orderIndex": 2
   },
   {
     "id": 6,
@@ -111,7 +73,7 @@
     ],
     "technologies": ["PHP / Laravel", "MySQL", "Docker", "Linux", "REST APIs"],
     "featured": true,
-    "orderIndex": 3
+    "orderIndex": 2
   },
   {
     "id": 7,

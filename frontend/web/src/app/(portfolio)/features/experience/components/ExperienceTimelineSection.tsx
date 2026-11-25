@@ -174,23 +174,25 @@ function HelicalCard({
     const typeLabel = isEducation ? eduBadgeLabel : workBadgeLabel;
     const NodeIcon = isEducation ? GraduationCap : Briefcase;
 
-    // Zona plana amplia de lectura (|delta| < 0.44) + al pasar el cursor encima queda 100% plano y nítido
+    // Zona de lectura nítida al centro (|delta| < 0.22) o cuando el cursor está encima (0% borroso).
+    // Fuera de esa zona, la tarjeta orbita en 3D (arco en X, profundidad en Z y giro Y/X) como cámara rodeando el eje.
     const absDelta = Math.abs(delta);
     const sign = delta >= 0 ? 1 : -1;
     const shouldAnimate3D = isDesktop && !reducedMotion && !hoverGlow.active;
-    const orbitalAmount = shouldAnimate3D ? smoothstep(0.44, 1.22, absDelta) : 0;
+    const orbitalAmount = shouldAnimate3D ? smoothstep(0.22, 1.0, absDelta) : 0;
     const signedOrbit = sign * orbitalAmount;
 
     const sideDir = isLeft ? 1 : -1;
-    const rotateY = sideDir * signedOrbit * 13;
-    const rotateX = -signedOrbit * 3;
-    const translateZ = -orbitalAmount * 36;
-    const translateY = signedOrbit * 8;
-    const scale = 1 - orbitalAmount * 0.04;
-    const opacity = reducedMotion || !isDesktop ? 1 : 1 - orbitalAmount * 0.3;
+    const rotateY = sideDir * signedOrbit * 36;
+    const rotateX = -signedOrbit * 12;
+    const translateZ = -orbitalAmount * 150;
+    const translateX = -sideDir * orbitalAmount * 42;
+    const translateY = signedOrbit * 18;
+    const scale = 1 - orbitalAmount * 0.14;
+    const opacity = reducedMotion || !isDesktop ? 1 : 1 - orbitalAmount * 0.45;
 
     const isFlatCrisp = orbitalAmount < 0.005;
-    const isInFocus = absDelta < 0.46;
+    const isInFocus = absDelta < 0.34;
     const isNodeLit = isPrimary || isReached || isInFocus || hoverGlow.active;
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -210,7 +212,7 @@ function HelicalCard({
         <article
             ref={registerRef}
             className="group relative grid grid-cols-1 md:grid-cols-2 items-start gap-4 md:gap-0 pl-9 md:pl-0"
-            style={isDesktop && !reducedMotion ? { perspective: '1600px' } : undefined}
+            style={isDesktop && !reducedMotion ? { perspective: '980px' } : undefined}
         >
             {/* Nodo Móvil (< md) */}
             <div
@@ -286,15 +288,15 @@ function HelicalCard({
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     style={{
-                        transformOrigin: isLeft ? 'calc(100% + 32px) 38px' : '-32px 38px',
+                        transformOrigin: isLeft ? 'calc(100% + 44px) 38px' : '-44px 38px',
                         transform: isFlatCrisp
                             ? undefined
-                            : `translate3d(0, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) rotateX(${rotateX.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
+                            : `translate3d(${translateX.toFixed(1)}px, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) rotateX(${rotateX.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
                         opacity,
                     }}
-                    className={`relative overflow-hidden p-6 sm:p-7 rounded-xl border bg-surface/85 flex flex-col gap-4 transition-[border-color,box-shadow,transform,opacity] duration-300 ease-out ${isInFocus || hoverGlow.active
-                            ? 'border-gold-300/55 shadow-[0_18px_36px_-18px_rgba(0,0,0,0.28),0_0_24px_var(--glow-gold)]'
-                            : 'border-border/65 shadow-[0_10px_24px_-16px_rgba(0,0,0,0.2)]'
+                    className={`relative overflow-hidden p-6 sm:p-7 rounded-xl border bg-surface/88 flex flex-col gap-4 transition-[border-color,box-shadow,transform,opacity] duration-300 ease-out ${isInFocus || hoverGlow.active
+                            ? 'border-gold-300/60 shadow-[0_22px_44px_-18px_rgba(0,0,0,0.34),0_0_26px_var(--glow-gold)]'
+                            : 'border-border/65 shadow-[0_12px_26px_-16px_rgba(0,0,0,0.24)]'
                         }`}
                 >
                     {/* Reflejo Especular Dorado en Hover */}
@@ -428,7 +430,7 @@ export function ExperienceTimelineSection({
     if (items.length === 0) return null;
 
     return (
-        <div ref={trackRef} className="relative flex flex-col gap-12 md:gap-14 py-2">
+        <div ref={trackRef} className="relative flex flex-col gap-12 md:gap-20 py-4">
             {/* Riel compacto exclusivo para móvil (< md) */}
             <div
                 className="md:hidden absolute left-[10px] top-6 bottom-6 w-[2px] rounded-full bg-border-gold/35 pointer-events-none"

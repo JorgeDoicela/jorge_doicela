@@ -101,6 +101,9 @@
     "pageSubtitle": "Detailed software development track record, production responsibilities, tech stacks, and academic background.",
     "highlightsLabel": "Responsibilities & Achievements",
     "stackUsedLabel": "Tech Stack",
+    "filterAll": "Full Timeline",
+    "filterWork": "Experience",
+    "filterEducation": "Education",
     "backToPortfolio": "Back to Portfolio"
   },
   "Engineering": {

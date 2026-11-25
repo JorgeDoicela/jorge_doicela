@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Briefcase, GraduationCap } from 'lucide-react';
 import { useHelicalTimeline } from '../hooks/useHelicalTimeline';
 import type { PortfolioExperienceItem } from '../types';
 
@@ -140,7 +140,10 @@ interface HelicalCardProps {
     index: number;
     delta: number;
     isReached: boolean;
+    isDesktop: boolean;
     reducedMotion: boolean;
+    workBadgeLabel: string;
+    eduBadgeLabel: string;
     highlightsLabel?: string;
     stackUsedLabel?: string;
     registerRef: (el: HTMLElement | null) => void;
@@ -151,7 +154,10 @@ function HelicalCard({
     index,
     delta,
     isReached,
+    isDesktop,
     reducedMotion,
+    workBadgeLabel,
+    eduBadgeLabel,
     highlightsLabel,
     stackUsedLabel,
     registerRef,
@@ -164,22 +170,27 @@ function HelicalCard({
 
     const isLeft = index % 2 === 0;
     const isPrimary = index === 0;
+    const isEducation = item.type === 'education';
+    const typeLabel = isEducation ? eduBadgeLabel : workBadgeLabel;
+    const NodeIcon = isEducation ? GraduationCap : Briefcase;
 
-    // Zona plana amplia de lectura + giro 3D sutil y arquitectónico
+    // Zona plana amplia de lectura (|delta| < 0.44) + al pasar el cursor encima queda 100% plano y nítido
     const absDelta = Math.abs(delta);
     const sign = delta >= 0 ? 1 : -1;
-    const orbitalAmount = reducedMotion ? 0 : smoothstep(0.24, 1.2, absDelta);
+    const shouldAnimate3D = isDesktop && !reducedMotion && !hoverGlow.active;
+    const orbitalAmount = shouldAnimate3D ? smoothstep(0.44, 1.22, absDelta) : 0;
     const signedOrbit = sign * orbitalAmount;
 
     const sideDir = isLeft ? 1 : -1;
-    const rotateY = sideDir * signedOrbit * 14;
-    const rotateX = -signedOrbit * 3.5;
-    const translateZ = -orbitalAmount * 42;
-    const translateY = signedOrbit * 10;
-    const scale = 1 - orbitalAmount * 0.05;
-    const opacity = reducedMotion ? 1 : 1 - orbitalAmount * 0.34;
+    const rotateY = sideDir * signedOrbit * 13;
+    const rotateX = -signedOrbit * 3;
+    const translateZ = -orbitalAmount * 36;
+    const translateY = signedOrbit * 8;
+    const scale = 1 - orbitalAmount * 0.04;
+    const opacity = reducedMotion || !isDesktop ? 1 : 1 - orbitalAmount * 0.3;
 
-    const isInFocus = absDelta < 0.42;
+    const isFlatCrisp = orbitalAmount < 0.005;
+    const isInFocus = absDelta < 0.46;
     const isNodeLit = isPrimary || isReached || isInFocus || hoverGlow.active;
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -199,21 +210,25 @@ function HelicalCard({
         <article
             ref={registerRef}
             className="group relative grid grid-cols-1 md:grid-cols-2 items-start gap-4 md:gap-0 pl-9 md:pl-0"
-            style={{ perspective: '1600px' }}
+            style={isDesktop && !reducedMotion ? { perspective: '1600px' } : undefined}
         >
             {/* Nodo Móvil (< md) */}
             <div
-                className="md:hidden absolute left-[11px] -translate-x-1/2 top-7 z-20 flex items-center justify-center"
+                className="md:hidden absolute left-[11px] -translate-x-1/2 top-6 z-20 flex items-center justify-center"
                 aria-hidden="true"
             >
                 <div
-                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${isNodeLit
+                    className={`w-6 h-6 rounded-full border flex items-center justify-center ${isNodeLit
                             ? 'border-gold-300 bg-background shadow-[0_0_12px_var(--glow-gold-strong)]'
                             : 'border-border-gold bg-background'
                         }`}
                 >
-                    <span
-                        className={`w-1.5 h-1.5 rounded-full ${isPrimary || isInFocus ? 'bg-gold-300 luxury-pulse' : 'bg-gold-400'
+                    <NodeIcon
+                        className={`w-3 h-3 ${isPrimary || isInFocus
+                                ? 'text-gold-300'
+                                : isNodeLit
+                                    ? 'text-gold-400'
+                                    : 'text-muted'
                             }`}
                     />
                 </div>
@@ -221,24 +236,24 @@ function HelicalCard({
 
             {/* Nodo Desktop sobre el vértice exacto de la curva S */}
             <div
-                className="hidden md:flex absolute left-1/2 top-[28px] z-20 items-center justify-center"
+                className="hidden md:flex absolute left-1/2 top-[24px] z-20 items-center justify-center"
                 style={{
                     transform: `translateX(calc(-50% + ${isLeft ? -CURVE_AMPLITUDE : CURVE_AMPLITUDE}px))`,
                 }}
                 aria-hidden="true"
             >
                 <div
-                    className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${isInFocus || isNodeLit
-                            ? 'border-gold-300 bg-background shadow-[0_4px_14px_rgba(0,0,0,0.22),0_0_16px_var(--glow-gold-strong)] scale-110'
+                    className={`w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${isInFocus || isNodeLit
+                            ? 'border-gold-300 bg-background shadow-[0_4px_14px_rgba(0,0,0,0.22),0_0_16px_var(--glow-gold-strong)] scale-105'
                             : 'border-border-gold bg-background scale-100'
                         }`}
                 >
-                    <span
-                        className={`w-2 h-2 rounded-full transition-colors duration-300 ${isPrimary || isInFocus
-                                ? 'bg-gold-300 luxury-pulse'
+                    <NodeIcon
+                        className={`w-3.5 h-3.5 transition-colors duration-300 ${isPrimary || isInFocus
+                                ? 'text-gold-300'
                                 : isNodeLit
-                                    ? 'bg-gold-400'
-                                    : 'bg-border-gold'
+                                    ? 'text-gold-400'
+                                    : 'text-muted'
                             }`}
                     />
                 </div>
@@ -246,12 +261,12 @@ function HelicalCard({
 
             {/* Conector limpio del nodo a la tarjeta (Desktop md+) */}
             <div
-                className={`hidden md:block absolute left-1/2 top-[38px] h-px w-[22px] z-10 transition-colors duration-300 ${isInFocus || isNodeLit ? 'bg-gold-300/65' : 'bg-border-gold/45'
+                className={`hidden md:block absolute left-1/2 top-[38px] h-px w-[18px] z-10 transition-colors duration-300 ${isInFocus || isNodeLit ? 'bg-gold-300/65' : 'bg-border-gold/45'
                     }`}
                 style={{
                     transform: isLeft
                         ? `translateX(${-(CURVE_AMPLITUDE + 32)}px)`
-                        : `translateX(${CURVE_AMPLITUDE + 10}px)`,
+                        : `translateX(${CURVE_AMPLITUDE + 14}px)`,
                 }}
                 aria-hidden="true"
             />
@@ -262,25 +277,24 @@ function HelicalCard({
                 aria-hidden="true"
             />
 
-            {/* Tarjeta Orbital 3D con espacio limpio respecto al nodo */}
+            {/* Tarjeta Orbital 3D con texto 100% nítido en foco y hover */}
             <div
                 className={`${isLeft ? 'md:order-1 md:pr-[60px]' : 'md:order-2 md:pl-[60px]'}`}
-                style={{ transformStyle: 'preserve-3d' }}
+                style={!isFlatCrisp ? { transformStyle: 'preserve-3d' } : undefined}
             >
                 <div
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     style={{
                         transformOrigin: isLeft ? 'calc(100% + 32px) 38px' : '-32px 38px',
-                        transform: reducedMotion
+                        transform: isFlatCrisp
                             ? undefined
                             : `translate3d(0, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) rotateX(${rotateX.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
                         opacity,
-                        transformStyle: 'preserve-3d',
                     }}
-                    className={`relative overflow-hidden p-6 sm:p-7 rounded-xl border bg-surface/60 backdrop-blur-sm will-change-transform flex flex-col gap-4 transition-[border-color,box-shadow] duration-300 ${isInFocus || hoverGlow.active
-                            ? 'border-gold-300/55 shadow-[0_18px_36px_-18px_rgba(0,0,0,0.32),0_0_24px_var(--glow-gold)]'
-                            : 'border-border/65 shadow-[0_10px_24px_-16px_rgba(0,0,0,0.22)]'
+                    className={`relative overflow-hidden p-6 sm:p-7 rounded-xl border bg-surface/85 flex flex-col gap-4 transition-[border-color,box-shadow,transform,opacity] duration-300 ease-out ${isInFocus || hoverGlow.active
+                            ? 'border-gold-300/55 shadow-[0_18px_36px_-18px_rgba(0,0,0,0.28),0_0_24px_var(--glow-gold)]'
+                            : 'border-border/65 shadow-[0_10px_24px_-16px_rgba(0,0,0,0.2)]'
                         }`}
                 >
                     {/* Reflejo Especular Dorado en Hover */}
@@ -301,6 +315,10 @@ function HelicalCard({
 
                     {/* Cabecera */}
                     <div className="relative flex flex-col gap-2 border-b border-border/35 pb-4">
+                        <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-gold-400/85">
+                            {typeLabel}
+                        </span>
+
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <h3 className="text-base sm:text-lg font-mono text-foreground font-semibold leading-snug">
                                 {item.title}
@@ -310,7 +328,7 @@ function HelicalCard({
                                     href={item.companyUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border-gold/45 bg-background/55 text-[10px] font-mono text-gold-400 hover:text-gold-200 hover:border-gold-300/60 transition-colors"
+                                    className="inline-flex items-center gap-1 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors"
                                 >
                                     <span>{item.companyUrl.replace(/^https?:\/\//, '')}</span>
                                     <ArrowUpRight className="w-3 h-3" />
@@ -385,79 +403,74 @@ function HelicalCard({
 }
 
 interface ExperienceTimelineSectionProps {
-    title: string;
-    icon: React.ReactNode;
     items: PortfolioExperienceItem[];
+    workBadgeLabel: string;
+    eduBadgeLabel: string;
     highlightsLabel?: string;
     stackUsedLabel?: string;
 }
 
 export function ExperienceTimelineSection({
-    title,
-    icon,
     items,
+    workBadgeLabel,
+    eduBadgeLabel,
     highlightsLabel,
     stackUsedLabel,
 }: ExperienceTimelineSectionProps) {
     const trackRef = useRef<HTMLDivElement | null>(null);
     const itemRefs = useRef<(HTMLElement | null)[]>([]);
 
-    const { scrollProgress, itemDeltas, nodeYs, trackHeight, reducedMotion } =
+    itemRefs.current.length = items.length;
+
+    const { scrollProgress, itemDeltas, nodeYs, trackHeight, isDesktop, reducedMotion } =
         useHelicalTimeline(trackRef, itemRefs, items.length);
 
     if (items.length === 0) return null;
 
     return (
-        <section className="flex flex-col gap-10">
-            {/* Cabecera centrada sobre el eje */}
-            <div className="flex items-center md:justify-center gap-2.5">
-                {icon}
-                <h2 className="text-xl md:text-2xl font-light text-foreground tracking-tight">
-                    {title}
-                </h2>
-            </div>
+        <div ref={trackRef} className="relative flex flex-col gap-12 md:gap-14 py-2">
+            {/* Riel compacto exclusivo para móvil (< md) */}
+            <div
+                className="md:hidden absolute left-[10px] top-6 bottom-6 w-[2px] rounded-full bg-border-gold/35 pointer-events-none"
+                aria-hidden="true"
+            />
+            <div
+                className="md:hidden absolute left-[10px] top-6 bottom-6 w-[2px] rounded-full origin-top bg-gradient-to-b from-gold-400 via-gold-300 to-gold-100 pointer-events-none"
+                style={{ transform: `scaleY(${scrollProgress})` }}
+                aria-hidden="true"
+            />
 
-            <div ref={trackRef} className="relative flex flex-col gap-12 md:gap-16 py-2">
-                {/* Riel compacto exclusivo para móvil (< md) */}
-                <div
-                    className="md:hidden absolute left-[10px] top-6 bottom-6 w-[2px] rounded-full bg-border-gold/35 pointer-events-none"
-                    aria-hidden="true"
-                />
-                <div
-                    className="md:hidden absolute left-[10px] top-6 bottom-6 w-[2px] rounded-full origin-top bg-gradient-to-b from-gold-400 via-gold-300 to-gold-100 pointer-events-none"
-                    style={{ transform: `scaleY(${scrollProgress})` }}
-                    aria-hidden="true"
-                />
+            {/* Curva S orgánica limpia de nodo a nodo (Desktop md+) */}
+            <OrganicCurveSpine
+                nodeYs={nodeYs}
+                trackHeight={trackHeight}
+                progress={scrollProgress}
+                reducedMotion={reducedMotion}
+            />
 
-                {/* Curva S orgánica limpia de nodo a nodo (Desktop md+) */}
-                <OrganicCurveSpine
-                    nodeYs={nodeYs}
-                    trackHeight={trackHeight}
-                    progress={scrollProgress}
-                    reducedMotion={reducedMotion}
-                />
+            {items.map((item, idx) => {
+                const threshold = items.length > 1 ? idx / (items.length - 1) : 0;
+                const isReached = scrollProgress >= threshold - 0.05;
 
-                {items.map((item, idx) => {
-                    const threshold = items.length > 1 ? idx / (items.length - 1) : 0;
-                    const isReached = scrollProgress >= threshold - 0.05;
-
-                    return (
-                        <HelicalCard
-                            key={item.id}
-                            item={item}
-                            index={idx}
-                            delta={itemDeltas[idx] ?? 0}
-                            isReached={isReached}
-                            reducedMotion={reducedMotion}
-                            highlightsLabel={highlightsLabel}
-                            stackUsedLabel={stackUsedLabel}
-                            registerRef={(el) => {
-                                itemRefs.current[idx] = el;
-                            }}
-                        />
-                    );
-                })}
-            </div>
-        </section>
+                return (
+                    <HelicalCard
+                        key={item.id}
+                        item={item}
+                        index={idx}
+                        delta={itemDeltas[idx] ?? 0}
+                        isReached={isReached}
+                        isDesktop={isDesktop}
+                        reducedMotion={reducedMotion}
+                        workBadgeLabel={workBadgeLabel}
+                        eduBadgeLabel={eduBadgeLabel}
+                        highlightsLabel={item.type === 'work' ? highlightsLabel : undefined}
+                        stackUsedLabel={stackUsedLabel}
+                        registerRef={(el) => {
+                            itemRefs.current[idx] = el;
+                        }}
+                    />
+                );
+            })}
+        </div>
     );
 }

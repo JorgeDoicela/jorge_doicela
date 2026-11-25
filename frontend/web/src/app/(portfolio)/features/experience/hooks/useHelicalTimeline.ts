@@ -10,6 +10,7 @@ export interface HelicalTimelineMetrics {
   nodeYs: number[];
   /** Altura total actual del contenedor trackRef en px */
   trackHeight: number;
+  isDesktop: boolean;
   reducedMotion: boolean;
 }
 
@@ -29,6 +30,7 @@ export function useHelicalTimeline(
     itemDeltas: Array(itemCount).fill(0),
     nodeYs: [],
     trackHeight: 0,
+    isDesktop: true,
     reducedMotion: false,
   }));
 
@@ -44,6 +46,8 @@ export function useHelicalTimeline(
       const trackEl = trackRef.current;
       if (!trackEl) return;
 
+      const viewportWidth = window.innerWidth;
+      const isDesktop = viewportWidth >= 768;
       const viewportHeight = window.innerHeight;
       const viewportCenter = viewportHeight * 0.5;
       const trackRect = trackEl.getBoundingClientRect();
@@ -65,6 +69,7 @@ export function useHelicalTimeline(
           itemDeltas: Array(itemCount).fill(0),
           nodeYs,
           trackHeight,
+          isDesktop,
           reducedMotion: true,
         });
         return;
@@ -86,22 +91,25 @@ export function useHelicalTimeline(
 
       const scrollProgress = Math.min(1, Math.max(0, Math.max(rawProgress, bottomBoost)));
 
-      // Fase orbital de cada tarjeta respecto al centro del viewport
+      // Fase orbital de cada tarjeta respecto al centro del viewport (solo en Desktop)
       const range = Math.max(viewportHeight * 0.58, 280);
-      const itemDeltas = Array.from({ length: itemCount }, (_, idx) => {
-        const el = nodes[idx];
-        if (!el) return 0;
-        const rect = el.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height * 0.5;
-        const raw = (cardCenter - viewportCenter) / range;
-        return Math.min(1.25, Math.max(-1.25, raw));
-      });
+      const itemDeltas = isDesktop
+        ? Array.from({ length: itemCount }, (_, idx) => {
+            const el = nodes[idx];
+            if (!el) return 0;
+            const rect = el.getBoundingClientRect();
+            const cardCenter = rect.top + rect.height * 0.5;
+            const raw = (cardCenter - viewportCenter) / range;
+            return Math.min(1.25, Math.max(-1.25, raw));
+          })
+        : Array(itemCount).fill(0);
 
       setMetrics({
         scrollProgress,
         itemDeltas,
         nodeYs,
         trackHeight,
+        isDesktop,
         reducedMotion: false,
       });
     };

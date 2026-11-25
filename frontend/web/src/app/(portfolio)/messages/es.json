@@ -101,6 +101,9 @@
     "pageSubtitle": "Historial detallado de desarrollo de software, responsabilidades en producción, stack empleado y formación académica.",
     "highlightsLabel": "Responsabilidades & Logros",
     "stackUsedLabel": "Stack Empleado",
+    "filterAll": "Trayectoria Completa",
+    "filterWork": "Experiencia",
+    "filterEducation": "Formación",
     "backToPortfolio": "Volver al Portafolio"
   },
   "Engineering": {

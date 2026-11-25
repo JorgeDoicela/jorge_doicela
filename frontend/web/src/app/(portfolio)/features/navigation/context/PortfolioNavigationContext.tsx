@@ -3,7 +3,11 @@
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PORTFOLIO_NAV_ITEMS, SIDENAV_STORAGE_KEY } from '../config/navItems';
-import { isPortfolioHomePath } from '../../../shared';
+import {
+  getPortfolioHomeHref,
+  isPortfolioHomePath,
+  resolvePortfolioHref,
+} from '../../../shared';
 import type { PortfolioNavItem } from '../types';
 
 interface PortfolioNavigationContextValue {
@@ -20,12 +24,30 @@ interface PortfolioNavigationContextValue {
 
 const PortfolioNavigationContext = createContext<PortfolioNavigationContextValue | null>(null);
 
+function resolveActiveIdFromPath(pathname: string): string {
+  if (isPortfolioHomePath(pathname)) {
+    return 'home';
+  }
+  const matchedRoute = PORTFOLIO_NAV_ITEMS.find(
+    (item) =>
+      item.kind === 'route' &&
+      item.href !== '/' &&
+      (pathname === item.href ||
+        pathname.startsWith(`${item.href}/`) ||
+        pathname === `/portfolio${item.href}` ||
+        pathname.startsWith(`/portfolio${item.href}/`))
+  );
+  return matchedRoute ? matchedRoute.id : '';
+}
+
 export function PortfolioNavigationProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const isHome = isPortfolioHomePath(pathname);
+  const routeActiveId = resolveActiveIdFromPath(pathname);
 
-  const [activeId, setActiveId] = useState<string>('');
+  const [scrollSpyId, setScrollSpyId] = useState<string | null>(null);
+  const activeId = isHome ? (scrollSpyId ?? routeActiveId) : routeActiveId;
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
@@ -97,19 +119,10 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
     setIsMobileOpen(false);
   }, [pathname]);
 
-  // Scroll-spy con IntersectionObserver en la vista principal
+  // Sincronización opcional por scroll-spy cuando existan anclas kind: 'section' en Home
   useEffect(() => {
-    if (!isHome) {
-      const matchedRoute = PORTFOLIO_NAV_ITEMS.find(
-        (item) =>
-          item.kind === 'route' &&
-          (pathname.startsWith(item.href) || pathname.startsWith(`/portfolio${item.href}`))
-      );
-      if (matchedRoute) {
-        setActiveId(matchedRoute.id);
-      }
-      return;
-    }
+    setScrollSpyId(null);
+    if (!isHome) return;
 
     const sectionItems = PORTFOLIO_NAV_ITEMS.filter(
       (item): item is Extract<PortfolioNavItem, { kind: 'section' }> => item.kind === 'section'
@@ -134,9 +147,9 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
 
         if (visibleEntries.length > 0) {
-          setActiveId(visibleEntries[0].target.id);
+          setScrollSpyId(visibleEntries[0].target.id);
         } else {
-          setActiveId('');
+          setScrollSpyId('home');
         }
       },
       {
@@ -152,9 +165,9 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
       const docHeight = document.documentElement.scrollHeight;
       if (docHeight - scrollBottom < 48) {
         const lastSection = sectionItems[sectionItems.length - 1];
-        if (lastSection) setActiveId(lastSection.id);
+        if (lastSection) setScrollSpyId(lastSection.id);
       } else if (window.scrollY < 80) {
-        setActiveId('');
+        setScrollSpyId('home');
       }
     };
 
@@ -170,24 +183,25 @@ export function PortfolioNavigationProvider({ children }: { children: React.Reac
     (item: PortfolioNavItem) => {
       setIsMobileOpen(false);
       if (item.kind === 'route') {
-        setActiveId(item.id);
-        router.push(item.href);
+        setScrollSpyId(null);
+        router.push(resolvePortfolioHref(pathname, item.href));
         return;
       }
 
       if (isHome) {
         const target = document.getElementById(item.anchor);
         if (target) {
-          setActiveId(item.id);
+          setScrollSpyId(item.id);
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           window.history.replaceState(null, '', `#${item.anchor}`);
         }
         return;
       }
 
-      router.push(`/#${item.anchor}`);
+      const homeHref = getPortfolioHomeHref(pathname);
+      router.push(`${homeHref}#${item.anchor}`);
     },
-    [isHome, router]
+    [isHome, pathname, router]
   );
 
   return (

@@ -99,7 +99,7 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
 
       {/* Bloque 2: Filosofía y Principios de Ingeniería */}
       <section className="flex flex-col gap-8">
-        <div className="flex items-center gap-2.5 border-b border-border/40 pb-4">
+        <div className="flex items-center gap-2.5">
           <Compass className="w-4 h-4 text-gold-400" />
           <h2 className="text-xl md:text-2xl font-light text-foreground">
             {tPhil('title')}
@@ -137,7 +137,7 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
 
       {/* Bloque 3: Líneas de Enfoque Técnico y Crecimiento */}
       <section className="flex flex-col gap-8">
-        <div className="flex items-center gap-2.5 border-b border-border/40 pb-4">
+        <div className="flex items-center gap-2.5">
           <ShieldCheck className="w-4 h-4 text-gold-400" />
           <h2 className="text-xl md:text-2xl font-light text-foreground">
             {tAbout('focusTitle')}

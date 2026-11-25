@@ -34,6 +34,7 @@ import { SandboxService } from './services/sandbox.service';
 import { SandboxSecurityService } from './services/sandbox-security.service';
 import { SandboxGateway } from './gateways/sandbox.gateway';
 
+import type Database from 'better-sqlite3';
 import { resolveDatabasePath } from '../common/database/database-path.util';
 
 @Module({
@@ -45,6 +46,15 @@ import { resolveDatabasePath } from '../common/database/database-path.util';
         'DATABASE_PORTFOLIO_PATH',
         'portfolio.sqlite',
       ),
+      enableWAL: true,
+      prepareDatabase: (db: Database.Database) => {
+        db.pragma('foreign_keys = ON');
+        db.pragma('synchronous = NORMAL');
+        db.pragma('busy_timeout = 5000');
+        db.pragma('cache_size = -8000'); // 8 MB de caché en RAM (catálogo ligero en VPS 1 GB RAM)
+        db.pragma('journal_size_limit = 33554432'); // 32 MB límite de WAL para proteger disco
+        db.pragma('temp_store = MEMORY');
+      },
       entities: [
         ContactMessage,
         PortfolioProject,

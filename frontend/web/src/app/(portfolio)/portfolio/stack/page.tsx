@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { PortfolioHeader } from '../../components/PortfolioHeader';
+import { PortfolioFooter } from '../../components/PortfolioFooter';
 import { StackDetailView, getPortfolioStack } from '../../features/stack';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,15 +15,14 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PortfolioStackPage() {
   const locale = await getLocale();
   const t = await getTranslations('Stack');
-  const tFooter = await getTranslations('Footer');
   const items = await getPortfolioStack(locale);
 
   return (
-    <div className="portfolio-shell min-h-screen bg-background text-foreground py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
+    <div className="portfolio-shell min-h-screen bg-background text-foreground pt-16 md:pt-11 pb-10 md:pb-12 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
       <PortfolioHeader />
 
       <div className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-12 animate-fade-up">
-        <div className="flex flex-col gap-3 border-b border-border/40 pb-8">
+        <div className="flex flex-col gap-3 pb-2">
           <h1 className="text-3xl md:text-4xl font-light text-foreground tracking-tight">
             {t('pageTitle')}
           </h1>
@@ -34,9 +34,7 @@ export default async function PortfolioStackPage() {
         <StackDetailView items={items} />
       </div>
 
-      <footer className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mt-20 md:mt-28 pt-8 pb-12 flex items-center justify-center text-center text-gold-s/40 text-[10px] tracking-[0.2em] uppercase font-mono">
-        <span>{tFooter('copyright', { year: new Date().getFullYear().toString() })}</span>
-      </footer>
+      <PortfolioFooter />
     </div>
   );
 }

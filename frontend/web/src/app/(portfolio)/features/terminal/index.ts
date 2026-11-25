@@ -6,6 +6,7 @@ export { SandboxTerminal } from './components/SandboxTerminal';
 export { ServerOfflineBanner } from './components/ServerOfflineBanner';
 export { TerminalConsole } from './components/TerminalConsole';
 export { TerminalHeader } from './components/TerminalHeader';
+export { TerminalTeaserSection } from './components/TerminalTeaserSection';
 export { useSandboxTerminal } from './hooks/useSandboxTerminal';
 export { useTerminalSocket } from './hooks/useTerminalSocket';
 export type {

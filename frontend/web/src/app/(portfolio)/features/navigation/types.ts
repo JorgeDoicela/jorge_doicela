@@ -1,25 +1,22 @@
 export type PortfolioNavLabelKey =
+  | 'home'
   | 'about'
   | 'projects'
   | 'stack'
   | 'experience'
   | 'engineering'
-  | 'cloud'
-  | 'tools'
-  | 'philosophy'
   | 'terminal'
   | 'contact';
 
-export type PortfolioNavGroup = 'overview' | 'engineering';
+export type PortfolioNavGroup = 'root' | 'overview' | 'engineering';
 
 export type PortfolioNavIconName =
+  | 'home'
   | 'user'
   | 'projects'
   | 'stack'
   | 'experience'
   | 'cloud'
-  | 'tools'
-  | 'philosophy'
   | 'terminal'
   | 'contact';
 

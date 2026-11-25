@@ -20,6 +20,47 @@ export function PortfolioSideNav() {
     navigateTo,
   } = usePortfolioNavigation();
 
+  const renderNavItem = (item: (typeof items)[number], buttonHeight: string) => {
+    const isActive = activeId === item.id;
+    const label = t(`items.${item.labelKey}`);
+
+    return (
+      <li key={item.id}>
+        <button
+          type="button"
+          onClick={() => navigateTo(item)}
+          aria-current={
+            isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
+          }
+          className={`group relative w-full ${buttonHeight} flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
+            isActive
+              ? 'border-gold-300 text-foreground'
+              : 'border-transparent text-muted/85 hover:text-foreground'
+          }`}
+        >
+          <NavIcon
+            name={item.icon}
+            className={`w-[15px] h-[15px] shrink-0 transition-colors duration-200 ${
+              isActive
+                ? 'text-gold-300'
+                : 'text-muted/55 group-hover:text-gold-400'
+            }`}
+          />
+
+          <span
+            className={`font-mono text-[11.5px] tracking-[0.08em] truncate transition-all duration-200 ${
+              isActive
+                ? 'text-foreground font-medium translate-x-0.5'
+                : 'text-muted group-hover:text-foreground group-hover:translate-x-0.5'
+            }`}
+          >
+            {label}
+          </span>
+        </button>
+      </li>
+    );
+  };
+
   // Renderizado compartido del árbol de navegación para escritorio y drawer móvil
   const renderNavLinks = (buttonHeight = 'h-[38px]') => (
     <nav
@@ -37,46 +78,7 @@ export function PortfolioSideNav() {
             </span>
 
             <ul className="flex flex-col gap-0.5">
-              {groupItems.map((item) => {
-                const isActive = activeId === item.id;
-                const label = t(`items.${item.labelKey}`);
-
-                return (
-                  <li key={item.id}>
-                    <button
-                      type="button"
-                      onClick={() => navigateTo(item)}
-                      aria-current={
-                        isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
-                      }
-                      className={`group relative w-full ${buttonHeight} flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
-                        isActive
-                          ? 'border-gold-300 text-foreground'
-                          : 'border-transparent text-muted/85 hover:text-foreground'
-                      }`}
-                    >
-                      <NavIcon
-                        name={item.icon}
-                        className={`w-[15px] h-[15px] shrink-0 transition-colors duration-200 ${
-                          isActive
-                            ? 'text-gold-300'
-                            : 'text-muted/55 group-hover:text-gold-400'
-                        }`}
-                      />
-
-                      <span
-                        className={`font-mono text-[11.5px] tracking-[0.08em] truncate transition-all duration-200 ${
-                          isActive
-                            ? 'text-foreground font-medium translate-x-0.5'
-                            : 'text-muted group-hover:text-foreground group-hover:translate-x-0.5'
-                        }`}
-                      >
-                        {label}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
+              {groupItems.map((item) => renderNavItem(item, buttonHeight))}
             </ul>
           </div>
         );

@@ -44,13 +44,14 @@ export class PortfolioProjectsService {
     slug: string,
     language?: string,
   ): Promise<PortfolioProject | null> {
-    const where: FindOptionsWhere<PortfolioProject> = { slug };
-    if (language) {
-      where.language = language;
-    }
-    let project = await this.projectRepository.findOne({ where });
-    if (!project && language) {
-      project = await this.projectRepository.findOne({ where: { slug } });
+    const lang = language === 'en' ? 'en' : 'es';
+    let project = await this.projectRepository.findOne({
+      where: { slug, language: lang },
+    });
+    if (!project && lang !== 'es') {
+      project = await this.projectRepository.findOne({
+        where: { slug, language: 'es' },
+      });
     }
     return project;
   }

@@ -19,7 +19,7 @@ export function ExperienceDetailView({ items }: ExperienceDetailViewProps) {
     <div className="flex flex-col gap-16">
       {/* Trayectoria Laboral Detallada */}
       <section className="flex flex-col gap-8">
-        <div className="flex items-center gap-2.5 border-b border-border/40 pb-4">
+        <div className="flex items-center gap-2.5">
           <Briefcase className="w-4 h-4 text-gold-400" />
           <h2 className="text-xl md:text-2xl font-light text-foreground">
             {tExp('title')}
@@ -120,7 +120,7 @@ export function ExperienceDetailView({ items }: ExperienceDetailViewProps) {
 
       {/* Formación Académica Detallada */}
       <section className="flex flex-col gap-8">
-        <div className="flex items-center gap-2.5 border-b border-border/40 pb-4">
+        <div className="flex items-center gap-2.5">
           <GraduationCap className="w-4 h-4 text-gold-400" />
           <h2 className="text-xl md:text-2xl font-light text-foreground">
             {tExp('eduTitle')}

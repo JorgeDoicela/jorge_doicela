@@ -14,9 +14,9 @@ Este documento detalla la arquitectura macro y micro, gateways de WebSockets, co
 >
 > **Arquitectura Micro:**
 > * **Arquitectura en Capas:**
->   1. *Presentación:* `PortfolioGateway` (WebSockets `/terminal`), `SandboxGateway` (WebSockets `/sandbox`) y 7 controladores REST (`Contact`, `PortfolioProjects`, `PortfolioExperience`, `PortfolioProfile`, `PortfolioStack`, `PortfolioEngineering`, `PortfolioLabs`, `Sandbox`).
->   2. *Lógica de Negocio:* Servicios desacoplados por dominio (`PortfolioService`, `SandboxService`, `ContactMessagesService`, `PortfolioProjectsService`, `PortfolioExperienceService`, `PortfolioProfileService`, `PortfolioStackService`, `PortfolioEngineeringService`, `PortfolioLabsService`).
->   3. *Acceso a Datos:* 7 entidades TypeORM aisladas en `portfolio.sqlite` (`ContactMessage`, `PortfolioProject`, `PortfolioExperience`, `PortfolioProfile`, `PortfolioStackItem`, `PortfolioEngineeringPillar`, `PortfolioLabChallenge`, `TerminalProfile`) con driver `better-sqlite3` en modo WAL.
+>   1. *Presentación:* `PortfolioGateway` (WebSockets `/terminal`), `SandboxGateway` (WebSockets `/sandbox`) y 8 controladores REST (`Contact`, `PortfolioProjects`, `PortfolioExperience`, `PortfolioProfile`, `PortfolioStack`, `PortfolioEngineering`, `PortfolioLabs`, `Sandbox`).
+>   2. *Lógica de Negocio:* Servicios desacoplados por dominio (`PortfolioService`, `SandboxService`, `SandboxSecurityService`, `ContactMessagesService`, `TelegramNotificationService`, `PortfolioProjectsService`, `PortfolioExperienceService`, `PortfolioProfileService`, `PortfolioStackService`, `PortfolioEngineeringService`, `PortfolioLabsService`).
+>   3. *Acceso a Datos:* 8 entidades TypeORM aisladas en `portfolio.sqlite` (`ContactMessage`, `PortfolioProject`, `PortfolioExperience`, `PortfolioProfile`, `PortfolioStackItem`, `PortfolioEngineeringPillar`, `PortfolioLabChallenge`, `TerminalProfile`) con driver `better-sqlite3` en modo WAL.
 
 ---
 
@@ -344,8 +344,15 @@ new ValidationPipe({
 
 | Dominio | Método y Ruta | Parámetros Query | Descripción |
 |---|---|---|---|
-| **Proyectos** | `GET /portfolio/projects` | `lang` | Catálogo de proyectos filtrables por idioma (`?lang=es\|en`) |
+| **Perfil** | `GET /portfolio/profile` | `lang` | Perfil biográfico, filosofía de ingeniería, pilares y áreas de enfoque (`?lang=es\|en`) |
+| **Proyectos** | `GET /portfolio/projects` | `lang`, `featured` | Catálogo de proyectos filtrables por idioma y estado destacado (`?featured=true`) |
 | | `GET /portfolio/projects/:slug` | `lang` | Detalle del proyecto por slug canónico compartido entre idiomas (`es`/`en`) |
+| **Stack** | `GET /portfolio/stack` | `lang`, `featured`, `category` | Catálogo de tecnologías y entorno Linux filtrable por categoría y estado destacado |
+| **Experiencia** | `GET /portfolio/experience` | `lang`, `featured`, `type` | Trayectoria laboral, educación y certificaciones filtrables por tipo (`work\|education\|certification`) |
+| **Ingeniería** | `GET /portfolio/engineering` | `lang`, `featured`, `domain` | Pilares de arquitectura Cloud, DevSecOps, sistemas e IA filtrables por dominio |
+| | `GET /portfolio/engineering/telemetry` | - | Snapshot en vivo de telemetría del runtime backend sin caché ISR |
+| **Labs (CTF)** | `GET /portfolio/labs` | `lang` | Listado de retos CTF activos sin exponer `flagHash` (`select: false`) |
+| | `POST /portfolio/labs/verify` | - | Validación de flag (`VerifyLabFlagDto`) mediante hash SHA-256 en tiempo constante (`timingSafeEqual`) protegida con `LabsThrottleGuard` |
 | **Contacto** | `POST /portfolio/contact` | - | Envío y validación de formulario (`CreateContactMessageDto`) protegido con `ContactThrottleGuard` (sin `GET` público para evitar exposición de PII) |
 | **Sandbox** | `GET /portfolio/sandbox/health` | - | Sondeo de salud ultraliviano pre-flight (< 1ms, zero-Docker call) para verificar disponibilidad del host físico/túnel |
 | | `POST /portfolio/sandbox/wake-request` | - | Solicitud de aviso de encendido del servidor físico privado (`CreateWakeRequestDto`) delegada a `SandboxService` con notificación asíncrona a Telegram |
@@ -387,6 +394,42 @@ new ValidationPipe({
   * `banner`, `help`, `tmux`, `about`, `skills`, `contact`, `files`, `manuals`, `messages`: Columnas `simple-json` sembradas desde `corpus/terminal.json`.
   * `PortfolioService` consume estos perfiles y los combina en tiempo real con `portfolio_projects` para servir `projects`, `ls ~/projects` y `cat ~/projects/<slug>.txt` en el idioma activo de la sesión WebSocket.
 
+* `portfolio_profiles`:
+  * `id`: PK autoincremental.
+  * `language`: `'es'` o `'en'` (único con `IDX_portfolio_profile_lang`).
+  * `fullName`, `headline`, `location`, `email`, `availability`, `philosophyQuote`, `philosophyVerse`: Campos de texto.
+  * `bio`, `extendedBio`, `pillars`, `focusAreas`: Columnas `simple-json` sembradas desde `corpus/profile.json`.
+
+* `portfolio_stack_items`:
+  * `id`: PK autoincremental.
+  * `slug`, `language`, `category`, `name`: Campos obligatorios.
+  * `level`, `summary`: Nullable.
+  * `featured` (`boolean`), `orderIndex` (`integer`).
+  * **Índices:** `IDX_portfolio_stack_slug_lang` (único en `slug, language`) y `IDX_portfolio_stack_lang_cat_order` (compuesto en `language, category, orderIndex`). Sembrada desde `corpus/stack.json`.
+
+* `portfolio_experiences`:
+  * `id`: PK autoincremental.
+  * `slug`, `language`, `type` (`'work' | 'education' | 'certification'`), `title`, `subtitle`, `description`: Campos obligatorios.
+  * `period`, `companyUrl`: Nullable.
+  * `highlights`, `technologies`: Columnas `simple-json`, nullable.
+  * `featured` (`boolean`), `orderIndex` (`integer`).
+  * **Índices:** `IDX_portfolio_experience_slug_lang` (único en `slug, language`) y `IDX_portfolio_experience_lang_type_order` (compuesto en `language, type, orderIndex`). Sembrada desde `corpus/experience.json`.
+
+* `portfolio_engineering_pillars`:
+  * `id`: PK autoincremental.
+  * `slug`, `language`, `domain`, `title`, `summary`: Campos obligatorios.
+  * `badge`: Nullable.
+  * `details`, `metrics`, `technologies`: Columnas `simple-json`, nullable.
+  * `featured` (`boolean`), `orderIndex` (`integer`).
+  * **Índices:** `IDX_portfolio_eng_slug_lang` (único en `slug, language`) y `IDX_portfolio_eng_lang_dom_order` (compuesto en `language, domain, orderIndex`). Sembrada desde `corpus/engineering.json`.
+
+* `portfolio_lab_challenges`:
+  * `id`: PK autoincremental.
+  * `slug`, `language`, `category`, `difficulty`, `title`, `briefing`, `hint`, `targetMode`: Campos obligatorios.
+  * `points` (`integer`), `active` (`boolean`), `orderIndex` (`integer`).
+  * `flagHash`: Hash SHA-256 de la bandera con `select: false` en TypeORM para impedir su exposición en consultas `GET`.
+  * **Índices:** `IDX_portfolio_lab_slug_lang` (único en `slug, language`) y `IDX_portfolio_lab_lang_order` (compuesto en `language, orderIndex`). Sembrada desde `corpus/labs.json`.
+
 ---
 
 ### 7.4 Protocolo de Salud, Integridad y Modo WAL (`portfolio.sqlite`)
@@ -403,5 +446,5 @@ new ValidationPipe({
   ```bash
   pnpm --filter backend seed:portfolio
   ```
-  Este script limpia, indexa y siembra atómicamente los 8 proyectos bilingües desde `corpus/projects.json` mediante sentencias `INSERT OR REPLACE` en transacción atómica.
+  Este script recrea e indexa atómicamente las 7 tablas de catálogo (`portfolio_projects`, `portfolio_terminal_profiles`, `portfolio_experiences`, `portfolio_profiles`, `portfolio_stack_items`, `portfolio_engineering_pillars` y `portfolio_lab_challenges`) desde `corpus/*.json` mediante sentencias `INSERT OR REPLACE` en una única transacción WAL, preservando intacta la tabla `contact_messages`.
 

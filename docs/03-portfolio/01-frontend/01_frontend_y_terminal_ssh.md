@@ -9,18 +9,18 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 > [!IMPORTANT]
 > **Arquitectura Macro y Enrutamiento Canónico Limpio:**
 > * **Subdominio Canónico:** `portfolio.jorgedoicela.com` (o `http://portfolio.localhost:3001` en desarrollo local).
-> * **URL Canónica Única:** La raíz del subdominio es `/`. Al ser una Single Page Application (SPA) interactiva, no posee subpáginas.
-> * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud con el prefijo redundante `/portfolio` o `/portfolio/*` en el subdominio se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/`), protegiendo el SEO y evitando contenido duplicado.
-> * **Reescritura Interna Transparente:** Next.js reescribe internamente la ruta raíz `/` al directorio físico `frontend/web/src/app/(portfolio)/portfolio/page.tsx` para evitar colisiones entre proyectos consolidados.
-> * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/portfolio` siguen respondiendo 200 OK directamente.
+> * **Arquitectura Multipágina SSR/ISR:** La raíz `/` presenta un resumen ejecutivo consolidado (`featured: true`) con enlace a páginas dedicadas (`/about`, `/projects`, `/stack`, `/experience`, `/engineering`, `/terminal`, `/contact` y `/sandbox`), manteniendo la política **Zero-WebSocket en Home**.
+> * **Redirección Canónica 308 Permanente:** En `src/middleware.ts`, cualquier solicitud con el prefijo redundante `/portfolio` o `/portfolio/*` en el subdominio se redirige automáticamente mediante HTTP 308 a la ruta limpia correspondiente (`/` o `/<ruta>`), protegiendo el SEO y evitando contenido duplicado.
+> * **Reescritura Interna Transparente:** Next.js reescribe internamente las rutas del subdominio hacia el directorio físico `frontend/web/src/app/(portfolio)/portfolio/*` para evitar colisiones entre proyectos consolidados.
+> * **Compatibilidad Localhost Directa:** Solicitudes directas sin subdominio a `localhost:3001/portfolio` y sus subrutas (`/portfolio/*`) responden `200 OK` directamente, con resolución adaptativa de enlaces en `shared/lib/routes.ts`.
 > * **Consolidación Física:** Se ejecuta en el único servidor Next.js 16 (puerto `3001`) para optimizar el límite de **1 GB de RAM** del VPS.
 > * **Aislamiento:** Cero importaciones de otros subdominios (`kartex`, `doiceladev`, `landing`). Estilos encapsulados en `(portfolio)/globals.css`.
 >
 > **Arquitectura Micro:**
-> * **Feature-Sliced Design (FSD):** El código se organiza en `features/terminal/` (consola SSH) y `features/contact/` (formulario).
+> * **Feature-Sliced Design (FSD):** El código se organiza en 9 features autocontenidas (`navigation`, `about`, `projects`, `stack`, `experience`, `engineering`, `labs`, `terminal`, `contact`) más la capa `shared/` aislada, con `0` importaciones cruzadas entre features.
 > * **Jerarquía de Componentes:** Componentes compartidos del subdominio en `(portfolio)/components/` vs componentes específicos en `features/<feature>/components/`.
-> * **Estética Dark Luxury y Tipografías Locales:** Fondos oscuros premium, acentos metálicos y dorados sutiles, tipografías auto-hospedadas bajo `(portfolio)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1** (Zero-External Network Fonts). La fuente monoespaciada se inyecta directamente a la emulación `@xterm/xterm` vía `var(--font-geist-mono)`.
-> * **Amplitud Horizontal y Layout Equilibrado:** Disposición panorámica de alto aprovechamiento espacial con contenedores `max-w-[1420px] 2xl:max-w-[1540px] mx-auto` en cabecera principal, cuerpo `main`, terminal y modal de proyectos, con `PortfolioHeader` flotante restringido a dicho eje de alineación para garantizar coherencia vertical perfecta en monitores widescreen y 2K sin generar dispersión visual.
+> * **Estética Dark Luxury y Tipografías Locales:** Fondos oscuros profundos, acentos metálicos y dorados sutiles, tipografías auto-hospedadas bajo `(portfolio)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1** (Zero-External Network Fonts). La fuente monoespaciada se inyecta directamente a la emulación `@xterm/xterm` vía `var(--font-geist-mono)`.
+> * **Amplitud Horizontal y Layout Equilibrado:** Disposición panorámica con contenedores `max-w-[1420px] 2xl:max-w-[1540px] mx-auto` en cabecera principal, cuerpo `main`, terminal y modal de proyectos, con `PortfolioHeader` flotante restringido a dicho eje de alineación para mantener coherencia vertical en monitores widescreen y 2K.
 
 ---
 
@@ -46,6 +46,8 @@ frontend/web/src/app/(portfolio)/
 │   │   └── page.tsx           # Página dedicada (/engineering) con arquitectura Cloud, DevSecOps, IA y telemetría real
 │   ├── terminal/
 │   │   └── page.tsx           # Página dedicada (/terminal) con Consola Tri-Modal + Tablero Interactivo CTF (features/labs)
+│   ├── contact/
+│   │   └── page.tsx           # Página dedicada (/contact) con formulario de contacto y áreas de compromiso
 │   └── sandbox/
 │       └── page.tsx           # Vista dedicada a pantalla completa para SandboxTerminal
 │
@@ -57,7 +59,6 @@ frontend/web/src/app/(portfolio)/
 │   ├── PortfolioPreferences.tsx # Componente reutilizable que agrupa idioma y modo claro/oscuro
 │   ├── TypewriterRole.tsx     # Animación de escritura de roles
 │   ├── ScrollToTopButton.tsx  # Botón flotante reutilizable (inferior derecha) con rAF y ocultamiento en /sandbox
-│   ├── ValuesPhilosophySection.tsx # Sección de valores y ética
 │   └── PortfolioJsonLd.tsx        # Marcado estructurado Schema.org ProfilePage
 │
 ├── hooks/                     # HOOKS TRANSVERSALES DEL SUBDOMINIO
@@ -69,7 +70,7 @@ frontend/web/src/app/(portfolio)/
 │   │   │   ├── PortfolioSideNav.tsx    # Sidebar lateral colapsable desde la línea divisoria (cursor-col-resize)
 │   │   │   └── NavIcon.tsx             # Mapeo tipado y desacoplado de iconos Lucide
 │   │   ├── config/
-│   │   │   └── navItems.ts             # Registro declarativo de secciones (01..09) y futuras rutas
+│   │   │   └── navItems.ts             # Registro declarativo de navegación: Inicio (/) + 7 módulos dedicados (kind: 'route')
 │   │   ├── context/
 │   │   │   └── PortfolioNavigationContext.tsx # Fuente única de verdad reactiva (React Context)
 │   │   ├── hooks/
@@ -81,7 +82,8 @@ frontend/web/src/app/(portfolio)/
 │   │   ├── api/
 │   │   │   └── getProfile.ts           # Cliente HTTP SSR/ISR desacoplado dentro de la feature
 │   │   ├── components/
-│   │   │   └── AboutDetailView.tsx     # Vista completa de perfil, filosofía y áreas de enfoque para /about
+│   │   │   ├── AboutSection.tsx        # Resumen biográfico y contactos rápidos en Home con enlace a /about
+│   │   │   └── AboutDetailView.tsx     # Vista completa de perfil, filosofía (SQLite) y áreas de enfoque para /about
 │   │   ├── types.ts                    # Contratos PortfolioProfileData y ProfilePillar
 │   │   └── index.ts                    # Barril de exportación pública de la feature
 │   │
@@ -138,6 +140,7 @@ frontend/web/src/app/(portfolio)/
 │   ├── terminal/              # FEATURE: SISTEMA TRI-MODAL DE TERMINAL
 │   │   ├── components/
 │   │   │   ├── TerminalConsole.tsx       # Conmutador de modo y ventana interactiva
+│   │   │   ├── TerminalTeaserSection.tsx # Tarjeta de acceso rápido Zero-WebSocket en el Home hacia /terminal
 │   │   │   ├── SandboxTerminal.tsx       # Terminal Linux Real en Vivo (xterm.js + FitAddon)
 │   │   │   ├── TerminalClipboardFooter.tsx # Barra inferior estilo AWS Lightsail para SandboxTerminal (popover y portapapeles)
 │   │   │   ├── ServerOfflineBanner.tsx   # Banner Dark Luxury de Servidor Offline y Solicitud Telegram
@@ -155,7 +158,9 @@ frontend/web/src/app/(portfolio)/
 │   │
 │   └── contact/               # FEATURE: FORMULARIO DE CONTACTO
 │       ├── components/
-│       │   └── ContactForm.tsx       # Formulario con validación en tiempo real
+│       │   ├── ContactForm.tsx       # Formulario con validación en tiempo real
+│       │   ├── ContactSection.tsx    # Vista completa (formulario + 3 áreas de compromiso) para /contact
+│       │   └── ContactTeaserSection.tsx # Bloque CTA ejecutivo en Home con disponibilidad y enlace a /contact
 │       ├── hooks/
 │       │   └── useContact.ts         # Llamada HTTP POST al backend y estados reactivos
 │       ├── types.ts                  # DTOs y tipos del formulario de contacto
@@ -164,7 +169,11 @@ frontend/web/src/app/(portfolio)/
 │   └── shared/                # CAPA SHARED FSD (AISLADA DEL SLICE PORTFOLIO)
 │       ├── lib/
 │       │   ├── api.ts                # Clientes y URLs base del portafolio (API_URL, SOCKET_URL, SANDBOX_TUNNEL_URL)
+│       │   ├── routes.ts             # Utilidades puras de clasificación y resolución de rutas (subdominio vs /portfolio/*)
 │       │   └── index.ts              # Barril de utilidades y librerías shared
+│       ├── ui/
+│       │   ├── PortfolioLink.tsx     # Enlace interno adaptativo (portfolio.* y /portfolio/*) sin romper ISR
+│       │   └── index.ts              # Barril de componentes UI shared
 │       └── index.ts                  # Exportación pública consolidada de shared
 ```
 
@@ -194,10 +203,13 @@ flowchart TD
 
 ### 3.1 Modelo de Datos y Contratos Tipados (`types.ts` & `config/navItems.ts`)
 * **Unión Discriminada `PortfolioNavItem`:**
-  * `kind: 'section'`: Para anclas dentro de la página raíz (`anchor: 'about' | 'projects' | 'stack' | ...`). Si el usuario está en una subruta (ej. `/sandbox`), navega a `/#${item.anchor}`.
-  * `kind: 'route'`: Para futuras páginas o módulos dedicados (`href: string`), resolviendo la navegación mediante `router.push(item.href)`.
+  * `kind: 'route'`: Utilizado por `Inicio` (`/`) y los 7 módulos dedicados (`/about`, `/projects`, `/stack`, `/experience`, `/engineering`, `/terminal`, `/contact`), resolviendo la navegación mediante `router.push(resolvePortfolioHref(pathname, item.href))`.
+  * `kind: 'section'`: Reservado y soportado en el contrato (`PortfolioNavigationContext`) para eventuales anclas internas en el Home (`${getPortfolioHomeHref(pathname)}#${item.anchor}`).
 * **Registro Canónico (`PORTFOLIO_NAV_ITEMS`):**
-  * Organización en dos grupos semánticos: `overview` (`Perfil`: Sobre Mí, Proyectos, Stack, Experiencia) e `engineering` (`Ingeniería`: Cloud, Herramientas, Filosofía, Terminal, Contacto).
+  * Tres grupos semánticos uniformes: `root` (`PORTAFOLIO`: Inicio `/`), `overview` (`PERFIL`: Sobre Mí, Proyectos, Stack, Experiencia) e `engineering` (`INGENIERÍA`: Arquitectura, Terminal, Contacto).
+  * `Inicio` (`/`) se marca activo cuando `isPortfolioHomePath(pathname)` es verdadero.
+  * `← PORTAL` permanece reservado en la cabecera superior para salir hacia `jorgedoicela.com`.
+  * Enlaces internos del Home encapsulados en `PortfolioLink` (`shared/ui/PortfolioLink.tsx`) para resolver de forma transparente tanto subdominio (`portfolio.*`) como acceso directo (`/portfolio/*`) sin perder ISR.
   * Iconografía desacoplada mediante el componente `NavIcon.tsx` mapeando tipadamente a `lucide-react`.
 
 ### 3.2 Fuente Única de Verdad (`PortfolioNavigationContext.tsx`)
@@ -214,7 +226,7 @@ flowchart TD
   * **Disparador Móvil de 3 Líneas (`Menu`) y Enlace al Portal:** Ubicado en el extremo izquierdo antecediendo a `PORTAL` exclusivamente en viewports móviles y táctiles (`< lg`), permitiendo desplegar el drawer lateral. El enlace `PORTAL` adapta la visibilidad de su flecha dorada de retorno de forma responsiva (`arrowClassName="hidden lg:inline-block"`), mostrándose limpia sin flecha junto al menú hamburguesa en móvil y recuperando la flecha clásica (`← PORTAL`) en modo escritorio (PC).
 * **Sidebar Lateral Editorial y Drawer Móvil (`PortfolioSideNav.tsx`):**
   * **Sidebar Desktop (`lg+`):** Estilizado sobre el lienzo (`w-[184px] fixed left-0 top-0 bottom-0 bg-background/95 backdrop-blur-md border-r border-border/40`), con cabecera y pie centrados, categorías centradas (`text-center`) y enlaces alineados a la izquierda sin truncamiento.
-  * **Drawer Móvil Ergonómico (`< lg`):** Panel deslizable calibrado a `w-[220px] max-w-[75vw]` (holgura horizontal sutil y equilibrada para pantalla táctil), con cabecera de marca centrada (`JORGE DOICELA`) y pie de preferencias (`ES 🌙`) bajo la misma tipografía, tamaño y espaciado que el modo PC (`text-xs font-mono tracking-wider text-foreground/75`), líneas divisorias simétricas (`border-b/border-t border-border/40`), enlaces con altura homologada de 38px (`h-[38px]`), y cierre intuitivo por tap exterior en el backdrop o al seleccionar cualquier enlace.
+  * **Drawer Móvil Ergonómico (`< lg`):** Panel deslizable calibrado a `w-[220px] max-w-[75vw]` (holgura horizontal sutil y equilibrada para pantalla táctil), con cabecera de marca centrada (`JORGE DOICELA`) y pie de preferencias (`PortfolioPreferences`) bajo la misma tipografía, tamaño y espaciado que el modo PC (`text-xs font-mono tracking-wider text-foreground/75`), líneas divisorias simétricas (`border-b/border-t border-border/40`), enlaces con altura homologada de 38px (`h-[38px]`), y cierre intuitivo por tap exterior en el backdrop o al seleccionar cualquier enlace.
   * Sidebar estilizado sobre el mismo lienzo del portafolio (`w-[184px] fixed left-0 top-0 bottom-0 bg-background/95 backdrop-blur-md border-r border-border/40`), sin bloques oscuros pesados ni cajas alrededor de los ítems.
   * **Cabecera Superior del Sidebar:** Integra el botón `BackToPortalButton` (`← PORTAL`) centrado simétricamente en el compartimento superior con línea sutil de separación inferior (`border-b border-border/40`).
   * **Pie Inferior del Sidebar:** Integra el grupo de preferencias `PortfolioPreferences` centrado simétricamente en el compartimento inferior con selector de idioma (`ES/EN`) y conmutador de tema claro/oscuro con línea sutil de separación superior (`border-t border-border/40`).
@@ -222,7 +234,7 @@ flowchart TD
   * **Colapso Puro desde el Borde con Indicador Fino:** La línea divisoria derecha del sidebar actúa como zona de colapso con `cursor-col-resize`, proyectando un indicador visual dorado fino de 1.5px en hover sin franjas gruesas. Al hacer clic, el sidebar se oculta suavemente hacia la izquierda (`-translate-x-full`).
   * **Re-apertura Invisible:** Cuando está colapsado, una franja en el borde izquierdo extremo de la pantalla con indicador fino de 1.5px permite reabrir el sidebar con un clic directo.
   * **Desplazamiento Simétrico del Layout (`globals.css`):** Mediante `.portfolio-shell` y `.portfolio-shell-header`, el contenido del portafolio se desplaza `calc(184px + 3rem)` al abrirse y regresa a `padding-left: 3rem` al colapsarse, manteniendo simetría horizontal perfecta con `padding-right: 3rem` (`lg:px-12`) y alineando `PortfolioHeader` a ras con el contenido.
-* **Anclas Semánticas en Contenido:** Cada una de las 9 secciones en `page.tsx`, `ProjectShowcase.tsx` y `ValuesPhilosophySection.tsx` cuenta con su respectivo atributo `id` semántico y clase de desplazamiento `scroll-mt-24` para que el encabezado no oculte el título al deslizarse.
+* **Anclas Semánticas en Contenido:** Cada una de las 7 secciones del Resumen Ejecutivo en Home (`AboutSection.tsx`, `ProjectShowcase.tsx`, `StackSection.tsx`, `ExperienceSection.tsx`, `EngineeringSection.tsx`, `TerminalTeaserSection.tsx` y `ContactTeaserSection.tsx`) cuenta con su respectivo atributo `id` semántico (`about`, `projects`, `stack`, `experience`, `engineering`, `terminal`, `contact`) y `scroll-mt-24`. Filosofía y Principios se consolidan exclusivamente en `/about` (`AboutDetailView.tsx`) y el formulario completo en `/contact` (`ContactSection.tsx`), evitando duplicación entre el Home y las páginas dedicadas.
 
 ---
 
@@ -347,7 +359,7 @@ El Portafolio implementa un selector de 3 vías conmutado mediante `TerminalCons
 
 ## 6. Centro de Comunicación
 
-La sección 9 del portafolio implementa una arquitectura editorial balanceada de 3 columnas (`gap-10 lg:gap-14 items-stretch`) diseñada bajo principios estrictos de UX/UI y estética Dark Luxury / Light Luxury:
+La vista dedicada `/contact` (`ContactSection.tsx`) implementa una arquitectura editorial balanceada de 3 columnas (`gap-10 lg:gap-14 items-stretch`), mientras que el Home (`/`) presenta un acceso ejecutivo ligero (`ContactTeaserSection.tsx`) con disponibilidad, correo directo y CTA hacia `/contact`:
 * **Cabecera Editorial General:**
   * Título de tesis cercano y reflexivo (`¿Tienes una idea, consulta o proyecto?`) y párrafo explicativo para el público general, unificando la entrada a toda la sección de forma sobria y directa (sin sobretítulos redundantes).
 * **Cuadrícula de Interacción Alineada (Formulario y Fichas al mismo nivel):**
@@ -356,7 +368,7 @@ La sección 9 del portafolio implementa una arquitectura editorial balanceada de
     * Inicia exactamente al mismo nivel superior que el formulario, distribuyéndose en tres tercios armónicos (`flex-1 flex flex-col justify-center`):
       1. *01 / Proyectos & Desarrollo:* Aplicaciones web completas, diseño de APIs robustas y optimización de software de extremo a extremo.
       2. *02 / Consultas Técnicas:* Espacio abierto y cercano para dudas sobre la terminal interactiva, módulos bíblicos o el monorepo.
-      3. *03 / Tiempos de Respuesta:* Compromiso de respuesta personal habitual en menos de 24 horas (Quito, Ecuador).
+      3. *03 / Atención Personal:* Respuesta personal directa según disponibilidad (Quito, Ecuador).
     * Estética tipográfica pura sin iconos SVG decorativos, con separadores sutiles de lujo (`border-b border-border/40`) a distancia proporcional y calibrada.
 
 ---

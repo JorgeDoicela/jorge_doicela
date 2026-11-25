@@ -76,7 +76,7 @@ export function StackDetailView({ items }: StackDetailViewProps) {
       <div className="flex flex-col gap-12">
         {visibleCategories.map((group) => (
           <section key={group.category} className="flex flex-col gap-5">
-            <div className="flex items-center justify-between border-b border-border/40 pb-3">
+            <div className="flex items-center justify-between">
               <h2 className="text-sm font-mono uppercase tracking-[0.16em] text-gold-400 font-semibold">
                 {group.label}
               </h2>

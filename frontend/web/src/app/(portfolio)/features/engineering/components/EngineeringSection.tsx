@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { ArrowRight, Cpu, RefreshCw, Server, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { PortfolioLink } from '../../../shared';
 import type { EngineeringDomainType, PortfolioEngineeringPillar } from '../types';
 
 interface EngineeringSectionProps {
@@ -28,20 +28,20 @@ export function EngineeringSection({
   const t = useTranslations('Engineering');
 
   return (
-    <section id="cloud" className="flex flex-col gap-6 scroll-mt-24">
+    <section id="engineering" className="flex flex-col gap-6 scroll-mt-24">
       <div className="flex items-baseline justify-between gap-4">
         <h2 className="text-2xl font-light text-foreground">
           {t('title')}
         </h2>
 
         {viewAllHref && (
-          <Link
+          <PortfolioLink
             href={viewAllHref}
             className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors shrink-0"
           >
             <span>{t('viewAll')}</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </Link>
+          </PortfolioLink>
         )}
       </div>
 

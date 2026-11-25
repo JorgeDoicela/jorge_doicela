@@ -1,19 +1,26 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { PortfolioProject } from '../types';
 import { useProjects } from '../hooks/useProjects';
 import { ExternalLink, BookOpen, ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { PortfolioLink } from '../../../shared';
 import { ProjectDetailModal } from './ProjectDetailModal';
 
 interface ProjectShowcaseProps {
   projects: PortfolioProject[];
   viewAllHref?: string;
+  showHeader?: boolean;
+  showFilters?: boolean;
 }
 
-export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps) {
+export function ProjectShowcase({
+  projects,
+  viewAllHref,
+  showHeader = true,
+  showFilters = true,
+}: ProjectShowcaseProps) {
   const t = useTranslations('Projects');
   const {
     activeFilter,
@@ -25,6 +32,8 @@ export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps)
     handleCloseDetail,
   } = useProjects(projects);
 
+  const visibleProjects = showFilters ? filteredProjects : projects;
+
   const categories = [
     { id: 'all', label: t('filterAll') },
     { id: 'fullstack', label: t('filterFullstack') },
@@ -34,38 +43,53 @@ export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps)
 
   return (
     <section id="projects" className="flex flex-col gap-8 scroll-mt-24">
-      {/* Encabezado de Sección */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl md:text-3xl font-light text-foreground">
-            {t('title')}
-          </h2>
-          <p className="text-xs text-muted font-light max-w-3xl">
-            {t('subtitle')}
-          </p>
-        </div>
+      {(showHeader || showFilters) && (
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          {showHeader && (
+            <div className="flex flex-col gap-2 flex-1">
+              <div className="flex items-baseline justify-between gap-4">
+                <h2 className="text-2xl md:text-3xl font-light text-foreground">
+                  {t('title')}
+                </h2>
+                {viewAllHref && !showFilters && (
+                  <PortfolioLink
+                    href={viewAllHref}
+                    className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors shrink-0"
+                  >
+                    <span>{t('viewAll')}</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </PortfolioLink>
+                )}
+              </div>
+              <p className="text-xs text-muted font-light max-w-3xl">
+                {t('subtitle')}
+              </p>
+            </div>
+          )}
 
-        {/* Filtros */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveFilter(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 cursor-pointer ${
-                activeFilter === cat.id
-                  ? 'bg-surface border border-gold-300/80 text-foreground font-semibold shadow-sm'
-                  : 'text-foreground/70 hover:text-foreground hover:bg-foreground/5 border border-border/40'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+          {showFilters && (
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveFilter(cat.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 cursor-pointer ${
+                    activeFilter === cat.id
+                      ? 'bg-surface border border-gold-300/80 text-foreground font-semibold shadow-sm'
+                      : 'text-foreground/70 hover:text-foreground hover:bg-foreground/5 border border-border/40'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       {/* Grid de Tarjetas Luxury */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-        {filteredProjects.map((project) => (
+        {visibleProjects.map((project) => (
           <article
             key={project.id}
             onClick={() => handleOpenDetail(project)}
@@ -130,7 +154,7 @@ export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps)
               </button>
 
               <div
-                className="flex items-center gap-2"
+                className="flex items-center gap-4"
                 onClick={(e) => e.stopPropagation()}
               >
                 {project.repoUrl && (
@@ -139,7 +163,7 @@ export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps)
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/70 bg-surface/60 hover:bg-surface-raised hover:border-gold-300/40 text-xs font-mono text-foreground/80 hover:text-foreground transition-all duration-200 cursor-pointer"
+                    className="flex items-center gap-1.5 pb-1 border-b border-border/60 hover:border-gold-300/80 text-xs font-mono text-foreground/80 hover:text-foreground transition-colors duration-200 cursor-pointer"
                     title={t('viewRepo')}
                     aria-label={`${t('viewRepo')}: ${project.title}`}
                   >
@@ -156,7 +180,7 @@ export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps)
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/70 bg-surface/60 hover:bg-surface-raised hover:border-gold-300/40 text-xs font-mono text-foreground/80 hover:text-foreground transition-all duration-200 cursor-pointer"
+                    className="flex items-center gap-1.5 pb-1 border-b border-gold-400/60 hover:border-gold-300 text-xs font-mono text-gold-200 transition-colors duration-200 cursor-pointer"
                     title={t('viewDemo')}
                     aria-label={`${t('viewDemo')}: ${project.title}`}
                   >
@@ -177,15 +201,15 @@ export function ProjectShowcase({ projects, viewAllHref }: ProjectShowcaseProps)
         onClose={handleCloseDetail}
       />
 
-      {viewAllHref && (
+      {viewAllHref && showFilters && (
         <div className="flex justify-end pt-1">
-          <Link
+          <PortfolioLink
             href={viewAllHref}
             className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-gold-400 hover:text-gold-200 transition-colors"
           >
             <span>{t('viewAll')}</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </Link>
+          </PortfolioLink>
         </div>
       )}
     </section>

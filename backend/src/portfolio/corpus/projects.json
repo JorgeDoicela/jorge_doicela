@@ -109,7 +109,7 @@
     "language": "es",
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
     "demoUrl": "https://jorgedoicela.com",
-    "featured": true,
+    "featured": false,
     "overview": "Infraestructura de producción de alta resiliencia diseñada para ejecutar 4 plataformas web y backend simultáneamente en un servidor limitado físicamente a 1 GB de RAM.",
     "challenge": "Evitar el colapso de memoria del sistema operativo y sobrecargas por scraping de bots de IA mediante consolidación de runtimes, proxy reverso inteligente y rate limiting perimetral.",
     "architectureHighlights": [
@@ -134,7 +134,7 @@
     "language": "en",
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
     "demoUrl": "https://jorgedoicela.com",
-    "featured": true,
+    "featured": false,
     "overview": "High-resilience production cloud infrastructure engineered to execute 4 independent platforms and real-time WebSockets on a physically constrained 1 GB RAM server.",
     "challenge": "Preventing kernel out-of-memory panics and crawler resource exhaustion through runtime consolidation, smart reverse proxying, and perimeter IP rate limiting.",
     "architectureHighlights": [
@@ -159,7 +159,7 @@
     "language": "es",
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
     "demoUrl": "https://portfolio.jorgedoicela.com",
-    "featured": true,
+    "featured": false,
     "overview": "Consola interactiva de baja latencia que ofrece navegación guiada de comandos Unix y acceso a un Live Linux Sandbox en contenedores efímeros aislados.",
     "challenge": "Exponer una shell real interactiva a internet sin riesgo de fuga de datos, ataques de denegación de servicio por bifurcación (fork-bombs) ni escalada de privilegios.",
     "architectureHighlights": [
@@ -184,7 +184,7 @@
     "language": "en",
     "repoUrl": "https://github.com/jorgedoicela/jorge_doicela",
     "demoUrl": "https://portfolio.jorgedoicela.com",
-    "featured": true,
+    "featured": false,
     "overview": "Low-latency full-duplex interactive terminal supporting guided Unix navigation alongside an on-demand hardened Linux Sandbox executed in ephemeral Docker containers.",
     "challenge": "Safely granting web visitors raw interactive bash shell access without risk of host container escape, fork-bomb denial-of-service, or network exfiltration.",
     "architectureHighlights": [

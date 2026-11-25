@@ -116,7 +116,7 @@ export function LabsBoard({ challenges }: LabsBoardProps) {
   return (
     <section className="flex flex-col gap-8">
       {/* Cabecera del Tablero CTF + Marcador */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border/40 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2 text-gold-400">
             <Flag className="w-4 h-4" />

@@ -1,12 +1,11 @@
 import React from 'react';
 import {
+  Home,
   User,
   FolderGit2,
   Layers,
   Briefcase,
   Cloud,
-  Wrench,
-  Compass,
   Terminal,
   Mail,
 } from 'lucide-react';
@@ -18,13 +17,12 @@ interface NavIconProps {
 }
 
 const ICON_MAP: Record<PortfolioNavIconName, React.ComponentType<{ className?: string }>> = {
+  home: Home,
   user: User,
   projects: FolderGit2,
   stack: Layers,
   experience: Briefcase,
   cloud: Cloud,
-  tools: Wrench,
-  philosophy: Compass,
   terminal: Terminal,
   contact: Mail,
 };

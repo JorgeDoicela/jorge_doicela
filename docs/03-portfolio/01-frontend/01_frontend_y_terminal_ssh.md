@@ -20,7 +20,7 @@ Este documento detalla la arquitectura macro y micro, componentes y funcionamien
 > * **Feature-Sliced Design (FSD):** El código se organiza en 9 features autocontenidas (`navigation`, `about`, `projects`, `stack`, `experience`, `engineering`, `labs`, `terminal`, `contact`) más la capa `shared/` aislada, con `0` importaciones cruzadas entre features.
 > * **Jerarquía de Componentes:** Componentes compartidos del subdominio en `(portfolio)/components/` vs componentes específicos en `features/<feature>/components/`.
 > * **Estética Dark Luxury y Tipografías Locales:** Fondos oscuros profundos, acentos metálicos y dorados sutiles, tipografías auto-hospedadas bajo `(portfolio)/fonts/` (`Geist-Variable.woff2` y `GeistMono-Variable.woff2`) cargadas mediante `next/font/local` con licencia **SIL OFL 1.1** (Zero-External Network Fonts). La fuente monoespaciada se inyecta directamente a la emulación `@xterm/xterm` vía `var(--font-geist-mono)`.
-> * **Amplitud Horizontal y Layout Equilibrado:** Disposición panorámica con contenedores `max-w-[1420px] 2xl:max-w-[1540px] mx-auto` en cabecera principal, cuerpo `main`, terminal y modal de proyectos, con `PortfolioHeader` flotante restringido a dicho eje de alineación para mantener coherencia vertical en monitores widescreen y 2K.
+> * **Amplitud Horizontal y Layout Editorial Equilibrado:** Contenedor unificado `PortfolioPageShell` (`max-w-[1380px] mx-auto`) compartido por el Home, las 7 subpáginas dedicadas, `PortfolioHeader` y `PortfolioFooter`, calibrado para coexistir con el sidebar lateral fijo de `184px` manteniendo proporciones de lectura óptimas y simetría visual tanto en escritorio como al colapsar la navegación.
 
 ---
 

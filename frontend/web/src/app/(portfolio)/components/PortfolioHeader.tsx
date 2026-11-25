@@ -22,7 +22,7 @@ export function PortfolioHeader() {
           : '-translate-y-12 sm:-translate-y-14 opacity-0 scale-[0.98] blur-[4px] pointer-events-none'
       }`}
     >
-      <div className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex items-center justify-between pointer-events-none">
+      <div className="w-full max-w-[1380px] mx-auto flex items-center justify-between pointer-events-none">
         <div className={`flex items-center gap-1 sm:gap-2 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
           {/* Botón de 3 líneas a la izquierda (visible solo en móvil/tablet < lg) */}
           <button

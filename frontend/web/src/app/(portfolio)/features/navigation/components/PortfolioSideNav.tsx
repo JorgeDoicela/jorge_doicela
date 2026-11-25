@@ -32,7 +32,7 @@ export function PortfolioSideNav() {
           aria-current={
             isActive ? (item.kind === 'route' ? 'page' : 'location') : undefined
           }
-          className={`group relative w-full ${buttonHeight} flex items-center gap-2.5 pl-3.5 pr-2 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
+          className={`group relative w-full ${buttonHeight} flex items-center gap-2.5 pl-3 pr-3 border-l text-left transition-all duration-200 cursor-pointer outline-none focus-visible:text-gold-300 ${
             isActive
               ? 'border-gold-300 text-foreground'
               : 'border-transparent text-muted/85 hover:text-foreground'
@@ -65,24 +65,26 @@ export function PortfolioSideNav() {
   const renderNavLinks = (buttonHeight = 'h-[38px]') => (
     <nav
       aria-label={t('sectionsAria')}
-      className="flex-1 overflow-y-auto pl-5 pr-3.5 py-5 flex flex-col gap-8 custom-scrollbar"
+      className="flex-1 overflow-y-auto px-3 py-5 custom-scrollbar"
     >
-      {PORTFOLIO_NAV_GROUPS.map((group) => {
-        const groupItems = items.filter((item) => item.group === group);
-        if (groupItems.length === 0) return null;
+      <div className="w-fit max-w-full mx-auto flex flex-col gap-8">
+        {PORTFOLIO_NAV_GROUPS.map((group) => {
+          const groupItems = items.filter((item) => item.group === group);
+          if (groupItems.length === 0) return null;
 
-        return (
-          <div key={group} className="flex flex-col gap-2.5">
-            <span className="text-center text-[9.5px] font-mono tracking-[0.26em] uppercase text-gold-400/80">
-              {t(`groups.${group}`)}
-            </span>
+          return (
+            <div key={group} className="flex flex-col gap-2.5">
+              <span className="text-center text-[9.5px] font-mono tracking-[0.26em] uppercase text-gold-400/80">
+                {t(`groups.${group}`)}
+              </span>
 
-            <ul className="flex flex-col gap-0.5">
-              {groupItems.map((item) => renderNavItem(item, buttonHeight))}
-            </ul>
-          </div>
-        );
-      })}
+              <ul className="flex flex-col gap-0.5">
+                {groupItems.map((item) => renderNavItem(item, buttonHeight))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
     </nav>
   );
 

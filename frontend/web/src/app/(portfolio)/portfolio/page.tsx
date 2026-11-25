@@ -5,8 +5,7 @@ import { EngineeringSection, getPortfolioEngineering } from '../features/enginee
 import { AboutSection, getPortfolioProfile } from '../features/about';
 import { TerminalTeaserSection } from '../features/terminal';
 import { ContactTeaserSection } from '../features/contact';
-import { PortfolioHeader } from '../components/PortfolioHeader';
-import { PortfolioFooter } from '../components/PortfolioFooter';
+import { PortfolioPageShell, PORTFOLIO_CONTAINER_CLASS } from '../components/PortfolioPageShell';
 import { TypewriterRole } from '../components/TypewriterRole';
 import { getLocale, getTranslations } from 'next-intl/server';
 
@@ -24,13 +23,9 @@ export default async function PortfolioPage() {
         ]);
 
     return (
-        <div className="portfolio-shell min-h-screen bg-background text-foreground pt-16 md:pt-11 pb-10 md:pb-12 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
-
-            {/* Cabecera Flotante con Ocultamiento Dinámico por Scroll */}
-            <PortfolioHeader />
-
+        <PortfolioPageShell>
             {/* Cabecera Principal */}
-            <header className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto mb-16 md:mb-20 flex flex-col gap-2 animate-fade-in">
+            <header className={`${PORTFOLIO_CONTAINER_CLASS} mb-16 md:mb-20 flex flex-col gap-2 animate-fade-in`}>
                 <h1 className="text-4xl md:text-5xl font-extralight tracking-[0.15em] uppercase text-gold-gradient bg-gradient-to-r from-gold-100 via-gold-300 to-gold-200 bg-clip-text text-transparent">
                     {tHeader('title')}
                 </h1>
@@ -45,7 +40,7 @@ export default async function PortfolioPage() {
             </header>
 
             {/* Resumen Ejecutivo (7 secciones espejo 1:1 con los 7 módulos dedicados) */}
-            <main className="w-full max-w-[1420px] 2xl:max-w-[1540px] mx-auto flex flex-col gap-[120px] md:gap-[160px] animate-fade-up">
+            <main className={`${PORTFOLIO_CONTAINER_CLASS} flex flex-col gap-[120px] md:gap-[160px] animate-fade-up`}>
 
                 {/* 1. Sobre Mí & Conexiones (-> /about) */}
                 <AboutSection profile={profile} viewAllHref="/about" />
@@ -77,9 +72,6 @@ export default async function PortfolioPage() {
                 />
 
             </main>
-
-            <PortfolioFooter />
-
-        </div>
+        </PortfolioPageShell>
     );
 }

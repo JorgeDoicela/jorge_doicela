@@ -106,8 +106,8 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
           </h2>
         </div>
 
-        <blockquote className="p-6 rounded-xl border border-border-gold/40 bg-surface/40 flex flex-col gap-2">
-          <p className="text-sm md:text-base text-foreground/90 font-light italic leading-relaxed">
+        <blockquote className="p-6 md:p-8 rounded-xl border border-border-gold/40 bg-surface/40 flex flex-col items-center text-center gap-2.5">
+          <p className="max-w-2xl text-sm md:text-base text-foreground/90 font-light italic leading-relaxed">
             {profile.philosophyQuote}
           </p>
           <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">

@@ -85,7 +85,13 @@ Toda publicación en cualquiera de las 8 categorías (`infrastructure`, `tutoria
 7. **Conclusión y Checklist de Validación:** Lista de verificación interactiva (`[x]`).
 
 > [!NOTE]
-> **Excepción Editorial para el Módulo `blog` (Blog Personal):** A diferencia de las guías técnicas (`infrastructure`, `tutorials`, `cybersecurity`, `ai`, `projects`, `news`), el módulo `blog` es un espacio de escritura personal y humana en primera persona (lecciones aprendidas, errores/post-mortems, criterio de ingeniería, carrera y bitácora). Mantiene el mismo rigor técnico y la prohibición de lenguaje publicitario, pero goza de libertad narrativa sin obligar a incluir checklists de comandos ni resúmenes ejecutivos rígidos cuando el ensayo fluya mejor como prosa reflexiva.
+> **Excepción Editorial para el Módulo `blog` (Blog Personal):** A diferencia de las guías técnicas (`infrastructure`, `tutorials`, `cybersecurity`, `ai`, `projects`, `news`), el módulo `blog` es un espacio de escritura personal y humana en primera persona (lecciones aprendidas, errores/post-mortems, criterio de ingeniería, carrera y bitácora). Mantiene el mismo rigor técnico, la prohibición de lenguaje publicitario y la profundidad operativa (~25–40 KB cuando aborda análisis de producción), pero goza de libertad narrativa sin obligar a plantillas rígidas cuando el ensayo fluya mejor como prosa reflexiva.
+>
+> **Estándar Editorial Específico para el Módulo `forum` (Foros Comunitarios):** Un hilo de foro no es un tratado cerrado ni un tutorial exhaustivo; su propósito es abrir una discusión técnica real con tensión argumental y dar protagonismo a la encuesta (`ForumPollCard`) y a las respuestas anidadas (`ForumDiscussionSection`), que se renderizan **debajo** del cuerpo Markdown (`content`). Por ello:
+> * **Extensión calibrada:** Mantener el planteamiento inicial en un rango aproximado de **7,000 a 10,000 caracteres** por idioma (suficiente para contextualizar con analogía, diagrama Mermaid, un caso técnico concreto y tabla de posturas, sin enterrar la encuesta ni el formulario de respuesta).
+> * **Encuesta (`forum_poll_options`):** Entre **4 y 5 opciones** claras y mutuamente distinguibles (incluyendo matices progresivos cuando aplique), evitando listas largas que dispersen votos.
+> * **Preguntas abiertas:** Entre **4 y 5 preguntas concretas** que inviten a responder desde la experiencia real, referenciando siempre la **encuesta inferior** (*poll below*).
+> * **Autenticidad en respuestas (`forum_replies`):** Se permite una respuesta inicial del autor del hilo fijando su postura práctica, pero queda estrictamente prohibido fabricar respuestas o debates simulados con usuarios ficticios.
 
 ---
 

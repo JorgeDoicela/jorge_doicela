@@ -310,7 +310,7 @@ El script `seed-doiceladev.ts` está diseñado para reconstruir y reiniciar la b
   pnpm seed:doiceladev
   ```
   * Ejecuta una purga atómica de tablas anteriores (`DROP TABLE IF EXISTS`) para garantizar un estado limpio libre de esquemas desactualizados o datos residuales.
-  * Reconstruye las 10 tablas relacionales con sus restricciones de integridad `CHECK`, relaciones foráneas con `ON DELETE CASCADE` e índices compuestos cubrientes.
+  * Reconstruye las 15 tablas relacionales con sus restricciones de integridad `CHECK`, relaciones foráneas con `ON DELETE CASCADE` e índices compuestos cubrientes.
   * Inserta todo el corpus bilingüe (`es` / `en`) desde `corpus/*.json` dentro de una transacción `better-sqlite3` en menos de **100 ms**.
 
 * **Bilingüismo Riguroso en Diagramas Vectoriales (Mermaid):** Los diagramas embebidos en el markdown de cada publicación están traducidos de raíz según el idioma:

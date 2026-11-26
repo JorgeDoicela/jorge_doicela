@@ -20,6 +20,10 @@ Catálogo de requerimientos completados y objetivos futuros para **DoicelaDev** 
 - [x] **Publicación Inaugural de Tutoriales:** Guía práctica bilingüe sobre *Autenticación SSH en Linux y Git: De Claves Ed25519 a la Gestión de Identidades y Bastionado* (`configuracion-ssh-claves-ed25519-alias-tuneles`).
 - [x] **Publicación Inaugural de Noticias:** Análisis técnico bilingüe sobre *Escalada de Ransomware Impulsado por IA: Del Récord de Octubre al Cifrado Híbrido y Respaldos Inmutables* (`ransomware-ia-cifrado-hibrido-respaldos-inmutables`).
 - [x] **Publicación Inaugural de Inteligencia Artificial:** Arquitectura de seguridad bilingüe sobre *Inyección de Prompts en Sistemas de IA (OWASP LLM01): De los Engaños a Chatbots a la Inyección Indirecta y el Aislamiento en Backend* (`inyeccion-prompts-owasp-llm01-seguridad-agentes`).
+- [x] **Publicación Inaugural de Ciberseguridad:** Análisis técnico bilingüe de vulnerabilidades PHP (`seguridad-php-cve-2024-8927-cve-2024-9026`).
+- [x] **Publicación Inaugural de Proyectos:** Documentación y caso técnico bilingüe de VPN privada con WireGuard en Linux (`vpn-privada-wireguard-linux`).
+- [x] **Publicación Inaugural de Blog:** Ensayo técnico ampliado bilingüe en primera persona sobre fundamentos de Linux, redes TCP/UDP y SQL frente a frameworks (`fundamentos-linux-redes-sql-sobre-frameworks`, ~34.8 KB ES / ~32.6 KB EN).
+- [x] **Hilo Inaugural de Foros:** Debate técnico bilingüe sobre aprendizaje de ingeniería de software en la era de la IA (`aprender-ingenieria-software-era-ia-criterio-tecnico`), calibrado a formato de foro (~7.7 KB ES / ~7.5 KB EN) con caso práctico de código, matriz de 4 posturas, encuesta de 5 opciones y respuesta inicial del autor.
 
 ---
 

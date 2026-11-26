@@ -221,8 +221,11 @@ Cada publicación debe estructurarse para que tres niveles de audiencia aprendan
 * **Prohibido:** Usar frases o encabezados como *"Para reclutadores"*, *"Para tech leads"*, *"Para novatos/principiantes"* o *"Para expertos"*.
 * **Obligatorio:** Utilizar encabezados de ingeniería sobrios, naturales y universales: *"Resumen Ejecutivo"*, *"Modelo Conceptual"*, *"Diagnóstico de Sockets"*, *"Arquitectura de Filtrado"*, etc. El valor para cada perfil debe ser entregado de forma orgánica y fluida a través de la calidad del contenido, sin meta-mensajes obvios.
 
-### 4.4 Estructura Bilingüe Simétrica
+### 4.4 Estructura Bilingüe Simétrica y Formatos por Naturaleza de Módulo
 * Cada publicación debe mantenerse sincronizada tanto en español (`es`) como en inglés (`en`), manteniendo idéntico rigor conceptual, diagramas y terminología profesional.
+* **Diferenciación por Naturaleza Editorial:**
+  * **Guías, Análisis y Blog Técnico (`infrastructure`, `tutorials`, `cybersecurity`, `ai`, `news`, `projects`, `blog`):** Publicaciones de referencia profunda (~22–41 KB por idioma) con casos reales, comandos auditables, diagramas Mermaid y validación operativa. En `blog`, se escribe en primera persona con voz propia y libertad narrativa sin plantillas rígidas.
+  * **Foros Comunitarios (`forum`):** El planteamiento inicial (`content`) debe mantenerse calibrado (~7–10 KB por idioma) para sustentar el debate (analogía, diagrama, caso concreto breve, tabla de posturas y 4–5 preguntas abiertas) sin enterrar la encuesta (`ForumPollCard`) ni las respuestas (`ForumDiscussionSection`), que se renderizan **debajo** del cuerpo Markdown. La encuesta admite óptimamente **4 a 5 opciones** en `forum_poll_options` y queda prohibido fabricar respuestas con usuarios ficticios en `forum_replies`.
 
 ### 4.5 Prohibición Terminológica Estricta: Cero Uso de 'Hub'
 * **Prohibido:** Utilizar la palabra *"hub"* en cualquier superficie visual, textos de interfaz, diccionarios de internacionalización (`messages/{es,en}.json`), endpoints de API, nombres de componentes, hooks, variables o documentación técnica.
@@ -263,7 +266,7 @@ DoicelaDev cuenta con un motor de interfaz enriquecida propio (`MarkdownRenderer
 ## 5. Comandos de Operación
 
 ```bash
-# 1. Sembrado atómico y recreación de doiceladev.sqlite (8 tablas desde corpus/*.json)
+# 1. Sembrado atómico y recreación de doiceladev.sqlite (15 tablas desde corpus/*.json)
 pnpm --filter backend seed:doiceladev
 
 # 2. Agregar librerías con aislamiento
@@ -298,6 +301,7 @@ pnpm run lint
 | Cargar fuentes desde Google Fonts o CDNs externos | Genera llamadas de red innecesarias, bloquea la renderización neumórfica y viola la autonomía de caja negra. | Mantener las tipografías variables locales en `(doiceladev)/fonts/` (SIL OFL 1.1) e importar vía `next/font/local`. |
 | Usar la palabra "hub" en interfaces, código o docs | Término impreciso, informal y vetado en los estándares del proyecto. | Emplear términos formales y canónicos: **Portal**, **Plataforma**, **Directorio** o **Feed**. |
 | Saturar párrafos con código en línea sobre términos del glosario, marcas o negritas en prosa y primera columna de tablas | Choca visualmente con `GlossaryTermPopover` (subrayado punteado azul) y duplica el estilo automático `first:font-mono first:font-semibold` de `TableBlock`. | Dejar términos del glosario, marcas y primera columna de tablas en texto plano; reservar backticks para comandos/rutas/IPs y negritas solo para arranque de listas y métricas. |
+| Inflar hilos de `forum` a 30+ KB o fabricar respuestas de usuarios ficticios | Entierra la encuesta (`ForumPollCard`) y el formulario de participación debajo de un ensayo cerrado y destruye la autenticidad del foro. | Mantener el planteamiento en ~7–10 KB con 4–5 preguntas concretas, 4–5 opciones en la encuesta (referenciada como encuesta inferior) y únicamente respuestas reales o postura inicial del autor. |
 
 ---
 

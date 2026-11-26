@@ -19,27 +19,14 @@ const HOME_COLUMNS: { category: StackCategoryType; titleKey: 'client' | 'server'
 
 /**
  * StackSection (Home)
- * Preserva las 3 columnas editoriales con cinta infinita fluida por categoría
- * alimentada desde portfolio.sqlite, con enlace a la página dedicada /stack.
+ * Muestra las 3 columnas editoriales estáticas por categoría alimentadas desde
+ * portfolio.sqlite, sin recorte ni desplazamiento horizontal, con enlace a /stack.
  */
 export function StackSection({
   items,
   viewAllHref = '/stack',
 }: StackSectionProps) {
   const t = useTranslations('Stack');
-
-  const renderSkillsTrack = (sectionItems: PortfolioStackItem[], prefix: string) => (
-    <div className="flex items-center gap-2 pr-2 shrink-0">
-      {sectionItems.map((item) => (
-        <React.Fragment key={`${prefix}-${item.id}`}>
-          <span className="text-xs font-mono text-foreground/80 hover:text-gold-200 transition-colors whitespace-nowrap">
-            {item.name}
-          </span>
-          <span className="text-gold-400/50 select-none">•</span>
-        </React.Fragment>
-      ))}
-    </div>
-  );
 
   return (
     <section id="stack" className="flex flex-col gap-6 scroll-mt-24">
@@ -65,25 +52,28 @@ export function StackSection({
           if (sectionItems.length === 0) return null;
 
           return (
-            <div key={col.category} className="flex flex-col gap-2.5 min-w-0">
-              <span className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">
+            <div key={col.category} className="flex flex-col gap-3 min-w-0">
+              <h3 className="text-[11px] font-mono text-gold-400 tracking-wider uppercase">
                 {t(col.titleKey)}
-              </span>
+              </h3>
 
-              <div
-                className="marquee-track overflow-hidden flex select-none py-0.5"
-                style={{
-                  maskImage:
-                    'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-                  WebkitMaskImage:
-                    'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-                }}
-              >
-                <div className="flex w-max animate-portfolio-marquee-left">
-                  {renderSkillsTrack(sectionItems, `${col.category}-a`)}
-                  {renderSkillsTrack(sectionItems, `${col.category}-b`)}
-                </div>
-              </div>
+              <ul className="flex flex-wrap items-center gap-x-2 gap-y-1.5 leading-relaxed">
+                {sectionItems.map((item, idx) => (
+                  <li key={item.id} className="inline-flex items-center gap-2">
+                    <span className="text-xs font-mono text-foreground/85 hover:text-gold-200 transition-colors">
+                      {item.name}
+                    </span>
+                    {idx < sectionItems.length - 1 && (
+                      <span
+                        aria-hidden="true"
+                        className="text-gold-400/50 select-none"
+                      >
+                        •
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           );
         })}

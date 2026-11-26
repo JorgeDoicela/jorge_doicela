@@ -65,7 +65,7 @@ export function PortfolioSideNav() {
   const renderNavLinks = (buttonHeight = 'h-[38px]') => (
     <nav
       aria-label={t('sectionsAria')}
-      className="flex-1 overflow-y-auto px-3 py-5 custom-scrollbar"
+      className="flex-1 overflow-y-auto px-3 pt-8 pb-5 custom-scrollbar"
     >
       <div className="w-fit max-w-full mx-auto flex flex-col gap-8">
         {PORTFOLIO_NAV_GROUPS.map((group) => {

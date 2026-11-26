@@ -22,6 +22,8 @@ export default async function PortfolioTerminalPage() {
             {/* Consola Tri-Modal Interactiva (Guiada + Docker VPS + Túnel) */}
             <TerminalConsole />
 
+            <hr aria-hidden="true" className="w-full border-0 border-t border-border/50" />
+
             {/* Tablero Interactivo de Retos CTF (Validación SHA-256 en Backend) */}
             <LabsBoard challenges={challenges} />
         </PortfolioPageShell>

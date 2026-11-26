@@ -19,7 +19,7 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
   const cvFilename = getPortfolioCvFilename(locale);
 
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-12">
       {/* Bloque 1: Biografía Completa + Tarjeta de Perfil & Conexiones */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
         <div className="lg:col-span-2 flex flex-col gap-5">
@@ -105,6 +105,8 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
         </aside>
       </section>
 
+      <hr aria-hidden="true" className="w-full border-0 border-t border-border/50" />
+
       {/* Bloque 2: Filosofía y Principios de Ingeniería */}
       <section className="flex flex-col gap-8">
         <div className="flex items-center gap-2.5">
@@ -142,6 +144,8 @@ export function AboutDetailView({ profile }: AboutDetailViewProps) {
           ))}
         </div>
       </section>
+
+      <hr aria-hidden="true" className="w-full border-0 border-t border-border/50" />
 
       {/* Bloque 3: Líneas de Enfoque Técnico y Crecimiento */}
       <section className="flex flex-col gap-8">

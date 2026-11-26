@@ -73,31 +73,39 @@ export function StackDetailView({ items }: StackDetailViewProps) {
       </div>
 
       {/* Grupos de Tecnologías y Entorno */}
-      <div className="flex flex-col gap-12">
-        {visibleCategories.map((group) => (
-          <section key={group.category} className="flex flex-col gap-5">
-            <h2 className="text-sm font-mono uppercase tracking-[0.16em] text-gold-400 font-semibold">
-              {group.label}
-            </h2>
+      <div className="flex flex-col gap-10">
+        {visibleCategories.map((group, groupIdx) => (
+          <React.Fragment key={group.category}>
+            {groupIdx > 0 && (
+              <hr
+                aria-hidden="true"
+                className="w-full border-0 border-t border-border/50"
+              />
+            )}
+            <section className="flex flex-col gap-5">
+              <h2 className="text-sm font-mono uppercase tracking-[0.16em] text-gold-400 font-semibold">
+                {group.label}
+              </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {group.items.map((item) => (
-                <article
-                  key={item.id}
-                  className="p-5 rounded-xl border border-border/60 bg-surface/40 hover:bg-surface hover:border-gold-300/40 transition-all duration-200 flex flex-col gap-2.5"
-                >
-                  <h3 className="text-sm font-mono text-foreground font-semibold">
-                    {item.name}
-                  </h3>
-                  {item.summary && (
-                    <p className="text-xs text-muted font-light leading-relaxed">
-                      {item.summary}
-                    </p>
-                  )}
-                </article>
-              ))}
-            </div>
-          </section>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {group.items.map((item) => (
+                  <article
+                    key={item.id}
+                    className="p-5 rounded-xl border border-border/60 bg-surface/40 hover:bg-surface hover:border-gold-300/40 transition-all duration-200 flex flex-col gap-2.5"
+                  >
+                    <h3 className="text-sm font-mono text-foreground font-semibold">
+                      {item.name}
+                    </h3>
+                    {item.summary && (
+                      <p className="text-xs text-muted font-light leading-relaxed">
+                        {item.summary}
+                      </p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
+          </React.Fragment>
         ))}
       </div>
     </div>

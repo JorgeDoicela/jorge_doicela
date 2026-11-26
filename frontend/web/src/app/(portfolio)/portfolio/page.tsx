@@ -11,9 +11,9 @@ import { getLocale, getTranslations } from 'next-intl/server';
 
 function SectionDivider() {
     return (
-        <div
+        <hr
             aria-hidden="true"
-            className="w-full max-w-[78%] mx-auto h-px bg-gradient-to-r from-transparent via-border/80 to-transparent"
+            className="w-full border-0 border-t border-border/50"
         />
     );
 }

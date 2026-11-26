@@ -65,7 +65,7 @@ export function PortfolioSideNav() {
   const renderNavLinks = (buttonHeight = 'h-[38px]') => (
     <nav
       aria-label={t('sectionsAria')}
-      className="flex-1 overflow-y-auto px-3 pt-8 pb-5 custom-scrollbar"
+      className="flex-1 overflow-y-auto px-3 pt-6 pb-5 custom-scrollbar"
     >
       <div className="w-fit max-w-full mx-auto flex flex-col gap-8">
         {PORTFOLIO_NAV_GROUPS.map((group) => {
@@ -118,7 +118,7 @@ export function PortfolioSideNav() {
         </div>
 
         {/* Cabecera superior del Sidebar */}
-        <div className="py-2.5 px-4 flex items-center justify-center shrink-0 border-b border-border/40">
+        <div className="py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-border/40">
           <BackToPortalButton id="portfolio-sidenav-back-to-portal" />
         </div>
 
@@ -126,7 +126,7 @@ export function PortfolioSideNav() {
         {renderNavLinks('h-[38px]')}
 
         {/* Pie del Sidebar: Preferencias */}
-        <div className="py-2 px-4 flex items-center justify-center shrink-0 border-t border-border/40">
+        <div className="py-3 px-4 flex items-center justify-center shrink-0 border-t border-border/40">
           <PortfolioPreferences prefixId="portfolio-sidenav" />
         </div>
       </aside>
@@ -147,7 +147,7 @@ export function PortfolioSideNav() {
             className="fixed top-0 bottom-0 left-0 z-50 w-[220px] max-w-[75vw] bg-background/98 backdrop-blur-md border-r border-border/40 shadow-2xl flex flex-col select-none animate-in slide-in-from-left duration-300"
           >
             {/* Cabecera del Drawer móvil: Misma tipografía, tamaño y tracking que el modo PC */}
-            <div className="py-2.5 px-4 flex items-center justify-center shrink-0 border-b border-border/40">
+            <div className="py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-border/40">
               <span className="text-xs font-mono tracking-wider uppercase text-foreground/75 text-center select-none">
                 JORGE DOICELA
               </span>
@@ -157,7 +157,7 @@ export function PortfolioSideNav() {
             {renderNavLinks('h-[38px]')}
 
             {/* Pie del Drawer móvil: Preferencias homologado al modo PC */}
-            <div className="py-2 px-4 flex items-center justify-center shrink-0 border-t border-border/40">
+            <div className="py-3 px-4 flex items-center justify-center shrink-0 border-t border-border/40">
               <PortfolioPreferences prefixId="portfolio-mobile-drawer" />
             </div>
           </aside>

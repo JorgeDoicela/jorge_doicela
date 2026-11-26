@@ -16,7 +16,7 @@ export function PortfolioPageShell({
   subtitle,
 }: PortfolioPageShellProps) {
   return (
-    <div className="portfolio-shell min-h-screen bg-background text-foreground pt-16 md:pt-11 pb-10 md:pb-12 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
+    <div className="portfolio-shell min-h-screen bg-background text-foreground pt-16 md:pt-14 pb-10 md:pb-12 px-4 sm:px-6 md:px-10 lg:px-12 relative selection:bg-[rgba(197,168,122,0.18)] selection:text-gold-100 transition-colors duration-300">
       <PortfolioHeader />
 
       {title ? (
